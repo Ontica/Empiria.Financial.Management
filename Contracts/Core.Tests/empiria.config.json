@@ -1,0 +1,23 @@
+﻿{
+  "appName": "Empiria Contracts Management Core Tests",
+  "description": "Domain types, classes and services tests environment settings",
+  "version": "1.0",
+  "date": "2024-10-07",
+  "settings": [
+    {
+      "type": "",
+      "key": "ApplicationKey",
+      "value": "{{APPLICATION-KEY}}"
+    },
+    {
+      "type": "",
+      "key": "GlobalConfigurationFile",
+      "value": "{{GLOBAL-CONFIGURATION-FILE}}"
+    },
+    {
+      "type": "Tests",
+      "key": "SessionToken",
+      "value": "{{TESTING-SESSION-TOKEN}}"
+    }
+  ]
+}
