@@ -42,7 +42,7 @@ namespace Empiria.Tests.Budgeting.Transactions {
     [Fact]
     public void Should_Create_A_Budget_Transaction() {
       var fields = new BudgetTransactionFields {
-        WorkItemUID = "12309481209840918408-123"
+        WorkItemUID = "07288961-55d9-4e73-871e-7a48e8b0dac2"
       };
 
       _usecases.CreateTransaction(fields);

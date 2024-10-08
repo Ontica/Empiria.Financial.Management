@@ -10,14 +10,6 @@
 
 namespace Empiria.Budgeting.Transactions.Execution.Adapters {
 
-  public class WorkItemDto {
-
-    public string WorkItemUID {
-      get; set;
-    }
-
-  }  // class WorkItemDto
-
   public class BudgetTransactionFields : WorkItemDto {
 
   }  // BudgetTransactionFields

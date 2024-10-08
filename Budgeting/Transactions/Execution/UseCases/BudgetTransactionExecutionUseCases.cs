@@ -28,19 +28,15 @@ namespace Empiria.Budgeting.Transactions.Execution.UseCases {
       return CreateInstance<BudgetTransactionExecutionUseCases>();
     }
 
-    static public BudgetTransactionExecutionUseCases UseCaseInteractor(IIdentifiable workItem) {
-      return CreateInstance<BudgetTransactionExecutionUseCases>(workItem);
-    }
-
     #endregion Constructors and parsers
 
     #region Use cases
 
-    [WorkflowCommand]
+    [WorkflowEvent("BudgetTransactionCreated")]
     public void CreateTransaction(BudgetTransactionFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      // WorkflowMessage(ObjectCreated, fields.WorkItemUID, 123);
+      base.SendWorkflowEvent("BudgetTransactionCreated", fields);
     }
 
     #endregion Use cases
