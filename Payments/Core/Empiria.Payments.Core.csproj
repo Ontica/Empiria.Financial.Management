@@ -62,7 +62,6 @@
     <PackageReference Include="Empiria.Core" Version="8.0.0" />
     <PackageReference Include="Empiria.Central" Version="8.0.0" />
     <PackageReference Include="Empiria.Services" Version="1.0.0" />
-    <PackageReference Include="Empiria.Workflow" Version="4.0.0" />
     <PackageReference Include="Empiria.Budgeting.Core" Version="2.0.0" />
     <PackageReference Include="Empiria.Contracts.Core" Version="1.0.0" />
   </ItemGroup>
@@ -70,7 +69,6 @@
     <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\..\..\central\Central\Empiria.Central.csproj" />
     <ProjectReference Include="..\..\..\extensions\Services\Empiria.Services.csproj" />
-    <ProjectReference Include="..\..\..\workflow\Workflow\Empiria.Workflow.csproj" />
     <ProjectReference Include="..\..\Budgeting\Core\Empiria.Budgeting.Core.csproj" />
     <ProjectReference Include="..\..\Contracts\Core\Empiria.Contracts.Core.csproj" />
   </ItemGroup>
