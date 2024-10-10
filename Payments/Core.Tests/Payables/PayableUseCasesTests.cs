@@ -193,14 +193,14 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Delete_ContractMilestone() {
 
-      _usecases.DeletePayable("c049088d-914b-4f44-89aa-7923c3354fb0");
+      _usecases.DeleteContractMilestone("c049088d-914b-4f44-89aa-7923c3354fb0");
     }
 
 
     [Fact]
     public void Should_Get_ContractMilestone() {
 
-      var sut = _usecases.GetPayable("c049088d-914b-4f44-89aa-7923c3354fb0");
+      var sut = _usecases.GetContractMilestone("c049088d-914b-4f44-89aa-7923c3354fb0");
 
       Assert.NotNull(sut);
     }
