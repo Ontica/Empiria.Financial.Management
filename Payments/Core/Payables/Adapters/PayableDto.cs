@@ -78,8 +78,18 @@ namespace Empiria.Payments.Payables.Adapters {
   } // class PayableDto
 
 
-  /// <summary>Output DTO used to return minimal payables objects data for use in lists.</summary>
-  public class PayableDescriptor {
+
+    /// <summary>Data transfer objects used to return contractMilestone objects.</summary>
+    public class ContractMilestoneDto : PayableDto  {
+
+    public NamedEntityDto Contract {
+      get; internal set;
+    }
+
+  }
+
+    /// <summary>Output DTO used to return minimal payables objects data for use in lists.</summary>
+    public class PayableDescriptor {
 
     public string UID {
       get; internal set;
