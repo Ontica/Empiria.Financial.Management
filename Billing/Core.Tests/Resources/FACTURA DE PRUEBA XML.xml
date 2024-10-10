@@ -1,0 +1,56 @@
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" 
+  Version="4.0" 
+  Folio="14" 
+  Fecha="2024-09-30T16:27:31" 
+  Sello="rt7+dkSNstYfu7Xxf7E5O+upXvJvr1TsZnadLdtEFCLf2XK+HzG18Q708S4Y1KjSQQRizf5gEQ5" 
+  FormaPago="03" 
+  NoCertificado="00001000000715104258" 
+  Certificado="NFUlZJQ0lPUyBUUklCVVRBUklPUyBBTCBDT05UUklCVVlFTlRF" 
+  SubTotal="17058.45" 
+  Moneda="MXN" 
+  Total="17755.00" 
+  TipoDeComprobante="I" 
+  Exportacion="01" 
+  MetodoPago="PUE" 
+  LugarExpedicion="83000">
+  <cfdi:Emisor RegimenFiscal="626" Rfc="RAVA880701QMZ" Nombre="NOMBRE COMPLETO EMISOR"/>
+  <cfdi:Receptor Rfc="BOM998514PZ5" Nombre="NOMBRE COMPLETO RECEPTOR" DomicilioFiscalReceptor="10000" RegimenFiscalReceptor="601" UsoCFDI="G03"/>
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="81112200" ClaveUnidad="E48" Cantidad="1.00" Unidad="SERVICIO" NoIdentificacion="DES" Descripcion="Desarrollo de Software Sistema SICOFIN de Banoras" ValorUnitario="17058.45" Importe="17058.45" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="17058.45" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="2729.35"/>
+        </cfdi:Traslados>
+        <cfdi:Retenciones>
+          <cfdi:Retencion Base="17058.45" Impuesto="001" TipoFactor="Tasa" TasaOCuota="0.012500" Importe="213.23"/>
+          <cfdi:Retencion Base="17058.45" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.106667" Importe="1819.57"/>
+        </cfdi:Retenciones>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
+    <cfdi:Concepto ClaveProdServ="81112200" ClaveUnidad="E48" Cantidad="1.00" Unidad="SERVICIO" NoIdentificacion="DES" Descripcion="Desarrollo de Software Sistema SICOFIN de Banoras" ValorUnitario="17058.45" Importe="17058.45" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="17058.45" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="2729.35"/>
+        </cfdi:Traslados>
+        <cfdi:Retenciones>
+          <cfdi:Retencion Base="17058.45" Impuesto="001" TipoFactor="Tasa" TasaOCuota="0.012500" Importe="213.23"/>
+          <cfdi:Retencion Base="17058.45" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.106667" Importe="1819.57"/>
+        </cfdi:Retenciones>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
+  </cfdi:Conceptos>
+  <cfdi:Impuestos TotalImpuestosRetenidos="2032.80" TotalImpuestosTrasladados="2729.35">
+    <cfdi:Retenciones>
+      <cfdi:Retencion Impuesto="001" Importe="213.23"/>
+      <cfdi:Retencion Impuesto="002" Importe="1819.57"/>
+    </cfdi:Retenciones>
+    <cfdi:Traslados>
+      <cfdi:Traslado Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="2729.35" Base="17058.45"/>
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+  <cfdi:Complemento>
+    <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="397BB0EB-1EB0-41B6-B780-DFA55EFE132D" FechaTimbrado="2024-09-30T17:27:35" RfcProvCertif="MAS0810247C0" SelloCFD="TBuBYjGcL9zxvf4XCVzlg0VO36/W9/tWPa3uLMS3sPu" NoCertificadoSAT="00001000000709182898" SelloSAT="eE+DhVdIg7rleonetV/gTFyOpWU4OlfIQBfbGzjqlBWj6EUsIcroSOrc/FqiAbfED+0ezuA"/>
+  </cfdi:Complemento>
+</cfdi:Comprobante>
