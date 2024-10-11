@@ -35,10 +35,10 @@ namespace Empiria.Budgeting.Processes {
       }
     }
 
-    public override FixedList<FieldValue> RequestTypeFields {
+    public override FixedList<FormerFieldValue> RequestTypeFields {
       get {
-        return new List<FieldValue> {
-          new FieldValue { Field = "budget", Value = Budget.UID }
+        return new List<FormerFieldValue> {
+          new FormerFieldValue { Field = "budget", Value = Budget.UID }
         }.ToFixedList();
       }
     }
