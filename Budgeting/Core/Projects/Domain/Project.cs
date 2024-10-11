@@ -11,7 +11,6 @@
 using Empiria.Budgeting;
 
 using Empiria.Projects.Adapters;
-using Empiria.ProjectTypes;
 
 namespace Empiria.Projects {
 

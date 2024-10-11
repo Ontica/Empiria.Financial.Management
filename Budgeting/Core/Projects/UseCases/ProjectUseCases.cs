@@ -7,12 +7,10 @@
 *  Summary  : Use cases for project segment items.                                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Services;
 
 using Empiria.Projects.Adapters;
-using Empiria.ProjectTypes;
 
 namespace Empiria.Projects.UseCases {
 
@@ -67,6 +65,6 @@ namespace Empiria.Projects.UseCases {
 
     #endregion Use cases
 
-  }  // class ProjectSegmentItemsUseCases
+  }  // class ProjectUseCases
 
 }  // namespace Empiria.Projects.UseCases
