@@ -245,11 +245,15 @@ namespace Empiria.Payments.Payables {
       Assertion.Require(fields, nameof(fields));
 
       PayableItem payableItem = GetItem(payableItemUID);
+     
+      _items.Value.Remove(payableItem);
 
       Total -= payableItem.Subtotal;
 
       payableItem.Update(fields);
 
+      _items.Value.Add(payableItem);
+      
       Total += payableItem.Subtotal;
 
       return payableItem;
