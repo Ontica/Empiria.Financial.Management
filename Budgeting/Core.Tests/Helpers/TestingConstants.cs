@@ -13,8 +13,6 @@ namespace Empiria.Budgeting.Tests {
   /// <summary>Provides testing constants.</summary>
   static public class TestingConstants {
 
-    static internal string PROJECT_TYPE_UID = "d1818e73-3fcd-4e20-a5db-82df01825a24";
-
   }  // class TestingConstants
 
 }  // namespace Empiria.Budgeting.Tests
