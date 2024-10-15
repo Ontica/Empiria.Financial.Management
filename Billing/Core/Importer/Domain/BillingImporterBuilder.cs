@@ -167,7 +167,7 @@ namespace Empiria.Financial.Management.Billing.Domain {
         if ((impuestosXml.NodeType == XmlNodeType.Element) && (impuestosXml.Name == "cfdi:Traslado")) {
 
           BillingTaxDto trasladoDto = new BillingTaxDto();
-          trasladoDto.TaxName = TaxType.Traslado;
+          trasladoDto.TipoImpuesto = TaxType.Traslado;
           trasladoDto.Base = Convert.ToDecimal(impuestosXml.GetAttribute("Base"));
           trasladoDto.Impuesto = impuestosXml.GetAttribute("Impuesto");
           trasladoDto.TipoFactor = impuestosXml.GetAttribute("TipoFactor");
@@ -179,7 +179,7 @@ namespace Empiria.Financial.Management.Billing.Domain {
                    (impuestosXml.Name == "cfdi:Retencion")) {
 
           BillingTaxDto retencionDto = new BillingTaxDto();
-          retencionDto.TaxName = TaxType.Retencion;
+          retencionDto.TipoImpuesto = TaxType.Retencion;
           retencionDto.Base = Convert.ToDecimal(impuestosXml.GetAttribute("Base"));
           retencionDto.Impuesto = impuestosXml.GetAttribute("Impuesto");
           retencionDto.TipoFactor = impuestosXml.GetAttribute("TipoFactor");
