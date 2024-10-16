@@ -29,6 +29,8 @@ namespace Empiria.Contracts.Adapters {
 
       string contractNoFilter = BuildContractNoFilter(query.ContractNo);
 
+      string contractTypeFilter = BuildContractTypeFilter(query.ContractTypeUID);
+
       string keywordFilter = BuildkeywordFilter(query.Keywords);
 
       string supplierUIDFilter = BuildSupplierFilter(query.SupplierUID);
@@ -40,6 +42,8 @@ namespace Empiria.Contracts.Adapters {
       var filter = new Filter(statusFilter);
 
       filter.AppendAnd(contractNoFilter);
+
+      filter.AppendAnd(contractTypeFilter);
 
       filter.AppendAnd(keywordFilter);
 
@@ -82,7 +86,7 @@ namespace Empiria.Contracts.Adapters {
         return string.Empty;
       }
 
-      var supplier = ContractSupplier.Parse(supplierUID);
+      var supplier = Party.Parse(supplierUID);
 
       return $"CONTRACT_SUPPLIER_ID = '{supplier.Id}'";
     }
@@ -102,6 +106,18 @@ namespace Empiria.Contracts.Adapters {
 
       return $"CONTRACT_NO = '{contratNo}'";
     }
+
+
+    private static string BuildContractTypeFilter(string contratTypeUID) {
+      if (contratTypeUID == string.Empty) {
+        return string.Empty;
+      }
+
+      var contractType = ContractType.Parse(contratTypeUID);
+
+      return $"CONTRACT_TYPE_ID = '{contractType.Id}'";
+    }
+
 
     private static string BuildContractStatusFilter(EntityStatus status) {
       if (status == EntityStatus.All) {
