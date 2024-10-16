@@ -49,7 +49,7 @@ namespace Empiria.Contracts.Adapters {
       get; set;
     } = EntityStatus.All;
 
-    
+
     public string OrderBy {
       get; set; 
     } = string.Empty;

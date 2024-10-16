@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using Empiria.StateEnums;
 
 namespace Empiria.Contracts.Adapters {
 
@@ -175,6 +176,10 @@ namespace Empiria.Contracts.Adapters {
       get; internal set;
     }
 
+
+    public string statusName {
+      get; internal set;
+    }
 
   } // class ContractDescriptor
 
