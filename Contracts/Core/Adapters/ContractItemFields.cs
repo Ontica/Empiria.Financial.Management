@@ -75,7 +75,7 @@ namespace Empiria.Contracts.Adapters {
 
     internal void EnsureValid() {
       Assertion.Require(ContractUID, "Se requiere el número de contrato.");
-      Assertion.Require(ProductUID, "Se requiere el ID del número de contrato.");
+      Assertion.Require(ProductUID, "Se requiere del número de producto.");
       Assertion.Require(Description, "Necesito el nombre del contrato.");
       Assertion.Require(UnitMeasureUID, "Necesito la unidad de medida.");
       Assertion.Require(UnitPrice > 0, "Necesito el precio unitario.");

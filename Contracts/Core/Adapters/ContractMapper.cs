@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.StateEnums;
+
 namespace Empiria.Contracts.Adapters {
 
   /// <summary>Provides data mapping services for Contract related types.</summary>
@@ -51,6 +53,7 @@ namespace Empiria.Contracts.Adapters {
         Currency = contract.Currency.Name,
         ToDate = contract.ToDate,
         FromDate = contract.ToDate,
+        statusName = EntityStatusEnumExtensions.GetName(contract.Status)
       };
 
     }

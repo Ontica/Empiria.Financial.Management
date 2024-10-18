@@ -20,6 +20,11 @@ namespace Empiria.Contracts.Adapters {
     } = string.Empty;
 
 
+    public string ContractTypeUID {
+      get; set;
+    } = string.Empty;
+
+
     public string Keywords {
       get; set;
     } = string.Empty;
@@ -44,7 +49,7 @@ namespace Empiria.Contracts.Adapters {
       get; set;
     } = EntityStatus.All;
 
-    
+
     public string OrderBy {
       get; set; 
     } = string.Empty;

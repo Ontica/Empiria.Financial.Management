@@ -70,17 +70,17 @@ namespace Empiria.Contracts {
       get; private set;
     }
 
-    //[DataField("CONTRACT_ITEM_FROM_QTY", ConvertFrom = typeof(decimal))]
+    [DataField("CONTRACT_ITEM_FROM_QTY", ConvertFrom = typeof(decimal))]
     public decimal FromQuantity {
       get; private set;
     }
 
-    //[DataField("CONTRACT_ITEM_TO_QTY")]
+    [DataField("CONTRACT_ITEM_TO_QTY", ConvertFrom = typeof(decimal))]
     public decimal ToQuantity {
       get; private set;
     }
 
-    //[DataField("CONTRACT_ITEM_UNIT_PRICE")]
+    [DataField("CONTRACT_ITEM_UNIT_PRICE", ConvertFrom = typeof(decimal))]
     public decimal UnitPrice {
       get; private set;
     }

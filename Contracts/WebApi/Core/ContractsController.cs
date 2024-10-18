@@ -11,9 +11,10 @@
 using System.Web.Http;
 
 using Empiria.WebApi;
-
 using Empiria.Contracts.Adapters;
 using Empiria.Contracts.UseCases;
+using Empiria.Measurement;
+using System.Diagnostics.Contracts;
 
 namespace Empiria.Contracts.WebApi {
 
@@ -83,6 +84,18 @@ namespace Empiria.Contracts.WebApi {
       }
     }
 
+
+    [HttpGet]
+    [Route("v2/contracts/contract-items/{contractUID:guid}")]
+    public CollectionModel GetContractItems([FromUri] string contractUID) {
+
+      using (var usecases = ContractUseCases.UseCaseInteractor()) {
+        FixedList<ContractItemDto> contractItems = usecases.GetContractItems(contractUID);
+
+        return new CollectionModel(base.Request, contractItems);
+      }
+    }
+
     #endregion Query web apis
 
     #region Command web apis
@@ -99,6 +112,22 @@ namespace Empiria.Contracts.WebApi {
         return new SingleObjectModel(base.Request, contract);
       }
     }
+
+
+    [HttpPost]
+    [Route("v2/contracts/add-contract-items/{contractUID:guid}")]
+    public SingleObjectModel AddContractItems([FromUri] string contractUID,
+                                              [FromBody] ContractItemFields fields) {
+
+      base.RequireBody(fields);
+
+      using (var usecases = ContractItemUseCases.UseCaseInteractor()) {
+        ContractItemDto contractItem = usecases.AddContractItem(contractUID, fields);
+
+        return new SingleObjectModel(base.Request, contractItem);
+      }
+    }
+
 
     #endregion Command web apis
 

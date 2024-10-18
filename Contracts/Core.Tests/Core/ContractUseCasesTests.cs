@@ -74,7 +74,7 @@ namespace Empiria.Tests.Contracts {
 
         ContractUID = TestingConstants.CONTRACT_UID,
         ProductUID = TestingConstants.CONTRACT_ITEM_PRODUCT_UID,
-        Description = "Prueba contract items",
+        Description = "Prueba contract items  2000",
         UnitMeasureUID = TestingConstants.CONTRACT_ITEM_UNIT_UID,
         ToQuantity = 5,
         FromQuantity = 2,
