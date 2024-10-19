@@ -35,9 +35,9 @@ namespace Empiria.Billing.UseCases {
 
     public BillDto ImportXmlBillFromFilePath(string xmlFilePath) {
 
-      var billDto = BillXmlReader.ReadFromFilePath(xmlFilePath);
+      var reader = new BillXmlReader(xmlFilePath);
 
-      // Code to store BillDto as Bill
+      var billDto = reader.ReadAsBillDto();
 
       return billDto;
     }

@@ -22,7 +22,9 @@ namespace Empiria.Tests.Billing {
 
       string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
 
-      BillDto sut = BillXmlReader.ReadFromFilePath(xmlFilePath);
+      var reader = new BillXmlReader(xmlFilePath);
+
+      BillDto sut = reader.ReadAsBillDto();
 
       Assert.NotNull(sut);
     }

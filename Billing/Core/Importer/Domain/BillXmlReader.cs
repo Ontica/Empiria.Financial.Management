@@ -18,17 +18,23 @@ namespace Empiria.Billing {
   /// <summary>Service used to read a bill as xml string and return a BillDto object.</summary>
   internal class BillXmlReader {
 
-    static private XmlReader xmlReader;
-    static private BillDto dto = new BillDto();
+    private readonly XmlReader _xmlReader;
+    private readonly BillDto _billDto;
 
-    #region Public methods
+    internal BillXmlReader(string xmlFilePath) {
+      Assertion.Require(xmlFilePath, nameof(xmlFilePath));
 
+      _xmlReader = XmlReader.Create(xmlFilePath);
+      _billDto = new BillDto();
+    }
 
-    static public BillDto ReadFromFilePath(string xmlFilePath) {
+    #region Services
 
-      xmlReader = XmlReader.Create(xmlFilePath);
+    internal BillDto ReadAsBillDto() {
+
       int count = 0;
-      while (xmlReader.Read()) {
+
+      while (_xmlReader.Read()) {
 
         if (count == 0) {
           ValidateXmlDocumentVersion();
@@ -44,32 +50,32 @@ namespace Empiria.Billing {
 
         count++;
       }
-      return dto;
+      return _billDto;
     }
 
 
-    private static void ValidateXmlDocumentVersion() {
+    private void ValidateXmlDocumentVersion() {
 
-      if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name != "cfdi:Comprobante")) {
-        Assertion.EnsureNoReachThisCode($"El archivo xml no es una factura.");
+      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name != "cfdi:Comprobante")) {
+        Assertion.RequireFail($"El archivo xml no es una factura.");
 
-      } else if (xmlReader.HasAttributes && xmlReader.GetAttribute("Version") != "4.0") {
-        Assertion.EnsureNoReachThisCode($"La version del archivo xml no es la correcta.");
+      } else if (_xmlReader.HasAttributes && _xmlReader.GetAttribute("Version") != "4.0") {
+        Assertion.RequireFail($"La version del archivo xml no es la correcta: {_xmlReader.GetAttribute("Version")}");
       }
     }
 
 
-    #endregion Public methods
+    #endregion Services
 
     #region Helpers
 
-    static private void GenerateConceptsList() {
+    private void GenerateConceptsList() {
 
-      if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "cfdi:Conceptos")) {
+      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name == "cfdi:Conceptos")) {
 
         var conceptosDto = new List<BillConceptDto>();
 
-        XmlReader conceptosXml = xmlReader.ReadSubtree();
+        XmlReader conceptosXml = _xmlReader.ReadSubtree();
 
         while (conceptosXml.Read()) {
 
@@ -92,63 +98,63 @@ namespace Empiria.Billing {
           }
         }
 
-        dto.Conceptos = conceptosDto.ToFixedList();
+        _billDto.Conceptos = conceptosDto.ToFixedList();
       }  // while
     }
 
 
-    static private void GenerateGeneralData() {
+    private void GenerateGeneralData() {
 
-      if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "cfdi:Comprobante")) {
+      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name == "cfdi:Comprobante")) {
 
-        if (xmlReader.HasAttributes) {
+        if (_xmlReader.HasAttributes) {
 
-          dto.DatosGenerales.CFDIVersion = xmlReader.GetAttribute("Version") ?? string.Empty;
-          dto.DatosGenerales.Folio = xmlReader.GetAttribute("Folio") ?? string.Empty;
-          dto.DatosGenerales.Fecha = Convert.ToDateTime(xmlReader.GetAttribute("Fecha"));
-          dto.DatosGenerales.Sello = xmlReader.GetAttribute("Version") ?? string.Empty;
-          dto.DatosGenerales.FormaPago = xmlReader.GetAttribute("FormaPago") ?? string.Empty;
-          dto.DatosGenerales.NoCertificado = xmlReader.GetAttribute("NoCertificado") ?? string.Empty;
-          dto.DatosGenerales.Certificado = xmlReader.GetAttribute("Certificado") ?? string.Empty;
+          _billDto.DatosGenerales.CFDIVersion = _xmlReader.GetAttribute("Version") ?? string.Empty;
+          _billDto.DatosGenerales.Folio = _xmlReader.GetAttribute("Folio") ?? string.Empty;
+          _billDto.DatosGenerales.Fecha = Convert.ToDateTime(_xmlReader.GetAttribute("Fecha"));
+          _billDto.DatosGenerales.Sello = _xmlReader.GetAttribute("Version") ?? string.Empty;
+          _billDto.DatosGenerales.FormaPago = _xmlReader.GetAttribute("FormaPago") ?? string.Empty;
+          _billDto.DatosGenerales.NoCertificado = _xmlReader.GetAttribute("NoCertificado") ?? string.Empty;
+          _billDto.DatosGenerales.Certificado = _xmlReader.GetAttribute("Certificado") ?? string.Empty;
 
-          dto.DatosGenerales.SubTotal = Convert.ToDecimal(xmlReader.GetAttribute("SubTotal"));
-          dto.DatosGenerales.Moneda = xmlReader.GetAttribute("Moneda") ?? string.Empty;
-          dto.DatosGenerales.Total = Convert.ToDecimal(xmlReader.GetAttribute("Total"));
+          _billDto.DatosGenerales.SubTotal = Convert.ToDecimal(_xmlReader.GetAttribute("SubTotal"));
+          _billDto.DatosGenerales.Moneda = _xmlReader.GetAttribute("Moneda") ?? string.Empty;
+          _billDto.DatosGenerales.Total = Convert.ToDecimal(_xmlReader.GetAttribute("Total"));
 
-          dto.DatosGenerales.TipoDeComprobante = xmlReader.GetAttribute("TipoDeComprobante") ?? string.Empty;
-          dto.DatosGenerales.Exportacion = xmlReader.GetAttribute("Exportacion") ?? string.Empty;
-          dto.DatosGenerales.MetodoPago = xmlReader.GetAttribute("MetodoPago") ?? string.Empty;
-          dto.DatosGenerales.LugarExpedicion = xmlReader.GetAttribute("LugarExpedicion") ?? string.Empty;
+          _billDto.DatosGenerales.TipoDeComprobante = _xmlReader.GetAttribute("TipoDeComprobante") ?? string.Empty;
+          _billDto.DatosGenerales.Exportacion = _xmlReader.GetAttribute("Exportacion") ?? string.Empty;
+          _billDto.DatosGenerales.MetodoPago = _xmlReader.GetAttribute("MetodoPago") ?? string.Empty;
+          _billDto.DatosGenerales.LugarExpedicion = _xmlReader.GetAttribute("LugarExpedicion") ?? string.Empty;
         }
       }
 
     }
 
 
-    static private void GenerateReceiverData() {
+    private void GenerateReceiverData() {
 
-      if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "cfdi:Receptor")) {
+      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name == "cfdi:Receptor")) {
 
-        if (xmlReader.HasAttributes) {
-          dto.Receptor.RegimenFiscal = xmlReader.GetAttribute("RegimenFiscalReceptor") ?? string.Empty;
-          dto.Receptor.RFC = xmlReader.GetAttribute("Rfc") ?? string.Empty;
-          dto.Receptor.Nombre = xmlReader.GetAttribute("Nombre") ?? string.Empty;
-          dto.Receptor.DomicilioFiscal = xmlReader.GetAttribute("DomicilioFiscalReceptor") ?? string.Empty;
-          dto.Receptor.UsoCFDI = xmlReader.GetAttribute("UsoCFDI") ?? string.Empty;
+        if (_xmlReader.HasAttributes) {
+          _billDto.Receptor.RegimenFiscal = _xmlReader.GetAttribute("RegimenFiscalReceptor") ?? string.Empty;
+          _billDto.Receptor.RFC = _xmlReader.GetAttribute("Rfc") ?? string.Empty;
+          _billDto.Receptor.Nombre = _xmlReader.GetAttribute("Nombre") ?? string.Empty;
+          _billDto.Receptor.DomicilioFiscal = _xmlReader.GetAttribute("DomicilioFiscalReceptor") ?? string.Empty;
+          _billDto.Receptor.UsoCFDI = _xmlReader.GetAttribute("UsoCFDI") ?? string.Empty;
         }
       }
     }
 
 
-    static private void GenerateSenderData() {
+    private void GenerateSenderData() {
 
-      if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "cfdi:Emisor")) {
+      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name == "cfdi:Emisor")) {
 
-        if (xmlReader.HasAttributes) {
+        if (_xmlReader.HasAttributes) {
 
-          dto.Emisor.RegimenFiscal = xmlReader.GetAttribute("RegimenFiscal") ?? string.Empty;
-          dto.Emisor.RFC = xmlReader.GetAttribute("Rfc") ?? string.Empty;
-          dto.Emisor.Nombre = xmlReader.GetAttribute("Nombre") ?? string.Empty;
+          _billDto.Emisor.RegimenFiscal = _xmlReader.GetAttribute("RegimenFiscal") ?? string.Empty;
+          _billDto.Emisor.RFC = _xmlReader.GetAttribute("Rfc") ?? string.Empty;
+          _billDto.Emisor.Nombre = _xmlReader.GetAttribute("Nombre") ?? string.Empty;
 
         }
 
@@ -156,7 +162,7 @@ namespace Empiria.Billing {
     }
 
 
-    static private FixedList<BillTaxDto> GenerateTaxesByConcept(XmlReader conceptosXml) {
+    private FixedList<BillTaxDto> GenerateTaxesByConcept(XmlReader conceptosXml) {
 
       XmlReader impuestosXml = conceptosXml.ReadSubtree();
 
