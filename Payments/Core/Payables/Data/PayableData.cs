@@ -22,7 +22,7 @@ namespace Empiria.Payments.Payables.Data {
     #region Methods
 
     static internal FixedList<Payable> GetPayables(string filter, string sortBy) {
-      var sql = "SELECT * FROM VW_PYM_PAYABLES";
+      var sql = "SELECT * FROM VW_FMS_PAYABLES";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql += $" WHERE {filter}";
@@ -42,9 +42,9 @@ namespace Empiria.Payments.Payables.Data {
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(payableItemUID, nameof(payableItemUID));
 
-      var sql = "SELECT* FROM PYM_PAYABLE_ITEMS " +
-                $"WHERE PYM_PYB_ID = {payable.Id} AND " +
-                $"PYM_PYB_ITEM_UID = '{payableItemUID}'";
+      var sql = "SELECT * FROM FMS_PAYABLE_ITEMS " +
+                $"WHERE PAYABLE_ID = {payable.Id} AND " +
+                $"PAYABLE_ITEM_UID = '{payableItemUID}'";
 
       var op = DataOperation.Parse(sql);
 
@@ -55,9 +55,9 @@ namespace Empiria.Payments.Payables.Data {
     static internal List<PayableItem> GetPayableItems(Payable payable) {
       Assertion.Require(payable, nameof(payable));
 
-      var sql = $"SELECT * FROM PYM_PAYABLE_ITEMS " +
-                $"WHERE PYM_PYB_ID = {payable.Id} AND " +
-                $"PYM_PYB_ITEM_STATUS <> 'X'";
+      var sql = $"SELECT * FROM FMS_PAYABLE_ITEMS " +
+                $"WHERE PAYABLE_ID = {payable.Id} AND " +
+                $"PAYABLE_ITEM_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
@@ -66,8 +66,8 @@ namespace Empiria.Payments.Payables.Data {
 
 
     static internal int GetLastPayableNumber() {
-      string sql = "SELECT MAX(PYM_PYB_Id) " +
-                   "FROM PYM_Payables";
+      string sql = "SELECT MAX(PAYABLE_ID) " +
+                   "FROM FMS_Payables";
 
       var op = DataOperation.Parse(sql);
 
@@ -76,7 +76,7 @@ namespace Empiria.Payments.Payables.Data {
 
 
     static internal void WriteContractMilestone(ContractMilestone o, string extensionData) {
-      var op = DataOperation.Parse("write_PYM_Payable",
+      var op = DataOperation.Parse("write_FMS_Payable",
                      o.Id, o.UID, o.payableNo, o.PayableType.Id, o.Description, o.OrganizationalUnit.Id,
                      o.RequestedTime, o.PayTo.Id, o.Contract.Id,
                      o.Currency.Id, o.BudgetType.Id, o.DueTime,
@@ -88,7 +88,7 @@ namespace Empiria.Payments.Payables.Data {
 
 
     static internal void WritePayable(Payable o, string extensionData) {
-      var op = DataOperation.Parse("write_PYM_Payable",
+      var op = DataOperation.Parse("write_FMS_Payable",
                      o.Id, o.UID, o.payableNo, o.PayableType.Id, o.Description, o.OrganizationalUnit.Id,
                      o.RequestedTime, o.PayTo.Id, Contract.Empty.Id,
                      o.Currency.Id, o.BudgetType.Id, o.DueTime,
@@ -100,7 +100,7 @@ namespace Empiria.Payments.Payables.Data {
 
 
     static internal void WritePayableItem(PayableItem o, string extensionData) {
-      var op = DataOperation.Parse("write_PYM_Payable_Item",
+      var op = DataOperation.Parse("write_FMS_Payable_Item",
                      o.Id, o.UID, o.Payable.Id, 1, 1, o.Description, o.Quantity, o.UnitPrice,
                      o.Currency.Id, 1, o.ExchangeRate, o.BudgetAccount.Id, 1, extensionData,
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);

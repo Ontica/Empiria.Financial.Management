@@ -12,6 +12,7 @@ using Xunit;
 
 using Empiria.Payments.Payables.UseCases;
 using Empiria.Payments.Payables.Adapters;
+using Empiria.Services;
 
 namespace Empiria.Tests.Payments.Payables.UseCases {
 
@@ -39,6 +40,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Add_PayableItem() {
       var fields = new PayableItemFields {
+        PayableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c",
         ProductUID = "",
         UnitUID = "",
         Description = "Agregado desde las pruebas",
@@ -152,6 +154,8 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Update_PayableItem() {
       var fields = new PayableItemFields {
+        PayableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c",
+        UID = "0785cf8e-fd06-4e41-ac1b-b2e3b09d12c2",
         ProductUID = "",
         UnitUID = "",
         Description = "Actualizando Items desde las pruebas",
@@ -174,7 +178,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Create_ContractMilestone() {
       var fields = new ContractMilestoneFields {
-        ContractUID = "46420a8f-3c8c-402d-b647-34ce4889bf1f",
+        ContractUID = "d13fccb0-a5d0-419e-9204-777f57b6959d",
         PayableTypeUID = "ObjectTypeInfo.Payable.ContractMilestone",
         Description = "Sin notas",
         OrganizationalUnitUID = "d4b9aae9-cc6e-4fbc-9589-639dec5dab9f",
@@ -209,7 +213,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Update_ContractMilestone() {
       var fields = new ContractMilestoneFields {
-        ContractUID = "46420a8f-3c8c-402d-b647-34ce4889bf1f",
+        ContractUID = "d13fccb0-a5d0-419e-9204-777f57b6959d",
         PayableTypeUID = "ObjectTypeInfo.Payable.ContractMilestone",
         Description = "Actualizado",
         OrganizationalUnitUID = "d4b9aae9-cc6e-4fbc-9589-639dec5dab9f",

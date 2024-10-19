@@ -1,33 +1,32 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Financial Billing                          Component : Domain Layer                            *
+*  Module   : Billing                                    Component : Domain Layer                            *
 *  Assembly : Empiria.Billing.Core.dll                   Pattern   : Service provider                        *
-*  Type     : BillingImporterBuilder                     License   : Please read LICENSE.txt file            *
+*  Type     : BillXmlReader                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases used to read xml and build billing models.                                           *
+*  Summary  : Service used to read a bill as xml string and return a BillDto object.                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 using System.Xml;
-using Empiria.Financial.Management.Billing.Adapters;
 
-namespace Empiria.Financial.Management.Billing.Domain {
+using Empiria.Billing.Adapters;
 
-  /// <summary>Use cases used to read xml and build billing models.</summary>
-  internal class BillingImporterBuilder {
+namespace Empiria.Billing {
 
+  /// <summary>Service used to read a bill as xml string and return a BillDto object.</summary>
+  internal class BillXmlReader {
 
     static private XmlReader xmlReader;
-    static private BillingDto dto = new BillingDto();
-
+    static private BillDto dto = new BillDto();
 
     #region Public methods
 
 
-    static public BillingDto ReadBillingXmlDocument(string xml) {
+    static public BillDto ReadFromFilePath(string xmlFilePath) {
 
-      xmlReader = XmlReader.Create(xml);
+      xmlReader = XmlReader.Create(xmlFilePath);
       int count = 0;
       while (xmlReader.Read()) {
 
@@ -62,14 +61,13 @@ namespace Empiria.Financial.Management.Billing.Domain {
 
     #endregion Public methods
 
-
-    #region Private methods
+    #region Helpers
 
     static private void GenerateConceptsList() {
 
       if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "cfdi:Conceptos")) {
 
-        List<BillingConceptDto> conceptosDto = new List<BillingConceptDto>();
+        var conceptosDto = new List<BillConceptDto>();
 
         XmlReader conceptosXml = xmlReader.ReadSubtree();
 
@@ -77,7 +75,8 @@ namespace Empiria.Financial.Management.Billing.Domain {
 
           if ((conceptosXml.NodeType == XmlNodeType.Element) && (conceptosXml.Name == "cfdi:Concepto")) {
 
-            BillingConceptDto conceptoDto = new BillingConceptDto();
+            var conceptoDto = new BillConceptDto();
+
             conceptoDto.ClaveProdServ = conceptosXml.GetAttribute("ClaveProdServ");
             conceptoDto.ClaveUnidad = conceptosXml.GetAttribute("ClaveUnidad");
             conceptoDto.Cantidad = Convert.ToDecimal(conceptosXml.GetAttribute("Cantidad"));
@@ -92,8 +91,9 @@ namespace Empiria.Financial.Management.Billing.Domain {
             conceptosDto.Add(conceptoDto);
           }
         }
+
         dto.Conceptos = conceptosDto.ToFixedList();
-      }
+      }  // while
     }
 
 
@@ -156,45 +156,42 @@ namespace Empiria.Financial.Management.Billing.Domain {
     }
 
 
-    static private FixedList<BillingTaxDto> GenerateTaxesByConcept(XmlReader conceptosXml) {
+    static private FixedList<BillTaxDto> GenerateTaxesByConcept(XmlReader conceptosXml) {
 
       XmlReader impuestosXml = conceptosXml.ReadSubtree();
 
-      List<BillingTaxDto> ImpuestosDto = new List<BillingTaxDto>();
+      var impuestosDto = new List<BillTaxDto>();
 
       while (impuestosXml.Read()) {
 
-        if ((impuestosXml.NodeType == XmlNodeType.Element) && (impuestosXml.Name == "cfdi:Traslado")) {
+        if ((impuestosXml.NodeType == XmlNodeType.Element) &&
+            (impuestosXml.Name == "cfdi:Traslado" || impuestosXml.Name == "cfdi:Retencion")) {
 
-          BillingTaxDto trasladoDto = new BillingTaxDto();
-          trasladoDto.TipoImpuesto = TaxType.Traslado;
-          trasladoDto.Base = Convert.ToDecimal(impuestosXml.GetAttribute("Base"));
-          trasladoDto.Impuesto = impuestosXml.GetAttribute("Impuesto");
-          trasladoDto.TipoFactor = impuestosXml.GetAttribute("TipoFactor");
-          trasladoDto.TasaOCuota = Convert.ToDecimal(impuestosXml.GetAttribute("TasaOCuota"));
-          trasladoDto.Importe = Convert.ToDecimal(impuestosXml.GetAttribute("Importe"));
-          ImpuestosDto.Add(trasladoDto);
+          var billTaxDto = new BillTaxDto();
 
-        } else if ((impuestosXml.NodeType == XmlNodeType.Element) &&
-                   (impuestosXml.Name == "cfdi:Retencion")) {
+          if (impuestosXml.Name == "cfdi:Traslado") {
+            billTaxDto.TipoAplicacionImpuesto = BillTaxApplicationType.Traslado;
+          } else if (impuestosXml.Name == "cfdi:Retencion") {
+            billTaxDto.TipoAplicacionImpuesto = BillTaxApplicationType.Retencion;
+          } else {
+            throw Assertion.EnsureNoReachThisCode($"Unhandled SAT tax type: {impuestosXml.Name}");
+          }
 
-          BillingTaxDto retencionDto = new BillingTaxDto();
-          retencionDto.TipoImpuesto = TaxType.Retencion;
-          retencionDto.Base = Convert.ToDecimal(impuestosXml.GetAttribute("Base"));
-          retencionDto.Impuesto = impuestosXml.GetAttribute("Impuesto");
-          retencionDto.TipoFactor = impuestosXml.GetAttribute("TipoFactor");
-          retencionDto.TasaOCuota = Convert.ToDecimal(impuestosXml.GetAttribute("TasaOCuota"));
-          retencionDto.Importe = Convert.ToDecimal(impuestosXml.GetAttribute("Importe"));
-          ImpuestosDto.Add(retencionDto);
+          billTaxDto.Base = Convert.ToDecimal(impuestosXml.GetAttribute("Base"));
+          billTaxDto.Impuesto = impuestosXml.GetAttribute("Impuesto");
+          billTaxDto.TipoFactor = impuestosXml.GetAttribute("TipoFactor");
+          billTaxDto.TasaOCuota = Convert.ToDecimal(impuestosXml.GetAttribute("TasaOCuota"));
+          billTaxDto.Importe = Convert.ToDecimal(impuestosXml.GetAttribute("Importe"));
+
+          impuestosDto.Add(billTaxDto);
         }
-      }
-      return ImpuestosDto.ToFixedList();
+      }  // while
+
+      return impuestosDto.ToFixedList();
     }
 
+    #endregion Helpers
 
-    #endregion Private methods
+  } // class BillXmlReader
 
-
-  } // class BillingImporterBuilder
-
-} // namespace Empiria.Financial.Management.Billing.Domain
+} // namespace Empiria.Billing

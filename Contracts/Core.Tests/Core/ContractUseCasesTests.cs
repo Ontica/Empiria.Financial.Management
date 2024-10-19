@@ -68,6 +68,7 @@ namespace Empiria.Tests.Contracts {
       Assert.Equal(fields.Total, sut.Total);
     }
 
+
     [Fact]
     public void Should_Add_A_Contract_Item() {
 
@@ -101,6 +102,7 @@ namespace Empiria.Tests.Contracts {
 
     }
 
+
     [Fact]
     public void Should_Read_A_Contract_Item() {
 
@@ -109,6 +111,7 @@ namespace Empiria.Tests.Contracts {
       Assert.NotNull(sut);
     }
 
+
     [Fact]
     public void Should_Read_A_Contract_Items() {
 
@@ -116,6 +119,7 @@ namespace Empiria.Tests.Contracts {
 
       Assert.NotNull(sut);
     }
+
 
     [Fact]
     public void Should_Remove_A_Contract_Item() {
@@ -159,16 +163,6 @@ namespace Empiria.Tests.Contracts {
 
 
     [Fact]
-    public void Should_Read_A_Contract_Cucop() {
-
-      var sut = _usecases.GetContractCucop();
-
-      Assert.NotNull(sut);
-
-    }
-
-
-    [Fact]
     public void Should_Search_Contracts() {
 
       var query = new ContractQuery {
@@ -180,7 +174,6 @@ namespace Empiria.Tests.Contracts {
       Assert.NotNull(sut);
 
     }
-
 
     #endregion Facts
 
