@@ -178,7 +178,7 @@ namespace Empiria.Contracts {
       get; private set;
     }
 
-
+    [DataField("CONTRACT_TOTAL", ConvertFrom = typeof(decimal))]
     public decimal Total {
       get; private set;
     }
@@ -250,6 +250,7 @@ namespace Empiria.Contracts {
       this.ManagedByOrgUnit = OrganizationalUnit.Parse(fields.ManagedByOrgUnitUID);
       this.Supplier = Party.Parse(fields.SupplierUID);
       this.BudgetType = BudgetType.Parse(fields.BudgetTypeUID);
+      this.Total = fields.Total;
       ExtData = new JsonObject();
     }
 

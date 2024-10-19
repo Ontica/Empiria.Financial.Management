@@ -99,7 +99,7 @@ namespace Empiria.Contracts {
     }
 
 
-    [DataField("CONTRACT_ITEM_BDG_ACCOUNT_ID")]
+    [DataField("CONTRACT_ITEM_BUDGET_ACCOUNT_ID")]
     public BudgetAccount BudgetAccount {
       get; private set;
     }

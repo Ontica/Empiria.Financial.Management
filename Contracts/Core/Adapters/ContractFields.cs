@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Diagnostics.Contracts;
+using System.Security.Cryptography;
 
 namespace Empiria.Contracts.Adapters {
 
@@ -107,12 +109,16 @@ namespace Empiria.Contracts.Adapters {
 
     public decimal Total {
       get; set;
-    }
+    } = 0.00m;
 
 
     internal void EnsureValid() {
       Assertion.Require(ContractNo, "Se requiere el número de contrato.");
+      Assertion.Require(ContractTypeUID, "Necesito el tipo de contrato.");
       Assertion.Require(Name, "Necesito el nombre del contrato.");
+      Assertion.Require(Description, "Necesito la descripción del contrato.");
+      Assertion.Require(CurrencyUID, "Necesito la moneda del contrato.");
+      Assertion.Require(Total, "Necesito el importe del contrato.");
       Assertion.Require(FromDate != ExecutionServer.DateMinValue,
                         "Necesito la fecha del inicio del contrato");
       Assertion.Require(ToDate != ExecutionServer.DateMinValue,
@@ -122,6 +128,9 @@ namespace Empiria.Contracts.Adapters {
                         "anterior a la fecha de inicio.");
       Assertion.Require(SignDate != ExecutionServer.DateMinValue,
                         "Necesito la fecha del firma del contrato");
+      Assertion.Require(BudgetTypeUID, "Necesito tipo de presupuesto del contrato.");
+      Assertion.Require(SupplierUID, "Necesito el proveedor del contrato.");
+
     }
 
   }  // class ContractFields

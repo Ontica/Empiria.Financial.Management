@@ -18,7 +18,7 @@ namespace Empiria.Contracts.Data {
     #region Methods
 
     static internal FixedList<Contract> getContracts(string filter, string sortBy) {
-      var sql = "select * from pym_contracts ";
+      var sql = "select * from fms_contracts ";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql += $" where {filter}";
@@ -35,11 +35,11 @@ namespace Empiria.Contracts.Data {
     }
 
     static internal void WriteContract(Contract o, string extensionData) {
-      var op = DataOperation.Parse("write_PYM_Contract",
+      var op = DataOperation.Parse("write_Contract",
                      o.Id, o.UID, o.ContractType.Id, o.ContractNo, o.Name,
                      o.Description, o.Currency.Id, o.FromDate, o.ToDate, o.SignDate,
                      o.ManagedByOrgUnit.Id, o.BudgetType.Id, o.Supplier.Id, o.Parent.Id,
-                     extensionData, o.Keywords,
+                     o.Total, extensionData, o.Keywords,
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
