@@ -162,7 +162,7 @@ namespace Empiria.Billing {
     }
 
 
-    private FixedList<BillTaxDto> GenerateTaxesByConcept(XmlReader conceptosXml) {
+    static private FixedList<BillTaxDto> GenerateTaxesByConcept(XmlReader conceptosXml) {
 
       XmlReader impuestosXml = conceptosXml.ReadSubtree();
 

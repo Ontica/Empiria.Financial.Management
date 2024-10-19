@@ -1,17 +1,17 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Billing                                    Component : Interface adapters                      *
-*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Data Transfer Object                    *
-*  Type     : BillingDataDto                             License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Output DTO                              *
+*  Type     : BillDto                                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO used to return a Billing object.                                                    *
+*  Summary  : Output DTO used to return a bill object.                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Billing.Adapters {
 
-  /// <summary>Output DTO used to return a Billing object.</summary>
+  /// <summary>Output DTO used to return a bill object.</summary>
   public class BillDto {
 
     public BillGeneralDataDto DatosGenerales {
@@ -109,37 +109,37 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
-  }
+  }  // class BillGeneralDataDto
 
 
   public class BillOrganizationDto {
 
-
     public string RegimenFiscal {
       get; internal set;
-    } = string.Empty;
+    }
 
 
     public string RFC {
       get; internal set;
-    } = string.Empty;
+    }
 
 
     public string Nombre {
       get; internal set;
-    } = string.Empty;
+    }
 
 
     public string DomicilioFiscal {
       get; internal set;
-    } = string.Empty;
+    }
 
 
     public string UsoCFDI {
       get; internal set;
-    } = string.Empty;
+    }
 
-  }
+  }  // class BillOrganizationDto
+
 
 
   public class BillConceptDto {
@@ -193,12 +193,11 @@ namespace Empiria.Billing.Adapters {
       get; set;
     } = new FixedList<BillTaxDto>();
 
+  }  // class BillConceptDto
 
-  }
 
 
   public class BillTaxDto {
-
 
     public BillTaxApplicationType TipoAplicacionImpuesto {
       get; set;
@@ -229,6 +228,6 @@ namespace Empiria.Billing.Adapters {
       get; set;
     }
 
-  } // class BillTaxDto
+  }  // class BillTaxDto
 
 } // namespace Empiria.Billing.Adapters
