@@ -83,13 +83,6 @@ namespace Empiria.Contracts.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetContractCucop() {
-      var contractCucop = ContractCucop.GetList();
-
-      return contractCucop.MapToNamedEntityList();
-    }
-
-
     public FixedList<ContractDescriptor> SearchContracts(ContractQuery query) {
       Assertion.Require(query, nameof(query));
 

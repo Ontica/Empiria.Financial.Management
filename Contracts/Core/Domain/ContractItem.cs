@@ -12,6 +12,7 @@ using System;
 
 using Empiria.Contacts;
 using Empiria.Json;
+using Empiria.Products;
 using Empiria.StateEnums;
 using Empiria.Time;
 
@@ -20,6 +21,7 @@ using Empiria.Projects;
 
 using Empiria.Contracts.Adapters;
 using Empiria.Contracts.Data;
+
 
 namespace Empiria.Contracts {
 
@@ -54,7 +56,7 @@ namespace Empiria.Contracts {
 
 
     [DataField("CONTRACT_ITEM_PRODUCT_ID")]
-    public ContractCucop Product {
+    public Product Product {
       get; private set;
     }
 
@@ -181,7 +183,7 @@ namespace Empiria.Contracts {
 
     internal void Load(ContractItemFields fields) {
       this.Contract = Contract.Parse(fields.ContractUID);
-      this.Product = ContractCucop.Parse(fields.ProductUID);
+      this.Product = Product.Parse(fields.ProductUID);
       this.Description = fields.Description;
       this.UnitMeasure = ContractUnit.Parse(fields.UnitMeasureUID);
       this.FromQuantity = fields.FromQuantity;

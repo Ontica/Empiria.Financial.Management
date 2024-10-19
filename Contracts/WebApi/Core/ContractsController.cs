@@ -59,18 +59,6 @@ namespace Empiria.Contracts.WebApi {
     }
 
 
-    [HttpGet]
-    [Route("v2/contracts/contract-cucop-types")]
-    public CollectionModel GetContraCucopTypes() {
-
-      using (var usecases = ContractUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> contractCucopTypes = usecases.GetContractCucop();
-
-        return new CollectionModel(base.Request, contractCucopTypes);
-      }
-    }
-
-
     [HttpPost]
     [Route("v2/contracts/search")]
     public CollectionModel SearchContracts([FromBody] ContractQuery query) {
