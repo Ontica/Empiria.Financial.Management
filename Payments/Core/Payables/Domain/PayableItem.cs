@@ -55,7 +55,7 @@ namespace Empiria.Payments.Payables {
 
     #region Properties
 
-    [DataField("PYM_PYB_ID")]
+    [DataField("PAYABLE_ID")]
     public Payable Payable {
       get; private set;
     }
@@ -71,31 +71,31 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PYM_PYB_ITEM_DESCRIPTION")]
+    [DataField("PAYABLE_ITEM_DESCRIPTION")]
     public string Description {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_ITEM_QTY", ConvertFrom = typeof(decimal))]
+    [DataField("PAYABLE_ITEM_QTY", ConvertFrom = typeof(decimal))]
     public decimal Quantity {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_ITEM_CURRENCY_ID")]
+    [DataField("PAYABLE_ITEM_CURRENCY_ID")]
     public Currency Currency {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_ITEM_EXCH_RATE", ConvertFrom = typeof(decimal))]
+    [DataField("PAYABLE_ITEM_EXCH_RATE", ConvertFrom = typeof(decimal))]
     public decimal ExchangeRate {
       get; private set;
     } = 1;
 
 
-    [DataField("PYM_PYB_ITEM_QTY", ConvertFrom = typeof(decimal))]
+    [DataField("PAYABLE_ITEM_QTY", ConvertFrom = typeof(decimal))]
     public decimal UnitPrice {
       get; private set;
     }
@@ -108,31 +108,31 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PYM_PYB_ITEM_BDG_ACCT_ID")]
+    [DataField("PAYABLE_ITEM_BDG_ACCT_ID")]
     public BudgetAccount BudgetAccount {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_ITEM_EXT_DATA")]
+    [DataField("PAYABLE_ITEM_EXT_DATA")]
     private JsonObject ExtData {
       get; set;
     }
 
 
-    [DataField("PYM_PYB_ITEM_POSTED_BY_ID")]
+    [DataField("PAYABLE_ITEM_POSTED_BY_ID")]
     public Contact PostedBy {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_ITEM_POSTING_TIME")]
+    [DataField("PAYABLE_ITEM_POSTING_TIME")]
     public DateTime PostingTime {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_ITEM_STATUS", Default = EntityStatus.Pending)]
+    [DataField("PAYABLE_ITEM_STATUS", Default = EntityStatus.Pending)]
     public EntityStatus Status {
       get; private set;
     } = EntityStatus.Pending;
