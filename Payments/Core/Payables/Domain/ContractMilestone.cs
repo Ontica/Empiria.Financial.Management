@@ -43,7 +43,7 @@ namespace Empiria.Payments.Payables {
 
     #region Properties
 
-    [DataField("PYM_PYB_CONTRACT_ID")]
+    [DataField("PAYABLE_CONTRACT_ID")]
     public Contract Contract {
       get; private set;
     }

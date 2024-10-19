@@ -66,55 +66,55 @@ namespace Empiria.Payments.Payables {
       }
     }
 
-    [DataField("PYM_PYB_NO")]
+    [DataField("PAYABLE_NO")]
     public string payableNo {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_DESCRIPTION")]
+    [DataField("PAYABLE_DESCRIPTION")]
     public string Description {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_ORG_UNIT_ID")]
+    [DataField("PAYABLE_ORG_UNIT_ID")]
     public OrganizationalUnit OrganizationalUnit {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_PAY_TO_ID")]
+    [DataField("PAYABLE_PAY_TO_ID")]
     public Party PayTo {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_BUDGET_TYPE_ID")]
+    [DataField("PAYABLE_BUDGET_TYPE_ID")]
     public BudgetType BudgetType {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_CURRENCY_ID")]
+    [DataField("PAYABLE_CURRENCY_ID")]
     public Currency Currency {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_TOTAL")]
+    [DataField("PAYABLE_TOTAL")]
     public decimal Total {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_DUETIME")]
+    [DataField("PAYABLE_DUETIME")]
     public DateTime DueTime {
       get; private set;
     } = ExecutionServer.DateMaxValue;
 
 
-    [DataField("PYM_PYB_EXT_DATA")]
+    [DataField("PAYABLE_EXT_DATA")]
     protected JsonObject ExtData {
       get; set;
     } = JsonObject.Empty;
@@ -127,25 +127,25 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PYM_PYB_REQUESTED_TIME")]
+    [DataField("PAYABLE_REQUESTED_TIME")]
     public DateTime RequestedTime {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_POSTED_BY_ID")]
+    [DataField("PAYABLE_POSTED_BY_ID")]
     public Contact PostedBy {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_POSTING_TIME")]
+    [DataField("PAYABLE_POSTING_TIME")]
     public DateTime PostingTime {
       get; private set;
     }
 
 
-    [DataField("PYM_PYB_STATUS", Default = PayableStatus.Capture)]
+    [DataField("PAYABLE_STATUS", Default = PayableStatus.Capture)]
     public PayableStatus Status {
       get; private set;
     } = PayableStatus.Capture;

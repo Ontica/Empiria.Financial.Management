@@ -50,7 +50,7 @@ namespace Empiria.Payments.Payables.Adapters {
         return query.OrderBy;
       }
 
-      return "PYM_PYB_ID";
+      return "PAYABLE_ID";
     }
 
     #endregion Extension methods
@@ -58,8 +58,8 @@ namespace Empiria.Payments.Payables.Adapters {
     #region Helpers
 
     static private string BuildDueTimeRangeFilter(DateTime fromDueTime, DateTime toDueTime) {
-      return $"{DataCommonMethods.FormatSqlDbDate(fromDueTime)} <= PYM_PYB_DUETIME AND " +
-             $"PYM_PYB_DUETIME < {DataCommonMethods.FormatSqlDbDate(toDueTime.Date.AddDays(1))}";
+      return $"{DataCommonMethods.FormatSqlDbDate(fromDueTime)} <= PAYABLE_DUETIME AND " +
+             $"PAYABLE_DUETIME < {DataCommonMethods.FormatSqlDbDate(toDueTime.Date.AddDays(1))}";
     }
 
 
@@ -67,7 +67,7 @@ namespace Empiria.Payments.Payables.Adapters {
       if (keywords.Length == 0) {
         return string.Empty;
       }
-      return SearchExpression.ParseAndLikeKeywords("PYM_PYB_KEYWORDS", keywords);
+      return SearchExpression.ParseAndLikeKeywords("PAYABLE_KEYWORDS", keywords);
     }
 
 
@@ -78,7 +78,7 @@ namespace Empiria.Payments.Payables.Adapters {
 
       var payableType = PayableType.Parse(payableTypeUID);
 
-      return $"PYM_PYB_TYPE_ID = {payableType.Id}";
+      return $"PAYABLE_TYPE_ID = {payableType.Id}";
     }
 
 
@@ -89,16 +89,16 @@ namespace Empiria.Payments.Payables.Adapters {
 
       var budgetType = BudgetType.Parse(budgetTypeUID);
 
-      return $"PYM_PYB_BUDGET_TYPE_ID = {budgetType.Id}";
+      return $"PAYABLE_BUDGET_TYPE_ID = {budgetType.Id}";
     }
 
 
     static private string BuildRequestStatusFilter(PayableStatus status) {
       if (status == PayableStatus.All) {
-        return $"PYM_PYB_STATUS <> 'X'";
+        return $"PAYABLE_STATUS <> 'X'";
       }
 
-      return $"PYM_PYB_STATUS = '{(char) status}'";
+      return $"PAYABLE_STATUS = '{(char) status}'";
     }
 
 
@@ -109,7 +109,7 @@ namespace Empiria.Payments.Payables.Adapters {
 
       var requesterOrgUnit = OrganizationalUnit.Parse(requesterOrgUnitUID);
 
-      return $"PYM_PYB_ORG_UNIT_ID = {requesterOrgUnit.Id}";
+      return $"PAYABLE_ORG_UNIT_ID = {requesterOrgUnit.Id}";
     }
 
     #endregion Helpers
