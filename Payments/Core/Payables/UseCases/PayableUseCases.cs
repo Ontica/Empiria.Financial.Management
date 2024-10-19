@@ -231,6 +231,16 @@ namespace Empiria.Payments.Payables.UseCases {
 
     #endregion ContractMilestone
 
+    #region PayableData
+
+    public PayableDataDto GetPayableData(string payableUID) {
+      var payable = Payable.Parse(payableUID);
+
+      return PayableDataMapper.Map(payable);
+    }
+
+    #endregion PayableData
+
   }  // class PayableUseCases
 
 }  // namespace Empiria.Payments.Payables.UseCases
