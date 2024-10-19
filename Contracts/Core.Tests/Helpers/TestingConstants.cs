@@ -21,7 +21,7 @@ namespace Empiria.Tests.Contracts {
 
     static internal string CONTRACT_TYPE_UID = "c64ee45d-6a1b-4ee6-925b-b77c4527b077";
 
-    static internal string MANAGED_BY_ORG_UNIT_UID = "7504ebc6-dd2e-440c-8d94-008007a8c711";
+    static internal string MANAGED_BY_ORG_UNIT_UID = "e387c433-8704-4d27-a8eb-fa1e002b5024";
 
     static internal string CONTRACT_ITEM_PROJECT_UID = "Empty";
 
@@ -39,7 +39,7 @@ namespace Empiria.Tests.Contracts {
 
     static internal string CONTRACT_MILES_ITEM_UID = "Empty";
 
-    static internal string CONTRACT_CURRENCY_ID = "358626ea-3c2c-44dd-80b5-18017fe3927e";
+    static internal string CONTRACT_CURRENCY_UID = "358626ea-3c2c-44dd-80b5-18017fe3927e";
 
     static internal string CONTRACT_BUDGET_TYPE_UID = "ObjectTypeInfo.Budget.ProgramaFinanciero";
 

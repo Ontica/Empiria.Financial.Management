@@ -48,7 +48,7 @@ namespace Empiria.Tests.Contracts {
         ContractNo = "123-9089/A456",
         Name = "Servicios de desarrollo de software 1",
         Description = "Description",
-        CurrencyUID = TestingConstants.CONTRACT_CURRENCY_ID,
+        CurrencyUID = TestingConstants.CONTRACT_CURRENCY_UID,
         ToDate = new DateTime(2024, 12, 31),
         FromDate = new DateTime(2024, 1, 1),
         SignDate = new DateTime(2023, 12, 18),
@@ -56,6 +56,7 @@ namespace Empiria.Tests.Contracts {
         BudgetTypeUID = TestingConstants.CONTRACT_BUDGET_TYPE_UID,
         SupplierUID = TestingConstants.SUPPLIER_UID,
         ParentUID = "Empty",
+        Total = 1000000.00M,
       };
 
       ContractDto sut = _usecases.AddContract(fields);
@@ -146,9 +147,6 @@ namespace Empiria.Tests.Contracts {
       Assert.NotNull(sut);
       Assert.NotNull(sut.UID);
     }
-
-
-
 
 
     [Fact]
