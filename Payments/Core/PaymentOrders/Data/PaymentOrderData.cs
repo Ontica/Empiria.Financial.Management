@@ -18,7 +18,7 @@ namespace Empiria.Payments.Orders.Data {
     #region Methods
 
     static internal FixedList<PaymentOrder> GetPaymentOrders(string filter, string sortBy) {
-      var sql = "SELECT * FROM PYM_ORDERS";
+      var sql = "SELECT * FROM FMS_ORDERS";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql += $" WHERE {filter}";
@@ -35,7 +35,7 @@ namespace Empiria.Payments.Orders.Data {
 
 
     static internal void WritePaymentOrder(PaymentOrder o, string extensionData) {
-      var op = DataOperation.Parse("write_PYM_Order",
+      var op = DataOperation.Parse("write_FMS_Order",
                      o.Id, o.UID, o.PaymentOrderType.Id, o.PaymentOrderNo, o.PayTo.Id, -1,
                      o.PayableTypeId, o.PaymentMethod.Id, o.Currency.Id, -1, o.Notes,o.RequestedTime,
                      extensionData, o.Total, o.DueTime, o.Keywords,

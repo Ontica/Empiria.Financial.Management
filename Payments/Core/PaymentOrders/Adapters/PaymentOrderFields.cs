@@ -87,7 +87,7 @@ namespace Empiria.Payments.Orders.Adapters {
       _ = Currency.Parse(CurrencyUID);
 
       Assertion.Require(PaymentAccountUID, "Necesito el número de cuenta.");
-      _ = PaymentAccount.Parse(PaymentAccountUID);
+    //  _ = PaymentAccount.Parse(PaymentAccountUID); ToDo
 
       Assertion.Require(Total > 0, "Necesito que el importe a pagar sea mayor a cero.");
     }

@@ -40,7 +40,7 @@ namespace Empiria.Tests.Payments.Orders {
     public void Should_Add_Payment_Order() {
       var fields = new PaymentOrderFields {
         PaymentOrderTypeUID = "32e1b307-676b-4488-b26f-1cbc03878875",
-        PayableUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
+        PayableUID = "4b0d2fa1-5ce9-453d-ba52-bab230314fc2",
         PayToUID = "c6278424-d1ff-492f-b5fe-410b4258292c",
         PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
@@ -61,7 +61,7 @@ namespace Empiria.Tests.Payments.Orders {
 
     [Fact]
     public void Should_Delete_Payment_Order() {
-      _usecases.DeletePaymentOrder("b7a4b215-2ad8-4a5f-9349-21cce0e1a8e9");
+      _usecases.DeletePaymentOrder("25dffa89-5d73-469c-84d7-8282a055f1c2");
     }
 
 
@@ -87,7 +87,7 @@ namespace Empiria.Tests.Payments.Orders {
     public void Should_Update_Payment_Order() {
       var fields = new PaymentOrderFields {
         PaymentOrderTypeUID = "32e1b307-676b-4488-b26f-1cbc03878875",
-        PayableUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
+        PayableUID = "4b0d2fa1-5ce9-453d-ba52-bab230314fc2",
         PayToUID = "c6278424-d1ff-492f-b5fe-410b4258292c",
         PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
@@ -100,7 +100,7 @@ namespace Empiria.Tests.Payments.Orders {
 
       };
 
-      var sut = _usecases.UpdatePaymentOrder("5426f403-2417-49de-b17d-ed18c37cbe06", fields);
+      var sut = _usecases.UpdatePaymentOrder("bfcd79a5-f8bb-4847-a852-ac353f8db7b2", fields);
 
       Assert.NotNull(sut);
     }
