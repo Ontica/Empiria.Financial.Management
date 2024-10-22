@@ -50,6 +50,18 @@ namespace Empiria.Contracts.UseCases {
     }
 
 
+    public void DeleteContractItem(string ContractItemUID) {
+
+      Assertion.Require(ContractItemUID, nameof(ContractItemUID));
+
+      var contractItem = ContractItem.Parse(ContractItemUID);
+
+      contractItem.Delete();
+
+      contractItem.Save();
+    }
+
+
     public ContractItemDto GetContractItem(string contractItemUID) {
 
       Assertion.Require(contractItemUID, nameof(contractItemUID));
@@ -60,31 +72,16 @@ namespace Empiria.Contracts.UseCases {
     }
 
 
-    public void RemoveContractItem(string ContractUID, string ContractItemUID) {
-
-      Assertion.Require(ContractUID, nameof(ContractUID));
-      Assertion.Require(ContractItemUID, nameof(ContractItemUID));
-
-      var contract = Contract.Parse(ContractUID);
-      var contractItem = contract.RemoveItem(ContractItemUID);
-
-      contractItem.Save();
-    }
-
-
-    public ContractItemDto UpdateContractItem(string ContractUID,
-                                              string ContractItemUID,
+    public ContractItemDto UpdateContractItem(string ContractItemUID,
                                               ContractItemFields fields) {
 
-      Assertion.Require(ContractUID, nameof(ContractUID));
-      Assertion.Require(ContractItemUID, nameof(ContractItemUID));
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
 
-      var contract = Contract.Parse(ContractUID);
+      var contractItem = ContractItem.Parse(ContractItemUID);
 
-      var contractItem = contract.UpdateItem(ContractItemUID, fields);
+      contractItem.Load(fields);
 
       contractItem.Save();
 

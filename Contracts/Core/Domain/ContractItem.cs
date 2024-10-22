@@ -68,7 +68,7 @@ namespace Empiria.Contracts {
 
 
     [DataField("CONTRACT_ITEM_UNIT_ID")]
-    public ContractUnit UnitMeasure {
+    public ProductUnit UnitMeasure {
       get; private set;
     }
 
@@ -105,7 +105,7 @@ namespace Empiria.Contracts {
     }
 
 
-    [DataField("CONTRACT_ITEM_EXTDATA")]
+    [DataField("CONTRACT_ITEM_EXT_DATA")]
     private JsonObject ExtData {
       get; set;
     }
@@ -185,12 +185,13 @@ namespace Empiria.Contracts {
       this.Contract = Contract.Parse(fields.ContractUID);
       this.Product = Product.Parse(fields.ProductUID);
       this.Description = fields.Description;
-      this.UnitMeasure = ContractUnit.Parse(fields.UnitMeasureUID);
+      this.UnitMeasure = ProductUnit.Parse(fields.UnitMeasureUID);
       this.FromQuantity = fields.FromQuantity;
       this.ToQuantity = fields.ToQuantity;
       this.UnitPrice = fields.UnitPrice;
       this.PaymentsPeriodicity = Periodicity.Parse(fields.PaymentPeriodicityUID);
       this.BudgetAccount = BudgetAccount.Parse(fields.BudgetAccountUID);
+      this.Project = Project.Parse(fields.ProjectUID);
       this.LastUpdatedBy = Contact.Parse(ExecutionServer.CurrentUserId);
       this.PostingTime = DateTime.Now;
     }

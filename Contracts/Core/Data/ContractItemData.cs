@@ -20,7 +20,7 @@ namespace Empiria.Contracts.Data {
     static internal List<ContractItem> GetContractItems(Contract contract) {
       Assertion.Require(contract, nameof(contract));
 
-      var sql = "SELECT * FROM PYM_CONTRACT_ITEMS " +
+      var sql = "SELECT * FROM FMS_CONTRACT_ITEMS " +
                 $"WHERE contract_id = {contract.Id} AND contract_item_status <> 'X'";
 
       var op = DataOperation.Parse(sql);
@@ -29,7 +29,7 @@ namespace Empiria.Contracts.Data {
     }
 
     static public void WriteContractItem(ContractItem o, string extensionData) {
-      var op = DataOperation.Parse("write_PYM_Contract_Item",
+      var op = DataOperation.Parse("write_Contract_Item",
                      o.Id, o.UID, o.Contract.Id, o.Product.Id, o.Description,
                      o.UnitMeasure.Id, o.FromQuantity, o.ToQuantity,
                      o.UnitPrice, o.Project.Id, o.PaymentsPeriodicity.Id,
