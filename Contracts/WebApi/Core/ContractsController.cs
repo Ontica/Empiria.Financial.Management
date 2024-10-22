@@ -117,6 +117,35 @@ namespace Empiria.Contracts.WebApi {
     }
 
 
+    [HttpDelete]
+    [Route("v2/contracts/contract-items/{contractItemUID:guid}")]
+    public NoDataModel DeleteContractItems([FromUri] string contractItemUID) {
+
+      base.RequireResource(contractItemUID, nameof(contractItemUID));
+
+      using (var usecases = ContractItemUseCases.UseCaseInteractor()) {
+        usecases.DeleteContractItem(contractItemUID);
+
+        return new NoDataModel(this.Request);
+      }
+    }
+
+
+    [HttpPut]
+    [Route("v2/contracts/contract-items/{contractItemUID:guid}")]
+    public SingleObjectModel UpdateContractItem([FromUri] string contractItemUID,
+                                                [FromBody] ContractItemFields fields) {
+
+      base.RequireBody(fields);
+
+      using (var usecases = ContractItemUseCases.UseCaseInteractor()) {
+        ContractItemDto contractItem = usecases.UpdateContractItem(contractItemUID, fields);
+
+        return new SingleObjectModel(base.Request, contractItem);
+      }
+    }
+
+
     #endregion Command web apis
 
   }  // class ContractsController

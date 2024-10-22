@@ -48,7 +48,6 @@ namespace Empiria.Contracts.UseCases {
       return ContractMapper.Map(contract);
     }
 
-
     public ContractDto GetContract(string contractUID) {
       Assertion.Require(contractUID, nameof(contractUID));
 
