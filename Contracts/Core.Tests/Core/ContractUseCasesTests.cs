@@ -124,7 +124,7 @@ namespace Empiria.Tests.Contracts {
     [Fact]
     public void Should_Remove_A_Contract_Item() {
 
-      _itemusecases.RemoveContractItem(TestingConstants.CONTRACT_UID, TestingConstants.CONTRACT_ITEM_UID);
+      _itemusecases.DeleteContractItem(TestingConstants.CONTRACT_ITEM_UID);
 
     }
 
@@ -146,7 +146,7 @@ namespace Empiria.Tests.Contracts {
         PaymentPeriodicityUID = TestingConstants.CONTRACT_ITEM_PYM_PER_UID
       };
 
-      ContractItemDto sut = _itemusecases.UpdateContractItem(TestingConstants.CONTRACT_UID, TestingConstants.CONTRACT_ITEM_UID, fields);
+      ContractItemDto sut = _itemusecases.UpdateContractItem(TestingConstants.CONTRACT_ITEM_UID, fields);
 
       Assert.NotNull(sut);
       Assert.NotNull(sut.UID);

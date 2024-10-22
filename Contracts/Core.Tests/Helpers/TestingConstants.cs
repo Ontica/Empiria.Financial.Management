@@ -13,17 +13,17 @@ namespace Empiria.Tests.Contracts {
   /// <summary>Provides testing constants for Contracts Management Core module.</summary>
   static public class TestingConstants {
 
-    static internal string CONTRACT_UID = "52c7e000-50b4-403a-934d-b8f6a52f50ed";
+    static internal string CONTRACT_UID = "d13fccb0-a5d0-419e-9204-777f57b6959d";
 
-    static internal string CONTRACT_ITEM_UID = "f4f24155-3fa6-4faa-803e-62fe7228cf83";
+    static internal string CONTRACT_ITEM_UID = "e883960c-7c63-4629-b7f4-de267a4bc247";
 
-    static internal string CONTRACT_ITEM_PRODUCT_UID = "120a4170-203c-4b54-a29a-72474765211e";
+    static internal string CONTRACT_ITEM_PRODUCT_UID = "aeb51693-6481-4aa0-9e53-83e4812c2bdd";
 
     static internal string CONTRACT_TYPE_UID = "c64ee45d-6a1b-4ee6-925b-b77c4527b077";
 
     static internal string MANAGED_BY_ORG_UNIT_UID = "e387c433-8704-4d27-a8eb-fa1e002b5024";
 
-    static internal string CONTRACT_ITEM_PROJECT_UID = "Empty";
+    static internal string CONTRACT_ITEM_PROJECT_UID = "05f66542-a59e-4d59-9f67-05145efad6aa";
 
     static internal string CONTRACT_ITEM_PYM_PER_UID = "7504ebc6-dd2e-440c-8d94-008007a8c711";
 
