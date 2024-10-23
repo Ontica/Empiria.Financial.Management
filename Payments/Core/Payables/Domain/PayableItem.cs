@@ -61,6 +61,12 @@ namespace Empiria.Payments.Payables {
     }
 
 
+    //[DataField("PAYABLE_ENTITY_ITEM_ID")]
+    public int PayableEntityItem {
+      get; private set;
+    }
+
+
     public Product Product {
       get; private set;
     }
@@ -168,6 +174,7 @@ namespace Empiria.Payments.Payables {
       //this.Product = Product..Parse(fields.ProductUID);
       //this.Unit = ProductUnit.Parse(fields.UnitUID);
 
+      this.PayableEntityItem = -1;
       this.Description = fields.Description;
       this.Quantity = fields.Quantity;
       this.Currency = Currency.Parse(fields.CurrencyUID);
