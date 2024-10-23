@@ -1,4 +1,4 @@
-﻿   /* Empiria Financial *****************************************************************************************
+﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Contracts Management                       Component : Data Layer                              *
 *  Assembly : Empiria.Contracts.Core.dll                 Pattern   : Data service                            *
@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Data;
 
 namespace Empiria.Contracts.Data {
@@ -45,7 +46,7 @@ namespace Empiria.Contracts.Data {
       DataWriter.Execute(op);
     }
 
-    #endregion Methods
+   #endregion Methods
 
   }  // class ContractData
 

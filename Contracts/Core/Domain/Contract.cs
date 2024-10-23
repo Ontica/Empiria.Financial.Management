@@ -10,15 +10,12 @@
 
 using System;
 using System.Collections.Generic;
-
 using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
-
 using Empiria.Financial;
 using Empiria.Budgeting;
-
 using Empiria.Contracts.Adapters;
 using Empiria.Contracts.Data;
 
