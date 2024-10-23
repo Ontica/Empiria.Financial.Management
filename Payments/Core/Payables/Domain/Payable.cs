@@ -78,6 +78,12 @@ namespace Empiria.Payments.Payables {
     }
 
 
+    //[DataField("PAYABLE_ENTITY_ID")]
+    public int PayableEntity {
+      get; private set;
+    }
+
+
     [DataField("PAYABLE_ORG_UNIT_ID")]
     public OrganizationalUnit OrganizationalUnit {
       get; private set;
@@ -187,6 +193,7 @@ namespace Empiria.Payments.Payables {
       this.Currency = Currency.Parse(fields.CurrencyUID);
       this.DueTime = fields.DueTime;
       this.RequestedTime = fields.RequestedTime;
+      this.PayableEntity = -1;
     }
 
     #endregion Methods
