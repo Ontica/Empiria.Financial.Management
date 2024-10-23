@@ -230,6 +230,18 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
 
     #endregion ContractMilestone
 
+    #region PayableDataStructure
+
+    [Fact]
+    public void Should_Get_PayableData() {
+
+      var sut = _usecases.GetPayableData("713b2755-aee1-44af-9f3c-1f46caebca1c");
+
+      Assert.NotNull(sut);
+    }
+
+    #endregion PayableDataStructure
+
     #endregion Facts
 
   }  //  class PayableUseCasesTests

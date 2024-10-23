@@ -154,6 +154,22 @@ namespace Empiria.Payments.Payables.WebApi {
 
     #endregion Payable items command web apis
 
+    #region PayableDataStructure
+
+    [HttpGet]
+    [Route("v2/payments-management/payables-data/{payableUID:guid}")]
+    public SingleObjectModel GetPayableData([FromUri] string payableUID) {
+
+      using (var usecases = PayableUseCases.UseCaseInteractor()) {
+
+        PayableDataDto payableDataDto = usecases.GetPayableData(payableUID);
+
+        return new SingleObjectModel(this.Request, payableDataDto);
+      }
+    }
+
+    #endregion PayableDataStructure
+
   }  // class PayableController
 
 }  // namespace Empiria.Payments.Payables.WebApi

@@ -15,16 +15,10 @@ namespace Empiria.Payments.Payables.Adapters {
   /// <summary>Summary  : Data transfer objects used to return payable data structure.</summary>
   public class PayableDataDto {
 
-    public string UID {
+    public PayableDto Payable {
       get; internal set;
     }
-
-
-    public NamedEntityDto Type {
-      get; internal set;
-    }
-
-
+    
     public PayableEntityDto PayableEntity {
       get; internal set;
     }
@@ -35,24 +29,19 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public DocumentDto Documents {
+    public FixedList<DocumentDto> Documents {
       get; internal set;
     }
 
 
-    public HistoryDto History {
+    public FixedList<HistoryDto> History {
       get; internal set;
     }
-
     
-    public NamedEntityDto Status {
-      get; internal set;
-    }
 
-
-   /* public Actions Actions {
+    public ActionsDto Actions {
       get; internal set;
-    } */
+    } 
 
   } // class PayableDataDto
 
@@ -70,7 +59,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public NamedEntityDto BudgetAccount {
+    public string BudgetAccount {
       get; internal set;
     }
 
@@ -80,7 +69,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public string PayableItemUID {
+    public string PayableEntityItemUID {
       get; internal set;
     }
 
@@ -90,7 +79,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public decimal Unit {
+    public string Unit {
       get; internal set;
     }
 
@@ -157,7 +146,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public decimal Unit {
+    public string Unit {
       get; internal set;
     }
 
@@ -234,8 +223,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    //? if is all party or EntityName or string
-    public NamedEntity Party {
+    public NamedEntityDto Party {
       get; internal set;
     }
 
@@ -243,6 +231,48 @@ namespace Empiria.Payments.Payables.Adapters {
   } // HistoryDto
 
 
+  // <summary>Output DTO used to return ActionsDto. </summary>
+  public class ActionsDto {
+
+    public CanDto CanObject {
+      get; internal set;
+    }
+
+    public ShowDto ShowObject {
+      get; internal set;
+    }
+
+  } // class TransactionActionDto
+
+  //Class to set order permissions
+  public class CanDto {
+    
+    
+    public Boolean Cancel {
+      get; internal set;
+    }
+
+
+    public Boolean Update {
+      get; internal set;
+    }
+
+  } // class CanDto
+
+  // class to show or hide interface items
+  public class ShowDto {
+
+    public Boolean PayablesData {
+      get; internal set;
+    }
+
+
+    public Boolean PaymentsData {
+      get; internal set;
+    }
+
+
+  } //class ShowDto
 
 
 }  // namespace Empiria.Payments.Payables.Adapters
