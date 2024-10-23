@@ -73,13 +73,6 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetPaymentMethods() {
-      var paymentMethods = PaymentMethod.GetList();
-
-      return paymentMethods.MapToNamedEntityList();
-    }
-
-
     public FixedList<PaymentOrderDescriptor> SearchPaymentOrders(PaymentOrdersQuery query) {
       Assertion.Require(query, nameof(query));
 

@@ -67,7 +67,7 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    //[DataField("PORDER_PAYABLE_ID")]
+    //[DataField("ORDER_PAYABLE_ID")]
     //public Payable Payable {
     //  get; internal set;
     //}

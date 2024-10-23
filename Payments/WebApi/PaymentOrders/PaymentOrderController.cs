@@ -22,18 +22,7 @@ namespace Empiria.Payments.Orders.WebApi {
 
     #region Query web apis
 
-    [HttpGet]
-    [Route("v2/payments-management/payment-methods")]
-    public CollectionModel GetPaymentMethods() {
-
-      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> paymentMethods = usecases.GetPaymentMethods();
-
-        return new CollectionModel(Request, paymentMethods);
-      }
-    }
-
-
+    
     [HttpGet]
     [Route("v2/payments-management/payment-order-types")]
     public CollectionModel GetPaymentOrderTypes() {
