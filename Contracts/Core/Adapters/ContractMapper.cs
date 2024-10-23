@@ -12,7 +12,7 @@ using Empiria.StateEnums;
 
 namespace Empiria.Contracts.Adapters {
 
-  /// <summary>Provides data mapping services for Contract related types.</summary>
+  /// <summary>Provides data mapping services for contract milestone related types.</summary>
   static internal class ContractMapper {
 
     static internal FixedList<ContractDto> Map(FixedList<Contract> contracts) {

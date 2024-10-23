@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Contracts Management                       Component : Data Layer                              *
+*  Module   : Contracts Milestone Management             Component : Data Layer                              *
 *  Assembly : Empiria.Contracts.Core.dll                 Pattern   : Data service                            *
 *  Type     : ContractData                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides data read and write methods for contract instances.                                   *
+*  Summary  : Provides data read and write methods for contract milestone instances.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -13,13 +13,13 @@ using Empiria.Data;
 
 namespace Empiria.Contracts.Data {
 
-  /// <summary>Provides data read and write methods for contract instances.</summary>
-  static internal class ContractData {
+  /// <summary>Provides data read and write methods for contract milestone instances.</summary>
+  static internal class ContractMilestoneData {
 
     #region Methods
 
-    static internal FixedList<Contract> getContracts(string filter, string sortBy) {
-      var sql = "select * from fms_contracts ";
+    static internal FixedList<ContractMilestone> getMilestone(string filter, string sortBy) {
+      var sql = "select * from fms_milestone ";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql += $" where {filter}";
@@ -31,23 +31,20 @@ namespace Empiria.Contracts.Data {
 
       var dataOperation = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<Contract>(dataOperation);
-
+      return DataReader.GetFixedList<ContractMilestone>(dataOperation);
     }
 
-    static internal void WriteContract(Contract o, string extensionData) {
-      var op = DataOperation.Parse("write_Contract",
-                     o.Id, o.UID, o.ContractType.Id, o.ContractNo, o.Name,
-                     o.Description, o.Currency.Id, o.FromDate, o.ToDate, o.SignDate,
-                     o.ManagedByOrgUnit.Id, o.BudgetType.Id, o.Supplier.Id, o.Parent.Id,
-                     o.Total, extensionData, o.Keywords,
+    static internal void WriteMilestone(ContractMilestone o, string extensionData) {
+      var op = DataOperation.Parse("write_Contract_Milestone",
+                     o.Id, o.UID, o.Contract.Id, o.PaymentNumber, o.PaymentDate,
+                     o.ManagedByOrgUnit.Id, extensionData, o.Keywords,
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
 
-   #endregion Methods
+    #endregion Methods
 
-  }  // class ContractData
+  }  // class ContractMilestoneData
 
 }  // namespace Empiria.Contracts.Data
