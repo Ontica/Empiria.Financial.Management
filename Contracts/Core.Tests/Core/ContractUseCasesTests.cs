@@ -119,7 +119,7 @@ namespace Empiria.Tests.Contracts {
 
       Assert.NotNull(sut);
     }
-
+                                                                                                                                                                                                                                                    
 
     [Fact]
     public void Should_Remove_A_Contract_Item() {
@@ -150,7 +150,7 @@ namespace Empiria.Tests.Contracts {
 
       Assert.NotNull(sut);
       Assert.NotNull(sut.UID);
-    }
+    } 
 
 
     [Fact]
@@ -166,9 +166,9 @@ namespace Empiria.Tests.Contracts {
     public void Should_Search_Contracts() {
 
       var query = new ContractQuery {
-        Keywords = "soft",
+        Keywords = "test",
       };
-
+                                                                                                                                                                              
       var sut = _usecases.SearchContracts(query);
 
       Assert.NotNull(sut);
