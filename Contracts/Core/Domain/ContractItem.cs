@@ -22,7 +22,6 @@ using Empiria.Projects;
 using Empiria.Contracts.Adapters;
 using Empiria.Contracts.Data;
 
-
 namespace Empiria.Contracts {
 
   /// <summary>Represents a contract item.</summary>
