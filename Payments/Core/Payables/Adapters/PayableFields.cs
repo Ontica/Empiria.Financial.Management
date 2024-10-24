@@ -24,27 +24,38 @@ namespace Empiria.Payments.Payables.Adapters {
 
     public string PayableTypeUID {
       get; set;
-    }
+    } = string.Empty;
+
+
+    public string PayableEntityUID {
+      get; set;
+    } = string.Empty;
+
 
     public string Description {
       get; set;
     } = string.Empty;
 
+
     public string OrganizationalUnitUID {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string PayToUID {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string CurrencyUID {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string BudgetTypeUID {
       get; set;
-    }
+    } = string.Empty;
+
 
     public DateTime DueTime {
       get; set;
@@ -52,8 +63,7 @@ namespace Empiria.Payments.Payables.Adapters {
 
 
     public DateTime RequestedTime {
-      get;
-      internal set;
+      get; set;
     } = ExecutionServer.DateMinValue;
 
     #endregion Properties

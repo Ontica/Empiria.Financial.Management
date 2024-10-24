@@ -43,7 +43,7 @@ namespace Empiria.Payments.Payables.Adapters {
         PayableNo = payable.payableNo,
         PayableTypeName = payable.PayableType.DisplayName,
         BudgetTypeName = payable.BudgetType.DisplayName,
-        ContractNo = string.Empty,
+        ContractNo = payable.PayableEntity.EntityNo,
         PayTo = payable.PayTo.Name,
         Total = payable.Total,
         CurrencyCode = payable.Currency.ISOCode,

@@ -8,7 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
+using Empiria.Financial;
 using Empiria.Ontology;
+using Empiria.Reflection;
 
 namespace Empiria.Payments.Payables {
 
@@ -49,6 +53,41 @@ namespace Empiria.Payments.Payables {
     static public PayableType ContractMilestone => Parse("ObjectTypeInfo.Payable.ContractMilestone");
 
     #endregion Constructors and parsers
+
+    #region Properties
+
+    internal ObjectTypeInfo PayableEntityType {
+      get {
+        int payableEntityTypeId = ExtensionData.Get<int>("payableEntityTypeId");
+
+        return ObjectTypeInfo.Parse(payableEntityTypeId);
+      }
+    }
+
+    #endregion Properties
+
+    #region Methods
+
+    internal IPayableEntity ParsePayableEntity(string payableEntityUID) {
+
+      Type type = PayableEntityType.UnderlyingSystemType;
+
+      object instance = ObjectFactory.InvokeParseMethod(type, payableEntityUID);
+
+      return (IPayableEntity) instance;
+    }
+
+
+    internal IPayableEntity ParsePayableEntity(int payableEntityId) {
+
+      Type type = PayableEntityType.UnderlyingSystemType;
+
+      object instance = ObjectFactory.InvokeParseMethod(type, payableEntityId);
+
+      return (IPayableEntity) instance;
+    }
+
+    #endregion Methods
 
   }  // class PayableType
 

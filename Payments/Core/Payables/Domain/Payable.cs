@@ -40,8 +40,15 @@ namespace Empiria.Payments.Payables {
 
     #region Constructors and parsers
 
-    internal protected Payable(PayableType payableType) : base(payableType) {
+    private Payable(PayableType payableType) : base(payableType) {
       // Required by Empiria Framework for all partitioned types.
+    }
+
+
+    internal Payable(PayableType payableType, IPayableEntity entity) : base(payableType) {
+      Assertion.Require(entity, nameof(entity));
+
+      this.PayableEntity = entity;
     }
 
     static public Payable Parse(int id) => ParseId<Payable>(id);
@@ -78,9 +85,17 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    //[DataField("PAYABLE_ENTITY_ID")]
-    public int PayableEntity {
-      get; private set;
+    [DataField("PAYABLE_ENTITY_ID")]
+    private int _payableEntityId = -1;
+
+
+    public IPayableEntity PayableEntity {
+      get {
+        return PayableType.ParsePayableEntity(_payableEntityId);
+      }
+      private set {
+        _payableEntityId = value.Id;
+      }
     }
 
 
@@ -193,7 +208,6 @@ namespace Empiria.Payments.Payables {
       this.Currency = Currency.Parse(fields.CurrencyUID);
       this.DueTime = fields.DueTime;
       this.RequestedTime = fields.RequestedTime;
-      this.PayableEntity = -1;
     }
 
     #endregion Methods
@@ -252,7 +266,7 @@ namespace Empiria.Payments.Payables {
       Assertion.Require(fields, nameof(fields));
 
       PayableItem payableItem = GetItem(payableItemUID);
-     
+
       _items.Value.Remove(payableItem);
 
       Total -= payableItem.Subtotal;
@@ -260,7 +274,7 @@ namespace Empiria.Payments.Payables {
       payableItem.Update(fields);
 
       _items.Value.Add(payableItem);
-      
+
       Total += payableItem.Subtotal;
 
       return payableItem;

@@ -10,9 +10,10 @@
 
 using Empiria.Services;
 
+using Empiria.Financial;
+
 using Empiria.Payments.Payables.Adapters;
 using Empiria.Payments.Payables.Data;
-using Empiria.Contracts;
 
 namespace Empiria.Payments.Payables.UseCases {
 
@@ -40,7 +41,9 @@ namespace Empiria.Payments.Payables.UseCases {
 
       PayableType payableType = PayableType.Parse(fields.PayableTypeUID);
 
-      var payable = new Payable(payableType);
+      IPayableEntity payableEntity = payableType.ParsePayableEntity(fields.PayableEntityUID);
+
+      var payable = new Payable(payableType, payableEntity);
 
       payable.Update(fields);
 

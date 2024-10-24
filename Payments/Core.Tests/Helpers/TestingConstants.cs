@@ -47,6 +47,10 @@ namespace Empiria.Tests.Payments {
 
     static internal string CONTRACT_ITEM_UNIT_UID = "3a99bb8a-113f-4e0c-846c-9c0bf8ec1ded";
 
+    static internal readonly string PAYABLE_ENTITY_UID = "bdca63fa-0cd0-46a0-b065-f092bc1dd3e7";
+
+    static internal readonly string PAYABLE_TYPE_UID = "ObjectTypeInfo.Payable.ContractMilestone";
+
   }  // class TestingConstants
 
 }  // namespace Empiria.Tests.Payments
