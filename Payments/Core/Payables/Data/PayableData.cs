@@ -75,23 +75,10 @@ namespace Empiria.Payments.Payables.Data {
     }
 
 
-    static internal void WriteContractMilestone(ContractMilestone o, string extensionData) {
-      var op = DataOperation.Parse("write_FMS_Payable",
-                     o.Id, o.UID, o.payableNo, o.PayableType.Id, o.Description,
-                     o.PayableEntity, o.OrganizationalUnit.Id,
-                     o.RequestedTime, o.PayTo.Id, o.Contract.Id,
-                     o.Currency.Id, o.BudgetType.Id, o.DueTime,
-                     extensionData, o.Keywords, o.PostedBy.Id,
-                     o.PostingTime, (char) o.Status);
-
-      DataWriter.Execute(op);
-    }
-
-
     static internal void WritePayable(Payable o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Payable",
                      o.Id, o.UID, o.payableNo, o.PayableType.Id, o.Description,
-                     o.PayableEntity, o.OrganizationalUnit.Id,
+                     o.PayableEntity.Id, o.OrganizationalUnit.Id,
                      o.RequestedTime, o.PayTo.Id, Contract.Empty.Id,
                      o.Currency.Id, o.BudgetType.Id, o.DueTime,
                      extensionData, o.Keywords, o.PostedBy.Id,

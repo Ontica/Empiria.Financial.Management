@@ -31,24 +31,6 @@ namespace Empiria.Payments.Payables.Adapters {
 
     }
 
-    static internal ContractMilestoneDto Map(ContractMilestone contractMilestone) {
-      return new ContractMilestoneDto {
-        UID = contractMilestone.UID,
-        Contract = contractMilestone.Contract.MapToNamedEntity(),
-        PayableNo = contractMilestone.payableNo,
-        PayableType = new NamedEntityDto(contractMilestone.PayableType.UID, contractMilestone.PayableType.DisplayName),
-        Description = contractMilestone.Description,
-        PayTo = contractMilestone.PayTo.MapToNamedEntity(),
-        RequestedBy = new NamedEntityDto(contractMilestone.OrganizationalUnit.UID, contractMilestone.OrganizationalUnit.Name),
-        BudgetType = new NamedEntityDto(contractMilestone.BudgetType.UID, contractMilestone.BudgetType.Name),
-        Total = contractMilestone.Total,
-        Currency = contractMilestone.Currency.Name,
-        RequestedTime = contractMilestone.RequestedTime,
-        DueTime = contractMilestone.DueTime,
-        Status = new NamedEntityDto(contractMilestone.Status.ToString(), contractMilestone.Status.GetName())
-      };
-
-    }
 
     static internal FixedList<PayableDescriptor> MapToDescriptor(FixedList<Payable> orders) {
       return orders.Select(x => MapToDescriptor(x)).ToFixedList();
@@ -61,7 +43,7 @@ namespace Empiria.Payments.Payables.Adapters {
         PayableNo = payable.payableNo,
         PayableTypeName = payable.PayableType.DisplayName,
         BudgetTypeName = payable.BudgetType.DisplayName,
-        ContractNo = payable is ContractMilestone ? ((ContractMilestone) payable).Contract.ContractNo : "ND",
+        ContractNo = string.Empty,
         PayTo = payable.PayTo.Name,
         Total = payable.Total,
         CurrencyCode = payable.Currency.ISOCode,

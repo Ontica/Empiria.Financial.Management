@@ -173,63 +173,6 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
       Assert.NotNull(sut);
     }
 
-    #region ContractMilestone
-
-    [Fact]
-    public void Should_Create_ContractMilestone() {
-      var fields = new ContractMilestoneFields {
-        ContractUID = "d13fccb0-a5d0-419e-9204-777f57b6959d",
-        PayableTypeUID = "ObjectTypeInfo.Payable.ContractMilestone",
-        Description = "Sin notas",
-        OrganizationalUnitUID = "d4b9aae9-cc6e-4fbc-9589-639dec5dab9f",
-        PayToUID = "c6278424-d1ff-492f-b5fe-410b4258292c",
-        CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
-        BudgetTypeUID = "ObjectTypeInfo.Budget.ProgramaFinanciero",
-        DueTime = DateTime.Today,
-      };
-
-      var sut = _usecases.CreateContractMilestone(fields);
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public void Should_Delete_ContractMilestone() {
-
-      _usecases.DeleteContractMilestone("c049088d-914b-4f44-89aa-7923c3354fb0");
-    }
-
-
-    [Fact]
-    public void Should_Get_ContractMilestone() {
-
-      var sut = _usecases.GetContractMilestone("c049088d-914b-4f44-89aa-7923c3354fb0");
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public void Should_Update_ContractMilestone() {
-      var fields = new ContractMilestoneFields {
-        ContractUID = "d13fccb0-a5d0-419e-9204-777f57b6959d",
-        PayableTypeUID = "ObjectTypeInfo.Payable.ContractMilestone",
-        Description = "Actualizado",
-        OrganizationalUnitUID = "d4b9aae9-cc6e-4fbc-9589-639dec5dab9f",
-        PayToUID = "c6278424-d1ff-492f-b5fe-410b4258292c",
-        CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
-        BudgetTypeUID = "ObjectTypeInfo.Budget.ProgramaFinanciero",
-        DueTime = DateTime.Today,
-      };
-
-      var sut = _usecases.UpdateContractMilestone("c049088d-914b-4f44-89aa-7923c3354fb0", fields);
-
-      Assert.NotNull(sut);
-    }
-
-    #endregion ContractMilestone
-
     #region PayableDataStructure
 
     [Fact]

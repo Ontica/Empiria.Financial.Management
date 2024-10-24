@@ -177,60 +177,6 @@ namespace Empiria.Payments.Payables.UseCases {
 
     #endregion PayableItem use cases
 
-    #region ContractMilestone 
-
-    public PayableDto CreateContractMilestone(ContractMilestoneFields fields) {
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureValid();
-
-      Contract contract = Contract.Parse(fields.ContractUID);
-
-      var contractMilestone = new ContractMilestone(contract);
-
-      contractMilestone.Update(fields);
-
-      contractMilestone.Save();
-
-      return PayableMapper.Map(contractMilestone);
-    }
-
-
-    public void DeleteContractMilestone(string contractMilestoneUID) {
-      Assertion.Require(contractMilestoneUID, nameof(contractMilestoneUID));
-
-      var contractMilestone = ContractMilestone.Parse(contractMilestoneUID);
-
-      contractMilestone.Delete();
-
-      contractMilestone.Save();
-    }
-
-
-    public PayableDto GetContractMilestone(string contractMilestoneUID) {
-      var contractMilestone = ContractMilestone.Parse(contractMilestoneUID);
-
-      return PayableMapper.Map(contractMilestone);
-    }
-
-
-    public PayableDto UpdateContractMilestone(string contractMilestoneUID, ContractMilestoneFields fields) {
-      Assertion.Require(contractMilestoneUID, nameof(contractMilestoneUID));
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureValid();
-
-      var contractMilestone = ContractMilestone.Parse(contractMilestoneUID);
-
-      contractMilestone.Update(fields);
-
-      contractMilestone.Save();
-
-      return PayableMapper.Map(contractMilestone);
-    }
-
-    #endregion ContractMilestone
-
     #region PayableData
 
     public PayableDataDto GetPayableData(string payableUID) {
