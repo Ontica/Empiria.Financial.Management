@@ -8,17 +8,21 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Contacts;
-using Empiria.Contracts.Data;
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
-using System;
+
+using Empiria.Financial;
+
+using Empiria.Contracts.Data;
 
 namespace Empiria.Contracts {
 
   /// <summary>Represents a contract milestone.</summary>
-  public class ContractMilestone : BaseObject {
+  public class ContractMilestone : BaseObject, IPayableEntity {
 
     #region Constructors and parsers
 
@@ -65,7 +69,7 @@ namespace Empiria.Contracts {
     }
 
 
-    [DataField("CONTRACT_EXT_DATA")]
+    [DataField("MILESTONE_EXT_DATA")]
     private JsonObject ExtData {
       get; set;
     }
@@ -94,6 +98,14 @@ namespace Empiria.Contracts {
     public EntityStatus Status {
       get; private set;
     }
+
+
+    string IPayableEntity.EntityNo {
+      get {
+        return this.Contract.ContractNo;
+      }
+    }
+
 
     #endregion Properties
 
