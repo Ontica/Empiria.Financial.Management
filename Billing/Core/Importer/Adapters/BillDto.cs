@@ -131,12 +131,12 @@ namespace Empiria.Billing.Adapters {
 
     public string DomicilioFiscal {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public string UsoCFDI {
       get; internal set;
-    }
+    } = string.Empty;
 
   }  // class BillOrganizationDto
 
