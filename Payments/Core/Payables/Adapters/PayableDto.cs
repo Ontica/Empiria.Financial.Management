@@ -141,4 +141,30 @@ namespace Empiria.Payments.Payables.Adapters {
 
   } // class PayableDescriptor
 
+
+  /// <summary>Output DTO used to return minimal payables Links info.</summary>
+  public class PayableLinkDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+
+    public string PayableNo {
+      get; internal set;
+    }
+
+
+    public string LinkedOBjectNo {
+      get; internal set;
+    }
+
+
+    public string LinkedOBjectDescription {
+      get; internal set;
+    }
+
+
+  } // class PayableDescriptor
+
 }  // namespace Empiria.Payments.Payables.Adapters

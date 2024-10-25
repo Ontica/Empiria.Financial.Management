@@ -180,6 +180,39 @@ namespace Empiria.Payments.Payables.UseCases {
 
     #endregion PayableItem use cases
 
+    #region Link use cases
+
+    public PayableDto AddPayableLink(PayableLinkFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      var payable = Payable.Parse(fields.PayableUID);
+      var linkType = PayableLinkType.Parse(fields.LinkTypeUID);
+
+      BaseObject linkedObject = linkType.ParseLinkedObject(fields.LinkedObjectUID);
+
+      var link = new PayableLink(linkType, payable, linkedObject);
+
+      link.Save();
+
+      return PayableMapper.Map(payable);
+    }
+
+
+    public void RemovePayableLink(string payableUID, string payableLinkUID) {
+      Assertion.Require(payableUID, nameof(payableUID));
+      Assertion.Require(payableLinkUID, nameof(payableLinkUID));
+
+      Payable payable = Payable.Parse(payableUID);
+
+      PayableLink link = PayableLink.Parse(payableLinkUID);
+
+      link.Save();
+    }
+
+    #endregion Link use cases
+
     #region PayableData
 
     public PayableDataDto GetPayableData(string payableUID) {
@@ -187,6 +220,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
       return PayableDataMapper.Map(payable);
     }
+      
 
     #endregion PayableData
 
