@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using System.Xml;
 
 using Empiria.Billing.Adapters;
@@ -18,50 +19,45 @@ namespace Empiria.Billing {
   /// <summary>Service used to read a bill as xml string and return a BillDto object.</summary>
   internal class BillXmlReader {
 
-    private readonly XmlReader _xmlReader;
+    private readonly XmlDocument _xmlDocument;
     private readonly BillDto _billDto;
 
     internal BillXmlReader(string xmlFilePath) {
       Assertion.Require(xmlFilePath, nameof(xmlFilePath));
 
-      _xmlReader = XmlReader.Create(xmlFilePath);
+      _xmlDocument = new XmlDocument();
+      _xmlDocument.Load(xmlFilePath);
+
       _billDto = new BillDto();
     }
 
     #region Services
 
+
     internal BillDto ReadAsBillDto() {
+      
+      XmlElement generalData = _xmlDocument.DocumentElement;
+      XmlNodeList nodes = generalData.ChildNodes;
 
-      int count = 0;
+      GenerateGeneralData(generalData);
 
-      while (_xmlReader.Read()) {
+      foreach (XmlNode node in nodes) {
 
-        if (count == 0) {
-          ValidateXmlDocumentVersion();
+        if (node.Name == "cfdi:Emisor") {
+
+          GenerateSenderData(node);
         }
+        if (node.Name == "cfdi:Receptor") {
 
-        GenerateGeneralData();
+          GenerateReceiverData(node);
+        }
+        if (node.Name == "cfdi:Conceptos") {
 
-        GenerateSenderData();
-
-        GenerateReceiverData();
-
-        GenerateConceptsList();
-
-        count++;
+          GenerateConceptsList(node);
+        }
       }
+
       return _billDto;
-    }
-
-
-    private void ValidateXmlDocumentVersion() {
-
-      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name != "cfdi:Comprobante")) {
-        Assertion.RequireFail($"El archivo xml no es una factura.");
-
-      } else if (_xmlReader.HasAttributes && _xmlReader.GetAttribute("Version") != "4.0") {
-        Assertion.RequireFail($"La version del archivo xml no es la correcta: {_xmlReader.GetAttribute("Version")}");
-      }
     }
 
 
@@ -69,132 +65,123 @@ namespace Empiria.Billing {
 
     #region Helpers
 
-    private void GenerateConceptsList() {
 
-      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name == "cfdi:Conceptos")) {
+    private void GenerateConceptsList(XmlNode conceptsHeader) {
 
-        var conceptosDto = new List<BillConceptDto>();
+      var conceptosDto = new List<BillConceptDto>();
 
-        XmlReader conceptosXml = _xmlReader.ReadSubtree();
+      foreach (XmlNode concept in conceptsHeader.ChildNodes) {
 
-        while (conceptosXml.Read()) {
-
-          if ((conceptosXml.NodeType == XmlNodeType.Element) && (conceptosXml.Name == "cfdi:Concepto")) {
-
-            var conceptoDto = new BillConceptDto();
-
-            conceptoDto.ClaveProdServ = conceptosXml.GetAttribute("ClaveProdServ");
-            conceptoDto.ClaveUnidad = conceptosXml.GetAttribute("ClaveUnidad");
-            conceptoDto.Cantidad = Convert.ToDecimal(conceptosXml.GetAttribute("Cantidad"));
-            conceptoDto.Unidad = conceptosXml.GetAttribute("Unidad");
-            conceptoDto.NoIdentificacion = conceptosXml.GetAttribute("NoIdentificacion");
-            conceptoDto.Descripcion = conceptosXml.GetAttribute("Descripcion");
-            conceptoDto.ValorUnitario = Convert.ToDecimal(conceptosXml.GetAttribute("ValorUnitario"));
-            conceptoDto.Importe = Convert.ToDecimal(conceptosXml.GetAttribute("Importe"));
-            conceptoDto.ObjetoImp = conceptosXml.GetAttribute("ObjetoImp");
-
-            conceptoDto.Impuestos = GenerateTaxesByConcept(conceptosXml);
-            conceptosDto.Add(conceptoDto);
-          }
+        if (!concept.Name.Equals("cfdi:Concepto")) {
+          Assertion.EnsureFailed("The concepts node must contain only concepts.");
         }
 
-        _billDto.Conceptos = conceptosDto.ToFixedList();
-      }  // while
-    }
+        var conceptoDto = new BillConceptDto();
+        conceptoDto.ClaveProdServ = concept.Attributes["ClaveProdServ"].Value;
+        conceptoDto.ClaveUnidad = concept.Attributes["ClaveUnidad"].Value;
+        conceptoDto.Cantidad = Convert.ToDecimal(concept.Attributes["Cantidad"].Value);
+        conceptoDto.Unidad = concept.Attributes["Unidad"].Value;
+        conceptoDto.NoIdentificacion = concept.Attributes["NoIdentificacion"].Value;
+        conceptoDto.Descripcion = concept.Attributes["Descripcion"].Value;
+        conceptoDto.ValorUnitario = Convert.ToDecimal(concept.Attributes["ValorUnitario"].Value);
+        conceptoDto.Importe = Convert.ToDecimal(concept.Attributes["Importe"].Value);
+        conceptoDto.ObjetoImp = concept.Attributes["ObjetoImp"].Value;
 
-
-    private void GenerateGeneralData() {
-
-      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name == "cfdi:Comprobante")) {
-
-        if (_xmlReader.HasAttributes) {
-
-          _billDto.DatosGenerales.CFDIVersion = _xmlReader.GetAttribute("Version") ?? string.Empty;
-          _billDto.DatosGenerales.Folio = _xmlReader.GetAttribute("Folio") ?? string.Empty;
-          _billDto.DatosGenerales.Fecha = Convert.ToDateTime(_xmlReader.GetAttribute("Fecha"));
-          _billDto.DatosGenerales.Sello = _xmlReader.GetAttribute("Version") ?? string.Empty;
-          _billDto.DatosGenerales.FormaPago = _xmlReader.GetAttribute("FormaPago") ?? string.Empty;
-          _billDto.DatosGenerales.NoCertificado = _xmlReader.GetAttribute("NoCertificado") ?? string.Empty;
-          _billDto.DatosGenerales.Certificado = _xmlReader.GetAttribute("Certificado") ?? string.Empty;
-
-          _billDto.DatosGenerales.SubTotal = Convert.ToDecimal(_xmlReader.GetAttribute("SubTotal"));
-          _billDto.DatosGenerales.Moneda = _xmlReader.GetAttribute("Moneda") ?? string.Empty;
-          _billDto.DatosGenerales.Total = Convert.ToDecimal(_xmlReader.GetAttribute("Total"));
-
-          _billDto.DatosGenerales.TipoDeComprobante = _xmlReader.GetAttribute("TipoDeComprobante") ?? string.Empty;
-          _billDto.DatosGenerales.Exportacion = _xmlReader.GetAttribute("Exportacion") ?? string.Empty;
-          _billDto.DatosGenerales.MetodoPago = _xmlReader.GetAttribute("MetodoPago") ?? string.Empty;
-          _billDto.DatosGenerales.LugarExpedicion = _xmlReader.GetAttribute("LugarExpedicion") ?? string.Empty;
-        }
-      }
-
-    }
-
-
-    private void GenerateReceiverData() {
-
-      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name == "cfdi:Receptor")) {
-
-        if (_xmlReader.HasAttributes) {
-          _billDto.Receptor.RegimenFiscal = _xmlReader.GetAttribute("RegimenFiscalReceptor") ?? string.Empty;
-          _billDto.Receptor.RFC = _xmlReader.GetAttribute("Rfc") ?? string.Empty;
-          _billDto.Receptor.Nombre = _xmlReader.GetAttribute("Nombre") ?? string.Empty;
-          _billDto.Receptor.DomicilioFiscal = _xmlReader.GetAttribute("DomicilioFiscalReceptor") ?? string.Empty;
-          _billDto.Receptor.UsoCFDI = _xmlReader.GetAttribute("UsoCFDI") ?? string.Empty;
-        }
-      }
-    }
-
-
-    private void GenerateSenderData() {
-
-      if ((_xmlReader.NodeType == XmlNodeType.Element) && (_xmlReader.Name == "cfdi:Emisor")) {
-
-        if (_xmlReader.HasAttributes) {
-
-          _billDto.Emisor.RegimenFiscal = _xmlReader.GetAttribute("RegimenFiscal") ?? string.Empty;
-          _billDto.Emisor.RFC = _xmlReader.GetAttribute("Rfc") ?? string.Empty;
-          _billDto.Emisor.Nombre = _xmlReader.GetAttribute("Nombre") ?? string.Empty;
-
-        }
+        conceptoDto.Impuestos = GenerateTaxesByConcept(concept.ChildNodes.Item(0));
+        conceptosDto.Add(conceptoDto);
 
       }
+      _billDto.Conceptos = conceptosDto.ToFixedList();
     }
 
 
-    static private FixedList<BillTaxDto> GenerateTaxesByConcept(XmlReader conceptosXml) {
+    private void GenerateGeneralData(XmlElement generalData) {
 
-      XmlReader impuestosXml = conceptosXml.ReadSubtree();
+      if (generalData.Name != "cfdi:Comprobante") {
+        Assertion.EnsureFailed("El archivo xml no es un cfdi.");
+      } else if (!generalData.GetAttribute("Version").Equals("4.0")) {
+        Assertion.EnsureFailed("The CFDI version is not correct.");
+      }
 
-      var impuestosDto = new List<BillTaxDto>();
 
-      while (impuestosXml.Read()) {
+      _billDto.DatosGenerales.CFDIVersion = generalData.GetAttribute("Version") ?? string.Empty;
+      _billDto.DatosGenerales.Folio = generalData.GetAttribute("Folio") ?? string.Empty;
+      _billDto.DatosGenerales.Fecha = Convert.ToDateTime(generalData.GetAttribute("Fecha"));
+      _billDto.DatosGenerales.Sello = generalData.GetAttribute("Version") ?? string.Empty;
+      _billDto.DatosGenerales.FormaPago = generalData.GetAttribute("FormaPago") ?? string.Empty;
+      _billDto.DatosGenerales.NoCertificado = generalData.GetAttribute("NoCertificado") ?? string.Empty;
+      _billDto.DatosGenerales.Certificado = generalData.GetAttribute("Certificado") ?? string.Empty;
 
-        if ((impuestosXml.NodeType == XmlNodeType.Element) &&
-            (impuestosXml.Name == "cfdi:Traslado" || impuestosXml.Name == "cfdi:Retencion")) {
+      _billDto.DatosGenerales.SubTotal = Convert.ToDecimal(generalData.GetAttribute("SubTotal"));
+      _billDto.DatosGenerales.Moneda = generalData.GetAttribute("Moneda") ?? string.Empty;
+      _billDto.DatosGenerales.Total = Convert.ToDecimal(generalData.GetAttribute("Total"));
 
-          var billTaxDto = new BillTaxDto();
+      _billDto.DatosGenerales.TipoDeComprobante = generalData.GetAttribute("TipoDeComprobante") ?? string.Empty;
+      _billDto.DatosGenerales.Exportacion = generalData.GetAttribute("Exportacion") ?? string.Empty;
+      _billDto.DatosGenerales.MetodoPago = generalData.GetAttribute("MetodoPago") ?? string.Empty;
+      _billDto.DatosGenerales.LugarExpedicion = generalData.GetAttribute("LugarExpedicion") ?? string.Empty;
+    }
 
-          if (impuestosXml.Name == "cfdi:Traslado") {
-            billTaxDto.TipoAplicacionImpuesto = BillTaxApplicationType.Traslado;
-          } else if (impuestosXml.Name == "cfdi:Retencion") {
-            billTaxDto.TipoAplicacionImpuesto = BillTaxApplicationType.Retencion;
-          } else {
-            throw Assertion.EnsureNoReachThisCode($"Unhandled SAT tax type: {impuestosXml.Name}");
-          }
 
-          billTaxDto.Base = Convert.ToDecimal(impuestosXml.GetAttribute("Base"));
-          billTaxDto.Impuesto = impuestosXml.GetAttribute("Impuesto");
-          billTaxDto.TipoFactor = impuestosXml.GetAttribute("TipoFactor");
-          billTaxDto.TasaOCuota = Convert.ToDecimal(impuestosXml.GetAttribute("TasaOCuota"));
-          billTaxDto.Importe = Convert.ToDecimal(impuestosXml.GetAttribute("Importe"));
+    private void GenerateReceiverData(XmlNode receiver) {
 
-          impuestosDto.Add(billTaxDto);
+      _billDto.Receptor.RegimenFiscal = receiver.Attributes["RegimenFiscalReceptor"].Value ?? string.Empty;
+      _billDto.Receptor.RFC = receiver.Attributes["Rfc"].Value ?? string.Empty;
+      _billDto.Receptor.Nombre = receiver.Attributes["Nombre"].Value ?? string.Empty;
+      _billDto.Receptor.DomicilioFiscal = receiver.Attributes["DomicilioFiscalReceptor"].Value ?? string.Empty;
+      _billDto.Receptor.UsoCFDI = receiver.Attributes["UsoCFDI"].Value ?? string.Empty;
+    }
+
+
+    private void GenerateSenderData(XmlNode sender) {
+
+      _billDto.Emisor.RegimenFiscal = sender.Attributes["RegimenFiscal"].Value ?? string.Empty;
+      _billDto.Emisor.RFC = sender.Attributes["Rfc"].Value ?? string.Empty;
+      _billDto.Emisor.Nombre = sender.Attributes["Nombre"].Value ?? string.Empty;
+    }
+
+
+    private FixedList<BillTaxDto> GenerateTaxesByConcept(XmlNode taxesNode) {
+
+      var taxesByConceptDto = new List<BillTaxDto>();
+
+      foreach (XmlNode taxNode in taxesNode.ChildNodes) {
+
+        taxesByConceptDto.AddRange(GetTaxItems(taxNode));
+      }
+      return taxesByConceptDto.ToFixedList();
+    }
+
+
+    private IEnumerable<BillTaxDto> GetTaxItems(XmlNode taxNode) {
+      var taxesByConceptDto = new List<BillTaxDto>();
+
+      foreach (XmlNode taxItem in taxNode.ChildNodes) {
+
+        var taxDto = new BillTaxDto();
+
+        taxDto.Base = Convert.ToDecimal(taxItem.Attributes["Base"].Value);
+        taxDto.Impuesto = taxItem.Attributes["Impuesto"].Value;
+        taxDto.TipoFactor = taxItem.Attributes["TipoFactor"].Value;
+        taxDto.TasaOCuota = Convert.ToDecimal(taxItem.Attributes["TasaOCuota"].Value);
+        taxDto.Importe = Convert.ToDecimal(taxItem.Attributes["Importe"].Value);
+
+        if (taxItem.Name == "cfdi:Traslado") {
+          taxDto.TipoAplicacionImpuesto = BillTaxApplicationType.Traslado;
+
+        } else if (taxItem.Name == "cfdi:Retencion") {
+          taxDto.TipoAplicacionImpuesto = BillTaxApplicationType.Retencion;
+
+        } else {
+
+          throw Assertion.EnsureNoReachThisCode($"Unhandled SAT tax type: {taxNode.Name}");
         }
-      }  // while
+        taxesByConceptDto.Add(taxDto);
+      }
 
-      return impuestosDto.ToFixedList();
+      return taxesByConceptDto;
     }
+
 
     #endregion Helpers
 
