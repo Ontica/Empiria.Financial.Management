@@ -75,13 +75,6 @@ namespace Empiria.Contracts.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetContractUnit() {
-      var contractUnit = ContractUnit.GetList();
-
-      return contractUnit.MapToNamedEntityList();
-    }
-
-
     public FixedList<ContractDescriptor> SearchContracts(ContractQuery query) {
       Assertion.Require(query, nameof(query));
 
