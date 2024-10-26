@@ -7,9 +7,12 @@
 *  Summary  : Represent a bill according to SAT Mexico standard.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 
+using Empiria.Financial;
 using Empiria.Json;
+using Empiria.Parties;
 
 namespace Empiria.Billing {
 
@@ -28,182 +31,148 @@ namespace Empiria.Billing {
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
-    [DataField("RFC_EMISOR")]
-    internal string RFCEmisor {
+    [DataField("BILL_TYPE_ID")]
+    public int BillType {
       get; private set;
     }
 
 
-    [DataField("REGIMEN_FISCAL_EMISOR")]
-    internal string RegimenFiscalEmisor {
-      get; private set;
-    } = string.Empty;
-
-
-    [DataField("RFC_RECEPTOR")]
-    internal string RFCReceptor {
+    [DataField("BILL_CATEGORY_ID")]
+    public int BillCategory {
       get; private set;
     }
 
 
-    [DataField("REGIMEN_FISCAL_RECEPTOR")]
-    internal string RegimenFiscalReceptor {
-      get; private set;
-    } = string.Empty;
-
-
-    [DataField("DOMICILIO_FISCAL_RECEPTOR")]
-    internal string DomicilioFiscalReceptor {
+    [DataField("BILL_NO")]
+    public string BillNo {
       get; private set;
     }
 
 
-    [DataField("USO_CFDI")]
-    internal string UsoCFDI {
+    [DataField("BILL_ISSUE_DATE")]
+    public DateTime IssueDate {
       get; private set;
     }
 
 
-
-    [DataField("CFDI_VERSION")]
-    internal string CFDIVersion {
+    [DataField("BILL_ISSUED_BY_ID")]
+    public Party IssuedBy {
       get; private set;
     }
 
 
-    [DataField("EXTDATA")]
-    internal JsonObject ExtData {
+    [DataField("BILL_ISSUED_TO_ID")]
+    public Party IssuedTo {
       get; private set;
     }
 
 
-    internal FixedList<BillConcept> Conceptos {
+    [DataField("BILL_SCHEMA_VERSION")]
+    public string SchemaVersion {
+      get; private set;
+    }
+
+
+    [DataField("BILL_IDENTIFICATORS")]
+    public string Identificators {
+      get; private set;
+    }
+
+
+    [DataField("BILL_TAGS")]
+    public string Tags {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CURRENCY_ID")]
+    public Currency Currency {
+      get; private set;
+    }
+
+
+    [DataField("BILL_SUBTOTAL")]
+    public decimal Subtotal {
+      get; private set;
+    }
+
+
+    [DataField("BILL_DISCOUNT")]
+    public decimal Discount {
+      get; private set;
+    }
+
+
+    [DataField("BILL_TOTAL")]
+    public decimal Total {
+      get; private set;
+    }
+
+
+    [DataField("BILL_SCHEMA_EXT_DATA")]
+    private JsonObject SchemaExtData {
+      get; set;
+    }
+
+
+    [DataField("BILL_SECURITY_EXT_DATA")]
+    private JsonObject SecurityExtData {
+      get; set;
+    }
+
+
+    [DataField("BILL_EXT_DATA")]
+    private JsonObject ExtData {
+      get; set;
+    }
+
+
+    [DataField("BILL_POSTED_BY_ID")]
+    public Party PostedBy {
+      get; private set;
+    }
+
+
+    [DataField("BILL_POSTING_TIME")]
+    public DateTime PostingTime {
+      get; private set;
+    }
+
+
+    [DataField("BILL_STATUS", Default = BillStatus.Pending)]
+    public BillStatus Status {
+      get; private set;
+    }
+
+
+    public BillSchemaData SchemaData {
+      get {
+        return new BillSchemaData(this.SchemaExtData);
+      }
+    }
+
+
+    public BillSecurityData SecurityData {
+      get {
+        return new BillSecurityData(this.SecurityExtData);
+      }
+    }
+
+
+    internal FixedList<BillConcept> Concepts {
       get; set;
     } = new FixedList<BillConcept>();
 
 
-    public int Folio {
+    public string Keywords {
       get {
-        return this.ExtData.Get("folio", 0);
-      }
-      private set {
-        this.ExtData.Set("folio", value);
+        return EmpiriaString.BuildKeywords(BillNo);
       }
     }
 
-
-    public DateTime Fecha {
-      get {
-        return this.ExtData.Get("fecha", ExecutionServer.DateMaxValue);
-      }
-      private set {
-        this.ExtData.Set("fecha", value);
-      }
-    }
-
-
-    private string Sello {
-      get {
-        return this.ExtData.Get<string>("sello", string.Empty);
-      }
-      set {
-        this.ExtData.SetIfValue("sello", value);
-      }
-    }
-
-
-    private string FormaPago {
-      get {
-        return this.ExtData.Get<string>("formaPago", string.Empty);
-      }
-      set {
-        this.ExtData.SetIfValue("formaPago", value);
-      }
-    }
-
-
-    private string NoCertificado {
-      get {
-        return this.ExtData.Get<string>("noCertificado", string.Empty);
-      }
-      set {
-        this.ExtData.SetIfValue("noCertificado", value);
-      }
-    }
-
-
-    private string TipoDeComprobante {
-      get {
-        return this.ExtData.Get<string>("tipoDeComprobante", string.Empty);
-      }
-      set {
-        this.ExtData.SetIfValue("tipoDeComprobante", value);
-      }
-    }
-
-
-    private string Exportacion {
-      get {
-        return this.ExtData.Get<string>("exportacion", string.Empty);
-      }
-      set {
-        this.ExtData.SetIfValue("exportacion", value);
-      }
-    }
-
-
-    private string MetodoPago {
-      get {
-        return this.ExtData.Get<string>("metodoPago", string.Empty);
-      }
-      set {
-        this.ExtData.SetIfValue("metodoPago", value);
-      }
-    }
-
-
-    private string LugarExpedicion {
-      get {
-        return this.ExtData.Get<string>("lugarExpedicion", string.Empty);
-      }
-      set {
-        this.ExtData.SetIfValue("lugarExpedicion", value);
-      }
-    }
-
-
-    private string Moneda {
-      get {
-        return this.ExtData.Get<string>("moneda", string.Empty);
-      }
-      set {
-        this.ExtData.SetIfValue("moneda", value);
-      }
-    }
-
-
-    public decimal Subtotal {
-      get {
-        return this.ExtData.Get<decimal>("subtotal", 0);
-      }
-      set {
-        this.ExtData.SetIfValue("subtotal", value);
-      }
-    }
-
-
-    public decimal Total {
-      get {
-        return this.ExtData.Get<decimal>("total", 0);
-      }
-      set {
-        this.ExtData.SetIfValue("total", value);
-      }
-    }
-
-    #endregion Public properties
+    #endregion Properties
 
   } // class Bill
 
