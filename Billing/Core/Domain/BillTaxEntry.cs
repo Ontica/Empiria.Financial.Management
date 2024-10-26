@@ -2,34 +2,31 @@
 *                                                                                                            *
 *  Module   : Financial Billing                          Component : Domain Layer                            *
 *  Assembly : Empiria.Billing.Core.dll                   Pattern   : Empiria Plain Object                    *
-*  Type     : BillingTaxEntry                            License   : Please read LICENSE.txt file            *
+*  Type     : BillTaxEntry                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represent an entry for a billing tax.                                                          *
+*  Summary  : Represent an entry for a bill tax.                                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-
-using Empiria.Billing.Adapters;
-
 namespace Empiria.Billing {
 
-  /// <summary>Represent an entry for a billing tax.</summary>
-  internal class BillingTaxEntry : BaseObject {
+  /// <summary>Represent an entry for a bill tax.</summary>
+  internal class BillTaxEntry : BaseObject {
 
     #region Constructors and parsers
 
-    private BillingTaxEntry() {
+    private BillTaxEntry() {
       // Required by Empiria Framework.
     }
 
 
-    static public BillingTaxEntry Parse(int id) {
-      return BaseObject.ParseId<BillingTaxEntry>(id);
+    static public BillTaxEntry Parse(int id) {
+      return BaseObject.ParseId<BillTaxEntry>(id);
     }
 
 
-    static public BillingTaxEntry Parse(string uid) {
-      return BaseObject.ParseKey<BillingTaxEntry>(uid);
+    static public BillTaxEntry Parse(string uid) {
+      return BaseObject.ParseKey<BillTaxEntry>(uid);
     }
 
 
@@ -74,6 +71,6 @@ namespace Empiria.Billing {
 
     #endregion Properties
 
-  } // class BillingTaxEntry
+  } // class BillTaxEntry
 
 }  // namespace Empiria.Billing

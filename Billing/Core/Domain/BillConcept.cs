@@ -4,15 +4,13 @@
 *  Assembly : Empiria.Billing.Core.dll                   Pattern   : Empiria Plain Object                    *
 *  Type     : BillConcept                                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a bill concept.                                                                      *
+*  Summary  : Represents a bill concept with its tax entries.                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Billing.Adapters;
-
 namespace Empiria.Billing {
 
-  /// <summary>Represents a bill concept.</summary>
+  /// <summary>Represents a bill concept with its tax entries.</summary>
   internal class BillConcept : BaseObject {
 
     #region Constructors and parsers
@@ -20,7 +18,6 @@ namespace Empiria.Billing {
     private BillConcept() {
       // Required by Empiria Framework.
     }
-
 
     static public BillConcept Parse(int id) => ParseId<BillConcept>(id);
 
@@ -84,13 +81,12 @@ namespace Empiria.Billing {
     }
 
 
-    public FixedList<BillTaxDto> Impuestos {
+    public FixedList<BillTaxEntry> Impuestos {
       get; set;
-    } = new FixedList<BillTaxDto>();
+    } = new FixedList<BillTaxEntry>();
 
 
     #endregion Public properties
-
 
   } // class BillConcept
 
