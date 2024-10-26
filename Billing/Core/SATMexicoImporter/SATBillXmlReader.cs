@@ -1,41 +1,38 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Billing                                    Component : Domain Layer                            *
+*  Module   : Billing SATMexico Importer                 Component : Domain Layer                            *
 *  Assembly : Empiria.Billing.Core.dll                   Pattern   : Service provider                        *
-*  Type     : BillXmlReader                              License   : Please read LICENSE.txt file            *
+*  Type     : SATBillXmlReader                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Service used to read a bill as xml string and return a BillDto object.                         *
+*  Summary  : Service used to read a bill as xml string and return a SATBillDto object.                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using System.Xml;
 
-using Empiria.Billing.Adapters;
+namespace Empiria.Billing.SATMexicoImporter {
 
-namespace Empiria.Billing {
+  /// <summary>Service used to read a bill as xml string and return a SATBillDto object.</summary>
+  internal class SATBillXmlReader {
 
-  /// <summary>Service used to read a bill as xml string and return a BillDto object.</summary>
-  internal class BillXmlReader {
+    private readonly SATBillDto _satBillDto;
 
     private readonly XmlDocument _xmlDocument;
-    private readonly BillDto _billDto;
 
-    internal BillXmlReader(string xmlFilePath) {
+    internal SATBillXmlReader(string xmlFilePath) {
       Assertion.Require(xmlFilePath, nameof(xmlFilePath));
+
+      _satBillDto = new SATBillDto();
 
       _xmlDocument = new XmlDocument();
       _xmlDocument.Load(xmlFilePath);
-
-      _billDto = new BillDto();
     }
 
     #region Services
 
+    internal SATBillDto ReadAsBillDto() {
 
-    internal BillDto ReadAsBillDto() {
-      
       XmlElement generalData = _xmlDocument.DocumentElement;
       XmlNodeList nodes = generalData.ChildNodes;
 
@@ -57,18 +54,16 @@ namespace Empiria.Billing {
         }
       }
 
-      return _billDto;
+      return _satBillDto;
     }
-
 
     #endregion Services
 
     #region Helpers
 
-
     private void GenerateConceptsList(XmlNode conceptsHeader) {
 
-      var conceptosDto = new List<BillConceptDto>();
+      var conceptosDto = new List<SATBillConceptDto>();
 
       foreach (XmlNode concept in conceptsHeader.ChildNodes) {
 
@@ -76,7 +71,7 @@ namespace Empiria.Billing {
           Assertion.EnsureFailed("The concepts node must contain only concepts.");
         }
 
-        var conceptoDto = new BillConceptDto();
+        var conceptoDto = new SATBillConceptDto();
         conceptoDto.ClaveProdServ = concept.Attributes["ClaveProdServ"].Value;
         conceptoDto.ClaveUnidad = concept.Attributes["ClaveUnidad"].Value;
         conceptoDto.Cantidad = Convert.ToDecimal(concept.Attributes["Cantidad"].Value);
@@ -91,7 +86,7 @@ namespace Empiria.Billing {
         conceptosDto.Add(conceptoDto);
 
       }
-      _billDto.Conceptos = conceptosDto.ToFixedList();
+      _satBillDto.Conceptos = conceptosDto.ToFixedList();
     }
 
 
@@ -104,46 +99,46 @@ namespace Empiria.Billing {
       }
 
 
-      _billDto.DatosGenerales.CFDIVersion = generalData.GetAttribute("Version") ?? string.Empty;
-      _billDto.DatosGenerales.Folio = generalData.GetAttribute("Folio") ?? string.Empty;
-      _billDto.DatosGenerales.Fecha = Convert.ToDateTime(generalData.GetAttribute("Fecha"));
-      _billDto.DatosGenerales.Sello = generalData.GetAttribute("Version") ?? string.Empty;
-      _billDto.DatosGenerales.FormaPago = generalData.GetAttribute("FormaPago") ?? string.Empty;
-      _billDto.DatosGenerales.NoCertificado = generalData.GetAttribute("NoCertificado") ?? string.Empty;
-      _billDto.DatosGenerales.Certificado = generalData.GetAttribute("Certificado") ?? string.Empty;
+      _satBillDto.DatosGenerales.CFDIVersion = generalData.GetAttribute("Version") ?? string.Empty;
+      _satBillDto.DatosGenerales.Folio = generalData.GetAttribute("Folio") ?? string.Empty;
+      _satBillDto.DatosGenerales.Fecha = Convert.ToDateTime(generalData.GetAttribute("Fecha"));
+      _satBillDto.DatosGenerales.Sello = generalData.GetAttribute("Version") ?? string.Empty;
+      _satBillDto.DatosGenerales.FormaPago = generalData.GetAttribute("FormaPago") ?? string.Empty;
+      _satBillDto.DatosGenerales.NoCertificado = generalData.GetAttribute("NoCertificado") ?? string.Empty;
+      _satBillDto.DatosGenerales.Certificado = generalData.GetAttribute("Certificado") ?? string.Empty;
 
-      _billDto.DatosGenerales.SubTotal = Convert.ToDecimal(generalData.GetAttribute("SubTotal"));
-      _billDto.DatosGenerales.Moneda = generalData.GetAttribute("Moneda") ?? string.Empty;
-      _billDto.DatosGenerales.Total = Convert.ToDecimal(generalData.GetAttribute("Total"));
+      _satBillDto.DatosGenerales.SubTotal = Convert.ToDecimal(generalData.GetAttribute("SubTotal"));
+      _satBillDto.DatosGenerales.Moneda = generalData.GetAttribute("Moneda") ?? string.Empty;
+      _satBillDto.DatosGenerales.Total = Convert.ToDecimal(generalData.GetAttribute("Total"));
 
-      _billDto.DatosGenerales.TipoDeComprobante = generalData.GetAttribute("TipoDeComprobante") ?? string.Empty;
-      _billDto.DatosGenerales.Exportacion = generalData.GetAttribute("Exportacion") ?? string.Empty;
-      _billDto.DatosGenerales.MetodoPago = generalData.GetAttribute("MetodoPago") ?? string.Empty;
-      _billDto.DatosGenerales.LugarExpedicion = generalData.GetAttribute("LugarExpedicion") ?? string.Empty;
+      _satBillDto.DatosGenerales.TipoDeComprobante = generalData.GetAttribute("TipoDeComprobante") ?? string.Empty;
+      _satBillDto.DatosGenerales.Exportacion = generalData.GetAttribute("Exportacion") ?? string.Empty;
+      _satBillDto.DatosGenerales.MetodoPago = generalData.GetAttribute("MetodoPago") ?? string.Empty;
+      _satBillDto.DatosGenerales.LugarExpedicion = generalData.GetAttribute("LugarExpedicion") ?? string.Empty;
     }
 
 
     private void GenerateReceiverData(XmlNode receiver) {
 
-      _billDto.Receptor.RegimenFiscal = receiver.Attributes["RegimenFiscalReceptor"].Value ?? string.Empty;
-      _billDto.Receptor.RFC = receiver.Attributes["Rfc"].Value ?? string.Empty;
-      _billDto.Receptor.Nombre = receiver.Attributes["Nombre"].Value ?? string.Empty;
-      _billDto.Receptor.DomicilioFiscal = receiver.Attributes["DomicilioFiscalReceptor"].Value ?? string.Empty;
-      _billDto.Receptor.UsoCFDI = receiver.Attributes["UsoCFDI"].Value ?? string.Empty;
+      _satBillDto.Receptor.RegimenFiscal = receiver.Attributes["RegimenFiscalReceptor"].Value ?? string.Empty;
+      _satBillDto.Receptor.RFC = receiver.Attributes["Rfc"].Value ?? string.Empty;
+      _satBillDto.Receptor.Nombre = receiver.Attributes["Nombre"].Value ?? string.Empty;
+      _satBillDto.Receptor.DomicilioFiscal = receiver.Attributes["DomicilioFiscalReceptor"].Value ?? string.Empty;
+      _satBillDto.Receptor.UsoCFDI = receiver.Attributes["UsoCFDI"].Value ?? string.Empty;
     }
 
 
     private void GenerateSenderData(XmlNode sender) {
 
-      _billDto.Emisor.RegimenFiscal = sender.Attributes["RegimenFiscal"].Value ?? string.Empty;
-      _billDto.Emisor.RFC = sender.Attributes["Rfc"].Value ?? string.Empty;
-      _billDto.Emisor.Nombre = sender.Attributes["Nombre"].Value ?? string.Empty;
+      _satBillDto.Emisor.RegimenFiscal = sender.Attributes["RegimenFiscal"].Value ?? string.Empty;
+      _satBillDto.Emisor.RFC = sender.Attributes["Rfc"].Value ?? string.Empty;
+      _satBillDto.Emisor.Nombre = sender.Attributes["Nombre"].Value ?? string.Empty;
     }
 
 
-    private FixedList<BillTaxDto> GenerateTaxesByConcept(XmlNode taxesNode) {
+    private FixedList<SATBillTaxDto> GenerateTaxesByConcept(XmlNode taxesNode) {
 
-      var taxesByConceptDto = new List<BillTaxDto>();
+      var taxesByConceptDto = new List<SATBillTaxDto>();
 
       foreach (XmlNode taxNode in taxesNode.ChildNodes) {
 
@@ -153,12 +148,12 @@ namespace Empiria.Billing {
     }
 
 
-    private IEnumerable<BillTaxDto> GetTaxItems(XmlNode taxNode) {
-      var taxesByConceptDto = new List<BillTaxDto>();
+    private IEnumerable<SATBillTaxDto> GetTaxItems(XmlNode taxNode) {
+      var taxesByConceptDto = new List<SATBillTaxDto>();
 
       foreach (XmlNode taxItem in taxNode.ChildNodes) {
 
-        var taxDto = new BillTaxDto();
+        var taxDto = new SATBillTaxDto();
 
         taxDto.Base = Convert.ToDecimal(taxItem.Attributes["Base"].Value);
         taxDto.Impuesto = taxItem.Attributes["Impuesto"].Value;
@@ -182,9 +177,8 @@ namespace Empiria.Billing {
       return taxesByConceptDto;
     }
 
-
     #endregion Helpers
 
-  } // class BillXmlReader
+  } // class SATBillXmlReader
 
-} // namespace Empiria.Billing
+} // namespace Empiria.Billing.SATMexicoImporter

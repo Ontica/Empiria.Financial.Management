@@ -1,44 +1,44 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Billing                                    Component : Interface adapters                      *
+*  Module   : Billing SATMexico Importer                 Component : Interface adapters                      *
 *  Assembly : Empiria.Billing.Core.dll                   Pattern   : Output DTO                              *
-*  Type     : BillDto                                    License   : Please read LICENSE.txt file            *
+*  Type     : SATBillDto                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO used to return a bill object.                                                       *
+*  Summary  : Output DTO used to return a SAT Mexico bill object.                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Billing.Adapters {
+namespace Empiria.Billing.SATMexicoImporter {
 
-  /// <summary>Output DTO used to return a bill object.</summary>
-  public class BillDto {
+  /// <summary>Output DTO used to return a SAT Mexico bill object.</summary>
+  public class SATBillDto {
 
-    public BillGeneralDataDto DatosGenerales {
+    public SATBillGeneralDataDto DatosGenerales {
       get; internal set;
-    } = new BillGeneralDataDto();
+    } = new SATBillGeneralDataDto();
 
 
-    public BillOrganizationDto Emisor {
+    public SATBillOrganizationDto Emisor {
       get; internal set;
-    } = new BillOrganizationDto();
+    } = new SATBillOrganizationDto();
 
 
-    public BillOrganizationDto Receptor {
+    public SATBillOrganizationDto Receptor {
       get; internal set;
-    } = new BillOrganizationDto();
+    } = new SATBillOrganizationDto();
 
 
-    public FixedList<BillConceptDto> Conceptos {
+    public FixedList<SATBillConceptDto> Conceptos {
       get; internal set;
-    } = new FixedList<BillConceptDto>();
+    } = new FixedList<SATBillConceptDto>();
 
 
-  } // class BillingDataDto
+  } // class SATBillDto
 
 
-  public class BillGeneralDataDto {
 
+  public class SATBillGeneralDataDto {
 
     public string CFDIVersion {
       get; internal set;
@@ -109,10 +109,10 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
-  }  // class BillGeneralDataDto
+  }  // class SATBillGeneralDataDto
 
 
-  public class BillOrganizationDto {
+  public class SATBillOrganizationDto {
 
     public string RegimenFiscal {
       get; internal set;
@@ -138,11 +138,11 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     } = string.Empty;
 
-  }  // class BillOrganizationDto
+  }  // class SATBillOrganizationDto
 
 
 
-  public class BillConceptDto {
+  public class SATBillConceptDto {
 
     public string ClaveProdServ {
       get; set;
@@ -189,15 +189,15 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    public FixedList<BillTaxDto> Impuestos {
+    public FixedList<SATBillTaxDto> Impuestos {
       get; set;
-    } = new FixedList<BillTaxDto>();
+    } = new FixedList<SATBillTaxDto>();
 
-  }  // class BillConceptDto
+  }  // class SATBillConceptDto
 
 
 
-  public class BillTaxDto {
+  public class SATBillTaxDto {
 
     public BillTaxApplicationType TipoAplicacionImpuesto {
       get; set;
@@ -228,6 +228,6 @@ namespace Empiria.Billing.Adapters {
       get; set;
     }
 
-  }  // class BillTaxDto
+  }  // class SATBillTaxDto
 
-} // namespace Empiria.Billing.Adapters
+} // namespace Empiria.Billing.SATMexicoImporter
