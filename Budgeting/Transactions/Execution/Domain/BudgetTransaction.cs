@@ -182,8 +182,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_TXN_STATUS", Default = EntityStatus.Pending)]
-    public EntityStatus Status {
+    [DataField("BDG_TXN_STATUS", Default = BudgetTransactionStatus.Pending)]
+    public BudgetTransactionStatus Status {
       get;
       private set;
     }
