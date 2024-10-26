@@ -1,22 +1,22 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Billing                                    Component : Interface adapters                      *
-*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Data Transfer Object                    *
-*  Type     : BillTaxApplicationType                     License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Enumeration                             *
+*  Type     : BillTaxMethod                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Enumerates a bill tax application type according to SAT Mexico fiscal rules.                   *
+*  Summary  : Enumerates a bill tax application method according to SAT Mexico fiscal rules.                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Billing {
 
-  /// <summary>Enumerates a bill tax application type according to SAT Mexico fiscal rules.</summary>
-  public enum BillTaxApplicationType {
+  /// <summary>Enumerates a bill tax application method according to SAT Mexico fiscal rules.</summary>
+  public enum BillTaxMethod {
 
-    Traslado,
+    Traslado = 'T',
 
-    Retencion
+    Retencion = 'R'
 
-  }  // enum BillTaxApplicationType
+  }  // enum BillTaxMethod
 
 } // namespace Empiria.Billing

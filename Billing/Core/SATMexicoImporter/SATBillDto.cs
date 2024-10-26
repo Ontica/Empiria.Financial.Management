@@ -199,7 +199,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
   public class SATBillTaxDto {
 
-    public BillTaxApplicationType TipoAplicacionImpuesto {
+    public BillTaxMethod MetodoAplicacion {
       get; set;
     }
 

@@ -162,10 +162,10 @@ namespace Empiria.Billing.SATMexicoImporter {
         taxDto.Importe = Convert.ToDecimal(taxItem.Attributes["Importe"].Value);
 
         if (taxItem.Name == "cfdi:Traslado") {
-          taxDto.TipoAplicacionImpuesto = BillTaxApplicationType.Traslado;
+          taxDto.MetodoAplicacion = BillTaxMethod.Traslado;
 
         } else if (taxItem.Name == "cfdi:Retencion") {
-          taxDto.TipoAplicacionImpuesto = BillTaxApplicationType.Retencion;
+          taxDto.MetodoAplicacion = BillTaxMethod.Retencion;
 
         } else {
 
