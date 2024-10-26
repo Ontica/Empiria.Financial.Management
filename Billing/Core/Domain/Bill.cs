@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Billing                                    Component : Domain Layer                            *
-*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Empiria Plain Object                    *
+*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Partitioned Type                        *
 *  Type     : Bill                                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represent a bill according to SAT Mexico standard.                                             *
+*  Summary  : Represents a bill for an invoice, credit note, paycheck, payment reception, etc.               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,17 +12,19 @@ using System;
 
 using Empiria.Financial;
 using Empiria.Json;
+using Empiria.Ontology;
 using Empiria.Parties;
 
 namespace Empiria.Billing {
 
-  /// <summary>Represent a bill according to SAT Mexico standard.</summary>
+  /// <summary>Represents a bill for an invoice, credit note, paycheck, payment reception, etc.</summary>
+  [PartitionedType(typeof(BillType))]
   internal class Bill : BaseObject {
 
     #region Constructors and parsers
 
-    private Bill() {
-      // Required by Empiria Framework.
+    protected Bill(BillType powertype) : base(powertype) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
     static public Bill Parse(int id) => ParseId<Bill>(id);
@@ -33,14 +35,15 @@ namespace Empiria.Billing {
 
     #region Properties
 
-    [DataField("BILL_TYPE_ID")]
-    public int BillType {
-      get; private set;
+    public BillType BillType {
+      get {
+        return (BillType) base.GetEmpiriaType();
+      }
     }
 
 
     [DataField("BILL_CATEGORY_ID")]
-    public int BillCategory {
+    public BillCategory BillCategory {
       get; private set;
     }
 
@@ -69,6 +72,13 @@ namespace Empiria.Billing {
     }
 
 
+
+    [DataField("BILL_MANAGED_BY_ID")]
+    public Party ManagedBy {
+      get; private set;
+    }
+
+
     [DataField("BILL_SCHEMA_VERSION")]
     public string SchemaVersion {
       get; private set;
@@ -76,14 +86,22 @@ namespace Empiria.Billing {
 
 
     [DataField("BILL_IDENTIFICATORS")]
-    public string Identificators {
-      get; private set;
+    private string _identificators = string.Empty;
+
+    public FixedList<string> Identificators {
+      get {
+        return _identificators.Split(' ').ToFixedList();
+      }
     }
 
 
     [DataField("BILL_TAGS")]
-    public string Tags {
-      get; private set;
+    private string _tags = string.Empty;
+
+    public FixedList<string> Tags {
+      get {
+        return _tags.Split(' ').ToFixedList();
+      }
     }
 
 
@@ -119,6 +137,12 @@ namespace Empiria.Billing {
 
     [DataField("BILL_SECURITY_EXT_DATA")]
     private JsonObject SecurityExtData {
+      get; set;
+    }
+
+
+    [DataField("BILL_PAYMENT_EXT_DATA")]
+    private JsonObject PaymentExtData {
       get; set;
     }
 

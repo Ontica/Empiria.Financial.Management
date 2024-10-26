@@ -53,16 +53,23 @@ namespace Empiria.Billing {
 
 
     [DataField("BILL_CONCEPT_IDENTIFICATORS")]
-    public string Identificators {
-      get; private set;
+    private string _identificators = string.Empty;
+
+    public FixedList<string> Identificators {
+      get {
+        return _identificators.Split(' ').ToFixedList();
+      }
     }
 
 
     [DataField("BILL_CONCEPT_TAGS")]
-    public string Tags {
-      get; private set;
-    }
+    private string _tags = string.Empty;
 
+    public FixedList<string> Tags {
+      get {
+        return _tags.Split(' ').ToFixedList();
+      }
+    }
 
     [DataField("BILL_CONCEPT_QTY")]
     public decimal Quantity {

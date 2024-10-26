@@ -17,9 +17,11 @@ namespace Empiria.Billing {
 
     Validated = 'V',
 
+    Issued = 'I',
+
     Payed = 'Y',
 
-    Canceled = 'C',
+    Canceled = 'N',
 
     Deleted = 'X',
 
