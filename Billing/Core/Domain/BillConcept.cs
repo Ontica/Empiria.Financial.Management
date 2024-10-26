@@ -8,6 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
+using Empiria.Json;
+using Empiria.Parties;
+using Empiria.Products;
+
 namespace Empiria.Billing {
 
   /// <summary>Represents a bill concept with its tax entries.</summary>
@@ -27,61 +33,97 @@ namespace Empiria.Billing {
 
     #region Public properties
 
-    [DataField("CLAVE_PROD_SERV")]
-    public string ClaveProdServ {
+
+    [DataField("BILL_CONCEPT_BILL_ID")]
+    public Bill Bill {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_PRODUCT_ID")]
+    public Product Product {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_DESCRIPTION")]
+    public string Description {
       get; set;
     }
 
 
-    [DataField("CLAVE_UNIDAD")]
-    public string ClaveUnidad {
+    [DataField("BILL_CONCEPT_IDENTIFICATORS")]
+    public string Identificators {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_TAGS")]
+    public string Tags {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_QTY")]
+    public decimal Quantity {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_UNIT_ID")]
+    public ProductUnit QuantityUnit {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_UNIT_PRICE")]
+    public decimal UnitPrice {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_SUBTOTAL")]
+    public decimal Subtotal {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_DISCOUNT")]
+    public decimal Discount {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_SCHEMA_EXT_DATA")]
+    private JsonObject SchemaExtData {
       get; set;
     }
 
 
-    [DataField("CANTIDAD")]
-    public decimal Cantidad {
+    [DataField("BILL_CONCEPT_EXT_DATA")]
+    private JsonObject ExtData {
       get; set;
     }
 
 
-    [DataField("UNIDAD")]
-    public string Unidad {
-      get; set;
+    [DataField("BILL_CONCEPT_POSTED_BY_ID")]
+    public Party PostedBy {
+      get; private set;
     }
 
 
-    [DataField("NO_IDENTIFICACION")]
-    public string NoIdentificacion {
-      get; set;
+    [DataField("BILL_CONCEPT_POSTING_TIME")]
+    public DateTime PostingTime {
+      get; private set;
     }
 
-
-    [DataField("DESCRIPCION")]
-    public string Descripcion {
-      get; set;
+    public BillConceptSchemaData SchemaData {
+      get {
+        return new BillConceptSchemaData(this.SchemaExtData);
+      }
     }
 
-
-    [DataField("VALOR_UNITARIO")]
-    public decimal ValorUnitario {
-      get; set;
-    }
-
-
-    [DataField("IMPORTE")]
-    public decimal Importe {
-      get; set;
-    }
-
-
-    [DataField("OBJETO_IMP")]
-    public string ObjetoImp {
-      get; set;
-    }
-
-
-    public FixedList<BillTaxEntry> Impuestos {
+    public FixedList<BillTaxEntry> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntry>();
 
