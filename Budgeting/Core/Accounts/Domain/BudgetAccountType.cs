@@ -7,7 +7,6 @@
 *  Summary  : Power type that describes a budget account.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Ontology;
 
@@ -23,13 +22,9 @@ namespace Empiria.Budgeting {
       // Empiria powertype types always have this constructor.
     }
 
-    static public new BudgetAccountType Parse(int typeId) {
-      return ObjectTypeInfo.Parse<BudgetAccountType>(typeId);
-    }
+    static public new BudgetAccountType Parse(int typeId) => Parse<BudgetAccountType>(typeId);
 
-    static public new BudgetAccountType Parse(string typeName) {
-      return BudgetAccountType.Parse<BudgetAccountType>(typeName);
-    }
+    static public new BudgetAccountType Parse(string typeName) => Parse<BudgetAccountType>(typeName);
 
     #endregion Constructors and parsers
 

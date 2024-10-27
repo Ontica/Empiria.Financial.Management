@@ -1,13 +1,12 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Budget Accounts                            Component : Domain Layer                            *
+*  Module   : Budgets                                    Component : Domain Layer                            *
 *  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Partitioned Type + Aggregate Root       *
 *  Type     : Budget                                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Partitioned type that represents a budget and serves as an aggregate root for its accounts.    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Ontology;
 
@@ -29,15 +28,9 @@ namespace Empiria.Budgeting {
     }
 
 
-    static public Budget Parse(int id) {
-      return BaseObject.ParseId<Budget>(id);
-    }
+    static public Budget Parse(int id) => ParseId<Budget>(id);
 
-
-    static public Budget Parse(string uid) {
-      return BaseObject.ParseKey<Budget>(uid);
-    }
-
+    static public Budget Parse(string uid) => ParseKey<Budget>(uid);
 
     static public FixedList<Budget> GetList() {
       return BaseObject.GetList<Budget>(string.Empty, "ObjectName")
@@ -48,8 +41,7 @@ namespace Empiria.Budgeting {
     }
 
 
-    static public Budget Empty => BaseObject.ParseEmpty<Budget>();
-
+    static public Budget Empty => ParseEmpty<Budget>();
 
     #endregion Constructors and parsers
 
@@ -67,7 +59,6 @@ namespace Empiria.Budgeting {
         return base.ExtendedDataField.Get<int>("year");
       }
     }
-
 
     #endregion Properties
 

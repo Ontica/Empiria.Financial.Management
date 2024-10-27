@@ -1,17 +1,17 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Budget Accounts                            Component : Adapters Layer                          *
+*  Module   : Budgets                                    Component : Adapters Layer                          *
 *  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Output DTO                              *
-*  Type     : BudgetTypeDto                              License   : Please read LICENSE.txt file            *
+*  Type     : BudgetDto                                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO for BudgetType instances.                                                           *
+*  Summary  : Output DTO for Budget instances.                                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Budgeting.Adapters {
 
-  /// <summary>Output DTO for BudgetType instances.</summary>
-  public class BudgetTypeDto {
+  /// <summary>Output DTO for Budget instances.</summary>
+  public class BudgetDto {
 
     public string UID {
       get; internal set;
@@ -21,14 +21,14 @@ namespace Empiria.Budgeting.Adapters {
       get; internal set;
     }
 
-    public FixedList<BudgetDto> Budgets {
+    public int Year {
       get; internal set;
     }
 
-    public FixedList<BudgetSegmentTypeDto> SegmentTypes {
+    public NamedEntityDto Type {
       get; internal set;
     }
 
-  }  // class BudgetTypeDto
+  }  // class BudgetDto
 
 }  // namespace Empiria.Budgeting.Adapters

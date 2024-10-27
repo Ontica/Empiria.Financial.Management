@@ -34,11 +34,11 @@ namespace Empiria.Budgeting.Adapters {
       get; set;
     }
 
-    public BudgetSegmentItemDto Parent {
+    public BudgetAccountSegmentDto Parent {
       get; set;
     }
 
-    public FixedList<BudgetSegmentItemDto> Children {
+    public FixedList<BudgetAccountSegmentDto> Children {
       get; set;
     }
 

@@ -2,11 +2,12 @@
 *                                                                                                            *
 *  Module   : Budget Accounts                              Component : Web Api                               *
 *  Assembly : Empiria.Budgeting.WebApi.dll                 Pattern   : Web api Controller                    *
-*  Type     : BudgetSegmentItemsController                 License   : Please read LICENSE.txt file          *
+*  Type     : BudgetsController                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update budget segment items.                                       *
+*  Summary  : Web API used to retrive and create budgets.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -16,24 +17,24 @@ using Empiria.Budgeting.UseCases;
 
 namespace Empiria.Budgeting.WebApi {
 
-  /// <summary>Web API used to retrive and update budget segment items.</summary>
-  public class BudgetSegmentItemsController : WebApiController {
+  /// <summary>Query web API used to retrive and create budgets.</summary>
+  public class BudgetsController : WebApiController {
 
     #region Web Apis
 
     [HttpGet]
-    [Route("v2/budgeting/budget-segment-items/by-type/{segmentTypeUID}")]
-    public CollectionModel GetBudgetSegmentItemsByType([FromUri] string segmentTypeUID) {
+    [Route("v2/budgeting/budgets")]
+    public CollectionModel GetBudgetsList() {
 
-      using (var usecases = BudgetSegmentItemsUseCases.UseCaseInteractor()) {
-        FixedList<BudgetSegmentItemDto> segmentItems = usecases.BudgetSegmentItemsByType(segmentTypeUID);
+      using (var usecases = BudgetUseCases.UseCaseInteractor()) {
+        FixedList<BudgetDto> list = usecases.BudgetsList();
 
-        return new CollectionModel(base.Request, segmentItems);
+        return new CollectionModel(base.Request, list);
       }
     }
 
     #endregion Web Apis
 
-  }  // class BudgetSegmentItemsController
+  }  // class BudgetsController
 
 }  // namespace Empiria.Budgeting.WebApi

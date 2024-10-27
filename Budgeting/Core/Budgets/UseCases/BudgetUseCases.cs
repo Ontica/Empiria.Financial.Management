@@ -1,13 +1,12 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Budget Accounts                            Component : Use cases Layer                         *
+*  Module   : Budgets                                    Component : Use cases Layer                         *
 *  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Use case interactor class               *
 *  Type     : BudgetUseCases                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases for budgets searching and updating.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Services;
 

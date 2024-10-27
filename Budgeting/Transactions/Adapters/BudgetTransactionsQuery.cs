@@ -64,6 +64,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
   /// <summary>Input query DTO used to retrieve budget transactions.</summary>
   public class BudgetTransactionsQuery {
 
+    public string TransactionTypeUID {
+      get; set;
+    } = string.Empty;
+
+
     public string BudgetTypeUID {
       get; set;
     } = string.Empty;

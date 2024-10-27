@@ -2,14 +2,15 @@
 *                                                                                                            *
 *  Module   : Budget Accounts                            Component : Domain Layer                            *
 *  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Partitioned Type | Information Holder   *
-*  Type     : BudgetSegmentItem                          License   : Please read LICENSE.txt file            *
+*  Type     : BudgetAccountSegment                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Partitioned type of BudgetSegmentType that holds data for a budget segment item.               *
-*             Budget segment items can be functional or administrative areas, development programs,          *
+*  Summary  : Partitioned type of BudgetAccountSegmentType that holds data for a budget account segment.     *
+*             Budget account segments can be functional or administrative areas, development programs,       *
 *             projects, budget concepts or units, activities, financial sources, geographic regions, etc.    *
-*             BudgetSegmentItem instances are the constitutive parts of budget accounts.                     *
+*             BudgetAccountSegment instances are the constitutive parts of budget accounts.                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 
 using Empiria.Contacts;
@@ -21,38 +22,38 @@ using Empiria.Budgeting.Data;
 
 namespace Empiria.Budgeting {
 
-  /// <summary>Partitioned type of BudgetSegmentType that holds data for a budget segment item.
-  /// Budget segment items can be functional or administrative areas, development programs, projects,
+  /// <summary>Partitioned type of BudgetAccountSegmentType that holds data for a budget account segment.
+  /// Budget account segments can be functional or administrative areas, development programs, projects,
   /// budget concepts or units, activities, financial sources, geographic regions, etcetera.
-  /// BudgetSegmentItem instances are the constitutive parts of budget accounts.</summary>
-  [PartitionedType(typeof(BudgetSegmentType))]
-  public class BudgetSegmentItem : BaseObject, INamedEntity {
+  /// BudgetAccountSegment instances are the constitutive parts of budget accounts.</summary>
+  [PartitionedType(typeof(BudgetAccountSegmentType))]
+  public class BudgetAccountSegment : BaseObject, INamedEntity {
 
     #region Fields
 
-    private Lazy<FixedList<BudgetSegmentItem>> _children;
+    private Lazy<FixedList<BudgetAccountSegment>> _children;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected BudgetSegmentItem(BudgetSegmentType powertype) : base(powertype) {
+    protected BudgetAccountSegment(BudgetAccountSegmentType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static public BudgetSegmentItem Parse(int id) => BaseObject.ParseId<BudgetSegmentItem>(id);
+    static public BudgetAccountSegment Parse(int id) => ParseId<BudgetAccountSegment>(id);
 
-    static public BudgetSegmentItem Parse(string uid) => BaseObject.ParseKey<BudgetSegmentItem>(uid);
+    static public BudgetAccountSegment Parse(string uid) => ParseKey<BudgetAccountSegment>(uid);
 
-    static public BudgetSegmentItem Empty => BaseObject.ParseEmpty<BudgetSegmentItem>();
+    static public BudgetAccountSegment Empty => ParseEmpty<BudgetAccountSegment>();
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public BudgetSegmentType BudgetSegmentType {
+    public BudgetAccountSegmentType BudgetSegmentType {
       get {
-        return (BudgetSegmentType) base.GetEmpiriaType();
+        return (BudgetAccountSegmentType) base.GetEmpiriaType();
       }
     }
 
@@ -81,12 +82,12 @@ namespace Empiria.Budgeting {
     } = -1;
 
 
-    public BudgetSegmentItem Parent {
+    public BudgetAccountSegment Parent {
       get {
         if (this.IsEmptyInstance || this.ParentId == this.Id) {
           return this;
         }
-        return BudgetSegmentItem.Parse(this.ParentId);
+        return BudgetAccountSegment.Parse(this.ParentId);
       }
     }
 
@@ -150,7 +151,7 @@ namespace Empiria.Budgeting {
       get; private set;
     }
 
-    public FixedList<BudgetSegmentItem> Children {
+    public FixedList<BudgetAccountSegment> Children {
       get {
         return _children.Value;
       }
@@ -162,18 +163,18 @@ namespace Empiria.Budgeting {
 
     protected override void OnLoad() {
       if (this.BudgetSegmentType.HasChildrenSegmentType) {
-        _children = new Lazy<FixedList<BudgetSegmentItem>>(() => BudgetSegmentItemsDataService.SegmentItemChildren(this));
+        _children = new Lazy<FixedList<BudgetAccountSegment>>(() => BudgetAccountSegmentDataService.BudgetAccountChildrenSegments(this));
       } else {
-        _children = new Lazy<FixedList<BudgetSegmentItem>>(() => new FixedList<BudgetSegmentItem>());
+        _children = new Lazy<FixedList<BudgetAccountSegment>>(() => new FixedList<BudgetAccountSegment>());
       }
     }
 
     protected override void OnSave() {
-      BudgetSegmentItemsDataService.Write(this);
+      BudgetAccountSegmentDataService.Write(this);
     }
 
     #endregion Methods
 
-  } // class BudgetSegmentItem
+  } // class BudgetAccountSegment
 
 } // namespace Empiria.Budgeting

@@ -2,21 +2,20 @@
 *                                                                                                            *
 *  Module   : Budget Accounts                            Component : Data Layer                              *
 *  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Data Service                            *
-*  Type     : BudgetSegmentItemsDataService              License   : Please read LICENSE.txt file            *
+*  Type     : BudgetAccountSegmentDataService            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides data access services for budget segment items.                                        *
+*  Summary  : Provides data access services for budget account segments.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Data;
 
 namespace Empiria.Budgeting.Data {
 
-  /// <summary>Provides data access services for budget segment items.</summary>
-  static internal class BudgetSegmentItemsDataService {
+  /// <summary>Provides data access services for budget account segments.</summary>
+  static internal class BudgetAccountSegmentDataService {
 
-    static internal FixedList<BudgetSegmentItem> SegmentItems(BudgetSegmentType segmentType) {
+    static internal FixedList<BudgetAccountSegment> BudgetAccountSegments(BudgetAccountSegmentType segmentType) {
       var sql = "SELECT * FROM BDG_SEGMENT_ITEMS " +
                 $"WHERE BDG_SEG_TYPE_ID = {segmentType.Id} " +
                 "AND BDG_SEG_ITEM_STATUS <> 'X' " +
@@ -24,23 +23,23 @@ namespace Empiria.Budgeting.Data {
 
       var dataOperation = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<BudgetSegmentItem>(dataOperation);
+      return DataReader.GetFixedList<BudgetAccountSegment>(dataOperation);
     }
 
 
-    static internal FixedList<BudgetSegmentItem> SegmentItemChildren(BudgetSegmentItem segmentItem) {
+    static internal FixedList<BudgetAccountSegment> BudgetAccountChildrenSegments(BudgetAccountSegment parentSegment) {
       var sql = "SELECT * FROM BDG_SEGMENT_ITEMS " +
-                $"WHERE BDG_SEG_ITEM_PARENT_ID = {segmentItem.Id} " +
+                $"WHERE BDG_SEG_ITEM_PARENT_ID = {parentSegment.Id} " +
                 "AND BDG_SEG_ITEM_STATUS <> 'X' " +
                 $"ORDER BY BDG_SEG_ITEM_CODE";
 
       var dataOperation = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<BudgetSegmentItem>(dataOperation);
+      return DataReader.GetFixedList<BudgetAccountSegment>(dataOperation);
     }
 
 
-    static internal void Write(BudgetSegmentItem o) {
+    static internal void Write(BudgetAccountSegment o) {
       var op = DataOperation.Parse("write_BDG_SEGMENT_ITEM",
                           o.Id, o.UID, o.BudgetSegmentType.Id,
                           o.Code, o.Name, o.Description, o.ExternalObjectReferenceId,
@@ -48,9 +47,9 @@ namespace Empiria.Budgeting.Data {
                           o.StartDate, o.EndDate, o.Parent.Id,
                           o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
-      DataReader.GetFixedList<BudgetSegmentItem>(op);
+      DataReader.GetFixedList<BudgetAccountSegment>(op);
     }
 
-  }  // class BudgetSegmentItemsDataService
+  }  // class BudgetAccountSegmentDataService
 
 }  // namespace Empiria.Budgeting.Data

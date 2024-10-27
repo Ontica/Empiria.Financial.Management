@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Linq;
+
 using Empiria.Ontology;
 
 namespace Empiria.Budgeting.Transactions {

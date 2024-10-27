@@ -7,7 +7,6 @@
 *  Summary  : Maps BudgetSegmentType instances to data transfer objects.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.Budgeting.Adapters {
 
@@ -16,12 +15,12 @@ namespace Empiria.Budgeting.Adapters {
 
     #region Mappers
 
-    static internal FixedList<BudgetSegmentTypeDto> Map(FixedList<BudgetSegmentType> segmentTypes) {
+    static internal FixedList<BudgetSegmentTypeDto> Map(FixedList<BudgetAccountSegmentType> segmentTypes) {
       return segmentTypes.Select(x => Map(x)).ToFixedList();
     }
 
 
-    static internal BudgetSegmentTypeDto Map(BudgetSegmentType segmentType) {
+    static internal BudgetSegmentTypeDto Map(BudgetAccountSegmentType segmentType) {
       var dto = MapWithoutStructure(segmentType);
 
       if (segmentType.HasParentSegmentType) {
@@ -37,7 +36,7 @@ namespace Empiria.Budgeting.Adapters {
       return dto;
     }
 
-    static internal BudgetSegmentTypeDto MapWithoutStructure(BudgetSegmentType segmentType) {
+    static internal BudgetSegmentTypeDto MapWithoutStructure(BudgetAccountSegmentType segmentType) {
       return new BudgetSegmentTypeDto {
         UID = segmentType.UID,
         Name = segmentType.DisplayName

@@ -1,13 +1,12 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Budget Accounts                            Component : Adapters Layer                          *
+*  Module   : Budgets                                    Component : Adapters Layer                          *
 *  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Mapping class                           *
 *  Type     : BudgetTypesMapper                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Maps BudgetType instances to data transfer objects.                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.Budgeting.Adapters {
 

@@ -1,24 +1,19 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Budget Accounts                            Component : Adapters Layer                          *
+*  Module   : Budgets                                    Component : Adapters Layer                          *
 *  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Output DTO                              *
-*  Type     : BudgetSegmentItemDto                       License   : Please read LICENSE.txt file            *
+*  Type     : BudgetTypeDto                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO for budget segment items.                                                           *
+*  Summary  : Output DTO for BudgetType instances.                                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.Budgeting.Adapters {
 
-  /// <summary>Output DTO for budget segment items.</summary>
-  public class BudgetSegmentItemDto {
+  /// <summary>Output DTO for BudgetType instances.</summary>
+  public class BudgetTypeDto {
 
     public string UID {
-      get; internal set;
-    }
-
-    public string Code {
       get; internal set;
     }
 
@@ -26,22 +21,14 @@ namespace Empiria.Budgeting.Adapters {
       get; internal set;
     }
 
-    public string Description {
+    public FixedList<BudgetDto> Budgets {
       get; internal set;
     }
 
-    public BudgetSegmentTypeDto Type {
+    public FixedList<BudgetSegmentTypeDto> SegmentTypes {
       get; internal set;
     }
 
-    public BudgetSegmentItemDto Parent {
-      get; internal set;
-    }
-
-    public FixedList<BudgetSegmentItemDto> Children {
-      get; internal set;
-    }
-
-  }  // class BudgetSegmentItemDto
+  }  // class BudgetTypeDto
 
 }  // namespace Empiria.Budgeting.Adapters

@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Budget Transactions Tests                  Component : Test cases                              *
-*  Assembly : Empiria.Budgeting.Transactions.Tests.dll   Pattern   : Use cases tests                         *
+*  Module   : Budget Transactions                        Component : Test cases                              *
+*  Assembly : Empiria.Budgeting.Transactions.Tests.dll   Pattern   : Unit tests                              *
 *  Type     : BudgetTransactionTests                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Unit tests for BudgetTransaction instances.                                                    *

@@ -13,7 +13,6 @@ using System;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
-using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions {
 

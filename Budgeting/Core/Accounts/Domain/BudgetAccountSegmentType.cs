@@ -2,38 +2,31 @@
 *                                                                                                            *
 *  Module   : Budget Accounts                            Component : Domain Layer                            *
 *  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Power type                              *
-*  Type     : BudgetSegmentType                          License   : Please read LICENSE.txt file            *
+*  Type     : BudgetAccountSegmentType                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Power type that describes a BudgetSegmentItem partitioned type.                                *
+*  Summary  : Power type that describes a budget account segment partitioned type.                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Ontology;
 
 namespace Empiria.Budgeting {
 
-  /// <summary>Power type that describes a BudgetSegmentItem partitioned type.</summary>
-  [Powertype(typeof(BudgetSegmentItem))]
-  public sealed class BudgetSegmentType : Powertype {
+  /// <summary>Power type that describes a budget account segment partitioned type.</summary>
+  [Powertype(typeof(BudgetAccountSegment))]
+  public sealed class BudgetAccountSegmentType : Powertype {
 
     #region Constructors and parsers
 
-    private BudgetSegmentType() {
+    private BudgetAccountSegmentType() {
       // Empiria power types always have this constructor.
     }
 
-    static public new BudgetSegmentType Parse(int typeId) {
-      return ObjectTypeInfo.Parse<BudgetSegmentType>(typeId);
-    }
+    static public new BudgetAccountSegmentType Parse(int typeId) => Parse<BudgetAccountSegmentType>(typeId);
 
-    static public new BudgetSegmentType Parse(string typeName) {
-      return BudgetAccountType.Parse<BudgetSegmentType>(typeName);
-    }
+    static public new BudgetAccountSegmentType Parse(string typeName) => Parse<BudgetAccountSegmentType>(typeName);
 
-    static public BudgetSegmentType Empty => BudgetSegmentType.Parse("ObjectTypeInfo.BudgetSegmentType");
-
-    static public BudgetSegmentType ProjectType => BudgetSegmentType.Parse("ObjectTypeInfo.BudgetSegmentType.Proyecto");
+    static public BudgetAccountSegmentType Empty => Parse("ObjectTypeInfo.BudgetAccountSegment");
 
     #endregion Constructors and parsers
 
@@ -41,31 +34,31 @@ namespace Empiria.Budgeting {
 
     public bool IsEmptyInstance {
       get {
-        return this.Equals(BudgetSegmentType.Empty);
+        return this.Equals(Empty);
       }
     }
 
     public string AsChildrenName {
       get {
-        return base.ExtensionData.Get<string>("asChildrenName", base.DisplayPluralName);
+        return base.ExtensionData.Get("asChildrenName", base.DisplayPluralName);
       }
     }
 
 
     public string AsParentName {
       get {
-        return base.ExtensionData.Get<string>("asParentName", base.DisplayName);
+        return base.ExtensionData.Get("asParentName", base.DisplayName);
       }
     }
 
 
-    public BudgetSegmentType ChildrenSegmentType {
+    public BudgetAccountSegmentType ChildrenSegmentType {
       get {
         if (this.IsEmptyInstance) {
           return this;
         }
 
-        return base.ExtensionData.Get<BudgetSegmentType>("childrenSegmentTypeId", BudgetSegmentType.Empty);
+        return base.ExtensionData.Get("childrenSegmentTypeId", Empty);
       }
     }
 
@@ -84,18 +77,18 @@ namespace Empiria.Budgeting {
     }
 
 
-    public BudgetSegmentType ParentSegmentType {
+    public BudgetAccountSegmentType ParentSegmentType {
       get {
         if (this.IsEmptyInstance) {
           return this;
         }
 
-        return base.ExtensionData.Get<BudgetSegmentType>("parentSegmentTypeId", BudgetSegmentType.Empty);
+        return base.ExtensionData.Get("parentSegmentTypeId", Empty);
       }
     }
 
     #endregion Properties
 
-  } // class BudgetSegmentType
+  } // class BudgetAccountSegmentType
 
 } // namespace Empiria.Budgeting

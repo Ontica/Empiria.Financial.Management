@@ -1,37 +1,38 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Budget Transactions Tests                  Component : Test cases                              *
+*  Module   : Budget Transactions                        Component : Test cases                              *
 *  Assembly : Empiria.Budgeting.Transactions.Tests.dll   Pattern   : Use cases tests                         *
-*  Type     : BudgetTransactionExecutionUseCasesTests    License   : Please read LICENSE.txt file            *
+*  Type     : BudgetTransactionEditionCasesTests         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Budget transactions execution use cases tests.                                                 *
+*  Summary  : Budget transactions edition use cases tests.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using Xunit;
 
-using Empiria.Budgeting.Transactions.Execution.Adapters;
-using Empiria.Budgeting.Transactions.Execution.UseCases;
+using Empiria.Budgeting.Transactions.Adapters;
+using Empiria.Budgeting.Transactions.UseCases;
 
 namespace Empiria.Tests.Budgeting.Transactions {
 
-  /// <summary>Budget transactions execution use cases tests.</summary>
-  public class BudgetTransactionExecutionUseCasesTests {
+  /// <summary>Budget transactions edition use cases tests.</summary>
+  public class BudgetTransactionEditionCasesTests {
 
     #region Fields
 
-    private readonly BudgetTransactionExecutionUseCases _usecases;
+    private readonly BudgetTransactionEditionUseCases _usecases;
 
     #endregion Fields
 
     #region Initialization
 
-    public BudgetTransactionExecutionUseCasesTests() {
+    public BudgetTransactionEditionCasesTests() {
       TestsCommonMethods.Authenticate();
 
-      _usecases = BudgetTransactionExecutionUseCases.UseCaseInteractor();
+      _usecases = BudgetTransactionEditionUseCases.UseCaseInteractor();
     }
 
-    ~BudgetTransactionExecutionUseCasesTests() {
+    ~BudgetTransactionEditionCasesTests() {
       _usecases.Dispose();
     }
 
@@ -42,6 +43,7 @@ namespace Empiria.Tests.Budgeting.Transactions {
     [Fact]
     public void Should_Create_A_Budget_Transaction() {
       var fields = new BudgetTransactionFields {
+        BaseBudgetUID = "bdd6ebe8-303c-41b3-917d-fdf49fb0e96e",
         WorkItemUID = "07288961-55d9-4e73-871e-7a48e8b0dac2"
       };
 
@@ -50,6 +52,6 @@ namespace Empiria.Tests.Budgeting.Transactions {
 
     #endregion Facts
 
-  }  // class BudgetTransactionExecutionUseCasesTests
+  }  // class BudgetTransactionEditionCasesTests
 
 }  // namespace Empiria.Tests.Budgeting.Transactions

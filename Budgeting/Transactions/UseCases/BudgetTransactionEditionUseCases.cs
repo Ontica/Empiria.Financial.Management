@@ -2,30 +2,30 @@
 *                                                                                                            *
 *  Module   : Budget Transactions                        Component : Use cases Layer                         *
 *  Assembly : Empiria.Budgeting.Transactions.dll         Pattern   : Use case interactor class               *
-*  Type     : BudgetTransactionExecutionUseCases         License   : Please read LICENSE.txt file            *
+*  Type     : BudgetTransactionEditionUseCases           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases used to record budget transactions.                                                  *
+*  Summary  : Use cases used to edit budget transactions.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Services;
 using Empiria.Services.Aspects;
 
-using Empiria.Budgeting.Transactions.Execution.Adapters;
+using Empiria.Budgeting.Transactions.Adapters;
 
-namespace Empiria.Budgeting.Transactions.Execution.UseCases {
+namespace Empiria.Budgeting.Transactions.UseCases {
 
-  /// <summary>Use cases used to record budget transactions.</summary>
-  public class BudgetTransactionExecutionUseCases : WorkflowUseCase {
+  /// <summary>Use cases used to edit budget transactions.</summary>
+  public class BudgetTransactionEditionUseCases : WorkflowUseCase {
 
     #region Constructors and parsers
 
-    protected BudgetTransactionExecutionUseCases() {
+    protected BudgetTransactionEditionUseCases() {
       // no-op
     }
 
-    static public BudgetTransactionExecutionUseCases UseCaseInteractor() {
-      return CreateInstance<BudgetTransactionExecutionUseCases>();
+    static public BudgetTransactionEditionUseCases UseCaseInteractor() {
+      return CreateInstance<BudgetTransactionEditionUseCases>();
     }
 
     #endregion Constructors and parsers
@@ -41,6 +41,6 @@ namespace Empiria.Budgeting.Transactions.Execution.UseCases {
 
     #endregion Use cases
 
-  }  // class BudgetTransactionExecutionUseCases
+  }  // class BudgetTransactionEditionUseCases
 
-}  // namespace Empiria.Budgeting.Transactions.Execution.UseCases
+}  // namespace Empiria.Budgeting.Transactions.UseCases

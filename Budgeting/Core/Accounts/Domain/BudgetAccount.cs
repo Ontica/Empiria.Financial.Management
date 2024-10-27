@@ -7,6 +7,7 @@
 *  Summary  : Partitioned type that represents a budget account.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 
 using Empiria.Contacts;
@@ -26,11 +27,11 @@ namespace Empiria.Budgeting {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static public BudgetAccount Parse(int id) => BaseObject.ParseId<BudgetAccount>(id);
+    static public BudgetAccount Parse(int id) => ParseId<BudgetAccount>(id);
 
-    static public BudgetAccount Parse(string uid) => BaseObject.ParseKey<BudgetAccount>(uid);
+    static public BudgetAccount Parse(string uid) => ParseKey<BudgetAccount>(uid);
 
-    static internal BudgetAccount Empty => BaseObject.ParseEmpty<BudgetAccount>();
+    static internal BudgetAccount Empty => ParseEmpty<BudgetAccount>();
 
     #endregion Constructors and parsers
 
@@ -43,7 +44,7 @@ namespace Empiria.Budgeting {
     }
 
 
-    [DataField("BDG_ACCt_BUDGET_TYPE_ID")]
+    [DataField("BDG_ACCT_BUDGET_TYPE_ID")]
     public BudgetType BudgetType {
       get;
       private set;
