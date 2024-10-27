@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
 using Empiria.Ontology;
 
 namespace Empiria.Budgeting.Transactions {
@@ -26,7 +27,34 @@ namespace Empiria.Budgeting.Transactions {
 
     static public new BudgetTransactionType Parse(string typeName) => Parse<BudgetTransactionType>(typeName);
 
+    static public FixedList<BudgetTransactionType> GetList() {
+      return Empty.GetAllSubclasses()
+            .Select(x => (BudgetTransactionType) x)
+            .ToFixedList();
+    }
+
+    static public FixedList<BudgetTransactionType> GetList(BudgetType budgetType) {
+      Assertion.Require(budgetType, nameof(budgetType));
+
+      return GetList().FindAll(x => x.BudgetType.Equals(budgetType));
+    }
+
+
+    static public BudgetTransactionType Empty => Parse("ObjectTypeInfo.BudgetTransaction");
+
     #endregion Constructors and parsers
+
+    #region Properties
+
+    public BudgetType BudgetType {
+      get {
+        int budgetTypeId = ExtensionData.Get<int>("budgetTypeId");
+
+        return BudgetType.Parse(budgetTypeId);
+      }
+    }
+
+    #endregion Properties
 
   } // class BudgetTransactionType
 

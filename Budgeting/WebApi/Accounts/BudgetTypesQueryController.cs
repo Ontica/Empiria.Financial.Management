@@ -12,7 +12,9 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.Budgeting.Adapters;
+
 using Empiria.Budgeting.UseCases;
+using Empiria.Budgeting.Transactions.UseCases;
 
 namespace Empiria.Budgeting.WebApi {
 
@@ -29,6 +31,18 @@ namespace Empiria.Budgeting.WebApi {
         FixedList<BudgetTypeDto> list = usecases.BudgetTypesList();
 
         return new CollectionModel(base.Request, list);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/budgeting/budget-types/{budgetTypeUID:string}/transaction-types")]
+    public CollectionModel GetTransactionTypes([FromUri] string budgetTypeUID) {
+
+      using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> transactionTypes = usecases.GetTransactionTypes(budgetTypeUID);
+
+        return new CollectionModel(base.Request, transactionTypes);
       }
     }
 
