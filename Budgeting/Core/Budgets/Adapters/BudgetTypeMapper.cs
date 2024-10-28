@@ -26,7 +26,8 @@ namespace Empiria.Budgeting.Adapters {
         UID = budgetType.Name,
         Name = budgetType.DisplayName,
         SegmentTypes = BudgetSegmentTypesMapper.Map(budgetType.SegmentTypes),
-        Budgets = BudgetMapper.Map(budgets.FindAll(x => x.BudgetType.Equals(budgetType)))
+        Budgets = BudgetMapper.Map(budgets.FindAll(x => x.BudgetType.Equals(budgetType))),
+        TransactionTypes = budgetType.GetTransactionTypes()
       };
     }
 

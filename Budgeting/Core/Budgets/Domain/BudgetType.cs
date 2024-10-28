@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Ontology;
 
 namespace Empiria.Budgeting {
@@ -42,6 +43,13 @@ namespace Empiria.Budgeting {
       get {
         return base.ExtensionData.GetFixedList<BudgetAccountSegmentType>("segmentTypes");
       }
+    }
+
+    internal FixedList<NamedEntityDto> GetTransactionTypes() {
+      FixedList<int> ids = base.ExtensionData.GetFixedList<int>("transactionTypes");
+
+      return ids.Select(x => ObjectTypeInfo.Parse(x))
+                .MapToNamedEntityList();
     }
 
     #endregion Properties
