@@ -10,9 +10,14 @@
 
 using Empiria.Services;
 
+using Empiria.Parties;
+
+using Empiria.Budgeting.Transactions.Adapters;
+using Empiria.Budgeting.Transactions.Data;
+
 namespace Empiria.Budgeting.Transactions.UseCases {
 
-  /// <summary>Use cases used to record budget transactions.</summary>
+  /// <summary>Use cases used to retrive budget transactions.</summary>
   public class BudgetTransactionUseCases : UseCase {
 
     #region Constructors and parsers
@@ -29,6 +34,22 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
     #region Use cases
 
+
+    public FixedList<NamedEntityDto> GetOperationSources() {
+      return OperationSource.GetList()
+                            .MapToNamedEntityList();
+    }
+
+
+    public BudgetTransactionDto GetTransaction(string budgetTransactionUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public FixedList<NamedEntityDto> GetTransactionTypes(string budgetTypeUID) {
       Assertion.Require(budgetTypeUID, nameof(budgetTypeUID));
 
@@ -36,6 +57,19 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       return BudgetTransactionType.GetList(budgetType)
                                   .MapToNamedEntityList();
+    }
+
+
+    public FixedList<BudgetTransactionDescriptorDto> SearchTransactions(BudgetTransactionsQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      string filter = query.MapToFilterString();
+
+      string sort = query.MapToSortString();
+
+      FixedList<BudgetTransaction> transactions = BudgetTransactionDataService.SearchTransactions(filter, sort);
+
+      return BudgetTransactionMapper.MapToDescriptor(transactions);
     }
 
     #endregion Use cases

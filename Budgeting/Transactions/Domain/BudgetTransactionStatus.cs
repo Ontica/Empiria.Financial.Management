@@ -25,4 +25,32 @@ namespace Empiria.Budgeting.Transactions {
 
   }  // enum BudgetTransactionStatus
 
+
+
+  /// <summary>Extension methods for BudgetTransactionStatus type.</summary>
+  static public class BudgetTransactionStatusExtensions {
+
+    static public string GetName(this BudgetTransactionStatus status) {
+
+      switch (status) {
+        case BudgetTransactionStatus.Pending:
+          return "Pendiente";
+        case BudgetTransactionStatus.OnAuthorization:
+          return "En autorización";
+        case BudgetTransactionStatus.Completed:
+          return "Completada";
+        case BudgetTransactionStatus.Deleted:
+          return "Eliminada";
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized budget transaction status {status}.");
+      }
+    }
+
+
+    static public NamedEntityDto MapToNamedEntity(this BudgetTransactionStatus status) {
+      return new NamedEntityDto(status.ToString(), status.GetName());
+    }
+
+  }  // class BudgetTransactionStatusExtensions
+
 }  // namespace Empiria.Budgeting.Transactions

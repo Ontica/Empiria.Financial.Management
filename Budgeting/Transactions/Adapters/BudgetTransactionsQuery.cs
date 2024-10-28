@@ -64,22 +64,22 @@ namespace Empiria.Budgeting.Transactions.Adapters {
   /// <summary>Input query DTO used to retrieve budget transactions.</summary>
   public class BudgetTransactionsQuery {
 
-    public string TransactionTypeUID {
-      get; set;
-    } = string.Empty;
-
-
     public string BudgetTypeUID {
       get; set;
     } = string.Empty;
 
 
-    public string BudgetUID {
+    public string TransactionTypeUID {
       get; set;
     } = string.Empty;
 
 
-    public string BaseOrgUnitUID {
+    public string BaseBudgetUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string BasePartyUID {
       get; set;
     } = string.Empty;
 
@@ -89,7 +89,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = string.Empty;
 
 
-    public string[] TransactionsID {
+    public string[] TransactionsNo {
       get; set;
     } = new string[0];
 
@@ -109,7 +109,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = new string[0];
 
 
-    public BudgetTransactionQueryDateType TransactionDateType {
+    public BudgetTransactionQueryDateType DateType {
       get; set;
     } = BudgetTransactionQueryDateType.None;
 
@@ -124,7 +124,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = ExecutionServer.DateMinValue;
 
 
-    public BudgetTransactionPartyType transactionPartyType {
+    public BudgetTransactionPartyType PartyType {
       get; set;
     } = BudgetTransactionPartyType.None;
 
@@ -142,6 +142,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     public BudgetTransactionStage Stage {
       get; set;
     } = BudgetTransactionStage.All;
+
+    public string OrderBy {
+      get; set;
+    } = string.Empty;
 
   }  // class BudgetTransactionsQuery
 

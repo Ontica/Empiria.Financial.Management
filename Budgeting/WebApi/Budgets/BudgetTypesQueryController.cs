@@ -36,8 +36,8 @@ namespace Empiria.Budgeting.WebApi {
     }
 
 
-    [HttpPost]
-    [Route("v2/budgeting/budget-types/{budgetTypeUID:string}/transaction-types")]
+    [HttpGet]
+    [Route("v2/budgeting/budget-types/{budgetTypeUID}/transaction-types")]
     public CollectionModel GetTransactionTypes([FromUri] string budgetTypeUID) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {

@@ -44,7 +44,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_TXN_SOURCE_ID")]
-    public OperationSource Source {
+    public OperationSource OperationSource {
       get;
       private set;
     }

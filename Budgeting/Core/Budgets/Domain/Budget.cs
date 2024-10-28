@@ -41,6 +41,12 @@ namespace Empiria.Budgeting {
     }
 
 
+    static public FixedList<Budget> GetList(BudgetType budgetType) {
+      Assertion.Require(budgetType, nameof(budgetType));
+
+      return GetList().FindAll(x => x.BudgetType.Equals(budgetType));
+    }
+
     static public Budget Empty => ParseEmpty<Budget>();
 
     #endregion Constructors and parsers
