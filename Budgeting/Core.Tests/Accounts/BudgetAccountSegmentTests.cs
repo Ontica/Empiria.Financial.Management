@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Budget Accounts                            Component : Test cases                              *
 *  Assembly : Empiria.Budgeting.Core.Tests.dll           Pattern   : Unit tests                              *
-*  Type     : BudgetAccountsTests                        License   : Please read LICENSE.txt file            *
+*  Type     : BudgetAccountSegmentTests                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Unit tests for budget accounts.                                                                *
+*  Summary  : Unit tests for BudgetAccountSegment type.                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -14,22 +14,37 @@ using Empiria.Budgeting;
 
 namespace Empiria.Tests.Budgeting {
 
-  /// <summary>Unit tests for budget accounts.</summary>
-  public class BudgetAccountsTests {
+  /// <summary>Unit tests for BudgetAccountSegment type.</summary>
+  public class BudgetAccountSegmentTests {
 
     #region Facts
 
     [Fact]
-    public void Should_Read_Empty_BudgetAccount() {
-      var sut = BudgetAccount.Empty;
+    public void Should_Parse_All_Budget_Accounts_Segments() {
+      var segments = BaseObject.GetList<BudgetAccountSegment>();
 
-      Assert.NotNull(sut);
+      foreach (var sut in segments) {
+        Assert.NotEmpty(sut.Code);
+        Assert.NotEmpty(sut.Name);
+        Assert.NotNull(sut.Parent);
+        Assert.NotNull(sut.Children);
+      }
     }
 
 
     [Fact]
-    public void Should_Read_All_Budget_Accounts() {
-      var sut = BudgetAccount.GetList<BudgetAccount>();
+    public void Should_Read_Empty_BudgetAccountSegment() {
+      var sut = BudgetAccountSegment.Empty;
+
+      Assert.NotNull(sut);
+      Assert.NotNull(sut.Parent);
+      Assert.Empty(sut.Children);
+    }
+
+
+    [Fact]
+    public void Should_Read_All_Budget_Accounts_Segments() {
+      var sut = BaseObject.GetList<BudgetAccountSegment>();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
@@ -37,6 +52,6 @@ namespace Empiria.Tests.Budgeting {
 
     #endregion Facts
 
-  }  // class BudgetAccountsTests
+  }  // class BudgetAccountSegmentTests
 
 }  // namespace Empiria.Tests.Budgeting

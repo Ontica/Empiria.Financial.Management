@@ -10,9 +10,9 @@
 
 using System;
 
-using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Ontology;
+using Empiria.Parties;
 using Empiria.StateEnums;
 
 namespace Empiria.Budgeting {
@@ -85,7 +85,7 @@ namespace Empiria.Budgeting {
 
 
     [DataField("BDG_ACCT_POSTED_BY_ID")]
-    public Person PostedById {
+    public Party PostedById {
       get;
       private set;
     }

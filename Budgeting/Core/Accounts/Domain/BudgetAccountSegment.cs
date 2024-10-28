@@ -13,9 +13,9 @@
 
 using System;
 
-using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Ontology;
+using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Budgeting.Data;
@@ -58,25 +58,25 @@ namespace Empiria.Budgeting {
     }
 
 
-    [DataField("BDG_SEG_ITEM_CODE")]
+    [DataField("BDG_ACCT_SEGMENT_CODE")]
     public string Code {
       get; protected set;
     }
 
 
-    [DataField("BDG_SEG_ITEM_NAME")]
+    [DataField("BDG_ACCT_SEGMENT_NAME")]
     public string Name {
       get; protected set;
     }
 
 
-    [DataField("BDG_SEG_ITEM_DESCRIPTION")]
+    [DataField("BDG_ACCT_SEGMENT_DESCRIPTION")]
     public string Description {
       get; protected set;
     }
 
 
-    [DataField("BDG_SEG_ITEM_PARENT_ID", Default = -1)]
+    [DataField("BDG_ACCT_SEGMENT_PARENT_ID", Default = -1)]
     private int ParentId {
       get; set;
     } = -1;
@@ -99,30 +99,30 @@ namespace Empiria.Budgeting {
     }
 
 
-    [DataField("BDG_SEG_ITEM_EXT_DATA")]
+    [DataField("BDG_ACCT_SEGMENT_EXT_DATA")]
     internal JsonObject ExtensionData {
       get; set;
     } = new JsonObject();
 
 
-    [DataField("BDG_SEG_ITEM_START_DATE")]
+    [DataField("BDG_ACCT_SEGMENT_START_DATE")]
     public DateTime StartDate {
       get; private set;
     }
 
 
-    [DataField("BDG_SEG_ITEM_END_DATE")]
+    [DataField("BDG_ACCT_SEGMENT_END_DATE")]
     public DateTime EndDate {
       get; private set;
     }
 
 
-    [DataField("BDG_SEG_ITEM_EXT_OBJECT_ID")]
+    [DataField("BDG_ACCT_SEGMENT_EXT_OBJECT_ID")]
     public int ExternalObjectReferenceId {
       get; private set;
     }
 
-    [DataField("BDG_SEG_ITEM_HISTORIC_ID")]
+    [DataField("BDG_ACCT_SEGMENT_HISTORIC_ID")]
     public int HistoryId {
       get; private set;
     }
@@ -134,19 +134,19 @@ namespace Empiria.Budgeting {
     }
 
 
-    [DataField("BDG_SEG_ITEM_POSTED_BY_ID")]
-    public Contact PostedBy {
+    [DataField("BDG_ACCT_SEGMENT_POSTED_BY_ID")]
+    public Party PostedBy {
       get; private set;
     }
 
 
-    [DataField("BDG_SEG_ITEM_POSTING_TIME")]
+    [DataField("BDG_ACCT_SEGMENT_POSTING_TIME")]
     public DateTime PostingTime {
       get; private set;
     }
 
 
-    [DataField("BDG_SEG_ITEM_STATUS", Default = EntityStatus.Active)]
+    [DataField("BDG_ACCT_SEGMENT_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get; private set;
     }
