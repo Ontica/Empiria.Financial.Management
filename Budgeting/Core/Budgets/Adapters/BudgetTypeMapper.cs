@@ -11,7 +11,7 @@
 namespace Empiria.Budgeting.Adapters {
 
   /// <summary>Maps BudgetType instances to data transfer objects.</summary>
-  static internal class BudgetTypesMapper {
+  static internal class BudgetTypeMapper {
 
     #region Mappers
 

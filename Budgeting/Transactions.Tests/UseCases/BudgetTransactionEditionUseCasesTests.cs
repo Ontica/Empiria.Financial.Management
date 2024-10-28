@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Budget Transactions                        Component : Test cases                              *
 *  Assembly : Empiria.Budgeting.Transactions.Tests.dll   Pattern   : Use cases tests                         *
-*  Type     : BudgetTransactionEditionCasesTests         License   : Please read LICENSE.txt file            *
+*  Type     : BudgetTransactionEditionUseCasesTests      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Budget transactions edition use cases tests.                                                   *
+*  Summary  : Use case tests for budget transactions edition.                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -15,8 +15,8 @@ using Empiria.Budgeting.Transactions.UseCases;
 
 namespace Empiria.Tests.Budgeting.Transactions {
 
-  /// <summary>Budget transactions edition use cases tests.</summary>
-  public class BudgetTransactionEditionCasesTests {
+  /// <summary>Use case tests for budget transactions edition.</summary>
+  public class BudgetTransactionEditionUseCasesTests {
 
     #region Fields
 
@@ -26,13 +26,13 @@ namespace Empiria.Tests.Budgeting.Transactions {
 
     #region Initialization
 
-    public BudgetTransactionEditionCasesTests() {
+    public BudgetTransactionEditionUseCasesTests() {
       TestsCommonMethods.Authenticate();
 
       _usecases = BudgetTransactionEditionUseCases.UseCaseInteractor();
     }
 
-    ~BudgetTransactionEditionCasesTests() {
+    ~BudgetTransactionEditionUseCasesTests() {
       _usecases.Dispose();
     }
 
@@ -52,6 +52,6 @@ namespace Empiria.Tests.Budgeting.Transactions {
 
     #endregion Facts
 
-  }  // class BudgetTransactionEditionCasesTests
+  }  // class BudgetTransactionEditionUseCasesTests
 
 }  // namespace Empiria.Tests.Budgeting.Transactions
