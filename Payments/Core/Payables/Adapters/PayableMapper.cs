@@ -23,7 +23,7 @@ namespace Empiria.Payments.Payables.Adapters {
         RequestedBy = new NamedEntityDto(payable.OrganizationalUnit.UID, payable.OrganizationalUnit.Name),
         BudgetType = new NamedEntityDto(payable.BudgetType.UID, payable.BudgetType.Name),
         Total = payable.Total,
-        Currency = payable.Currency.Name,
+        Currency = payable.Currency.MapToNamedEntity(),
         RequestedTime = payable.RequestedTime,
         DueTime = payable.DueTime,
         Status = new NamedEntityDto(payable.Status.ToString(), payable.Status.GetName())

@@ -113,7 +113,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
 
       var sut = _usecases.GetPayableTypes();
 
-      Assert.NotNull(sut);
+     Assert.NotNull(sut);
     }
 
 

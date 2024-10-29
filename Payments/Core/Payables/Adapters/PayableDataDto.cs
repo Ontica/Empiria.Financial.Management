@@ -29,6 +29,11 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
+    public FixedList<BillDto> Bills {
+      get; internal set;
+    }
+
+
     public FixedList<DocumentDto> Documents {
       get; internal set;
     }
@@ -59,7 +64,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public string BudgetAccount {
+    public NamedEntityDto BudgetAccount {
       get; internal set;
     }
 
@@ -114,11 +119,12 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
+
     //TODO 
     //public AttributesDto Attributes {
     //  get; internal set;
     //}
-       
+
 
     public FixedList<PayableEntityItemDto> Items {
       get; internal set;
@@ -136,6 +142,16 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
+    public NamedEntityDto Budget {
+      get; internal set;
+    }
+
+
+    public NamedEntityDto Product {
+      get; internal set;
+    }
+
+
     public string Name {
       get; internal set;
     }
@@ -147,6 +163,66 @@ namespace Empiria.Payments.Payables.Adapters {
 
 
     public string Unit {
+      get; internal set;
+    }
+
+
+    public decimal Total {
+      get; internal set;
+    }
+
+  } // class PayableEntityItemDto
+
+
+  // <summary>Output DTO used to return minimal information about Bills.</summary>
+  public class BillDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+
+    public string Name {
+      get; internal set;
+    }
+
+
+    public DateTime Date {
+      get; internal set;
+    }
+
+
+    public string CFDIGUID {
+      get; internal set;
+    }
+
+
+     public FixedList<BillItemDto> Items {
+      get; internal set;
+    }
+
+  } // BillDto
+
+
+  // <summary>Output DTO used to return payable entity item minimal information.</summary>
+  public class BillItemDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+
+    public string Name {
+      get; internal set;
+    }
+
+
+    public string Unit {
+      get; internal set;
+    }
+
+
+    public decimal Quantity {
       get; internal set;
     }
 
@@ -234,11 +310,11 @@ namespace Empiria.Payments.Payables.Adapters {
   // <summary>Output DTO used to return ActionsDto. </summary>
   public class ActionsDto {
 
-    public CanDto CanObject {
+    public CanDto Can {
       get; internal set;
     }
 
-    public ShowDto ShowObject {
+    public ShowDto Show {
       get; internal set;
     }
 

@@ -55,7 +55,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public string Currency {
+    public NamedEntityDto Currency {
       get; internal set;
     }
 
