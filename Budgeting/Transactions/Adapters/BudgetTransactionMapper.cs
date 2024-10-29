@@ -33,6 +33,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         ApplicationDate = transaction.ApplicationDate,
         RequestedDate = transaction.RequestedTime,
         Status = transaction.Status.MapToNamedEntity(),
+        Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries)
       };
     }
 

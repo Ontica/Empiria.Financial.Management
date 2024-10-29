@@ -14,6 +14,8 @@ using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
 
+using Empiria.Budgeting.Transactions.Data;
+
 namespace Empiria.Budgeting.Transactions {
 
   /// <summary>Partitioned type that represents a budget transaction with its entries.</summary>
@@ -192,6 +194,12 @@ namespace Empiria.Budgeting.Transactions {
       get {
         return EmpiriaString.BuildKeywords(TransactionNo, Description, BudgetTransactionType.DisplayName,
                                            BaseBudget.Keywords, BaseParty.Keywords);
+      }
+    }
+
+    public FixedList<BudgetEntry> Entries {
+      get {
+        return BudgetTransactionDataService.GetTransactionEntries(this);
       }
     }
 
