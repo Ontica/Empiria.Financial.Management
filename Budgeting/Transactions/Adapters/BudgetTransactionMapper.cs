@@ -8,19 +8,43 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Documents;
+
 namespace Empiria.Budgeting.Transactions.Adapters {
 
   /// <summary>Maps BudgetTransaction instances to data transfer objects.</summary>
   static internal class BudgetTransactionMapper {
 
-    #region Mappers
+    #region Public mappers
 
-    static internal FixedList<BudgetTransactionDto> Map(FixedList<BudgetTransaction> transactions) {
-      return transactions.Select(x => Map(x)).ToFixedList();
+    static internal BudgetTransactionHolderDto Map(BudgetTransaction transaction) {
+      return new BudgetTransactionHolderDto {
+        Transaction = MapTransaction(transaction),
+        Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
+        Documents = MapDocuments(transaction),
+        History = MapHistory(transaction)
+      };
+    }
+
+    static internal FixedList<BudgetTransactionDescriptorDto> MapToDescriptor(FixedList<BudgetTransaction> transactions) {
+      return transactions.Select(x => MapToDescriptor(x)).ToFixedList();
+    }
+
+    #endregion Public mappers
+
+    #region Helpers
+
+    static private FixedList<Document> MapHistory(BudgetTransaction transaction) {
+      return new FixedList<Document>();
     }
 
 
-    static internal BudgetTransactionDto Map(BudgetTransaction transaction) {
+    static private FixedList<Document> MapDocuments(BudgetTransaction transaction) {
+      return new FixedList<Document>();
+    }
+
+
+    static private BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
       return new BudgetTransactionDto {
         UID = transaction.UID,
         TransactionType = transaction.BudgetTransactionType.MapToNamedEntity(),
@@ -32,13 +56,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         BaseParty = transaction.BaseParty.MapToNamedEntity(),
         ApplicationDate = transaction.ApplicationDate,
         RequestedDate = transaction.RequestedTime,
-        Status = transaction.Status.MapToNamedEntity(),
+        Status = transaction.Status.MapToNamedEntity()
       };
-    }
-
-
-    static internal FixedList<BudgetTransactionDescriptorDto> MapToDescriptor(FixedList<BudgetTransaction> transactions) {
-      return transactions.Select(x => MapToDescriptor(x)).ToFixedList();
     }
 
 
@@ -58,7 +77,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       };
     }
 
-    #endregion Mappers
+    #endregion Helpers
 
   }  // class BudgetTransactionMapper
 

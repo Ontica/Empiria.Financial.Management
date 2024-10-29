@@ -61,6 +61,20 @@ namespace Empiria.Budgeting.Transactions.Adapters {
   }
 
 
+  /// <summary>Input query DTO used to retrieve budget transactions parties.</summary>
+  public class BudgetPartiesQuery {
+
+    public BudgetTransactionPartyType PartyType {
+      get; set;
+    }
+
+    public string Keywords {
+      get; set;
+    }
+
+  }  // class BudgetPartiesQuery
+
+
   /// <summary>Input query DTO used to retrieve budget transactions.</summary>
   public class BudgetTransactionsQuery {
 

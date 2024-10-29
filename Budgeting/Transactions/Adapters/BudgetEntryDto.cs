@@ -2,45 +2,18 @@
 *                                                                                                            *
 *  Module   : Budget Transactions                        Component : Adapters Layer                          *
 *  Assembly : Empiria.Budgeting.Transactions.dll         Pattern   : Output DTO                              *
-*  Type     : BudgetTransactionDto                       License   : Please read LICENSE.txt file            *
+*  Type     : BudgetEntryDto                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO used for budget transactions.                                                       *
+*  Summary  : Output DTO used for budget entries.                                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 
-using Empiria.Documents;
-
 namespace Empiria.Budgeting.Transactions.Adapters {
 
-
-  /// <summary>Output holder DTO used for a budget transaction.</summary>
-  public class BudgetTransactionHolderDto {
-
-    public BudgetTransactionDto Transaction {
-      get; internal set;
-    }
-
-    public FixedList<BudgetEntryDescriptorDto> Entries {
-      get; internal set;
-    }
-
-    public FixedList<Document> Documents {
-      get; internal set;
-    }
-
-
-    public FixedList<Document> History {
-      get; internal set;
-    }
-
-  }  // class BudgetTransactionHolderDto
-
-
-
-  /// <summary>Output DTO used for budget transactions.</summary>
-  public class BudgetTransactionDto {
+  /// <summary>Output DTO used for budget entries.</summary>
+  public class BudgetEntryDto {
 
     public string UID {
       get; internal set;
@@ -86,54 +59,50 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-  }  // BudgetTransactionDto
+  }  // BudgetEntryDto
 
 
 
-  /// <summary>Output DTO used to display budget transactions in lists.</summary>
-  public class BudgetTransactionDescriptorDto {
+  /// <summary>Output DTO used to display budget entries in a lists.</summary>
+  public class BudgetEntryDescriptorDto {
 
     public string UID {
       get; internal set;
     }
 
-    public string BudgetTypeName {
+    public string BudgetAccountCode {
       get; internal set;
     }
 
-    public string TransactionTypeName {
+    public string BudgetAccountName {
       get; internal set;
     }
 
-    public string TransactionNo {
+    public int Year {
       get; internal set;
     }
 
-    public string BudgetName {
+    public int Month {
       get; internal set;
     }
 
-    public string BasePartyName {
+    public string MonthName {
       get; internal set;
     }
 
-    public string OperationSourceName {
+    public int Day {
       get; internal set;
     }
 
-    public string Description {
+    public string BalanceColumn {
       get; internal set;
     }
 
-    public DateTime RequestedDate {
+    public decimal Deposit {
       get; internal set;
     }
 
-    public DateTime ApplicationDate {
-      get; internal set;
-    }
-
-    public string StatusName {
+    public decimal Withdrawal {
       get; internal set;
     }
 

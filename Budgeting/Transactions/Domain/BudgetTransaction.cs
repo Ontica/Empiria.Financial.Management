@@ -14,6 +14,8 @@ using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
 
+using Empiria.Budgeting.Transactions.Data;
+
 namespace Empiria.Budgeting.Transactions {
 
   /// <summary>Partitioned type that represents a budget transaction with its entries.</summary>
@@ -78,15 +80,28 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_TXN_RECEIVABLE_ID")]
-    public int ReceivableId {
+    [DataField("BDG_TXN_IDENTIFICATORS")]
+    public string Identificators {
       get;
       private set;
     }
 
 
-    [DataField("BDG_TXN_PAYABLE_ID")]
-    public int PayableId {
+    [DataField("BDG_TXN_TAGS")]
+    public string Tags {
+      get;
+      private set;
+    }
+
+    [DataField("BDG_TXN_BASE_ENTITY_TYPE_ID")]
+    public int BaseEntityType {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_TXN_BASE_ENTITY_ID")]
+    public int BaseEntity {
       get;
       private set;
     }
@@ -155,18 +170,6 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_TXN_PARENT_ID")]
-    private int _parentId;
-    public BudgetTransaction Parent {
-      get {
-        return Parse(_parentId);
-      }
-      private set {
-        _parentId = value.Id;
-      }
-    }
-
-
     [DataField("BDG_TXN_POSTING_TIME")]
     public DateTime PostingTime {
       get;
@@ -192,6 +195,12 @@ namespace Empiria.Budgeting.Transactions {
       get {
         return EmpiriaString.BuildKeywords(TransactionNo, Description, BudgetTransactionType.DisplayName,
                                            BaseBudget.Keywords, BaseParty.Keywords);
+      }
+    }
+
+    public FixedList<BudgetEntry> Entries {
+      get {
+        return BudgetTransactionDataService.GetTransactionEntries(this);
       }
     }
 

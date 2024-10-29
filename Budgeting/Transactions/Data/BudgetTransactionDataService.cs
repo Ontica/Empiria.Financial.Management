@@ -15,6 +15,18 @@ namespace Empiria.Budgeting.Transactions.Data {
   /// <summary>Provides data access services for budget transactions.</summary>
   static internal class BudgetTransactionDataService {
 
+    static internal FixedList<BudgetEntry> GetTransactionEntries(BudgetTransaction transaction) {
+      var sql = "SELECT * FROM FMS_BUDGET_ENTRIES " +
+               $"WHERE BDG_ENTRY_TXN_ID = {transaction.Id} AND " +
+                     $"BDG_ENTRY_STATUS <> 'X' " +
+               $"ORDER BY BGD_ENTRY_ID";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<BudgetEntry>(op);
+    }
+
+
     static internal FixedList<BudgetTransaction> SearchTransactions(string filter, string sort) {
       Assertion.Require(filter, nameof(filter));
       Assertion.Require(sort, nameof(sort));

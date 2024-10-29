@@ -57,6 +57,14 @@ namespace Empiria.Budgeting {
       private set;
     }
 
+
+    public string Name {
+      get {
+        return "Nombre de la cuenta";
+      }
+    }
+
+
     [DataField("BDG_ACCT_EXT_DATA")]
     private JsonObject ExtData {
       get;
@@ -77,9 +85,9 @@ namespace Empiria.Budgeting {
     }
 
 
-    internal protected virtual string Keywords {
+    public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Code);
+        return EmpiriaString.BuildKeywords(this.Code, this.Name);
       }
     }
 

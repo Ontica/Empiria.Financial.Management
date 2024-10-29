@@ -41,7 +41,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public BudgetTransactionDto GetTransaction(string budgetTransactionUID) {
+    public BudgetTransactionHolderDto GetTransaction(string budgetTransactionUID) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
 
       var transaction = BudgetTransaction.Parse(budgetTransactionUID);
@@ -70,6 +70,13 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       FixedList<BudgetTransaction> transactions = BudgetTransactionDataService.SearchTransactions(filter, sort);
 
       return BudgetTransactionMapper.MapToDescriptor(transactions);
+    }
+
+
+    public FixedList<NamedEntityDto> SearchTransactionsParties(BudgetPartiesQuery query) {
+      var persons = BaseObject.GetList<Person>();
+
+      return persons.MapToNamedEntityList();
     }
 
     #endregion Use cases
