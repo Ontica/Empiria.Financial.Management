@@ -60,13 +60,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> SearchTransactionsParties(BudgetTransactionPartyType partyType, string keywords) {
-      var persons = BaseObject.GetList<Person>();
-
-      return persons.MapToNamedEntityList();
-    }
-
-
     public FixedList<BudgetTransactionDescriptorDto> SearchTransactions(BudgetTransactionsQuery query) {
       Assertion.Require(query, nameof(query));
 
@@ -77,6 +70,13 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       FixedList<BudgetTransaction> transactions = BudgetTransactionDataService.SearchTransactions(filter, sort);
 
       return BudgetTransactionMapper.MapToDescriptor(transactions);
+    }
+
+
+    public FixedList<NamedEntityDto> SearchTransactionsParties(BudgetPartiesQuery query) {
+      var persons = BaseObject.GetList<Person>();
+
+      return persons.MapToNamedEntityList();
     }
 
     #endregion Use cases

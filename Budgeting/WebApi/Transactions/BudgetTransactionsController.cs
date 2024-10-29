@@ -40,26 +40,23 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     public SingleObjectModel GetTransaction([FromUri] string budgetTransactionUID) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
-        BudgetTransactionDto transaction = usecases.GetTransaction(budgetTransactionUID);
+        BudgetTransactionHolderDto transaction = usecases.GetTransaction(budgetTransactionUID);
 
         return new SingleObjectModel(base.Request, transaction);
       }
     }
 
 
-    [HttpGet]
-    [Route("v2/budgeting/transactions/{partyType}/parties")]
-    public CollectionModel SearchTransactionsParties([FromUri] BudgetTransactionPartyType partyType,
-                                                     [FromUri] string keywords = "") {
+    [HttpPost]
+    [Route("v2/budgeting/transactions/parties")]
+    public CollectionModel SearchTransactionsParties([FromBody] BudgetPartiesQuery query) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> parties = usecases.SearchTransactionsParties(partyType, keywords);
+        FixedList<NamedEntityDto> parties = usecases.SearchTransactionsParties(query);
 
         return new CollectionModel(base.Request, parties);
       }
     }
-
-
 
 
     [HttpPost]
