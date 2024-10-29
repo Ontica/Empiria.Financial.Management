@@ -80,15 +80,28 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_TXN_RECEIVABLE_ID")]
-    public int ReceivableId {
+    [DataField("BDG_TXN_IDENTIFICATORS")]
+    public string Identificators {
       get;
       private set;
     }
 
 
-    [DataField("BDG_TXN_PAYABLE_ID")]
-    public int PayableId {
+    [DataField("BDG_TXN_TAGS")]
+    public string Tags {
+      get;
+      private set;
+    }
+
+    [DataField("BDG_TXN_BASE_ENTITY_TYPE_ID")]
+    public int BaseEntityType {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_TXN_BASE_ENTITY_ID")]
+    public int BaseEntity {
       get;
       private set;
     }
@@ -154,18 +167,6 @@ namespace Empiria.Budgeting.Transactions {
     protected JsonObject ExtensionData {
       get;
       private set;
-    }
-
-
-    [DataField("BDG_TXN_PARENT_ID")]
-    private int _parentId;
-    public BudgetTransaction Parent {
-      get {
-        return Parse(_parentId);
-      }
-      private set {
-        _parentId = value.Id;
-      }
     }
 
 

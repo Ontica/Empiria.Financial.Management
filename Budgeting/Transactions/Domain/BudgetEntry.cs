@@ -13,6 +13,8 @@ using System;
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
+using Empiria.Products;
+using Empiria.Projects;
 
 namespace Empiria.Budgeting.Transactions {
 
@@ -42,16 +44,57 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    //[DataField("BDG_ENTRY_TYPE_ID")]
+    [DataField("BDG_ENTRY_TYPE_ID")]
     public int BudgetEntryTypeId {
-      get {
-        return -1;
-      }
+      get;
+      private set;
     }
 
 
     [DataField("BDG_ENTRY_BUDGET_ID")]
     public Budget Budget {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_BUDGET_ACCT_ID")]
+    public BudgetAccount BudgetAccount {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_SUBLEDGER_ACCT_ID")]
+    public int SubledgerAccountId {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_PROJECT_ID")]
+    public Project Project {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_PRODUCT_ID")]
+    public Product Product {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_OPERATION_TYPE_ID")]
+    public int OperationTypeId {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_OPERATION_ID")]
+    public int OperationId {
       get;
       private set;
     }
@@ -85,37 +128,6 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_ENTRY_BUDGET_ACCT_ID")]
-    public BudgetAccount BudgetAccount {
-      get;
-      private set;
-    }
-
-
-    // [DataField("BDG_ENTRY_SUBLEDGER_ACCT_ID")]
-    public int SubledgerAccountId {
-      get {
-        return -1;
-      }
-    }
-
-
-    // [DataField("BDG_ENTRY_OPERATION_TYPE_ID")]
-    public int OperationTypeId {
-      get {
-        return -1;
-      }
-    }
-
-
-    // [DataField("BDG_ENTRY_OPERATION_ID")]
-    public int OperationId {
-      get {
-        return -1;
-      }
-    }
-
-
     [DataField("BDG_ENTRY_BALANCE_COLUMN_ID")]
     public BalanceColumn BalanceColumn {
       get;
@@ -139,6 +151,27 @@ namespace Empiria.Budgeting.Transactions {
 
     [DataField("BDG_ENTRY_WITHDRAWAL_AMOUNT")]
     public decimal Withdrawal {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_DESCRIPTION")]
+    public string Description {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_IDENTIFICATORS")]
+    public string Identificators {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_TAGS")]
+    public string Tags {
       get;
       private set;
     }
