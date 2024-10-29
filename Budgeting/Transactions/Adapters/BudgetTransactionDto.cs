@@ -10,7 +10,34 @@
 
 using System;
 
+using Empiria.Documents;
+
 namespace Empiria.Budgeting.Transactions.Adapters {
+
+
+  /// <summary>Output holder DTO used for a budget transaction.</summary>
+  public class BudgetTransactionHolderDto {
+
+    public BudgetTransactionDto Transaction {
+      get; internal set;
+    }
+
+    public FixedList<BudgetEntryDescriptorDto> Entries {
+      get; internal set;
+    }
+
+    public FixedList<Document> Documents {
+      get; internal set;
+    }
+
+
+    public FixedList<Document> History {
+      get; internal set;
+    }
+
+  }  // class BudgetTransactionHolderDto
+
+
 
   /// <summary>Output DTO used for budget transactions.</summary>
   public class BudgetTransactionDto {
@@ -56,10 +83,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
     public NamedEntityDto Status {
-      get; internal set;
-    }
-
-    public FixedList<BudgetEntryDescriptorDto> Entries {
       get; internal set;
     }
 

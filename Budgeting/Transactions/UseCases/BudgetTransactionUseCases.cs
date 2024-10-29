@@ -41,7 +41,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public BudgetTransactionDto GetTransaction(string budgetTransactionUID) {
+    public BudgetTransactionHolderDto GetTransaction(string budgetTransactionUID) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
 
       var transaction = BudgetTransaction.Parse(budgetTransactionUID);
