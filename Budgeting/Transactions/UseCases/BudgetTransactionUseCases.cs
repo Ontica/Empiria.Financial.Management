@@ -60,6 +60,13 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public FixedList<NamedEntityDto> SearchTransactionsParties(BudgetTransactionPartyType partyType, string keywords) {
+      var persons = BaseObject.GetList<Person>();
+
+      return persons.MapToNamedEntityList();
+    }
+
+
     public FixedList<BudgetTransactionDescriptorDto> SearchTransactions(BudgetTransactionsQuery query) {
       Assertion.Require(query, nameof(query));
 

@@ -47,6 +47,21 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
 
+    [HttpGet]
+    [Route("v2/budgeting/transactions/{partyType}/parties")]
+    public CollectionModel SearchTransactionsParties([FromUri] BudgetTransactionPartyType partyType,
+                                                     [FromUri] string keywords = "") {
+
+      using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> parties = usecases.SearchTransactionsParties(partyType, keywords);
+
+        return new CollectionModel(base.Request, parties);
+      }
+    }
+
+
+
+
     [HttpPost]
     [Route("v2/budgeting/transactions/search")]
     public SingleObjectModel SearchTransactions([FromBody] BudgetTransactionsQuery query) {
