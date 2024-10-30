@@ -44,6 +44,14 @@ namespace Empiria.Contracts {
       return BaseObject.ParseKey<ContractItem>(contractItemUID);
     }
 
+
+    static internal ContractItem Parse(int id) {
+      return BaseObject.ParseId<ContractItem>(id);
+    }
+
+
+    static public ContractItem Empty => BaseObject.ParseEmpty<ContractItem>();
+
     #endregion Constructors and parsers
 
     #region Properties
