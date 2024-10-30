@@ -17,7 +17,7 @@ namespace Empiria.Contracts.Data {
   /// <summary>Provides data read and write methods for contract milestone item instances.</summary>
   static public class ContractMilestoneItemData {
 
-    static internal List<ContractMilestoneItem> GetContractMilestoneItems(ContractMilestoneItem milestone) {
+    static internal List<ContractMilestoneItem> GetContractMilestoneItems(ContractMilestone milestone) {
       Assertion.Require(milestone, nameof(milestone));
 
       var sql = "select * from fms_milestone_items " +
@@ -31,7 +31,7 @@ namespace Empiria.Contracts.Data {
 
     static public void WriteMilestoneItem(ContractMilestoneItem o, string extensionData) {
       var op = DataOperation.Parse("write_Milestone_Item",
-                     o.Id, o.UID, o.Milestone.Id, o.ContractItem.Id, o.Product.Id, o.Quantity, 
+                     o.Id, o.UID, o.Milestone.Id, o.ContractItem.Id, o.Product.Id, o.Quantity,
                      o.UnitPrice, extensionData, o.Keywords, o.LastUpdatedBy.Id, o.PostingTime,
                      (char) o.Status);
 

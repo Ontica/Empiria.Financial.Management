@@ -10,7 +10,9 @@
 
 using System;
 
+using Empiria.Budgeting;
 using Empiria.Contacts;
+using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Products;
 using Empiria.StateEnums;
@@ -18,7 +20,7 @@ using Empiria.StateEnums;
 namespace Empiria.Contracts {
 
   /// <summary>Represents a contract milestone item.</summary>
-  public class ContractMilestoneItem : BaseObject {
+  public class ContractMilestoneItem : BaseObject, IPayableEntityItem {
 
     #region Constructors and parsers
 
@@ -41,7 +43,7 @@ namespace Empiria.Contracts {
     #region Properties
 
     [DataField("MILESTONE_ID")]
-    public ContractMilestone Milestone{
+    public ContractMilestone Milestone {
       get; private set;
     }
 
@@ -57,6 +59,19 @@ namespace Empiria.Contracts {
       get; private set;
     }
 
+
+    // [DataField("MILESTONE_ITEM_PRODUCT_UNIT_ID")]
+    public ProductUnit Unit {
+      get; private set;
+    } = ProductUnit.Empty;
+
+
+    // [DataField("MILESTONE_ITEM_DESCRIPTION")]
+    public string Description {
+      get; private set;
+    } = string.Empty;
+
+
     [DataField("MILESTONE_ITEM_QTY", ConvertFrom = typeof(decimal))]
     public decimal Quantity {
       get; private set;
@@ -67,6 +82,20 @@ namespace Empiria.Contracts {
     public decimal UnitPrice {
       get; private set;
     }
+
+
+    public decimal Total {
+      get {
+        return Quantity * UnitPrice;
+      }
+    }
+
+
+    //[DataField("MILESTONE_ITEM_BUDGET_ACCOUNT_ID")]
+    public BudgetAccount BudgetAccount {
+      get;
+      private set;
+    } = BudgetAccount.Empty;
 
 
     [DataField("MILESTONE_ITEM_EXT_DATA")]
@@ -119,7 +148,30 @@ namespace Empiria.Contracts {
       get; private set;
     } = EntityStatus.Pending;
 
+
     #endregion Properties
+
+    #region IPayableEntityItem interface
+
+    INamedEntity IPayableEntityItem.BudgetAccount {
+      get {
+        return this.BudgetAccount;
+      }
+    }
+
+    INamedEntity IPayableEntityItem.Product {
+      get {
+        return this.Product;
+      }
+    }
+
+    INamedEntity IPayableEntityItem.Unit {
+      get {
+        return this.Unit;
+      }
+    }
+
+    #endregion IPayableEntityItem interface
 
   }  // class ContractMilestoneItem
 

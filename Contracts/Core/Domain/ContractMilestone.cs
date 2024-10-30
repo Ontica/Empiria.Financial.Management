@@ -18,6 +18,7 @@ using Empiria.StateEnums;
 using Empiria.Financial;
 
 using Empiria.Contracts.Data;
+using System.Collections.Generic;
 
 namespace Empiria.Contracts {
 
@@ -26,20 +27,16 @@ namespace Empiria.Contracts {
 
     #region Constructors and parsers
 
-    static internal ContractMilestone Parse(int id) {
-      return BaseObject.ParseId<ContractMilestone>(id);
-    }
+    static internal ContractMilestone Parse(int id) => ParseId<ContractMilestone>(id);
 
-    static internal ContractMilestone Parse(string uid) {
-      return BaseObject.ParseKey<ContractMilestone>(uid);
-    }
+    static internal ContractMilestone Parse(string uid) => ParseKey<ContractMilestone>(uid);
 
     static internal FixedList<ContractMilestone> GetList() {
       return BaseObject.GetList<ContractMilestone>()
                        .ToFixedList();
     }
 
-    static internal ContractMilestone Empty => BaseObject.ParseEmpty<ContractMilestone>();
+    static internal ContractMilestone Empty => ParseEmpty<ContractMilestone>();
 
     #endregion Constructors and parsers
 
@@ -51,13 +48,43 @@ namespace Empiria.Contracts {
     }
 
 
-    [DataField("MILESTONE_PAYMENT_NUMBER")]
+    // [DataField("MILESTONE_NO")]
+    public string MilestoneNo {
+      get; private set;
+    } = string.Empty;
+
+
+    // [DataField("MILESTONE_NAME")]
+    public string Name {
+      get; private set;
+    } = string.Empty;
+
+
+    // [DataField("MILESTONE_DESCRIPTION")]
+    public string Description {
+      get; private set;
+    } = string.Empty;
+
+
+    // [DataField("MILESTONE_SUPPLIER_ID")]
+    public Party Supplier {
+      get; private set;
+    } = Party.Empty;
+
+
+    // [DataField("MILESTONE_PAYMENT_EXT_DATA")]
+    public PaymentData PaymentData {
+      get; private set;
+    } = new PaymentData(JsonObject.Empty);
+
+
+    [DataField("MILESTONE_PAYMENT_NUMBER")]   // ToDo: Remove
     public int PaymentNumber {
       get; private set;
     }
 
 
-    [DataField("MILESTONE_PAYMENT_DATE")]
+    [DataField("MILESTONE_PAYMENT_DATE")]     // ToDo: Remove
     public DateTime PaymentDate {
       get; private set;
     }
@@ -99,6 +126,16 @@ namespace Empiria.Contracts {
       get; private set;
     }
 
+    #endregion Properties
+
+    #region IPayableEntity interface
+
+    INamedEntity IPayableEntity.Type {
+      get {
+        return base.GetEmpiriaType();
+      }
+    }
+
 
     string IPayableEntity.EntityNo {
       get {
@@ -106,8 +143,20 @@ namespace Empiria.Contracts {
       }
     }
 
+    INamedEntity IPayableEntity.Supplier {
+      get {
+        return this.Supplier;
+      }
+    }
 
-    #endregion Properties
+    IEnumerable<IPayableEntityItem> IPayableEntity.Items {
+      get {
+        return ContractMilestoneItemData.GetContractMilestoneItems(this)
+                                        .ToFixedList();
+      }
+    }
+
+    #endregion IPayableEntity interface
 
     #region Methods
 

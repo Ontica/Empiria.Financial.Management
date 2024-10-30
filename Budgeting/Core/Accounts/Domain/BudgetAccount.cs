@@ -19,7 +19,7 @@ namespace Empiria.Budgeting {
 
   /// <summary>Partitioned type that represents a budget account.</summary>
   [PartitionedType(typeof(BudgetAccountType))]
-  public class BudgetAccount : BaseObject {
+  public class BudgetAccount : BaseObject, INamedEntity {
 
     #region Constructors and parsers
 
@@ -31,7 +31,7 @@ namespace Empiria.Budgeting {
 
     static public BudgetAccount Parse(string uid) => ParseKey<BudgetAccount>(uid);
 
-    static internal BudgetAccount Empty => ParseEmpty<BudgetAccount>();
+    static public BudgetAccount Empty => ParseEmpty<BudgetAccount>();
 
     #endregion Constructors and parsers
 
