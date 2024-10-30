@@ -18,7 +18,7 @@ namespace Empiria.Payments.Payables.Adapters {
     public PayableDto Payable {
       get; internal set;
     }
-    
+
     public PayableEntityDto PayableEntity {
       get; internal set;
     }
@@ -42,11 +42,11 @@ namespace Empiria.Payments.Payables.Adapters {
     public FixedList<HistoryDto> History {
       get; internal set;
     }
-    
+
 
     public ActionsDto Actions {
       get; internal set;
-    } 
+    }
 
   } // class PayableDataDto
 
@@ -105,31 +105,33 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public string Type {
+    public NamedEntityDto Type {
       get; internal set;
     }
 
+    public string EntityNo {
+      get;
+      internal set;
+    }
 
     public string Name {
       get; internal set;
     }
-
 
     public string Description {
       get; internal set;
     }
 
 
-    //TODO 
-    //public AttributesDto Attributes {
-    //  get; internal set;
-    //}
-
-
     public FixedList<PayableEntityItemDto> Items {
       get; internal set;
     }
 
+
+    //TODO
+    //public AttributesDto Attributes {
+    //  get; internal set;
+    //}
 
   } // class PayableEntityDto
 
@@ -142,32 +144,36 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public NamedEntityDto Budget {
+    public decimal Quantity {
       get; internal set;
     }
 
+
+    public NamedEntityDto Unit {
+      get; internal set;
+    }
 
     public NamedEntityDto Product {
       get; internal set;
     }
 
 
-    public string Name {
+    public string Description {
       get; internal set;
     }
 
 
-    public decimal Quantity {
-      get; internal set;
-    }
-
-
-    public string Unit {
+    public decimal UnitPrice {
       get; internal set;
     }
 
 
     public decimal Total {
+      get; internal set;
+    }
+
+
+    public NamedEntityDto BudgetAccount {
       get; internal set;
     }
 
@@ -322,8 +328,8 @@ namespace Empiria.Payments.Payables.Adapters {
 
   //Class to set order permissions
   public class CanDto {
-    
-    
+
+
     public Boolean Cancel {
       get; internal set;
     }

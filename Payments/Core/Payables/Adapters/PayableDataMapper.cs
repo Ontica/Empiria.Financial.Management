@@ -10,11 +10,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Xml.Linq;
+using System.Linq;
+
 using Empiria.Financial;
-using Empiria.Measurement;
-using Empiria.Services;
 
 namespace Empiria.Payments.Payables.Adapters {
 
@@ -25,7 +23,7 @@ namespace Empiria.Payments.Payables.Adapters {
 
       return new PayableDataDto {
         Payable = PayableMapper.Map(payable),
-        PayableEntity = MapPayableEntity(),
+        PayableEntity = MapPayableEntity(payable.PayableEntity),
         Items = MapPayableItems(payable),
         Documents = MapDocuments(),
         History = MapHistory(),
@@ -34,7 +32,7 @@ namespace Empiria.Payments.Payables.Adapters {
       };
 
     }
-        
+
 
     #region Private Methods
 
@@ -108,7 +106,7 @@ namespace Empiria.Payments.Payables.Adapters {
         Name = "Reporte de del Mes de enero",
         Description = "Reporte correspondiente al mes de enero",
         UploadedDate = DateTime.Today,
-        UploadedBy = "Raul lopez"      
+        UploadedBy = "Raul lopez"
       };
 
       List<DocumentDto> documents = new List<DocumentDto>();
@@ -117,7 +115,7 @@ namespace Empiria.Payments.Payables.Adapters {
       return documents.ToFixedList();
     }
 
-    static private FixedList<HistoryDto>MapHistory() {
+    static private FixedList<HistoryDto> MapHistory() {
 
       var history = new HistoryDto {
         UID = "e0f6a221-bf23-429a-a503-bfd63eb581fa",
@@ -160,39 +158,41 @@ namespace Empiria.Payments.Payables.Adapters {
       };
     }
 
-    static private PayableEntityDto MapPayableEntity() {
-        
+    static private PayableEntityDto MapPayableEntity(IPayableEntity payableEntity) {
+
       return new PayableEntityDto {
-        UID = "fb946d2e-32a2-423e-9000-713b2e08a8ea",
-        Type = "Contrato de prestación de servicios",
-        Name = "Servicios de desarrollo de software 1",
-        Description = "",
-       
-        Items = MapPayebleEntityItems()
+        UID = payableEntity.UID,
+        Type = payableEntity.Type.MapToNamedEntity(),
+        EntityNo = payableEntity.EntityNo,
+        Name = payableEntity.Name,
+        Description = payableEntity.Description,
+
+        Items = MapPayableEntityItems(payableEntity.Items)
       };
 
     }
 
 
-    static private FixedList<PayableEntityItemDto> MapPayebleEntityItems() {
-
-      var item =  new PayableEntityItemDto {
-        UID = "35051c46-536d-42c5-a5d4-aa3021d5018a",
-        Name = "Servicio c1 del mes de enero",
-        Quantity = 343,
-        Unit = "Puntos de función CFP",
-        Budget = new NamedEntityDto("ObjectTypeInfo.Budget.GastoCorriente", "Gasto corriente"),
-        Product = new NamedEntityDto("31d0ecc8-9292-427c-b4ac-408f56d4bf8c", "Servicios de desarrollo de software"),
-        Total = 4004.898m
-      };
-
-      List<PayableEntityItemDto> payableEntityItems = new List<PayableEntityItemDto>();
-      payableEntityItems.Add(item);
-
-      return payableEntityItems.ToFixedList();
+    static private FixedList<PayableEntityItemDto> MapPayableEntityItems(IEnumerable<IPayableEntityItem> items) {
+      return items.Select(x => MapPayableEntityItem(x))
+                  .ToFixedList();
     }
 
-    #endregion Private Methods     
+
+    static private PayableEntityItemDto MapPayableEntityItem(IPayableEntityItem item) {
+      return new PayableEntityItemDto {
+        UID = item.UID,
+        Quantity = item.Quantity,
+        Unit = item.Unit.MapToNamedEntity(),
+        Product = item.Product.MapToNamedEntity(),
+        Description = item.Description,
+        UnitPrice = item.UnitPrice,
+        Total = item.Total,
+        BudgetAccount = item.BudgetAccount.MapToNamedEntity(),
+      };
+    }
+
+    #endregion Private Methods
 
 
   } // class PayableMapper
