@@ -105,7 +105,7 @@ namespace Empiria.Payments.Payables.UseCases {
     }
 
 
-    public PayableDto UpdatePayable(string payableUID, PayableFields fields) {
+    public PayableHolderDto UpdatePayable(string payableUID, PayableFields fields) {
       Assertion.Require(payableUID, nameof(payableUID));
       Assertion.Require(fields, nameof(fields));
 
@@ -117,7 +117,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
       payable.Save();
 
-      return PayableMapper.Map(payable);
+      return PayableDataMapper.Map(payable);
     }
 
     #endregion Payable use cases

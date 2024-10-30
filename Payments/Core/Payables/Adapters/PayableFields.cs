@@ -71,9 +71,7 @@ namespace Empiria.Payments.Payables.Adapters {
     #region Methods
 
     virtual internal void EnsureValid() {
-      Assertion.Require(PayableTypeUID, "Necesito el tipo de pago.");
-      _ = PayableType.Parse(PayableTypeUID);
-
+     
       Assertion.Require(OrganizationalUnitUID, "Necesito se proporcione el área.");
       _ = OrganizationalUnit.Parse(OrganizationalUnitUID);
 

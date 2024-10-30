@@ -135,7 +135,6 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Update_Payable() {
       var fields = new PayableFields {
-        PayableTypeUID = "ObjectTypeInfo.Payable.Bill",
         Description = "Actualziado desde las pruebas",
         OrganizationalUnitUID = "d4b9aae9-cc6e-4fbc-9589-639dec5dab9f",
         PayToUID = "c6278424-d1ff-492f-b5fe-410b4258292c",
@@ -144,7 +143,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
         DueTime = DateTime.Today,
       };
 
-      var payableUID = "4b0d2fa1-5ce9-453d-ba52-bab230314fc2";
+      var payableUID = "abdc27b9-5fb1-4386-aa87-f5ad5ec66fea";
 
       var sut = _usecases.UpdatePayable(payableUID, fields);
 

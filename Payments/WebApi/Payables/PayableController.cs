@@ -85,7 +85,7 @@ namespace Empiria.Payments.Payables.WebApi {
 
       using (var usecases = PayableUseCases.UseCaseInteractor()) {
 
-        PayableDto payable = usecases.UpdatePayable(payableUID, fields);
+        PayableHolderDto payable = usecases.UpdatePayable(payableUID, fields);
 
         return new SingleObjectModel(this.Request, payable);
       }
