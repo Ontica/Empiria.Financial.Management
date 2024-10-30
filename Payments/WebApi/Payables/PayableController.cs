@@ -57,7 +57,7 @@ namespace Empiria.Payments.Payables.WebApi {
       base.RequireBody(fields);
 
       using (var usecases = PayableUseCases.UseCaseInteractor()) {
-        PayableDto payable = usecases.CreatePayable(fields);
+        PayableHolderDto payable = usecases.CreatePayable(fields);
 
         return new SingleObjectModel(base.Request, payable);
       }

@@ -34,7 +34,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
     #region Payable use cases
 
-    public PayableDto CreatePayable(PayableFields fields) {
+    public PayableHolderDto CreatePayable(PayableFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
@@ -49,7 +49,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
       payable.Save();
 
-      return PayableMapper.Map(payable);
+      return PayableDataMapper.Map(payable);
     }
 
 
