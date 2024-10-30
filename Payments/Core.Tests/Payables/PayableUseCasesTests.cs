@@ -12,7 +12,6 @@ using Xunit;
 
 using Empiria.Payments.Payables.UseCases;
 using Empiria.Payments.Payables.Adapters;
-using Empiria.Services;
 
 namespace Empiria.Tests.Payments.Payables.UseCases {
 

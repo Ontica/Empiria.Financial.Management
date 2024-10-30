@@ -196,6 +196,21 @@ namespace Empiria.Payments.Payables {
     }
 
 
+    internal void OnPayment() {
+      Assertion.Require(this.Status == PayableStatus.Capture,
+                 $"No se puede generar la instrucción de pago de una obligación de pago que está en estado {this.Status.GetName()}.");
+
+      this.Status = PayableStatus.OnPayment;
+    }
+
+
+    internal void Pay() {
+      Assertion.Require(this.Status == PayableStatus.OnPayment,
+                 $"No se puede cambiar a pagada una obligación de pago que está en estado {this.Status.GetName()}.");
+
+      this.Status = PayableStatus.Payed;
+    }
+
     internal void Update(PayableFields fields) {
       Assertion.Require(fields, nameof(fields));
 
