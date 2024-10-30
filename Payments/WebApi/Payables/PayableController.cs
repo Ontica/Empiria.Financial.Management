@@ -75,20 +75,7 @@ namespace Empiria.Payments.Payables.WebApi {
         return new NoDataModel(this.Request);
       }
     }
-
-
-    [HttpGet]
-    [Route("v2/payments-management/payables/{payableUID:guid}")]
-    public SingleObjectModel GetPayable([FromUri] string payableUID) {
-
-      using (var usecases = PayableUseCases.UseCaseInteractor()) {
-
-        PayableDto payableDto = usecases.GetPayable(payableUID);
-
-        return new SingleObjectModel(this.Request, payableDto);
-      }
-    }
-
+        
 
     [HttpPut]
     [Route("v2/payments-management/payables/{payableUID:guid}")]
@@ -157,14 +144,14 @@ namespace Empiria.Payments.Payables.WebApi {
     #region PayableDataStructure
 
     [HttpGet]
-    [Route("v2/payments-management/payables-data/{payableUID:guid}")]
+    [Route("v2/payments-management/payables/{payableUID:guid}")]
     public SingleObjectModel GetPayableData([FromUri] string payableUID) {
 
       using (var usecases = PayableUseCases.UseCaseInteractor()) {
 
-        PayableDataDto payableDataDto = usecases.GetPayableData(payableUID);
+        PayableHolderDto payableHolderDto = usecases.GetPayableData(payableUID);
 
-        return new SingleObjectModel(this.Request, payableDataDto);
+        return new SingleObjectModel(this.Request, payableHolderDto);
       }
     }
 

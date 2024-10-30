@@ -13,7 +13,7 @@ using System;
 namespace Empiria.Payments.Payables.Adapters {
 
   /// <summary>Summary  : Data transfer objects used to return payable data structure.</summary>
-  public class PayableDataDto {
+  public class PayableHolderDto {
 
     public PayableDto Payable {
       get; internal set;

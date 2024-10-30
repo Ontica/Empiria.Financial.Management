@@ -19,9 +19,9 @@ namespace Empiria.Payments.Payables.Adapters {
   /// <summary>Provides data mapping services for payable data objects and related types.</summary>
   internal class PayableDataMapper {
 
-    static internal PayableDataDto Map(Payable payable) {
+    static internal PayableHolderDto Map(Payable payable) {
 
-      return new PayableDataDto {
+      return new PayableHolderDto {
         Payable = PayableMapper.Map(payable),
         PayableEntity = MapPayableEntity(payable.PayableEntity),
         Items = MapPayableItems(payable),

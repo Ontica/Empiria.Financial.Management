@@ -215,7 +215,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
     #region PayableData
 
-    public PayableDataDto GetPayableData(string payableUID) {
+    public PayableHolderDto GetPayableData(string payableUID) {
       var payable = Payable.Parse(payableUID);
 
       return PayableDataMapper.Map(payable);
