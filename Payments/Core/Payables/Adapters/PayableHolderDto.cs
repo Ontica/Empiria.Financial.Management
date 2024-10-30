@@ -330,7 +330,7 @@ namespace Empiria.Payments.Payables.Adapters {
   public class CanDto {
 
 
-    public Boolean Cancel {
+    public Boolean Delete {
       get; internal set;
     }
 

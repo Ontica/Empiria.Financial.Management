@@ -17,7 +17,7 @@ using Empiria.Financial;
 namespace Empiria.Payments.Payables.Adapters {
 
   /// <summary>Provides data mapping services for payable data objects and related types.</summary>
-  internal class PayableDataMapper {
+  internal class PayableHolderMapper {
 
     static internal PayableHolderDto Map(Payable payable) {
 
@@ -49,7 +49,7 @@ namespace Empiria.Payments.Payables.Adapters {
     static private CanDto MapCanDto() {
 
       return new CanDto {
-        Cancel = true,
+        Delete = true,
         Update = true
       };
 

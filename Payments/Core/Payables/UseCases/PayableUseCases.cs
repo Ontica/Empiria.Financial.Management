@@ -49,7 +49,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
       payable.Save();
 
-      return PayableDataMapper.Map(payable);
+      return PayableHolderMapper.Map(payable);
     }
 
 
@@ -117,7 +117,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
       payable.Save();
 
-      return PayableDataMapper.Map(payable);
+      return PayableHolderMapper.Map(payable);
     }
 
     #endregion Payable use cases
@@ -218,7 +218,7 @@ namespace Empiria.Payments.Payables.UseCases {
     public PayableHolderDto GetPayableData(string payableUID) {
       var payable = Payable.Parse(payableUID);
 
-      return PayableDataMapper.Map(payable);
+      return PayableHolderMapper.Map(payable);
     }
       
 
