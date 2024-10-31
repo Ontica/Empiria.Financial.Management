@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Diagnostics.Contracts;
 using Empiria.Data;
 
 namespace Empiria.Contracts.Data {
@@ -18,11 +19,13 @@ namespace Empiria.Contracts.Data {
 
     #region Methods
 
-    static internal FixedList<ContractMilestone> getMilestone(string filter, string sortBy) {
-      var sql = "select * from fms_milestone ";
+    static internal FixedList<ContractMilestone> GetContractMilestone(Contract contract, string filter, string sortBy) {
+      var sql = "select * from fms_milestone " + 
+
+      $"where contract_id = {contract.Id} and contract_item_status <> 'X'";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
-        sql += $" where {filter}";
+        sql += $" and {filter}";
       }
 
       if (!string.IsNullOrWhiteSpace(sortBy)) {
@@ -34,11 +37,11 @@ namespace Empiria.Contracts.Data {
       return DataReader.GetFixedList<ContractMilestone>(dataOperation);
     }
 
-    static internal void WriteMilestone(ContractMilestone o, string extensionData) {
+    static internal void WriteContractMilestone(ContractMilestone o, string extensionData) {
       var op = DataOperation.Parse("write_Contract_Milestone",
-                     o.Id, o.UID, o.Contract.Id, o.PaymentNumber, o.PaymentDate,
-                     o.ManagedByOrgUnit.Id, extensionData, o.Keywords,
-                     o.PostedBy.Id, o.PostingTime, (char) o.Status);
+                     o.Id, o.UID, o.Contract.Id, o.MilestoneNo, o.Name, o.Description,
+                     o.Supplier.Id, o.PaymentData, o.ManagedByOrgUnit.Id, extensionData,
+                      o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }

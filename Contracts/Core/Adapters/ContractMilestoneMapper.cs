@@ -25,8 +25,11 @@ namespace Empiria.Contracts.Adapters {
       return new ContractMilestoneDto {
         UID = milestone.UID,
         Contract = milestone.Contract,
-        PaymentNumber = milestone.PaymentNumber,
-        PaymentDate = milestone.PaymentDate,
+        MilestoneNo = milestone.MilestoneNo,  
+        Name = milestone.Name,
+        Description = milestone.Description,
+        Supplier = milestone.Supplier,
+        //PaymentExtData = milestone.PaymentData.,
       };
     }
 
@@ -42,13 +45,15 @@ namespace Empiria.Contracts.Adapters {
       return new ContractMilestoneDescriptor {
         UID = milestone.UID,
         Contract = milestone.Contract.Id,
-        PaymentNumber = milestone.PaymentNumber,
-        PaymentDate = milestone.PaymentDate,
+        MilestoneNo = milestone.MilestoneNo,
+        Name = milestone.Name,
+        Description = milestone.Description,
+        Supplier = milestone.Supplier.Id,
         statusName = EntityStatusEnumExtensions.GetName(milestone.Status)
       };
 
     }
 
-  }  // class ContractMapper
+  }  // class ContractMilestoneMapper
 
 }  // namespace Empiria.Contracts.Adapters

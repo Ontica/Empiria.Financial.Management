@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using Empiria.Parties;
 
 namespace Empiria.Contracts.Adapters {
 
@@ -31,12 +32,27 @@ namespace Empiria.Contracts.Adapters {
     }
 
 
-    public int PaymentNumber {
+    public string MilestoneNo {
       get; internal set;
     }
 
 
-    public DateTime PaymentDate {
+    public string Name {
+      get; internal set;
+    }
+
+
+    public string Description {
+      get; internal set;
+    }
+
+
+    public Party Supplier {
+      get; internal set;
+    }
+
+
+    public string PaymentExtData {
       get; internal set;
     }
 
@@ -61,6 +77,11 @@ namespace Empiria.Contracts.Adapters {
   /// Output Dto used to return minimal contract milestone data
   public class ContractMilestoneDescriptor {
 
+    public string ID {
+      get; internal set;
+    }
+
+
     public string UID {
       get; internal set;
     }
@@ -71,12 +92,22 @@ namespace Empiria.Contracts.Adapters {
     }
 
 
-    public int PaymentNumber {
+    public string MilestoneNo {
       get; internal set;
     }
 
 
-    public DateTime PaymentDate {
+    public string Name {
+      get; internal set;
+    }
+
+
+    public string Description {
+      get; internal set;
+    }
+
+
+    public int Supplier {
       get; internal set;
     }
 

@@ -9,21 +9,26 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
-
 using Empiria.Financial;
-
 using Empiria.Contracts.Data;
-using System.Collections.Generic;
+using Empiria.Contracts.Adapters;
 
 namespace Empiria.Contracts {
 
   /// <summary>Represents a contract milestone.</summary>
   public class ContractMilestone : BaseObject, IPayableEntity {
+
+    #region Fields
+
+    private Lazy<List<ContractMilestoneItem>> _items = new Lazy<List<ContractMilestoneItem>>();
+
+    #endregion Fields
 
     #region Constructors and parsers
 
@@ -48,46 +53,34 @@ namespace Empiria.Contracts {
     }
 
 
-    // [DataField("MILESTONE_NO")]
+    [DataField("MILESTONE_NO")]
     public string MilestoneNo {
       get; private set;
     } = string.Empty;
 
 
-    // [DataField("MILESTONE_NAME")]
+    [DataField("MILESTONE_NAME")]
     public string Name {
       get; private set;
     } = string.Empty;
 
 
-    // [DataField("MILESTONE_DESCRIPTION")]
+    [DataField("MILESTONE_DESCRIPTION")]
     public string Description {
       get; private set;
     } = string.Empty;
 
 
-    // [DataField("MILESTONE_SUPPLIER_ID")]
+    [DataField("MILESTONE_SUPPLIER_ID")]
     public Party Supplier {
       get; private set;
     } = Party.Empty;
 
 
-    // [DataField("MILESTONE_PAYMENT_EXT_DATA")]
+    [DataField("MILESTONE_PAYMENT_EXT_DATA")]
     public PaymentData PaymentData {
       get; private set;
     } = new PaymentData(JsonObject.Empty);
-
-
-    [DataField("MILESTONE_PAYMENT_NUMBER")]   // ToDo: Remove
-    public int PaymentNumber {
-      get; private set;
-    }
-
-
-    [DataField("MILESTONE_PAYMENT_DATE")]     // ToDo: Remove
-    public DateTime PaymentDate {
-      get; private set;
-    }
 
 
     [DataField("MILESTONE_MGMT_ORG_UNIT_ID")]
@@ -183,7 +176,7 @@ namespace Empiria.Contracts {
         this.PostingTime = DateTime.Now;
       }
 
-      ContractMilestoneData.WriteMilestone(this, this.ExtData.ToString());
+      ContractMilestoneData.WriteContractMilestone(this, this.ExtData.ToString());
     }
 
 
@@ -195,6 +188,27 @@ namespace Empiria.Contracts {
     }
 
     #endregion Methods
+
+
+    #region Helpers
+
+    internal void Load(ContractMilestoneFields fields) {
+      this.Contract = Contract.Parse(fields.ContractUID);
+      this.MilestoneNo = fields.MilestoneNo;
+      this.Name = fields.Name;
+      this.Description = fields.Description;
+      this.Supplier = Party.Parse(fields.SupplierUID);
+      //this.PaymentData = PaymentData();
+      this.ManagedByOrgUnit = OrganizationalUnit.Parse(fields.ManagedByOrgUnitUID);
+      ExtData = new JsonObject();
+    }
+
+    #endregion Helpers
+
+    internal FixedList<ContractMilestoneItem> GetItems() {
+      return _items.Value.ToFixedList();
+    }
+
 
   }  // class ContractMilestone
 

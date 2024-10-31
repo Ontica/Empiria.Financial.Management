@@ -30,10 +30,10 @@ namespace Empiria.Contracts.Data {
 
 
     static public void WriteMilestoneItem(ContractMilestoneItem o, string extensionData) {
-      var op = DataOperation.Parse("write_Milestone_Item",
-                     o.Id, o.UID, o.Milestone.Id, o.ContractItem.Id, o.Product.Id, o.Quantity,
-                     o.UnitPrice, extensionData, o.Keywords, o.LastUpdatedBy.Id, o.PostingTime,
-                     (char) o.Status);
+       var op = DataOperation.Parse("write_Contract_Milestone_Item",
+                     o.Id, o.UID, o.ContractMilestone.Id, o.ContractItem.Id, o.Product.Id, o.Product.Id,
+                     o.ProductUnit.Id, o.Quantity, o.UnitPrice, o.Description, o.BudgetAccount.Id,
+                     extensionData, o.Keywords, o.LastUpdatedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
