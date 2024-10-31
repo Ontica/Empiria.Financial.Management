@@ -10,7 +10,7 @@
 
 using System;
 using System.Collections.Generic;
-using Empiria.Contacts;
+
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
@@ -159,7 +159,7 @@ namespace Empiria.Contracts {
 
 
     [DataField("CONTRACT_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -204,7 +204,7 @@ namespace Empiria.Contracts {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.PostedBy = ExecutionServer.CurrentContact;
+        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
 
@@ -251,7 +251,7 @@ namespace Empiria.Contracts {
       ExtData = new JsonObject();
     }
 
-    
+
     internal void AddItem(ContractItem contractItem) {
       Assertion.Require(contractItem, nameof(contractItem));
       Assertion.Require(contractItem.Contract.Equals(this), "Wrong ContractItem.Contract instance");
@@ -259,11 +259,15 @@ namespace Empiria.Contracts {
       _items.Value.Add(contractItem);
     }
 
-    
+
     internal FixedList<ContractItem> GetItems() {
       return _items.Value.ToFixedList();
     }
 
+
+    internal FixedList<ContractMilestone> GetMilestones() {
+      return ContractMilestone.GetListFor(this);
+    }
 
     internal ContractItem RemoveItem(string contractItemUID) {
       Assertion.Require("contractItemUID", nameof(contractItemUID));
@@ -293,6 +297,7 @@ namespace Empiria.Contracts {
 
       return contractItem;
     }
+
 
     #endregion Helpers
 

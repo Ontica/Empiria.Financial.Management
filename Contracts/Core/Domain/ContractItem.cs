@@ -10,8 +10,8 @@
 
 using System;
 
-using Empiria.Contacts;
 using Empiria.Json;
+using Empiria.Parties;
 using Empiria.Products;
 using Empiria.StateEnums;
 using Empiria.Time;
@@ -61,6 +61,11 @@ namespace Empiria.Contracts {
       get; private set;
     }
 
+
+    [DataField("CONTRACT_ITEM_SUPPLIER_ID")]
+    public Party Supplier {
+      get; private set;
+    }
 
     [DataField("CONTRACT_ITEM_PRODUCT_ID")]
     public Product Product {
@@ -125,9 +130,9 @@ namespace Empiria.Contracts {
     }
 
 
-    internal Contact LastUpdatedBy {
+    internal Party LastUpdatedBy {
       get {
-        return ExtData.Get<Contact>("lastUpdatedBy", Contact.Empty);
+        return ExtData.Get("lastUpdatedBy", Party.Empty);
       }
       set {
         ExtData.Set("lastUpdatedBy", value.Id);
@@ -146,7 +151,7 @@ namespace Empiria.Contracts {
 
 
     [DataField("CONTRACT_ITEM_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -174,11 +179,11 @@ namespace Empiria.Contracts {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.PostedBy = ExecutionServer.CurrentContact;
+        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
 
-      LastUpdatedBy = ExecutionServer.CurrentContact;
+      LastUpdatedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       LastUpdatedTime = DateTime.Now;
 
       ContractItemData.WriteContractItem(this, this.ExtData.ToString());
@@ -189,7 +194,6 @@ namespace Empiria.Contracts {
     #region Helpers
 
     internal void Load(ContractItemFields fields) {
-      this.Contract = Contract.Parse(fields.ContractUID);
       this.Product = Product.Parse(fields.ProductUID);
       this.Description = fields.Description;
       this.UnitMeasure = ProductUnit.Parse(fields.UnitMeasureUID);
@@ -199,8 +203,6 @@ namespace Empiria.Contracts {
       this.PaymentsPeriodicity = Periodicity.Parse(fields.PaymentPeriodicityUID);
       this.BudgetAccount = BudgetAccount.Parse(fields.BudgetAccountUID);
       this.Project = Project.Parse(fields.ProjectUID);
-      this.LastUpdatedBy = Contact.Parse(ExecutionServer.CurrentUserId);
-      this.PostingTime = DateTime.Now;
     }
 
     #endregion Helpers

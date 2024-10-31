@@ -37,9 +37,18 @@ namespace Empiria.Contracts {
     static internal ContractMilestone Parse(string uid) => ParseKey<ContractMilestone>(uid);
 
     static internal FixedList<ContractMilestone> GetList() {
-      return BaseObject.GetList<ContractMilestone>()
-                       .ToFixedList();
+      return BaseObject.GetFullList<ContractMilestone>()
+                       .ToFixedList()
+                       .FindAll(x => x.Status != EntityStatus.Deleted);
     }
+
+
+    static internal FixedList<ContractMilestone> GetListFor(Contract contract) {
+      return BaseObject.GetFullList<ContractMilestone>()
+                       .ToFixedList()
+                       .FindAll(x => x.Contract.Equals(contract) && x.Status != EntityStatus.Deleted);
+    }
+
 
     static internal ContractMilestone Empty => ParseEmpty<ContractMilestone>();
 
@@ -77,7 +86,7 @@ namespace Empiria.Contracts {
     } = Party.Empty;
 
 
-    [DataField("MILESTONE_PAYMENT_EXT_DATA")]
+    //[DataField("MILESTONE_PAYMENT_EXT_DATA")]
     public PaymentData PaymentData {
       get; private set;
     } = new PaymentData(JsonObject.Empty);
@@ -189,7 +198,6 @@ namespace Empiria.Contracts {
 
     #endregion Methods
 
-
     #region Helpers
 
     internal void Load(ContractMilestoneFields fields) {
@@ -208,7 +216,6 @@ namespace Empiria.Contracts {
     internal FixedList<ContractMilestoneItem> GetItems() {
       return _items.Value.ToFixedList();
     }
-
 
   }  // class ContractMilestone
 
