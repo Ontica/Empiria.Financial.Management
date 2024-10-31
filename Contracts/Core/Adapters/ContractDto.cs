@@ -180,6 +180,13 @@ namespace Empiria.Contracts.Adapters {
       get; internal set;
     }
 
+
+    public decimal Total {
+      get; internal set;
+    }
+
+
+
   } // class ContractDescriptor
 
 }  // namespace Empiria.Contracts.Adapters

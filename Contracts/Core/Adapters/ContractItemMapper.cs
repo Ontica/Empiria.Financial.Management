@@ -32,7 +32,6 @@ namespace Empiria.Contracts.Adapters {
         Project = contractItem.Project.MapToNamedEntity(),
         PaymentsPeriodicity = contractItem.PaymentsPeriodicity.MapToNamedEntity(),
         BudgetAccount = new NamedEntityDto(contractItem.BudgetAccount.UID, contractItem.BudgetAccount.Code),
-
       };
 
     }

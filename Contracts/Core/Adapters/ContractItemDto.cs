@@ -10,6 +10,9 @@
 
 using System;
 
+using Empiria.Parties;
+
+
 namespace Empiria.Contracts.Adapters {
 
   /// <summary>Data transfer object used to return contracts information.</summary>
@@ -84,12 +87,7 @@ namespace Empiria.Contracts.Adapters {
     }
 
 
-    public DateTime SignDate {
-      get; internal set;
-    }
-
-
-    public decimal Total {
+    public Party Supplier {
       get; internal set;
     }
 
