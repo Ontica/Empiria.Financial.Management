@@ -77,6 +77,18 @@ namespace Empiria.Payments.Payables.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v2/payments-management/payables/{payableUID:guid}/payment-instruction")]
+    public SingleObjectModel SetPaymentInstruction([FromUri] string payableUID) {
+            
+      using (var usecases = PayableUseCases.UseCaseInteractor()) {
+        PayableHolderDto payable = usecases.SetPaymentInstruction(payableUID);
+
+        return new SingleObjectModel(base.Request, payable);
+      }
+    }
+
+
     [HttpPut]
     [Route("v2/payments-management/payables/{payableUID:guid}")]
     public SingleObjectModel UpdatePayable([FromUri] string payableUID,
@@ -86,6 +98,20 @@ namespace Empiria.Payments.Payables.WebApi {
       using (var usecases = PayableUseCases.UseCaseInteractor()) {
 
         PayableHolderDto payable = usecases.UpdatePayable(payableUID, fields);
+
+        return new SingleObjectModel(this.Request, payable);
+      }
+    }
+
+    [HttpPut]
+    [Route("v2/payments-management/payables/{payableUID:guid}/payment-data")]
+    public SingleObjectModel UpdatePayablePayment([FromUri] string payableUID,
+                                          [FromBody] PayablePaymentFields fields) {
+      base.RequireBody(fields);
+
+      using (var usecases = PayableUseCases.UseCaseInteractor()) {
+
+        PayableHolderDto payable = usecases.UpdatePayablePayment(payableUID, fields);
 
         return new SingleObjectModel(this.Request, payable);
       }

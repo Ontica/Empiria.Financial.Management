@@ -17,6 +17,7 @@ using Empiria.Parties;
 
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.Data;
+using Empiria.Payments.Payables;
 
 namespace Empiria.Payments.Orders {
 
@@ -67,12 +68,12 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    //[DataField("ORDER_PAYABLE_ID")]
-    //public Payable Payable {
-    //  get; internal set;
-    //}
+    [DataField("ORDER_PAYABLE_ID")]
+    public Payable Payable {
+      get; internal set;
+    }
 
-
+    [DataField("ORDER_PAYABLE_TYPE_ID")]
     public int PayableTypeId {
       get; internal set;
     }
@@ -90,10 +91,10 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    //[DataField("ORDER_PAYMENT_ACCOUNT_ID")]
-    //public PaymentAccount PaymentAccount {
-    //  get; private set;
-    //}
+    [DataField("ORDER_PAYMENT_ACCOUNT_ID")]
+    public PaymentAccount PaymentAccount {
+      get; private set;
+    }
 
 
     [DataField("ORDER_NOTES")]
@@ -203,11 +204,11 @@ namespace Empiria.Payments.Orders {
 
       this.PaymentOrderType = PaymentOrderType.Parse(fields.PaymentOrderTypeUID);
       this.PayTo = Party.Parse(fields.PayToUID);
-      // this.Payable = Payable.Parse(fields.PayableUID);
-      this.PayableTypeId = -1;
+      this.Payable = Payable.Parse(fields.PayableUID); 
+      this.PayableTypeId = this.Payable.PayableType.Id;
       this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
       this.Currency = Currency.Parse(fields.CurrencyUID);
-      //this.PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
+      this.PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
       this.Notes = fields.Notes;
       this.RequestedTime = fields.RequestedTime;
       this.DueTime = fields.DueTime;

@@ -7,6 +7,7 @@
 *  Summary  : Use cases for payables management.                                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 
 using Empiria.Services;
 
@@ -14,6 +15,10 @@ using Empiria.Financial;
 
 using Empiria.Payments.Payables.Adapters;
 using Empiria.Payments.Payables.Data;
+using Empiria.Payments.Payables.Services;
+using Empiria.Payments.Orders.Adapters;
+using Empiria.Payments.Orders.UseCases;
+
 
 namespace Empiria.Payments.Payables.UseCases {
 
@@ -102,6 +107,24 @@ namespace Empiria.Payments.Payables.UseCases {
       FixedList<Payable> payables = PayableData.GetPayables(filter, sortBy);
 
       return PayableMapper.MapToDescriptor(payables);
+    }
+
+
+    public PayableHolderDto SetPaymentInstruction(string payableUID) {
+      Assertion.Require(payableUID, nameof(payableUID));
+
+      var payable = Payable.Parse(payableUID);
+
+      Assertion.Require(payable.PaymentMethod.Id > -1, "Necesito se proporcione el método de pago, para realizar la instrucción de pago.");
+      if (payable.PaymentMethod.LinkedToAccount) {
+        Assertion.Require(payable.PaymentAccount.Id > -1 , "Necesito el identificador UID de la cuenta donde se debe realizar el pago."); 
+      }
+
+      PayableServices.SetOnPayment(payable);
+
+      CreatePaymentOrder(payable);
+
+      return PayableHolderMapper.Map(payable);
     }
 
 
@@ -235,9 +258,43 @@ namespace Empiria.Payments.Payables.UseCases {
 
       return PayableHolderMapper.Map(payable);
     }
-      
+
 
     #endregion PayableData
+
+    #region Helpers
+
+     private PaymentOrderDto CreatePaymentOrder(Payable payable) {
+
+      var fields = LoadPaymentOrderFields(payable);
+     
+      var paymentOrderUseCases = PaymentOrderUseCases.UseCaseInteractor();
+
+      var paymentOrder = paymentOrderUseCases.CreatePaymentOrder(fields);
+
+      return paymentOrder;
+    }
+
+
+    private PaymentOrderFields LoadPaymentOrderFields(Payable payable) {
+
+     return new PaymentOrderFields {
+        PaymentOrderTypeUID = "32e1b307-676b-4488-b26f-1cbc03878875",
+        PayableUID = payable.UID,
+        PayToUID = payable.PayTo.UID,
+        PaymentMethodUID = payable.PaymentMethod.UID,
+        CurrencyUID = payable.Currency.UID,
+        PaymentAccountUID = payable.PaymentAccount.UID,
+        Notes = "Sin notas",
+        Total = payable.Total,
+        DueTime = payable.DueTime,
+        RequestedByUID = payable.OrganizationalUnit.UID,
+        RequestedTime = DateTime.Now
+      };
+    }
+
+
+    #endregion Helpers
 
   }  // class PayableUseCases
 

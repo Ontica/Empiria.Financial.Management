@@ -28,7 +28,7 @@ namespace Empiria.Payments.Payables.Adapters {
         Currency = payable.Currency.MapToNamedEntity(),
         RequestedTime = payable.RequestedTime,
         DueTime = payable.DueTime,
-        Payment = MapToPayablePaymentDto(payable),
+        Payment = MapToPayablePayment(payable),
         Status = new NamedEntityDto(payable.Status.ToString(), payable.Status.GetName())
       };
 
@@ -57,7 +57,7 @@ namespace Empiria.Payments.Payables.Adapters {
       };
     }
 
-    static internal PayablePaymentDto MapToPayablePaymentDto(Payable payable) {
+    static internal PayablePaymentDto MapToPayablePayment(Payable payable) {
       return new PayablePaymentDto {
         PaymentMethod = payable.PaymentMethod.MapToNamedEntity(),
         PayablePaymentAccount = MapPaymentAccount(payable),

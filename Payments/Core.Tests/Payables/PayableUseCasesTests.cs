@@ -130,6 +130,15 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
       Assert.NotNull(sut);
     }
 
+    [Fact]
+    public void Should_Set_Payment_Instruction() {
+      var payableUID = "abdc27b9-5fb1-4386-aa87-f5ad5ec66fea";
+
+      var sut = _usecases.SetPaymentInstruction(payableUID);
+
+      Assert.NotNull(sut);
+    }
+
 
     [Fact]
     public void Should_Update_Payable() {

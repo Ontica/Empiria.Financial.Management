@@ -22,6 +22,7 @@ namespace Empiria.Payments.Orders.Adapters {
     static internal PaymentOrderDto Map(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
         UID = paymentOrder.UID,
+        OrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.Name,
         RequestedBy = paymentOrder.RequestedBy.Name,
         RequestedDate = paymentOrder.RequestedTime,
