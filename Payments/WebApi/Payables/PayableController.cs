@@ -23,13 +23,14 @@ namespace Empiria.Payments.Payables.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v2/payments-management/payables/payable-types")]
-    public CollectionModel GetPayableTypes() {
+    [Route("v2/payments-management/payables/{payableUID:guid}")]
+    public SingleObjectModel GetPayable([FromUri] string payableUID) {
 
       using (var usecases = PayableUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> payableTypes = usecases.GetPayableTypes();
 
-        return new CollectionModel(Request, payableTypes);
+        PayableHolderDto payableHolderDto = usecases.GetPayableData(payableUID);
+
+        return new SingleObjectModel(this.Request, payableHolderDto);
       }
     }
 
@@ -45,10 +46,9 @@ namespace Empiria.Payments.Payables.WebApi {
       }
     }
 
-
     #endregion Query web apis
 
-    #region Payable command web apis
+    #region Command web apis
 
     [HttpPost]
     [Route("v2/payments-management/payables")]
@@ -75,7 +75,7 @@ namespace Empiria.Payments.Payables.WebApi {
         return new NoDataModel(this.Request);
       }
     }
-        
+
 
     [HttpPut]
     [Route("v2/payments-management/payables/{payableUID:guid}")]
@@ -91,71 +91,7 @@ namespace Empiria.Payments.Payables.WebApi {
       }
     }
 
-    #endregion Payable command web apis
-
-    #region Payable items command web apis
-
-    [HttpPost]
-    [Route("v2/payments-management/payables/{payableUID:guid}/items")]
-    public SingleObjectModel AddPayableItem([FromUri] string payableUID,
-                                            [FromBody] PayableItemFields fields) {
-      base.RequireBody(fields);
-
-      using (var usecases = PayableUseCases.UseCaseInteractor()) {
-        PayableItemDto payableItem = usecases.AddPayableItem(payableUID, fields);
-
-        return new SingleObjectModel(base.Request, payableItem);
-      }
-    }
-
-
-    [HttpDelete]
-    [Route("v2/payments-management/payables/{payableUID:guid}/items/{payableItemUID:guid}")]
-    public NoDataModel RemovePayableItem([FromUri] string payableUID,
-                                         [FromUri] string payableItemUID) {
-
-      using (var usecases = PayableUseCases.UseCaseInteractor()) {
-
-        usecases.RemovePayableItem(payableUID, payableItemUID);
-
-        return new NoDataModel(this.Request);
-      }
-    }
-
-
-    [HttpPut]
-    [Route("v2/payments-management/payables/{payableUID:guid}/items/{payableItemUID:guid}")]
-    public SingleObjectModel UpdatePayableItem([FromUri] string payableUID,
-                                               [FromUri] string payableItemUID,
-                                               [FromBody] PayableItemFields fields) {
-
-      base.RequireBody(fields);
-
-      using (var usecases = PayableUseCases.UseCaseInteractor()) {
-
-        PayableItemDto payableItem = usecases.UpdatePayableItem(payableUID, payableItemUID, fields);
-
-        return new SingleObjectModel(this.Request, payableItem);
-      }
-    }
-
-    #endregion Payable items command web apis
-
-    #region PayableDataStructure
-
-    [HttpGet]
-    [Route("v2/payments-management/payables/{payableUID:guid}")]
-    public SingleObjectModel GetPayableData([FromUri] string payableUID) {
-
-      using (var usecases = PayableUseCases.UseCaseInteractor()) {
-
-        PayableHolderDto payableHolderDto = usecases.GetPayableData(payableUID);
-
-        return new SingleObjectModel(this.Request, payableHolderDto);
-      }
-    }
-
-    #endregion PayableDataStructure
+    #endregion Command web apis
 
   }  // class PayableController
 

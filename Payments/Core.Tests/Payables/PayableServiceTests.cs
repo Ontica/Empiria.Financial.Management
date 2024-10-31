@@ -24,7 +24,7 @@ namespace Empiria.Tests.Payments.Payables.Services {
 
       var payable = Payable.Parse("abdc27b9-5fb1-4386-aa87-f5ad5ec66fea");
 
-      PayableService.SetOnPayment(payable);
+      PayableServices.SetOnPayment(payable);
     }
 
 
@@ -33,7 +33,7 @@ namespace Empiria.Tests.Payments.Payables.Services {
 
       var payable = Payable.Parse("abdc27b9-5fb1-4386-aa87-f5ad5ec66fea");
 
-      PayableService.SetPay(payable);
+      PayableServices.SetAsPayed(payable);
     }
 
     #endregion Facts
