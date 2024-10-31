@@ -25,7 +25,7 @@ using Empiria.Contracts.Data;
 namespace Empiria.Contracts {
 
   /// <summary>Represents a contract item.</summary>
-  public class ContractItem : BaseObject {
+  public class ContractItem : BaseObject, INamedEntity {
 
     #region Constructors and parsers
 
@@ -72,6 +72,15 @@ namespace Empiria.Contracts {
       get; private set;
     }
 
+    public string Name {
+      get {
+        if (Description.Length != 0) {
+          return Description;
+        } else {
+          return Product.Name;
+        }
+      }
+    }
 
     [DataField("CONTRACT_ITEM_DESCRIPTION")]
     public string Description {

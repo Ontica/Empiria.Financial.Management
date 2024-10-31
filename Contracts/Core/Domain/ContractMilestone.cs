@@ -22,7 +22,7 @@ using Empiria.Contracts.Adapters;
 namespace Empiria.Contracts {
 
   /// <summary>Represents a contract milestone.</summary>
-  public class ContractMilestone : BaseObject, IPayableEntity {
+  public class ContractMilestone : BaseObject, IPayableEntity, INamedEntity {
 
     #region Fields
 

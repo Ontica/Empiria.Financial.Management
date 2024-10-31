@@ -22,8 +22,8 @@ namespace Empiria.Contracts.Adapters {
     static internal ContractMilestoneItemDto Map(ContractMilestoneItem milestoneItem) {
       return new ContractMilestoneItemDto {
         UID = milestoneItem.UID,
-        ContractMilestone = new NamedEntityDto(milestoneItem.ContractMilestone.UID, milestoneItem.ContractMilestone.Name),
-        ContractItem = new NamedEntityDto(milestoneItem.ContractItem.UID, milestoneItem.ContractItem.Description),
+        ContractMilestone = milestoneItem.ContractMilestone.MapToNamedEntity(),
+        ContractItem = milestoneItem.ContractItem.MapToNamedEntity(),
         Description = milestoneItem.Description,
         Product = milestoneItem.Product.MapToNamedEntity(),
         ProductUnit = milestoneItem.ProductUnit.MapToNamedEntity(),

@@ -20,7 +20,7 @@ using Empiria.StateEnums;
 namespace Empiria.Contracts {
 
   /// <summary>Represents a contract milestone item.</summary>
-  public class ContractMilestoneItem : BaseObject, IPayableEntityItem {
+  public class ContractMilestoneItem : BaseObject, IPayableEntityItem, INamedEntity {
 
     #region Constructors and parsers
 
@@ -51,6 +51,17 @@ namespace Empiria.Contracts {
     [DataField("CONTRACT_ITEM_ID")]
     public ContractItem ContractItem {
       get; private set;
+    }
+
+
+    public string Name {
+      get {
+        if (Description.Length != 0) {
+          return Description;
+        } else {
+          return Product.Name;
+        }
+      }
     }
 
 
