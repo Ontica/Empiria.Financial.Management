@@ -250,8 +250,7 @@ namespace Empiria.Payments.Payables {
       } else {
         this.PaymentAccount = PaymentAccount.Empty;
       }
-
-     
+           
     }
 
     #endregion Methods

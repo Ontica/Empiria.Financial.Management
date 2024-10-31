@@ -153,8 +153,8 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Update_Payable_Payment() {
       var fields = new PayablePaymentFields {
-        PaymentMethodUID = "ff779080-f58c-41ac-a48d-c1a00a2c5232", //"591e657c-229d-4d0b-9988-ce6b9489725e",
-        PaymentAccountUID = ""
+        PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
+        PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43"
       };
 
       var payableUID = "abdc27b9-5fb1-4386-aa87-f5ad5ec66fea";

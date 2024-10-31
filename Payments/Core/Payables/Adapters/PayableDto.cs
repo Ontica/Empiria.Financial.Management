@@ -69,6 +69,9 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
+    public PayablePaymentDto Payment {
+      get; internal set;
+    }
 
     public NamedEntityDto Status {
       get; internal set;
@@ -165,6 +168,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-  } // class PayableDescriptor
+  } // class PayableLinkDto
 
+  
 }  // namespace Empiria.Payments.Payables.Adapters

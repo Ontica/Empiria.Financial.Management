@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
+
 namespace Empiria.Payments.Payables.Adapters {
 
   /// <summary>Provides data mapping services for payable objects and related types.</summary>
@@ -21,11 +23,12 @@ namespace Empiria.Payments.Payables.Adapters {
         Description = payable.Description,
         PayTo = payable.PayTo.MapToNamedEntity(),
         RequestedBy = new NamedEntityDto(payable.OrganizationalUnit.UID, payable.OrganizationalUnit.Name),
-        BudgetType = new NamedEntityDto(payable.BudgetType.UID, payable.BudgetType.Name),
+        BudgetType = new NamedEntityDto(payable.BudgetType.UID, payable.BudgetType.DisplayName),
         Total = payable.Total,
         Currency = payable.Currency.MapToNamedEntity(),
         RequestedTime = payable.RequestedTime,
         DueTime = payable.DueTime,
+        Payment = MapToPayablePaymentDto(payable),
         Status = new NamedEntityDto(payable.Status.ToString(), payable.Status.GetName())
       };
 
@@ -52,6 +55,26 @@ namespace Empiria.Payments.Payables.Adapters {
         RequestedBy = payable.OrganizationalUnit.Name,
         StatusName = payable.Status.GetName()
       };
+    }
+
+    static internal PayablePaymentDto MapToPayablePaymentDto(Payable payable) {
+      return new PayablePaymentDto {
+        PaymentMethod = payable.PaymentMethod.MapToNamedEntity(),
+        PayablePaymentAccount = MapPaymentAccount(payable),
+      };
+
+    }
+
+
+    static internal PayablePaymentAccountDto MapPaymentAccount(Payable payable) {
+      return new PayablePaymentAccountDto {
+        Institution = payable.PaymentAccount.Institution.MapToNamedEntity(),
+        Currency = payable.PaymentAccount.MapToNamedEntity(),
+        AccountNo = payable.PaymentAccount.AccountNo,
+        CLABE = payable.PaymentAccount.CLABE
+
+      };
+
     }
 
   } // class PayableMapper
