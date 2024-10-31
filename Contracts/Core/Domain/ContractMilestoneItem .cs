@@ -43,7 +43,7 @@ namespace Empiria.Contracts {
     #region Properties
 
     [DataField("MILESTONE_ID")]
-    public ContractMilestone Milestone {
+    public ContractMilestone ContractMilestone {
       get; private set;
     }
 
@@ -60,13 +60,13 @@ namespace Empiria.Contracts {
     }
 
 
-    // [DataField("MILESTONE_ITEM_PRODUCT_UNIT_ID")]
-    public ProductUnit Unit {
+    [DataField("MILESTONE_ITEM_PRODUCT_UNIT_ID")]
+    public ProductUnit ProductUnit {
       get; private set;
     } = ProductUnit.Empty;
 
 
-    // [DataField("MILESTONE_ITEM_DESCRIPTION")]
+    [DataField("MILESTONE_ITEM_DESCRIPTION")]
     public string Description {
       get; private set;
     } = string.Empty;
@@ -91,7 +91,7 @@ namespace Empiria.Contracts {
     }
 
 
-    //[DataField("MILESTONE_ITEM_BUDGET_ACCOUNT_ID")]
+    [DataField("MILESTONE_ITEM_BUDGET_ACCOUNT_ID")]
     public BudgetAccount BudgetAccount {
       get;
       private set;
@@ -167,7 +167,7 @@ namespace Empiria.Contracts {
 
     INamedEntity IPayableEntityItem.Unit {
       get {
-        return this.Unit;
+        return this.ProductUnit;
       }
     }
 

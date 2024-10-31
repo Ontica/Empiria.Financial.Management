@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Contracts Management                       Component : Adapters Layer                          *
-*  Assembly : Empiria.Contracts.Core.dll                 Pattern   : Query DTO                               *
-*  Type     : ContractQuery                              License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.ContractMilestone.Core.dll         Pattern   : Query DTO                               *
+*  Type     : ContractMilestoneQuery                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Query data transfer object used to search contracts.                                           *
+*  Summary  : Query data transfer object used to search contracts milestone.                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,15 +12,10 @@ using Empiria.StateEnums;
 
 namespace Empiria.Contracts.Adapters {
 
-  /// <summary>Query data transfer object used to search contracts.</summary>
-  public class ContractQuery {
+  /// <summary>Query data transfer object used to search contracts milestone.</summary>
+  public class ContractMilestoneQuery {
 
     public string ContractNo {
-      get; set;
-    } = string.Empty;
-
-
-    public string ContractTypeUID {
       get; set;
     } = string.Empty;
 
@@ -54,6 +49,6 @@ namespace Empiria.Contracts.Adapters {
       get; set; 
     } = string.Empty;
 
-  }  // class ContractQuery
+  }  // class ContractMilestoneQuery
 
 } // namespace Empiria.Contracts.Adapters

@@ -251,6 +251,7 @@ namespace Empiria.Contracts {
       ExtData = new JsonObject();
     }
 
+    
     internal void AddItem(ContractItem contractItem) {
       Assertion.Require(contractItem, nameof(contractItem));
       Assertion.Require(contractItem.Contract.Equals(this), "Wrong ContractItem.Contract instance");
@@ -258,9 +259,11 @@ namespace Empiria.Contracts {
       _items.Value.Add(contractItem);
     }
 
+    
     internal FixedList<ContractItem> GetItems() {
       return _items.Value.ToFixedList();
     }
+
 
     internal ContractItem RemoveItem(string contractItemUID) {
       Assertion.Require("contractItemUID", nameof(contractItemUID));
@@ -273,6 +276,7 @@ namespace Empiria.Contracts {
 
       return contractItem;
     }
+
 
     internal ContractItem UpdateItem(string contractItemUID, ContractItemFields fields) {
       Assertion.Require("contractItemUID", nameof(contractItemUID));

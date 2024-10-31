@@ -22,15 +22,30 @@ namespace Empiria.Contracts.Adapters {
 
     public string ContractUID {
       get; set;
-    } = string.Empty;
+    }
 
 
-    public int PaymentNumber {
+    public string MilestoneNo {
       get; set;
     }
 
 
-    public DateTime PaymentDate {
+    public string Name {
+      get; set;
+    }
+
+
+    public string Description {
+      get; set;
+    }
+
+
+    public string SupplierUID {
+      get; set;
+    }
+
+
+    public string PaymentExtData {
       get; set;
     }
 
@@ -51,8 +66,8 @@ namespace Empiria.Contracts.Adapters {
 
 
     internal void EnsureValid() {
-      Assertion.Require(PaymentDate, "Se requiere la fecha del pago.");
-      Assertion.Require(PaymentNumber, "Se requiere el numero de pago.");
+      Assertion.Require(MilestoneNo, "Se requiere el numero del entregable.");
+      Assertion.Require(Name, "Se requiere el nombre del entregable.");
     }
 
   }  // class ContractMilestoneFields

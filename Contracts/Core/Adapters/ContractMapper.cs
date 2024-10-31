@@ -52,8 +52,9 @@ namespace Empiria.Contracts.Adapters {
         ContractType = contract.ContractType.Name,
         Currency = contract.Currency.Name,
         ToDate = contract.ToDate,
-        FromDate = contract.ToDate,
-        statusName = EntityStatusEnumExtensions.GetName(contract.Status)
+        FromDate = contract.FromDate,
+        statusName = EntityStatusEnumExtensions.GetName(contract.Status),
+        Total = contract.Total,
       };
 
     }

@@ -20,7 +20,7 @@ namespace Empiria.Contracts.Data {
     static internal List<ContractItem> GetContractItems(Contract contract) {
       Assertion.Require(contract, nameof(contract));
 
-      var sql = "SELECT * FROM FMS_CONTRACT_ITEMS " +
+      var sql = "select * from fms_contract_items " +
                 $"WHERE contract_id = {contract.Id} AND contract_item_status <> 'X'";
 
       var op = DataOperation.Parse(sql);
