@@ -45,21 +45,48 @@ namespace Empiria.Tests.Contracts {
     public void Should_Add_A_Contract() {
       var fields = new ContractFields {
         ContractTypeUID = TestingConstants.CONTRACT_TYPE_UID,
-        ContractNo = "123-9089/A456",
-        Name = "Servicios de desarrollo de software 1",
-        Description = "Description",
+        ContractNo = "DAGA/146/2023",
+        Name = "BANOBRAS-2023-O-00ABCD",
+        Description = "Fábrica de Software 2023-2024",
         CurrencyUID = TestingConstants.CONTRACT_CURRENCY_UID,
+        FromDate = new DateTime(2023, 11, 07),
         ToDate = new DateTime(2024, 12, 31),
-        FromDate = new DateTime(2024, 1, 1),
-        SignDate = new DateTime(2023, 12, 18),
+        SignDate = new DateTime(2023, 11, 07),
         ManagedByOrgUnitUID = TestingConstants.MANAGED_BY_ORG_UNIT_UID,
         BudgetTypeUID = TestingConstants.CONTRACT_BUDGET_TYPE_UID,
         SupplierUID = TestingConstants.SUPPLIER_UID,
         ParentUID = "Empty",
-        Total = 1000000.00M,
+        Total = 237762005.00M,
       };
 
       ContractDto sut = _usecases.AddContract(fields);
+
+      Assert.NotNull(sut);
+      Assert.NotNull(sut.UID);
+      Assert.Equal(fields.ContractNo, sut.ContractNo);
+      Assert.Equal(fields.Name, sut.Name);
+      Assert.Equal(fields.Total, sut.Total);
+    }
+
+    [Fact]
+    public void Should_Update_A_Contract() {
+      var fields = new ContractFields {
+        ContractTypeUID = TestingConstants.CONTRACT_TYPE_UID,
+        ContractNo = "DAGA/031/2022",
+        Name = "BANOBRAS-2024-O-XXXXXX",
+        Description = "Servicios de soporte técnico y mantenimiento al Sistema Fiduciario que opera en Banobras YATLA",
+        CurrencyUID = TestingConstants.CONTRACT_CURRENCY_UID,
+        FromDate = new DateTime(2022, 09, 01),
+        ToDate = new DateTime(2024, 08, 31),
+        SignDate = new DateTime(2022, 09, 01),
+        ManagedByOrgUnitUID = TestingConstants.MANAGED_BY_ORG_UNIT_UID,
+        BudgetTypeUID = TestingConstants.CONTRACT_BUDGET_TYPE_UID,
+        SupplierUID = TestingConstants.SUPPLIER_UID,
+        ParentUID = "Empty",
+        Total = 9300402.32M,
+      };
+
+      ContractDto sut = _usecases.UpdateContract(TestingConstants.CONTRACT_UID, fields);
 
       Assert.NotNull(sut);
       Assert.NotNull(sut.UID);
