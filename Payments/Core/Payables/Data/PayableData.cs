@@ -81,6 +81,7 @@ namespace Empiria.Payments.Payables.Data {
                      o.PayableEntity.Id, o.OrganizationalUnit.Id,
                      o.RequestedTime, o.PayTo.Id, Contract.Empty.Id,
                      o.Currency.Id, o.BudgetType.Id, o.DueTime,
+                     o.PaymentMethod.Id, o.PaymentAccount.Id,
                      extensionData, o.Keywords, o.PostedBy.Id,
                      o.PostingTime, (char) o.Status);
 

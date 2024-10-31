@@ -151,6 +151,20 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
 
 
     [Fact]
+    public void Should_Update_Payable_Payment() {
+      var fields = new PayablePaymentFields {
+        PaymentMethodUID = "ff779080-f58c-41ac-a48d-c1a00a2c5232", //"591e657c-229d-4d0b-9988-ce6b9489725e",
+        PaymentAccountUID = ""
+      };
+
+      var payableUID = "abdc27b9-5fb1-4386-aa87-f5ad5ec66fea";
+
+      var sut = _usecases.UpdatePayablePayment(payableUID, fields);
+
+      Assert.NotNull(sut);
+    }
+
+    [Fact]
     public void Should_Update_PayableItem() {
       var fields = new PayableItemFields {
         PayableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c",

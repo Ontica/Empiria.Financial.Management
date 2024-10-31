@@ -23,6 +23,7 @@ using Empiria.Budgeting;
 
 using Empiria.Payments.Payables.Adapters;
 using Empiria.Payments.Payables.Data;
+using Empiria.Payments.Orders;
 
 namespace Empiria.Payments.Payables {
 
@@ -135,6 +136,18 @@ namespace Empiria.Payments.Payables {
     } = ExecutionServer.DateMaxValue;
 
 
+    [DataField("PAYABLE_PAYMENT_METHOD_ID")]
+    public PaymentMethod PaymentMethod {
+      get; private set;
+    } = PaymentMethod.Empty;
+
+                
+    [DataField("PAYABLE_PAYMENT_ACCOUNT_ID")]
+    public PaymentAccount PaymentAccount {
+      get; private set;
+    } = PaymentAccount.Empty;
+
+
     [DataField("PAYABLE_EXT_DATA")]
     protected JsonObject ExtData {
       get; set;
@@ -223,6 +236,22 @@ namespace Empiria.Payments.Payables {
       this.Currency = Currency.Parse(fields.CurrencyUID);
       this.DueTime = fields.DueTime;
       this.RequestedTime = fields.RequestedTime;
+    }
+
+
+    internal void UpdatePaymentData(PayablePaymentFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+      this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
+
+      if (this.PaymentMethod.LinkedToAccount) {
+        this.PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
+      } else {
+        this.PaymentAccount = PaymentAccount.Empty;
+      }
+
+     
     }
 
     #endregion Methods
