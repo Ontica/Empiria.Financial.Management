@@ -8,10 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
-using Empiria.Parties;
-
 
 namespace Empiria.Contracts.Adapters {
 
@@ -26,68 +22,47 @@ namespace Empiria.Contracts.Adapters {
       get; internal set;
     }
 
-
     public NamedEntityDto Contract {
       get; internal set;
     }
 
+    public NamedEntityDto Supplier {
+      get; internal set;
+    }
 
     public NamedEntityDto Product {
       get; internal set;
     }
 
-
     public string Description {
       get; internal set;
     }
 
-
-    public NamedEntityDto UnitMeasure {
+    public NamedEntityDto Unit {
       get; internal set;
     }
-
 
     public decimal FromQuantity {
       get; internal set;
     }
 
-
     public decimal ToQuantity {
       get; internal set;
     }
-
 
     public decimal UnitPrice {
       get; internal set;
     }
 
-
     public NamedEntityDto Project {
       get; internal set;
     }
 
-
-    public NamedEntityDto PaymentsPeriodicity {
+    public NamedEntityDto Periodicity {
       get; internal set;
     }
-
 
     public NamedEntityDto BudgetAccount {
-      get; internal set;
-    }
-
-
-    public NamedEntityDto Document {
-      get; internal set;
-    }
-
-
-    public NamedEntityDto DocumentTypes {
-      get; internal set;
-    }
-
-
-    public Party Supplier {
       get; internal set;
     }
 

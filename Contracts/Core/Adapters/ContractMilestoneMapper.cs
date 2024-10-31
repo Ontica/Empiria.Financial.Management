@@ -24,11 +24,11 @@ namespace Empiria.Contracts.Adapters {
     static internal ContractMilestoneDto Map(ContractMilestone milestone) {
       return new ContractMilestoneDto {
         UID = milestone.UID,
-        Contract = milestone.Contract,
-        MilestoneNo = milestone.MilestoneNo,  
+        Contract = milestone.Contract.MapToNamedEntity(),
+        MilestoneNo = milestone.MilestoneNo,
         Name = milestone.Name,
         Description = milestone.Description,
-        Supplier = milestone.Supplier,
+        Supplier = milestone.Supplier.MapToNamedEntity(),
         //PaymentExtData = milestone.PaymentData.,
       };
     }
@@ -44,7 +44,7 @@ namespace Empiria.Contracts.Adapters {
     private static ContractMilestoneDescriptor MapToDescriptor(ContractMilestone milestone) {
       return new ContractMilestoneDescriptor {
         UID = milestone.UID,
-        Contract = milestone.Contract.Id,
+        ContractUID = milestone.Contract.UID,
         MilestoneNo = milestone.MilestoneNo,
         Name = milestone.Name,
         Description = milestone.Description,

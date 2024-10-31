@@ -59,13 +59,13 @@ namespace Empiria.Tests.Contracts {
         Total = 237762005.00M,
       };
 
-      ContractDto sut = _usecases.AddContract(fields);
+      ContractHolderDto sut = _usecases.AddContract(fields);
 
       Assert.NotNull(sut);
-      Assert.NotNull(sut.UID);
-      Assert.Equal(fields.ContractNo, sut.ContractNo);
-      Assert.Equal(fields.Name, sut.Name);
-      Assert.Equal(fields.Total, sut.Total);
+      Assert.NotNull(sut.Contract.UID);
+      Assert.Equal(fields.ContractNo, sut.Contract.ContractNo);
+      Assert.Equal(fields.Name, sut.Contract.Name);
+      Assert.Equal(fields.Total, sut.Contract.Total);
     }
 
     [Fact]
@@ -86,13 +86,13 @@ namespace Empiria.Tests.Contracts {
         Total = 9300402.32M,
       };
 
-      ContractDto sut = _usecases.UpdateContract(TestingConstants.CONTRACT_UID, fields);
+      ContractHolderDto sut = _usecases.UpdateContract(TestingConstants.CONTRACT_UID, fields);
 
       Assert.NotNull(sut);
-      Assert.NotNull(sut.UID);
-      Assert.Equal(fields.ContractNo, sut.ContractNo);
-      Assert.Equal(fields.Name, sut.Name);
-      Assert.Equal(fields.Total, sut.Total);
+      Assert.NotNull(sut.Contract.UID);
+      Assert.Equal(fields.ContractNo, sut.Contract.ContractNo);
+      Assert.Equal(fields.Name, sut.Contract.Name);
+      Assert.Equal(fields.Total, sut.Contract.Total);
     }
 
 
@@ -123,7 +123,7 @@ namespace Empiria.Tests.Contracts {
     [Fact]
     public void Should_Read_A_Contract() {
 
-      ContractDto sut = _usecases.GetContract(TestingConstants.CONTRACT_UID);
+      ContractHolderDto sut = _usecases.GetContract(TestingConstants.CONTRACT_UID);
 
       Assert.NotNull(sut);
 

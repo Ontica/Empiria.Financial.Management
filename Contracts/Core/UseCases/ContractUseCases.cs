@@ -32,7 +32,7 @@ namespace Empiria.Contracts.UseCases {
 
     #region Use cases
 
-    public ContractDto AddContract(ContractFields fields) {
+    public ContractHolderDto AddContract(ContractFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
@@ -48,8 +48,8 @@ namespace Empiria.Contracts.UseCases {
       return ContractMapper.Map(contract);
     }
 
-    
-    public ContractDto GetContract(string contractUID) {
+
+    public ContractHolderDto GetContract(string contractUID) {
       Assertion.Require(contractUID, nameof(contractUID));
 
       var contract = Contract.Parse(contractUID);
@@ -87,7 +87,8 @@ namespace Empiria.Contracts.UseCases {
       return ContractMapper.MapToDescriptor(contracts);
     }
 
-    public ContractDto UpdateContract(string ContractUID,
+
+    public ContractHolderDto UpdateContract(string ContractUID,
                                       ContractFields fields) {
       Assertion.Require(fields, nameof(fields));
 

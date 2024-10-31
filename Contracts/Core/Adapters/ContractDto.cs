@@ -10,105 +10,94 @@
 
 using System;
 
+using Empiria.Documents;
+
 namespace Empiria.Contracts.Adapters {
 
-  /// <summary>Data transfer object used to return contracts information.</summary>
-  public class ContractDto {
+  public class ContractHolderDto {
 
-
-    public int ID {
+    public ContractDto Contract {
       get; internal set;
     }
 
+    public FixedList<ContractItemDto> Items {
+      get; internal set;
+    }
+
+    public FixedList<ContractMilestoneDto> Milestones {
+      get; internal set;
+    }
+
+    public FixedList<Document> Documents {
+      get; internal set;
+    }
+
+    public FixedList<Document> History {
+      get; internal set;
+    }
+
+  }  // class ContractHolderDto
+
+
+  /// <summary>Data transfer object used to return contracts information.</summary>
+  public class ContractDto {
 
     public string UID {
       get; internal set;
     }
 
+    public NamedEntityDto ContractType {
+      get; internal set;
+    }
 
     public string ContractNo {
       get; internal set;
     }
 
-
     public string Name {
       get; internal set;
     }
-
 
     public string Description {
       get; internal set;
     }
 
-
-    public NamedEntityDto Currency {
+    public NamedEntityDto Supplier {
       get; internal set;
     }
-
-
-    public DateTime FromDate {
-      get; internal set;
-    }
-
-
-    public DateTime ToDate {
-      get; internal set;
-    }
-
-
-    public DateTime SignDate {
-      get; internal set;
-    }
-
 
     public NamedEntityDto ManagedByOrgUnit {
       get; internal set;
     }
 
-
-    public NamedEntityDto Supplier {
+    public DateTime FromDate {
       get; internal set;
     }
 
+    public DateTime ToDate {
+      get; internal set;
+    }
+
+    public DateTime SignDate {
+      get; internal set;
+    }
 
     public NamedEntityDto BudgetType {
       get; internal set;
     }
 
-
-    public string ParentContract {
+    public NamedEntityDto Currency {
       get; internal set;
     }
-
-
-    public string ExtData {
-      get; internal set;
-    }
-
-
-    public string KeyWords {
-      get; internal set;
-    }
-
-
-    public NamedEntityDto PostedBy {
-      get; internal set;
-    }
-
-
-    public string PostingTime {
-      get; internal set;
-    }
-
-
-    public string Status {
-      get; internal set;
-    }
-
 
     public decimal Total {
       get; internal set;
     }
+
+    public NamedEntityDto Status {
+      get; internal set;
+    }
+
 
   }  // class ContractDto
 
@@ -120,71 +109,57 @@ namespace Empiria.Contracts.Adapters {
       get; internal set;
     }
 
+    public string ContractType {
+      get; internal set;
+    }
 
     public string ContractNo {
       get; internal set;
     }
 
-
     public string Name {
       get; internal set;
     }
-
 
     public string Description {
       get; internal set;
     }
 
-
-    public DateTime SignDate {
-      get; internal set;
-    }
-
-
     public string Supplier {
       get; internal set;
     }
-
-
-    public string BudgetType {
-      get; internal set;
-    }
-
 
     public string ManagedByOrgUnit {
       get; internal set;
     }
 
-
-    public string ContractType {
-      get; internal set;
-    }
-
-
-    public string Currency {
-      get; internal set;
-    }
-
-
     public DateTime FromDate {
       get; internal set;
     }
-
 
     public DateTime ToDate {
       get; internal set;
     }
 
-
-    public string statusName {
+    public DateTime SignDate {
       get; internal set;
     }
 
+    public string BudgetType {
+      get; internal set;
+    }
+
+    public string Currency {
+      get; internal set;
+    }
 
     public decimal Total {
       get; internal set;
     }
 
+    public string StatusName {
+      get; internal set;
+    }
 
 
   } // class ContractDescriptor

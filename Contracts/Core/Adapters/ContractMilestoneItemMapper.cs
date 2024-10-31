@@ -29,7 +29,7 @@ namespace Empiria.Contracts.Adapters {
         ProductUnit = milestoneItem.ProductUnit.MapToNamedEntity(),
         Quantity = milestoneItem.Quantity,
         UnitPrice = milestoneItem.UnitPrice,
-        BudgetAccount = new NamedEntityDto(milestoneItem.BudgetAccount.UID, milestoneItem.BudgetAccount.Code),
+        BudgetAccount = milestoneItem.BudgetAccount.MapToNamedEntity(),
       };
 
     }

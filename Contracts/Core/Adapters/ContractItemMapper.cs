@@ -23,15 +23,16 @@ namespace Empiria.Contracts.Adapters {
       return new ContractItemDto {
         UID = contractItem.UID,
         Contract = contractItem.Contract.MapToNamedEntity(),
+        Supplier = contractItem.Supplier.MapToNamedEntity(),
         Product = contractItem.Product.MapToNamedEntity(),
         Description = contractItem.Description,
-        UnitMeasure = contractItem.UnitMeasure.MapToNamedEntity(),
+        Unit = contractItem.UnitMeasure.MapToNamedEntity(),
         FromQuantity = contractItem.FromQuantity,
         ToQuantity = contractItem.ToQuantity,
         UnitPrice = contractItem.UnitPrice,
         Project = contractItem.Project.MapToNamedEntity(),
-        PaymentsPeriodicity = contractItem.PaymentsPeriodicity.MapToNamedEntity(),
-        BudgetAccount = new NamedEntityDto(contractItem.BudgetAccount.UID, contractItem.BudgetAccount.Code),
+        Periodicity = contractItem.PaymentsPeriodicity.MapToNamedEntity(),
+        BudgetAccount = contractItem.BudgetAccount.MapToNamedEntity()
       };
 
     }

@@ -15,24 +15,37 @@ namespace Empiria.Contracts.Adapters {
   /// <summary>Provides data mapping services for contract milestone related types.</summary>
   static internal class ContractMapper {
 
-    static internal FixedList<ContractDto> Map(FixedList<Contract> contracts) {
-      return contracts.Select(x => Map(x))
-                      .ToFixedList();
+    static internal ContractHolderDto Map(Contract contract) {
+      return new ContractHolderDto {
+        Contract = MapContract(contract),
+        Items = ContractItemMapper.Map(contract.GetItems()),
+        Milestones = ContractMilestoneMapper.Map(contract.GetMilestones()),
+        Documents = new FixedList<Documents.Document>(),
+        History = new FixedList<Documents.Document>(),
+      };
     }
 
-
-    static internal ContractDto Map(Contract contract) {
+    static internal ContractDto MapContract(Contract contract) {
       return new ContractDto {
         UID = contract.UID,
+        ContractType = contract.ContractType.MapToNamedEntity(),
         ContractNo = contract.ContractNo,
         Name = contract.Name,
+        Description = contract.Description,
+        Supplier = contract.Supplier.MapToNamedEntity(),
+        ManagedByOrgUnit = contract.ManagedByOrgUnit.MapToNamedEntity(),
+        BudgetType = contract.BudgetType.MapToNamedEntity(),
+        FromDate = contract.FromDate,
+        ToDate = contract.ToDate,
         SignDate = contract.SignDate,
+        Currency = contract.Currency.MapToNamedEntity(),
         Total = contract.Total,
+        Status = contract.Status.MapToDto()
       };
     }
 
 
-    static internal FixedList<ContractDescriptor> MapToDescriptor(FixedList<Contract> contracts) {
+  static internal FixedList<ContractDescriptor> MapToDescriptor(FixedList<Contract> contracts) {
       return contracts.Select(contract => MapToDescriptor(contract))
                 .ToFixedList();
 
@@ -53,7 +66,7 @@ namespace Empiria.Contracts.Adapters {
         Currency = contract.Currency.Name,
         ToDate = contract.ToDate,
         FromDate = contract.FromDate,
-        statusName = EntityStatusEnumExtensions.GetName(contract.Status),
+        StatusName = EntityStatusEnumExtensions.GetName(contract.Status),
         Total = contract.Total,
       };
 

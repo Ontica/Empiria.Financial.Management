@@ -11,10 +11,9 @@
 using System.Web.Http;
 
 using Empiria.WebApi;
+
 using Empiria.Contracts.Adapters;
 using Empiria.Contracts.UseCases;
-using Empiria.Measurement;
-using System.Diagnostics.Contracts;
 
 namespace Empiria.Contracts.WebApi {
 
@@ -28,7 +27,7 @@ namespace Empiria.Contracts.WebApi {
     public SingleObjectModel GetContract([FromUri] string contractUID) {
 
       using (var usecases = ContractUseCases.UseCaseInteractor()) {
-        ContractDto contract = usecases.GetContract(contractUID);
+        ContractHolderDto contract = usecases.GetContract(contractUID);
 
         return new SingleObjectModel(base.Request, contract);
       }
@@ -83,7 +82,7 @@ namespace Empiria.Contracts.WebApi {
       base.RequireBody(fields);
 
       using (var usecases = ContractUseCases.UseCaseInteractor()) {
-        ContractDto contract = usecases.AddContract(fields);
+        ContractHolderDto contract = usecases.AddContract(fields);
 
         return new SingleObjectModel(base.Request, contract);
       }
