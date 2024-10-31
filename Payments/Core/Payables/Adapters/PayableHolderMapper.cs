@@ -23,7 +23,7 @@ namespace Empiria.Payments.Payables.Adapters {
 
       return new PayableHolderDto {
         Payable = PayableMapper.Map(payable),
-        PayableEntity = MapPayableEntity(payable.PayableEntity),
+        PayableEntity = PayableEntityMapper.Map(payable.PayableEntity),
         Items = MapPayableItems(payable),
         Documents = MapDocuments(),
         History = MapHistory(),
@@ -158,42 +158,7 @@ namespace Empiria.Payments.Payables.Adapters {
       };
     }
 
-    static private PayableEntityDto MapPayableEntity(IPayableEntity payableEntity) {
-
-      return new PayableEntityDto {
-        UID = payableEntity.UID,
-        Type = payableEntity.Type.MapToNamedEntity(),
-        EntityNo = payableEntity.EntityNo,
-        Name = payableEntity.Name,
-        Description = payableEntity.Description,
-
-        Items = MapPayableEntityItems(payableEntity.Items)
-      };
-
-    }
-
-
-    static private FixedList<PayableEntityItemDto> MapPayableEntityItems(IEnumerable<IPayableEntityItem> items) {
-      return items.Select(x => MapPayableEntityItem(x))
-                  .ToFixedList();
-    }
-
-
-    static private PayableEntityItemDto MapPayableEntityItem(IPayableEntityItem item) {
-      return new PayableEntityItemDto {
-        UID = item.UID,
-        Quantity = item.Quantity,
-        Unit = item.Unit.MapToNamedEntity(),
-        Product = item.Product.MapToNamedEntity(),
-        Description = item.Description,
-        UnitPrice = item.UnitPrice,
-        Total = item.Total,
-        BudgetAccount = item.BudgetAccount.MapToNamedEntity(),
-      };
-    }
-
     #endregion Private Methods
-
 
   } // class PayableMapper
 
