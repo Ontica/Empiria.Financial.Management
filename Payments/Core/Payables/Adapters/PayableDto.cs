@@ -75,7 +75,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public PaymentAccountDto PaymentAccount {
+    public NamedEntityDto PaymentAccount {
       get; internal set;
     }
 
