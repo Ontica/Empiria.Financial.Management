@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using Empiria.Financial.Adapters;
 
 namespace Empiria.Payments.Payables.Adapters {
 
@@ -70,7 +71,7 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public NamedEntityDto PaymentMethod {
+    public PaymentMethodDto PaymentMethod {
       get; internal set;
     }
 

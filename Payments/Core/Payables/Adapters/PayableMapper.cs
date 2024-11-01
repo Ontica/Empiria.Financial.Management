@@ -7,6 +7,7 @@
 *  Summary  : Provides data mapping services for payable objects and related types.                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using Empiria.Financial.Adapters;
 
 namespace Empiria.Payments.Payables.Adapters {
 
@@ -26,7 +27,7 @@ namespace Empiria.Payments.Payables.Adapters {
         Currency = payable.Currency.MapToNamedEntity(),
         RequestedTime = payable.RequestedTime,
         DueTime = payable.DueTime,
-        PaymentMethod = payable.PaymentMethod.MapToNamedEntity(),
+        PaymentMethod = PaymentMethodMapper.Map(payable.PaymentMethod),
         PaymentAccount = payable.PaymentAccount.MapToNamedEntity(),
         Status = new NamedEntityDto(payable.Status.ToString(), payable.Status.GetName())
       };
