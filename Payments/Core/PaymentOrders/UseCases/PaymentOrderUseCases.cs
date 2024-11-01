@@ -13,6 +13,7 @@ using Empiria.Services;
 using Empiria.Payments.Orders.Adapters;
 using System;
 using Empiria.Payments.Orders.Data;
+using Empiria.Payments.Payables;
 
 namespace Empiria.Payments.Orders.UseCases {
 
@@ -37,6 +38,12 @@ namespace Empiria.Payments.Orders.UseCases {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
+           
+      var payable = Payable.Parse(fields.PayableUID);
+
+      if (PaymentOrder.TryGetFor(payable) != null) {
+        Assertion.EnsureNoReachThisCode("La obligación de pago ya cuenta con una orden de pago");
+      }
 
       var order = new PaymentOrder(fields);
 
@@ -120,6 +127,10 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
     #endregion Use cases
+
+    #region Helpers 
+    
+    #endregion Helpers 
 
   }  // class PaymentOrderUseCases
 

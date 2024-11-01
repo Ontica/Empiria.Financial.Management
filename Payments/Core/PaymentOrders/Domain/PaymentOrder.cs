@@ -46,6 +46,11 @@ namespace Empiria.Payments.Orders {
       return BaseObject.ParseId<PaymentOrder>(Id);
     }
 
+
+    static internal PaymentOrder TryGetFor(Payable payable) {
+     return BaseObject.TryParse<PaymentOrder>($"ORDER_PAYABLE_ID = {payable.Id}");
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -223,6 +228,8 @@ namespace Empiria.Payments.Orders {
     private string GeneratePaymentOrderNo() {
       return "O-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
     }
+
+   
 
     #endregion Helpers
 
