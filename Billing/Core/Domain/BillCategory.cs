@@ -43,6 +43,8 @@ namespace Empiria.Billing {
 
     static public BillCategory Empty => ParseEmpty<BillCategory>();
 
+    static public BillCategory Factura => Parse(701);
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -90,6 +92,7 @@ namespace Empiria.Billing {
     public override string Keywords {
       get {
         if (IsEmptyInstance) {
+          return string.Empty;
         }
         return EmpiriaString.BuildKeywords(Name, BillType.DisplayName, Parent.Name);
       }

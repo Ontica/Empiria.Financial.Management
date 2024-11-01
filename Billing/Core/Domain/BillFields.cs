@@ -14,7 +14,6 @@ namespace Empiria.Billing {
   /// <summary>Input fields DTO used to create and update bill.</summary>
   internal class BillFields {
 
-
     public string BillCategoryUID {
       get; set;
     } = string.Empty;
@@ -27,15 +26,15 @@ namespace Empiria.Billing {
 
     public DateTime IssueDate {
       get; set;
-    }
+    } = ExecutionServer.DateMaxValue;
 
 
-    public string IssuedByRFC {
+    public string IssuedByUID {
       get; set;
     } = string.Empty;
 
 
-    public string IssuedToRFC {
+    public string IssuedToUID {
       get; set;
     } = string.Empty;
 
@@ -60,7 +59,7 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public string CurrencyCode {
+    public string CurrencyUID {
       get; set;
     } = string.Empty;
 
@@ -104,6 +103,10 @@ namespace Empiria.Billing {
       get; set;
     } = new FixedList<BillConceptFields>();
 
+
+    internal void EnsureIsValid() {
+      // ToDo
+    }
 
   } // class BillFields
 
@@ -170,6 +173,11 @@ namespace Empiria.Billing {
       get; set;
     } = new FixedList<BillTaxEntryFields>();
 
+
+    internal void EnsureIsValid() {
+       // ToDo
+    }
+
   } // class BillConceptFields
 
 
@@ -186,7 +194,7 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public BillTaxMethod TaxType {
+    public BillTaxMethod TaxMethod {
       get; set;
     } = BillTaxMethod.Traslado;
 

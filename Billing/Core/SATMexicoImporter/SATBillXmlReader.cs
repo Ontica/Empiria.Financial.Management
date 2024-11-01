@@ -61,6 +61,20 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     #region Helpers
 
+    private string GetAttribute(XmlNode concept, string attributeName) {
+      return FieldPatcher.PatchField(concept.Attributes[attributeName]?.Value, string.Empty);
+    }
+
+
+    private T GetAttribute<T>(XmlNode concept, string attributeName) {
+      if (concept.Attributes[attributeName]?.Value == null) {
+        return default;
+      } else {
+        return (T) Convert.ChangeType(concept.Attributes[attributeName]?.Value, typeof(T));
+      }
+    }
+
+
     private void GenerateConceptsList(XmlNode conceptsHeader) {
 
       var conceptosDto = new List<SATBillConceptDto>();
@@ -71,18 +85,19 @@ namespace Empiria.Billing.SATMexicoImporter {
           Assertion.EnsureFailed("The concepts node must contain only concepts.");
         }
 
-        var conceptoDto = new SATBillConceptDto();
-        conceptoDto.ClaveProdServ = concept.Attributes["ClaveProdServ"].Value;
-        conceptoDto.ClaveUnidad = concept.Attributes["ClaveUnidad"].Value;
-        conceptoDto.Cantidad = Convert.ToDecimal(concept.Attributes["Cantidad"].Value);
-        conceptoDto.Unidad = concept.Attributes["Unidad"].Value;
-        conceptoDto.NoIdentificacion = concept.Attributes["NoIdentificacion"].Value;
-        conceptoDto.Descripcion = concept.Attributes["Descripcion"].Value;
-        conceptoDto.ValorUnitario = Convert.ToDecimal(concept.Attributes["ValorUnitario"].Value);
-        conceptoDto.Importe = Convert.ToDecimal(concept.Attributes["Importe"].Value);
-        conceptoDto.ObjetoImp = concept.Attributes["ObjetoImp"].Value;
+        var conceptoDto = new SATBillConceptDto() {
+          ClaveProdServ = GetAttribute(concept, "ClaveProdServ"),
+          ClaveUnidad = GetAttribute(concept, "ClaveUnidad"),
+          Cantidad = GetAttribute<decimal>(concept, "Cantidad"),
+          Unidad = GetAttribute(concept, "Unidad"),
+          NoIdentificacion = GetAttribute(concept, "NoIdentificacion"),
+          Descripcion = GetAttribute(concept, "Descripcion"),
+          ValorUnitario = GetAttribute<decimal>(concept, "ValorUnitario"),
+          Importe = GetAttribute<decimal>(concept, "Importe"),
+          ObjetoImp = GetAttribute(concept, "ObjetoImp"),
+          Impuestos = GenerateTaxesByConcept(concept.ChildNodes.Item(0))
+        };
 
-        conceptoDto.Impuestos = GenerateTaxesByConcept(concept.ChildNodes.Item(0));
         conceptosDto.Add(conceptoDto);
 
       }
@@ -98,41 +113,47 @@ namespace Empiria.Billing.SATMexicoImporter {
         Assertion.EnsureFailed("The CFDI version is not correct.");
       }
 
+      _satBillDto.DatosGenerales = new SATBillGeneralDataDto {
+        CFDIVersion = GetAttribute(generalData, "Version"),
+        Folio = GetAttribute(generalData, "Folio"),
+        Fecha = GetAttribute<DateTime>(generalData, "Fecha"),
+        Sello = GetAttribute(generalData, "Version"),
+        FormaPago = GetAttribute(generalData, "FormaPago"),
+        NoCertificado = GetAttribute(generalData, "NoCertificado"),
+        Certificado = GetAttribute(generalData, "Certificado"),
 
-      _satBillDto.DatosGenerales.CFDIVersion = generalData.GetAttribute("Version") ?? string.Empty;
-      _satBillDto.DatosGenerales.Folio = generalData.GetAttribute("Folio") ?? string.Empty;
-      _satBillDto.DatosGenerales.Fecha = Convert.ToDateTime(generalData.GetAttribute("Fecha"));
-      _satBillDto.DatosGenerales.Sello = generalData.GetAttribute("Version") ?? string.Empty;
-      _satBillDto.DatosGenerales.FormaPago = generalData.GetAttribute("FormaPago") ?? string.Empty;
-      _satBillDto.DatosGenerales.NoCertificado = generalData.GetAttribute("NoCertificado") ?? string.Empty;
-      _satBillDto.DatosGenerales.Certificado = generalData.GetAttribute("Certificado") ?? string.Empty;
+        SubTotal = GetAttribute<decimal>(generalData, "SubTotal"),
+        Moneda = GetAttribute(generalData, "Moneda"),
+        Total = GetAttribute<decimal>(generalData, "Total"),
 
-      _satBillDto.DatosGenerales.SubTotal = Convert.ToDecimal(generalData.GetAttribute("SubTotal"));
-      _satBillDto.DatosGenerales.Moneda = generalData.GetAttribute("Moneda") ?? string.Empty;
-      _satBillDto.DatosGenerales.Total = Convert.ToDecimal(generalData.GetAttribute("Total"));
+        TipoDeComprobante = GetAttribute(generalData, "TipoDeComprobante"),
+        Exportacion = GetAttribute(generalData, "Exportacion"),
+        MetodoPago = GetAttribute(generalData, "MetodoPago"),
+        LugarExpedicion = GetAttribute(generalData, "LugarExpedicion"),
+      };
 
-      _satBillDto.DatosGenerales.TipoDeComprobante = generalData.GetAttribute("TipoDeComprobante") ?? string.Empty;
-      _satBillDto.DatosGenerales.Exportacion = generalData.GetAttribute("Exportacion") ?? string.Empty;
-      _satBillDto.DatosGenerales.MetodoPago = generalData.GetAttribute("MetodoPago") ?? string.Empty;
-      _satBillDto.DatosGenerales.LugarExpedicion = generalData.GetAttribute("LugarExpedicion") ?? string.Empty;
     }
 
 
     private void GenerateReceiverData(XmlNode receiver) {
 
-      _satBillDto.Receptor.RegimenFiscal = receiver.Attributes["RegimenFiscalReceptor"].Value ?? string.Empty;
-      _satBillDto.Receptor.RFC = receiver.Attributes["Rfc"].Value ?? string.Empty;
-      _satBillDto.Receptor.Nombre = receiver.Attributes["Nombre"].Value ?? string.Empty;
-      _satBillDto.Receptor.DomicilioFiscal = receiver.Attributes["DomicilioFiscalReceptor"].Value ?? string.Empty;
-      _satBillDto.Receptor.UsoCFDI = receiver.Attributes["UsoCFDI"].Value ?? string.Empty;
+      _satBillDto.Receptor = new SATBillOrganizationDto {
+        RegimenFiscal = GetAttribute(receiver, "RegimenFiscalReceptor"),
+        RFC = GetAttribute(receiver, "Rfc"),
+        Nombre = GetAttribute(receiver, "Nombre"),
+        DomicilioFiscal = GetAttribute(receiver, "DomicilioFiscalReceptor"),
+        UsoCFDI = GetAttribute(receiver, "UsoCFDI"),
+      };
     }
 
 
     private void GenerateSenderData(XmlNode sender) {
 
-      _satBillDto.Emisor.RegimenFiscal = sender.Attributes["RegimenFiscal"].Value ?? string.Empty;
-      _satBillDto.Emisor.RFC = sender.Attributes["Rfc"].Value ?? string.Empty;
-      _satBillDto.Emisor.Nombre = sender.Attributes["Nombre"].Value ?? string.Empty;
+      _satBillDto.Emisor = new SATBillOrganizationDto {
+        RegimenFiscal = GetAttribute(sender, "RegimenFiscal"),
+        RFC = GetAttribute(sender, "Rfc"),
+        Nombre = GetAttribute(sender, "Nombre"),
+      };
     }
 
 
