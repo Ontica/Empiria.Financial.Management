@@ -167,14 +167,12 @@ namespace Empiria.Payments.Orders {
 
     #region Methods
 
-
     internal void Delete() {
       Assertion.Require(this.Status == PaymentOrderStatus.Pending,
                   $"No se puede eliminar una orden de pago que está en estado {this.Status.GetName()}.");
 
       this.Status = PaymentOrderStatus.Deleted;
     }
-
 
     protected override void OnSave() {
       if (base.IsNew) {
@@ -209,7 +207,7 @@ namespace Empiria.Payments.Orders {
 
       this.PaymentOrderType = PaymentOrderType.Parse(fields.PaymentOrderTypeUID);
       this.PayTo = Party.Parse(fields.PayToUID);
-      this.Payable = Payable.Parse(fields.PayableUID); 
+      this.Payable = Payable.Parse(fields.PayableUID);
       this.PayableTypeId = this.Payable.PayableType.Id;
       this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
       this.Currency = Currency.Parse(fields.CurrencyUID);
@@ -228,8 +226,6 @@ namespace Empiria.Payments.Orders {
     private string GeneratePaymentOrderNo() {
       return "O-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
     }
-
-   
 
     #endregion Helpers
 

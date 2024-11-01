@@ -8,18 +8,24 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Payments.Payables.Adapters;
+
 namespace Empiria.Payments.Orders.Adapters {
 
   /// <summary>Provides data mapping services for payment orders.</summary>
   static internal class PaymentOrderMapper {
 
-    static internal FixedList<PaymentOrderDto> Map(FixedList<PaymentOrder> paymentOrders) {
-      return paymentOrders.Select(x => Map(x))
-                      .ToFixedList();
+    static internal PaymentOrderHolderDto Map(PaymentOrder paymentOrder) {
+      return new PaymentOrderHolderDto {
+        PaymentOrder = MapPaymentOrder(paymentOrder),
+        Items = PayableItemMapper.Map(paymentOrder.Payable.GetItems()),
+        Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
+        Documents = ExternalServices.GetEntityDocuments(paymentOrder),
+        History = ExternalServices.GetEntityHistory(paymentOrder)
+      };
     }
 
-
-    static internal PaymentOrderDto Map(PaymentOrder paymentOrder) {
+    static private PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
         UID = paymentOrder.UID,
         OrderNo = paymentOrder.PaymentOrderNo,

@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
-
 namespace Empiria.Payments.Payables.Adapters {
 
   /// <summary>Provides data mapping services for payable objects and related types.</summary>

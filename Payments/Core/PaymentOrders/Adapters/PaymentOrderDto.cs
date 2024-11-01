@@ -10,9 +10,47 @@
 
 using System;
 
+using Empiria.Documents.Services.Adapters;
+using Empiria.History.Services.Adapters;
+
+using Empiria.Payments.Payables.Adapters;
+
 namespace Empiria.Payments.Orders.Adapters {
 
-  /// <summary>Output DTO used to return full payment orders.</summary>
+  /// <summary>Output DTO used to return a complete payment order.</summary>
+  public class PaymentOrderHolderDto {
+
+    public PaymentOrderDto PaymentOrder {
+      get; internal set;
+    }
+
+    public FixedList<PayableItemDto> Items {
+      get; internal set;
+    }
+
+    public FixedList<BillDto> Bills {
+      get; internal set;
+    }
+
+
+    public FixedList<DocumentDto> Documents {
+      get; internal set;
+    }
+
+
+    public FixedList<HistoryDto> History {
+      get; internal set;
+    }
+
+
+    public ActionsDto Actions {
+      get; internal set;
+    }
+
+  }  // class PaymentOrderHolderDto
+
+
+  /// <summary>Output DTO used to return a payment order.</summary>
   public class PaymentOrderDto {
 
     public string UID {

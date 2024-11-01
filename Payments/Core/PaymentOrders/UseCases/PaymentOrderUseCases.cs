@@ -34,11 +34,11 @@ namespace Empiria.Payments.Orders.UseCases {
 
     #region Use cases
 
-    public PaymentOrderDto CreatePaymentOrder(PaymentOrderFields fields) {
+    public PaymentOrderHolderDto CreatePaymentOrder(PaymentOrderFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
-           
+
       var payable = Payable.Parse(fields.PayableUID);
 
       if (PaymentOrder.TryGetFor(payable) != null) {
@@ -64,7 +64,7 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
-    public PaymentOrderDto GetPaymentOrder(string paymentOrderUID) {
+    public PaymentOrderHolderDto GetPaymentOrder(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
       var order = PaymentOrder.Parse(paymentOrderUID);
@@ -94,9 +94,9 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
-    public PaymentOrderDto SuspendPaymentOrder(string paymentOrderUID,
-                                               string suspendedByUID,
-                                               DateTime suspendedUntil) {
+    public PaymentOrderHolderDto SuspendPaymentOrder(string paymentOrderUID,
+                                                     string suspendedByUID,
+                                                     DateTime suspendedUntil) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
       Assertion.Require(suspendedByUID, nameof(suspendedByUID));
 
@@ -112,7 +112,7 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
-    public PaymentOrderDto UpdatePaymentOrder(string uid, PaymentOrderFields fields) {
+    public PaymentOrderHolderDto UpdatePaymentOrder(string uid, PaymentOrderFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
@@ -128,9 +128,9 @@ namespace Empiria.Payments.Orders.UseCases {
 
     #endregion Use cases
 
-    #region Helpers 
-    
-    #endregion Helpers 
+    #region Helpers
+
+    #endregion Helpers
 
   }  // class PaymentOrderUseCases
 

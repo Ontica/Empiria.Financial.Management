@@ -117,7 +117,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
       Assertion.Require(payable.PaymentMethod.Id > -1, "Necesito se proporcione el método de pago, para realizar la instrucción de pago.");
       if (payable.PaymentMethod.LinkedToAccount) {
-        Assertion.Require(payable.PaymentAccount.Id > -1 , "Necesito el identificador UID de la cuenta donde se debe realizar el pago."); 
+        Assertion.Require(payable.PaymentAccount.Id > -1 , "Necesito el identificador UID de la cuenta donde se debe realizar el pago.");
       }
 
       PayableServices.SetOnPayment(payable);
@@ -143,7 +143,7 @@ namespace Empiria.Payments.Payables.UseCases {
       return PayableHolderMapper.Map(payable);
     }
 
-   
+
     #endregion Payable use cases
 
     #region PayableItem use cases
@@ -250,21 +250,18 @@ namespace Empiria.Payments.Payables.UseCases {
 
     #region Helpers
 
-     private PaymentOrderDto CreatePaymentOrder(Payable payable) {
+    private void CreatePaymentOrder(Payable payable) {
 
-      var fields = LoadPaymentOrderFields(payable);
-     
-      var paymentOrderUseCases = PaymentOrderUseCases.UseCaseInteractor();
+      PaymentOrderFields fields = TransformPayableToPaymentOrderFields(payable);
 
-      var paymentOrder = paymentOrderUseCases.CreatePaymentOrder(fields);
+      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-      return paymentOrder;
+        _ = usecases.CreatePaymentOrder(fields);
+      }
     }
 
-
-    private PaymentOrderFields LoadPaymentOrderFields(Payable payable) {
-
-     return new PaymentOrderFields {
+    private PaymentOrderFields TransformPayableToPaymentOrderFields(Payable payable) {
+      return new PaymentOrderFields {
         PaymentOrderTypeUID = "32e1b307-676b-4488-b26f-1cbc03878875",
         PayableUID = payable.UID,
         PayToUID = payable.PayTo.UID,
@@ -278,7 +275,6 @@ namespace Empiria.Payments.Payables.UseCases {
         RequestedTime = DateTime.Now
       };
     }
-
 
     #endregion Helpers
 

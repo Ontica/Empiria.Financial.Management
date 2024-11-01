@@ -22,7 +22,7 @@ namespace Empiria.Payments.Orders.WebApi {
 
     #region Query web apis
 
-    
+
     [HttpGet]
     [Route("v2/payments-management/payment-order-types")]
     public CollectionModel GetPaymentOrderTypes() {
@@ -40,7 +40,7 @@ namespace Empiria.Payments.Orders.WebApi {
     public SingleObjectModel GetPaymentOrder([FromUri] string paymentOrderUID) {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
-        PaymentOrderDto paymentOrder = usecases.GetPaymentOrder(paymentOrderUID);
+        PaymentOrderHolderDto paymentOrder = usecases.GetPaymentOrder(paymentOrderUID);
 
         return new SingleObjectModel(base.Request, paymentOrder);
       }
@@ -69,7 +69,7 @@ namespace Empiria.Payments.Orders.WebApi {
       base.RequireBody(fields);
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
-        PaymentOrderDto paymentOrder = usecases.CreatePaymentOrder(fields);
+        PaymentOrderHolderDto paymentOrder = usecases.CreatePaymentOrder(fields);
 
         return new SingleObjectModel(base.Request, paymentOrder);
       }
@@ -101,9 +101,9 @@ namespace Empiria.Payments.Orders.WebApi {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-        PaymentOrderDto paymentOrder = usecases.SuspendPaymentOrder(paymentOrderUID,
-                                                                       suspendedByUID,
-                                                                       suspendedUntil);
+        PaymentOrderHolderDto paymentOrder = usecases.SuspendPaymentOrder(paymentOrderUID,
+                                                                          suspendedByUID,
+                                                                          suspendedUntil);
 
         return new SingleObjectModel(this.Request, paymentOrder);
       }
@@ -119,7 +119,8 @@ namespace Empiria.Payments.Orders.WebApi {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-        PaymentOrderDto paymentOrder = usecases.UpdatePaymentOrder(paymentOrderUID, fields);
+        PaymentOrderHolderDto paymentOrder = usecases.UpdatePaymentOrder(paymentOrderUID,
+                                                                         fields);
 
         return new SingleObjectModel(this.Request, paymentOrder);
       }
