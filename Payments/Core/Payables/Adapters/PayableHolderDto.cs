@@ -8,7 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
+using Empiria.Documents.Services.Adapters;
+using Empiria.History.Services.Adapters;
 
 namespace Empiria.Payments.Payables.Adapters {
 
@@ -23,26 +24,21 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-
     public FixedList<PayableDataItemDto> Items {
       get; internal set;
     }
-
 
     public FixedList<BillDto> Bills {
       get; internal set;
     }
 
-
     public FixedList<DocumentDto> Documents {
       get; internal set;
     }
 
-
     public FixedList<HistoryDto> History {
       get; internal set;
     }
-
 
     public ActionsDto Actions {
       get; internal set;
@@ -58,41 +54,33 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-
     public string Name {
       get; internal set;
     }
-
 
     public NamedEntityDto BudgetAccount {
       get; internal set;
     }
 
-
     public string BillConcept {
       get; internal set;
     }
-
 
     public string PayableEntityItemUID {
       get; internal set;
     }
 
-
     public decimal Quantity {
       get; internal set;
     }
-
 
     public string Unit {
       get; internal set;
     }
 
-
     public decimal Total {
       get; internal set;
     }
-
 
   } // class PayableEntityItemDto
 
@@ -104,14 +92,12 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-
     public NamedEntityDto Type {
       get; internal set;
     }
 
     public string EntityNo {
-      get;
-      internal set;
+      get; internal set;
     }
 
     public string Name {
@@ -122,16 +108,9 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-
     public FixedList<PayableEntityItemDto> Items {
       get; internal set;
     }
-
-
-    //TODO
-    //public AttributesDto Attributes {
-    //  get; internal set;
-    //}
 
   } // class PayableEntityDto
 
@@ -143,11 +122,9 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-
     public decimal Quantity {
       get; internal set;
     }
-
 
     public NamedEntityDto Unit {
       get; internal set;
@@ -157,21 +134,17 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-
     public string Description {
       get; internal set;
     }
-
 
     public decimal UnitPrice {
       get; internal set;
     }
 
-
     public decimal Total {
       get; internal set;
     }
-
 
     public NamedEntityDto BudgetAccount {
       get; internal set;
@@ -180,140 +153,7 @@ namespace Empiria.Payments.Payables.Adapters {
   } // class PayableEntityItemDto
 
 
-  // <summary>Output DTO used to return minimal information about Bills.</summary>
-  public class BillDto {
-
-    public string UID {
-      get; internal set;
-    }
-
-
-    public string Name {
-      get; internal set;
-    }
-
-
-    public DateTime Date {
-      get; internal set;
-    }
-
-
-    public string CFDIGUID {
-      get; internal set;
-    }
-
-
-     public FixedList<BillItemDto> Items {
-      get; internal set;
-    }
-
-  } // BillDto
-
-
-  // <summary>Output DTO used to return payable entity item minimal information.</summary>
-  public class BillItemDto {
-
-    public string UID {
-      get; internal set;
-    }
-
-
-    public string Name {
-      get; internal set;
-    }
-
-
-    public string Unit {
-      get; internal set;
-    }
-
-
-    public decimal Quantity {
-      get; internal set;
-    }
-
-
-    public decimal Total {
-      get; internal set;
-    }
-
-  } // class PayableEntityItemDto
-
-
-  // <summary>Output DTO used to return document information about payables.</summary>
-  public class DocumentDto {
-
-    public string UID {
-      get; internal set;
-    }
-
-
-    public string Type {
-      get; internal set;
-    }
-
-
-    public string Name {
-      get; internal set;
-    }
-
-
-    public string Description {
-      get; internal set;
-    }
-
-
-    public DateTime UploadedDate {
-      get; internal set;
-    }
-
-
-    //? if is all party or EntityName or string
-    public string UploadedBy {
-      get; internal set;
-    }
-
-
-    //TODO
-    //public DocumentAttributesDto Attributes {
-    //  get; internal set;
-    //}
-
-  } // class DocumentDto
-
-
-  // <summary>Output DTO used to return minimal history information about payables.</summary>
-  public class HistoryDto {
-
-    public string UID {
-      get; internal set;
-    }
-
-
-    public string Type {
-      get; internal set;
-    }
-
-
-    public string Description {
-      get; internal set;
-    }
-
-
-    public DateTime Time {
-      get; internal set;
-    }
-
-
-    public NamedEntityDto Party {
-      get; internal set;
-    }
-
-
-  } // HistoryDto
-
-
-  // <summary>Output DTO used to return ActionsDto. </summary>
+   // <summary>Output DTO used to return ActionsDto. </summary>
   public class ActionsDto {
 
     public CanDto Can {
@@ -329,13 +169,11 @@ namespace Empiria.Payments.Payables.Adapters {
   //Class to set order permissions
   public class CanDto {
 
-
-    public Boolean Delete {
+    public bool Delete {
       get; internal set;
     }
 
-
-    public Boolean Update {
+    public bool Update {
       get; internal set;
     }
 
@@ -344,17 +182,14 @@ namespace Empiria.Payments.Payables.Adapters {
   // class to show or hide interface items
   public class ShowDto {
 
-    public Boolean PayablesData {
+    public bool PayablesData {
       get; internal set;
     }
 
-
-    public Boolean PaymentsData {
+    public bool PaymentsData {
       get; internal set;
     }
-
 
   } //class ShowDto
-
 
 }  // namespace Empiria.Payments.Payables.Adapters
