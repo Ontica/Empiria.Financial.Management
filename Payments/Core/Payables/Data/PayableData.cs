@@ -100,7 +100,7 @@ namespace Empiria.Payments.Payables.Data {
 
     static internal void WritePayableLink(PayableLink o) {
       var op = DataOperation.Parse("write_FMS_Payable_Item",
-                     o.Id, o.UID,o.PayableLinkType.Id, o.Payable.Id, o.LinkedObject.Id,
+                     o.Id, o.UID,o.PayableLinkType.Id, o.Payable.Id, o.LinkedObjectId,
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);

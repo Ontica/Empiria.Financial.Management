@@ -38,11 +38,11 @@ namespace Empiria.Payments.Payables {
       Assertion.Require(!linkedObject.IsEmptyInstance,
                         "payable can not be the empty instance.");
 
-      Assertion.Require(linkedObject.GetEmpiriaType().Equals(linkType.LinkedObjectType), "Invalid LinkedObjectType.");
+      // Assertion.Require(linkedObject.GetEmpiriaType().Equals(linkType.LinkedObjectType), "Invalid LinkedObjectType.");
 
       PayableLinkType = linkType;
       Payable = payable;
-      LinkedObject = linkedObject;
+      LinkedObjectId = linkedObject.Id;
     }
 
     static public PayableLink Parse(int id) => ParseId<PayableLink>(id);
@@ -70,7 +70,7 @@ namespace Empiria.Payments.Payables {
 
 
     [DataField("LINKED_OBJECT_ID")]
-    public BaseObject LinkedObject {
+    internal int LinkedObjectId {
       get; private set;
     }
 
@@ -103,7 +103,7 @@ namespace Empiria.Payments.Payables {
         this.PostingTime = DateTime.Now;
       }
     }
-   
+
 
     protected override void OnSave() {
       PayableData.WritePayableLink(this);
