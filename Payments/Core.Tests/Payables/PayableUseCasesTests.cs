@@ -93,7 +93,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
 
     [Fact]
     public void Should_Generate_Payable_Items() {
-      Payable payable = Payable.Parse("794a1ad0-afd2-4a13-ac72-00c08ff36e68");
+      Payable payable = Payable.Parse("c62a8523-a9a9-4202-afe1-3b08ca871daf");
 
       PayableItemGenerator generator = new PayableItemGenerator(payable);
       var sut = generator.Generate();

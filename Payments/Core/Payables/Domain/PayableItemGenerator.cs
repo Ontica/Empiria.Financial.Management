@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 
-using System;
 using System.Collections.Generic;
 using Empiria.Financial;
 using Empiria.Payments.Payables.Adapters;
@@ -77,6 +76,7 @@ namespace Empiria.Payments.Payables {
       return new PayableItemFields {
         PayableUID = this.Payable.UID,
         BudgetAccountUID = entityItem.BudgetAccount.UID,
+        EntityItemId = entityItem.Id,
         ProductUID = entityItem.Product.UID,
         UnitUID = entityItem.Unit.UID,
         Description = entityItem.Description,

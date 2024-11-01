@@ -176,7 +176,7 @@ namespace Empiria.Payments.Payables {
       this.Product = Product.Parse(fields.ProductUID);
       this.Unit = ProductUnit.Parse(fields.UnitUID);
 
-      this.PayableEntityItem = -1;
+      this.PayableEntityItem = fields.EntityItemId;
       this.Description = fields.Description;
       this.Quantity = fields.Quantity;
       this.Currency = Currency.Parse(fields.CurrencyUID);

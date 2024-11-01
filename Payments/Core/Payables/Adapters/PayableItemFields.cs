@@ -39,6 +39,10 @@ namespace Empiria.Payments.Payables.Adapters {
     } = string.Empty;
 
 
+    public int EntityItemId {
+      get; set;
+    } = -1;
+
     public string Description {
       get; set;
     } = string.Empty;
@@ -74,7 +78,6 @@ namespace Empiria.Payments.Payables.Adapters {
 
     internal void EnsureValid() {
       Assertion.Require(PayableUID, nameof(PayableUID));
-      Assertion.Require(Description, "Necesito la descripción.");
       Assertion.Require(Quantity > 0, "Necesito la cantidad.");
       Assertion.Require(UnitPrice > 0, "Necesito el precio unitario.");
 
