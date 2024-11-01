@@ -92,7 +92,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private void GenerateGeneralData(XmlElement generalData) {
 
-      if (generalData.Name != "cfdi:Comprobante") {
+      if (!generalData.Name.Equals("cfdi:Comprobante")) {
         Assertion.EnsureFailed("El archivo xml no es un cfdi.");
       } else if (!generalData.GetAttribute("Version").Equals("4.0")) {
         Assertion.EnsureFailed("The CFDI version is not correct.");

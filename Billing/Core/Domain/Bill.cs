@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-
+using Empiria.Billing.Data;
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
@@ -31,6 +31,13 @@ namespace Empiria.Billing {
 
     static public Bill Parse(string uid) => ParseKey<Bill>(uid);
 
+    public Bill(BillFields fields) {
+
+      MapFieldsToBill(fields);
+
+    }
+
+    
     #endregion Constructors and parsers
 
     #region Properties
@@ -87,6 +94,7 @@ namespace Empiria.Billing {
 
     [DataField("BILL_IDENTIFICATORS")]
     private string _identificators = string.Empty;
+
 
     public FixedList<string> Identificators {
       get {
@@ -192,11 +200,41 @@ namespace Empiria.Billing {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(BillNo);
+        return EmpiriaString.BuildKeywords(BillNo, IssuedBy.Name);
       }
     }
 
     #endregion Properties
+
+    #region Private methods
+
+    
+    private void MapFieldsToBill(BillFields fields) {
+
+      this.BillCategory = BillCategory.Parse(fields.BillCategoryUID);
+      this.BillNo = fields.BillNo;
+      this.IssueDate = fields.IssueDate;
+      this.IssuedBy = Party.Parse(fields.IssuedByRFC);
+      this.IssuedTo = Party.Parse(fields.IssuedToRFC);
+      this.ManagedBy = Party.Parse(fields.ManagedByUID);
+      this.SchemaVersion = fields.SchemaVersion;
+      this._identificators = fields.Identificators;
+      this._tags = fields.Tags;
+      this.Currency = Currency.Parse(fields.CurrencyCode);
+      this.Subtotal = fields.Subtotal;
+      this.Discount = fields.Discount;
+      this.Total = fields.Total;
+      this.PostedBy = Party.Parse(ExecutionServer.CurrentUserId);
+      this.PostingTime = DateTime.Now;
+    }
+
+
+    protected override void OnSave() {
+      BillData.WriteBill(this);
+    }
+
+
+    #endregion Private methods
 
   } // class Bill
 

@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-
+using Empiria.Billing.Data;
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.Products;
@@ -23,6 +23,10 @@ namespace Empiria.Billing {
 
     private BillConcept() {
       // Required by Empiria Framework.
+    }
+
+    public BillConcept(BillConceptFields fields, string billUID) {
+      MapFieldsToBillConcept(fields, billUID);
     }
 
     static public BillConcept Parse(int id) => ParseId<BillConcept>(id);
@@ -136,6 +140,31 @@ namespace Empiria.Billing {
 
 
     #endregion Public properties
+
+    #region Private methods
+
+    private void MapFieldsToBillConcept(BillConceptFields fields, string billUID) {
+      
+      this.Bill = Bill.Parse(billUID);
+      this.Product = Product.Parse(fields.ProductUID);
+      this.Description = fields.Description;
+      this._identificators = fields.Identificators;
+      this._tags = fields.Tags;
+      this.Quantity = fields.Quantity;
+      this.QuantityUnit = ProductUnit.Parse(-1);
+      this.UnitPrice = fields.UnitPrice;
+      this.Subtotal = fields.Subtotal;
+      this.Discount = fields.Discount;
+      this.PostedBy = Party.Parse(ExecutionServer.CurrentUserId);
+      this.PostingTime = DateTime.Now;
+    }
+
+
+    protected override void OnSave() {
+      BillData.WriteBillConcept(this);
+    }
+
+    #endregion Private methods
 
   } // class BillConcept
 

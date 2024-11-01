@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-
+using Empiria.Billing.Data;
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
@@ -26,6 +26,9 @@ namespace Empiria.Billing {
       // Required by Empiria Framework.
     }
 
+    public BillTaxEntry(BillTaxEntryFields fields, string billUID, string billConceptUID) {
+      MapFieldsToBillTaxEntry(fields, billUID, billConceptUID);
+    }
 
     static internal BillTaxEntry Parse(int id) => ParseId<BillTaxEntry>(id);
 
@@ -108,6 +111,31 @@ namespace Empiria.Billing {
 
     #endregion Properties
 
+    #region Private methods
+
+    private void MapFieldsToBillTaxEntry(BillTaxEntryFields fields,
+                                         string billUID, string billConceptUID) {
+      
+      this.Bill = Bill.Parse(billUID);
+      this.BillConcept = BillConcept.Parse(billConceptUID);
+      this.TaxType = TaxType.Parse(-1);
+      this.TaxMethod = fields.TaxType;
+      this.TaxFactorType = fields.TaxFactorType;
+      this.Factor = fields.Factor;
+      this.BaseAmount = fields.BaseAmount;
+      this.Total = fields.Total;
+      this.ExtData = new JsonObject();
+      this.PostedBy = Party.Parse(ExecutionServer.CurrentUserId);
+      this.PostingTime = DateTime.Now;
+      this.Status = EntityStatus.Active;
+    }
+
+
+    protected override void OnSave() {
+      BillData.WriteBillTaxEntry(this);
+    }
+
+    #endregion Private methods
   } // class BillTaxEntry
 
 }  // namespace Empiria.Billing
