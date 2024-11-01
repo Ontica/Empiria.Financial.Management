@@ -9,11 +9,13 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using Empiria.Billing.Data;
+
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
+
+using Empiria.Billing.Data;
 
 namespace Empiria.Billing {
 
@@ -26,13 +28,19 @@ namespace Empiria.Billing {
       // Required by Empiria Framework.
     }
 
-    public BillTaxEntry(BillTaxEntryFields fields, string billUID, string billConceptUID) {
-      MapFieldsToBillTaxEntry(fields, billUID, billConceptUID);
+    public BillTaxEntry(Bill bill, BillConcept billConcept) {
+      Assertion.Require(bill, nameof(bill));
+      Assertion.Require(billConcept, nameof(billConcept));
+
+      this.Bill = bill;
+      this.BillConcept = billConcept;
     }
 
     static internal BillTaxEntry Parse(int id) => ParseId<BillTaxEntry>(id);
 
     static internal BillTaxEntry Parse(string uid) => ParseKey<BillTaxEntry>(uid);
+
+    static public BillTaxEntry Empty => ParseEmpty<BillTaxEntry>();
 
     #endregion Constructors and parsers
 
@@ -68,19 +76,19 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_TAX_FACTOR")]
+    [DataField("BILL_TAX_FACTOR", ConvertFrom = typeof(float))]
     public decimal Factor {
       get; private set;
     }
 
 
-    [DataField("BILL_TAX_BASE_AMOUNT")]
+    [DataField("BILL_TAX_BASE_AMOUNT", ConvertFrom = typeof(float))]
     public decimal BaseAmount {
       get; private set;
     }
 
 
-    [DataField("BILL_TAX_TOTAL")]
+    [DataField("BILL_TAX_TOTAL", ConvertFrom = typeof(float))]
     public decimal Total {
       get; private set;
     }
@@ -104,7 +112,7 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_TAX_STATUS")]
+    [DataField("BILL_TAX_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get; private set;
     }
@@ -113,25 +121,22 @@ namespace Empiria.Billing {
 
     #region Private methods
 
-    private void MapFieldsToBillTaxEntry(BillTaxEntryFields fields,
-                                         string billUID, string billConceptUID) {
-      
-      this.Bill = Bill.Parse(billUID);
-      this.BillConcept = BillConcept.Parse(billConceptUID);
-      this.TaxType = TaxType.Parse(-1);
-      this.TaxMethod = fields.TaxType;
+    internal void Update (BillTaxEntryFields fields) {
+      this.TaxType = TaxType.Empty;
+      this.TaxMethod = fields.TaxMethod;
       this.TaxFactorType = fields.TaxFactorType;
       this.Factor = fields.Factor;
       this.BaseAmount = fields.BaseAmount;
       this.Total = fields.Total;
       this.ExtData = new JsonObject();
-      this.PostedBy = Party.Parse(ExecutionServer.CurrentUserId);
-      this.PostingTime = DateTime.Now;
-      this.Status = EntityStatus.Active;
     }
 
 
     protected override void OnSave() {
+      if (IsNew) {
+        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        this.PostingTime = DateTime.Now;
+      }
       BillData.WriteBillTaxEntry(this);
     }
 

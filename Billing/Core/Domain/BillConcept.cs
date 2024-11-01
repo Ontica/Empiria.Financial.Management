@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+
 using Empiria.Billing.Data;
 using Empiria.Json;
 using Empiria.Parties;
@@ -25,13 +26,19 @@ namespace Empiria.Billing {
       // Required by Empiria Framework.
     }
 
-    public BillConcept(BillConceptFields fields, string billUID) {
-      MapFieldsToBillConcept(fields, billUID);
+    public BillConcept(Bill bill, Product product) {
+      Assertion.Require(bill, nameof(bill));
+      Assertion.Require(product, nameof(product));
+
+      this.Bill = bill;
+      this.Product = product;
     }
 
     static public BillConcept Parse(int id) => ParseId<BillConcept>(id);
 
     static public BillConcept Parse(string uid) => ParseKey<BillConcept>(uid);
+
+    static public BillConcept Empty => ParseEmpty<BillConcept>();
 
     #endregion Constructors and parsers
 
@@ -75,7 +82,7 @@ namespace Empiria.Billing {
       }
     }
 
-    [DataField("BILL_CONCEPT_QTY")]
+    [DataField("BILL_CONCEPT_QTY", ConvertFrom = typeof(float))]
     public decimal Quantity {
       get; private set;
     }
@@ -87,19 +94,19 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_CONCEPT_UNIT_PRICE")]
+    [DataField("BILL_CONCEPT_UNIT_PRICE", ConvertFrom = typeof(float))]
     public decimal UnitPrice {
       get; private set;
     }
 
 
-    [DataField("BILL_CONCEPT_SUBTOTAL")]
+    [DataField("BILL_CONCEPT_SUBTOTAL", ConvertFrom = typeof(float))]
     public decimal Subtotal {
       get; private set;
     }
 
 
-    [DataField("BILL_CONCEPT_DISCOUNT")]
+    [DataField("BILL_CONCEPT_DISCOUNT", ConvertFrom = typeof(float))]
     public decimal Discount {
       get; private set;
     }
@@ -141,30 +148,36 @@ namespace Empiria.Billing {
 
     #endregion Public properties
 
-    #region Private methods
+    #region <ethods
 
-    private void MapFieldsToBillConcept(BillConceptFields fields, string billUID) {
-      
-      this.Bill = Bill.Parse(billUID);
-      this.Product = Product.Parse(fields.ProductUID);
-      this.Description = fields.Description;
-      this._identificators = fields.Identificators;
-      this._tags = fields.Tags;
-      this.Quantity = fields.Quantity;
-      this.QuantityUnit = ProductUnit.Parse(-1);
+    internal void Update(BillConceptFields fields) {
+
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureIsValid();
+
+      Product = PatchField(fields.ProductUID, Product);
+      Description = PatchField(fields.Description, Description);
+      _identificators = PatchField(fields.Identificators, _identificators);
+      _tags = PatchField(fields.Tags, _tags);
+      Quantity = fields.Quantity;
+      QuantityUnit = Product.BaseUnit;
       this.UnitPrice = fields.UnitPrice;
       this.Subtotal = fields.Subtotal;
       this.Discount = fields.Discount;
-      this.PostedBy = Party.Parse(ExecutionServer.CurrentUserId);
-      this.PostingTime = DateTime.Now;
     }
 
 
     protected override void OnSave() {
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
+
       BillData.WriteBillConcept(this);
     }
 
-    #endregion Private methods
+    #endregion Methods
 
   } // class BillConcept
 

@@ -28,7 +28,7 @@ namespace Empiria.Billing {
 
     static public new BillType Parse(string typeName) => Parse<BillType>(typeName);
 
-    static public BillType Empty => Parse("ObjectTypeInfo.BillType");
+    static public BillType Empty => Parse("ObjectTypeInfo.PowerType.BillType");
 
     #endregion Constructors and parsers
 

@@ -41,13 +41,13 @@ namespace Empiria.Billing.Data {
 
     static public void WriteBill(Bill bill) {
 
-      var op = DataOperation.Parse("WRITE_FMS_BILL",
+      var op = DataOperation.Parse("write_FMS_Bill",
         bill.Id, bill.UID, bill.BillType.Id, bill.BillCategory.Id,
         bill.BillNo, bill.IssueDate, bill.IssuedBy.Id, bill.IssuedTo.Id,
-        bill.ManagedBy.Id, bill.SchemaVersion, bill.Identificators, bill.Tags,
+        bill.ManagedBy.Id, bill.SchemaVersion,
+        string.Join(" ", bill.Identificators), string.Join(" ", bill.Tags),
         bill.Currency.Id, bill.Subtotal, bill.Discount, bill.Total,
-        bill.SchemaData, bill.SecurityData, "", "",
-        bill.PostedBy, bill.PostingTime, (char) bill.Status);
+        "", "", "", "", bill.PostedBy.Id, bill.PostingTime, (char) bill.Status);
 
       DataWriter.Execute(op);
     }
@@ -55,11 +55,12 @@ namespace Empiria.Billing.Data {
 
     static public void WriteBillConcept(BillConcept concept) {
 
-      var op = DataOperation.Parse("WRITE_FMS_BILL",
+      var op = DataOperation.Parse("write_FMS_Bill_Concept",
         concept.Id, concept.UID, concept.Bill.Id, concept.Product.Id,
-        concept.Description, concept.Identificators, concept.Tags, concept.Quantity,
+        concept.Description, string.Join(" ", concept.Identificators),
+        string.Join(" ", concept.Tags), concept.Quantity,
         concept.QuantityUnit.Id, concept.UnitPrice, concept.Subtotal, concept.Discount,
-        concept.SchemaData, "", concept.PostedBy, concept.PostingTime);
+        "", "", concept.PostedBy.Id, concept.PostingTime);
 
       DataWriter.Execute(op);
     }
@@ -67,11 +68,11 @@ namespace Empiria.Billing.Data {
 
     static public void WriteBillTaxEntry(BillTaxEntry tax) {
 
-      var op = DataOperation.Parse("WRITE_FMS_BILL_TAX",
+      var op = DataOperation.Parse("write_FMS_Bill_Tax",
         tax.Id, tax.UID, tax.Bill.Id, tax.BillConcept.Id,
-        tax.TaxType.Id, (char)tax.TaxMethod, (char)tax.TaxFactorType,
+        tax.TaxType.Id, (char) tax.TaxMethod, (char) tax.TaxFactorType,
         tax.Factor, tax.BaseAmount, tax.Total, "",
-        tax.PostedBy, tax.PostingTime, (char) tax.Status);
+        tax.PostedBy.Id, tax.PostingTime, (char) tax.Status);
 
       DataWriter.Execute(op);
     }
