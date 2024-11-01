@@ -12,23 +12,8 @@ using System;
 
 namespace Empiria.Payments.Payables.Adapters {
 
-  /// <summary>Data transfer objects used to return payable payment objects. </summary>
-   public class PayablePaymentDto {
-
-    public NamedEntityDto PaymentMethod {
-      get; internal set;
-    }
-
-
-    public PayablePaymentAccountDto PayablePaymentAccount {
-      get; internal set;
-    }
-
-  } // class PayablePaymentDto
-
-
   /// <summary>Data transfer objects used to return payable payment account. </summary>
-  public class PayablePaymentAccountDto {
+  public class PaymentAccountDto {
 
     public NamedEntityDto PaymentMethod {
       get; internal set;

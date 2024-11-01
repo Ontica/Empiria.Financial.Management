@@ -62,6 +62,16 @@ namespace Empiria.Payments.Payables.Adapters {
     } = ExecutionServer.DateMinValue;
 
 
+      public string PaymentMethodUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string PaymentAccountUID {
+      get; set;
+    } = string.Empty;
+
+
     public DateTime RequestedTime {
       get; set;
     } = ExecutionServer.DateMinValue;
@@ -71,8 +81,8 @@ namespace Empiria.Payments.Payables.Adapters {
     #region Methods
 
     virtual internal void EnsureValid() {
-     
-      Assertion.Require(OrganizationalUnitUID, "Necesito se proporcione el área.");
+
+      Assertion.Require(OrganizationalUnitUID, "Necesito se proporcione el área que solicita la obligación de pago.");
       _ = OrganizationalUnit.Parse(OrganizationalUnitUID);
 
       Assertion.Require(PayToUID, "Necesito saber a quien se le realizará el pago.");
@@ -81,8 +91,18 @@ namespace Empiria.Payments.Payables.Adapters {
       Assertion.Require(CurrencyUID, "Necesito la moneda.");
       _ = Currency.Parse(CurrencyUID);
 
-      Assertion.Require(BudgetTypeUID, "Necesito saber con qué presupuesto se hará el pago.");
+      Assertion.Require(BudgetTypeUID, "Necesito saber con qué presupuesto correspondiente.");
       _ = BudgetType.Parse(BudgetTypeUID);
+
+      Assertion.Require(PaymentMethodUID, "Necesito el identificador UID del método de pago");
+
+      var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);
+
+      if (paymentMethod.LinkedToAccount) {
+        Assertion.Require(PaymentAccountUID, "Necesito el identificador UID de la cuenta donde se debe realizar el pago.");
+        _ = PaymentAccount.Parse(PaymentAccountUID);
+      }
+
     }
 
 

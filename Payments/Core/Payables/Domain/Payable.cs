@@ -234,23 +234,9 @@ namespace Empiria.Payments.Payables {
       this.PayTo = Party.Parse(fields.PayToUID);
       this.BudgetType = BudgetType.Parse(fields.BudgetTypeUID);
       this.Currency = Currency.Parse(fields.CurrencyUID);
-      this.DueTime = fields.DueTime;
+      this.DueTime = fields.DueTime;      
       this.RequestedTime = fields.RequestedTime;
-    }
-
-
-    internal void UpdatePaymentData(PayablePaymentFields fields) {
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureValid();
-      this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
-
-      if (this.PaymentMethod.LinkedToAccount) {
-        this.PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
-      } else {
-        this.PaymentAccount = PaymentAccount.Empty;
-      }
-           
+      this.UpdatePaymentData(fields);
     }
 
     #endregion Methods
@@ -334,6 +320,19 @@ namespace Empiria.Payments.Payables {
 
       return $"OP-2024-{current:00000}";
     }
+
+
+    private void UpdatePaymentData(PayableFields fields) {
+      this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
+
+      if (this.PaymentMethod.LinkedToAccount) {
+        this.PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
+      } else {
+        this.PaymentAccount = PaymentAccount.Empty;
+      }
+
+    }
+
 
     #endregion Helpers
 

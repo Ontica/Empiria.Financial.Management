@@ -69,9 +69,16 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-    public PayablePaymentDto Payment {
+
+    public NamedEntityDto PaymentMethod {
       get; internal set;
     }
+
+
+    public PaymentAccountDto PaymentAccount {
+      get; internal set;
+    }
+
 
     public NamedEntityDto Status {
       get; internal set;

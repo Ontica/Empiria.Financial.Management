@@ -103,20 +103,7 @@ namespace Empiria.Payments.Payables.WebApi {
       }
     }
 
-    [HttpPut]
-    [Route("v2/payments-management/payables/{payableUID:guid}/payment-data")]
-    public SingleObjectModel UpdatePayablePayment([FromUri] string payableUID,
-                                          [FromBody] PayablePaymentFields fields) {
-      base.RequireBody(fields);
-
-      using (var usecases = PayableUseCases.UseCaseInteractor()) {
-
-        PayableHolderDto payable = usecases.UpdatePayablePayment(payableUID, fields);
-
-        return new SingleObjectModel(this.Request, payable);
-      }
-    }
-
+    
     #endregion Command web apis
 
   }  // class PayableController
