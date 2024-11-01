@@ -12,10 +12,10 @@ using System.Collections.Generic;
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
 using Empiria.Billing.SATMexicoImporter;
+using Empiria.Products;
 using Empiria.Services;
 
 namespace Empiria.Billing.UseCases {
-
 
   /// <summary>Use cases to manage billing.</summary>
   internal class BillUseCases : UseCase {
@@ -71,11 +71,15 @@ namespace Empiria.Billing.UseCases {
 
     private Bill CreateBill(BillFields fields) {
 
-      Bill bill = new Bill(fields);
+      var billCategory = BillCategory.Factura;
+
+      var bill = new Bill(billCategory, fields.BillNo);
+
+      bill.Update(fields);
 
       bill.Save();
 
-      FixedList<BillConcept> concepts = CreateBillConcepts(bill.UID, fields.Concepts);
+      FixedList<BillConcept> concepts = CreateBillConcepts(bill, fields.Concepts);
 
       bill.Concepts = concepts;
 
@@ -83,19 +87,19 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private FixedList<BillConcept> CreateBillConcepts(string billUID, FixedList<BillConceptFields> conceptFields) {
+    private FixedList<BillConcept> CreateBillConcepts(Bill bill, FixedList<BillConceptFields> conceptFields) {
 
-      List<BillConcept> concepts = new List<BillConcept>();
+      var concepts = new List<BillConcept>();
 
-      foreach (BillConceptFields field in conceptFields) {
+      foreach (BillConceptFields fields in conceptFields) {
 
-        BillConcept billConcept = new BillConcept(field, billUID);
+        var billConcept = new BillConcept(bill, Product.Empty);
+
+        billConcept.Update(fields);
 
         billConcept.Save();
 
-        FixedList<BillTaxEntry> taxes = CreateBillTaxEntries(field.TaxEntries, billUID, billConcept.UID);
-
-        billConcept.TaxEntries = taxes;
+        billConcept.TaxEntries = CreateBillTaxEntries(bill, billConcept, fields.TaxEntries);
 
         concepts.Add(billConcept);
       }
@@ -104,20 +108,24 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private FixedList<BillTaxEntry> CreateBillTaxEntries(FixedList<BillTaxEntryFields> taxFields,
-                                      string billUID, string billConceptUID) {
-      
-      List<BillTaxEntry> taxes = new List<BillTaxEntry>();
-      
-      foreach (BillTaxEntryFields field in taxFields) {
+    private FixedList<BillTaxEntry> CreateBillTaxEntries(Bill bill,
+                                                         BillConcept billConcept,
+                                                         FixedList<BillTaxEntryFields> allTaxesFields) {
 
-        BillTaxEntry billTaxEntry = new BillTaxEntry(field, billUID, billConceptUID);
+      var taxesList = new List<BillTaxEntry>(allTaxesFields.Count);
+
+      foreach (BillTaxEntryFields taxFields in allTaxesFields) {
+
+        var billTaxEntry = new BillTaxEntry(bill, billConcept);
+
+        billTaxEntry.Update(taxFields);
 
         billTaxEntry.Save();
 
-        taxes.Add(billTaxEntry);
+        taxesList.Add(billTaxEntry);
       }
-      return taxes.ToFixedList();
+
+      return taxesList.ToFixedList();
     }
 
 

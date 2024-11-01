@@ -7,15 +7,19 @@
 *  Summary  : Mapping methods for bill fields.                                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using System.Collections.Generic;
+
+using Empiria.Parties;
+
+using Empiria.Products.SATMexico;
+
 using Empiria.Billing.SATMexicoImporter;
 
 namespace Empiria.Billing.Adapters {
 
   /// <summary>Mapping methods for bill fields.</summary>
   static internal class BillFieldsMapper {
-
 
     #region Public methods
 
@@ -34,21 +38,14 @@ namespace Empiria.Billing.Adapters {
 
       foreach (var concepto in conceptos) {
 
-        var field = new BillConceptFields();
-        field.ProductUID = string.Empty;
-        field.Description = concepto.Descripcion;
-        field.Quantity = concepto.Cantidad;
-        field.UnitPrice = concepto.ValorUnitario;
-        field.Subtotal = concepto.Importe;
-
-        field.TaxEntries = MapToBillTaxFields(concepto.Impuestos);
-
-        field.BillUID = string.Empty;
-        field.Identificators = string.Empty;
-        field.Tags = string.Empty;
-        field.Discount = 0;
-        field.SchemaExtData = string.Empty;
-        field.ExtData = string.Empty;
+        var field = new BillConceptFields {
+          ProductUID = string.Empty,
+          Description = concepto.Descripcion,
+          Quantity = concepto.Cantidad,
+          UnitPrice = concepto.ValorUnitario,
+          Subtotal = concepto.Importe,
+          TaxEntries = MapToBillTaxFields(concepto.Impuestos)
+        };
 
         fields.Add(field);
       }
@@ -59,31 +56,19 @@ namespace Empiria.Billing.Adapters {
 
     static private BillFields MapToBillFields(SATBillDto dto) {
 
-      BillFields fields = new BillFields();
-
-      fields.BillNo = dto.DatosGenerales.NoCertificado;
-      fields.IssueDate = dto.DatosGenerales.Fecha;
-      fields.IssuedByRFC = dto.Emisor.RFC;
-      fields.IssuedToRFC = dto.Receptor.RFC;
-      fields.SchemaVersion = dto.DatosGenerales.CFDIVersion;
-      fields.CurrencyCode = dto.DatosGenerales.Moneda;
-      fields.Subtotal = dto.DatosGenerales.SubTotal;
-      fields.Total = dto.DatosGenerales.Total;
-      fields.Concepts = MapToBillConceptFields(dto.Conceptos);
-
-      fields.ManagedByUID = string.Empty;
-      fields.BillCategoryUID = string.Empty;
-      fields.Identificators = string.Empty;
-      fields.Tags = string.Empty;
-      fields.Discount = 0;
-      fields.SchemaExtData = string.Empty;
-      fields.SecurityExtData = string.Empty;
-      fields.PaymentExtData = string.Empty;
-      fields.ExtData = string.Empty;
-
-      return fields;
+      return new BillFields {
+        BillCategoryUID = BillCategory.Factura.UID,
+        BillNo = dto.DatosGenerales.NoCertificado,
+        IssueDate = dto.DatosGenerales.Fecha,
+        IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
+        IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
+        SchemaVersion = dto.DatosGenerales.CFDIVersion,
+        CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
+        Subtotal = dto.DatosGenerales.SubTotal,
+        Total = dto.DatosGenerales.Total,
+        Concepts = MapToBillConceptFields(dto.Conceptos)
+      };
     }
-
 
 
     static private FixedList<BillTaxEntryFields> MapToBillTaxFields(FixedList<SATBillTaxDto> impuestos) {
@@ -92,45 +77,39 @@ namespace Empiria.Billing.Adapters {
 
       foreach (SATBillTaxDto tax in impuestos) {
 
-        BillTaxEntryFields field = new BillTaxEntryFields();
-        field.TaxType = tax.MetodoAplicacion;
-        field.TaxFactorType = GetFactorTypeByTax(tax.TipoFactor);
-        field.Factor = tax.TasaOCuota;
-        field.BaseAmount = tax.Base;
-        field.Total = tax.Importe;
-
-        field.BillUID = string.Empty;
-        field.BillConceptUID = string.Empty;
-        field.ExtData = string.Empty;
+        var field = new BillTaxEntryFields {
+          TaxMethod = tax.MetodoAplicacion,
+          TaxFactorType = GetFactorTypeByTax(tax.TipoFactor),
+          Factor = tax.TasaOCuota,
+          BaseAmount = tax.Base,
+          Total = tax.Importe
+        };
 
         fields.Add(field);
       }
       return fields.ToFixedList();
     }
 
-
     #endregion Private methods
-
 
     #region Helpers
 
     static private BillTaxFactorType GetFactorTypeByTax(string tipoFactor) {
 
       switch (tipoFactor) {
-        
+
         case "Cuota":
           return BillTaxFactorType.Cuota;
 
         case "Tasa":
           return BillTaxFactorType.Tasa;
-        
+
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled bill tax factor type for '{tipoFactor}'.");
       }
     }
 
     #endregion Helpers
-
 
   } // class BillFieldsMapper
 

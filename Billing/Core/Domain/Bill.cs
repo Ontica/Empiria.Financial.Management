@@ -9,8 +9,10 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+
 using Empiria.Billing.Data;
 using Empiria.Financial;
+
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
@@ -31,13 +33,15 @@ namespace Empiria.Billing {
 
     static public Bill Parse(string uid) => ParseKey<Bill>(uid);
 
-    public Bill(BillFields fields) {
+    public Bill(BillCategory billCategory, string billNo) : base(billCategory.BillType) {
+      Assertion.Require(billNo, nameof(billNo));
 
-      MapFieldsToBill(fields);
-
+      BillCategory = billCategory;
+      BillNo = billNo;
     }
 
-    
+    static public Bill Empty => ParseEmpty<Bill>();
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -119,19 +123,19 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_SUBTOTAL")]
+    [DataField("BILL_SUBTOTAL", ConvertFrom = typeof(float))]
     public decimal Subtotal {
       get; private set;
     }
 
 
-    [DataField("BILL_DISCOUNT")]
+    [DataField("BILL_DISCOUNT", ConvertFrom = typeof(float))]
     public decimal Discount {
       get; private set;
     }
 
 
-    [DataField("BILL_TOTAL")]
+    [DataField("BILL_TOTAL", ConvertFrom = typeof(float))]
     public decimal Total {
       get; private set;
     }
@@ -206,35 +210,36 @@ namespace Empiria.Billing {
 
     #endregion Properties
 
-    #region Private methods
-
-    
-    private void MapFieldsToBill(BillFields fields) {
-
-      this.BillCategory = BillCategory.Parse(fields.BillCategoryUID);
-      this.BillNo = fields.BillNo;
-      this.IssueDate = fields.IssueDate;
-      this.IssuedBy = Party.Parse(fields.IssuedByRFC);
-      this.IssuedTo = Party.Parse(fields.IssuedToRFC);
-      this.ManagedBy = Party.Parse(fields.ManagedByUID);
-      this.SchemaVersion = fields.SchemaVersion;
-      this._identificators = fields.Identificators;
-      this._tags = fields.Tags;
-      this.Currency = Currency.Parse(fields.CurrencyCode);
-      this.Subtotal = fields.Subtotal;
-      this.Discount = fields.Discount;
-      this.Total = fields.Total;
-      this.PostedBy = Party.Parse(ExecutionServer.CurrentUserId);
-      this.PostingTime = DateTime.Now;
-    }
-
+    #region Methods
 
     protected override void OnSave() {
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
       BillData.WriteBill(this);
     }
 
 
-    #endregion Private methods
+    internal void Update(BillFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureIsValid();
+
+      IssueDate = PatchField(fields.IssueDate, IssueDate);
+      IssuedBy = Party.Parse(fields.IssuedByUID);
+      IssuedTo = Party.Parse(fields.IssuedToUID);
+      ManagedBy = PatchField(fields.ManagedByUID, ManagedBy);
+      SchemaVersion = PatchField(fields.SchemaVersion, SchemaVersion);
+      _identificators = PatchField(fields.Identificators, _identificators);
+      _tags = PatchField(fields.Tags, _tags);
+      Currency = PatchField(fields.CurrencyUID, Currency);
+      Subtotal = fields.Subtotal;
+      Discount = fields.Discount;
+      Total = fields.Total;
+    }
+
+    #endregion Methods
 
   } // class Bill
 

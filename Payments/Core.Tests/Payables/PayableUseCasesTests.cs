@@ -12,6 +12,7 @@ using Xunit;
 
 using Empiria.Payments.Payables.UseCases;
 using Empiria.Payments.Payables.Adapters;
+using Empiria.Payments.Payables;
 
 namespace Empiria.Tests.Payments.Payables.UseCases {
 
@@ -42,7 +43,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
         PayableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c",
         ProductUID = "",
         UnitUID = "",
-        Description = "Agregado desde las pruebas",
+        Description = "Prueba del dia 1 Noviembre",
         Quantity = 3m,
         UnitPrice = 10,
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
@@ -86,14 +87,26 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Delete_PayableItem() {
 
-      _usecases.RemovePayableItem("713b2755-aee1-44af-9f3c-1f46caebca1c", "456e7c4d-a5b3-4f8a-bd8b-ad1d05d11240");
+      _usecases.RemovePayableItem("713b2755-aee1-44af-9f3c-1f46caebca1c", "675f4977-d3cd-4114-953f-8c46f8a3ace3");
+    }
+
+
+    [Fact]
+    public void Should_Generate_Payable_Items() {
+      Payable payable = Payable.Parse("794a1ad0-afd2-4a13-ac72-00c08ff36e68");
+
+      PayableItemGenerator generator = new PayableItemGenerator(payable);
+      var sut = generator.Generate();
+
+      Assert.NotNull(sut);
+      Assert.True(sut.Count > 0);
     }
 
 
     [Fact]
     public void Should_Get_Payable() {
 
-      var sut = _usecases.GetPayable("79cda212-9676-429b-b242-407614eb01db");
+      var sut = _usecases.GetPayable("abdc27b9-5fb1-4386-aa87-f5ad5ec66fea");
 
       Assert.NotNull(sut);
     }
@@ -162,11 +175,11 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Update_PayableItem() {
       var fields = new PayableItemFields {
+        UID = "675f4977-d3cd-4114-953f-8c46f8a3ace3",
         PayableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c",
-        UID = "0785cf8e-fd06-4e41-ac1b-b2e3b09d12c2",
-        ProductUID = "",
+        ProductUID = "675f4977-d3cd-4114-953f-8c46f8a3ace3",
         UnitUID = "",
-        Description = "Actualizando Items desde las pruebas",
+        Description = "Items actualizados desde las pruebas el 1 Nov",
         Quantity = 3m,
         UnitPrice = 10,
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
@@ -175,7 +188,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
       };
 
       var payableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c";
-      var payableItemUID = "0785cf8e-fd06-4e41-ac1b-b2e3b09d12c2";
+      var payableItemUID = "675f4977-d3cd-4114-953f-8c46f8a3ace3";
       var sut = _usecases.UpdatePayableItem(payableUID,payableItemUID, fields);
 
       Assert.NotNull(sut);
@@ -186,7 +199,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Get_PayableData() {
 
-      var sut = _usecases.GetPayableData("713b2755-aee1-44af-9f3c-1f46caebca1c");
+      var sut = _usecases.GetPayableData("abdc27b9-5fb1-4386-aa87-f5ad5ec66fea");
 
       Assert.NotNull(sut);
     }

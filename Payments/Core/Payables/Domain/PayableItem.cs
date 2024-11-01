@@ -61,17 +61,19 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    //[DataField("PAYABLE_ENTITY_ITEM_ID")]
+    [DataField("PAYABLE_ENTITY_ITEM_ID")]
     public int PayableEntityItem {
       get; private set;
     }
 
 
+    [DataField("PAYABLE_ITEM_PRODUCT_ID")]
     public Product Product {
       get; private set;
     }
 
 
+    [DataField("PAYABLE_ITEM_UNIT_ID")]
     public ProductUnit Unit {
       get; private set;
     }
@@ -171,8 +173,8 @@ namespace Empiria.Payments.Payables {
 
       fields.EnsureValid();
 
-      //this.Product = Product..Parse(fields.ProductUID);
-      //this.Unit = ProductUnit.Parse(fields.UnitUID);
+      this.Product = Product.Parse(fields.ProductUID);
+      this.Unit = ProductUnit.Parse(fields.UnitUID);
 
       this.PayableEntityItem = -1;
       this.Description = fields.Description;

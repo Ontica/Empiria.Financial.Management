@@ -31,8 +31,7 @@ namespace Empiria.Tests.Payments.Payables {
       Assert.Equal(payableType, sut.PayableType);
       Assert.Equal(payableEntity, sut.PayableEntity);
     }
-
-
+ 
 
     [Fact]
     public void Should_Read_All_Payables() {
