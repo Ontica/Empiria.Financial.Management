@@ -91,7 +91,7 @@ namespace Empiria.Payments.Payables.Data {
 
     static internal void WritePayableItem(PayableItem o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Payable_Item",
-                     o.Id, o.UID, o.Payable.Id, o.PayableEntityItem, 1, 1, o.Description, o.Quantity, o.UnitPrice,
+                     o.Id, o.UID, o.Payable.Id, o.PayableEntityItem, o.Product.Id, o.Unit.Id, o.Description, o.Quantity, o.UnitPrice,
                      o.Currency.Id, 1, o.ExchangeRate, o.BudgetAccount.Id, 1, extensionData,
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
@@ -99,7 +99,7 @@ namespace Empiria.Payments.Payables.Data {
     }
 
     static internal void WritePayableLink(PayableLink o) {
-      var op = DataOperation.Parse("write_FMS_Payable_Item",
+      var op = DataOperation.Parse("write_FMS_Payable_Link",
                      o.Id, o.UID,o.PayableLinkType.Id, o.Payable.Id, o.LinkedObject.Id,
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
