@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using Empiria.Financial;
+
 using Empiria.Ontology;
 using Empiria.Reflection;
 
@@ -17,6 +17,7 @@ namespace Empiria.Payments.Payables {
 
   /// <summary> Describes links between payable object with other base object. </summary>
   internal class PayableLinkType : GeneralObject {
+
 
     #region Constructors and parsers
 
@@ -29,17 +30,17 @@ namespace Empiria.Payments.Payables {
                        .ToFixedList();
     }
 
-    static public PaymentMethod Empty => ParseEmpty<PaymentMethod>();
+    static public PayableLinkType Empty => ParseEmpty<PayableLinkType>();
 
+    static internal PayableLinkType Bill => Parse(690);
 
     #endregion Constructors and parsers
-
 
     #region Properties
 
     public ObjectTypeInfo LinkedObjectType {
       get {
-        int id  = ExtendedDataField.Get<int>("linkedObjectTypeId");
+        int id = ExtendedDataField.Get<int>("linkedObjectTypeId");
 
         return ObjectTypeInfo.Parse(id);
       }

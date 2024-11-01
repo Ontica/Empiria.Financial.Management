@@ -17,4 +17,5 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("Empiria and Ontica are either trademarks of La Vía Óntica SC or Ontica LLC.")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
+[assembly: InternalsVisibleTo("Empiria.Payments.Core")]
 [assembly: InternalsVisibleTo("Empiria.Billing.Core.Tests")]

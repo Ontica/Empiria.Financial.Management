@@ -4,18 +4,25 @@
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Service connector                       *
 *  Type     : ExternalServices                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : QConnect Empiria Payments with external services providers.                                    *
+*  Summary  : Connect Empiria Payments with external services providers.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 using System.Collections.Generic;
 
+using Empiria.Storage;
+
+using Empiria.Documents;
 using Empiria.Documents.Services;
 using Empiria.Documents.Services.Adapters;
 
 using Empiria.History.Services;
 using Empiria.History.Services.Adapters;
+
+using Empiria.Billing;
+using Empiria.Billing.UseCases;
+using Empiria.Billing.Adapters;
 
 using Empiria.Payments.Payables;
 
@@ -24,7 +31,24 @@ namespace Empiria.Payments {
   /// <summary>Connect Empiria Payments with external services providers.</summary>
   static internal class ExternalServices {
 
+    static internal Bill GenerateBill(DocumentDto billDocument) {
+      Assertion.Require(billDocument, nameof(billDocument));
+
+      var document = Document.Parse(billDocument.UID);
+
+      string billXmlFillPath = document.FullLocalName;
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+        BillEntryDto returnedValue = usecases.CreateBill(billXmlFillPath);
+
+        return Bill.Parse(returnedValue.Bill_UID);
+      }
+    }
+
+
     static internal FixedList<DocumentDto> GetEntityDocuments(BaseObject entity) {
+      Assertion.Require(entity, nameof(entity));
 
       using (var services = DocumentServices.ServiceInteractor()) {
 
@@ -32,7 +56,9 @@ namespace Empiria.Payments {
       }
     }
 
+
     static internal FixedList<HistoryDto> GetEntityHistory(BaseObject entity) {
+      Assertion.Require(entity, nameof(entity));
 
       using (var services = HistoryServices.ServiceInteractor()) {
 
@@ -55,6 +81,19 @@ namespace Empiria.Payments {
       bills.Add(bill);
 
       return bills.ToFixedList();
+    }
+
+    static internal DocumentDto StorePayableBillAsDocument(Payable payable,
+                                                           InputFile billFile,
+                                                           DocumentFields fields) {
+      Assertion.Require(payable, nameof(payable));
+      Assertion.Require(billFile, nameof(billFile));
+      Assertion.Require(fields, nameof(fields));
+
+      using (var services = DocumentServices.ServiceInteractor()) {
+
+        return services.CreateDocument(billFile, payable, fields);
+      }
     }
 
 
