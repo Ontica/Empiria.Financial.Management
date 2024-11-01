@@ -27,8 +27,12 @@ namespace Empiria.Contracts.Adapters {
         Contract = milestone.Contract.MapToNamedEntity(),
         MilestoneNo = milestone.MilestoneNo,
         Name = milestone.Name,
+        ManagedByOrgUnit = milestone.ManagedByOrgUnit.MapToNamedEntity(),
         Description = milestone.Description,
         Supplier = milestone.Supplier.MapToNamedEntity(),
+        Total = milestone.GetTotal(),
+        Status = milestone.Status.MapToDto(),
+        Items = ContractMilestoneItemMapper.Map(milestone.GetItems())
         //PaymentExtData = milestone.PaymentData.,
       };
     }

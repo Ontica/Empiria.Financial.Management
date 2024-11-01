@@ -8,9 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Parties;
-using Empiria.Products;
-
 namespace Empiria.Contracts.Adapters {
 
   /// <summary>Data transfer object used to return milestones item information.</summary>
@@ -36,7 +33,7 @@ namespace Empiria.Contracts.Adapters {
 
 
     public NamedEntityDto ContractItem {
-      get; internal set; 
+      get; internal set;
     }
 
 
@@ -53,8 +50,8 @@ namespace Empiria.Contracts.Adapters {
     public NamedEntityDto ProductUnit {
       get; internal set;
     }
-  
-    
+
+
     public decimal Quantity {
       get; internal set;
     }
@@ -64,23 +61,15 @@ namespace Empiria.Contracts.Adapters {
       get; internal set;
     }
 
+    public decimal Total {
+      get; internal set;
+    }
 
     public NamedEntityDto BudgetAccount {
       get; internal set;
     }
 
-
-    public NamedEntityDto ManagedByOrgUnit {
-      get; internal set;
-    }
-
-
-    public string Status {
-      get; internal set;
-    }
-
-
-    public decimal Total {
+    public NamedEntityDto Status {
       get; internal set;
     }
 

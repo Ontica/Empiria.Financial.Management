@@ -49,22 +49,20 @@ namespace Empiria.Contracts.Adapters {
     }
 
 
-    public string PaymentExtData {
-      get; internal set;
-    }
-
-
     public NamedEntityDto ManagedByOrgUnit {
       get; internal set;
     }
 
+    public decimal Total {
+      get; internal set;
+    }
 
-    public string Status {
+    public NamedEntityDto Status {
       get; internal set;
     }
 
 
-    public decimal Total {
+    public FixedList<ContractMilestoneItemDto> Items {
       get; internal set;
     }
 

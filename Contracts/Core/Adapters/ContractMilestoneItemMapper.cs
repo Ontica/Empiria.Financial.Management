@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.StateEnums;
+
 namespace Empiria.Contracts.Adapters {
 
   /// <summary>Provides data mapping services for ContractMilestoneItem instances.</summary>
@@ -29,7 +31,9 @@ namespace Empiria.Contracts.Adapters {
         ProductUnit = milestoneItem.ProductUnit.MapToNamedEntity(),
         Quantity = milestoneItem.Quantity,
         UnitPrice = milestoneItem.UnitPrice,
+        Total = milestoneItem.Total,
         BudgetAccount = milestoneItem.BudgetAccount.MapToNamedEntity(),
+        Status = milestoneItem.Status.MapToDto()
       };
 
     }

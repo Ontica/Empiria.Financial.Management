@@ -10,12 +10,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
 using Empiria.Financial;
+
 using Empiria.Contracts.Data;
 using Empiria.Contracts.Adapters;
 
@@ -51,6 +52,10 @@ namespace Empiria.Contracts {
 
 
     static internal ContractMilestone Empty => ParseEmpty<ContractMilestone>();
+
+    protected override void OnLoad() {
+      _items = new Lazy<List<ContractMilestoneItem>>(() => ContractMilestoneItemData.GetContractMilestoneItems(this));
+    }
 
     #endregion Constructors and parsers
 
@@ -112,7 +117,7 @@ namespace Empiria.Contracts {
 
 
     [DataField("MILESTONE_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -171,7 +176,6 @@ namespace Empiria.Contracts {
 
 
     internal void Delete() {
-
       Assertion.Require(this.Status == EntityStatus.Active || this.Status == EntityStatus.Suspended,
                   $"No se puede eliminar un entregable que está en estado {this.Status.GetName()}.");
 
@@ -179,9 +183,31 @@ namespace Empiria.Contracts {
     }
 
 
+    internal FixedList<ContractMilestoneItem> GetItems() {
+      return _items.Value.ToFixedList();
+    }
+
+
+    internal decimal GetTotal() {
+      return GetItems().Sum(x => x.Total);
+    }
+
+
+    internal void Load(ContractMilestoneFields fields) {
+      this.Contract = Contract.Parse(fields.ContractUID);
+      this.MilestoneNo = fields.MilestoneNo;
+      this.Name = fields.Name;
+      this.Description = fields.Description;
+      this.Supplier = Party.Parse(fields.SupplierUID);
+      //this.PaymentData = PaymentData();
+      this.ManagedByOrgUnit = OrganizationalUnit.Parse(fields.ManagedByOrgUnitUID);
+      ExtData = new JsonObject();
+    }
+
+
     protected override void OnSave() {
       if (base.IsNew) {
-        this.PostedBy = ExecutionServer.CurrentContact;
+        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
 
@@ -197,25 +223,6 @@ namespace Empiria.Contracts {
     }
 
     #endregion Methods
-
-    #region Helpers
-
-    internal void Load(ContractMilestoneFields fields) {
-      this.Contract = Contract.Parse(fields.ContractUID);
-      this.MilestoneNo = fields.MilestoneNo;
-      this.Name = fields.Name;
-      this.Description = fields.Description;
-      this.Supplier = Party.Parse(fields.SupplierUID);
-      //this.PaymentData = PaymentData();
-      this.ManagedByOrgUnit = OrganizationalUnit.Parse(fields.ManagedByOrgUnitUID);
-      ExtData = new JsonObject();
-    }
-
-    #endregion Helpers
-
-    internal FixedList<ContractMilestoneItem> GetItems() {
-      return _items.Value.ToFixedList();
-    }
 
   }  // class ContractMilestone
 

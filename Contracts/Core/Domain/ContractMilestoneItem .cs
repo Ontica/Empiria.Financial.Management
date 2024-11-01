@@ -10,12 +10,13 @@
 
 using System;
 
-using Empiria.Budgeting;
-using Empiria.Contacts;
-using Empiria.Financial;
 using Empiria.Json;
+using Empiria.Parties;
 using Empiria.Products;
 using Empiria.StateEnums;
+
+using Empiria.Budgeting;
+using Empiria.Financial;
 
 namespace Empiria.Contracts {
 
@@ -65,7 +66,7 @@ namespace Empiria.Contracts {
     }
 
 
-    [DataField("CONTRACT_ITEM_PRODUCT_ID")]
+    [DataField("MILESTONE_ITEM_PRODUCT_ID")]
     public Product Product {
       get; private set;
     }
@@ -122,9 +123,9 @@ namespace Empiria.Contracts {
     }
 
 
-    internal Contact LastUpdatedBy {
+    internal Party LastUpdatedBy {
       get {
-        return ExtData.Get<Contact>("lastUpdatedBy", Contact.Empty);
+        return ExtData.Get("lastUpdatedBy", Party.Empty);
       }
       set {
         ExtData.Set("lastUpdatedBy", value.Id);
@@ -134,7 +135,7 @@ namespace Empiria.Contracts {
 
     internal DateTime LastUpdatedTime {
       get {
-        return ExtData.Get<DateTime>("lastUpdatedTime", this.PostingTime);
+        return ExtData.Get("lastUpdatedTime", this.PostingTime);
       }
       set {
         ExtData.Set("lastUpdatedTime", value);
@@ -143,7 +144,7 @@ namespace Empiria.Contracts {
 
 
     [DataField("MILESTONE_ITEM_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
