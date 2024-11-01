@@ -33,20 +33,20 @@ namespace Empiria.Tests.Billing {
     }
 
 
-    //[Fact]
-    //public void Get_Bill_List_Test() {
+    [Fact]
+    public void Get_Bill_List_Test() {
 
-    //  string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
+      string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
 
-    //  using (var usecases = BillUseCases.UseCaseInteractor()) {
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-    //    BillsQuery query = GetBillsQuery();
+        BillsQuery query = GetBillsQuery();
 
-    //    FixedList<BillEntryDto> sut = usecases.GetBillList(query);
+        FixedList<BillEntryDto> sut = usecases.GetBillList(query);
 
-    //    Assert.NotNull(sut);
-    //  }
-    //}
+        Assert.NotNull(sut);
+      }
+    }
 
 
     #region Helpers

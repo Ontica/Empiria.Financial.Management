@@ -21,22 +21,22 @@ namespace Empiria.Billing.Data {
     #region Public methods
 
 
-    //static internal FixedList<Bill> GetBillList(string filtering, string sorting) {
+    static internal FixedList<Bill> GetBillList(string filtering, string sorting) {
 
-    //  var sql = "SELECT * FROM FMS_BILLS ";
+      var sql = "SELECT * FROM FMS_BILLS ";
 
-    //  if (!string.IsNullOrWhiteSpace(filtering)) {
-    //    sql += $"WHERE {filtering} ";
-    //  }
+      if (!string.IsNullOrWhiteSpace(filtering)) {
+        sql += $"WHERE {filtering} ";
+      }
 
-    //  if (!string.IsNullOrWhiteSpace(sorting)) {
-    //    sql += $"ORDER BY {sorting} ";
-    //  }
+      if (!string.IsNullOrWhiteSpace(sorting)) {
+        sql += $"ORDER BY {sorting} ";
+      }
 
-    //  var op = DataOperation.Parse(sql);
+      var op = DataOperation.Parse(sql);
 
-    //  return DataReader.GetPlainObjectFixedList<Bill>(op);
-    //}
+      return DataReader.GetPlainObjectFixedList<Bill>(op);
+    }
 
 
     static public void WriteBill(Bill bill) {

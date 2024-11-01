@@ -36,16 +36,16 @@ namespace Empiria.Billing.UseCases {
     #region Use cases
 
 
-    //public FixedList<BillEntryDto> GetBillList(BillsQuery query) {
-    //  Assertion.Require(query, nameof(query));
+    public FixedList<BillEntryDto> GetBillList(BillsQuery query) {
+      Assertion.Require(query, nameof(query));
 
-    //  var filtering = query.MapToFilterString();
-    //  var sorting = query.MapToSortString();
+      var filtering = query.MapToFilterString();
+      var sorting = query.MapToSortString();
 
-    //  FixedList<Bill> bills = BillData.GetBillList(filtering, sorting);
+      FixedList<Bill> bills = BillData.GetBillList(filtering, sorting);
 
-    //  return BillMapper.MapToBillListDto(bills);
-    //}
+      return BillMapper.MapToBillListDto(bills);
+    }
 
 
     public BillEntryDto CreateBill(string xmlFilePath) {
