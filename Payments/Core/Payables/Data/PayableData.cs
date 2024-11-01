@@ -98,14 +98,10 @@ namespace Empiria.Payments.Payables.Data {
       DataWriter.Execute(op);
     }
 
+
     static internal void WritePayableLink(PayableLink o) {
-<<<<<<< HEAD
       var op = DataOperation.Parse("write_FMS_Payable_Link",
-                     o.Id, o.UID,o.PayableLinkType.Id, o.Payable.Id, o.LinkedObject.Id,
-=======
-      var op = DataOperation.Parse("write_FMS_Payable_Item",
                      o.Id, o.UID,o.PayableLinkType.Id, o.Payable.Id, o.LinkedObjectId,
->>>>>>> 22379c5eb18bacd491be688b2abe6fb9b1d77b23
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
