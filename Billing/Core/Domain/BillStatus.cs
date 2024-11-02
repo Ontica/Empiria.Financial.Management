@@ -42,16 +42,22 @@ namespace Empiria.Billing {
           
         case BillStatus.Validated:
           return "Validada";
+
         case BillStatus.Issued:
           return "Emitida";
+
         case BillStatus.Payed:
           return "Pagada";
+
         case BillStatus.Canceled:
           return "Cancelada";
+
         case BillStatus.Deleted:
           return "Eliminada";
+
         case BillStatus.All:
           return "Todas";
+
         default:
           throw Assertion.EnsureNoReachThisCode($"Unrecognized status {status}");
       }

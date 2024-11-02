@@ -19,22 +19,22 @@ namespace Empiria.Billing.Adapters {
     #region Public methods
 
 
-    static internal BillDto Map(Bill bill) {
+    static internal BillHolderDto Map(Bill bill) {
 
-      return new BillDto() {
+      return new BillHolderDto() {
         Bill = MapToBillDto(bill),
-        Concepts = MapBillConcepts(bill.Concepts),
-        File = GetFileData(bill)
+        Concepts = MapBillConcepts(bill.Concepts)
       };
 
     }
 
 
-    static internal BillEntryDto MapToBillDto(Bill bill) {
+    static internal BillDto MapToBillDto(Bill bill) {
 
-      BillEntryDto dto = new BillEntryDto();
+      BillDto dto = new BillDto();
       dto.UID = bill.UID;
       dto.BillNo = bill.BillNo;
+      dto.BillType = new NamedEntityDto(bill.BillType.UID, bill.BillType.DisplayName);
       dto.IssueDate = bill.IssueDate;
       dto.IssuedBy = new NamedEntityDto(bill.IssuedBy.UID, bill.IssuedBy.Name);
       dto.IssuedTo = new NamedEntityDto(bill.IssuedTo.UID, bill.IssuedTo.Name);
@@ -45,7 +45,7 @@ namespace Empiria.Billing.Adapters {
       dto.Total = bill.Total;
       dto.PostedBy = new NamedEntityDto(bill.PostedBy.UID, bill.PostedBy.Name);
       dto.PostingTime = bill.PostingTime;
-      dto.Status = bill.Status;
+      dto.Status = new NamedEntityDto(bill.Status.ToString(), bill.Status.GetName());
       dto.Concepts = MapBillConcepts(bill.Concepts);
       return dto;
     }
@@ -67,13 +67,6 @@ namespace Empiria.Billing.Adapters {
 
 
     #region Private methods
-
-    static private FileDto GetFileData(Bill bill) {
-      
-      return new FileDto(FileType.Pdf,
-                         $"https://bnoqsicofin1-b.banobras.gob.mx/sicofin/files/vouchers/poliza.2024-08-000007.2cd4a2d3-4951-04f6-9d9a-dca96837580c.pdf");
-    }
-
 
     static private FixedList<BillConceptDto> MapBillConcepts(FixedList<BillConcept> billConcepts) {
       if (billConcepts.Count == 0) {

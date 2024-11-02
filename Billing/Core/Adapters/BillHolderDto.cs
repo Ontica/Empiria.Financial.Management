@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Documents;
 using Empiria.History.Services.Adapters;
 using Empiria.StateEnums;
 using Empiria.Storage;
@@ -16,23 +17,22 @@ namespace Empiria.Billing.Adapters {
 
 
   /// <summary>Output DTO used to return bill data.</summary>
-  public class BillDto {
+  public class BillHolderDto {
 
-
-    public FileDto File {
+    public BillDto Bill {
       get; set;
-    }
-
-
-    public BillEntryDto Bill {
-      get; set;
-    } = new BillEntryDto();
+    } = new BillDto();
 
 
     public FixedList<BillConceptDto> Concepts {
       get; set;
     } = new FixedList<BillConceptDto>();
 
+
+    public FixedList<Document> Documents {
+      get; internal set;
+    } = new FixedList<Document>();
+    
 
     public FixedList<HistoryDto> History {
       get; set;
@@ -43,7 +43,7 @@ namespace Empiria.Billing.Adapters {
 
 
   /// <summary>Output DTO used to return bill entry data.</summary>
-  public class BillEntryDto {
+  public class BillDto {
 
     public string UID {
       get; set;
@@ -53,6 +53,11 @@ namespace Empiria.Billing.Adapters {
     public string BillNo {
       get; set;
     }
+
+
+    public NamedEntityDto BillType {
+      get; set;
+    } = new NamedEntityDto("", "");
 
 
     public DateTime IssueDate {
@@ -105,15 +110,15 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    public BillStatus Status {
+    public NamedEntityDto Status {
       get; set;
-    }
+    } = new NamedEntityDto("", "");
 
 
     public FixedList<BillConceptDto> Concepts {
       get; set;
     } = new FixedList<BillConceptDto>();
-
+    
   } // Class BillEntryDto
 
 

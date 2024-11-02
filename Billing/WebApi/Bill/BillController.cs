@@ -28,7 +28,7 @@ namespace Empiria.Billing.WebApi {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
         
-        BillDto bill = usecases.GetBill(billUID);
+        BillHolderDto bill = usecases.GetBill(billUID);
 
         return new SingleObjectModel(base.Request, bill);
       }

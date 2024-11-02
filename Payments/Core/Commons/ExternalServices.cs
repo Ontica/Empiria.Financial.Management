@@ -40,7 +40,7 @@ namespace Empiria.Payments {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-        BillEntryDto returnedValue = usecases.CreateBill(billXmlFillPath);
+                Billing.Adapters.BillDto returnedValue = usecases.CreateBill(billXmlFillPath);
 
         return Bill.Parse(returnedValue.UID);
       }
