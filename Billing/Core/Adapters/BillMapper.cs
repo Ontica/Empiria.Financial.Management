@@ -119,7 +119,7 @@ namespace Empiria.Billing.Adapters {
     static private BillDescriptorDto MapToBillDescriptorDto(Bill x) {
 
       return new BillDescriptorDto() {
-        UID = x.UID,
+        UID = x.BillUID,
         BillNo = x.BillNo,
         IssuedByName = x.IssuedBy.Name,
         IssuedToName = x.IssuedTo.Name,

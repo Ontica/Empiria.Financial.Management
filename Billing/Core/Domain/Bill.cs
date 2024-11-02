@@ -58,6 +58,12 @@ namespace Empiria.Billing {
     }
 
 
+    [DataField("BILL_UID")]
+    public string BillUID {
+      get; private set;
+    }
+
+
     [DataField("BILL_CATEGORY_ID")]
     public BillCategory BillCategory {
       get; private set;
