@@ -24,6 +24,11 @@ namespace Empiria.Billing.Adapters {
     }
 
 
+    public string BillTypeName {
+      get; set;
+    }
+
+
     public string IssuedByName {
       get; set;
     }
@@ -52,10 +57,7 @@ namespace Empiria.Billing.Adapters {
     public string StatusName {
       get; set;
     }
-
-
-
-
+    
   } // class BillDescriptorDto
 
 } // namespace Empiria.Billing.Adapters

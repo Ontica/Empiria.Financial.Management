@@ -116,17 +116,18 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private BillDescriptorDto MapToBillDescriptorDto(Bill x) {
+    static private BillDescriptorDto MapToBillDescriptorDto(Bill bill) {
 
       return new BillDescriptorDto() {
-        UID = x.BillUID,
-        BillNo = x.BillNo,
-        IssuedByName = x.IssuedBy.Name,
-        IssuedToName = x.IssuedTo.Name,
-        CategoryName = x.BillCategory.Name,
-        Total = x.Total,
-        IssueDate = x.IssueDate,
-        StatusName = x.Status.GetName()
+        UID = bill.BillUID,
+        BillNo = bill.BillNo,
+        BillTypeName = bill.BillType.DisplayName,
+        IssuedByName = bill.IssuedBy.Name,
+        IssuedToName = bill.IssuedTo.Name,
+        CategoryName = bill.BillCategory.Name,
+        Total = bill.Total,
+        IssueDate = bill.IssueDate,
+        StatusName = bill.Status.GetName()
       };
     }
 
