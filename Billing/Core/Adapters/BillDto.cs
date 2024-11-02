@@ -45,7 +45,7 @@ namespace Empiria.Billing.Adapters {
   /// <summary>Output DTO used to return bill entry data.</summary>
   public class BillEntryDto {
 
-    public string Bill_UID {
+    public string UID {
       get; set;
     }
 

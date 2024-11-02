@@ -33,7 +33,7 @@ namespace Empiria.Billing.Adapters {
     static internal BillEntryDto MapToBillDto(Bill bill) {
 
       BillEntryDto dto = new BillEntryDto();
-      dto.Bill_UID = bill.UID;
+      dto.UID = bill.UID;
       dto.BillNo = bill.BillNo;
       dto.IssueDate = bill.IssueDate;
       dto.IssuedBy = new NamedEntityDto(bill.IssuedBy.UID, bill.IssuedBy.Name);
