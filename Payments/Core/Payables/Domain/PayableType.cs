@@ -8,11 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Financial;
 using Empiria.Ontology;
-using Empiria.Reflection;
 
 namespace Empiria.Payments.Payables {
 
@@ -69,22 +66,15 @@ namespace Empiria.Payments.Payables {
     #region Methods
 
     internal IPayableEntity ParsePayableEntity(string payableEntityUID) {
+      Assertion.Require(payableEntityUID, nameof(payableEntityUID));
 
-      Type type = PayableEntityType.UnderlyingSystemType;
-
-      object instance = ObjectFactory.InvokeParseMethod(type, payableEntityUID);
-
-      return (IPayableEntity) instance;
+      return (IPayableEntity) PayableEntityType.ParseObject(payableEntityUID);
     }
 
 
     internal IPayableEntity ParsePayableEntity(int payableEntityId) {
 
-      Type type = PayableEntityType.UnderlyingSystemType;
-
-      object instance = ObjectFactory.InvokeParseMethod(type, payableEntityId);
-
-      return (IPayableEntity) instance;
+      return (IPayableEntity) PayableEntityType.ParseObject(payableEntityId);
     }
 
     #endregion Methods

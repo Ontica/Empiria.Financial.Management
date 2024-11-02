@@ -53,20 +53,11 @@ namespace Empiria.Payments.Payables {
     public BaseObject ParseLinkedObject(string linkedObjectUID) {
       Assertion.Require(linkedObjectUID, nameof(linkedObjectUID));
 
-      Type type = LinkedObjectType.UnderlyingSystemType;
-
-      object instance = ObjectFactory.InvokeParseMethod(type, linkedObjectUID);
-
-      return (BaseObject) instance;
+      return LinkedObjectType.ParseObject(linkedObjectUID);
     }
 
-    internal BaseObject ParsePayableEntity(int payableEntityId) {
-
-      Type type = LinkedObjectType.UnderlyingSystemType;
-
-      object instance = ObjectFactory.InvokeParseMethod(type, payableEntityId);
-
-      return (BaseObject) instance;
+    internal BaseObject ParseLinkedObject(int payableEntityId) {
+      return LinkedObjectType.ParseObject(payableEntityId);
     }
 
     #endregion Methods
