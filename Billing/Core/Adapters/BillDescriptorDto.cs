@@ -14,7 +14,7 @@ namespace Empiria.Billing.Adapters {
   /// <summary>Output DTO used to return bill descriptor data.</summary>
   public class BillDescriptorDto {
 
-    public string Bill_UID {
+    public string UID {
       get; set;
     }
 
@@ -24,17 +24,17 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    public string IssuedBy {
+    public string IssuedByName {
       get; set;
     }
 
 
-    public string IssuedTo {
+    public string IssuedToName {
       get; set;
     }
 
 
-    public string Category {
+    public string CategoryName {
       get; set;
     }
 
@@ -49,9 +49,12 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    public string Status {
+    public string StatusName {
       get; set;
     }
+
+
+
 
   } // class BillDescriptorDto
 
