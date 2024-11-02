@@ -20,8 +20,8 @@ namespace Empiria.Billing.Adapters {
 
 
     public FileDto File {
-      get;set;
-    } = new FileDto(FileType.Pdf, "");
+      get; set;
+    }
 
 
     public BillEntryDto Bill {

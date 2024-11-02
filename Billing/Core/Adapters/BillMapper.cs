@@ -71,8 +71,7 @@ namespace Empiria.Billing.Adapters {
     static private FileDto GetFileData(Bill bill) {
       
       return new FileDto(FileType.Pdf,
-                         $"https://bnoqsicofin1-b.banobras.gob.mx/sicofin/files/vouchers/" +
-                         $"poliza.2024-08-000007.2cd4a2d3-4951-04f6-9d9a-dca96837580c.pdf");
+                         $"https://bnoqsicofin1-b.banobras.gob.mx/sicofin/files/vouchers/poliza.2024-08-000007.2cd4a2d3-4951-04f6-9d9a-dca96837580c.pdf");
     }
 
 

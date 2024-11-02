@@ -24,7 +24,7 @@ namespace Empiria.Billing.WebApi {
 
     [HttpGet]
     [Route("v2/billing-management/bills/{billUID:guid}")]
-    public SingleObjectModel GetPaymentOrder([FromUri] string billUID) {
+    public SingleObjectModel GetBill([FromUri] string billUID) {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
         
