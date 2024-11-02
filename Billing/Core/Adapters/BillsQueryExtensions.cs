@@ -88,7 +88,9 @@ namespace Empiria.Billing.Adapters {
 
     private static string GetDateRangeFilter(BillsQuery query) {
 
-      if (query.FromDate == null && query.ToDate == null) {
+      if (query.FromDate == ExecutionServer.DateMinValue &&
+          query.ToDate == ExecutionServer.DateMinValue) {
+
         return string.Empty;
       }
 
