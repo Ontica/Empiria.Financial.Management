@@ -8,7 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.History.Services.Adapters;
 using Empiria.StateEnums;
+using Empiria.Storage;
 
 namespace Empiria.Billing.Adapters {
 
@@ -17,14 +19,24 @@ namespace Empiria.Billing.Adapters {
   public class BillDto {
 
 
-    public BillsQuery Query {
+    public FileDto File {
       get;set;
-    } = new BillsQuery();
+    } = new FileDto(FileType.Pdf, "");
 
 
-    public FixedList<BillEntryDto> Bills {
+    public BillEntryDto Bill {
       get; set;
-    } = new FixedList<BillEntryDto>();
+    } = new BillEntryDto();
+
+
+    public FixedList<BillConceptDto> Concepts {
+      get; set;
+    } = new FixedList<BillConceptDto>();
+
+
+    public FixedList<HistoryDto> History {
+      get; set;
+    } = new FixedList<HistoryDto>();
 
 
   } // class BillDto
@@ -109,12 +121,12 @@ namespace Empiria.Billing.Adapters {
   public class BillConceptDto {
 
 
-    public string BillUID {
+    public string UID {
       get; set;
     }
 
 
-    public string BillConceptUID {
+    public string BillUID {
       get; set;
     }
 
@@ -171,17 +183,18 @@ namespace Empiria.Billing.Adapters {
   /// <summary>Output DTO used to return bill tax entry data.</summary>
   public class BillTaxEntryDto {
 
+
+    public string UID {
+      get; set;
+    }
+
+
     public string BillUID {
       get; set;
     }
 
 
     public string BillConceptUID {
-      get; set;
-    }
-
-
-    public string BillTaxEntryUID {
       get; set;
     }
 

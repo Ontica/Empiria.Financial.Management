@@ -34,6 +34,20 @@ namespace Empiria.Tests.Billing {
 
 
     [Fact]
+    public void Get_Bill_By_UID_Test() {
+
+      string billUID = "e810086a-feef-49aa-a5ab-a71bf366912a";
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+        BillDto sut = usecases.GetBill(billUID);
+
+        Assert.NotNull(sut);
+      }
+    }
+
+
+    [Fact]
     public void Get_Bill_List_Test() {
 
       string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;

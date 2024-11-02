@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Empiria.Data;
 
@@ -21,12 +22,30 @@ namespace Empiria.Billing.Data {
     #region Public methods
 
 
+    internal static FixedList<BillConcept> GetBillConceptsByBillId(int billId) {
+
+      var sql = $"SELECT * FROM FMS_BILL_CONCEPTS WHERE BILL_CONCEPT_BILL_ID = {billId}";
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetPlainObjectFixedList<BillConcept>(op);
+    }
+
+
+    internal static List<BillTaxEntry> GetBillTaxesByBillConceptId(int billConceptId) {
+
+      var sql = $"SELECT * FROM FMS_BILL_TAXES WHERE BILL_TAX_BILL_CONCEPT_ID = {billConceptId}";
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetPlainObjectList<BillTaxEntry>(op);
+    }
+
+    
     static internal FixedList<Bill> GetBillList(string filtering, string sorting) {
 
-      var sql = "SELECT * FROM FMS_BILLS ";
+      var sql = "SELECT * FROM FMS_BILLS WHERE BILL_ID > 0 ";
 
       if (!string.IsNullOrWhiteSpace(filtering)) {
-        sql += $"WHERE {filtering} ";
+        sql += $"AND {filtering} ";
       }
 
       if (!string.IsNullOrWhiteSpace(sorting)) {
@@ -76,7 +95,6 @@ namespace Empiria.Billing.Data {
 
       DataWriter.Execute(op);
     }
-
 
     #endregion Public methods
 

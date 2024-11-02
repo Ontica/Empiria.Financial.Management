@@ -45,6 +45,18 @@ namespace Empiria.Billing {
     #region Public properties
 
 
+    [DataField("BILL_CONCEPT_ID")]
+    public int BillConceptId {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_UID")]
+    public string BillConceptUID {
+      get; private set;
+    }
+
+
     [DataField("BILL_CONCEPT_BILL_ID")]
     public Bill Bill {
       get; private set;
@@ -148,7 +160,7 @@ namespace Empiria.Billing {
 
     #endregion Public properties
 
-    #region <ethods
+    #region Methods
 
     internal void Update(BillConceptFields fields) {
 
@@ -165,6 +177,12 @@ namespace Empiria.Billing {
       this.UnitPrice = fields.UnitPrice;
       this.Subtotal = fields.Subtotal;
       this.Discount = fields.Discount;
+    }
+
+
+    static internal FixedList<BillConcept> GetListByBillId(int billId) {
+
+      return BillData.GetBillConceptsByBillId(billId);
     }
 
 

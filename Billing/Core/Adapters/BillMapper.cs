@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using Empiria.Billing.SATMexicoImporter;
+using Empiria.Storage;
 
 namespace Empiria.Billing.Adapters {
 
@@ -16,6 +17,18 @@ namespace Empiria.Billing.Adapters {
   static internal class BillMapper {
 
     #region Public methods
+
+
+    static internal BillDto Map(Bill bill) {
+
+      return new BillDto() {
+        Bill = MapToBillDto(bill),
+        Concepts = MapBillConcepts(bill.Concepts),
+        File = GetFileData(bill)
+      };
+
+    }
+
 
     static internal BillEntryDto MapToBillDto(Bill bill) {
 
@@ -49,24 +62,18 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private BillDescriptorDto MapToBillDescriptorDto(Bill x) {
-
-      return new BillDescriptorDto() {
-        Bill_UID = x.UID,
-        BillNo = x.BillNo,
-        IssuedBy= x.IssuedBy.Name,
-        IssuedTo = x.IssuedTo.Name,
-        Category = x.BillCategory.Name,
-        Total = x.Total,
-        IssueDate = x.IssueDate,
-        Status = x.Status.GetName()
-      };
-    }
-
+    
     #endregion Public methods
 
 
     #region Private methods
+
+    static private FileDto GetFileData(Bill bill) {
+      
+      return new FileDto(FileType.Pdf,
+                         $"https://bnoqsicofin1-b.banobras.gob.mx/sicofin/files/vouchers/" +
+                         $"poliza.2024-08-000007.2cd4a2d3-4951-04f6-9d9a-dca96837580c.pdf");
+    }
 
 
     static private FixedList<BillConceptDto> MapBillConcepts(FixedList<BillConcept> billConcepts) {
@@ -80,11 +87,21 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    private static BillConceptDto MapToBillConceptsDto(BillConcept billConcept) {
+    static private FixedList<BillTaxEntryDto> MapBillTaxes(FixedList<BillTaxEntry> taxEntries) {
+      if (taxEntries.Count == 0) {
+        return new FixedList<BillTaxEntryDto>();
+      }
+      var taxes = taxEntries.Select((x) => MapToBillTaxesDto(x));
+
+      return new FixedList<BillTaxEntryDto>(taxes);
+    }
+
+
+    static private BillConceptDto MapToBillConceptsDto(BillConcept billConcept) {
 
       BillConceptDto conceptDto = new BillConceptDto();
       conceptDto.BillUID = billConcept.Bill.UID;
-      conceptDto.BillConceptUID = billConcept.UID;
+      conceptDto.UID = billConcept.BillConceptUID;
       conceptDto.ProductUID = billConcept.Product.UID;
       conceptDto.Description = billConcept.Description;
       conceptDto.Quantity = billConcept.Quantity;
@@ -99,13 +116,18 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private FixedList<BillTaxEntryDto> MapBillTaxes(FixedList<BillTaxEntry> taxEntries) {
-      if (taxEntries.Count==0) {
-        return new FixedList<BillTaxEntryDto>();
-      }
-      var taxes = taxEntries.Select((x) => MapToBillTaxesDto(x));
+    static private BillDescriptorDto MapToBillDescriptorDto(Bill x) {
 
-      return new FixedList<BillTaxEntryDto>(taxes);
+      return new BillDescriptorDto() {
+        UID = x.UID,
+        BillNo = x.BillNo,
+        IssuedByName = x.IssuedBy.Name,
+        IssuedToName = x.IssuedTo.Name,
+        CategoryName = x.BillCategory.Name,
+        Total = x.Total,
+        IssueDate = x.IssueDate,
+        StatusName = x.Status.GetName()
+      };
     }
 
 
@@ -113,7 +135,7 @@ namespace Empiria.Billing.Adapters {
       BillTaxEntryDto dto = new BillTaxEntryDto();
       dto.BillUID = x.Bill.UID;
       dto.BillConceptUID = x.BillConcept.UID;
-      dto.BillTaxEntryUID = x.UID;
+      dto.UID = x.BillTaxUID;
       dto.TaxMethod = x.TaxMethod;
       dto.TaxFactorType = x.TaxFactorType;
       dto.Factor = x.Factor;

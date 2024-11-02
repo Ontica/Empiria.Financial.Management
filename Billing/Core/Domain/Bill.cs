@@ -226,6 +226,17 @@ namespace Empiria.Billing {
     }
 
 
+    internal void AssignConcepts() {
+
+      this.Concepts = BillConcept.GetListByBillId(Id);
+
+      foreach (var concept in Concepts) {
+
+        concept.TaxEntries = BillTaxEntry.GetListByBillConceptId(concept.BillConceptId);
+      }
+    }
+
+
     internal void Update(BillFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -244,6 +255,7 @@ namespace Empiria.Billing {
       Total = fields.Total;
     }
 
+    
     #endregion Methods
 
   } // class Bill

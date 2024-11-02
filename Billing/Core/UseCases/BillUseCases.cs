@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
@@ -35,6 +36,24 @@ namespace Empiria.Billing.UseCases {
 
     #region Use cases
 
+    public BillDto GetBill(string billUID) {
+      Assertion.Require(billUID, nameof(billUID));
+
+      Bill bill = Bill.Parse(billUID);
+      bill.AssignConcepts();
+
+      return BillMapper.Map(bill);
+    }
+
+    private void AssignConcepts(Bill bill) {
+
+      bill.Concepts = BillConcept.GetListByBillId(bill.Id);
+
+      foreach (var concept in bill.Concepts) {
+
+        concept.TaxEntries = BillTaxEntry.GetListByBillConceptId(concept.Id);
+      }
+    }
 
     public FixedList<BillDescriptorDto> GetBillList(BillsQuery query) {
       Assertion.Require(query, nameof(query));
@@ -127,6 +146,8 @@ namespace Empiria.Billing.UseCases {
 
       return taxesList.ToFixedList();
     }
+
+    
 
 
     #endregion Private methods

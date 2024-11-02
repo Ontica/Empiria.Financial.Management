@@ -16,6 +16,7 @@ using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Billing.Data;
+using System.Collections.Generic;
 
 namespace Empiria.Billing {
 
@@ -45,6 +46,18 @@ namespace Empiria.Billing {
     #endregion Constructors and parsers
 
     #region Properties
+
+    [DataField("BIILL_TAX_ENTRY_ID")]
+    public int BillTaxId {
+      get; private set;
+    }
+
+
+    [DataField("BIILL_TAX_ENTRY_UID")]
+    public string BillTaxUID {
+      get; private set;
+    }
+
 
     [DataField("BILL_TAX_BILL_ID")]
     public Bill Bill {
@@ -121,6 +134,17 @@ namespace Empiria.Billing {
 
     #region Private methods
 
+    internal static FixedList<BillTaxEntry> GetListByBillConceptId(int billConceptId) {
+
+      List<BillTaxEntry> taxList = BillData.GetBillTaxesByBillConceptId(billConceptId);
+      if (taxList.Count == 0) {
+        return new FixedList<BillTaxEntry>();
+      }
+
+      return taxList.ToFixedList();
+    }
+
+
     internal void Update (BillTaxEntryFields fields) {
       this.TaxType = TaxType.Empty;
       this.TaxMethod = fields.TaxMethod;
@@ -139,6 +163,7 @@ namespace Empiria.Billing {
       }
       BillData.WriteBillTaxEntry(this);
     }
+
 
     #endregion Private methods
   } // class BillTaxEntry
