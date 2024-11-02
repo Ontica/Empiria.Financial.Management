@@ -20,7 +20,7 @@ namespace Empiria.Tests.Billing {
 
 
     [Fact]
-    public void Should_Create_A_Bill_From_An_Xml_File() {
+    public void Create_A_Bill_From_An_Xml_File_Test() {
 
       string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
 
@@ -42,7 +42,7 @@ namespace Empiria.Tests.Billing {
 
         BillsQuery query = GetBillsQuery();
 
-        FixedList<BillEntryDto> sut = usecases.GetBillList(query);
+        FixedList<BillDescriptorDto> sut = usecases.GetBillList(query);
 
         Assert.NotNull(sut);
       }

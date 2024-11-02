@@ -17,15 +17,6 @@ namespace Empiria.Billing.Adapters {
 
     #region Public methods
 
-    static internal BillDto MapBillDto(FixedList<Bill> bills, BillsQuery query) {
-
-      return new BillDto {
-        Bills = MapToBillListDto(bills),
-        Query = query
-      };
-    }
-
-
     static internal BillEntryDto MapToBillDto(Bill bill) {
 
       BillEntryDto dto = new BillEntryDto();
@@ -47,14 +38,29 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    internal static FixedList<BillEntryDto> MapToBillListDto(FixedList<Bill> bills) {
+    static internal FixedList<BillDescriptorDto> MapToBillListDto(FixedList<Bill> bills) {
       if (bills.Count == 0) {
-        return new FixedList<BillEntryDto>();
+        return new FixedList<BillDescriptorDto>();
       }
 
-      var billDto = bills.Select((x) => MapToBillDto(x));
+      var billDto = bills.Select((x) => MapToBillDescriptorDto(x));
 
-      return new FixedList<BillEntryDto>(billDto);
+      return new FixedList<BillDescriptorDto>(billDto);
+    }
+
+
+    static private BillDescriptorDto MapToBillDescriptorDto(Bill x) {
+
+      return new BillDescriptorDto() {
+        Bill_UID = x.UID,
+        BillNo = x.BillNo,
+        IssuedBy= x.IssuedBy.Name,
+        IssuedTo = x.IssuedTo.Name,
+        Category = x.BillCategory.Name,
+        Total = x.Total,
+        IssueDate = x.IssueDate,
+        Status = x.Status.GetName()
+      };
     }
 
     #endregion Public methods

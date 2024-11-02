@@ -18,7 +18,7 @@ using Empiria.Services;
 namespace Empiria.Billing.UseCases {
 
   /// <summary>Use cases to manage billing.</summary>
-  internal class BillUseCases : UseCase {
+  public class BillUseCases : UseCase {
 
     #region Constructors and parsers
 
@@ -36,7 +36,7 @@ namespace Empiria.Billing.UseCases {
     #region Use cases
 
 
-    public FixedList<BillEntryDto> GetBillList(BillsQuery query) {
+    public FixedList<BillDescriptorDto> GetBillList(BillsQuery query) {
       Assertion.Require(query, nameof(query));
 
       var filtering = query.MapToFilterString();

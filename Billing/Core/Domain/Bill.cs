@@ -29,6 +29,11 @@ namespace Empiria.Billing {
       // Required by Empiria Framework for all partitioned types.
     }
 
+
+    protected Bill() {
+
+    }
+
     static public Bill Parse(int id) => ParseId<Bill>(id);
 
     static public Bill Parse(string uid) => ParseKey<Bill>(uid);
