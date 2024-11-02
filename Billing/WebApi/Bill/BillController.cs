@@ -22,14 +22,27 @@ namespace Empiria.Billing.WebApi {
     #region Web apis
 
 
+    [HttpGet]
+    [Route("v2/billing-management/bills/{billUID:guid}")]
+    public SingleObjectModel GetPaymentOrder([FromUri] string billUID) {
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+        
+        BillDto bill = usecases.GetBill(billUID);
+
+        return new SingleObjectModel(base.Request, bill);
+      }
+    }
+
+
     [HttpPost]
     [Route("v2/billing-management/bills/search")]
     public CollectionModel SearchBills([FromBody] BillsQuery query) {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
-        FixedList<BillDescriptorDto> payables = usecases.GetBillList(query);
+        FixedList<BillDescriptorDto> billList = usecases.GetBillList(query);
 
-        return new CollectionModel(this.Request, payables);
+        return new CollectionModel(this.Request, billList);
       }
     }
 
