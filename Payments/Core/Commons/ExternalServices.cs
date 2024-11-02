@@ -22,14 +22,18 @@ using Empiria.History.Services.Adapters;
 
 using Empiria.Billing;
 using Empiria.Billing.UseCases;
-using Empiria.Billing.Adapters;
 
 using Empiria.Payments.Payables;
+using Empiria.Payments.Orders;
+
+using Empiria.Payments.Processor;
+using Empiria.Payments.Processor.Services;
 
 namespace Empiria.Payments {
 
   /// <summary>Connect Empiria Payments with external services providers.</summary>
   static internal class ExternalServices {
+
 
     static internal Bill GenerateBill(DocumentDto billDocument) {
       Assertion.Require(billDocument, nameof(billDocument));
@@ -40,7 +44,7 @@ namespace Empiria.Payments {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-                Billing.Adapters.BillDto returnedValue = usecases.CreateBill(billXmlFillPath);
+        Billing.Adapters.BillDto returnedValue = usecases.CreateBill(billXmlFillPath);
 
         return Bill.Parse(returnedValue.UID);
       }
@@ -82,6 +86,17 @@ namespace Empiria.Payments {
 
       return bills.ToFixedList();
     }
+
+
+    static internal PaymentInstruction SendPaymentOrderToPay(PaymentOrder paymentOrder) {
+      Assertion.Require(paymentOrder, nameof(paymentOrder));
+
+      using (var usecases = PaymentService.ServiceInteractor()) {
+
+        return usecases.Pay(paymentOrder);
+      }
+    }
+
 
     static internal DocumentDto StorePayableBillAsDocument(Payable payable,
                                                            InputFile billFile,
