@@ -2,56 +2,52 @@
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Use cases Layer                         *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Use case interactor class               *
-*  Type     : PayableBillUseCases                        License   : Please read LICENSE.txt file            *
+*  Type     : PayableDocumentUseCases                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases for payable bills management.                                                        *
+*  Summary  : Use cases for payable documents management.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Services;
-using Empiria.Storage;
 
-using Empiria.Documents;
 using Empiria.Documents.Services.Adapters;
 
 using Empiria.Billing;
-
-using Empiria.Payments.Payables.Adapters;
+using Empiria.Documents;
 
 namespace Empiria.Payments.Payables.UseCases {
 
   /// <summary>Use cases for payable bills management.</summary>
-  public class PayableBillUseCases : UseCase {
+  public class PayableDocumentUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected PayableBillUseCases() {
+    protected PayableDocumentUseCases() {
       // no-op
     }
 
-    static public PayableBillUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<PayableBillUseCases>();
+    static public PayableDocumentUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<PayableDocumentUseCases>();
     }
 
     #endregion Constructors and parsers
 
     #region Use cases
 
-    public PayableHolderDto AppendPayableBill(string payableUID,
-                                              DocumentFields fields,
-                                              InputFile billFile) {
+    public DocumentDto ProcessPayableDocument(string payableUID,
+                                              DocumentDto documentDto) {
       Assertion.Require(payableUID, nameof(payableUID));
-      Assertion.Require(fields, nameof(fields));
-      Assertion.Require(billFile, nameof(billFile));
+      Assertion.Require(documentDto, nameof(documentDto));
 
-      // ToDo Validar bill con SATXmlReader / Validator
+      if (documentDto.ApplicationContentType.Length == 0) {
+        return documentDto;
+      }
 
       var payable = Payable.Parse(payableUID);
+      var document = Document.Parse(documentDto.UID);
 
-      DocumentDto billAsDocument = ExternalServices.StorePayableBillAsDocument(payable, billFile, fields);
-
-      Bill bill = ExternalServices.GenerateBill(billAsDocument);
+      Bill bill = ExternalServices.GenerateBill(document);
 
       var linkType = PayableLinkType.Bill;
 
@@ -59,19 +55,11 @@ namespace Empiria.Payments.Payables.UseCases {
 
       billLink.Save();
 
-      return PayableHolderMapper.Map(payable);
-    }
-
-
-    public void DeletePayableBill(string payableUID, string billUID) {
-      Assertion.Require(payableUID, nameof(payableUID));
-      Assertion.Require(billUID, nameof(billUID));
-
-      throw new NotImplementedException();
+      return ExternalServices.UpdatePayableDocumentWithBillData(payable, document, bill);
     }
 
     #endregion Use cases
 
-  }  // class PayableBillUseCases
+  }  // class PayableDocumentUseCases
 
 }  // namespace Empiria.Payments.Payables.UseCases

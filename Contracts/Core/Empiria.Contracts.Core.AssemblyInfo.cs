@@ -18,3 +18,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 [assembly: InternalsVisibleTo("Empiria.Contracts.Core.Tests")]
+[assembly: InternalsVisibleTo("Empiria.Contracts.WebApi")]
