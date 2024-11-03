@@ -187,6 +187,10 @@ namespace Empiria.Payments.Payables {
 
     #region Methods
 
+    public BaseObject GetPayableEntity() {
+      return PayableType.PayableEntityType.ParseObject(_payableEntityId);
+    }
+
     protected override void OnBeforeSave() {
       if (base.IsNew) {
         this.payableNo = GeneratePayableNo();

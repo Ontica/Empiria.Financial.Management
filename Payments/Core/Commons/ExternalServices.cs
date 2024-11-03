@@ -11,23 +11,21 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Storage;
-
 using Empiria.Documents;
 using Empiria.Documents.Services;
 using Empiria.Documents.Services.Adapters;
 
-using Empiria.History.Services;
-using Empiria.History.Services.Adapters;
-
 using Empiria.Billing;
 using Empiria.Billing.UseCases;
+
+using Empiria.Contracts;
 
 using Empiria.Payments.Payables;
 using Empiria.Payments.Orders;
 
 using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Services;
+
 
 namespace Empiria.Payments {
 
@@ -98,10 +96,25 @@ namespace Empiria.Payments {
 
     static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
 
+      DocumentLinkServices.CreateLink(document, bill);
+
+      DocumentLinkServices.CreateLink(document, payable.GetPayableEntity());
+
+      if (payable.GetPayableEntity() is ContractMilestone contractMilestone) {
+        DocumentLinkServices.CreateLink(document, contractMilestone.Contract);
+
+        foreach (var contractDocument in DocumentServices.GetEntityDocuments(contractMilestone.Contract)) {
+          DocumentLinkServices.CreateLink(Document.Parse(contractDocument.UID), bill);
+        }
+      }
+
       var fields = new DocumentFields {
         UID = document.UID,
         DocumentNo = bill.BillNo,
-        DocumentDate = bill.IssueDate
+        DocumentDate = bill.IssueDate,
+        SourcePartyUID = bill.IssuedBy.UID,
+        TargetPartyUID = bill.IssuedTo.UID,
+        Description = payable.Description
       };
 
       return DocumentServices.UpdateDocument(payable, document, fields);
