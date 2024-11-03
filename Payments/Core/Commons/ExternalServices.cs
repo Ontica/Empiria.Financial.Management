@@ -34,7 +34,6 @@ namespace Empiria.Payments {
   /// <summary>Connect Empiria Payments with external services providers.</summary>
   static internal class ExternalServices {
 
-
     static internal Bill GenerateBill(DocumentDto billDocument) {
       Assertion.Require(billDocument, nameof(billDocument));
 
@@ -98,17 +97,28 @@ namespace Empiria.Payments {
     }
 
 
-    static internal DocumentDto StorePayableBillAsDocument(Payable payable,
-                                                           InputFile billFile,
-                                                           DocumentFields fields) {
-      Assertion.Require(payable, nameof(payable));
-      Assertion.Require(billFile, nameof(billFile));
+    static internal DocumentDto DeleteDocument(string documentUID) {
+
+      using (var services = DocumentServices.ServiceInteractor()) {
+        return services.DeleteDocument(documentUID);
+      }
+    }
+
+
+    static internal DocumentDto StoreDocument(BaseObject baseObject, DocumentFields fields, InputFile inputFile) {
+      Assertion.Require(baseObject, nameof(baseObject));
+      Assertion.Require(inputFile, nameof(inputFile));
       Assertion.Require(fields, nameof(fields));
 
       using (var services = DocumentServices.ServiceInteractor()) {
 
-        return services.CreateDocument(billFile, payable, fields);
+        return services.CreateDocument(inputFile, baseObject, fields);
       }
+    }
+
+
+    static internal string GetEntityDocumentsEditionUrl(Payable payable) {
+      return $"v2/payments-management/payables/{payable.UID}/documents";
     }
 
 
@@ -125,6 +135,20 @@ namespace Empiria.Payments {
       items.Add(item);
 
       return items.ToFixedList();
+    }
+
+
+    static internal DocumentDto UpdatePayableBillDocument(Payable payable, Bill bill, DocumentDto document) {
+
+      var fields = new DocumentFields {
+        UID = document.UID,
+        DocumentNo = bill.BillNo,
+        DocumentDate = bill.IssueDate
+      };
+
+      using (var services = DocumentServices.ServiceInteractor()) {
+        return services.UpdateDocument(fields);
+      }
     }
 
   }  // class ExternalServices

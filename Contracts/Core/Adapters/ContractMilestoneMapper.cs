@@ -33,7 +33,6 @@ namespace Empiria.Contracts.Adapters {
         Total = milestone.GetTotal(),
         Status = milestone.Status.MapToDto(),
         Items = ContractMilestoneItemMapper.Map(milestone.GetItems())
-        //PaymentExtData = milestone.PaymentData.,
       };
     }
 

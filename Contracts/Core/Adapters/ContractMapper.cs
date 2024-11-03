@@ -20,8 +20,8 @@ namespace Empiria.Contracts.Adapters {
         Contract = MapContract(contract),
         Items = ContractItemMapper.Map(contract.GetItems()),
         Milestones = ContractMilestoneMapper.Map(contract.GetMilestones()),
-        Documents = new FixedList<Documents.Document>(),
-        History = new FixedList<Documents.Document>(),
+        Documents = ExternalServices.GetEntityDocuments(contract),
+        History = ExternalServices.GetEntityHistory(contract),
       };
     }
 

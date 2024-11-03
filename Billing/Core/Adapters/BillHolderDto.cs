@@ -8,36 +8,32 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using Empiria.Documents;
-using Empiria.History.Services.Adapters;
+
 using Empiria.StateEnums;
-using Empiria.Storage;
+
+using Empiria.Documents.Services.Adapters;
+using Empiria.History.Services.Adapters;
 
 namespace Empiria.Billing.Adapters {
-
 
   /// <summary>Output DTO used to return bill data.</summary>
   public class BillHolderDto {
 
     public BillDto Bill {
-      get; set;
-    } = new BillDto();
-
+      get; internal set;
+    }
 
     public FixedList<BillConceptDto> Concepts {
-      get; set;
-    } = new FixedList<BillConceptDto>();
-
-
-    public FixedList<Document> Documents {
       get; internal set;
-    } = new FixedList<Document>();
-    
+    }
+
+    public FixedList<DocumentDto> Documents {
+      get; internal set;
+    }
 
     public FixedList<HistoryDto> History {
-      get; set;
-    } = new FixedList<HistoryDto>();
-
+      get; internal set;
+    }
 
   } // class BillDto
 
@@ -46,32 +42,32 @@ namespace Empiria.Billing.Adapters {
   public class BillDto {
 
     public string UID {
-      get; set;
+      get; internal set;
     }
 
 
     public string BillNo {
-      get; set;
+      get; internal set;
     }
 
 
     public NamedEntityDto BillType {
-      get; set;
+      get; internal set;
     } = new NamedEntityDto("", "");
 
 
     public DateTime IssueDate {
-      get; set;
+      get; internal set;
     }
 
 
     public NamedEntityDto IssuedBy {
-      get; set;
+      get; internal set;
     } = new NamedEntityDto("","");
 
 
     public NamedEntityDto IssuedTo {
-      get; set;
+      get; internal set;
     } = new NamedEntityDto("", "");
 
 
@@ -81,44 +77,44 @@ namespace Empiria.Billing.Adapters {
 
 
     public string CurrencyCode {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Subtotal {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Discount {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Total {
-      get; set;
+      get; internal set;
     }
 
 
     public NamedEntityDto PostedBy {
-      get; set;
+      get; internal set;
     } = new NamedEntityDto("", "");
 
 
     public DateTime PostingTime {
-      get; set;
+      get; internal set;
     }
 
 
     public NamedEntityDto Status {
-      get; set;
+      get; internal set;
     } = new NamedEntityDto("", "");
 
 
     public FixedList<BillConceptDto> Concepts {
-      get; set;
+      get; internal set;
     } = new FixedList<BillConceptDto>();
-    
+
   } // Class BillEntryDto
 
 

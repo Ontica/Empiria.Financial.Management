@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using Empiria.Billing.SATMexicoImporter;
+using Empiria.Data;
 using Empiria.Storage;
 
 namespace Empiria.Billing.Adapters {
@@ -23,7 +24,9 @@ namespace Empiria.Billing.Adapters {
 
       return new BillHolderDto() {
         Bill = MapToBillDto(bill),
-        Concepts = MapBillConcepts(bill.Concepts)
+        Concepts = MapBillConcepts(bill.Concepts),
+        Documents = ExternalServices.GetEntityDocuments(bill),
+        History = ExternalServices.GetEntityHistory(bill),
       };
 
     }
@@ -62,9 +65,8 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    
-    #endregion Public methods
 
+    #endregion Public methods
 
     #region Private methods
 

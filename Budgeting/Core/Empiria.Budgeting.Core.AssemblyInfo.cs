@@ -18,3 +18,5 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 [assembly: InternalsVisibleTo("Empiria.Budgeting.Core.Tests")]
+[assembly: InternalsVisibleTo("Empiria.Budgeting.Transactions")]
+[assembly: InternalsVisibleTo("Empiria.Budgeting.WebApi")]
