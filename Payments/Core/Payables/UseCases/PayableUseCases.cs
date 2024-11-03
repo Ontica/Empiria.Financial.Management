@@ -162,7 +162,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
       var payable = Payable.Parse(payableUID);
 
-      PayableItem payableItem = payable.CreateItem();
+      PayableItem payableItem = new PayableItem(payable);
 
       payableItem.Update(fields);
 

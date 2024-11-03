@@ -23,7 +23,6 @@ using Empiria.Budgeting;
 
 using Empiria.Payments.Payables.Adapters;
 using Empiria.Payments.Payables.Data;
-using Empiria.Payments.Orders;
 
 namespace Empiria.Payments.Payables {
 
@@ -229,15 +228,28 @@ namespace Empiria.Payments.Payables {
 
       fields.EnsureValid();
 
-      this.Description = fields.Description;
-      this.OrganizationalUnit = OrganizationalUnit.Parse(fields.OrganizationalUnitUID);
-      this.PayTo = Party.Parse(fields.PayToUID);
-      this.BudgetType = BudgetType.Parse(fields.BudgetTypeUID);
-      this.Currency = Currency.Parse(fields.CurrencyUID);
-      this.DueTime = fields.DueTime;
-      this.RequestedTime = fields.RequestedTime;
-      this.UpdatePaymentData(fields);
+      Description = GetDescription(fields.Description);
+      OrganizationalUnit = OrganizationalUnit.Parse(fields.OrganizationalUnitUID);
+      PayTo = Party.Parse(fields.PayToUID);
+      BudgetType = BudgetType.Parse(fields.BudgetTypeUID);
+      Currency = Currency.Parse(fields.CurrencyUID);
+      DueTime = fields.DueTime;
+      RequestedTime = fields.RequestedTime;
+
+      UpdatePaymentData(fields);
     }
+
+
+    private string GetDescription(string description) {
+      description = EmpiriaString.Clean(description);
+
+      if (description.Length != 0) {
+        return description;
+      } else {
+        return PayableEntity.Description;
+      }
+    }
+
 
     #endregion Methods
 
@@ -250,12 +262,7 @@ namespace Empiria.Payments.Payables {
 
       _items.Value.Add(payableItem);
 
-      Total += payableItem.Subtotal;
-    }
-
-
-    internal PayableItem CreateItem() {
-      return new PayableItem(this);
+      Total += payableItem.Total;
     }
 
 
@@ -287,7 +294,7 @@ namespace Empiria.Payments.Payables {
 
       payableItem.Delete();
 
-      Total -= payableItem.Subtotal;
+      Total -= payableItem.Total;
 
       return payableItem;
     }
@@ -301,13 +308,13 @@ namespace Empiria.Payments.Payables {
 
       _items.Value.Remove(payableItem);
 
-      Total -= payableItem.Subtotal;
+      Total -= payableItem.Total;
 
       payableItem.Update(fields);
 
       _items.Value.Add(payableItem);
 
-      Total += payableItem.Subtotal;
+      Total += payableItem.Total;
 
       return payableItem;
     }
@@ -333,7 +340,6 @@ namespace Empiria.Payments.Payables {
       } else {
         this.PaymentAccount = PaymentAccount.Empty;
       }
-
     }
 
     #endregion Helpers

@@ -11,13 +11,14 @@
 
 using System;
 
-using Empiria.Contacts;
 using Empiria.Financial;
 using Empiria.Json;
+using Empiria.Parties;
 using Empiria.Products;
 using Empiria.StateEnums;
 
 using Empiria.Budgeting;
+using Empiria.Billing;
 
 using Empiria.Payments.Payables.Adapters;
 using Empiria.Payments.Payables.Data;
@@ -109,9 +110,9 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    public decimal Subtotal {
+    public decimal Total {
       get {
-        return Math.Round(UnitPrice * Quantity * ExchangeRate);
+        return Math.Round(UnitPrice * Quantity * ExchangeRate, 2);
       }
     }
 
@@ -119,6 +120,21 @@ namespace Empiria.Payments.Payables {
     [DataField("PAYABLE_ITEM_BDG_ACCT_ID")]
     public BudgetAccount BudgetAccount {
       get; private set;
+    }
+
+    public bool HasBillConcept {
+      get {
+        return !BillConcept.IsEmptyInstance;
+      }
+    }
+
+    public BillConcept BillConcept {
+      get {
+        return ExtData.Get("billConceptId", BillConcept.Empty);
+      }
+      private set {
+        ExtData.SetIf("billConceptId", value.Id, !value.IsEmptyInstance);
+      }
     }
 
 
@@ -129,7 +145,7 @@ namespace Empiria.Payments.Payables {
 
 
     [DataField("PAYABLE_ITEM_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -145,26 +161,29 @@ namespace Empiria.Payments.Payables {
       get; private set;
     } = EntityStatus.Pending;
 
+
     #endregion Properties
 
     #region Methods
 
-
-    protected override void OnBeforeSave() {
-      if (base.IsNew) {
-        this.PostedBy = ExecutionServer.CurrentContact;
-        this.PostingTime = DateTime.Now;
-      }
+    internal void Delete() {
+      this.Status = EntityStatus.Deleted;
     }
 
 
     protected override void OnSave() {
+      if (base.IsNew) {
+        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        this.PostingTime = DateTime.Now;
+      }
       PayableData.WritePayableItem(this, this.ExtData.ToString());
     }
 
 
-    internal void Delete() {
-      this.Status = EntityStatus.Deleted;
+    internal void SetBillConcept(BillConcept billConcept) {
+      Assertion.Require(billConcept, nameof(billConcept));
+
+      this.BillConcept = billConcept;
     }
 
 
@@ -179,9 +198,9 @@ namespace Empiria.Payments.Payables {
       this.PayableEntityItem = fields.EntityItemId;
       this.Description = fields.Description;
       this.Quantity = fields.Quantity;
+      this.UnitPrice = fields.UnitPrice;
       this.Currency = Currency.Parse(fields.CurrencyUID);
       this.ExchangeRate = fields.ExchangeRate;
-      this.UnitPrice = fields.UnitPrice;
       this.BudgetAccount = BudgetAccount.Parse(fields.BudgetAccountUID);
     }
 

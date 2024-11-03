@@ -2,20 +2,21 @@
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Service Layer                           *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Service                                 *
-*  Type     : PayableServices                            License   : Please read LICENSE.txt file            *
+*  Type     : PayableItemGenerator                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Service to import payable itemsa and management from payableEntities.                          *
+*  Summary  : Service used to generate payable items from payable entities interfaces.                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-
 using System.Collections.Generic;
+
 using Empiria.Financial;
+
 using Empiria.Payments.Payables.Adapters;
 
 namespace Empiria.Payments.Payables {
 
-  /// <summary>Service to import payable itemsa and management from payableEntities.</summary>
+  /// <summary>Service used to generate payable items from payable entities interfaces.</summary>
   internal class PayableItemGenerator {
 
     #region Constructors and parsers
@@ -45,7 +46,7 @@ namespace Empiria.Payments.Payables {
       List<PayableItem> payableItems = new List<PayableItem>();
 
       foreach (var entityItem in entityItems) {
-        PayableItemFields fields = TransformEntityItmeToPayableItem(this.Payable,entityItem);
+        PayableItemFields fields = TransformEntityItemToPayableItem(this.Payable, entityItem);
 
         PayableItem payableItem = AddPayableItem(fields);
 
@@ -60,7 +61,7 @@ namespace Empiria.Payments.Payables {
     #region Helpers
 
     private PayableItem AddPayableItem(PayableItemFields fields) {
-      PayableItem payableItem = this.Payable.CreateItem();
+      var payableItem = new PayableItem(this.Payable);
 
       payableItem.Update(fields);
 
@@ -72,7 +73,7 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    private PayableItemFields TransformEntityItmeToPayableItem(Payable payable, IPayableEntityItem entityItem) {
+    private PayableItemFields TransformEntityItemToPayableItem(Payable payable, IPayableEntityItem entityItem) {
       return new PayableItemFields {
         PayableUID = this.Payable.UID,
         BudgetAccountUID = entityItem.BudgetAccount.UID,
@@ -82,8 +83,8 @@ namespace Empiria.Payments.Payables {
         Description = entityItem.Description,
         Quantity = entityItem.Quantity,
         UnitPrice = entityItem.UnitPrice,
-        CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e", //Todo 
-        ExchangeRate = 1m, //Todo
+        CurrencyUID = entityItem.Currency.UID,
+        ExchangeRate = decimal.One
       };
     }
 
