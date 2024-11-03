@@ -31,6 +31,7 @@ namespace Empiria.Payments.Payables.Adapters {
         EntityNo = payableEntity.EntityNo,
         Name = payableEntity.Name,
         Description = payableEntity.Description,
+        PayTo = payableEntity.PayTo.MapToNamedEntity(),
         Items = MapItems(payableEntity.Items)
       };
     }

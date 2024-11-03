@@ -123,6 +123,10 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto PayTo {
+      get; internal set;
+    }
+
     public FixedList<PayableEntityItemDto> Items {
       get; internal set;
     }
