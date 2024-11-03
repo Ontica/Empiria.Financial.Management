@@ -146,11 +146,11 @@ namespace Empiria.Contracts {
 
     string IPayableEntity.EntityNo {
       get {
-        return this.Contract.ContractNo;
+        return this.MilestoneNo;
       }
     }
 
-    INamedEntity IPayableEntity.Supplier {
+    INamedEntity IPayableEntity.PayTo {
       get {
         return this.Supplier;
       }

@@ -165,11 +165,27 @@ namespace Empiria.Contracts {
 
     #region IPayableEntityItem interface
 
+
     INamedEntity IPayableEntityItem.BudgetAccount {
       get {
         return this.BudgetAccount;
       }
     }
+
+
+    INamedEntity IPayableEntityItem.Currency {
+      get {
+        return Currency.Default;
+      }
+    }
+
+
+    string IPayableEntityItem.Description {
+      get {
+        return this.Name;
+      }
+    }
+
 
     INamedEntity IPayableEntityItem.Product {
       get {
@@ -177,11 +193,13 @@ namespace Empiria.Contracts {
       }
     }
 
+
     INamedEntity IPayableEntityItem.Unit {
       get {
         return this.ProductUnit;
       }
     }
+
 
     #endregion IPayableEntityItem interface
 
