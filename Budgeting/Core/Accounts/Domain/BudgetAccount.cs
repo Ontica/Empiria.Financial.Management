@@ -60,10 +60,29 @@ namespace Empiria.Budgeting {
 
     public string Name {
       get {
-        return "Nombre de la cuenta";
+        return $"[{Segment_2.Code}] - {Segment_2.Name}";
       }
     }
 
+    [DataField("BDG_ACCT_SEGMENT_01_ID")]
+    private BudgetAccountSegment Segment_1 {
+      get; set;
+    }
+
+    [DataField("BDG_ACCT_SEGMENT_02_ID")]
+    private BudgetAccountSegment Segment_2 {
+      get; set;
+    }
+
+    [DataField("BDG_ACCT_SEGMENT_03_ID")]
+    private BudgetAccountSegment Segment_3 {
+      get; set;
+    }
+
+    [DataField("BDG_ACCT_SEGMENT_04_ID")]
+    private BudgetAccountSegment Segment_4 {
+      get; set;
+    }
 
     [DataField("BDG_ACCT_EXT_DATA")]
     private JsonObject ExtData {
