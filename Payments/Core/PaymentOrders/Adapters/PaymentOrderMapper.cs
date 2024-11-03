@@ -21,7 +21,39 @@ namespace Empiria.Payments.Orders.Adapters {
         Items = PayableItemMapper.Map(paymentOrder.Payable.GetItems()),
         Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
         Documents = ExternalServices.GetEntityDocuments(paymentOrder),
-        History = ExternalServices.GetEntityHistory(paymentOrder)
+        History = ExternalServices.GetEntityHistory(paymentOrder),
+        Actions = MapActions(paymentOrder)
+      };
+    }
+
+    static internal FixedList<PaymentOrderDescriptor> MapToDescriptor(FixedList<PaymentOrder> orders) {
+      return orders.Select(x => MapToDescriptor(x)).ToFixedList();
+    }
+
+    #region Helpers
+
+    static private PaymentOrderDescriptor MapToDescriptor(PaymentOrder paymentOrder) {
+      return new PaymentOrderDescriptor {
+        UID = paymentOrder.UID,
+        PaymentOrderTypeName = paymentOrder.PaymentOrderType.Name,
+        PaymentOrderNo = paymentOrder.PaymentOrderNo,
+        PayTo = paymentOrder.PayTo.Name,
+        PaymentMethod = paymentOrder.PaymentMethod.Name,
+        Total = paymentOrder.Total,
+        Currency = paymentOrder.Currency.Name,
+        RequestedBy = paymentOrder.RequestedBy.Name,
+        RequestedDate = paymentOrder.RequestedTime,
+        DueTime = paymentOrder.DueTime,
+        StatusName = paymentOrder.Status.GetName()
+      };
+    }
+
+    private static PaymentOrderActions MapActions(PaymentOrder paymentOrder) {
+      return new PaymentOrderActions {
+        CanDelete = true,
+        CanUpdate = true,
+        CanEditDocuments = true,
+        CanSendToPay = true
       };
     }
 
@@ -39,26 +71,8 @@ namespace Empiria.Payments.Orders.Adapters {
       };
     }
 
-    static internal FixedList<PaymentOrderDescriptor> MapToDescriptor(FixedList<PaymentOrder> orders) {
-      return orders.Select(x => MapToDescriptor(x)).ToFixedList();
-    }
+    #endregion Helpers
 
-    static internal PaymentOrderDescriptor MapToDescriptor(PaymentOrder paymentOrder) {
-      return new PaymentOrderDescriptor {
-        UID = paymentOrder.UID,
-        PaymentOrderTypeName = paymentOrder.PaymentOrderType.Name,
-        PaymentOrderNo = paymentOrder.PaymentOrderNo,
-        PayTo = paymentOrder.PayTo.Name,
-        PaymentMethod = paymentOrder.PaymentMethod.Name,
-        Total = paymentOrder.Total,
-        Currency = paymentOrder.Currency.Name,
-        RequestedBy = paymentOrder.RequestedBy.Name,
-        RequestedDate = paymentOrder.RequestedTime,
-        DueTime = paymentOrder.DueTime,
-        StatusName = paymentOrder.Status.GetName()
-      };
-    }
-
-  }  // class ContractMapper
+  }  // class PaymentOrderMapper
 
 }  // namespace Empiria.Payments.Contracts.Adapters

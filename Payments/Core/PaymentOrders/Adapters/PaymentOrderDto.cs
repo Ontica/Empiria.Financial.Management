@@ -43,12 +43,19 @@ namespace Empiria.Payments.Orders.Adapters {
     }
 
 
-    public ActionsDto Actions {
+    public PaymentOrderActions Actions {
       get; internal set;
     }
 
   }  // class PaymentOrderHolderDto
 
+  public class PaymentOrderActions : BaseActions {
+
+    public bool CanSendToPay {
+      get; internal set;
+    }
+
+  }
 
   /// <summary>Output DTO used to return a payment order.</summary>
   public class PaymentOrderDto {

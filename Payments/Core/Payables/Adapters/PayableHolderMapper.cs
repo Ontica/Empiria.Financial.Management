@@ -23,43 +23,24 @@ namespace Empiria.Payments.Payables.Adapters {
         Items = MapPayableItems(payable.GetItems()),
         Bills = ExternalServices.GetPayableBills(payable),
         Documents = ExternalServices.GetEntityDocuments(payable),
+        DocumentsEditionUrl = ExternalServices.GetEntityDocumentsEditionUrl(payable),
         History = ExternalServices.GetEntityHistory(payable),
         Actions = MapActions(),
       };
 
     }
 
-
     #region Private Methods
 
-    static private ActionsDto MapActions() {
-
-      return new ActionsDto {
-        Can = MapCanDto(),
-        Show = MapShowDto()
+    static private PayableActions MapActions() {
+      return new PayableActions {
+        CanDelete = true,
+        CanUpdate = true,
+        CanEditDocuments = true,
+        CanGeneratePaymentOrder = true,
       };
-
     }
 
-
-    static private CanDto MapCanDto() {
-
-      return new CanDto {
-        Delete = true,
-        Update = true
-      };
-
-    }
-
-
-    static private ShowDto MapShowDto() {
-
-      return new ShowDto {
-        PayablesData = true,
-        PaymentsData = false
-      };
-
-    }
 
     static private FixedList<PayableDataItemDto> MapPayableItems(FixedList<PayableItem> payableItems) {
 
