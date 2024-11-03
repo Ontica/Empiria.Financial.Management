@@ -55,7 +55,20 @@ namespace Empiria.Payments.Payables.UseCases {
 
       billLink.Save();
 
+      SetPayableBillConcepts(payable.GetItems(), bill.Concepts);
+
       return ExternalServices.UpdatePayableDocumentWithBillData(payable, document, bill);
+    }
+
+    private void SetPayableBillConcepts(FixedList<PayableItem> payableItems,
+                                        FixedList<BillConcept> billConcepts) {
+      for (int i = 0; i < payableItems.Count; i++) {
+        PayableItem payableItem = payableItems[i];
+        if (i <= billConcepts.Count - 1) {
+          payableItem.SetBillConcept(billConcepts[i]);
+          payableItem.Save();
+        }
+      }
     }
 
     #endregion Use cases
