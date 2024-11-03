@@ -8,6 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Documents.Services;
+using Empiria.History.Services;
+
 using Empiria.StateEnums;
 
 namespace Empiria.Contracts.Adapters {
@@ -20,8 +23,8 @@ namespace Empiria.Contracts.Adapters {
         Contract = MapContract(contract),
         Items = ContractItemMapper.Map(contract.GetItems()),
         Milestones = ContractMilestoneMapper.Map(contract.GetMilestones()),
-        Documents = ExternalServices.GetEntityDocuments(contract),
-        History = ExternalServices.GetEntityHistory(contract),
+        Documents = DocumentServices.GetEntityDocuments(contract),
+        History = HistoryServices.GetEntityHistory(contract),
       };
     }
 
@@ -45,14 +48,13 @@ namespace Empiria.Contracts.Adapters {
     }
 
 
-  static internal FixedList<ContractDescriptor> MapToDescriptor(FixedList<Contract> contracts) {
+    static internal FixedList<ContractDescriptor> MapToDescriptor(FixedList<Contract> contracts) {
       return contracts.Select(contract => MapToDescriptor(contract))
-                .ToFixedList();
-
+                       .ToFixedList();
     }
 
 
-    private static ContractDescriptor MapToDescriptor(Contract contract) {
+    static private ContractDescriptor MapToDescriptor(Contract contract) {
       return new ContractDescriptor {
         UID = contract.UID,
         ContractNo = contract.ContractNo,
@@ -66,10 +68,9 @@ namespace Empiria.Contracts.Adapters {
         Currency = contract.Currency.Name,
         ToDate = contract.ToDate,
         FromDate = contract.FromDate,
-        StatusName = EntityStatusEnumExtensions.GetName(contract.Status),
+        StatusName = contract.Status.GetName(),
         Total = contract.Total,
       };
-
     }
 
   }  // class ContractMapper

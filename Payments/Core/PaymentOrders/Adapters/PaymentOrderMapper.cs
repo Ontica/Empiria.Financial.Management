@@ -8,6 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Documents.Services;
+using Empiria.History.Services;
+
 using Empiria.Payments.Payables.Adapters;
 
 namespace Empiria.Payments.Orders.Adapters {
@@ -20,8 +23,8 @@ namespace Empiria.Payments.Orders.Adapters {
         PaymentOrder = MapPaymentOrder(paymentOrder),
         Items = PayableItemMapper.Map(paymentOrder.Payable.GetItems()),
         Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
-        Documents = ExternalServices.GetEntityDocuments(paymentOrder),
-        History = ExternalServices.GetEntityHistory(paymentOrder),
+        Documents = DocumentServices.GetEntityDocuments(paymentOrder),
+        History = HistoryServices.GetEntityHistory(paymentOrder),
         Actions = MapActions(paymentOrder)
       };
     }

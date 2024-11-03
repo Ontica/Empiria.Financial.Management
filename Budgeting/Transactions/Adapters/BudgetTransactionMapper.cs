@@ -8,7 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Documents;
+using Empiria.Documents.Services;
+using Empiria.History.Services;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
@@ -21,8 +22,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return new BudgetTransactionHolderDto {
         Transaction = MapTransaction(transaction),
         Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
-        Documents = ExternalServices.GetEntityDocuments(transaction),
-        History = ExternalServices.GetEntityHistory(transaction),
+        Documents = DocumentServices.GetEntityDocuments(transaction),
+        History = HistoryServices.GetEntityHistory(transaction),
       };
     }
 
@@ -33,16 +34,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     #endregion Public mappers
 
     #region Helpers
-
-    static private FixedList<Document> MapHistory(BudgetTransaction transaction) {
-      return new FixedList<Document>();
-    }
-
-
-    static private FixedList<Document> MapDocuments(BudgetTransaction transaction) {
-      return new FixedList<Document>();
-    }
-
 
     static private BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
       return new BudgetTransactionDto {

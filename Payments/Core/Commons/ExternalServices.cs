@@ -34,38 +34,16 @@ namespace Empiria.Payments {
   /// <summary>Connect Empiria Payments with external services providers.</summary>
   static internal class ExternalServices {
 
-    static internal Bill GenerateBill(DocumentDto billDocument) {
+    static internal Bill GenerateBill(Document billDocument) {
       Assertion.Require(billDocument, nameof(billDocument));
 
-      var document = Document.Parse(billDocument.UID);
-
-      string billXmlFillPath = document.FullLocalName;
+      string billXmlFillPath = billDocument.FullLocalName;
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
         Billing.Adapters.BillDto returnedValue = usecases.CreateBill(billXmlFillPath);
 
         return Bill.Parse(returnedValue.UID);
-      }
-    }
-
-
-    static internal FixedList<DocumentDto> GetEntityDocuments(BaseObject entity) {
-      Assertion.Require(entity, nameof(entity));
-
-      using (var services = DocumentServices.ServiceInteractor()) {
-
-        return services.GetEntityDocuments(entity);
-      }
-    }
-
-
-    static internal FixedList<HistoryDto> GetEntityHistory(BaseObject entity) {
-      Assertion.Require(entity, nameof(entity));
-
-      using (var services = HistoryServices.ServiceInteractor()) {
-
-        return services.GetEntityHistory(entity);
       }
     }
 
@@ -97,26 +75,6 @@ namespace Empiria.Payments {
     }
 
 
-    static internal DocumentDto DeleteDocument(string documentUID) {
-
-      using (var services = DocumentServices.ServiceInteractor()) {
-        return services.DeleteDocument(documentUID);
-      }
-    }
-
-
-    static internal DocumentDto StoreDocument(BaseObject baseObject, DocumentFields fields, InputFile inputFile) {
-      Assertion.Require(baseObject, nameof(baseObject));
-      Assertion.Require(inputFile, nameof(inputFile));
-      Assertion.Require(fields, nameof(fields));
-
-      using (var services = DocumentServices.ServiceInteractor()) {
-
-        return services.CreateDocument(inputFile, baseObject, fields);
-      }
-    }
-
-
     static internal string GetEntityDocumentsEditionUrl(Payable payable) {
       return $"v2/payments-management/payables/{payable.UID}/documents";
     }
@@ -138,7 +96,7 @@ namespace Empiria.Payments {
     }
 
 
-    static internal DocumentDto UpdatePayableBillDocument(Payable payable, Bill bill, DocumentDto document) {
+    static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
 
       var fields = new DocumentFields {
         UID = document.UID,
@@ -146,9 +104,7 @@ namespace Empiria.Payments {
         DocumentDate = bill.IssueDate
       };
 
-      using (var services = DocumentServices.ServiceInteractor()) {
-        return services.UpdateDocument(fields);
-      }
+      return DocumentServices.UpdateDocument(payable, document, fields);
     }
 
   }  // class ExternalServices

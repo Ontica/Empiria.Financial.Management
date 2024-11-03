@@ -7,10 +7,9 @@
 *  Summary  : Mapping methods for bill.                                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-using Empiria.Billing.SATMexicoImporter;
-using Empiria.Data;
-using Empiria.Storage;
+
+using Empiria.Documents.Services;
+using Empiria.History.Services;
 
 namespace Empiria.Billing.Adapters {
 
@@ -19,99 +18,78 @@ namespace Empiria.Billing.Adapters {
 
     #region Public methods
 
-
     static internal BillHolderDto Map(Bill bill) {
 
       return new BillHolderDto() {
         Bill = MapToBillDto(bill),
         Concepts = MapBillConcepts(bill.Concepts),
-        Documents = ExternalServices.GetEntityDocuments(bill),
-        History = ExternalServices.GetEntityHistory(bill),
+        Documents = DocumentServices.GetEntityDocuments(bill),
+        History = HistoryServices.GetEntityHistory(bill),
       };
 
     }
 
 
     static internal BillDto MapToBillDto(Bill bill) {
-
-      BillDto dto = new BillDto();
-      dto.UID = bill.UID;
-      dto.BillNo = bill.BillNo;
-      dto.BillType = new NamedEntityDto(bill.BillType.UID, bill.BillType.DisplayName);
-      dto.IssueDate = bill.IssueDate;
-      dto.IssuedBy = new NamedEntityDto(bill.IssuedBy.UID, bill.IssuedBy.Name);
-      dto.IssuedTo = new NamedEntityDto(bill.IssuedTo.UID, bill.IssuedTo.Name);
-      dto.ManagedBy = new NamedEntityDto(bill.ManagedBy.UID, bill.ManagedBy.Name);
-      dto.CurrencyCode = bill.Currency.ISOCode;
-      dto.Subtotal = bill.Subtotal;
-      dto.Discount = bill.Discount;
-      dto.Total = bill.Total;
-      dto.PostedBy = new NamedEntityDto(bill.PostedBy.UID, bill.PostedBy.Name);
-      dto.PostingTime = bill.PostingTime;
-      dto.Status = new NamedEntityDto(bill.Status.ToString(), bill.Status.GetName());
-      dto.Concepts = MapBillConcepts(bill.Concepts);
-      return dto;
+      return new BillDto {
+        UID = bill.UID,
+        BillNo = bill.BillNo,
+        BillType = bill.BillType.MapToNamedEntity(),
+        IssueDate = bill.IssueDate,
+        IssuedBy = bill.IssuedBy.MapToNamedEntity(),
+        IssuedTo = bill.IssuedTo.MapToNamedEntity(),
+        ManagedBy = bill.ManagedBy.MapToNamedEntity(),
+        CurrencyCode = bill.Currency.ISOCode,
+        Subtotal = bill.Subtotal,
+        Discount = bill.Discount,
+        Total = bill.Total,
+        PostedBy = bill.PostedBy.MapToNamedEntity(),
+        PostingTime = bill.PostingTime,
+        Status = bill.Status.MapToDto(),
+        Concepts = MapBillConcepts(bill.Concepts)
+      };
     }
 
 
     static internal FixedList<BillDescriptorDto> MapToBillListDto(FixedList<Bill> bills) {
-      if (bills.Count == 0) {
-        return new FixedList<BillDescriptorDto>();
-      }
-
-      var billDto = bills.Select((x) => MapToBillDescriptorDto(x));
-
-      return new FixedList<BillDescriptorDto>(billDto);
+      return bills.Select((x) => MapToBillDescriptorDto(x))
+                  .ToFixedList();
     }
-
-
 
     #endregion Public methods
 
     #region Private methods
 
     static private FixedList<BillConceptDto> MapBillConcepts(FixedList<BillConcept> billConcepts) {
-      if (billConcepts.Count == 0) {
-        return new FixedList<BillConceptDto>();
-      }
-
-      var conceptsDto = billConcepts.Select((x) => MapToBillConceptsDto(x));
-
-      return new FixedList<BillConceptDto>(conceptsDto);
+      return billConcepts.Select((x) => MapToBillConceptsDto(x))
+                         .ToFixedList();
     }
 
 
     static private FixedList<BillTaxEntryDto> MapBillTaxes(FixedList<BillTaxEntry> taxEntries) {
-      if (taxEntries.Count == 0) {
-        return new FixedList<BillTaxEntryDto>();
-      }
-      var taxes = taxEntries.Select((x) => MapToBillTaxesDto(x));
-
-      return new FixedList<BillTaxEntryDto>(taxes);
+      return taxEntries.Select((x) => MapToBillTaxesDto(x))
+                       .ToFixedList();
     }
 
 
     static private BillConceptDto MapToBillConceptsDto(BillConcept billConcept) {
-
-      BillConceptDto conceptDto = new BillConceptDto();
-      conceptDto.BillUID = billConcept.Bill.UID;
-      conceptDto.UID = billConcept.BillConceptUID;
-      conceptDto.ProductUID = billConcept.Product.UID;
-      conceptDto.Description = billConcept.Description;
-      conceptDto.Quantity = billConcept.Quantity;
-      conceptDto.UnitPrice = billConcept.UnitPrice;
-      conceptDto.Subtotal = billConcept.Subtotal;
-      conceptDto.Discount = billConcept.Discount;
-      conceptDto.PostedBy = new NamedEntityDto(billConcept.PostedBy.UID, billConcept.PostedBy.Name);
-      conceptDto.PostingTime = billConcept.PostingTime;
-      conceptDto.TaxEntriesDto = MapBillTaxes(billConcept.TaxEntries);
-
-      return conceptDto;
+      return new BillConceptDto {
+        BillUID = billConcept.Bill.UID,
+        UID = billConcept.BillConceptUID,
+        ProductUID = billConcept.Product.UID,
+        Description = billConcept.Description,
+        Quantity = billConcept.Quantity,
+        UnitPrice = billConcept.UnitPrice,
+        Subtotal = billConcept.Subtotal,
+        Discount = billConcept.Discount,
+        PostedBy = billConcept.PostedBy.MapToNamedEntity(),
+        PostingTime = billConcept.PostingTime,
+        TaxEntriesDto = MapBillTaxes(billConcept.TaxEntries)
+      };
     }
 
 
     static private BillDescriptorDto MapToBillDescriptorDto(Bill bill) {
-
       return new BillDescriptorDto() {
         UID = bill.BillUID,
         BillNo = bill.BillNo,
@@ -126,20 +104,20 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private BillTaxEntryDto MapToBillTaxesDto(BillTaxEntry x) {
-      BillTaxEntryDto dto = new BillTaxEntryDto();
-      dto.BillUID = x.Bill.UID;
-      dto.BillConceptUID = x.BillConcept.UID;
-      dto.UID = x.BillTaxUID;
-      dto.TaxMethod = x.TaxMethod;
-      dto.TaxFactorType = x.TaxFactorType;
-      dto.Factor = x.Factor;
-      dto.BaseAmount = x.BaseAmount;
-      dto.Total = x.Total;
-      dto.PostedBy = new NamedEntityDto(x.PostedBy.UID, x.PostedBy.Name);
-      dto.PostingTime = x.PostingTime;
-      dto.Status = x.Status;
-      return dto;
+    static private BillTaxEntryDto MapToBillTaxesDto(BillTaxEntry taxEntry) {
+      return new BillTaxEntryDto {
+        BillUID = taxEntry.Bill.UID,
+        BillConceptUID = taxEntry.BillConcept.UID,
+        UID = taxEntry.BillTaxUID,
+        TaxMethod = taxEntry.TaxMethod,
+        TaxFactorType = taxEntry.TaxFactorType,
+        Factor = taxEntry.Factor,
+        BaseAmount = taxEntry.BaseAmount,
+        Total = taxEntry.Total,
+        PostedBy = taxEntry.PostedBy.MapToNamedEntity(),
+        PostingTime = taxEntry.PostingTime,
+        Status = taxEntry.Status,
+      };
     }
 
     #endregion Private methods
