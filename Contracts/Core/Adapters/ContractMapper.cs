@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Contracts.Core.dll                 Pattern   : Mapper                                  *
 *  Type     : ContractMapper                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides data mapping services for Contract related types.                                     *
+*  Summary  : Provides data mapping services for Contract instances.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -15,7 +15,7 @@ using Empiria.StateEnums;
 
 namespace Empiria.Contracts.Adapters {
 
-  /// <summary>Provides data mapping services for contract milestone related types.</summary>
+  /// <summary>Provides data mapping services for Contract instances.</summary>
   static internal class ContractMapper {
 
     static internal ContractHolderDto Map(Contract contract) {
@@ -25,8 +25,10 @@ namespace Empiria.Contracts.Adapters {
         Milestones = ContractMilestoneMapper.Map(contract.GetMilestones()),
         Documents = DocumentServices.GetEntityDocuments(contract),
         History = HistoryServices.GetEntityHistory(contract),
+        Actions = MapActions()
       };
     }
+
 
     static internal ContractDto MapContract(Contract contract) {
       return new ContractDto {
@@ -53,6 +55,14 @@ namespace Empiria.Contracts.Adapters {
                        .ToFixedList();
     }
 
+    #region Helpers
+
+    static private BaseActions MapActions() {
+      return new BaseActions {
+        CanEditDocuments = true
+      };
+    }
+
 
     static private ContractDescriptor MapToDescriptor(Contract contract) {
       return new ContractDescriptor {
@@ -72,6 +82,8 @@ namespace Empiria.Contracts.Adapters {
         Total = contract.Total,
       };
     }
+
+    #endregion Helpers
 
   }  // class ContractMapper
 

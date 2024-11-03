@@ -25,6 +25,7 @@ namespace Empiria.Billing.Adapters {
         Concepts = MapBillConcepts(bill.Concepts),
         Documents = DocumentServices.GetEntityDocuments(bill),
         History = HistoryServices.GetEntityHistory(bill),
+        Actions = MapActions()
       };
 
     }
@@ -58,7 +59,13 @@ namespace Empiria.Billing.Adapters {
 
     #endregion Public methods
 
-    #region Private methods
+    #region Helpers
+
+    static private BaseActions MapActions() {
+      return new BaseActions {
+        CanEditDocuments = true
+      };
+    }
 
     static private FixedList<BillConceptDto> MapBillConcepts(FixedList<BillConcept> billConcepts) {
       return billConcepts.Select((x) => MapToBillConceptsDto(x))
@@ -120,7 +127,7 @@ namespace Empiria.Billing.Adapters {
       };
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
   } // class BillMapper
 

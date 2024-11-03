@@ -37,6 +37,10 @@ namespace Empiria.Contracts.Adapters {
       get; internal set;
     }
 
+    public BaseActions Actions {
+      get; internal set;
+    }
+
   }  // class ContractHolderDto
 
 
