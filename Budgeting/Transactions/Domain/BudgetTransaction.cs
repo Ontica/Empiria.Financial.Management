@@ -93,15 +93,16 @@ namespace Empiria.Budgeting.Transactions {
       private set;
     }
 
+
     [DataField("BDG_TXN_BASE_ENTITY_TYPE_ID")]
-    public int BaseEntityType {
+    public int BaseEntityTypeId {
       get;
       private set;
     }
 
 
     [DataField("BDG_TXN_BASE_ENTITY_ID")]
-    public int BaseEntity {
+    public int BaseEntityId {
       get;
       private set;
     }
@@ -164,7 +165,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_TXN_EXT_DATA")]
-    protected JsonObject ExtensionData {
+    internal protected JsonObject ExtensionData {
       get;
       private set;
     }
@@ -193,10 +194,12 @@ namespace Empiria.Budgeting.Transactions {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(TransactionNo, Description, BudgetTransactionType.DisplayName,
+        return EmpiriaString.BuildKeywords(TransactionNo, Description, Identificators, Tags,
+                                           BudgetTransactionType.DisplayName,
                                            BaseBudget.Keywords, BaseParty.Keywords);
       }
     }
+
 
     public FixedList<BudgetEntry> Entries {
       get {
@@ -205,6 +208,14 @@ namespace Empiria.Budgeting.Transactions {
     }
 
     #endregion Properties
+
+    #region Methods
+
+    protected override void OnSave() {
+      BudgetTransactionDataService.WriteTransaction(this);
+    }
+
+    #endregion Methods
 
   }  // class BudgetTransaction
 

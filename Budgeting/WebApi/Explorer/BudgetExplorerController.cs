@@ -7,6 +7,7 @@
 *  Summary  : Web API used to retrieve budget information.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System.Web.Http;
 
 using Empiria.WebApi;

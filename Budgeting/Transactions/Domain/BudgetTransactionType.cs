@@ -34,6 +34,7 @@ namespace Empiria.Budgeting.Transactions {
             .ToFixedList();
     }
 
+
     static public FixedList<BudgetTransactionType> GetList(BudgetType budgetType) {
       Assertion.Require(budgetType, nameof(budgetType));
 

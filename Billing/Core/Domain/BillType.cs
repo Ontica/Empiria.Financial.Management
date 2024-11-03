@@ -9,6 +9,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
+
 using Empiria.Ontology;
 
 namespace Empiria.Billing {
@@ -28,7 +30,13 @@ namespace Empiria.Billing {
 
     static public new BillType Parse(string typeName) => Parse<BillType>(typeName);
 
-    static public BillType Empty => Parse("ObjectTypeInfo.PowerType.BillType");
+    static public BillType Empty => Parse("ObjectTypeInfo.Bill");
+
+    static public FixedList<BillType> GetList() {
+      return Empty.GetAllSubclasses()
+                  .Select(x => (BillType) x)
+                  .ToFixedList();
+    }
 
     #endregion Constructors and parsers
 

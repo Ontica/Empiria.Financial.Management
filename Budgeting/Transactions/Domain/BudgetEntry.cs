@@ -16,6 +16,8 @@ using Empiria.Parties;
 using Empiria.Products;
 using Empiria.Projects;
 
+using Empiria.Budgeting.Transactions.Data;
+
 namespace Empiria.Budgeting.Transactions {
 
   /// <summary>An entry in a budget transaction.</summary>
@@ -212,6 +214,14 @@ namespace Empiria.Budgeting.Transactions {
     }
 
     #endregion Properties
+
+    #region Methods
+
+    protected override void OnSave() {
+      BudgetTransactionDataService.WriteEntry(this);
+    }
+
+    #endregion Methods
 
   }  // class BudgetEntry
 

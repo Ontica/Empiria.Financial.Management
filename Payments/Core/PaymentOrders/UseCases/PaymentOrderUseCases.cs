@@ -8,12 +8,14 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Services;
 
-using Empiria.Payments.Orders.Adapters;
-using System;
-using Empiria.Payments.Orders.Data;
 using Empiria.Payments.Payables;
+
+using Empiria.Payments.Orders.Adapters;
+using Empiria.Payments.Orders.Data;
 
 namespace Empiria.Payments.Orders.UseCases {
 

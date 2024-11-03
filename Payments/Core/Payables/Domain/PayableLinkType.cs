@@ -18,7 +18,6 @@ namespace Empiria.Payments.Payables {
   /// <summary> Describes links between payable object with other base object. </summary>
   internal class PayableLinkType : GeneralObject {
 
-
     #region Constructors and parsers
 
     static public PayableLinkType Parse(int id) => ParseId<PayableLinkType>(id);

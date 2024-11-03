@@ -15,19 +15,18 @@ using Empiria.Billing.UseCases;
 using Empiria.Billing.Adapters;
 
 namespace Empiria.Billing.WebApi {
-  
-  /// <summary></summary>
+
+  /// <summary>Web API used to retrive and update payable bills.</summary>
   public class BillController : WebApiController {
 
     #region Web apis
-
 
     [HttpGet]
     [Route("v2/billing-management/bills/{billUID:guid}")]
     public SingleObjectModel GetBill([FromUri] string billUID) {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
-        
+
         BillHolderDto bill = usecases.GetBill(billUID);
 
         return new SingleObjectModel(base.Request, bill);
