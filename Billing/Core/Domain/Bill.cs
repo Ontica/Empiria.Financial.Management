@@ -249,8 +249,8 @@ namespace Empiria.Billing {
       fields.EnsureIsValid();
 
       IssueDate = PatchField(fields.IssueDate, IssueDate);
-      IssuedBy = Party.Parse(fields.IssuedByUID);
-      IssuedTo = Party.Parse(fields.IssuedToUID);
+      IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
+      IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
       ManagedBy = PatchField(fields.ManagedByUID, ManagedBy);
       SchemaVersion = PatchField(fields.SchemaVersion, SchemaVersion);
       _identificators = PatchField(fields.Identificators, _identificators);
@@ -261,7 +261,7 @@ namespace Empiria.Billing {
       Total = fields.Total;
     }
 
-    
+
     #endregion Methods
 
   } // class Bill

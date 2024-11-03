@@ -61,7 +61,7 @@ namespace Empiria.Payments.Payables {
     static public Payable Empty => ParseEmpty<Payable>();
 
     protected override void OnLoad() {
-      _items = new Lazy<List<PayableItem>>(() => PayableData.GetPayableItems(this));
+      Reload();
     }
 
     #endregion Constructors and parsers
@@ -141,7 +141,7 @@ namespace Empiria.Payments.Payables {
       get; private set;
     } = PaymentMethod.Empty;
 
-                
+
     [DataField("PAYABLE_PAYMENT_ACCOUNT_ID")]
     public PaymentAccount PaymentAccount {
       get; private set;
@@ -234,7 +234,7 @@ namespace Empiria.Payments.Payables {
       this.PayTo = Party.Parse(fields.PayToUID);
       this.BudgetType = BudgetType.Parse(fields.BudgetTypeUID);
       this.Currency = Currency.Parse(fields.CurrencyUID);
-      this.DueTime = fields.DueTime;      
+      this.DueTime = fields.DueTime;
       this.RequestedTime = fields.RequestedTime;
       this.UpdatePaymentData(fields);
     }
@@ -274,6 +274,9 @@ namespace Empiria.Payments.Payables {
       return _items.Value.ToFixedList();
     }
 
+    internal void Reload() {
+      _items = new Lazy<List<PayableItem>>(() => PayableData.GetPayableItems(this));
+    }
 
     internal PayableItem RemoveItem(string payableItemUID) {
       Assertion.Require(payableItemUID, nameof(payableItemUID));
@@ -332,7 +335,6 @@ namespace Empiria.Payments.Payables {
       }
 
     }
-
 
     #endregion Helpers
 

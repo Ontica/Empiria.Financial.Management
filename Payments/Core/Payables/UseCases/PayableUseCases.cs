@@ -54,6 +54,12 @@ namespace Empiria.Payments.Payables.UseCases {
 
       payable.Save();
 
+      var generator = new PayableItemGenerator(payable);
+
+      generator.Generate();
+
+      payable.Reload();
+
       return PayableHolderMapper.Map(payable);
     }
 
