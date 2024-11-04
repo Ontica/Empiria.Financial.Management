@@ -64,6 +64,11 @@ namespace Empiria.Payments.Orders {
       }
     }
 
+
+    static public NamedEntityDto MapToNamedEntity(this PaymentOrderStatus status) {
+      return new NamedEntityDto(status.ToString(), GetName(status));
+    }
+
   }  // class PaymentOrderStatusExtensions
 
 }  // namespace Empiria.Payments.Orders

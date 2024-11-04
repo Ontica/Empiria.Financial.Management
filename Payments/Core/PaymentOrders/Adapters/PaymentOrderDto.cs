@@ -64,36 +64,45 @@ namespace Empiria.Payments.Orders.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto PaymentOrderType {
+      get; internal set;
+    }
 
     public string OrderNo {
       get; internal set;
     }
 
-
-    public string PayTo {
+    public NamedEntityDto PayTo {
       get; internal set;
     }
 
-
-    public string RequestedBy {
+    public NamedEntityDto RequestedBy {
       get; internal set;
     }
-
 
     public DateTime RequestedDate {
       get; internal set;
     }
 
+    public DateTime DueTime {
+      get; internal set;
+    }
 
     public string Notes {
       get; internal set;
     }
 
+    public NamedEntityDto PaymentMethod {
+      get; internal set;
+    }
+
+    public NamedEntityDto Currency {
+      get; internal set;
+    }
 
     public decimal Total {
       get; internal set;
     }
-
 
     public NamedEntityDto Status {
       get; internal set;
@@ -124,36 +133,29 @@ namespace Empiria.Payments.Orders.Adapters {
       get; internal set;
     }
 
-
-    public string PaymentMethod {
+    public string RequestedBy {
       get; internal set;
     }
-
-
-    public decimal Total {
-      get; internal set;
-    }
-
-
-    public string Currency {
-      get; internal set;
-    }
-
 
     public DateTime RequestedDate {
       get; internal set;
     }
 
-
     public DateTime DueTime {
       get; internal set;
     }
 
-
-    public string RequestedBy {
+    public string PaymentMethod {
       get; internal set;
     }
 
+    public string Currency {
+      get; internal set;
+    }
+
+    public decimal Total {
+      get; internal set;
+    }
 
     public string StatusName {
       get; internal set;

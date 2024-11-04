@@ -63,14 +63,17 @@ namespace Empiria.Payments.Orders.Adapters {
     static private PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
         UID = paymentOrder.UID,
+        PaymentOrderType = paymentOrder.PaymentOrderType.MapToNamedEntity(),
         OrderNo = paymentOrder.PaymentOrderNo,
-        PayTo = paymentOrder.PayTo.Name,
-        RequestedBy = paymentOrder.RequestedBy.Name,
+        PayTo = paymentOrder.PayTo.MapToNamedEntity(),
+        RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
         RequestedDate = paymentOrder.RequestedTime,
+        DueTime = paymentOrder.DueTime,
         Notes = paymentOrder.Notes,
+        PaymentMethod = paymentOrder.PaymentMethod.MapToNamedEntity(),
+        Currency = paymentOrder.Currency.MapToNamedEntity(),
         Total = paymentOrder.Total,
-        Status = new NamedEntityDto(paymentOrder.Status.ToString(),
-                                    paymentOrder.Status.GetName()),
+        Status = paymentOrder.Status.MapToNamedEntity()
       };
     }
 
