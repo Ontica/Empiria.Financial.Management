@@ -11,7 +11,7 @@
 using Empiria.Services;
 using Empiria.Services.Aspects;
 
-using Empiria.Budgeting.Transactions.Adapters;
+using Empiria.Financial;
 
 namespace Empiria.Budgeting.Transactions.UseCases {
 
@@ -37,6 +37,22 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       Assertion.Require(fields, nameof(fields));
 
       base.SendWorkflowEvent("BudgetTransactionCreated", fields);
+    }
+
+
+    public BudgetTransaction CreateTransaction(IPayableEntity payable,
+                                               BudgetTransactionFields fields) {
+
+      Assertion.Require(fields, nameof(fields));
+      Assertion.Require(payable, nameof(payable));
+
+      var transactionBuilder = new BudgetTransactionBuilder(payable, fields);
+
+      BudgetTransaction transaction = transactionBuilder.Build();
+
+      transaction.Save();
+
+      return transaction;
     }
 
     #endregion Use cases
