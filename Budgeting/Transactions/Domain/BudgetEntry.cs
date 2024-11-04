@@ -29,6 +29,17 @@ namespace Empiria.Budgeting.Transactions {
       // Required by Empiria Framework.
     }
 
+    internal BudgetEntry(BudgetTransaction transaction) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      this.BudgetTransaction = transaction;
+      this.Budget = transaction.BaseBudget;
+
+      this.Year = transaction.ApplicationDate.Year;
+      this.Month = transaction.ApplicationDate.Month;
+      this.Day = transaction.ApplicationDate.Day;
+    }
+
     static public BudgetEntry Parse(int id) => ParseId<BudgetEntry>(id);
 
     static public BudgetEntry Parse(string uid) => ParseKey<BudgetEntry>(uid);
@@ -217,8 +228,35 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Methods
 
+    internal void Delete() {
+      Status = BudgetTransactionStatus.Deleted;
+
+      MarkAsDirty();
+    }
+
     protected override void OnSave() {
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
       BudgetTransactionDataService.WriteEntry(this);
+    }
+
+
+    internal void Update(BudgetEntryFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureIsValid();
+
+      this.BudgetAccount = PatchField(fields.BudgetAccountUID, BudgetAccount);
+      this.BalanceColumn = PatchField(fields.BalanceColumnUID, BalanceColumn);
+      this.Product = PatchField(fields.ProductUID, Product);
+      this.Description = PatchCleanField(fields.Description, Description);
+      this.Currency = PatchField(fields.CurrencyUID, Currency);
+      this.Deposit = fields.Deposit;
+      this.Withdrawal = fields.Withdrawal;
+
+      MarkAsDirty();
     }
 
     #endregion Methods
