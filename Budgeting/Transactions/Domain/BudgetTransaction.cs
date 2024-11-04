@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Json;
 using Empiria.Ontology;
@@ -21,6 +22,12 @@ namespace Empiria.Budgeting.Transactions {
   /// <summary>Partitioned type that represents a budget transaction with its entries.</summary>
   [PartitionedType(typeof(BudgetTransactionType))]
   public class BudgetTransaction : BaseObject {
+
+    #region Fields
+
+    private Lazy<List<BudgetEntry>> _entries = new Lazy<List<BudgetEntry>>();
+
+    #endregion Fields
 
     #region Constructors and parsers
 
@@ -40,6 +47,10 @@ namespace Empiria.Budgeting.Transactions {
     static public BudgetTransaction Parse(string uid) => ParseKey<BudgetTransaction>(uid);
 
     static public BudgetTransaction Empty => ParseEmpty<BudgetTransaction>();
+
+    protected override void OnLoad() {
+      Reload();
+    }
 
     #endregion Constructors and parsers
 
@@ -210,7 +221,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public FixedList<BudgetEntry> Entries {
       get {
-        return BudgetTransactionDataService.GetTransactionEntries(this);
+        return _entries.Value.ToFixedList();
       }
     }
 
@@ -218,13 +229,45 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Methods
 
+    internal void AddEntry(BudgetEntryFields entryFields) {
+      Assertion.Require(entryFields, nameof(entryFields));
+
+      var entry = new BudgetEntry(this);
+
+      entry.Update(entryFields);
+
+      _entries.Value.Add(entry);
+    }
+
+
     protected override void OnSave() {
       if (IsNew) {
         TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
+
       BudgetTransactionDataService.WriteTransaction(this);
+
+      foreach (var entry in _entries.Value) {
+        entry.Save();
+      }
+    }
+
+
+    internal void Reload() {
+      _entries = new Lazy<List<BudgetEntry>>(() => BudgetTransactionDataService.GetTransactionEntries(this));
+    }
+
+
+    internal void RemoveEntry(BudgetEntry entry) {
+      Assertion.Require(entry, nameof(entry));
+      Assertion.Require(_entries.Value.Contains(entry),
+                        "Entry to remove does not belong to this transaction.");
+
+      entry.Delete();
+
+      _entries.Value.Remove(entry);
     }
 
 
@@ -237,6 +280,7 @@ namespace Empiria.Budgeting.Transactions {
       BaseParty = PatchField(fields.BasePartyUID, BaseParty);
       RequestedBy = PatchField(fields.RequestedByUID, RequestedBy);
       OperationSource = PatchField(fields.OperationSourceUID, OperationSource);
+      ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
     }
 
     #endregion Methods

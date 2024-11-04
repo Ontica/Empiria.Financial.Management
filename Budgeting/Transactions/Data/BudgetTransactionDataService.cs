@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Data;
 
@@ -45,7 +46,7 @@ namespace Empiria.Budgeting.Transactions.Data {
     }
 
 
-    static internal FixedList<BudgetEntry> GetTransactionEntries(BudgetTransaction transaction) {
+    static internal List<BudgetEntry> GetTransactionEntries(BudgetTransaction transaction) {
       var sql = "SELECT * FROM FMS_BUDGET_ENTRIES " +
                $"WHERE BDG_ENTRY_TXN_ID = {transaction.Id} AND " +
                      $"BDG_ENTRY_STATUS <> 'X' " +
@@ -53,7 +54,7 @@ namespace Empiria.Budgeting.Transactions.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<BudgetEntry>(op);
+      return DataReader.GetList<BudgetEntry>(op);
     }
 
 

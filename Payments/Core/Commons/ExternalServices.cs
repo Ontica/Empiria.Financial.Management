@@ -46,6 +46,7 @@ namespace Empiria.Payments {
         Description = payable.Description,
         BasePartyUID = payable.OrganizationalUnit.UID,
         RequestedByUID = payable.PostedBy.UID,
+        ApplicationDate = payable.DueTime
       };
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {

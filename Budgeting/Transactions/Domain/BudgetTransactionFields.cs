@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Parties;
 
 namespace Empiria.Budgeting.Transactions {
@@ -43,6 +44,11 @@ namespace Empiria.Budgeting.Transactions {
     public string RequestedByUID {
       get; set;
     } = string.Empty;
+
+
+    public DateTime ApplicationDate {
+      get; set;
+    } = ExecutionServer.DateMaxValue;
 
   }  // BudgetTransactionFields
 
