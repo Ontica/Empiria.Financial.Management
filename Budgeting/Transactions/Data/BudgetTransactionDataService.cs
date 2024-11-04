@@ -8,12 +8,42 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Data;
 
 namespace Empiria.Budgeting.Transactions.Data {
 
   /// <summary>Provides data access services for budget transactions.</summary>
   static internal class BudgetTransactionDataService {
+
+    static internal string GetNextTransactionNo(BudgetTransaction transaction) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      string transactionPrefix = transaction.BudgetTransactionType.Prefix;
+      string budgetPrefix = transaction.BaseBudget.BudgetType.Prefix;
+
+      int year = transaction.BaseBudget.Year;
+
+      string prefix = $"{year}-{transactionPrefix}-{budgetPrefix}";
+
+      string sql = "SELECT MAX(BDG_TXN_NUMBER) " +
+                   "FROM FMS_BUDGET_TRANSACTIONS " +
+                   $"WHERE BDG_TXN_NUMBER LIKE '{prefix}-%'";
+
+      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), String.Empty);
+
+      if (lastUniqueID != null && lastUniqueID.Length != 0) {
+
+        int consecutive = int.Parse(lastUniqueID.Split('-')[3]) + 1;
+
+        return $"{prefix}-{consecutive:00000}";
+
+      } else {
+        return $"{prefix}-00001";
+      }
+    }
+
 
     static internal FixedList<BudgetEntry> GetTransactionEntries(BudgetTransaction transaction) {
       var sql = "SELECT * FROM FMS_BUDGET_ENTRIES " +

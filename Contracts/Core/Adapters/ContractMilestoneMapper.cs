@@ -10,6 +10,9 @@
 
 using Empiria.StateEnums;
 
+using Empiria.Documents.Services;
+using Empiria.History.Services;
+
 namespace Empiria.Contracts.Adapters {
 
   /// <summary>Provides data mapping services for contract milestone related types.</summary>
@@ -32,7 +35,10 @@ namespace Empiria.Contracts.Adapters {
         Supplier = milestone.Supplier.MapToNamedEntity(),
         Total = milestone.GetTotal(),
         Status = milestone.Status.MapToDto(),
-        Items = ContractMilestoneItemMapper.Map(milestone.GetItems())
+        Items = ContractMilestoneItemMapper.Map(milestone.GetItems()),
+        Documents = DocumentServices.GetEntityDocuments(milestone),
+        History = HistoryServices.GetEntityHistory(milestone),
+        Actions = MapActions()
       };
     }
 
@@ -43,8 +49,16 @@ namespace Empiria.Contracts.Adapters {
 
     }
 
+    #region Helpers
 
-    private static ContractMilestoneDescriptor MapToDescriptor(ContractMilestone milestone) {
+    static private BaseActions MapActions() {
+      return new BaseActions {
+        CanEditDocuments = true
+      };
+    }
+
+
+    static private ContractMilestoneDescriptor MapToDescriptor(ContractMilestone milestone) {
       return new ContractMilestoneDescriptor {
         UID = milestone.UID,
         ContractUID = milestone.Contract.UID,
@@ -52,10 +66,11 @@ namespace Empiria.Contracts.Adapters {
         Name = milestone.Name,
         Description = milestone.Description,
         Supplier = milestone.Supplier.Id,
-        statusName = EntityStatusEnumExtensions.GetName(milestone.Status)
+        StatusName = EntityStatusEnumExtensions.GetName(milestone.Status)
       };
-
     }
+
+    #endregion Helpers
 
   }  // class ContractMilestoneMapper
 

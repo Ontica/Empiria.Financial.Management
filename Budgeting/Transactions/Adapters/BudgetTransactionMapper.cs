@@ -24,6 +24,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
         Documents = DocumentServices.GetEntityDocuments(transaction),
         History = HistoryServices.GetEntityHistory(transaction),
+        Actions = MapActions(transaction)
       };
     }
 
@@ -34,6 +35,13 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     #endregion Public mappers
 
     #region Helpers
+
+    static private BaseActions MapActions(BudgetTransaction transaction) {
+      return new BaseActions {
+        CanEditDocuments = true
+      };
+    }
+
 
     static private BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
       return new BudgetTransactionDto {

@@ -8,16 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Documents.Services.Adapters;
+using Empiria.History.Services.Adapters;
+
 namespace Empiria.Contracts.Adapters {
 
   /// <summary>Data transfer object used to return milestone information.</summary>
   public class ContractMilestoneDto {
-
-
-    public int ID {
-      get; internal set;
-    }
-
 
     public string UID {
       get; internal set;
@@ -63,6 +60,18 @@ namespace Empiria.Contracts.Adapters {
 
 
     public FixedList<ContractMilestoneItemDto> Items {
+      get; internal set;
+    }
+
+    public FixedList<DocumentDto> Documents {
+      get; internal set;
+    }
+
+    public FixedList<HistoryDto> History {
+      get; internal set;
+    }
+
+    public BaseActions Actions {
       get; internal set;
     }
 
@@ -112,7 +121,7 @@ namespace Empiria.Contracts.Adapters {
     }
 
 
-    public string statusName {
+    public string StatusName {
       get; internal set;
     }
 

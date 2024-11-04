@@ -41,6 +41,9 @@ namespace Empiria.Budgeting.Transactions {
       return GetList().FindAll(x => x.BudgetType.Equals(budgetType));
     }
 
+    static public BudgetTransactionType ComprometerGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.ComprometerGastoCorriente");
+
+    static public BudgetTransactionType EjercerGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.EjercerGastoCorriente");
 
     static public BudgetTransactionType Empty => Parse("ObjectTypeInfo.BudgetTransaction");
 
@@ -53,6 +56,12 @@ namespace Empiria.Budgeting.Transactions {
         int budgetTypeId = ExtensionData.Get<int>("budgetTypeId");
 
         return BudgetType.Parse(budgetTypeId);
+      }
+    }
+
+    public string Prefix {
+      get {
+        return ExtensionData.Get("prefix", string.Empty);
       }
     }
 

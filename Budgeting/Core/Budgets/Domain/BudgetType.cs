@@ -39,11 +39,32 @@ namespace Empiria.Budgeting {
 
     #region Properties
 
+    public string Prefix {
+      get {
+        return ExtensionData.Get("prefix", string.Empty);
+      }
+    }
+
+
     public FixedList<BudgetAccountSegmentType> SegmentTypes {
       get {
         return base.ExtensionData.GetFixedList<BudgetAccountSegmentType>("segmentTypes");
       }
     }
+
+    #endregion Properties
+
+    #region Methods
+
+    public Budget GetCurrentBudget() {
+      var budget = Budget.GetFullList<Budget>()
+                         .Find(x => x.BudgetType.Equals(this) && x.Year == DateTime.Today.Year);
+
+      Assertion.Require(budget, $"No hay presupuestos registrados para el año {DateTime.Today.Year}");
+
+      return budget;
+    }
+
 
     internal FixedList<NamedEntityDto> GetTransactionTypes() {
       FixedList<int> ids = base.ExtensionData.GetFixedList<int>("transactionTypes");
@@ -52,7 +73,7 @@ namespace Empiria.Budgeting {
                 .MapToNamedEntityList();
     }
 
-    #endregion Properties
+    #endregion Methods
 
   }  // class BudgetType
 

@@ -35,6 +35,11 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
+    public BaseActions Actions {
+      get; internal set;
+    }
+
+
   } // class BillDto
 
 

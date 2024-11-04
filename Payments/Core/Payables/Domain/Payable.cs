@@ -117,6 +117,13 @@ namespace Empiria.Payments.Payables {
     }
 
 
+    public Budget Budget {
+      get {
+        return BudgetType.GetCurrentBudget();
+      }
+    }
+
+
     [DataField("PAYABLE_CURRENCY_ID")]
     public Currency Currency {
       get; private set;
@@ -186,6 +193,10 @@ namespace Empiria.Payments.Payables {
     #endregion Properties
 
     #region Methods
+
+    public BaseObject GetPayableEntity() {
+      return PayableType.PayableEntityType.ParseObject(_payableEntityId);
+    }
 
     protected override void OnBeforeSave() {
       if (base.IsNew) {
