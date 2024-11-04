@@ -29,6 +29,16 @@ namespace Empiria.Tests.Payments {
       ExternalServices.CommitBudget(sut);
     }
 
+
+    [Fact]
+    public void Should_Exercise_Budget() {
+      TestsCommonMethods.Authenticate();
+
+      Payable sut = Payable.Parse(TestingConstants.PAYABLE_ID);
+
+      ExternalServices.ExerciseBudget(sut);
+    }
+
     #endregion Facts
 
   }  // class PayableTests

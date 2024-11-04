@@ -36,25 +36,17 @@ namespace Empiria.Payments {
   /// <summary>Connect Empiria Payments with external services providers.</summary>
   static internal class ExternalServices {
 
-    static private OperationSource SISTEMA_DE_PAGOS = OperationSource.Parse(12);
+    #region Services
 
     static internal void CommitBudget(Payable payable) {
-      var fields = new BudgetTransactionFields {
-        TransactionTypeUID = BudgetTransactionType.ComprometerGastoCorriente.UID,
-        BaseBudgetUID = payable.Budget.UID,
-        OperationSourceUID = SISTEMA_DE_PAGOS.UID,
-        Description = payable.Description,
-        BasePartyUID = payable.OrganizationalUnit.UID,
-        RequestedByUID = payable.PostedBy.UID,
-        ApplicationDate = payable.DueTime
-      };
-
-      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        BudgetTransaction transaction = usecases.CreateTransaction(payable.PayableEntity, fields);
-
-        CreatePayableDocumentLinks(payable, transaction);
-      }
+      InvokeBudgetTransactionService(payable, BudgetTransactionType.ComprometerGastoCorriente, payable.DueTime);
     }
+
+
+    static internal void ExerciseBudget(Payable payable) {
+      InvokeBudgetTransactionService(payable, BudgetTransactionType.EjercerGastoCorriente, DateTime.Today);
+    }
+
 
     static internal Bill GenerateBill(Document billDocument) {
       Assertion.Require(billDocument, nameof(billDocument));
@@ -97,8 +89,39 @@ namespace Empiria.Payments {
     }
 
 
-    static internal string GetEntityDocumentsEditionUrl(Payable payable) {
-      return $"v2/payments-management/payables/{payable.UID}/documents";
+    static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
+
+      CreatePayableDocumentLinks(payable, document, bill);
+
+      var fields = new DocumentFields {
+        UID = document.UID,
+        DocumentNo = bill.BillNo,
+        DocumentDate = bill.IssueDate,
+        SourcePartyUID = bill.IssuedBy.UID,
+        TargetPartyUID = bill.IssuedTo.UID,
+        Description = payable.Description
+      };
+
+      return DocumentServices.UpdateDocument(payable, document, fields);
+    }
+
+    #endregion Services
+
+    #region Helpers
+
+    static private void InvokeBudgetTransactionService(Payable payable,
+                                                       BudgetTransactionType budgetTransactionType,
+                                                       DateTime applicationDate) {
+
+      BudgetTransactionFields fields = TransformToBudgetTransactionFields(payable,
+                                                                          budgetTransactionType,
+                                                                          applicationDate);
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+        BudgetTransaction transaction = usecases.CreateTransaction(payable.PayableEntity, fields);
+
+        CreatePayableDocumentLinks(payable, transaction);
+      }
     }
 
 
@@ -118,21 +141,23 @@ namespace Empiria.Payments {
     }
 
 
-    static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
+    static private BudgetTransactionFields TransformToBudgetTransactionFields(Payable payable,
+                                                                              BudgetTransactionType transactionType,
+                                                                              DateTime applicationDate) {
 
-      CreatePayableDocumentLinks(payable, document, bill);
+      var SISTEMA_DE_PAGOS = OperationSource.Parse(12);
 
-      var fields = new DocumentFields {
-        UID = document.UID,
-        DocumentNo = bill.BillNo,
-        DocumentDate = bill.IssueDate,
-        SourcePartyUID = bill.IssuedBy.UID,
-        TargetPartyUID = bill.IssuedTo.UID,
-        Description = payable.Description
+      return new BudgetTransactionFields {
+        TransactionTypeUID = transactionType.UID,
+        BaseBudgetUID = payable.Budget.UID,
+        OperationSourceUID = SISTEMA_DE_PAGOS.UID,
+        Description = payable.Description,
+        BasePartyUID = payable.OrganizationalUnit.UID,
+        RequestedByUID = payable.PostedBy.UID,
+        ApplicationDate = applicationDate
       };
-
-      return DocumentServices.UpdateDocument(payable, document, fields);
     }
+
 
     static private void CreatePayableDocumentLinks(Payable payable, Document document, Bill bill) {
       DocumentLinkServices.CreateLink(document, bill);
@@ -149,6 +174,7 @@ namespace Empiria.Payments {
       }
     }
 
+
     static private void CreatePayableDocumentLinks(Payable payable, BudgetTransaction transaction) {
 
       foreach (var payableDocument in DocumentServices.GetEntityDocuments(payable)) {
@@ -162,6 +188,8 @@ namespace Empiria.Payments {
         }
       }
     }
+
+    #endregion Helpers
 
   }  // class ExternalServices
 

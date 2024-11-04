@@ -29,44 +29,57 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal BudgetTransaction Build() {
-      _transaction = CreateTransaction();
+      _transaction = BuildTransaction();
 
-      CreateEntries();
+      BuildEntries();
 
       return _transaction;
     }
 
     #region Helpers
 
-    private void CreateEntries() {
+    private void BuildDoubleEntries(IPayableEntityItem item,
+                                    BalanceColumn depositColumn,
+                                    BalanceColumn withdrawalColumn) {
+
+      var fields = BuildEntryFields(item, depositColumn, true);
+
+      _transaction.AddEntry(fields);
+
+      fields = BuildEntryFields(item, withdrawalColumn, false);
+
+      _transaction.AddEntry(fields);
+    }
+
+
+    private void BuildEntries() {
       foreach (var item in _payable.Items) {
-        var fields = CreateEntryFields(item, BalanceColumn.Available, false);
 
-        _transaction.AddEntry(fields);
-
-        fields = CreateEntryFields(item, BalanceColumn.Commited, true);
-
-        _transaction.AddEntry(fields);
+        if (_transaction.BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente)) {
+          BuildDoubleEntries(item, BalanceColumn.Commited, BalanceColumn.Available);
+        } else if (_transaction.BudgetTransactionType.Equals(BudgetTransactionType.EjercerGastoCorriente)) {
+          BuildDoubleEntries(item, BalanceColumn.Commited, BalanceColumn.Exercised);
+        }
       }
     }
 
 
-    static private BudgetEntryFields CreateEntryFields(IPayableEntityItem item,
-                                                       BalanceColumn balanceColumn,
-                                                       bool deposit) {
+    static private BudgetEntryFields BuildEntryFields(IPayableEntityItem item,
+                                                      BalanceColumn balanceColumn,
+                                                      bool isDeposit) {
       return new BudgetEntryFields {
         BudgetAccountUID = item.BudgetAccount.UID,
         BalanceColumnUID = balanceColumn.UID,
         Description = item.Description,
         ProductUID = item.Product.UID,
         CurrencyUID = item.Currency.UID,
-        Deposit = deposit ? item.Total : 0,
-        Withdrawal = deposit ? 0: item.Total,
+        Deposit = isDeposit ? item.Total : 0,
+        Withdrawal = isDeposit ? 0: item.Total,
       };
     }
 
 
-    private BudgetTransaction CreateTransaction() {
+    private BudgetTransaction BuildTransaction() {
 
       var transactionType = BudgetTransactionType.Parse(_fields.TransactionTypeUID);
 
