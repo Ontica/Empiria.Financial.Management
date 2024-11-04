@@ -18,6 +18,11 @@ using Empiria.Documents.Services.Adapters;
 using Empiria.Billing;
 using Empiria.Billing.UseCases;
 
+using Empiria.Budgeting.Transactions;
+using Empiria.Budgeting.Transactions.UseCases;
+
+using Empiria.Parties;
+
 using Empiria.Contracts;
 
 using Empiria.Payments.Payables;
@@ -26,11 +31,29 @@ using Empiria.Payments.Orders;
 using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Services;
 
-
 namespace Empiria.Payments {
 
   /// <summary>Connect Empiria Payments with external services providers.</summary>
   static internal class ExternalServices {
+
+    static private OperationSource SISTEMA_DE_PAGOS = OperationSource.Parse(12);
+
+    static internal void CommitBudget(Payable payable) {
+      var fields = new BudgetTransactionFields {
+        TransactionTypeUID = BudgetTransactionType.ComprometerGastoCorriente.UID,
+        BaseBudgetUID = payable.Budget.UID,
+        OperationSourceUID = SISTEMA_DE_PAGOS.UID,
+        Description = payable.Description,
+        BasePartyUID = payable.OrganizationalUnit.UID,
+        RequestedByUID = payable.PostedBy.UID,
+      };
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+        BudgetTransaction transaction = usecases.CreateTransaction(payable.PayableEntity, fields);
+
+        CreatePayableDocumentLinks(payable, transaction);
+      }
+    }
 
     static internal Bill GenerateBill(Document billDocument) {
       Assertion.Require(billDocument, nameof(billDocument));
@@ -96,17 +119,7 @@ namespace Empiria.Payments {
 
     static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
 
-      DocumentLinkServices.CreateLink(document, bill);
-
-      DocumentLinkServices.CreateLink(document, payable.GetPayableEntity());
-
-      if (payable.GetPayableEntity() is ContractMilestone contractMilestone) {
-        DocumentLinkServices.CreateLink(document, contractMilestone.Contract);
-
-        foreach (var contractDocument in DocumentServices.GetEntityDocuments(contractMilestone.Contract)) {
-          DocumentLinkServices.CreateLink(Document.Parse(contractDocument.UID), bill);
-        }
-      }
+      CreatePayableDocumentLinks(payable, document, bill);
 
       var fields = new DocumentFields {
         UID = document.UID,
@@ -118,6 +131,35 @@ namespace Empiria.Payments {
       };
 
       return DocumentServices.UpdateDocument(payable, document, fields);
+    }
+
+    static private void CreatePayableDocumentLinks(Payable payable, Document document, Bill bill) {
+      DocumentLinkServices.CreateLink(document, bill);
+
+      DocumentLinkServices.CreateLink(document, payable.GetPayableEntity());
+
+      if (payable.GetPayableEntity() is ContractMilestone contractMilestone) {
+
+        DocumentLinkServices.CreateLink(document, contractMilestone.Contract);
+
+        foreach (var contractDocument in DocumentServices.GetEntityDocuments(contractMilestone.Contract)) {
+          DocumentLinkServices.CreateLink(Document.Parse(contractDocument.UID), bill);
+        }
+      }
+    }
+
+    static private void CreatePayableDocumentLinks(Payable payable, BudgetTransaction transaction) {
+
+      foreach (var payableDocument in DocumentServices.GetEntityDocuments(payable)) {
+        DocumentLinkServices.CreateLink(Document.Parse(payableDocument.UID), transaction);
+      }
+
+      if (payable.GetPayableEntity() is ContractMilestone contractMilestone) {
+
+        foreach (var milestoneDocument in DocumentServices.GetEntityDocuments(contractMilestone.Contract)) {
+          DocumentLinkServices.CreateLink(Document.Parse(milestoneDocument.UID), transaction);
+        }
+      }
     }
 
   }  // class ExternalServices

@@ -13,12 +13,12 @@ using Empiria.Services;
 
 using Empiria.Financial;
 
-using Empiria.Payments.Payables.Adapters;
-using Empiria.Payments.Payables.Data;
-using Empiria.Payments.Payables.Services;
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.UseCases;
 
+using Empiria.Payments.Payables.Adapters;
+using Empiria.Payments.Payables.Data;
+using Empiria.Payments.Payables.Services;
 
 namespace Empiria.Payments.Payables.UseCases {
 
@@ -98,7 +98,7 @@ namespace Empiria.Payments.Payables.UseCases {
       FixedList<PayableType> payableTypes = PayableType.GetList();
 
       return payableTypes.Select(x => new NamedEntityDto(x.UID, x.DisplayName))
-      .ToFixedList();
+                         .ToFixedList();
     }
 
 
@@ -127,6 +127,8 @@ namespace Empiria.Payments.Payables.UseCases {
       }
 
       PayableServices.SetOnPayment(payable);
+
+      ExternalServices.CommitBudget(payable);
 
       CreatePaymentOrder(payable);
 
