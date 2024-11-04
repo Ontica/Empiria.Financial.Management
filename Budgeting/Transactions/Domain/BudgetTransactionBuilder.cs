@@ -17,6 +17,7 @@ namespace Empiria.Budgeting.Transactions {
 
     private readonly IPayableEntity _payable;
     private readonly BudgetTransactionFields _fields;
+    private BudgetTransaction _transaction;
 
     public BudgetTransactionBuilder(IPayableEntity payable, BudgetTransactionFields fields) {
       Assertion.Require(payable, nameof(payable));
@@ -28,12 +29,42 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal BudgetTransaction Build() {
-      BudgetTransaction transaction = CreateTransaction();
+      _transaction = CreateTransaction();
 
-      return transaction;
+      CreateEntries();
+
+      return _transaction;
     }
 
     #region Helpers
+
+    private void CreateEntries() {
+      foreach (var item in _payable.Items) {
+        var fields = CreateEntryFields(item, BalanceColumn.Available, false);
+
+        _transaction.AddEntry(fields);
+
+        fields = CreateEntryFields(item, BalanceColumn.Commited, true);
+
+        _transaction.AddEntry(fields);
+      }
+    }
+
+
+    static private BudgetEntryFields CreateEntryFields(IPayableEntityItem item,
+                                                       BalanceColumn balanceColumn,
+                                                       bool deposit) {
+      return new BudgetEntryFields {
+        BudgetAccountUID = item.BudgetAccount.UID,
+        BalanceColumnUID = balanceColumn.UID,
+        Description = item.Description,
+        ProductUID = item.Product.UID,
+        CurrencyUID = item.Currency.UID,
+        Deposit = deposit ? item.Total : 0,
+        Withdrawal = deposit ? 0: item.Total,
+      };
+    }
+
 
     private BudgetTransaction CreateTransaction() {
 

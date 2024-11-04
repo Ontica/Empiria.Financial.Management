@@ -18,6 +18,24 @@ namespace Empiria.Budgeting.Transactions {
 
     static public BalanceColumn Empty => ParseEmpty<BalanceColumn>();
 
+    static public BalanceColumn Planned => Parse("Planned");
+
+    static public BalanceColumn Authorized => Parse("Authorized");
+
+    static public BalanceColumn Expanded => Parse("Expanded");
+
+    static public BalanceColumn Reduced => Parse("Reduced");
+
+    static public BalanceColumn Modified => Parse("Modified");
+
+    static public BalanceColumn Available => Parse("Available");
+
+    static public BalanceColumn Commited => Parse("Commited");
+
+    static public BalanceColumn ToPay => Parse("ToPay");
+
+    static public BalanceColumn Exercised => Parse("Exercised");
+
   }  // class BalanceColumn
 
 }  // namespace Empiria.Budgeting.Transactions
