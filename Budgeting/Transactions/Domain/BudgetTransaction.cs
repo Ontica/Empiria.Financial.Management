@@ -28,6 +28,13 @@ namespace Empiria.Budgeting.Transactions {
       // Required by Empiria Framework for all partitioned types.
     }
 
+    internal protected BudgetTransaction(BudgetTransactionType transactionType,
+                                         Budget baseBudget) : base(transactionType) {
+      Assertion.Require(baseBudget, nameof(baseBudget));
+
+      this.BaseBudget = baseBudget;
+    }
+
     static public BudgetTransaction Parse(int id) => ParseId<BudgetTransaction>(id);
 
     static public BudgetTransaction Parse(string uid) => ParseKey<BudgetTransaction>(uid);
@@ -212,7 +219,24 @@ namespace Empiria.Budgeting.Transactions {
     #region Methods
 
     protected override void OnSave() {
+      if (IsNew) {
+        TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
       BudgetTransactionDataService.WriteTransaction(this);
+    }
+
+
+    internal void Update(BudgetTransactionFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureIsValid();
+
+      Description = PatchCleanField(fields.Description, Description);
+      BaseParty = PatchField(fields.BasePartyUID, BaseParty);
+      RequestedBy = PatchField(fields.RequestedByUID, RequestedBy);
+      OperationSource = PatchField(fields.OperationSourceUID, OperationSource);
     }
 
     #endregion Methods

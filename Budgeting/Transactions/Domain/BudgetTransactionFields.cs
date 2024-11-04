@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Budget Transactions                        Component : Adapters Layer                          *
+*  Module   : Budget Transactions                        Component : Domain Layer                            *
 *  Assembly : Empiria.Budgeting.Transactions.dll         Pattern   : Input Fields DTO                        *
 *  Type     : BudgetTransactionFields                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -8,27 +8,29 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Budgeting.Transactions.Adapters {
+using Empiria.Parties;
+
+namespace Empiria.Budgeting.Transactions {
 
   /// <summary>Input fields DTO used to create and update budget transactions.</summary>
   public class BudgetTransactionFields : WorkItemDto {
-
-    public string BaseBudgetUID {
-      get; set;
-    } = string.Empty;
-
 
     public string TransactionTypeUID {
       get; set;
     } = string.Empty;
 
 
-    public string TransactionSubTypeUID {
+    public string BaseBudgetUID {
       get; set;
     } = string.Empty;
 
 
-    public string BaseOrgUnitUID {
+    public string OperationSourceUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string BasePartyUID {
       get; set;
     } = string.Empty;
 
@@ -42,7 +44,37 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; set;
     } = string.Empty;
 
-
   }  // BudgetTransactionFields
 
-}  // namespace Empiria.Budgeting.Transactions.Adapters
+
+
+  /// <summary>Extension methods for BudgetTransactionFields class.</summary>
+  static internal class BudgetTransactionFieldsExtension {
+
+    static internal void EnsureIsValid(this BudgetTransactionFields fields) {
+      fields.Description = EmpiriaString.Clean(fields.Description);
+
+      if (fields.TransactionTypeUID.Length != 0) {
+        _ = BudgetTransactionType.Parse(fields.TransactionTypeUID);
+      }
+
+      if (fields.BaseBudgetUID.Length != 0) {
+        _ = Budget.Parse(fields.BaseBudgetUID);
+      }
+
+      if (fields.OperationSourceUID.Length != 0) {
+        _ = OperationSource.Parse(fields.OperationSourceUID);
+      }
+
+      if (fields.BasePartyUID.Length != 0) {
+        _ = Party.Parse(fields.BasePartyUID);
+      }
+
+      if (fields.RequestedByUID.Length != 0) {
+        _ = Party.Parse(fields.RequestedByUID);
+      }
+    }
+
+  }  // class BudgetTransactionFieldsExtensions
+
+}  // namespace Empiria.Budgeting.Transactions

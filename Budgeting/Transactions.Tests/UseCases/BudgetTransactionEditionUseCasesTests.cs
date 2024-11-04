@@ -10,7 +10,7 @@
 
 using Xunit;
 
-using Empiria.Budgeting.Transactions.Adapters;
+using Empiria.Budgeting.Transactions;
 using Empiria.Budgeting.Transactions.UseCases;
 
 namespace Empiria.Tests.Budgeting.Transactions {
