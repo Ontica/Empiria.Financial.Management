@@ -58,7 +58,8 @@ namespace Empiria.Billing.Adapters {
 
       return new BillFields {
         BillCategoryUID = BillCategory.Factura.UID,
-        BillNo = dto.DatosGenerales.NoCertificado,
+        BillNo = dto.SATComplemento.UUID,
+        CertificationNo = dto.DatosGenerales.NoCertificado,
         IssueDate = dto.DatosGenerales.Fecha,
         IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
         IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,

@@ -24,6 +24,11 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public string CertificationNo {
+      get; set;
+    } = string.Empty;
+
+
     public DateTime IssueDate {
       get; set;
     } = ExecutionServer.DateMaxValue;
@@ -102,7 +107,7 @@ namespace Empiria.Billing {
     public FixedList<BillConceptFields> Concepts {
       get; set;
     } = new FixedList<BillConceptFields>();
-
+    
 
     internal void EnsureIsValid() {
       // ToDo
