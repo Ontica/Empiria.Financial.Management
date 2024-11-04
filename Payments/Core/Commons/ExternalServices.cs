@@ -120,7 +120,7 @@ namespace Empiria.Payments {
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
         BudgetTransaction transaction = usecases.CreateTransaction(payable.PayableEntity, fields);
 
-        CreatePayableDocumentLinks(payable, transaction);
+        CreateBudgetTransactionDocumentLinks(payable, transaction);
       }
     }
 
@@ -166,25 +166,31 @@ namespace Empiria.Payments {
 
       if (payable.GetPayableEntity() is ContractMilestone contractMilestone) {
 
-        DocumentLinkServices.CreateLink(document, contractMilestone.Contract);
+        foreach (var milestoneDocument in DocumentServices.GetEntityBaseDocuments(contractMilestone)) {
+          DocumentLinkServices.CreateLink(Document.Parse(milestoneDocument.UID), bill);
+        }
 
-        foreach (var contractDocument in DocumentServices.GetEntityDocuments(contractMilestone.Contract)) {
+        foreach (var contractDocument in DocumentServices.GetEntityBaseDocuments(contractMilestone.Contract)) {
           DocumentLinkServices.CreateLink(Document.Parse(contractDocument.UID), bill);
         }
       }
     }
 
 
-    static private void CreatePayableDocumentLinks(Payable payable, BudgetTransaction transaction) {
+    static private void CreateBudgetTransactionDocumentLinks(Payable payable, BudgetTransaction transaction) {
 
-      foreach (var payableDocument in DocumentServices.GetEntityDocuments(payable)) {
+      foreach (var payableDocument in DocumentServices.GetEntityBaseDocuments(payable)) {
         DocumentLinkServices.CreateLink(Document.Parse(payableDocument.UID), transaction);
       }
 
       if (payable.GetPayableEntity() is ContractMilestone contractMilestone) {
 
-        foreach (var milestoneDocument in DocumentServices.GetEntityDocuments(contractMilestone.Contract)) {
+        foreach (var milestoneDocument in DocumentServices.GetEntityBaseDocuments(contractMilestone)) {
           DocumentLinkServices.CreateLink(Document.Parse(milestoneDocument.UID), transaction);
+        }
+
+        foreach (var contractDocument in DocumentServices.GetEntityBaseDocuments(contractMilestone.Contract)) {
+          DocumentLinkServices.CreateLink(Document.Parse(contractDocument.UID), transaction);
         }
       }
     }
