@@ -72,6 +72,7 @@ namespace Empiria.Billing.UseCases {
       return BillMapper.MapToBillListDto(bills);
     }
 
+    
     #endregion Use cases
 
 
