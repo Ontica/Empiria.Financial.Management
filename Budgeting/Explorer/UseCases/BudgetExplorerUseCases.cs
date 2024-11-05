@@ -7,13 +7,12 @@
 *  Summary  : Use cases for retrieve budget information.                                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Services;
 
-using Empiria.Budgeting.Adapters;
+using Empiria.Budgeting.Explorer.Adapters;
 
-namespace Empiria.Budgeting.UseCases {
+namespace Empiria.Budgeting.Explorer.UseCases {
 
   /// <summary>Use cases for retrieve budget information.</summary>
   public class BudgetExplorerUseCases : UseCase {
@@ -32,14 +31,18 @@ namespace Empiria.Budgeting.UseCases {
 
     #region Use cases
 
-    public BudgetExplorerResultDto RetrievePlannedBudget(BudgetExplorerQuery query) {
+    public BudgetExplorerResultDto ExploreBudget(BudgetExplorerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      return new BudgetExplorerResultDto();
+      var explorer = new BudgetExplorer(query);
+
+      BudgetExplorerResult result = explorer.Execute();
+
+      return BudgetExplorerResultMapper.Map(result);
     }
 
     #endregion Use cases
 
   }  // class BudgetExplorerUseCases
 
-}  // namespace Empiria.Budgeting.UseCases
+}  // namespace Empiria.Budgeting.Explorer.UseCases
