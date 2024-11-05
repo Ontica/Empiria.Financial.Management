@@ -58,7 +58,7 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente)) {
           BuildDoubleEntries(item, BalanceColumn.Commited, BalanceColumn.Available);
         } else if (_transaction.BudgetTransactionType.Equals(BudgetTransactionType.EjercerGastoCorriente)) {
-          BuildDoubleEntries(item, BalanceColumn.Commited, BalanceColumn.Exercised);
+          BuildDoubleEntries(item, BalanceColumn.Exercised, BalanceColumn.Commited);
         }
       }
     }
