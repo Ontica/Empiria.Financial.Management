@@ -51,6 +51,15 @@
     </cfdi:Traslados>
   </cfdi:Impuestos>
   <cfdi:Complemento>
-    <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="397BB0EB-1EB0-41B6-B780-DFA55EFE132D" FechaTimbrado="2024-09-30T17:27:35" RfcProvCertif="MAS0810247C0" SelloCFD="TBuBYjGcL9zxvf4XCVzlg0VO36/W9/tWPa3uLMS3sPu" NoCertificadoSAT="00001000000709182898" SelloSAT="eE+DhVdIg7rleonetV/gTFyOpWU4OlfIQBfbGzjqlBWj6EUsIcroSOrc/FqiAbfED+0ezuA"/>
+    <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" 
+                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                             xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" 
+                             Version="1.1" 
+                             UUID="397BB0EB-1EB0-41B6-B780-DFA55EFE132D" 
+                             FechaTimbrado="2024-09-30T17:27:35" 
+                             RfcProvCertif="MAS0810247C0" 
+                             SelloCFD="TBuBYjGcL9zxvf4XCVzlg0VO36/W9/tWPa3uLMS3sPu" 
+                             NoCertificadoSAT="00001000000709182898" 
+                             SelloSAT="eE+DhVdIg7rleonetV/gTFyOpWU4OlfIQBfbGzjqlBWj6EUsIcroSOrc/FqiAbfED+0ezuA"/>
   </cfdi:Complemento>
 </cfdi:Comprobante>

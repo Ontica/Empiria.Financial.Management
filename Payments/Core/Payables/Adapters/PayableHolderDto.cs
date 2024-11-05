@@ -36,10 +36,6 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-    public string DocumentsEditionUrl {
-      get; internal set;
-    }
-
     public FixedList<HistoryDto> History {
       get; internal set;
     }

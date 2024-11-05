@@ -240,6 +240,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal void Authorize() {
+      this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      this.AuthorizationTime = DateTime.UtcNow;
+      this.Status = BudgetTransactionStatus.Completed;
+    }
+
+
     protected override void OnSave() {
       if (IsNew) {
         TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
@@ -268,6 +275,11 @@ namespace Empiria.Budgeting.Transactions {
       entry.Delete();
 
       _entries.Value.Remove(entry);
+    }
+
+
+    internal void SendToAuthorization() {
+      this.Status = BudgetTransactionStatus.OnAuthorization;
     }
 
 

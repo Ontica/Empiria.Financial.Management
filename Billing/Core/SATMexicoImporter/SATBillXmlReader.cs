@@ -52,6 +52,10 @@ namespace Empiria.Billing.SATMexicoImporter {
 
           GenerateConceptsList(node);
         }
+        if (node.Name == "cfdi:Complemento") {
+
+          GenerateComplementData(node);
+        }
       }
 
       return _satBillDto;
@@ -75,11 +79,33 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    private void GenerateConceptsList(XmlNode conceptsHeader) {
+    private void GenerateComplementData(XmlNode complementNode) {
+
+      XmlNode timbre = complementNode.FirstChild;
+
+      if (!timbre.Name.Equals("tfd:TimbreFiscalDigital"))
+        Assertion.EnsureFailed("The 'tfd:TimbreFiscalDigital' it doesnt exist.");
+
+      _satBillDto.SATComplemento = new SATBillComplementDto {
+        Xmlns_Tfd = GetAttribute(timbre, "xmlns:tfd"),
+        Xmlns_Xsi = GetAttribute(timbre, "xmlns:xsi"),
+        Xsi_SchemaLocation = GetAttribute(timbre, "xsi:schemaLocation"),
+        Tfd_Version = GetAttribute(timbre, "Version"),
+        UUID = GetAttribute(timbre, "UUID"),
+        FechaTimbrado = GetAttribute<DateTime>(timbre, "FechaTimbrado"),
+        RfcProvCertif = GetAttribute(timbre, "RfcProvCertif"),
+        SelloCFD = GetAttribute(timbre, "SelloCFD"),
+        NoCertificadoSAT = GetAttribute(timbre, "NoCertificadoSAT"),
+        SelloSAT = GetAttribute(timbre, "SelloSAT")
+      };
+    }
+
+
+    private void GenerateConceptsList(XmlNode conceptsNode) {
 
       var conceptosDto = new List<SATBillConceptDto>();
 
-      foreach (XmlNode concept in conceptsHeader.ChildNodes) {
+      foreach (XmlNode concept in conceptsNode.ChildNodes) {
 
         if (!concept.Name.Equals("cfdi:Concepto")) {
           Assertion.EnsureFailed("The concepts node must contain only concepts.");
@@ -105,54 +131,53 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    private void GenerateGeneralData(XmlElement generalData) {
+    private void GenerateGeneralData(XmlElement generalDataNode) {
 
-      if (!generalData.Name.Equals("cfdi:Comprobante")) {
+      if (!generalDataNode.Name.Equals("cfdi:Comprobante")) {
         Assertion.EnsureFailed("El archivo xml no es un cfdi.");
-      } else if (!generalData.GetAttribute("Version").Equals("4.0")) {
+      } else if (!generalDataNode.GetAttribute("Version").Equals("4.0")) {
         Assertion.EnsureFailed("The CFDI version is not correct.");
       }
 
       _satBillDto.DatosGenerales = new SATBillGeneralDataDto {
-        CFDIVersion = GetAttribute(generalData, "Version"),
-        Folio = GetAttribute(generalData, "Folio"),
-        Fecha = GetAttribute<DateTime>(generalData, "Fecha"),
-        Sello = GetAttribute(generalData, "Version"),
-        FormaPago = GetAttribute(generalData, "FormaPago"),
-        NoCertificado = GetAttribute(generalData, "NoCertificado"),
-        Certificado = GetAttribute(generalData, "Certificado"),
+        CFDIVersion = GetAttribute(generalDataNode, "Version"),
+        Folio = GetAttribute(generalDataNode, "Folio"),
+        Fecha = GetAttribute<DateTime>(generalDataNode, "Fecha"),
+        Sello = GetAttribute(generalDataNode, "Version"),
+        FormaPago = GetAttribute(generalDataNode, "FormaPago"),
+        NoCertificado = GetAttribute(generalDataNode, "NoCertificado"),
+        Certificado = GetAttribute(generalDataNode, "Certificado"),
+        SubTotal = GetAttribute<decimal>(generalDataNode, "SubTotal"),
+        Moneda = GetAttribute(generalDataNode, "Moneda"),
+        Total = GetAttribute<decimal>(generalDataNode, "Total"),
 
-        SubTotal = GetAttribute<decimal>(generalData, "SubTotal"),
-        Moneda = GetAttribute(generalData, "Moneda"),
-        Total = GetAttribute<decimal>(generalData, "Total"),
-
-        TipoDeComprobante = GetAttribute(generalData, "TipoDeComprobante"),
-        Exportacion = GetAttribute(generalData, "Exportacion"),
-        MetodoPago = GetAttribute(generalData, "MetodoPago"),
-        LugarExpedicion = GetAttribute(generalData, "LugarExpedicion"),
+        TipoDeComprobante = GetAttribute(generalDataNode, "TipoDeComprobante"),
+        Exportacion = GetAttribute(generalDataNode, "Exportacion"),
+        MetodoPago = GetAttribute(generalDataNode, "MetodoPago"),
+        LugarExpedicion = GetAttribute(generalDataNode, "LugarExpedicion"),
       };
 
     }
 
 
-    private void GenerateReceiverData(XmlNode receiver) {
+    private void GenerateReceiverData(XmlNode receiverNode) {
 
       _satBillDto.Receptor = new SATBillOrganizationDto {
-        RegimenFiscal = GetAttribute(receiver, "RegimenFiscalReceptor"),
-        RFC = GetAttribute(receiver, "Rfc"),
-        Nombre = GetAttribute(receiver, "Nombre"),
-        DomicilioFiscal = GetAttribute(receiver, "DomicilioFiscalReceptor"),
-        UsoCFDI = GetAttribute(receiver, "UsoCFDI"),
+        RegimenFiscal = GetAttribute(receiverNode, "RegimenFiscalReceptor"),
+        RFC = GetAttribute(receiverNode, "Rfc"),
+        Nombre = GetAttribute(receiverNode, "Nombre"),
+        DomicilioFiscal = GetAttribute(receiverNode, "DomicilioFiscalReceptor"),
+        UsoCFDI = GetAttribute(receiverNode, "UsoCFDI"),
       };
     }
 
 
-    private void GenerateSenderData(XmlNode sender) {
+    private void GenerateSenderData(XmlNode senderNode) {
 
       _satBillDto.Emisor = new SATBillOrganizationDto {
-        RegimenFiscal = GetAttribute(sender, "RegimenFiscal"),
-        RFC = GetAttribute(sender, "Rfc"),
-        Nombre = GetAttribute(sender, "Nombre"),
+        RegimenFiscal = GetAttribute(senderNode, "RegimenFiscal"),
+        RFC = GetAttribute(senderNode, "Rfc"),
+        Nombre = GetAttribute(senderNode, "Nombre"),
       };
     }
 

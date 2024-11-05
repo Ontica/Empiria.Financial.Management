@@ -36,8 +36,9 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     #region Helpers
 
-    static private BaseActions MapActions(BudgetTransaction transaction) {
-      return new BaseActions {
+    static private BudgetTransactionActions MapActions(BudgetTransaction transaction) {
+      return new BudgetTransactionActions {
+        CanAuthorize = true,
         CanEditDocuments = true
       };
     }

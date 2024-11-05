@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Budgeting.WebApi.dll                 Pattern   : Query Api Controller                  *
 *  Type     : BudgetExplorerController                     License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrieve budget information.                                                   *
+*  Summary  : Web API used to retrieve dynamic budget information.                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,22 +12,22 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Budgeting.Adapters;
-using Empiria.Budgeting.UseCases;
+using Empiria.Budgeting.Explorer.Adapters;
+using Empiria.Budgeting.Explorer.UseCases;
 
-namespace Empiria.Budgeting.WebApi {
+namespace Empiria.Budgeting.Explorer.WebApi {
 
-  /// <summary>Web API used to retrieve budget information.</summary>
+  /// <summary>Web API used to retrieve dynamic budget information.</summary>
   public class BudgetExplorerController : WebApiController {
 
     #region Web Apis
 
     [HttpPost]
     [Route("v2/budgeting/budget-explorer/planning")]
-    public SingleObjectModel RetrievePlannedBudget([FromBody] BudgetExplorerQuery query) {
+    public SingleObjectModel ExplorePlannedBudget([FromBody] BudgetExplorerQuery query) {
 
       using (var usecases = BudgetExplorerUseCases.UseCaseInteractor()) {
-        BudgetExplorerResultDto result = usecases.RetrievePlannedBudget(query);
+        BudgetExplorerResultDto result = usecases.ExploreBudget(query);
 
         return new SingleObjectModel(base.Request, result);
       }
@@ -37,4 +37,4 @@ namespace Empiria.Budgeting.WebApi {
 
   }  // class BudgetExplorerController
 
-}  // namespace Empiria.Budgeting.WebApi
+}  // namespace Empiria.Budgeting.Explorer.WebApi

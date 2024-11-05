@@ -58,6 +58,15 @@ namespace Empiria.Billing.Data {
     }
 
 
+    static internal int ValidateExistBill(string billNo) {
+
+      var sql = $"SELECT * FROM FMS_BILLS WHERE BILL_NO = '{billNo}'";
+      var op = DataOperation.Parse(sql);
+      var exist = DataReader.GetPlainObjectList<Bill>(op);
+      return exist.Count;
+    }
+
+
     static public void WriteBill(Bill bill) {
 
       var op = DataOperation.Parse("write_FMS_Bill",

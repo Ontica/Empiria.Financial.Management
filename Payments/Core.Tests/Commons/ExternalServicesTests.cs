@@ -32,7 +32,17 @@ namespace Empiria.Tests.Payments {
 
 
     [Fact]
-    public void Should_Sent_PaymentOrder_ToPay() {
+    public void Should_Exercise_Budget() {
+      TestsCommonMethods.Authenticate();
+
+      Payable sut = Payable.Parse(TestingConstants.PAYABLE_ID);
+
+      ExternalServices.ExerciseBudget(sut);
+    }
+
+
+    [Fact]
+    public void Should_Send_PaymentOrder_ToPay() {
       TestsCommonMethods.Authenticate();
 
       PaymentOrder order = PaymentOrder.Parse("ae03e327-7384-44d7-91b4-48ee6d47d3d4");
@@ -40,6 +50,7 @@ namespace Empiria.Tests.Payments {
 
        Assert.NotNull(sut);
     }
+
     #endregion Facts
 
   }  // class PayableTests

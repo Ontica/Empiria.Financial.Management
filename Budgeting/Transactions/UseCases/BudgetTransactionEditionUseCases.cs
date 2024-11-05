@@ -13,6 +13,8 @@ using Empiria.Services.Aspects;
 
 using Empiria.Financial;
 
+using Empiria.Budgeting.Transactions.Adapters;
+
 namespace Empiria.Budgeting.Transactions.UseCases {
 
   /// <summary>Use cases used to edit budget transactions.</summary>
@@ -32,6 +34,19 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
     #region Use cases
 
+    public BudgetTransactionHolderDto AuthorizeTransaction(string budgetTransactionUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      transaction.Authorize();
+
+      transaction.Save();
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     [WorkflowEvent("BudgetTransactionCreated")]
     public void CreateTransaction(BudgetTransactionFields fields) {
       Assertion.Require(fields, nameof(fields));
@@ -49,6 +64,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       var transactionBuilder = new BudgetTransactionBuilder(payable, fields);
 
       BudgetTransaction transaction = transactionBuilder.Build();
+
+      transaction.SendToAuthorization();
 
       transaction.Save();
 

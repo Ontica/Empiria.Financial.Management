@@ -34,6 +34,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = new FixedList<SATBillConceptDto>();
 
 
+    public SATBillComplementDto SATComplemento {
+      get; internal set;
+    } = new SATBillComplementDto();
+
+
   } // class SATBillDto
 
 
@@ -229,5 +234,61 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
   }  // class SATBillTaxDto
+
+
+  public class SATBillComplementDto {
+
+
+    public string Xmlns_Tfd {
+      get; set;
+    }
+
+
+    public string Xmlns_Xsi {
+      get; set;
+    }
+
+
+    public string Xsi_SchemaLocation {
+      get; set;
+    }
+
+
+    public string Tfd_Version {
+      get; set;
+    }
+
+
+    public string UUID {
+      get; internal set;
+    }
+
+
+    public DateTime FechaTimbrado {
+      get; internal set;
+    }
+
+
+    public string RfcProvCertif {
+      get; internal set;
+    }
+
+
+    public string SelloCFD {
+      get; internal set;
+    }
+
+
+    public string NoCertificadoSAT {
+      get; internal set;
+    }
+
+
+    public string SelloSAT {
+      get; internal set;
+    }
+
+  }  // class SATBillTaxDto
+
 
 } // namespace Empiria.Billing.SATMexicoImporter

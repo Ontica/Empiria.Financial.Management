@@ -36,12 +36,21 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public BaseActions Actions {
+    public BudgetTransactionActions Actions {
       get; internal set;
     }
 
   }  // class BudgetTransactionHolderDto
 
+
+
+  public class BudgetTransactionActions : BaseActions {
+
+    public bool CanAuthorize {
+      get; internal set;
+    }
+
+  }
 
 
   /// <summary>Output DTO used for budget transactions.</summary>

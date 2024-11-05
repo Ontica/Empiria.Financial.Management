@@ -22,6 +22,18 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
     #region Web Apis
 
+    [HttpPost]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/authorize")]
+    public SingleObjectModel AuthorizeTransaction([FromUri] string budgetTransactionUID) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+        BudgetTransactionHolderDto transaction = usecases.AuthorizeTransaction(budgetTransactionUID);
+
+        return new SingleObjectModel(base.Request, transaction);
+      }
+    }
+
+
     [HttpGet]
     [Route("v2/budgeting/transactions/operation-sources")]
     public SingleObjectModel GetOperationSources() {

@@ -8,6 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Billing.Data;
+using Empiria.Billing.SATMexicoImporter;
+using Empiria.Parties;
 
 namespace Empiria.Billing {
 
@@ -20,6 +23,11 @@ namespace Empiria.Billing {
 
 
     public string BillNo {
+      get; set;
+    } = string.Empty;
+
+
+    public string CertificationNo {
       get; set;
     } = string.Empty;
 
@@ -102,10 +110,20 @@ namespace Empiria.Billing {
     public FixedList<BillConceptFields> Concepts {
       get; set;
     } = new FixedList<BillConceptFields>();
-
-
+    
+    
     internal void EnsureIsValid() {
-      // ToDo
+
+      var issuedTo = Party.TryParseWithID(IssuedToUID);
+      Assertion.Require(issuedTo != null, "No existe registro del receptor de la factura.");
+
+      Assertion.Require(issuedTo.Tags.Contains("BNO670315CD0"), "El receptor de la factura no es BANOBRAS.");
+
+      Assertion.Require(IssueDate <= DateTime.Now,
+                        "La fecha de la factura no debe ser mayor a la fecha actual.");
+
+      Assertion.Require(BillData.ValidateExistBill(BillNo) == 0,
+                        "La factura que se intenta guardar ya esta registrada.");
     }
 
   } // class BillFields

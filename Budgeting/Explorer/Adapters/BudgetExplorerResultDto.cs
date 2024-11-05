@@ -10,7 +10,7 @@
 
 using Empiria.DynamicData;
 
-namespace Empiria.Budgeting.Adapters {
+namespace Empiria.Budgeting.Explorer.Adapters {
 
   /// <summary>Dynamic columns output DTO with budget information.</summary>
   public class BudgetExplorerResultDto {
@@ -30,4 +30,4 @@ namespace Empiria.Budgeting.Adapters {
 
   }  // class BudgetExplorerResultDto
 
-}  // namespace Empiria.Budgeting.Adapters
+}  // namespace Empiria.Budgeting.Explorer.Adapters

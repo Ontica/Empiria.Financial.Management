@@ -26,7 +26,6 @@ namespace Empiria.Payments.Payables.Adapters {
         Items = MapPayableItems(payable.GetItems()),
         Bills = ExternalServices.GetPayableBills(payable),
         Documents = DocumentServices.GetEntityDocuments(payable),
-        DocumentsEditionUrl = ExternalServices.GetEntityDocumentsEditionUrl(payable),
         History = HistoryServices.GetEntityHistory(payable),
         Actions = MapActions(),
       };

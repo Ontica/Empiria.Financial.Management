@@ -57,7 +57,6 @@ namespace Empiria.Budgeting {
       }
     }
 
-
     [DataField("BDG_ACCT_SEGMENT_CODE")]
     public string Code {
       get; protected set;
@@ -69,6 +68,11 @@ namespace Empiria.Budgeting {
       get; protected set;
     }
 
+    public string FullName {
+      get {
+        return $"{Code} - {Name}";
+      }
+    }
 
     [DataField("BDG_ACCT_SEGMENT_DESCRIPTION")]
     public string Description {

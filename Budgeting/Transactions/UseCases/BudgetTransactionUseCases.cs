@@ -30,10 +30,10 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       return CreateInstance<BudgetTransactionUseCases>();
     }
 
+
     #endregion Constructors and parsers
 
     #region Use cases
-
 
     public FixedList<NamedEntityDto> GetOperationSources() {
       return OperationSource.GetList()
