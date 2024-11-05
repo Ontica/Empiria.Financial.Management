@@ -65,23 +65,23 @@ namespace Empiria.Budgeting {
     }
 
     [DataField("BDG_ACCT_SEGMENT_01_ID")]
-    private BudgetAccountSegment Segment_1 {
-      get; set;
+    internal BudgetAccountSegment Segment_1 {
+      get; private set;
     }
 
     [DataField("BDG_ACCT_SEGMENT_02_ID")]
-    private BudgetAccountSegment Segment_2 {
-      get; set;
+    internal BudgetAccountSegment Segment_2 {
+      get; private set;
     }
 
     [DataField("BDG_ACCT_SEGMENT_03_ID")]
-    private BudgetAccountSegment Segment_3 {
-      get; set;
+    internal BudgetAccountSegment Segment_3 {
+      get; private set;
     }
 
     [DataField("BDG_ACCT_SEGMENT_04_ID")]
-    private BudgetAccountSegment Segment_4 {
-      get; set;
+    internal BudgetAccountSegment Segment_4 {
+      get; private set;
     }
 
     [DataField("BDG_ACCT_EXT_DATA")]
