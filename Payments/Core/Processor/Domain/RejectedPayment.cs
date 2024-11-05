@@ -12,8 +12,10 @@ using Empiria.Payments.Orders;
 
 namespace Empiria.Payments.Processor {
 
+  /// <summary>Represents a rejected payment.</summary>
   internal class RejectedPayment : PaymentInstruction {
 
+    #region Constructors and Parsers
     public RejectedPayment(PaymentsBroker broker,
                            PaymentOrder paymentOrder,
                            RejectedPaymentData failResult) : base(broker, paymentOrder) {
@@ -21,12 +23,19 @@ namespace Empiria.Payments.Processor {
       Assertion.Require(failResult, nameof(failResult));
 
       this.FailResult = failResult;
+      this.SetFailPayment();
     }
 
+    #endregion Constructors and Parsers
+
+
+    #region Properties
 
     public RejectedPaymentData FailResult {
       get; private set;
     }
+
+    #endregion Properties
 
   }  // class RejectedPayment
 

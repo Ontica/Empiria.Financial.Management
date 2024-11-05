@@ -39,7 +39,7 @@ namespace Empiria.Payments.Processor.Services {
 
       IPaymentResult paymentResult = brokerProvider.Pay(paymentInstruction);
 
-      var broker = PaymentsBroker.Parse(brokerProvider.UID);
+      var broker = PaymentsBroker.Parse("5800f993-2db1-4aa8-aaad-5bd86db24c78");
 
       if (paymentResult.Failed) {
         return RejectedPayment(paymentOrder, paymentResult, broker);

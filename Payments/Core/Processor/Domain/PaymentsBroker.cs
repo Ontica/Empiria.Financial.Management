@@ -37,6 +37,7 @@ namespace Empiria.Payments.Processor {
     #endregion Constructors and parsers
 
     public IPaymentResult Pay(IPaymentInstruction instruction) {
+  
       return new PaymentResultDto {
          Failed = EmpiriaMath.GetRandomBoolean(),
       };

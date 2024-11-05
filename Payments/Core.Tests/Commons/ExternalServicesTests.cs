@@ -12,6 +12,7 @@ using Xunit;
 
 using Empiria.Payments;
 using Empiria.Payments.Payables;
+using Empiria.Payments.Orders;
 
 namespace Empiria.Tests.Payments {
 
@@ -29,6 +30,16 @@ namespace Empiria.Tests.Payments {
       ExternalServices.CommitBudget(sut);
     }
 
+
+    [Fact]
+    public void Should_Sent_PaymentOrder_ToPay() {
+      TestsCommonMethods.Authenticate();
+
+      PaymentOrder order = PaymentOrder.Parse("ae03e327-7384-44d7-91b4-48ee6d47d3d4");
+      var sut = ExternalServices.SendPaymentOrderToPay(order);
+
+       Assert.NotNull(sut);
+    }
     #endregion Facts
 
   }  // class PayableTests

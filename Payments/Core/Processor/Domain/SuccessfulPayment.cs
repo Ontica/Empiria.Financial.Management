@@ -15,19 +15,32 @@ namespace Empiria.Payments.Processor {
   /// <summary>Represents an actual payment.</summary>
   internal class SuccessfulPayment : PaymentInstruction {
 
+    #region Constructors and Parsers 
+
     public SuccessfulPayment(PaymentsBroker broker, PaymentOrder paymentOrder,
                              SuccessfulPaymentData successfulResult) : base(broker, paymentOrder) {
 
       Assertion.Require(successfulResult, nameof(successfulResult));
 
       this.SuccessfulResult = successfulResult;
+      this.SetSuccessfulPayment();
     }
 
+    #endregion Constructors and Parsers 
+
+    #region Properties
 
     public SuccessfulPaymentData SuccessfulResult {
       get; private set;
     }
 
+    #endregion Properties
+
+    #region Methods
+
+  
+
+    #endregion Methods
   }  // class Payment
 
 } // namespace Empiria.Payments.Processor
