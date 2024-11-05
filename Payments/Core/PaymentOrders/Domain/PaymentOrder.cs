@@ -51,6 +51,8 @@ namespace Empiria.Payments.Orders {
      return BaseObject.TryParse<PaymentOrder>($"ORDER_PAYABLE_ID = {payable.Id}");
     }
 
+    static public PaymentOrder Empty => ParseEmpty<PaymentOrder>();
+
     #endregion Constructors and parsers
 
     #region Properties
