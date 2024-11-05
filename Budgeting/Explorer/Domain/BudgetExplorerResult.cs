@@ -10,15 +10,14 @@
 
 using Empiria.DynamicData;
 
-using Empiria.Budgeting.Explorer.Adapters;
-
 namespace Empiria.Budgeting.Explorer {
 
   /// <summary>Holds the dynamic result of a budget explorer execution.</summary>
   internal class BudgetExplorerResult {
 
-    public BudgetExplorerQuery Query {
-      get; internal set;
+    public BudgetExplorerCommand Command {
+      get;
+      internal set;
     }
 
     public FixedList<DataTableColumn> Columns {

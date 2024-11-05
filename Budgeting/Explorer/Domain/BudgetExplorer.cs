@@ -12,7 +12,6 @@ using System.Collections.Generic;
 
 using Empiria.DynamicData;
 
-using Empiria.Budgeting.Explorer.Adapters;
 using Empiria.Budgeting.Explorer.Data;
 
 namespace Empiria.Budgeting.Explorer {
@@ -20,17 +19,17 @@ namespace Empiria.Budgeting.Explorer {
   /// <summary>Retrives budget information bases on a query returning a dynamic result data structure.</summary>
   internal class BudgetExplorer {
 
-    private readonly BudgetExplorerQuery _query;
+    private readonly BudgetExplorerCommand _command;
 
-    internal BudgetExplorer(BudgetExplorerQuery query) {
+    internal BudgetExplorer(BudgetExplorerCommand query) {
       Assertion.Require(query, nameof(query));
 
-      _query = query;
+      _command = query;
     }
 
     internal BudgetExplorerResult Execute() {
       return new BudgetExplorerResult {
-        Query = _query,
+        Command = _command,
         Columns = BuildColumns(),
         Entries = BudgetExplorerDataService.GetBugetDataInMultipleColumns()
       };
@@ -38,6 +37,7 @@ namespace Empiria.Budgeting.Explorer {
 
     private FixedList<DataTableColumn> BuildColumns() {
       return new List<DataTableColumn> {
+        new DataTableColumn("organizationalUnit", "Área", "text"),
         new DataTableColumn("budgetAccount", "Cuenta", "text"),
         new DataTableColumn("year", "Año", "text"),
         new DataTableColumn("month", "Mes", "text"),

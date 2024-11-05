@@ -34,11 +34,13 @@ namespace Empiria.Budgeting.Explorer.UseCases {
     public BudgetExplorerResultDto ExploreBudget(BudgetExplorerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var explorer = new BudgetExplorer(query);
+      BudgetExplorerCommand command = BudgetExplorerQueryMapper.Map(query);
+
+      var explorer = new BudgetExplorer(command);
 
       BudgetExplorerResult result = explorer.Execute();
 
-      return BudgetExplorerResultMapper.Map(result);
+      return BudgetExplorerResultMapper.Map(query, result);
     }
 
     #endregion Use cases

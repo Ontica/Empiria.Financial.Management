@@ -15,15 +15,17 @@ namespace Empiria.Budgeting.Explorer.Adapters {
 
     public string BudgetUID {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string[] GroupBy {
       get; set;
-    }
+    } = new string[0];
+
 
     public BudgetSegmentQuery[] FilteredBy {
       get; set;
-    }
+    } = new BudgetSegmentQuery[0];
 
   }  // class BudgetExplorerQuery
 
@@ -35,11 +37,12 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     [Newtonsoft.Json.JsonProperty(PropertyName = "SegmentUID")]
     public string SegmentTypeUID {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string[] SegmentItems {
       get; set;
-    }
+    } = new string[0];
 
   }  // class BudgetSegmentQuery
 

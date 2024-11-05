@@ -21,6 +21,10 @@ namespace Empiria.Budgeting.Explorer.Adapters {
       get; internal set;
     }
 
+    public string OrganizationalUnit {
+      get; internal set;
+    }
+
     public string BudgetAccount {
       get; internal set;
     }
