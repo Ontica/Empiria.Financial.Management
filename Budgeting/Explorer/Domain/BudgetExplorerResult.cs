@@ -24,7 +24,7 @@ namespace Empiria.Budgeting.Explorer {
       get; internal set;
     }
 
-    public FixedList<BudgetDataInColumns> Entries {
+    public FixedList<BudgetExplorerEntry> Entries {
       get; internal set;
     }
 

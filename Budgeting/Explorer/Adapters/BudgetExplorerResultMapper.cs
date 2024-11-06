@@ -26,18 +26,19 @@ namespace Empiria.Budgeting.Explorer.Adapters {
 
     #region Helpers
 
-    static private FixedList<DynamicBudgetExplorerEntryDto> Map(FixedList<BudgetDataInColumns> entries) {
+    static private FixedList<DynamicBudgetExplorerEntryDto> Map(FixedList<BudgetExplorerEntry> entries) {
       return entries.Select(x => Map(x))
                     .ToFixedList();
     }
 
-    static private DynamicBudgetExplorerEntryDto Map(BudgetDataInColumns entry) {
+    static private DynamicBudgetExplorerEntryDto Map(BudgetExplorerEntry entry) {
       return new DynamicBudgetExplorerEntryDto {
-        OrganizationalUnit = entry.BudgetAccount.Segment_1.FullName,
-        BudgetAccount = entry.BudgetAccount.Name,
+        OrganizationalUnitName = entry.OrganizationalUnit.FullName,
+        BudgetAccountName = entry.BudgetAccount.Name,
+        Capitulo = entry.BudgetAccount.Segment_2.Parent.FullName,
         Year = entry.Year,
         Month = entry.Month,
-        Currency = entry.Currency.ISOCode,
+        CurrencyCode = entry.Currency.ISOCode,
         Planned = entry.Planned,
         Authorized = entry.Authorized,
         Expanded = entry.Expanded,
