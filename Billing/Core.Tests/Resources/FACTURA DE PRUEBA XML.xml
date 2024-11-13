@@ -16,7 +16,7 @@
   MetodoPago="PUE" 
   LugarExpedicion="83000">
   <cfdi:Emisor RegimenFiscal="626" Rfc="RAVA880701QMZ" Nombre="NOMBRE COMPLETO EMISOR"/>
-  <cfdi:Receptor Rfc="BOM998514PZ5" Nombre="NOMBRE COMPLETO RECEPTOR" DomicilioFiscalReceptor="10000" RegimenFiscalReceptor="601" UsoCFDI="G03"/>
+  <cfdi:Receptor Rfc="BNO670315CD0" Nombre="NOMBRE COMPLETO RECEPTOR" DomicilioFiscalReceptor="10000" RegimenFiscalReceptor="601" UsoCFDI="G03"/>
   <cfdi:Conceptos>
     <cfdi:Concepto ClaveProdServ="81112200" ClaveUnidad="E48" Cantidad="1.00" Unidad="SERVICIO" NoIdentificacion="DES" Descripcion="Desarrollo de Software Sistema SICOFIN de Banoras" ValorUnitario="17058.45" Importe="17058.45" ObjetoImp="02">
       <cfdi:Impuestos>
