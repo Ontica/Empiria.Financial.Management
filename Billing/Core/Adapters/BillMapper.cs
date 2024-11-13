@@ -10,6 +10,7 @@
 
 using Empiria.Documents.Services;
 using Empiria.History.Services;
+using Empiria.StateEnums;
 
 namespace Empiria.Billing.Adapters {
 
@@ -35,19 +36,19 @@ namespace Empiria.Billing.Adapters {
       return new BillDto {
         UID = bill.UID,
         BillNo = bill.BillNo,
+        Category = bill.BillCategory.MapToNamedEntity(),
         BillType = bill.BillType.MapToNamedEntity(),
-        IssueDate = bill.IssueDate,
+        ManagedBy = bill.ManagedBy.MapToNamedEntity(),
         IssuedBy = bill.IssuedBy.MapToNamedEntity(),
         IssuedTo = bill.IssuedTo.MapToNamedEntity(),
-        ManagedBy = bill.ManagedBy.MapToNamedEntity(),
         CurrencyCode = bill.Currency.ISOCode,
         Subtotal = bill.Subtotal,
         Discount = bill.Discount,
         Total = bill.Total,
+        IssueDate = bill.IssueDate,
         PostedBy = bill.PostedBy.MapToNamedEntity(),
         PostingTime = bill.PostingTime,
-        Status = bill.Status.MapToDto(),
-        Concepts = MapBillConcepts(bill.Concepts)
+        Status = bill.Status.MapToDto()
       };
     }
 
@@ -55,6 +56,14 @@ namespace Empiria.Billing.Adapters {
     static internal FixedList<BillDescriptorDto> MapToBillListDto(FixedList<Bill> bills) {
       return bills.Select((x) => MapToBillDescriptorDto(x))
                   .ToFixedList();
+    }
+
+
+    static internal BillWithConceptsDto MapToBillWithConcepts(Bill bill) {
+      return new BillWithConceptsDto {
+        Bill = MapToBillDto(bill),
+        Concepts = MapBillConcepts(bill.Concepts)
+      };
     }
 
     #endregion Public methods
@@ -81,9 +90,9 @@ namespace Empiria.Billing.Adapters {
 
     static private BillConceptDto MapToBillConceptsDto(BillConcept billConcept) {
       return new BillConceptDto {
-        BillUID = billConcept.Bill.UID,
+        //BillUID = billConcept.Bill.UID,
         UID = billConcept.BillConceptUID,
-        ProductUID = billConcept.Product.UID,
+        Product = billConcept.Product.MapToNamedEntity(),
         Description = billConcept.Description,
         Quantity = billConcept.Quantity,
         UnitPrice = billConcept.UnitPrice,
@@ -91,7 +100,7 @@ namespace Empiria.Billing.Adapters {
         Discount = billConcept.Discount,
         PostedBy = billConcept.PostedBy.MapToNamedEntity(),
         PostingTime = billConcept.PostingTime,
-        TaxEntriesDto = MapBillTaxes(billConcept.TaxEntries)
+        TaxEntries = MapBillTaxes(billConcept.TaxEntries)
       };
     }
 
@@ -113,17 +122,17 @@ namespace Empiria.Billing.Adapters {
 
     static private BillTaxEntryDto MapToBillTaxesDto(BillTaxEntry taxEntry) {
       return new BillTaxEntryDto {
-        BillUID = taxEntry.Bill.UID,
-        BillConceptUID = taxEntry.BillConcept.UID,
+        //BillUID = taxEntry.Bill.UID,
+        //BillConceptUID = taxEntry.BillConcept.UID,
         UID = taxEntry.BillTaxUID,
-        TaxMethod = taxEntry.TaxMethod,
-        TaxFactorType = taxEntry.TaxFactorType,
+        TaxMethod = taxEntry.TaxMethod.MapToDto(),
+        TaxFactorType = taxEntry.TaxFactorType.MapToDto(),
         Factor = taxEntry.Factor,
         BaseAmount = taxEntry.BaseAmount,
         Total = taxEntry.Total,
         PostedBy = taxEntry.PostedBy.MapToNamedEntity(),
         PostingTime = taxEntry.PostingTime,
-        Status = taxEntry.Status,
+        Status = EntityStatusEnumExtensions.MapToDto(taxEntry.Status)
       };
     }
 

@@ -19,4 +19,28 @@ namespace Empiria.Billing {
 
   }  // enum BillTaxFactorType
 
+
+  /// <summary>Extension methods for BillTaxFactorType.</summary>
+  static public class BillTaxFactorTypeExtensions {
+
+    static public string GetName(this BillTaxFactorType status) {
+      switch (status) {
+        case BillTaxFactorType.Cuota:
+          return "Cuota";
+
+        case BillTaxFactorType.Tasa:
+          return "Tasa";
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized status {status}");
+      }
+    }
+
+
+    static public NamedEntityDto MapToDto(this BillTaxFactorType status) {
+      return new NamedEntityDto(status.ToString(), status.GetName());
+    }
+
+  }  // class BillTaxFactorTypeExtensions
+
 } // namespace Empiria.Billing

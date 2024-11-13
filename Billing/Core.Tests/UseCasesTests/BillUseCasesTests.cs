@@ -36,12 +36,25 @@ namespace Empiria.Tests.Billing {
     [Fact]
     public void Get_Bill_By_UID_Test() {
 
-      string billUID = "30453b57-0b30-4082-966d-25940f441d25";
+      string billUID = "52c7394e-9d1b-4632-89df-320d2e438874";
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
         BillHolderDto sut = usecases.GetBill(billUID);
 
+        Assert.NotNull(sut);
+      }
+    }
+
+
+    [Fact]
+    public void Get_Bill_Map_By_UID_Test() {
+
+      string billUID = "52c7394e-9d1b-4632-89df-320d2e438874";
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+        BillWithConceptsDto sut = usecases.GetBillWithConceptsDto(billUID);
         Assert.NotNull(sut);
       }
     }
@@ -71,11 +84,11 @@ namespace Empiria.Tests.Billing {
         BillTypeUID = "",
         BillCategoryUID = "",
         ManagedByUID = "",
-        Keywords ="",
-        ConceptsKeywords="",
+        Keywords = "",
+        ConceptsKeywords = "",
         Tags = new string[] { },
         BillDateType = BillQueryDateType.None,
-        FromDate = new DateTime(2024,10,29),
+        FromDate = new DateTime(2024, 10, 29),
         ToDate = new DateTime(2024, 10, 31),
         Status = Empiria.Billing.BillStatus.All
       };

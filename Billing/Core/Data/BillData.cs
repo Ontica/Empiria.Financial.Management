@@ -39,7 +39,7 @@ namespace Empiria.Billing.Data {
       return DataReader.GetPlainObjectList<BillTaxEntry>(op);
     }
 
-    
+
     static internal FixedList<Bill> GetBillList(string filtering, string sorting) {
 
       var sql = "SELECT * FROM FMS_BILLS WHERE BILL_ID > 0 ";
@@ -58,6 +58,15 @@ namespace Empiria.Billing.Data {
     }
 
 
+    //internal static void UpdateBillStatus(string billUID, BillStatus status) {
+      
+    //  Bill bill = Bill.Parse(billUID);
+    //  var sql = $"UPDATE FMS_BILLS SET BILL_STATUS = '{(char) status}' WHERE BILL_ID = {bill.Id}";
+    //  var op = DataOperation.Parse(sql);
+    //  DataWriter.Execute(op);
+    //}
+
+
     static internal int ValidateExistBill(string billNo) {
 
       var sql = $"SELECT * FROM FMS_BILLS WHERE BILL_NO = '{billNo}'";
@@ -67,7 +76,7 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static public void WriteBill(Bill bill) {
+    static internal void WriteBill(Bill bill) {
 
       var op = DataOperation.Parse("write_FMS_Bill",
         bill.Id, bill.UID, bill.BillType.Id, bill.BillCategory.Id,
@@ -81,7 +90,7 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static public void WriteBillConcept(BillConcept concept) {
+    static internal void WriteBillConcept(BillConcept concept) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Concept",
         concept.Id, concept.UID, concept.Bill.Id, concept.Product.Id,
@@ -94,7 +103,7 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static public void WriteBillTaxEntry(BillTaxEntry tax) {
+    static internal void WriteBillTaxEntry(BillTaxEntry tax) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Tax",
         tax.Id, tax.UID, tax.Bill.Id, tax.BillConcept.Id,
@@ -104,6 +113,7 @@ namespace Empiria.Billing.Data {
 
       DataWriter.Execute(op);
     }
+
 
     #endregion Public methods
 

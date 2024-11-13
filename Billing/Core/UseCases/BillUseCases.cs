@@ -61,6 +61,16 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    public BillWithConceptsDto GetBillWithConceptsDto(string billUID) {
+      Assertion.Require(billUID, nameof(billUID));
+
+      Bill bill = Bill.Parse(billUID);
+      bill.AssignConcepts();
+
+      return BillMapper.MapToBillWithConcepts(bill);
+    }
+
+
     public FixedList<BillDescriptorDto> GetBillList(BillsQuery query) {
       Assertion.Require(query, nameof(query));
 
@@ -71,6 +81,12 @@ namespace Empiria.Billing.UseCases {
 
       return BillMapper.MapToBillListDto(bills);
     }
+
+
+    //public void UpdateBillStatus(string billUID, BillStatus status) {
+      
+    //  BillData.UpdateBillStatus(billUID, status);
+    //}
 
     
     #endregion Use cases

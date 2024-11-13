@@ -19,4 +19,28 @@ namespace Empiria.Billing {
 
   }  // enum BillTaxMethod
 
+
+  /// <summary>Extension methods for BillTaxMethod.</summary>
+  static public class BillTaxMethodExtensions {
+
+    static public string GetName(this BillTaxMethod status) {
+      switch (status) {
+        case BillTaxMethod.Traslado:
+          return "Traslado";
+
+        case BillTaxMethod.Retencion:
+          return "Retencion";
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized status {status}");
+      }
+    }
+
+
+    static public NamedEntityDto MapToDto(this BillTaxMethod status) {
+      return new NamedEntityDto(status.ToString(), status.GetName());
+    }
+
+  }  // class BillTaxMethodExtensions
+
 } // namespace Empiria.Billing

@@ -56,8 +56,18 @@ namespace Empiria.Billing.Adapters {
     }
 
 
+    public NamedEntityDto Category {
+      get; internal set;
+    } = new NamedEntityDto("", "");
+
+
     public NamedEntityDto BillType {
       get; internal set;
+    } = new NamedEntityDto("", "");
+
+
+    public NamedEntityDto ManagedBy {
+      get; set;
     } = new NamedEntityDto("", "");
 
 
@@ -73,11 +83,6 @@ namespace Empiria.Billing.Adapters {
 
     public NamedEntityDto IssuedTo {
       get; internal set;
-    } = new NamedEntityDto("", "");
-
-
-    public NamedEntityDto ManagedBy {
-      get; set;
     } = new NamedEntityDto("", "");
 
 
@@ -115,12 +120,21 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     } = new NamedEntityDto("", "");
 
+  } // Class BillEntryDto
+
+
+  public class BillWithConceptsDto {
+
+    public BillDto Bill {
+      get; internal set;
+    }
+
 
     public FixedList<BillConceptDto> Concepts {
       get; internal set;
     } = new FixedList<BillConceptDto>();
 
-  } // Class BillEntryDto
+  } // class BillWithConceptsDto
 
 
   /// <summary>Output DTO used to return bill entry data.</summary>
@@ -132,15 +146,15 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    public string BillUID {
-      get; set;
-    }
+    //public string BillUID {
+    //  get; set;
+    //}
 
 
-    public string ProductUID {
-      get; set;
-    }
-
+    public NamedEntityDto Product {
+      get; internal set;
+    } = new NamedEntityDto("", "");
+    
 
     public string Description {
       get; set;
@@ -177,7 +191,7 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    public FixedList<BillTaxEntryDto> TaxEntriesDto {
+    public FixedList<BillTaxEntryDto> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntryDto>();
 
@@ -195,24 +209,24 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    public string BillUID {
+    //public string BillUID {
+    //  get; set;
+    //}
+
+
+    //public string BillConceptUID {
+    //  get; set;
+    //}
+
+
+    public NamedEntityDto TaxMethod {
       get; set;
-    }
+    } = new NamedEntityDto("", "");
 
 
-    public string BillConceptUID {
+    public NamedEntityDto TaxFactorType {
       get; set;
-    }
-
-
-    public BillTaxMethod TaxMethod {
-      get; set;
-    }
-
-
-    public BillTaxFactorType TaxFactorType {
-      get; set;
-    }
+    } = new NamedEntityDto("", "");
 
 
     public decimal Factor {
@@ -240,10 +254,9 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    public EntityStatus Status {
-      get;
-      internal set;
-    }
+    public NamedEntityDto Status {
+      get; internal set;
+    } = new NamedEntityDto("", "");
 
   } // class BillTaxEntryDto
 
