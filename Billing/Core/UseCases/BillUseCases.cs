@@ -83,12 +83,12 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    //public void UpdateBillStatus(string billUID, BillStatus status) {
-      
-    //  BillData.UpdateBillStatus(billUID, status);
-    //}
+    public void SetBillAsPayed(string billUID) {
 
-    
+      BillData.SetBillAsPayed(billUID);
+    }
+
+
     #endregion Use cases
 
 

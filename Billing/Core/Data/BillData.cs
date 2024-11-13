@@ -58,13 +58,15 @@ namespace Empiria.Billing.Data {
     }
 
 
-    //internal static void UpdateBillStatus(string billUID, BillStatus status) {
+    internal static void SetBillAsPayed(string billUID) {
       
-    //  Bill bill = Bill.Parse(billUID);
-    //  var sql = $"UPDATE FMS_BILLS SET BILL_STATUS = '{(char) status}' WHERE BILL_ID = {bill.Id}";
-    //  var op = DataOperation.Parse(sql);
-    //  DataWriter.Execute(op);
-    //}
+      Bill bill = Bill.Parse(billUID);
+
+      var sql = $"UPDATE FMS_BILLS SET BILL_STATUS = '{(char) BillStatus.Payed}' WHERE BILL_ID = {bill.Id}";
+      var op = DataOperation.Parse(sql);
+      
+      DataWriter.Execute(op);
+    }
 
 
     static internal int ValidateExistBill(string billNo) {
