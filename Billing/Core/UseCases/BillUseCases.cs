@@ -36,7 +36,7 @@ namespace Empiria.Billing.UseCases {
 
     #region Use cases
 
-    public BillDto CreateBill(string xmlFilePath) {
+    public BillDto CreateBill(string xmlFilePath, int payableId) {
       Assertion.Require(xmlFilePath, nameof(xmlFilePath));
 
       var reader = new SATBillXmlReader(xmlFilePath);
@@ -44,6 +44,7 @@ namespace Empiria.Billing.UseCases {
       SATBillDto satDto = reader.ReadAsBillDto();
 
       BillFields fields = BillFieldsMapper.Map(satDto);
+      fields.PayableId = payableId;
 
       Bill bill = CreateBill(fields);
 

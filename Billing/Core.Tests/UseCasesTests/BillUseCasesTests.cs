@@ -26,7 +26,7 @@ namespace Empiria.Tests.Billing {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-        BillDto sut = usecases.CreateBill(xmlFilePath);
+        BillDto sut = usecases.CreateBill(xmlFilePath, -1);
 
         Assert.NotNull(sut);
       }

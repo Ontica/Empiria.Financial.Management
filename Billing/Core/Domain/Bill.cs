@@ -29,7 +29,6 @@ namespace Empiria.Billing {
       // Required by Empiria Framework for all partitioned types.
     }
 
-
     protected Bill() {
 
     }
@@ -72,6 +71,12 @@ namespace Empiria.Billing {
 
     [DataField("BILL_NO")]
     public string BillNo {
+      get; private set;
+    }
+
+
+    [DataField("BILL_PAYABLE_ID")]
+    public int PayableId {
       get; private set;
     }
 
@@ -247,7 +252,7 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
-
+      PayableId = fields.PayableId;
       IssueDate = PatchField(fields.IssueDate, IssueDate);
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);

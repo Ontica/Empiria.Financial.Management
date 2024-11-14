@@ -27,6 +27,11 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public int PayableId {
+      get; set;
+    }
+
+
     public string CertificationNo {
       get; set;
     } = string.Empty;
@@ -111,11 +116,11 @@ namespace Empiria.Billing {
       get; set;
     } = new FixedList<BillConceptFields>();
     
-    
+
     internal void EnsureIsValid() {
 
-      var issuedTo = Party.TryParseWithID(IssuedToUID);
-      Assertion.Require(issuedTo != null, "No existe registro del receptor de la factura.");
+      var issuedTo = Party.Parse(IssuedToUID);
+      Assertion.Require(issuedTo != null, "No existe registro en BD del receptor de la factura.");
 
       Assertion.Require(issuedTo.Tags.Contains("BNO670315CD0"), "El receptor de la factura no es BANOBRAS.");
 
