@@ -47,7 +47,7 @@ namespace Empiria.Payments.Payables.UseCases {
       var payable = Payable.Parse(payableUID);
       var document = Document.Parse(documentDto.UID);
 
-      Bill bill = ExternalServices.GenerateBill(document);
+      Bill bill = ExternalServices.GenerateBill(payable, document);
 
       var linkType = PayableLinkType.Bill;
 

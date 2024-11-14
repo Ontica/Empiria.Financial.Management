@@ -48,14 +48,14 @@ namespace Empiria.Payments {
     }
 
 
-    static internal Bill GenerateBill(Document billDocument) {
+    static internal Bill GenerateBill(Payable payable, Document billDocument) {
       Assertion.Require(billDocument, nameof(billDocument));
 
       string billXmlFillPath = billDocument.FullLocalName;
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-        Billing.Adapters.BillDto returnedValue = usecases.CreateBill(billXmlFillPath);
+        Billing.Adapters.BillDto returnedValue = usecases.CreateBill(billXmlFillPath, payable.PayableEntity);
 
         return Bill.Parse(returnedValue.UID);
       }
