@@ -75,10 +75,10 @@ namespace Empiria.Payments.Payables.UseCases {
     }
 
 
-    public PayableDto GetPayable(string payableUID) {
+    public PayableHolderDto GetPayable(string payableUID) {
       var payable = Payable.Parse(payableUID);
 
-      return PayableMapper.Map(payable);
+      return PayableHolderMapper.Map(payable);
     }
 
 
@@ -244,17 +244,6 @@ namespace Empiria.Payments.Payables.UseCases {
     }
 
     #endregion Link use cases
-
-    #region PayableData
-
-    public PayableHolderDto GetPayableData(string payableUID) {
-      var payable = Payable.Parse(payableUID);
-
-      return PayableHolderMapper.Map(payable);
-    }
-
-
-    #endregion PayableData
 
     #region Helpers
 
