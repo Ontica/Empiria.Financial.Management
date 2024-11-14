@@ -19,19 +19,6 @@ namespace Empiria.Tests.Billing {
   public class BillUseCasesTests {
 
 
-    [Fact]
-    public void Create_A_Bill_From_An_Xml_File_Test() {
-
-      string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
-
-      using (var usecases = BillUseCases.UseCaseInteractor()) {
-
-        BillDto sut = usecases.CreateBill(xmlFilePath);
-
-        Assert.NotNull(sut);
-      }
-    }
-
 
     [Fact]
     public void Get_Bill_By_UID_Test() {
