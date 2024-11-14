@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
 using Empiria.Billing.SATMexicoImporter;
+using Empiria.Financial;
 using Empiria.Products;
 using Empiria.Services;
 
@@ -36,7 +37,7 @@ namespace Empiria.Billing.UseCases {
 
     #region Use cases
 
-    public BillDto CreateBill(string xmlFilePath, int payableId) {
+    public BillDto CreateBill(string xmlFilePath) {
       Assertion.Require(xmlFilePath, nameof(xmlFilePath));
 
       var reader = new SATBillXmlReader(xmlFilePath);
@@ -44,7 +45,24 @@ namespace Empiria.Billing.UseCases {
       SATBillDto satDto = reader.ReadAsBillDto();
 
       BillFields fields = BillFieldsMapper.Map(satDto);
-      fields.PayableId = payableId;
+      fields.PayableId = -1;
+
+      Bill bill = CreateBill(fields);
+
+      return BillMapper.MapToBillDto(bill);
+    }
+
+
+    public BillDto CreateBill(string xmlFilePath, IPayableEntity iPayableEntity) {
+      Assertion.Require(xmlFilePath, nameof(xmlFilePath));
+      Assertion.Require(iPayableEntity, nameof(iPayableEntity));
+
+      var reader = new SATBillXmlReader(xmlFilePath);
+
+      SATBillDto satDto = reader.ReadAsBillDto();
+
+      BillFields fields = BillFieldsMapper.Map(satDto);
+      fields.PayableId = iPayableEntity.Id;
 
       Bill bill = CreateBill(fields);
 
