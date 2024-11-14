@@ -28,7 +28,7 @@ namespace Empiria.Payments.Payables.WebApi {
 
       using (var usecases = PayableUseCases.UseCaseInteractor()) {
 
-        PayableHolderDto payableHolderDto = usecases.GetPayableData(payableUID);
+        PayableHolderDto payableHolderDto = usecases.GetPayable(payableUID);
 
         return new SingleObjectModel(this.Request, payableHolderDto);
       }
