@@ -38,10 +38,10 @@ namespace Empiria.Contracts.Data {
     }
 
     static internal void WriteContractMilestone(ContractMilestone o, string extensionData) {
-      var op = DataOperation.Parse("write_Contract_Milestone",
+      var op = DataOperation.Parse("write_Milestone",
                      o.Id, o.UID, o.Contract.Id, o.MilestoneNo, o.Name, o.Description,
-                     o.Supplier.Id, o.PaymentData, o.ManagedByOrgUnit.Id, extensionData,
-                      o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+                     o.Supplier.Id, o.ManagedByOrgUnit.Id, o.PaymentData,  extensionData,
+                     o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
