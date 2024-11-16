@@ -27,9 +27,9 @@ namespace Empiria.Contracts.Adapters {
         ContractMilestone = milestoneItem.ContractMilestone.MapToNamedEntity(),
         ContractItem = milestoneItem.ContractItem.MapToNamedEntity(),
         Description = milestoneItem.Description,
-        Product = milestoneItem.Product.MapToNamedEntity(),
-        ProductUnit = milestoneItem.ProductUnit.MapToNamedEntity(),
         Quantity = milestoneItem.Quantity,
+        ProductUnit = milestoneItem.ProductUnit.MapToNamedEntity(),
+        Product = milestoneItem.Product.MapToNamedEntity(),
         UnitPrice = milestoneItem.UnitPrice,
         BudgetAccount = milestoneItem.BudgetAccount.MapToNamedEntity(),
         Status = milestoneItem.Status.MapToDto()
