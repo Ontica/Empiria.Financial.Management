@@ -32,7 +32,7 @@ namespace Empiria.Contracts.UseCases {
 
     #region Use cases
 
-    public ContractMilestoneDto AddContractMlestone(ContractMilestoneFields fields) {
+    public ContractMilestoneDto AddContractMilestone(ContractMilestoneFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
@@ -83,7 +83,7 @@ namespace Empiria.Contracts.UseCases {
     }
     
     public ContractMilestoneDto UpdateContractMilestone(string ContractUID,
-                                               ContractMilestoneFields fields) {
+                                                        ContractMilestoneFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
