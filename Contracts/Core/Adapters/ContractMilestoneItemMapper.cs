@@ -31,7 +31,6 @@ namespace Empiria.Contracts.Adapters {
         ProductUnit = milestoneItem.ProductUnit.MapToNamedEntity(),
         Quantity = milestoneItem.Quantity,
         UnitPrice = milestoneItem.UnitPrice,
-        Total = milestoneItem.Total,
         BudgetAccount = milestoneItem.BudgetAccount.MapToNamedEntity(),
         Status = milestoneItem.Status.MapToDto()
       };

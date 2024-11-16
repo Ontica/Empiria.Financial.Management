@@ -10,55 +10,79 @@
 
 using Empiria.Products;
 
-namespace Empiria.Contracts.Adapters {
+namespace Empiria.Contracts.Adapters
+{
 
-  /// <summary>DTO fields structure used for update Contract milestone items information.</summary>
-  public class ContractMilestoneItemFields {
+    /// <summary>DTO fields structure used for update Contract milestone items information.</summary>
+    public class ContractMilestoneItemFields
+    {
 
-    public string UID {
-      get; set;
-    } = string.Empty;
+        public string UID
+        {
+            get; set;
+        } = string.Empty;
 
+        public string MilestoneUID
+        {
+            get; set;
+        } = string.Empty;
 
-    public string MilestoneUID {
-      get; set;
-    } = string.Empty;
+        public string ContractItemUID
+        {
+            get; set;
+        } = string.Empty;
 
+        public string Description
+        {
+            get; set;
+        } = string.Empty;
 
-    public string ContractItemUID {
-      get; set;
-    } = string.Empty;
+        public decimal Quantity
+        {
+            get; set;
+        }
 
+        public string ProductUnitUID
+        {
+            get; set;
+        }
 
-    public string ProductItemUID {
-      get; set;
-    } = string.Empty;
+        public string ProductUID
+        {
+            get; set;
+        } = string.Empty;
 
+        public decimal UnitPrice
+        {
+            get; set;
+        }
+        public string BudgetAccountUID
+        {
+            get; set;
+        } = string.Empty;
 
-    public decimal Quantity {
-      get; set;
-    }
+        public string Status
+        {
+            get; set;
+        } = string.Empty;
 
+        public decimal Total
+        {
+            get; set;
+        }
 
-    public decimal UnitPrice {
-      get; set;
-    }
+        internal void EnsureValid()
+        {
+            Assertion.Require(MilestoneUID, "Se requiere el identificador del entregable.");
+            Assertion.Require(ContractItemUID, "Se requiere el identificador del concepto del entregable.");
+            Assertion.Require(Quantity, "Se requiere la cantidad del prodcuto.");
+            Assertion.Require(ProductUnitUID, "Se requiere la unidad del producto.");
+            Assertion.Require(ProductUID, "Se requiere del número de producto.");
+            Assertion.Require(Quantity > 0, "Se requiere la cantidad del producto.");
+            Assertion.Require(UnitPrice > 0, "Se requiere el precio unitario del producto.");
+            Assertion.Require(BudgetAccountUID, "Se requiere la clave presupuestal del producto.");
+        }
 
-    
-    public decimal Total {
-      get; set;
-    }
-
-    
-    internal void EnsureValid() {
-      Assertion.Require(MilestoneUID, "Se requiere el identificador del entregable.");
-      Assertion.Require(ContractItemUID, "Se requiere el identificador del desglose del contrato.");
-      Assertion.Require(ProductItemUID, "Se requiere del número de producto.");
-      Assertion.Require(Quantity < 0, "Necesito la cantidad.");
-      Assertion.Require(UnitPrice < 0, "Necesito el precio unitario.");
-
-    }
-
-  }  // class ContractMilestoneItemFields
+    }  // class ContractMilestoneItemFields
 
 }  // namespace Empiria.Contracts.Adapters
