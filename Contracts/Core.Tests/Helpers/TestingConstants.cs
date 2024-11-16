@@ -19,7 +19,7 @@ namespace Empiria.Tests.Contracts {
 
     static internal string CONTRACT_ITEM_UID = "bf596018-7f37-4c09-95a8-f3f6d9fac24a";
 
-    static internal string CONTRACT_ITEM_PRODUCT_UID = "35051c46-536d-42c5-a5d4-aa3021d5018a";
+    static internal string CONTRACT_ITEM_PRODUCT_UID = "05ae770b-14cb-4cfe-88fe-cc3b15b7e424";
 
     static internal string CONTRACT_PRODUCT_UNIT_UID = "bdfc9360-6e4c-4e95-85a8-766c6b3571db";
 
