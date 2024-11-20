@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
+using Empiria.StateEnums;
 
 using Empiria.Budgeting.Transactions.Data;
 
@@ -203,8 +204,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_TXN_STATUS", Default = BudgetTransactionStatus.Pending)]
-    public BudgetTransactionStatus Status {
+    [DataField("BDG_TXN_STATUS", Default = TransactionStatus.Pending)]
+    public TransactionStatus Status {
       get;
       private set;
     }
@@ -243,7 +244,7 @@ namespace Empiria.Budgeting.Transactions {
     internal void Authorize() {
       this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.AuthorizationTime = DateTime.UtcNow;
-      this.Status = BudgetTransactionStatus.Completed;
+      this.Status = TransactionStatus.Completed;
     }
 
 
@@ -279,7 +280,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal void SendToAuthorization() {
-      this.Status = BudgetTransactionStatus.OnAuthorization;
+      this.Status = TransactionStatus.OnAuthorization;
     }
 
 

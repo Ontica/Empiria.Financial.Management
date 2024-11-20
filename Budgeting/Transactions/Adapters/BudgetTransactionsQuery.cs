@@ -9,71 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
-
-  /// <summary>Enumerates the different workflow stages for a budget transaction.</summary>
-  public enum BudgetTransactionStage {
-
-    MyInbox,
-
-    Pending,
-
-    ControlDesk,
-
-    Completed,
-
-    All
-
-  }  // enum BudgetTransactionStage
-
-
-
-  /// <summary>Enumerates the different parties that participates in a budget transaction.</summary>
-  public enum BudgetTransactionPartyType {
-
-    RequestedBy,
-
-    RegisteredBy,
-
-    AuthorizedBy,
-
-    CompletedBy,
-
-    None,
-
-  }
-
-
-  /// <summary>Enumerates the different dates for query budget transactions.</summary>
-  public enum BudgetTransactionQueryDateType {
-
-    Requested,
-
-    Registered,
-
-    Authorizated,
-
-    Completed,
-
-    None
-
-  }
-
-
-  /// <summary>Input query DTO used to retrieve budget transactions parties.</summary>
-  public class BudgetPartiesQuery {
-
-    public BudgetTransactionPartyType PartyType {
-      get; set;
-    }
-
-    public string Keywords {
-      get; set;
-    }
-
-  }  // class BudgetPartiesQuery
-
 
   /// <summary>Input query DTO used to retrieve budget transactions.</summary>
   public class BudgetTransactionsQuery {
@@ -123,9 +61,9 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = new string[0];
 
 
-    public BudgetTransactionQueryDateType DateType {
+    public TransactionDateType DateType {
       get; set;
-    } = BudgetTransactionQueryDateType.None;
+    } = TransactionDateType.None;
 
 
     public DateTime FromDate {
@@ -138,9 +76,9 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = ExecutionServer.DateMinValue;
 
 
-    public BudgetTransactionPartyType PartyType {
+    public TransactionPartyType PartyType {
       get; set;
-    } = BudgetTransactionPartyType.None;
+    } = TransactionPartyType.None;
 
 
     public string PartyUID {
@@ -148,14 +86,15 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = string.Empty;
 
 
-    public BudgetTransactionStatus Status {
+    public TransactionStatus Status {
       get; set;
-    } = BudgetTransactionStatus.All;
+    } = TransactionStatus.All;
 
 
-    public BudgetTransactionStage Stage {
+    public TransactionStage Stage {
       get; set;
-    } = BudgetTransactionStage.All;
+    } = TransactionStage.All;
+
 
     public string OrderBy {
       get; set;

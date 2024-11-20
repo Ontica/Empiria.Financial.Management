@@ -10,6 +10,7 @@
 
 using System.Web.Http;
 
+using Empiria.StateEnums;
 using Empiria.WebApi;
 
 using Empiria.Budgeting.Transactions.Adapters;
@@ -60,7 +61,7 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
     [HttpPost]
     [Route("v2/budgeting/transactions/parties")]
-    public CollectionModel SearchTransactionsParties([FromBody] BudgetPartiesQuery query) {
+    public CollectionModel SearchTransactionsParties([FromBody] TransactionPartiesQuery query) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
         FixedList<NamedEntityDto> parties = usecases.SearchTransactionsParties(query);

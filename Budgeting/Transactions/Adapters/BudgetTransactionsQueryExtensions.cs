@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Parties;
+using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
@@ -124,8 +125,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
-    static private string BuildStatusFilter(BudgetTransactionStatus status) {
-      if (status == BudgetTransactionStatus.All) {
+    static private string BuildStatusFilter(TransactionStatus status) {
+      if (status == TransactionStatus.All) {
         return "BDG_TXN_STATUS <> 'X' ";
       }
 

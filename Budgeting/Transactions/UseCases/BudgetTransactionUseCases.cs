@@ -11,6 +11,7 @@
 using Empiria.Services;
 
 using Empiria.Parties;
+using Empiria.StateEnums;
 
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.Data;
@@ -73,7 +74,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> SearchTransactionsParties(BudgetPartiesQuery query) {
+    public FixedList<NamedEntityDto> SearchTransactionsParties(TransactionPartiesQuery query) {
       var persons = BaseObject.GetList<Person>();
 
       return persons.MapToNamedEntityList();

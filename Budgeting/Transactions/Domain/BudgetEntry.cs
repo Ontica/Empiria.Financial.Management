@@ -15,6 +15,7 @@ using Empiria.Json;
 using Empiria.Parties;
 using Empiria.Products;
 using Empiria.Projects;
+using Empiria.StateEnums;
 
 using Empiria.Budgeting.Transactions.Data;
 
@@ -211,8 +212,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_ENTRY_STATUS", Default = BudgetTransactionStatus.Pending)]
-    public BudgetTransactionStatus Status {
+    [DataField("BDG_ENTRY_STATUS", Default = TransactionStatus.Pending)]
+    public TransactionStatus Status {
       get;
       private set;
     }
@@ -229,7 +230,7 @@ namespace Empiria.Budgeting.Transactions {
     #region Methods
 
     internal void Delete() {
-      Status = BudgetTransactionStatus.Deleted;
+      Status = TransactionStatus.Deleted;
 
       MarkAsDirty();
     }
