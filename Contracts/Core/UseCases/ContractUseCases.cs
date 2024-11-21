@@ -32,7 +32,7 @@ namespace Empiria.Contracts.UseCases {
 
     #region Use cases
 
-    public ContractHolderDto AddContract(ContractFields fields) {
+    public ContractHolderDto CreateContract(ContractFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();

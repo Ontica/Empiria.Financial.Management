@@ -12,81 +12,86 @@ using Empiria.Services;
 
 using Empiria.Contracts.Adapters;
 
-namespace Empiria.Contracts.UseCases {
+namespace Empiria.Contracts.UseCases
+{
 
     /// <summary>Use cases for contract milestone items management.</summary>
-    public class ContractMilestoneItemUseCases : UseCase {
+    public class ContractMilestoneItemUseCases : UseCase
+    {
 
-    #region Constructors and parsers
+        #region Constructors and parsers
 
-    protected ContractMilestoneItemUseCases() {
-      // no-op
-    }
+        protected ContractMilestoneItemUseCases()
+        {
+            // no-op
+        }
 
-    static public ContractMilestoneItemUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<ContractMilestoneItemUseCases>();
-    }
+        static public ContractMilestoneItemUseCases UseCaseInteractor()
+        {
+            return UseCase.CreateInstance<ContractMilestoneItemUseCases>();
+        }
 
-    #endregion Constructors and parsers
+        #endregion Constructors and parsers
 
-    #region Use cases
+        #region Use cases
 
-    public ContractMilestoneItemDto AddContractMilestoneItem(string milestoneUID, ContractMilestoneItemFields fields) {
+        public ContractMilestoneItemDto CreateContractMilestoneItem(ContractMilestoneItemFields fields)
+        {
 
-        Assertion.Require(milestoneUID, nameof(milestoneUID));
-        Assertion.Require(fields, nameof(fields));
+            Assertion.Require(fields, nameof(fields));
 
-        fields.EnsureValid();
+            fields.EnsureValid();
 
-        var milestone = ContractMilestone.Parse(milestoneUID);
+            var milestoneItem = new ContractMilestoneItem(fields);
 
-        var milestoneItem = new ContractMilestoneItem(fields);
+            milestoneItem.Load(fields);
 
-        milestone.AddItem(milestoneItem);
+            milestoneItem.Save();
 
-        milestoneItem.Save();
-
-      return ContractMilestoneItemMapper.Map(milestoneItem);
-    }
-
-
-    public void DeleteContracMilestonetItem(string milestoneItemUID) {
-
-        Assertion.Require(milestoneItemUID, nameof(milestoneItemUID));
-
-        var milestoneItem = ContractItem.Parse(milestoneItemUID);
-
-        milestoneItem.Delete();
-
-        milestoneItem.Save();
-    }
+            return ContractMilestoneItemMapper.Map(milestoneItem);
+        }
 
 
-    public ContractMilestoneItemDto GetContractMilestoneItem(string milestoneItemUID) {
+        public void RemoveContracMilestonetItem(string milestoneItemUID)
+        {
 
-      Assertion.Require(milestoneItemUID, nameof(milestoneItemUID));
+            Assertion.Require(milestoneItemUID, nameof(milestoneItemUID));
 
-      var milestoneItem = ContractMilestoneItem.Parse(milestoneItemUID);
+            var milestoneItem = ContractMilestoneItem.Parse(milestoneItemUID);
 
-      return ContractMilestoneItemMapper.Map(milestoneItem);
-    }
+            milestoneItem.Delete();
+
+            milestoneItem.Save();
+        }
 
 
-    public ContractMilestoneItemDto UpdateContractMilestoneItem(string milestoneItemUID,
-                                                                ContractMilestoneItemFields fields) {
+        public ContractMilestoneItemDto GetContractMilestoneItem(string milestoneItemUID)
+        {
 
-        Assertion.Require(fields, nameof(fields));
+            Assertion.Require(milestoneItemUID, nameof(milestoneItemUID));
 
-        fields.EnsureValid();
+            var milestoneItem = ContractMilestoneItem.Parse(milestoneItemUID);
 
-        var milestoneItem = ContractMilestoneItem.Parse(milestoneItemUID);
+            return ContractMilestoneItemMapper.Map(milestoneItem);
+        }
 
-        milestoneItem.Load(fields);
 
-        milestoneItem.Save();
+        public ContractMilestoneItemDto UpdateContractMilestoneItem(string milestoneItemUID,
+                                                                    ContractMilestoneItemFields fields)
+        {
 
-      return ContractMilestoneItemMapper.Map(milestoneItem);
-    }
+            Assertion.Require(fields, nameof(fields));
+
+            fields.EnsureValid();
+
+            var milestoneItem = ContractMilestoneItem.Parse(milestoneItemUID);
+
+            milestoneItem.Load(fields);
+
+            milestoneItem.Save();
+
+            return ContractMilestoneItemMapper.Map(milestoneItem);
+        }
 
         #endregion Use cases
 

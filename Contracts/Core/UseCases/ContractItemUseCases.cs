@@ -31,7 +31,7 @@ namespace Empiria.Contracts.UseCases {
 
     #region Use cases
 
-    public ContractItemDto AddContractItem(string ContractUID, ContractItemFields fields) {
+    public ContractItemDto CreateContractItem(string ContractUID, ContractItemFields fields) {
 
       Assertion.Require(ContractUID, nameof(ContractUID));
       Assertion.Require(fields, nameof(fields));
