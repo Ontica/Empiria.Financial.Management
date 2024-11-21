@@ -15,8 +15,8 @@ namespace Empiria.Contracts.Adapters {
   /// <summary>Provides data mapping services for ContractMilestoneItem instances.</summary>
   static internal class ContractMilestoneItemMapper {
 
-    static internal FixedList<ContractMilestoneItemDto> Map(FixedList<ContractMilestoneItem> contractsItem) {
-      return contractsItem.Select(x => Map(x))
+    static internal FixedList<ContractMilestoneItemDto> Map(FixedList<ContractMilestoneItem> milestoneItem) {
+      return milestoneItem.Select(x => Map(x))
                       .ToFixedList();
     }
 

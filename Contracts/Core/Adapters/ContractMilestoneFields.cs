@@ -68,6 +68,9 @@ namespace Empiria.Contracts.Adapters {
     internal void EnsureValid() {
       Assertion.Require(MilestoneNo, "Se requiere el numero del entregable.");
       Assertion.Require(Name, "Se requiere el nombre del entregable.");
+      Assertion.Require(Description, "Se requiere la descripción del entregable.");
+      Assertion.Require(SupplierUID, "Se requiere el proveedor del entregable.");
+
     }
 
   }  // class ContractMilestoneFields
