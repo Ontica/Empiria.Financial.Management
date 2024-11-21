@@ -211,6 +211,31 @@ namespace Empiria.Contracts
 
         #endregion Properties
 
+        #region Methods
+
+        internal void Delete()
+        {
+
+            this.Status = EntityStatus.Deleted;
+        }
+
+
+        protected override void OnSave()
+        {
+            if (base.IsNew)
+            {
+                this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+                this.PostingTime = DateTime.Now;
+            }
+
+            LastUpdatedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+            LastUpdatedTime = DateTime.Now;
+
+            ContractMilestoneItemData.WriteMilestoneItem(this, this.ExtData.ToString());
+        }
+
+        #endregion Methods
+
 
         #region Helpers
 
