@@ -7,179 +7,125 @@
 *  Summary  : Test cases for retrieving accounts from the accounts chart.                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Xunit;
-
 using Empiria.Contracts.Adapters;
 using Empiria.Contracts.UseCases;
-using System.Security.Cryptography;
-
-namespace Empiria.Tests.Contracts {
-
-  /// <summary>Test cases contract milestone and contract milestone items.</summary>
-  public class ContractMilestoneUseCasesTests {
-
-    #region Use cases initialization
-
-    private readonly ContractMilestoneUseCases _usecases;
-    private readonly ContractMilestoneItemUseCases _itemusecases;
+using Empiria.Contracts;
 
 
-    public ContractMilestoneUseCasesTests() {
-      TestsCommonMethods.Authenticate();
+namespace Empiria.Tests.Contracts
+{
 
-      _usecases = ContractMilestoneUseCases.UseCaseInteractor();
-      _itemusecases = ContractMilestoneItemUseCases.UseCaseInteractor();
-    }
+    /// <summary>Test cases contract milestone and contract milestone items.</summary>
+    public class ContractMilestoneUseCasesTests
+    {
 
-    ~ContractMilestoneUseCasesTests() {
-      _usecases.Dispose();
-      _itemusecases.Dispose();
-    }
+        #region Use cases initialization
 
-    #endregion Use cases initialization
-
-    #region Facts
-
-    [Fact]
-    public void Should_Add_A_Contract_Milestone() {
-      var fields = new ContractMilestoneFields {
-
-        ContractUID = TestingConstants.CONTRACT_UID, 
-        MilestoneNo = "Soporte del sistema LOBO 2024",
-        Name = "Soporte del sistema SIAL", 
-        Description = "Servicio unico soporte y mantenimiento del sistema SIAL, de acuerdo al contrato LIC/022/2024 Lobo Software Inc.",
-        ManagedByOrgUnitUID = TestingConstants.MANAGED_BY_ORG_UNIT_UID,
-        SupplierUID = TestingConstants.SUPPLIER_UID,
-
-      };
-
-      ContractMilestoneDto sut = _usecases.AddContractMilestone(fields);
-
-      Assert.NotNull(sut);
-      Assert.NotNull(sut.Contract.UID);
-
-    }
-
-    [Fact]
-    public void Should_Update_A_Contract_Milestone() {
-      var fields = new ContractMilestoneFields {
-        Name = "BANOBRAS-2024-O-XXXXXX",
-        Description = "Servicios de soporte técnico y mantenimiento al Sistema Fiduciario que opera en Banobras YATLA",
-        ManagedByOrgUnitUID = TestingConstants.MANAGED_BY_ORG_UNIT_UID,
-        SupplierUID = TestingConstants.SUPPLIER_UID,
-      };
-
-      /*
-            ContractHolderDto sut = _usecases.UpdateContract(TestingConstants.CONTRACT_UID, fields);
-
-      Assert.NotNull(sut);
-      Assert.NotNull(sut.Contract.UID);
-      Assert.Equal(fields.ContractNo, sut.Contract.ContractNo);
-      Assert.Equal(fields.Name, sut.Contract.Name);
-      Assert.Equal(fields.Total, sut.Contract.Total);
-      */
-    }
+        private readonly ContractMilestoneUseCases _usecases;
 
 
-    [Fact]
-    public void Should_Add_A_Contract_Milestone_Item() {
+        public ContractMilestoneUseCasesTests()
+        {
+            TestsCommonMethods.Authenticate();
 
-            var fields = new ContractMilestoneItemFields {
+            _usecases = ContractMilestoneUseCases.UseCaseInteractor();
+        }
 
-                MilestoneUID = TestingConstants.CONTRACT_MILESTONE_UID,
-                ContractItemUID = TestingConstants.CONTRACT_ITEM_UID,
-                Description = "Pago unico",
-                Quantity = 120,
-                ProductUnitUID = TestingConstants.CONTRACT_MILESTONE_ITEM_UNIT_UID,
-                ProductUID = TestingConstants.CONTRACT_ITEM_PRODUCT_UID,
-                UnitPrice = 1800,
-                BudgetAccountUID = TestingConstants.CONTRACT_BUDGET_ACCOUNT_UID,
+        ~ContractMilestoneUseCasesTests()
+        {
+            _usecases.Dispose();
+        }
+
+        #endregion Use cases initialization
+
+        #region Facts
+
+        [Fact]
+        public void Should_Create_A_Contract_Milestone()
+        {
+            var fields = new ContractMilestoneFields
+            {
+
+                ContractUID = TestingConstants.CONTRACT_UID,
+                MilestoneNo = "XXXX-XXX-XXXXX",
+                Name = "Soporte del sistema SIAL 2024",
+                Description = "Servicio unico soporte y mantenimiento del sistema SIAL, de acuerdo al contrato LIC/022/2024 Lobo Software Inc.",
+                ManagedByOrgUnitUID = TestingConstants.MANAGED_BY_ORG_UNIT_UID,
+                SupplierUID = TestingConstants.SUPPLIER_UID,
+
             };
 
-            ContractMilestoneItemDto sut = _itemusecases.AddContractMilestoneItem(TestingConstants.CONTRACT_MILESTONE_UID, fields);
+            ContractMilestoneDto sut = _usecases.CreateContractMilestone(fields);
 
             Assert.NotNull(sut);
-            Assert.NotNull(sut.UID);
-    }
+            Assert.NotNull(sut.Contract.UID);
+
+        }
 
 
-    [Fact]
-    public void Should_Read_A_Contract() {
+        [Fact]
+        public void Should_Remove_A_Contract_Milestone()
+        {
 
-    //  ContractHolderDto sut = _usecases.GetContractMilestone(TestingConstants.CONTRACT_UID);
+            _usecases.RemoveContractMilestone(TestingConstants.CONTRACT_MILESTONE_UID);
 
-    //  Assert.NotNull(sut);
-
-    }
-
-
-    [Fact]
-    public void Should_Read_A_Contract_Milestone_Item() {
-
-      ContractMilestoneItemDto sut = _itemusecases.GetContractMilestoneItem(TestingConstants.CONTRACT_MILESTONE_ITEM_UID);
-
-      Assert.NotNull(sut);
-    }
+        }
 
 
-    [Fact]
-    public void Should_Read_A_Contract_Items() {
+        [Fact]
+        public void Should_Update_A_Contract_Milestone()
+        {
 
-    //  FixedList<ContractItemDto> sut = _usecases.GetContractItems(TestingConstants.CONTRACT_UID);
+            var fields = new ContractMilestoneFields
+            {
+                ContractUID = "d13fccb0-a5d0-419e-9204-777f57b6959d",
+                Name = "BANOBRAS-2024-O-QQQQQQQ",
+                Description = "Servicios de soporte técnico y mantenimiento al Sistema Fiduciario que opera en Banobras YATLA",
+                MilestoneNo = "Soporte anio 2025",
+                ManagedByOrgUnitUID = TestingConstants.MANAGED_BY_ORG_UNIT_UID,
+                SupplierUID = TestingConstants.SUPPLIER_UID,
+            };
 
-    //  Assert.NotNull(sut);
-    }
+            ContractMilestoneDto sut = _usecases.UpdateContractMilestone(TestingConstants.CONTRACT_MILESTONE_UID, fields);
 
+            Assert.NotNull(sut);
+            Assert.NotNull(sut.Contract.UID);
+            Assert.Equal(fields.MilestoneNo, sut.MilestoneNo);
+            Assert.Equal(fields.Name, sut.Name);
+            Assert.Equal(fields.Description, sut.Description);
 
-    [Fact]
-    public void Should_Remove_A_Contract_Item() {
-
-     // _itemusecases.DeleteContractMilestoneItem(TestingConstants.CONTRACT_MILESTONE_ITEM_UID);
-
-    }
-
-
-    [Fact]
-    public void Should_Update_A_Contract_Item() {
-
-      var fields = new ContractItemFields {
-
-        ContractUID = TestingConstants.CONTRACT_UID,
-        ProductUID = TestingConstants.CONTRACT_ITEM_PRODUCT_UID,
-        Description = "Prueba contract item modificar en test",
-        UnitMeasureUID = TestingConstants.CONTRACT_ITEM_UNIT_UID,
-        ToQuantity = 10,
-        FromQuantity = 5,
-        UnitPrice = 20,
-        BudgetAccountUID = TestingConstants.CONTRACT_BUDGET_ACCOUNT_UID,
-        ProjectUID = TestingConstants.CONTRACT_ITEM_PROJECT_UID,
-        PaymentPeriodicityUID = TestingConstants.CONTRACT_ITEM_PYM_PER_UID
-      };
-
-      // ContractItemDto sut = _itemusecases.UpdateContractMilestoneItem(TestingConstants.CONTRACT_MILESTONE_ITEM_UID, fields);
-
-      // Assert.NotNull(sut);
-      // Assert.NotNull(sut.UID);
-    }
+        }
 
 
-    [Fact]
-    public void Should_Search_Contracts() {
+        public ContractMilestoneDto ReadContractMilestone(string milestoneUID)
+        {
+            Assertion.Require(milestoneUID, nameof(milestoneUID));
 
-      var query = new ContractQuery {
-        Keywords = "test",
-      };
+            var milestone = ContractMilestone.Parse(milestoneUID);
 
-      //var sut = _usecases.SearchContracts(query);
+            return ContractMilestoneMapper.Map(milestone);
+        }
 
-      // Assert.NotNull(sut);
 
-    }
+        [Fact]
+        public void Should_Search_Contracts()
+        {
 
-    #endregion Facts
+            var query = new ContractMilestoneQuery
+            {
+                Keywords = "test",
+            };
 
-  }  // class ContractMilestoneUseCasesTests
+            //var sut = _usecases.SearchMileContracts(query);
+
+            // Assert.NotNull(sut);
+
+        }
+
+        #endregion Facts
+
+    }  // class ContractMilestoneUseCasesTests
 
 }  // namespace Empiria.Tests.Contracts

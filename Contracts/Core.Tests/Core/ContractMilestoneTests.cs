@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Contracts Management                       Component : Test cases                              *
+*  Module   : Contractn milestones Management            Component : Test cases                              *
 *  Assembly : Empiria.Contracts.Core.Tests.dll           Pattern   : Unit Tests                              *
 *  Type     : ContractMilestoneTests                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *

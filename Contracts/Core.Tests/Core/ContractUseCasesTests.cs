@@ -59,7 +59,7 @@ namespace Empiria.Tests.Contracts {
         Total = 237762005.00M,
       };
 
-      ContractHolderDto sut = _usecases.AddContract(fields);
+      ContractHolderDto sut = _usecases.CreateContract(fields);
 
       Assert.NotNull(sut);
       Assert.NotNull(sut.Contract.UID);
@@ -97,7 +97,7 @@ namespace Empiria.Tests.Contracts {
 
 
     [Fact]
-    public void Should_Add_A_Contract_Item() {
+    public void Should_Create_A_Contract_Item() {
 
       var fields = new ContractItemFields {
 
@@ -113,7 +113,7 @@ namespace Empiria.Tests.Contracts {
         PaymentPeriodicityUID = TestingConstants.CONTRACT_ITEM_PYM_PER_UID
       };
 
-      ContractItemDto sut = _itemusecases.AddContractItem(TestingConstants.CONTRACT_UID, fields);
+      ContractItemDto sut = _itemusecases.CreateContractItem(TestingConstants.CONTRACT_UID, fields);
 
       Assert.NotNull(sut);
       Assert.NotNull(sut.UID);
