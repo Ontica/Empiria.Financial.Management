@@ -77,12 +77,12 @@ namespace Empiria.Contracts.WebApi {
 
     [HttpPost]
     [Route("v2/contracts")]
-    public SingleObjectModel AddContract([FromBody] ContractFields fields) {
+    public SingleObjectModel CreateContract([FromBody] ContractFields fields) {
 
       base.RequireBody(fields);
 
       using (var usecases = ContractUseCases.UseCaseInteractor()) {
-        ContractHolderDto contract = usecases.AddContract(fields);
+        ContractHolderDto contract = usecases.CreateContract(fields);
 
         return new SingleObjectModel(base.Request, contract);
       }
@@ -91,13 +91,13 @@ namespace Empiria.Contracts.WebApi {
 
     [HttpPost]
     [Route("v2/contracts/add-contract-items/{contractUID:guid}")]
-    public SingleObjectModel AddContractItems([FromUri] string contractUID,
+    public SingleObjectModel CreateContractItems([FromUri] string contractUID,
                                               [FromBody] ContractItemFields fields) {
 
       base.RequireBody(fields);
 
       using (var usecases = ContractItemUseCases.UseCaseInteractor()) {
-        ContractItemDto contractItem = usecases.AddContractItem(contractUID, fields);
+        ContractItemDto contractItem = usecases.CreateContractItem(contractUID, fields);
 
         return new SingleObjectModel(base.Request, contractItem);
       }
