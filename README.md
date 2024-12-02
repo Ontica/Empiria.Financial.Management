@@ -35,17 +35,8 @@ El *backend* del **Sistema de administración financiera** se conforma de los si
 3.  **Cashflow**  
     Sistema para la administración del flujo de efectivo.  
 
-4.  **Contracts**  
-    Sistema para la administración de contratos con proveedores.  
-
-5.  **Payments**  
+4.  **Payments**  
     Sistema para la administración de pagos a proveedores, reembolsos y administración de fondos fijos.  
-
-6. **Web API**  
-    Cada uno de los sistemas o subsistemas proporciona su propia capa de servicios web HTTP/Json.  
-
-7. **Tests**  
-    Cada uno de los sistemas o subsistemas contiene sus propios módulos de pruebas unitarias y de integración.  
 
 
 ## Licencia
