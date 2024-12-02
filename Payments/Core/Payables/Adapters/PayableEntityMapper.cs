@@ -16,9 +16,9 @@ using Empiria.Financial;
 namespace Empiria.Payments.Payables.Adapters {
 
   /// <summary>Provides data mapping services for payable entities and their items.</summary>
-  internal class PayableEntityMapper {
+  public class PayableEntityMapper {
 
-    static internal FixedList<PayableEntityDto> Map(IEnumerable<IPayableEntity> entities) {
+    static public FixedList<PayableEntityDto> Map(IEnumerable<IPayableEntity> entities) {
       return entities.Select(x => Map(x))
                      .ToFixedList();
     }

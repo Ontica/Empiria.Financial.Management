@@ -15,7 +15,7 @@ namespace Empiria.Payments.Payables {
 
   /// <summary>Power type that describes payable types partitioning payable objects.</summary>
   [Powertype(typeof(Payable))]
-  internal class PayableType : Powertype {
+  public class PayableType : Powertype {
 
     #region Constructors and parsers
 
@@ -23,7 +23,7 @@ namespace Empiria.Payments.Payables {
       // Empiria powertype types always have this constructor.
     }
 
-    static public new PayableType Parse(int typeId) {
+    static internal new PayableType Parse(int typeId) {
       if (typeId != -1) {
         return Parse<PayableType>(typeId);
       } else {

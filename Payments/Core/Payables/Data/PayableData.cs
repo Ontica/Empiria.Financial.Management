@@ -12,8 +12,6 @@ using System.Collections.Generic;
 
 using Empiria.Data;
 
-using Empiria.Contracts;
-
 namespace Empiria.Payments.Payables.Data {
 
   /// <summary>Provides data read and write methods for Payable instances.</summary>
@@ -79,9 +77,8 @@ namespace Empiria.Payments.Payables.Data {
       var op = DataOperation.Parse("write_FMS_Payable",
                      o.Id, o.UID, o.payableNo, o.PayableType.Id, o.Description,
                      o.PayableEntity.Id, o.OrganizationalUnit.Id,
-                     o.RequestedTime, o.PayTo.Id, Contract.Empty.Id,
-                     o.Currency.Id, o.BudgetType.Id, o.DueTime,
-                     o.PaymentMethod.Id, o.PaymentAccount.Id,
+                     o.RequestedTime, o.PayTo.Id, o.Currency.Id, o.BudgetType.Id,
+                     o.DueTime, o.PaymentMethod.Id, o.PaymentAccount.Id,
                      extensionData, o.Keywords, o.PostedBy.Id,
                      o.PostingTime, (char) o.Status);
 
