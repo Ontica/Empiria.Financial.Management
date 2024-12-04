@@ -20,13 +20,14 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private readonly XmlDocument _xmlDocument;
 
-    internal SATBillXmlReader(string xmlFilePath) {
-      Assertion.Require(xmlFilePath, nameof(xmlFilePath));
+    internal SATBillXmlReader(string xmlString) {
+      Assertion.Require(xmlString, nameof(xmlString));
 
       _satBillDto = new SATBillDto();
 
       _xmlDocument = new XmlDocument();
-      _xmlDocument.Load(xmlFilePath);
+
+      _xmlDocument.LoadXml(xmlString);
     }
 
     #region Services

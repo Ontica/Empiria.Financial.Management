@@ -27,11 +27,6 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public int PayableId {
-      get; set;
-    }
-
-
     public string CertificationNo {
       get; set;
     } = string.Empty;
@@ -115,7 +110,7 @@ namespace Empiria.Billing {
     public FixedList<BillConceptFields> Concepts {
       get; set;
     } = new FixedList<BillConceptFields>();
-    
+
 
     internal void EnsureIsValid() {
 

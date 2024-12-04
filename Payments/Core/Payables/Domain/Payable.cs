@@ -30,7 +30,7 @@ namespace Empiria.Payments.Payables {
   /// A payable can be a bill, a contract milestone, a service order, a loan, travel expenses,
   /// fixed fund provision, etc.</summary>
   [PartitionedType(typeof(PayableType))]
-  internal class Payable : BaseObject {
+  internal class Payable : BaseObject, IPayable {
 
     #region Fields
 

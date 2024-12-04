@@ -7,15 +7,17 @@
 *  Summary  : Use cases to manage billing.                                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-using System.Collections;
+
 using System.Collections.Generic;
-using Empiria.Billing.Adapters;
-using Empiria.Billing.Data;
-using Empiria.Billing.SATMexicoImporter;
+
 using Empiria.Financial;
 using Empiria.Products;
 using Empiria.Services;
+
+using Empiria.Billing.SATMexicoImporter;
+
+using Empiria.Billing.Adapters;
+using Empiria.Billing.Data;
 
 namespace Empiria.Billing.UseCases {
 
@@ -34,22 +36,19 @@ namespace Empiria.Billing.UseCases {
 
     #endregion Constructors and parsers
 
-
     #region Use cases
 
+    public BillDto CreateBill(string xmlString, IPayable payable) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
 
-    public BillDto CreateBill(string xmlFilePath, IPayableEntity iPayableEntity) {
-      Assertion.Require(xmlFilePath, nameof(xmlFilePath));
-      Assertion.Require(iPayableEntity, nameof(iPayableEntity));
-
-      var reader = new SATBillXmlReader(xmlFilePath);
+      var reader = new SATBillXmlReader(xmlString);
 
       SATBillDto satDto = reader.ReadAsBillDto();
 
       BillFields fields = BillFieldsMapper.Map(satDto);
-      fields.PayableId = iPayableEntity.Id;
 
-      Bill bill = CreateBill(fields);
+      Bill bill = CreateBillImplementation(payable, fields);
 
       return BillMapper.MapToBillDto(bill);
     }
@@ -95,7 +94,6 @@ namespace Empiria.Billing.UseCases {
 
     #endregion Use cases
 
-
     #region Private methods
 
     private void AssignConcepts(Bill bill) {
@@ -109,11 +107,11 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateBill(BillFields fields) {
+    private Bill CreateBillImplementation(IPayable payable, BillFields fields) {
 
       var billCategory = BillCategory.Factura;
 
-      var bill = new Bill(billCategory, fields.BillNo);
+      var bill = new Bill(payable, billCategory, fields.BillNo);
 
       bill.Update(fields);
 
@@ -168,11 +166,10 @@ namespace Empiria.Billing.UseCases {
       return taxesList.ToFixedList();
     }
 
-    
+
 
 
     #endregion Private methods
-
 
   } // class BillUseCases
 

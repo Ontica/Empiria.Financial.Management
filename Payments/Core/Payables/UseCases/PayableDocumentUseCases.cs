@@ -49,12 +49,6 @@ namespace Empiria.Payments.Payables.UseCases {
 
       Bill bill = ExternalServices.GenerateBill(payable, document);
 
-      var linkType = PayableLinkType.Bill;
-
-      var billLink = new PayableLink(linkType, payable, bill);
-
-      billLink.Save();
-
       SetPayableBillConcepts(payable.GetItems(), bill.Concepts);
 
       return ExternalServices.UpdatePayableDocumentWithBillData(payable, document, bill);

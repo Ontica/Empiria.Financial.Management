@@ -9,13 +9,13 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using System.Collections.Generic;
 
 using Empiria.Documents;
 using Empiria.Documents.Services;
 using Empiria.Documents.Services.Adapters;
 
 using Empiria.Billing;
+using Empiria.Billing.Adapters;
 using Empiria.Billing.UseCases;
 
 using Empiria.Budgeting.Transactions;
@@ -49,11 +49,8 @@ namespace Empiria.Payments {
     static internal Bill GenerateBill(Payable payable, Document billDocument) {
       Assertion.Require(billDocument, nameof(billDocument));
 
-      string billXmlFillPath = billDocument.FullLocalName;
-
       using (var usecases = BillUseCases.UseCaseInteractor()) {
-
-        Billing.Adapters.BillDto returnedValue = usecases.CreateBill(billXmlFillPath, payable.PayableEntity);
+        BillDto returnedValue = usecases.CreateBill(billDocument.ReadAllText(), payable);
 
         return Bill.Parse(returnedValue.UID);
       }
@@ -61,19 +58,9 @@ namespace Empiria.Payments {
 
 
     static internal FixedList<BillDto> GetPayableBills(Payable payable) {
-      var bill = new BillDto {
-        UID = "e0f6a221-bf23-429a-a503-bfd63eb581fa",
-        Name = "LA VÍA ONTICA SC",
-        Date = DateTime.Today,
-        CFDIGUID = "-bf23-429a-a503-bfd63eb581",
-        Items = MapBillItems()
-      };
+      Assertion.Require(payable, nameof(payable));
 
-      List<BillDto> bills = new List<BillDto>();
-
-      bills.Add(bill);
-
-      return bills.ToFixedList();
+      return new FixedList<BillDto>();
     }
 
 
@@ -120,22 +107,6 @@ namespace Empiria.Payments {
 
         CreateBudgetTransactionDocumentLinks(payable, transaction);
       }
-    }
-
-
-    static private FixedList<BillItemDto> MapBillItems() {
-      var item = new BillItemDto {
-        UID = "aa4ca009-a204-4732-8f5c-c1bf3a25019f",
-        Name = "345 Puntos de función COSMIC",
-        Unit = "Puntos de función CFP2",
-        Quantity = 1,
-        Total = 4004.898m
-      };
-
-      List<BillItemDto> items = new List<BillItemDto>();
-      items.Add(item);
-
-      return items.ToFixedList();
     }
 
 

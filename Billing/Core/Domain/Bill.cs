@@ -37,9 +37,14 @@ namespace Empiria.Billing {
 
     static public Bill Parse(string uid) => ParseKey<Bill>(uid);
 
-    public Bill(BillCategory billCategory, string billNo) : base(billCategory.BillType) {
+    public Bill(IPayable payable,
+                BillCategory billCategory,
+                string billNo) : base(billCategory.BillType) {
+      Assertion.Require(payable, nameof(payable));
+      Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
 
+      PayableId = payable.Id;
       BillCategory = billCategory;
       BillNo = billNo;
     }
@@ -252,7 +257,7 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
-      PayableId = fields.PayableId;
+
       IssueDate = PatchField(fields.IssueDate, IssueDate);
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
@@ -265,7 +270,6 @@ namespace Empiria.Billing {
       Discount = fields.Discount;
       Total = fields.Total;
     }
-
 
     #endregion Methods
 
