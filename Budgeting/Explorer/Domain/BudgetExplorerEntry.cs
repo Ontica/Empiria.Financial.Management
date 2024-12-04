@@ -55,7 +55,7 @@ namespace Empiria.Budgeting.Explorer {
       get; internal set;
     }
 
-    public decimal Available {
+    public decimal Requested {
       get; internal set;
     }
 
@@ -75,17 +75,22 @@ namespace Empiria.Budgeting.Explorer {
       get; internal set;
     }
 
+    public decimal Available {
+      get; internal set;
+    }
+
     internal void Sum(BudgetExplorerEntry entry) {
       Planned += entry.Planned;
       Authorized += entry.Authorized;
-      Available += entry.Available;
-      Commited += entry.Commited;
+      Expanded += entry.Expanded;
       Reduced += entry.Reduced;
       Modified += entry.Modified;
-      Excercised += entry.Excercised;
+      Requested += entry.Requested;
+      Commited += entry.Commited;
       ToPay += entry.ToPay;
-      Expanded += entry.Expanded;
+      Excercised += entry.Excercised;
       ToExercise += entry.ToExercise;
+      Available += entry.Available;
     }
 
   }  // class BudgetExplorerEntry

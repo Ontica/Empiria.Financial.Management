@@ -20,12 +20,12 @@ namespace Empiria.Budgeting.Explorer {
       get; private set;
     }
 
-    [DataField("YEAR")]
+    //[DataField("YEAR")]
     internal int Year {
       get; private set;
     }
 
-    [DataField("MONTH")]
+    //[DataField("MONTH")]
     internal int Month {
       get; private set;
     }
@@ -65,8 +65,8 @@ namespace Empiria.Budgeting.Explorer {
       get; private set;
     }
 
-    [DataField("AVAILABLE")]
-    internal decimal Available {
+    [DataField("REQUESTED")]
+    internal decimal Requested {
       get; private set;
     }
 
@@ -87,6 +87,11 @@ namespace Empiria.Budgeting.Explorer {
 
     [DataField("TOEXERCISE")]
     internal decimal ToExercise {
+      get; private set;
+    }
+
+    [DataField("AVAILABLE")]
+    internal decimal Available {
       get; private set;
     }
 

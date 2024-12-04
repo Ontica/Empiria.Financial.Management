@@ -82,12 +82,12 @@ namespace Empiria.Budgeting.Explorer {
       columns.Add(new DataTableColumn("expanded", "Ampliaciones", "decimal"));
       columns.Add(new DataTableColumn("reduced", "Reducciones", "decimal"));
       columns.Add(new DataTableColumn("modified", "Modificado", "decimal"));
-      columns.Add(new DataTableColumn("modified", "Modificado", "decimal"));
-      columns.Add(new DataTableColumn("available", "Disponible", "decimal"));
+      columns.Add(new DataTableColumn("requested", "Apartado", "decimal"));
       columns.Add(new DataTableColumn("commited", "Comprometido", "decimal"));
       columns.Add(new DataTableColumn("toPay", "Por pagar", "decimal"));
       columns.Add(new DataTableColumn("excercised", "Ejercido", "decimal"));
       columns.Add(new DataTableColumn("toExercise", "Por ejercer", "decimal"));
+      columns.Add(new DataTableColumn("available", "Disponible", "decimal"));
 
       return columns.ToFixedList();
     }
@@ -257,16 +257,17 @@ namespace Empiria.Budgeting.Explorer {
 
     private BudgetExplorerEntry TransformToEntry(BudgetDataInColumns sourceData) {
       return new BudgetExplorerEntry {
-        Authorized = sourceData.Authorized,
-        Available = sourceData.Available,
-        Commited = sourceData.Commited,
-        Excercised = sourceData.Excercised,
-        Expanded = sourceData.Expanded,
-        Modified = sourceData.Modified,
         Planned = sourceData.Planned,
+        Authorized = sourceData.Authorized,
+        Expanded = sourceData.Expanded,
         Reduced = sourceData.Reduced,
-        ToExercise = sourceData.ToExercise,
+        Modified = sourceData.Modified,
+        Requested = sourceData.Requested,
+        Commited = sourceData.Commited,
         ToPay = sourceData.ToPay,
+        Excercised = sourceData.Excercised,
+        ToExercise = sourceData.ToExercise,
+        Available = sourceData.Available,
       };
     }
 
