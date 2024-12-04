@@ -11,6 +11,8 @@
 using Empiria.Documents.Services.Adapters;
 using Empiria.History.Services.Adapters;
 
+using Empiria.Billing.Adapters;
+
 namespace Empiria.Payments.Payables.Adapters {
 
   /// <summary>Data transfer objects used to return payable data structure.</summary>

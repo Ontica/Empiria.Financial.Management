@@ -13,6 +13,8 @@ using System;
 using Empiria.Documents.Services.Adapters;
 using Empiria.History.Services.Adapters;
 
+using Empiria.Billing.Adapters;
+
 using Empiria.Payments.Payables.Adapters;
 
 namespace Empiria.Payments.Orders.Adapters {
