@@ -20,7 +20,16 @@ namespace Empiria.Tests.Billing {
       get {
         var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
-        return Path.Combine(directory.Parent.FullName, @"Resources\FACTURA DE PRUEBA XML.xml");
+        return Path.Combine(directory.Parent.FullName, @"Resources\FacturaParaNotaCreditoPrueba.xml");
+      }
+    }
+
+
+    static public string XML_CREDIT_NOTE_FILE_PATH {
+      get {
+        var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+
+        return Path.Combine(directory.Parent.FullName, @"Resources\NotaCreditoPrueba.xml");
       }
     }
 

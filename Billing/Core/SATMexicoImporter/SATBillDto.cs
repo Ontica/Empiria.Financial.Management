@@ -43,6 +43,115 @@ namespace Empiria.Billing.SATMexicoImporter {
 
 
 
+  public class SATBillComplementDto {
+
+
+    public string Xmlns_Tfd {
+      get; set;
+    }
+
+
+    public string Xmlns_Xsi {
+      get; set;
+    }
+
+
+    public string Xsi_SchemaLocation {
+      get; set;
+    }
+
+
+    public string Tfd_Version {
+      get; set;
+    }
+
+
+    public string UUID {
+      get; internal set;
+    }
+
+
+    public DateTime FechaTimbrado {
+      get; internal set;
+    }
+
+
+    public string RfcProvCertif {
+      get; internal set;
+    }
+
+
+    public string SelloCFD {
+      get; internal set;
+    }
+
+
+    public string NoCertificadoSAT {
+      get; internal set;
+    }
+
+
+    public string SelloSAT {
+      get; internal set;
+    }
+
+  }  // class SATBillComplementDto
+
+
+  public class SATBillConceptDto {
+
+    public string ClaveProdServ {
+      get; set;
+    }
+
+
+    public string ClaveUnidad {
+      get; set;
+    }
+
+
+    public decimal Cantidad {
+      get; set;
+    }
+
+
+    public string Unidad {
+      get; set;
+    }
+
+
+    public string NoIdentificacion {
+      get; set;
+    }
+
+
+    public string Descripcion {
+      get; set;
+    }
+
+
+    public decimal ValorUnitario {
+      get; set;
+    }
+
+
+    public decimal Importe {
+      get; set;
+    }
+
+
+    public string ObjetoImp {
+      get; set;
+    }
+
+
+    public FixedList<SATBillTaxDto> Impuestos {
+      get; set;
+    } = new FixedList<SATBillTaxDto>();
+
+  }  // class SATBillConceptDto
+
+
   public class SATBillGeneralDataDto {
 
     public string CFDIVersion {
@@ -114,6 +223,11 @@ namespace Empiria.Billing.SATMexicoImporter {
       get; internal set;
     }
 
+
+    public FixedList<SATBillCFDIRelatedDataDto> CfdiRelacionados {
+      get; internal set;
+    } = new FixedList<SATBillCFDIRelatedDataDto>();
+
   }  // class SATBillGeneralDataDto
 
 
@@ -146,60 +260,13 @@ namespace Empiria.Billing.SATMexicoImporter {
   }  // class SATBillOrganizationDto
 
 
+  public class SATBillCFDIRelatedDataDto {
 
-  public class SATBillConceptDto {
-
-    public string ClaveProdServ {
-      get; set;
+    public string UUID {
+      get; internal set;
     }
 
-
-    public string ClaveUnidad {
-      get; set;
-    }
-
-
-    public decimal Cantidad {
-      get; set;
-    }
-
-
-    public string Unidad {
-      get; set;
-    }
-
-
-    public string NoIdentificacion {
-      get; set;
-    }
-
-
-    public string Descripcion {
-      get; set;
-    }
-
-
-    public decimal ValorUnitario {
-      get; set;
-    }
-
-
-    public decimal Importe {
-      get; set;
-    }
-
-
-    public string ObjetoImp {
-      get; set;
-    }
-
-
-    public FixedList<SATBillTaxDto> Impuestos {
-      get; set;
-    } = new FixedList<SATBillTaxDto>();
-
-  }  // class SATBillConceptDto
-
+  } // class SATBillRelatedDataDto
 
 
   public class SATBillTaxDto {
@@ -235,60 +302,6 @@ namespace Empiria.Billing.SATMexicoImporter {
 
   }  // class SATBillTaxDto
 
-
-  public class SATBillComplementDto {
-
-
-    public string Xmlns_Tfd {
-      get; set;
-    }
-
-
-    public string Xmlns_Xsi {
-      get; set;
-    }
-
-
-    public string Xsi_SchemaLocation {
-      get; set;
-    }
-
-
-    public string Tfd_Version {
-      get; set;
-    }
-
-
-    public string UUID {
-      get; internal set;
-    }
-
-
-    public DateTime FechaTimbrado {
-      get; internal set;
-    }
-
-
-    public string RfcProvCertif {
-      get; internal set;
-    }
-
-
-    public string SelloCFD {
-      get; internal set;
-    }
-
-
-    public string NoCertificadoSAT {
-      get; internal set;
-    }
-
-
-    public string SelloSAT {
-      get; internal set;
-    }
-
-  }  // class SATBillTaxDto
 
 
 } // namespace Empiria.Billing.SATMexicoImporter

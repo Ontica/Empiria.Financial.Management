@@ -28,6 +28,19 @@ namespace Empiria.Tests.Billing {
       Assert.NotNull(sut);
     }
 
+
+    [Fact]
+    public void Should_Read_A_Credit_Note_From_An_Xml_File() {
+
+      string xmlFilePath = TestingConstants.XML_CREDIT_NOTE_FILE_PATH;
+
+      var reader = new SATCreditNoteXmlReader(xmlFilePath);
+
+      SATBillDto sut = reader.ReadAsCreditNoteDto();
+
+      Assert.NotNull(sut);
+    }
+
   }  // class SATBillXmlReaderTests
 
 }  // namespace Empiria.Tests.Billing
