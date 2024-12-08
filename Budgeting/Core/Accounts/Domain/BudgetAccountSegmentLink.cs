@@ -22,9 +22,6 @@ namespace Empiria.Budgeting {
     static public BaseObjectLinkType ProductLink =>
                     BaseObjectLinkType.Parse("ObjectTypeInfo.BudgetAccountSegmentLink.Product");
 
-    static public BaseObjectLinkType ProjectLink =>
-                    BaseObjectLinkType.Parse("ObjectTypeInfo.BudgetAccountSegmentLink.Project");
-
     #endregion Types
 
     #region Constructors and parsers
@@ -38,12 +35,6 @@ namespace Empiria.Budgeting {
       // no-op
     }
 
-
-    internal BudgetAccountSegmentLink(BudgetAccountSegment segment, Project project)
-                : base(ProjectLink, segment, project) {
-      // no-op
-    }
-
     static public BudgetAccountSegmentLink Parse(int id) => ParseId<BudgetAccountSegmentLink>(id);
 
     static public BudgetAccountSegmentLink Parse(string uid) => ParseKey<BudgetAccountSegmentLink>(uid);
@@ -52,10 +43,18 @@ namespace Empiria.Budgeting {
     static public FixedList<BudgetAccountSegment> GetBudgetAccountSegmentsForProduct(Product product) {
       Assertion.Require(product, nameof(product));
 
-      return GetBaseObjectsFor<BudgetAccountSegment>(ProductLink, product);
+      return GetBaseObjectsFor<BudgetAccountSegment>(ProductLink, product)
+            .Sort((x, y) => x.Code.CompareTo(y.Code));
     }
 
-    static public BudgetAccountSegmentLink Empty => ParseEmpty<BudgetAccountSegmentLink>();
+
+    static internal FixedList<BudgetAccountSegmentLink> GetListForProduct(Product product) {
+      Assertion.Require(product, nameof(product));
+
+      return GetListWithLinkedObject<BudgetAccountSegmentLink>(ProductLink, product)
+            .Sort((x, y) => x.BudgetAccountSegment.Code.CompareTo(y.BudgetAccountSegment.Code));
+    }
+
 
     #endregion Constructors and parsers
 
