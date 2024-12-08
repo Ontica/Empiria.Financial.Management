@@ -21,3 +21,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Empiria.Budgeting.Explorer")]
 [assembly: InternalsVisibleTo("Empiria.Budgeting.Transactions")]
 [assembly: InternalsVisibleTo("Empiria.Budgeting.WebApi")]
+[assembly: InternalsVisibleTo("Empiria.Operations.Integration.Core")]

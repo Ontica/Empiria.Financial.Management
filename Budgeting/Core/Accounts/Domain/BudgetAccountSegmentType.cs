@@ -32,6 +32,12 @@ namespace Empiria.Budgeting {
 
     #region Properties
 
+    public BudgetType BudgetType {
+      get {
+        return base.ExtensionData.Get("budgetTypeId", BudgetType.Empty);
+      }
+    }
+
     public bool IsEmptyInstance {
       get {
         return this.Equals(Empty);

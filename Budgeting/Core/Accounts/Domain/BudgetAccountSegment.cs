@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Accounts                            Component : Domain Layer                            *
-*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Partitioned Type | Information Holder   *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Partitioned Type                        *
 *  Type     : BudgetAccountSegment                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Partitioned type of BudgetAccountSegmentType that holds data for a budget account segment.     *
@@ -57,6 +57,7 @@ namespace Empiria.Budgeting {
       }
     }
 
+
     [DataField("BDG_ACCT_SEGMENT_CODE")]
     public string Code {
       get; protected set;
@@ -66,6 +67,12 @@ namespace Empiria.Budgeting {
     [DataField("BDG_ACCT_SEGMENT_NAME")]
     public string Name {
       get; protected set;
+    }
+
+    string INamedEntity.Name {
+      get {
+        return FullName;
+      }
     }
 
     public string FullName {
@@ -160,6 +167,7 @@ namespace Empiria.Budgeting {
         return _children.Value;
       }
     }
+
 
     #endregion Properties
 

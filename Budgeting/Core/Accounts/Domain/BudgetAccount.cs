@@ -60,7 +60,7 @@ namespace Empiria.Budgeting {
 
     public string Name {
       get {
-        return $"[{Segment_2.Code}] - {Segment_2.Name}";
+        return $"[{Segment_2.Code}] - {Segment_2.Name} ({Segment_1.Code})";
       }
     }
 
