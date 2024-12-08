@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Procesess                           Component : Domain Layer                            *
-*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Infomation Holder                       *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Information Holder                      *
 *  Type     : BudgetingRequest                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a budgeting request.                                                                *

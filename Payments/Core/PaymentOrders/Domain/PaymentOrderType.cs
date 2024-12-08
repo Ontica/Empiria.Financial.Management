@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Payments.dll                       Pattern   : Infomation Holder                       *
+*  Assembly : Empiria.Payments.dll                       Pattern   : Information Holder                      *
 *  Type     : PaymentOrderType                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a payment order type.                                                               *
@@ -38,4 +38,4 @@ namespace Empiria.Payments.Orders {
 
   }  // class PaymentOrderType
 
-}  // namespace Empiria.Payments.Contracts
+}  // namespace Empiria.Payments.Orders

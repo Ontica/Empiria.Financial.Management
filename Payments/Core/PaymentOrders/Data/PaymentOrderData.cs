@@ -49,4 +49,4 @@ namespace Empiria.Payments.Orders.Data {
 
   }  // class ContractData
 
-}  // namespace Empiria.Payments.Contracts.Data
+}  // namespace Empiria.Payments.Orders.Data

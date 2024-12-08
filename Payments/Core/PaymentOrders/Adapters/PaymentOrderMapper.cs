@@ -81,4 +81,4 @@ namespace Empiria.Payments.Orders.Adapters {
 
   }  // class PaymentOrderMapper
 
-}  // namespace Empiria.Payments.Contracts.Adapters
+}  // namespace Empiria.Payments.Orders.Adapters

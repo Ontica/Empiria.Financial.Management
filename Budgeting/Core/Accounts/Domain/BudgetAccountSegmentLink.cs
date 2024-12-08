@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Products;
-using Empiria.Projects;
 
 namespace Empiria.Budgeting {
 
@@ -19,8 +18,8 @@ namespace Empiria.Budgeting {
 
     #region Types
 
-    static public BaseObjectLinkType ProductLink =>
-                    BaseObjectLinkType.Parse("ObjectTypeInfo.BudgetAccountSegmentLink.Product");
+    static public BaseObjectLinkType ProcurementProductLink =>
+                    BaseObjectLinkType.Parse("ObjectTypeInfo.BudgetAccountSegmentLink.ProcurementProduct");
 
     #endregion Types
 
@@ -31,7 +30,7 @@ namespace Empiria.Budgeting {
     }
 
     internal BudgetAccountSegmentLink(BudgetAccountSegment segment, Product product)
-              : base(ProductLink, segment, product) {
+              : base(ProcurementProductLink, segment, product) {
       // no-op
     }
 
@@ -43,7 +42,7 @@ namespace Empiria.Budgeting {
     static public FixedList<BudgetAccountSegment> GetBudgetAccountSegmentsForProduct(Product product) {
       Assertion.Require(product, nameof(product));
 
-      return GetBaseObjectsFor<BudgetAccountSegment>(ProductLink, product)
+      return GetBaseObjectsFor<BudgetAccountSegment>(ProcurementProductLink, product)
             .Sort((x, y) => x.Code.CompareTo(y.Code));
     }
 
@@ -51,7 +50,7 @@ namespace Empiria.Budgeting {
     static internal FixedList<BudgetAccountSegmentLink> GetListForProduct(Product product) {
       Assertion.Require(product, nameof(product));
 
-      return GetListWithLinkedObject<BudgetAccountSegmentLink>(ProductLink, product)
+      return GetListWithLinkedObject<BudgetAccountSegmentLink>(ProcurementProductLink, product)
             .Sort((x, y) => x.BudgetAccountSegment.Code.CompareTo(y.BudgetAccountSegment.Code));
     }
 

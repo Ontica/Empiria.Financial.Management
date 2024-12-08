@@ -302,6 +302,4 @@ namespace Empiria.Billing.SATMexicoImporter {
 
   }  // class SATBillTaxDto
 
-
-
 } // namespace Empiria.Billing.SATMexicoImporter

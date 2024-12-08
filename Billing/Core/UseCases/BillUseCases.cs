@@ -166,9 +166,6 @@ namespace Empiria.Billing.UseCases {
       return taxesList.ToFixedList();
     }
 
-
-
-
     #endregion Private methods
 
   } // class BillUseCases
