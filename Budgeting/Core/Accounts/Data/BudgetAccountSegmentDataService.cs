@@ -15,11 +15,18 @@ namespace Empiria.Budgeting.Data {
   /// <summary>Provides data access services for budget account segments.</summary>
   static internal class BudgetAccountSegmentDataService {
 
-    static internal FixedList<BudgetAccountSegment> BudgetAccountSegments(BudgetAccountSegmentType segmentType) {
+    static internal FixedList<BudgetAccountSegment> BudgetAccountSegments(BudgetAccountSegmentType segmentType,
+                                                                          string keywords) {
+      var filter = SearchExpression.ParseAndLikeKeywords("BDG_ACCT_SEGMENT_KEYWORDS", keywords);
+
       var sql = "SELECT * FROM FMS_BUDGET_ACCOUNTS_SEGMENTS " +
                 $"WHERE BDG_ACCT_SEGMENT_TYPE_ID = {segmentType.Id} " +
-                "AND BDG_ACCT_SEGMENT_STATUS <> 'X' " +
-                $"ORDER BY BDG_ACCT_SEGMENT_CODE";
+                "AND BDG_ACCT_SEGMENT_STATUS <> 'X' ";
+
+      if (filter.Length != 0) {
+        sql += $"AND {filter} ";
+      }
+      sql += $"ORDER BY BDG_ACCT_SEGMENT_CODE";
 
       var op = DataOperation.Parse(sql);
 

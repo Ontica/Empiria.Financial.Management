@@ -32,12 +32,13 @@ namespace Empiria.Budgeting.UseCases {
 
     #region Use cases
 
-    public FixedList<BudgetAccountSegmentDto> GetBudgetAccountSegmentsByType(string segmentTypeUID) {
+    public FixedList<BudgetAccountSegmentDto> GetBudgetAccountSegmentsByType(string segmentTypeUID, string keywords) {
       Assertion.Require(segmentTypeUID, nameof(segmentTypeUID));
+      keywords = keywords ?? string.Empty;
 
       var segmentType = BudgetAccountSegmentType.Parse(segmentTypeUID);
 
-      FixedList<BudgetAccountSegment> segments = BudgetAccountSegmentDataService.BudgetAccountSegments(segmentType);
+      FixedList<BudgetAccountSegment> segments = segmentType.SearchInstances(keywords);
 
       return BudgetAccountSegmentMapper.Map(segments);
     }

@@ -10,6 +10,8 @@
 
 using Empiria.Ontology;
 
+using Empiria.Budgeting.Data;
+
 namespace Empiria.Budgeting {
 
   /// <summary>Power type that describes a budget account segment partitioned type.</summary>
@@ -91,6 +93,13 @@ namespace Empiria.Budgeting {
 
         return base.ExtensionData.Get("parentSegmentTypeId", Empty);
       }
+    }
+
+
+    public FixedList<BudgetAccountSegment> SearchInstances(string keywords) {
+      keywords = keywords ?? string.Empty;
+
+      return BudgetAccountSegmentDataService.BudgetAccountSegments(this, keywords);
     }
 
     #endregion Properties

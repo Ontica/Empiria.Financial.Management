@@ -24,10 +24,11 @@ namespace Empiria.Budgeting.WebApi {
 
     [HttpGet]
     [Route("v2/budgeting/budget-segment-items/by-type/{segmentTypeUID}")]
-    public CollectionModel GetBudgetAccountSegmentsByType([FromUri] string segmentTypeUID) {
+    public CollectionModel GetBudgetAccountSegmentsByType([FromUri] string segmentTypeUID,
+                                                          [FromUri] string keywords = "") {
 
       using (var usecases = BudgetAccountSegmentUseCases.UseCaseInteractor()) {
-        FixedList<BudgetAccountSegmentDto> segments = usecases.GetBudgetAccountSegmentsByType(segmentTypeUID);
+        FixedList<BudgetAccountSegmentDto> segments = usecases.GetBudgetAccountSegmentsByType(segmentTypeUID, keywords);
 
         return new CollectionModel(base.Request, segments);
       }
