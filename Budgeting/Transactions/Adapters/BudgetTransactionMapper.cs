@@ -16,7 +16,7 @@ using Empiria.History.Services;
 namespace Empiria.Budgeting.Transactions.Adapters {
 
   /// <summary>Maps BudgetTransaction instances to data transfer objects.</summary>
-  static internal class BudgetTransactionMapper {
+  static public class BudgetTransactionMapper {
 
     #region Public mappers
 
@@ -29,6 +29,24 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Actions = MapActions(transaction)
       };
     }
+
+
+    static public BudgetTransactionDescriptorDto MapToDescriptor(BudgetTransaction transaction) {
+      return new BudgetTransactionDescriptorDto {
+        UID = transaction.UID,
+        TransactionTypeName = transaction.BudgetTransactionType.DisplayName,
+        BudgetTypeName = transaction.BaseBudget.BudgetType.DisplayName,
+        BudgetName = transaction.BaseBudget.Name,
+        TransactionNo = transaction.TransactionNo,
+        Description = transaction.Description,
+        OperationSourceName = transaction.OperationSource.Name,
+        BasePartyName = transaction.BaseParty.Name,
+        ApplicationDate = transaction.ApplicationDate,
+        RequestedDate = transaction.RequestedTime,
+        StatusName = transaction.Status.GetName(),
+      };
+    }
+
 
     static internal FixedList<BudgetTransactionDescriptorDto> MapToDescriptor(FixedList<BudgetTransaction> transactions) {
       return transactions.Select(x => MapToDescriptor(x)).ToFixedList();
@@ -59,23 +77,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         ApplicationDate = transaction.ApplicationDate,
         RequestedDate = transaction.RequestedTime,
         Status = transaction.Status.MapToNamedEntity()
-      };
-    }
-
-
-    static private BudgetTransactionDescriptorDto MapToDescriptor(BudgetTransaction transaction) {
-      return new BudgetTransactionDescriptorDto {
-        UID = transaction.UID,
-        TransactionTypeName = transaction.BudgetTransactionType.DisplayName,
-        BudgetTypeName = transaction.BaseBudget.BudgetType.DisplayName,
-        BudgetName = transaction.BaseBudget.Name,
-        TransactionNo = transaction.TransactionNo,
-        Description = transaction.Description,
-        OperationSourceName = transaction.OperationSource.Name,
-        BasePartyName = transaction.BaseParty.Name,
-        ApplicationDate = transaction.ApplicationDate,
-        RequestedDate = transaction.RequestedTime,
-        StatusName = transaction.Status.GetName(),
       };
     }
 
