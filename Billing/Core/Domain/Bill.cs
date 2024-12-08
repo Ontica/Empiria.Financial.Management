@@ -144,19 +144,19 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_SUBTOTAL", ConvertFrom = typeof(float))]
+    [DataField("BILL_SUBTOTAL")]
     public decimal Subtotal {
       get; private set;
     }
 
 
-    [DataField("BILL_DISCOUNT", ConvertFrom = typeof(float))]
+    [DataField("BILL_DISCOUNT")]
     public decimal Discount {
       get; private set;
     }
 
 
-    [DataField("BILL_TOTAL", ConvertFrom = typeof(float))]
+    [DataField("BILL_TOTAL")]
     public decimal Total {
       get; private set;
     }

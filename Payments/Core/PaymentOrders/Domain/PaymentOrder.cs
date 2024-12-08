@@ -122,7 +122,7 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    [DataField("ORDER_TOTAL", ConvertFrom = typeof(decimal))]
+    [DataField("ORDER_TOTAL")]
     public decimal Total {
       get; private set;
     }
@@ -233,4 +233,4 @@ namespace Empiria.Payments.Orders {
 
   }  // class PaymentOrder
 
-}  // namespace Empiria.Payments.Contracts
+}  // namespace Empiria.Payments.Orders

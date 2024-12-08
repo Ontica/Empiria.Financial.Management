@@ -10,10 +10,11 @@
 
 using System;
 
-using Empiria.Billing.Data;
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.Products;
+
+using Empiria.Billing.Data;
 
 namespace Empiria.Billing {
 
@@ -43,7 +44,6 @@ namespace Empiria.Billing {
     #endregion Constructors and parsers
 
     #region Public properties
-
 
     [DataField("BILL_CONCEPT_ID")]
     public int BillConceptId {
@@ -106,19 +106,19 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_CONCEPT_UNIT_PRICE", ConvertFrom = typeof(float))]
+    [DataField("BILL_CONCEPT_UNIT_PRICE")]
     public decimal UnitPrice {
       get; private set;
     }
 
 
-    [DataField("BILL_CONCEPT_SUBTOTAL", ConvertFrom = typeof(float))]
+    [DataField("BILL_CONCEPT_SUBTOTAL")]
     public decimal Subtotal {
       get; private set;
     }
 
 
-    [DataField("BILL_CONCEPT_DISCOUNT", ConvertFrom = typeof(float))]
+    [DataField("BILL_CONCEPT_DISCOUNT")]
     public decimal Discount {
       get; private set;
     }

@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Financial;
 using Empiria.Json;
@@ -16,7 +17,6 @@ using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Billing.Data;
-using System.Collections.Generic;
 
 namespace Empiria.Billing {
 
@@ -89,19 +89,19 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_TAX_FACTOR", ConvertFrom = typeof(float))]
+    [DataField("BILL_TAX_FACTOR")]
     public decimal Factor {
       get; private set;
     }
 
 
-    [DataField("BILL_TAX_BASE_AMOUNT", ConvertFrom = typeof(float))]
+    [DataField("BILL_TAX_BASE_AMOUNT")]
     public decimal BaseAmount {
       get; private set;
     }
 
 
-    [DataField("BILL_TAX_TOTAL", ConvertFrom = typeof(float))]
+    [DataField("BILL_TAX_TOTAL")]
     public decimal Total {
       get; private set;
     }
@@ -166,6 +166,7 @@ namespace Empiria.Billing {
 
 
     #endregion Private methods
+
   } // class BillTaxEntry
 
 }  // namespace Empiria.Billing

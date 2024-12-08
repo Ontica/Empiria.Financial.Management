@@ -86,7 +86,7 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PAYABLE_ITEM_QTY", ConvertFrom = typeof(decimal))]
+    [DataField("PAYABLE_ITEM_QTY")]
     public decimal Quantity {
       get; private set;
     }
@@ -98,13 +98,13 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PAYABLE_ITEM_EXCH_RATE", ConvertFrom = typeof(decimal))]
+    [DataField("PAYABLE_ITEM_EXCH_RATE")]
     public decimal ExchangeRate {
       get; private set;
     } = 1;
 
 
-    [DataField("PAYABLE_ITEM_QTY", ConvertFrom = typeof(decimal))]
+    [DataField("PAYABLE_ITEM_QTY")]
     public decimal UnitPrice {
       get; private set;
     }

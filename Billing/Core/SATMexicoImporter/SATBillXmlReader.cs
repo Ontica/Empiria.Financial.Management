@@ -84,8 +84,9 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       XmlNode timbre = complementNode.FirstChild;
 
-      if (!timbre.Name.Equals("tfd:TimbreFiscalDigital"))
-        Assertion.EnsureFailed("The 'tfd:TimbreFiscalDigital' it doesnt exist.");
+      if (!timbre.Name.Equals("tfd:TimbreFiscalDigital")) {
+        Assertion.EnsureFailed("The 'tfd:TimbreFiscalDigital' does not exist.");
+      }
 
       _satBillDto.SATComplemento = new SATBillComplementDto {
         Xmlns_Tfd = GetAttribute(timbre, "xmlns:tfd"),

@@ -115,9 +115,8 @@ namespace Empiria.Billing {
     internal void EnsureIsValid() {
 
       var issuedTo = Party.Parse(IssuedToUID);
-      Assertion.Require(issuedTo != null, "No existe registro en BD del receptor de la factura.");
 
-      Assertion.Require(issuedTo.Tags.Contains("BNO670315CD0"), "El receptor de la factura no es BANOBRAS.");
+      Assertion.Require(Party.Primary.Equals(issuedTo), $"El receptor de la factura no es {Party.Primary.Name}");
 
       Assertion.Require(IssueDate <= DateTime.Now,
                         "La fecha de la factura no debe ser mayor a la fecha actual.");
