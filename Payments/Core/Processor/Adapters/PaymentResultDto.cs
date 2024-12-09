@@ -10,8 +10,8 @@
 
 namespace Empiria.Payments.Processor.Adapters {
 
-  /// <summary>Integration interface that represents a payment result sent by a payments broker.</summary>
-  internal interface IPaymentResult {
+    /// <summary>Integration interface that represents a payment result sent by a payments broker.</summary>
+    public interface IPaymentResult {
 
     bool Failed {
       get;
@@ -21,11 +21,11 @@ namespace Empiria.Payments.Processor.Adapters {
 
 
 
-  internal class PaymentResultDto : IPaymentResult {
+   public class PaymentResultDto : IPaymentResult {
 
     public bool Failed {
       get;
-      internal set;
+      set;
     }
 
   }  // class PaymentResultDto

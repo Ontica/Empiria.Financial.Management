@@ -11,7 +11,7 @@
 namespace Empiria.Payments.Processor.Adapters {
 
   /// <summary>Interface to integrate payment brokers with Empiria Payments.</summary>
-  internal interface IPaymentsBroker {
+  public interface IPaymentsBroker {
 
     string UID {
       get;
