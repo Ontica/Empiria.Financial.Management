@@ -72,6 +72,8 @@ namespace Empiria.Budgeting.Transactions {
         BalanceColumnUID = balanceColumn.UID,
         Description = item.Description,
         ProductUID = item.Product.UID,
+        ProductUnitUID = item.Unit.UID,
+        BaseEntityItemId = item.Id,
         CurrencyUID = item.Currency.UID,
         Deposit = isDeposit ? item.Total : 0,
         Withdrawal = isDeposit ? 0: item.Total,

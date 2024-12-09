@@ -79,8 +79,15 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_ENTRY_SUBLEDGER_ACCT_ID")]
-    public int SubledgerAccountId {
+    [DataField("BDG_ENTRY_PRODUCT_ID")]
+    public Product Product {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_PRODUCT_UNIT_ID")]
+    public ProductUnit ProductUnit {
       get;
       private set;
     }
@@ -93,8 +100,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_ENTRY_PRODUCT_ID")]
-    public Product Product {
+    [DataField("BDG_ENTRY_PARTY_ID")]
+    public Party Party {
       get;
       private set;
     }
@@ -109,6 +116,13 @@ namespace Empiria.Budgeting.Transactions {
 
     [DataField("BDG_ENTRY_OPERATION_ID")]
     public int OperationId {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_BASE_ENTITY_ITEM_ID")]
+    public int BaseEntityItemId {
       get;
       private set;
     }
@@ -165,6 +179,13 @@ namespace Empiria.Budgeting.Transactions {
 
     [DataField("BDG_ENTRY_WITHDRAWAL_AMOUNT")]
     public decimal Withdrawal {
+      get;
+      private set;
+    }
+
+
+    [DataField("BDG_ENTRY_EXCHAGE_RATE")]
+    public decimal ExchangeRate {
       get;
       private set;
     }
@@ -250,12 +271,19 @@ namespace Empiria.Budgeting.Transactions {
       fields.EnsureIsValid();
 
       this.BudgetAccount = PatchField(fields.BudgetAccountUID, BudgetAccount);
-      this.BalanceColumn = PatchField(fields.BalanceColumnUID, BalanceColumn);
       this.Product = PatchField(fields.ProductUID, Product);
+      this.ProductUnit = PatchField(fields.ProductUnitUID, ProductUnit);
+      this.Project = PatchField(fields.ProjectUID, Project);
+      this.Party = PatchField(fields.PartyUID, Party);
+      this.OperationTypeId = fields.OperationTypeId;
+      this.OperationId = fields.OperationId;
+      this.BaseEntityItemId = fields.BaseEntityItemId;
+      this.BalanceColumn = PatchField(fields.BalanceColumnUID, BalanceColumn);
       this.Description = PatchCleanField(fields.Description, Description);
       this.Currency = PatchField(fields.CurrencyUID, Currency);
       this.Deposit = fields.Deposit;
       this.Withdrawal = fields.Withdrawal;
+      this.ExchangeRate = fields.ExchangeRate;
 
       MarkAsDirty();
     }

@@ -31,6 +31,35 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
+    public string ProductUnitUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string ProjectUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string PartyUID {
+      get; set;
+    } = string.Empty;
+
+
+    public int OperationTypeId {
+      get; set;
+    } = -1;
+
+
+    public int OperationId {
+      get; set;
+    } = -1;
+
+    public int BaseEntityItemId {
+      get; set;
+    } = -1;
+
+
     public string CurrencyUID {
       get; set;
     } = string.Empty;
@@ -43,6 +72,10 @@ namespace Empiria.Budgeting.Transactions {
     public decimal Withdrawal {
       get; set;
     }
+
+    public decimal ExchangeRate {
+      get; internal set;
+    } = 1m;
 
     public string Description {
       get; set;

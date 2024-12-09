@@ -291,6 +291,8 @@ namespace Empiria.Budgeting.Transactions {
 
       Description = PatchCleanField(fields.Description, Description);
       BaseParty = PatchField(fields.BasePartyUID, BaseParty);
+      BaseEntityTypeId = fields.BaseEntityTypeId;
+      BaseEntityId = fields.BaseEntityId;
       RequestedBy = PatchField(fields.RequestedByUID, RequestedBy);
       OperationSource = PatchField(fields.OperationSourceUID, OperationSource);
       ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);

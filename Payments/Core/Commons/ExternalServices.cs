@@ -121,6 +121,8 @@ namespace Empiria.Payments {
         BaseBudgetUID = payable.Budget.UID,
         OperationSourceUID = SISTEMA_DE_PAGOS.UID,
         Description = payable.Description,
+        BaseEntityTypeId = payable.GetPayableEntity().GetEmpiriaType().Id,
+        BaseEntityId = payable.PayableEntity.Id,
         BasePartyUID = payable.OrganizationalUnit.UID,
         RequestedByUID = payable.PostedBy.UID,
         ApplicationDate = applicationDate
