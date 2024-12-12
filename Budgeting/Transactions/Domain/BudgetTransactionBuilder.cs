@@ -15,15 +15,16 @@ namespace Empiria.Budgeting.Transactions {
   /// <summary>Builds a budget transaction using a IPayableEntity instance.</summary>
   internal class BudgetTransactionBuilder {
 
-    private readonly IPayableEntity _payable;
+    private readonly IPayableEntity _payableEntity;
     private readonly BudgetTransactionFields _fields;
     private BudgetTransaction _transaction;
 
-    public BudgetTransactionBuilder(IPayableEntity payable, BudgetTransactionFields fields) {
-      Assertion.Require(payable, nameof(payable));
+    public BudgetTransactionBuilder(IPayableEntity payableEntity,
+                                    BudgetTransactionFields fields) {
+      Assertion.Require(payableEntity, nameof(payableEntity));
       Assertion.Require(fields, nameof(fields));
 
-      _payable = payable;
+      _payableEntity = payableEntity;
       _fields = fields;
     }
 
@@ -53,7 +54,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     private void BuildEntries() {
-      foreach (var item in _payable.Items) {
+      foreach (var item in _payableEntity.Items) {
 
         if (_transaction.BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente)) {
           BuildDoubleEntries(item, BalanceColumn.Commited, BalanceColumn.Available);
@@ -87,7 +88,7 @@ namespace Empiria.Budgeting.Transactions {
 
       var budget = Budget.Parse(_fields.BaseBudgetUID);
 
-      var transaction = new BudgetTransaction(transactionType, budget);
+      var transaction = new BudgetTransaction(transactionType, budget, (BaseObject) _payableEntity);
 
       transaction.Update(_fields);
 

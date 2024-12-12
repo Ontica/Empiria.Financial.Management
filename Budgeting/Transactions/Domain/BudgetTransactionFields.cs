@@ -36,16 +36,6 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
-    public int BaseEntityTypeId {
-      get; set;
-    } = -1;
-
-
-    public int BaseEntityId {
-      get; set;
-    } = -1;
-
-
     public string Description {
       get; set;
     } = string.Empty;

@@ -37,10 +37,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
     internal protected BudgetTransaction(BudgetTransactionType transactionType,
-                                         Budget baseBudget) : base(transactionType) {
+                                         Budget baseBudget,
+                                         BaseObject baseEntity) : base(transactionType) {
       Assertion.Require(baseBudget, nameof(baseBudget));
 
       this.BaseBudget = baseBudget;
+      this.BaseEntityTypeId = baseEntity.GetEmpiriaType().Id;
+      this.BaseEntityId = baseEntity.Id;
     }
 
     static public BudgetTransaction Parse(int id) => ParseId<BudgetTransaction>(id);
@@ -291,8 +294,6 @@ namespace Empiria.Budgeting.Transactions {
 
       Description = PatchCleanField(fields.Description, Description);
       BaseParty = PatchField(fields.BasePartyUID, BaseParty);
-      BaseEntityTypeId = fields.BaseEntityTypeId;
-      BaseEntityId = fields.BaseEntityId;
       RequestedBy = PatchField(fields.RequestedByUID, RequestedBy);
       OperationSource = PatchField(fields.OperationSourceUID, OperationSource);
       ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
