@@ -184,7 +184,7 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_ENTRY_EXCHAGE_RATE")]
+    [DataField("BDG_ENTRY_EXCHANGE_RATE")]
     public decimal ExchangeRate {
       get;
       private set;

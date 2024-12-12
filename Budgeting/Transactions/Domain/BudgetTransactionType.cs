@@ -41,9 +41,17 @@ namespace Empiria.Budgeting.Transactions {
       return GetList().FindAll(x => x.BudgetType.Equals(budgetType));
     }
 
+    static public BudgetTransactionType ApartarGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.ApartarGastoCorriente");
+
+    static public BudgetTransactionType ApartarCostoFinanciero => Parse("ObjectTypeInfo.BudgetTransaction.ApartarCostoFinanciero");
+
     static public BudgetTransactionType ComprometerGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.ComprometerGastoCorriente");
 
+    static public BudgetTransactionType ComprometerCostoFinanciero => Parse("ObjectTypeInfo.BudgetTransaction.ComprometerCostoFinanciero");
+
     static public BudgetTransactionType EjercerGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.EjercerGastoCorriente");
+
+    static public BudgetTransactionType EjercerCostoFinanciero => Parse("ObjectTypeInfo.BudgetTransaction.EjercerCostoFinanciero");
 
     static public BudgetTransactionType Empty => Parse("ObjectTypeInfo.BudgetTransaction");
 
