@@ -27,7 +27,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       _xmlDocument = new XmlDocument();
 
-      _xmlDocument.LoadXml(xmlString);
+      _xmlDocument.Load(xmlString);
     }
 
     #region Services

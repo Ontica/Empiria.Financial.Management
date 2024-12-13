@@ -69,12 +69,22 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal int ValidateExistBill(string billNo) {
+    static internal List<Bill> ValidateIfExistBill(string billNo) {
 
-      var sql = $"SELECT * FROM FMS_BILLS WHERE BILL_NO = '{billNo}'";
+      var sql = $"SELECT * FROM FMS_BILLS WHERE BILL_NO = '{billNo}' " +
+                $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
       var op = DataOperation.Parse(sql);
-      var exist = DataReader.GetPlainObjectList<Bill>(op);
-      return exist.Count;
+      return DataReader.GetPlainObjectList<Bill>(op);
+    }
+
+
+    static internal List<Bill> ValidateIfExistCreditNotesByBill(string cfdiRelated) {
+
+      var sql = $"SELECT * FROM FMS_BILLS " +
+                $"WHERE BILL_NO_RELATED = '{cfdiRelated}' " +
+                $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
+      var op = DataOperation.Parse(sql);
+      return DataReader.GetPlainObjectList<Bill>(op);
     }
 
 
@@ -82,8 +92,8 @@ namespace Empiria.Billing.Data {
 
       var op = DataOperation.Parse("write_FMS_Bill",
         bill.Id, bill.UID, bill.BillType.Id, bill.BillCategory.Id,
-        bill.BillNo, bill.IssueDate, bill.IssuedBy.Id, bill.IssuedTo.Id,
-        bill.ManagedBy.Id, bill.SchemaVersion,
+        bill.BillNo, bill.BillNoRelated, bill.IssueDate, bill.IssuedBy.Id,
+        bill.IssuedTo.Id, bill.ManagedBy.Id, bill.SchemaVersion,
         string.Join(" ", bill.Identificators), string.Join(" ", bill.Tags),
         bill.Currency.Id, bill.Subtotal, bill.Discount, bill.Total,
         "", "", "", "",

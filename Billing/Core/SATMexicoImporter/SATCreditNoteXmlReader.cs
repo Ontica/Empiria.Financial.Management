@@ -27,7 +27,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       _xmlDocument = new XmlDocument();
 
-      _xmlDocument.LoadXml(xmlString);
+      _xmlDocument.Load(xmlString);
     }
 
     #region Services
@@ -77,7 +77,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode cfdiRelated in cfdiRelatedNode.ChildNodes) {
 
-        if (!cfdiRelated.Name.Equals("cfdi:CfdiRelacionado ")) {
+        if (!cfdiRelated.Name.Equals("cfdi:CfdiRelacionado")) {
           Assertion.EnsureFailed("The node name must be cfdi:CfdiRelacionado.");
         }
 

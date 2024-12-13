@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Linq;
 using Empiria.Billing.Data;
 using Empiria.Billing.SATMexicoImporter;
 using Empiria.Parties;
@@ -30,6 +31,12 @@ namespace Empiria.Billing {
     public string CertificationNo {
       get; set;
     } = string.Empty;
+
+
+    public string CFDIRelated {
+      get;
+      internal set;
+    }
 
 
     public DateTime IssueDate {
@@ -116,13 +123,33 @@ namespace Empiria.Billing {
 
       var issuedTo = Party.Parse(IssuedToUID);
 
-      Assertion.Require(Party.Primary.Equals(issuedTo), $"El receptor de la factura no es {Party.Primary.Name}");
+      Assertion.Require(Party.Primary.Equals(issuedTo),
+                        $"El receptor de la factura/nota de crédito no es {Party.Primary.Name}");
 
       Assertion.Require(IssueDate <= DateTime.Now,
-                        "La fecha de la factura no debe ser mayor a la fecha actual.");
+                        "La fecha de la factura/nota de crédito no debe ser mayor a la fecha actual.");
 
-      Assertion.Require(BillData.ValidateExistBill(BillNo) == 0,
-                        "La factura que se intenta guardar ya esta registrada.");
+      Assertion.Require(BillData.ValidateIfExistBill(BillNo).Count == 0,
+                        "La factura/nota de crédito que se intenta guardar ya esta registrada.");
+    }
+
+
+    internal void EnsureIsValidCreditNote() {
+
+      var billsRelated = BillData.ValidateIfExistBill(CFDIRelated);
+
+      Assertion.Require(billsRelated.Count == 1,
+                        "El CFDI relacionado al que hace referencia no existe.");
+
+      var creditNotesList = BillData.ValidateIfExistCreditNotesByBill(CFDIRelated);
+
+      if (creditNotesList.Count > 0) {
+
+        Assertion.Require(creditNotesList.Sum(x => x.Total) <= billsRelated.First().Total,
+                        "El total de ésta nota de crédito y la suma de " +
+                        "las notas de crédito registradas exceden el total de la factura.");
+      }
+
     }
 
   } // class BillFields
@@ -192,7 +219,7 @@ namespace Empiria.Billing {
 
 
     internal void EnsureIsValid() {
-       // ToDo
+      // ToDo
     }
 
   } // class BillConceptFields

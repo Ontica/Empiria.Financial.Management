@@ -45,6 +45,8 @@ namespace Empiria.Billing {
 
     static public BillCategory Factura => Parse(701);
 
+    static public BillCategory NotaDeCredito => Parse(702);
+
     #endregion Constructors and parsers
 
     #region Properties

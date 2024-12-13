@@ -15,6 +15,8 @@ using Empiria.Parties;
 using Empiria.Products.SATMexico;
 
 using Empiria.Billing.SATMexicoImporter;
+using System;
+using System.Linq;
 
 namespace Empiria.Billing.Adapters {
 
@@ -67,6 +69,7 @@ namespace Empiria.Billing.Adapters {
         CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
         Subtotal = dto.DatosGenerales.SubTotal,
         Total = dto.DatosGenerales.Total,
+        CFDIRelated = MapToCfdiRelated(dto.DatosGenerales.CfdiRelacionados),
         Concepts = MapToBillConceptFields(dto.Conceptos)
       };
     }
@@ -89,6 +92,16 @@ namespace Empiria.Billing.Adapters {
         fields.Add(field);
       }
       return fields.ToFixedList();
+    }
+
+
+    static private string MapToCfdiRelated(FixedList<SATBillCFDIRelatedDataDto> cfdiRelacionados) {
+
+      if (cfdiRelacionados.Count == 0) {
+        return string.Empty;
+      }
+
+      return cfdiRelacionados.First().UUID;
     }
 
     #endregion Private methods

@@ -37,6 +37,17 @@ namespace Empiria.Billing {
 
     static public Bill Parse(string uid) => ParseKey<Bill>(uid);
 
+    public Bill(BillCategory billCategory,
+                string billNo) : base(billCategory.BillType) {
+
+      Assertion.Require(billCategory, nameof(billCategory));
+      Assertion.Require(billNo, nameof(billNo));
+
+      PayableId = -1;
+      BillCategory = billCategory;
+      BillNo = billNo;
+    }
+
     public Bill(IPayable payable,
                 BillCategory billCategory,
                 string billNo) : base(billCategory.BillType) {
@@ -80,11 +91,18 @@ namespace Empiria.Billing {
     }
 
 
+    [DataField("BILL_NO_RELATED")]
+    public string BillNoRelated {
+      get;
+      private set;
+    }
+
+
     [DataField("BILL_PAYABLE_ID")]
     public int PayableId {
       get; private set;
     }
-
+    
 
     [DataField("BILL_ISSUE_DATE")]
     public DateTime IssueDate {
@@ -257,7 +275,8 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
-
+      
+      BillNoRelated = fields.CFDIRelated;
       IssueDate = PatchField(fields.IssueDate, IssueDate);
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
@@ -269,6 +288,15 @@ namespace Empiria.Billing {
       Subtotal = fields.Subtotal;
       Discount = fields.Discount;
       Total = fields.Total;
+    }
+
+
+    internal void UpdateCreditNote(BillFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      Update(fields);
+
+      fields.EnsureIsValidCreditNote();
     }
 
     #endregion Methods

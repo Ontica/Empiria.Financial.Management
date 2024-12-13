@@ -11,6 +11,7 @@ using System;
 using Empiria.Billing.Adapters;
 using Empiria.Billing.SATMexicoImporter;
 using Empiria.Billing.UseCases;
+using Empiria.Financial;
 using Xunit;
 
 namespace Empiria.Tests.Billing {
@@ -18,6 +19,19 @@ namespace Empiria.Tests.Billing {
   /// <summary></summary>
   public class BillUseCasesTests {
 
+
+    [Fact]
+    public void Create_Bill_Test() {
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+        string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
+
+        BillDto sut = usecases.CreateBillTest(xmlFilePath);
+
+        Assert.NotNull(sut);
+      }
+    }
 
 
     [Fact]
@@ -49,8 +63,6 @@ namespace Empiria.Tests.Billing {
 
     [Fact]
     public void Get_Bill_List_Test() {
-
-      string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 

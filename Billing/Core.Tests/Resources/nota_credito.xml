@@ -1,7 +1,4 @@
-<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" 
-  Version="4.0" 
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" Version="4.0" 
   Fecha="2023-06-22T14:47:25" 
   Sello="oUlhFNf3+ZqtYfooJ6VZsXWqZzR/y433gBDfY7UqBlaSi6lPrlEzspZSmbSRHCvCWEv/1IcRhPiEQE38xJmjmCc7eiUe011VZdCoyvKZ15MKdI42MromDx2s4M/EUxNQvdlrr8goREIOB+ChvCnm9QdIN7cqtgVzvaMeRaoqxdQFbNHHhvv7KmEIufs3Uf5f8CWdEokWmSgZ+g1wHtYwz7iqMyjUhnAk8GcOpkNmlfrQgoRdezbTzoVutXjIjdhqit+iLTLYYEaDLWBYESWC6sI6MSZrtcb1iUQl4D+H/FmI9qxU5SitD3HOr5IA0DhoSdwcOBH35EZ3FGVvliaBbw==" 
   FormaPago="17" 

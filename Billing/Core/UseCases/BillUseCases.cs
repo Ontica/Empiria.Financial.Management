@@ -38,6 +38,24 @@ namespace Empiria.Billing.UseCases {
 
     #region Use cases
 
+
+    public BillDto CreateBillTest(string xmlString) {
+      Assertion.Require(xmlString, nameof(xmlString));
+
+      //var reader = new SATBillXmlReader(xmlString);
+      //SATBillDto satDto = reader.ReadAsBillDto();
+
+      var reader = new SATCreditNoteXmlReader(xmlString);
+      SATBillDto satDto = reader.ReadAsCreditNoteDto();
+
+      BillFields fields = BillFieldsMapper.Map(satDto);
+
+      Bill bill = CreateBillTest(fields);
+
+      return BillMapper.MapToBillDto(bill);
+    }
+
+
     public BillDto CreateBill(string xmlString, IPayable payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
@@ -49,6 +67,22 @@ namespace Empiria.Billing.UseCases {
       BillFields fields = BillFieldsMapper.Map(satDto);
 
       Bill bill = CreateBillImplementation(payable, fields);
+
+      return BillMapper.MapToBillDto(bill);
+    }
+
+
+    public BillDto CreateCreditNote(string xmlString, IPayable payable) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+
+      var reader = new SATCreditNoteXmlReader(xmlString);
+
+      SATBillDto satDto = reader.ReadAsCreditNoteDto();
+
+      BillFields fields = BillFieldsMapper.Map(satDto);
+
+      Bill bill = CreateCreditNoteImplementation(payable, fields);
 
       return BillMapper.MapToBillDto(bill);
     }
@@ -107,6 +141,24 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    private Bill CreateBillTest(BillFields fields) {
+
+      var billCategory = BillCategory.Factura;
+
+      var bill = new Bill(billCategory, fields.BillNo);
+
+      bill.Update(fields);
+
+      bill.Save();
+
+      FixedList<BillConcept> concepts = CreateBillConcepts(bill, fields.Concepts);
+
+      bill.Concepts = concepts;
+
+      return bill;
+    }
+
+
     private Bill CreateBillImplementation(IPayable payable, BillFields fields) {
 
       var billCategory = BillCategory.Factura;
@@ -114,6 +166,24 @@ namespace Empiria.Billing.UseCases {
       var bill = new Bill(payable, billCategory, fields.BillNo);
 
       bill.Update(fields);
+
+      bill.Save();
+
+      FixedList<BillConcept> concepts = CreateBillConcepts(bill, fields.Concepts);
+
+      bill.Concepts = concepts;
+
+      return bill;
+    }
+
+
+    private Bill CreateCreditNoteImplementation(IPayable payable, BillFields fields) {
+
+      var billCategory = BillCategory.NotaDeCredito;
+
+      var bill = new Bill(payable, billCategory, fields.BillNo);
+
+      bill.UpdateCreditNote(fields);
 
       bill.Save();
 
