@@ -48,7 +48,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
-    static internal FixedList<BudgetTransactionDescriptorDto> MapToDescriptor(FixedList<BudgetTransaction> transactions) {
+    static public FixedList<BudgetTransactionDescriptorDto> MapToDescriptor(FixedList<BudgetTransaction> transactions) {
       return transactions.Select(x => MapToDescriptor(x)).ToFixedList();
     }
 

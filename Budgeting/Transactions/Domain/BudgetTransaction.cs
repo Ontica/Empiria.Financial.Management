@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
@@ -49,6 +50,10 @@ namespace Empiria.Budgeting.Transactions {
     static public BudgetTransaction Parse(int id) => ParseId<BudgetTransaction>(id);
 
     static public BudgetTransaction Parse(string uid) => ParseKey<BudgetTransaction>(uid);
+
+    static public FixedList<BudgetTransaction> GetFor(IPayableEntity payableEntity) {
+      return BudgetTransactionDataService.GetTransactions(payableEntity);
+    }
 
     static public BudgetTransaction Empty => ParseEmpty<BudgetTransaction>();
 
