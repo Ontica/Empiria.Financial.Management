@@ -5,7 +5,7 @@
 *  Type     : Payable                                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a payable object that is an aggregate root of PayableItem objects.                  *
-*             A payable can be a bill, a contract milestone, a service order, a loan, travel expenses,       *
+*             A payable can be a bill, a contract supply order, a service order, a loan, travel expenses,    *
 *             fixed fund provision, etc.                                                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
@@ -27,7 +27,7 @@ using Empiria.Payments.Payables.Data;
 namespace Empiria.Payments.Payables {
 
   /// <summary>Represents a payable object that is an aggregate root of PayableItem objects.
-  /// A payable can be a bill, a contract milestone, a service order, a loan, travel expenses,
+  /// A payable can be a bill, a contract supply order, a service order, a loan, travel expenses,
   /// fixed fund provision, etc.</summary>
   [PartitionedType(typeof(PayableType))]
   internal class Payable : BaseObject, IPayable {

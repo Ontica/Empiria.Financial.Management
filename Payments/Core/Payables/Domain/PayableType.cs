@@ -47,7 +47,7 @@ namespace Empiria.Payments.Payables {
 
     static private ObjectTypeInfo BasePayableType => Powertype.Parse("ObjectTypeInfo.PowerType.PayableType");
 
-    static public PayableType ContractMilestone => Parse("ObjectTypeInfo.Payable.ContractMilestone");
+    static public PayableType ContractOrder => Parse("ObjectTypeInfo.Payable.ContractOrder");
 
     #endregion Constructors and parsers
 

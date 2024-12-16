@@ -61,7 +61,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Create_Payable() {
       var fields = new PayableFields {
-        PayableTypeUID = "ObjectTypeInfo.Payable.ContractMilestone",
+        PayableTypeUID = "ObjectTypeInfo.Payable.ContractOrder",
         PayableEntityUID = "0f2a2a72-0d6c-4dcb-84d1-98534ebb1713",
         Description = "Payable de Prueba",
         OrganizationalUnitUID = "d4b9aae9-cc6e-4fbc-9589-639dec5dab9f",
@@ -196,7 +196,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
 
     #region PayableDataStructure
 
-   
+
 
     #endregion PayableDataStructure
 

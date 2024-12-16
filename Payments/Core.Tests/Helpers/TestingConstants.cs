@@ -37,8 +37,6 @@ namespace Empiria.Tests.Payments {
 
     static internal string DOCUMENT_TYPE_UID = "05581e90-3bb4-42f4-8629-bf3503b2eda6";
 
-    static internal string CONTRACT_MILES_ITEM_UID = "Empty";
-
     static internal string CONTRACT_CURRENCY_ID = "358626ea-3c2c-44dd-80b5-18017fe3927e";
 
     static internal string CONTRACT_BUDGET_TYPE_UID = "ObjectTypeInfo.Budget.ProgramaFinanciero";
@@ -51,7 +49,7 @@ namespace Empiria.Tests.Payments {
 
     static internal readonly string PAYABLE_ID = "33c97347-923f-41d9-8bbc-3618411096a4";
 
-    static internal readonly string PAYABLE_TYPE_UID = "ObjectTypeInfo.Payable.ContractMilestone";
+    static internal readonly string PAYABLE_TYPE_UID = "ObjectTypeInfo.Payable.ContractOrder";
 
   }  // class TestingConstants
 

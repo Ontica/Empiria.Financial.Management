@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Information Holder                      *
 *  Type     : PayableItem                                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents an item of a payable object. A payable can be a bill, a contract milestone,         *
+*  Summary  : Represents an item of a payable object. A payable can be a bill, a contract supply order,      *
 *             a service order, a loan, travel expenses, a fixed fund provision, etc.                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
@@ -25,7 +25,7 @@ using Empiria.Payments.Payables.Data;
 
 namespace Empiria.Payments.Payables {
 
-  /// <summary>Represents an item of a payable object. A payable can be a bill, a contract milestone,
+  /// <summary>Represents an item of a payable object. A payable can be a bill, a contract supply order,
   /// a service order, a loan, travel expenses, a fixed fund provision, etc.</summary>
   internal class PayableItem : BaseObject {
 

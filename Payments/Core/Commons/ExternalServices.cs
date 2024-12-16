@@ -137,9 +137,9 @@ namespace Empiria.Payments {
         DocumentLinkServices.CreateLink(Document.Parse(payableEntityDocument.UID), bill);
       }
 
-      // if (payable.GetPayableEntity() is ContractMilestone contractMilestone) {
+      // if (payable.GetPayableEntity() is ContractOrder contractOrder) {
 
-      //   foreach (var contractDocument in DocumentServices.GetEntityBaseDocuments(contractMilestone.Contract)) {
+      //   foreach (var contractDocument in DocumentServices.GetEntityBaseDocuments(contractOrder.Contract)) {
       //     DocumentLinkServices.CreateLink(Document.Parse(contractDocument.UID), bill);
       //   }
       //}
@@ -157,9 +157,9 @@ namespace Empiria.Payments {
       }
 
 
-      // if (payable.GetPayableEntity() is ContractMilestone contractMilestone) {
+      // if (payable.GetPayableEntity() is ContractOrder contractOrder) {
 
-      // foreach (var contractDocument in DocumentServices.GetEntityBaseDocuments(contractMilestone.Contract)) {
+      // foreach (var contractDocument in DocumentServices.GetEntityBaseDocuments(contractOrder.Contract)) {
       //   DocumentLinkServices.CreateLink(Document.Parse(contractDocument.UID), transaction);
       // }
       // }
