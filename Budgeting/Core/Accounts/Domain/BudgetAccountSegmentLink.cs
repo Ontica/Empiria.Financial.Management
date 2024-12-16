@@ -29,9 +29,11 @@ namespace Empiria.Budgeting {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal BudgetAccountSegmentLink(BudgetAccountSegment segment, Product product)
+    internal BudgetAccountSegmentLink(BudgetAccountSegment segment, Product product,
+                                      string observations)
               : base(ProcurementProductLink, segment, product) {
-      // no-op
+
+      base.Description = EmpiriaString.Clean(observations);
     }
 
     static public BudgetAccountSegmentLink Parse(int id) => ParseId<BudgetAccountSegmentLink>(id);
