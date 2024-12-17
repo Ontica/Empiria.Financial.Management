@@ -119,18 +119,31 @@ namespace Empiria.Billing {
     } = new FixedList<BillConceptFields>();
 
 
-    internal void EnsureIsValid() {
+    public decimal PayableTotal {
+      get; internal set;
+    }
+
+
+    internal void EnsureIsValid(int payableId) {
 
       var issuedTo = Party.Parse(IssuedToUID);
+      
+      Assertion.Require(BillData.ValidateIfExistBill(BillNo).Count == 0,
+                        "La factura/nota de crédito que se intenta guardar ya esta registrada.");
+      
+      //ToDo validar el importe de n facturas sea igual al del IPayable ligado
+      //var billsByPayable = BillData.ValidateIfExistBillsByPayable(payableId);
+      
+      //if (billsByPayable.Count > 0) {
+      //  Assertion.Require((billsByPayable.Sum(x=>x.Total) + Total) <= PayableTotal,
+      //                  "El monto total de las facturas es mayor al monto total del contrato.");
+      //}
 
       Assertion.Require(Party.Primary.Equals(issuedTo),
                         $"El receptor de la factura/nota de crédito no es {Party.Primary.Name}");
 
       Assertion.Require(IssueDate <= DateTime.Now,
                         "La fecha de la factura/nota de crédito no debe ser mayor a la fecha actual.");
-
-      Assertion.Require(BillData.ValidateIfExistBill(BillNo).Count == 0,
-                        "La factura/nota de crédito que se intenta guardar ya esta registrada.");
     }
 
 
@@ -145,11 +158,10 @@ namespace Empiria.Billing {
 
       if (creditNotesList.Count > 0) {
 
-        Assertion.Require(creditNotesList.Sum(x => x.Total) <= billsRelated.First().Total,
+        Assertion.Require((creditNotesList.Sum(x => x.Total) + Total) <= billsRelated.First().Total,
                         "El total de ésta nota de crédito y la suma de " +
                         "las notas de crédito registradas exceden el total de la factura.");
       }
-
     }
 
   } // class BillFields

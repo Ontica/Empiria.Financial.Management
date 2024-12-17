@@ -31,6 +31,15 @@
     </cfdi:Traslados>
   </cfdi:Impuestos>
   <cfdi:Complemento>
-    <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="C25F75BE-7E79-4656-9367-2DFDB1A651F1" FechaTimbrado="2023-06-20T13:06:05" RfcProvCertif="SAT970701NN3" SelloCFD="j8oFZ6QwaOWu5W5XPvckA/oI5UaO6c4J6ewH5kdoBPF0Tfh+LH1La/Vy0kEHhwrvLD5qhrl116ZalGKXUoNnKbHGuyhlxCwgnSfKHde8EtOZg86GboNjxk9OfUvD3oTzxdUsj2xOG6zedtvzEFVMH7/Mwk0MvjaSUBCtBw+Oyu/O8kG7gdC/b6m/3j9AopzgIhHLp+8MAaAjiXdfGMRQ9479pvfijS8/V4iAeLU5V55jtnNI6dZStVAoWlYncKjNGCuECA5p3vd2leFZLDLm018L04t5fFKpdFK7zIOS/MTOdxOushQ/oc0lE6WTs03Tpvfv5Tg/EjXkP8cQIO/nZw==" NoCertificadoSAT="00001000000504465028" SelloSAT="e/w0q/OplOtdhtzzNqaCzjUlUaI8yhBnvF6RNrfYNj1zyDvFHYyu9IjijHpV1OqpHF06+Qku1wG2PJIKjYK9yktbdKb0oRmaZgGINdgoO0Be3sf0V9ZcuK5xdL0zTnU19Mv+um4sft3D911Z0sp+EMHpTQNNn5rI2/y6+IqVJEtJ+KA2TtXjBf2jVhDqc2bBH/8pzrOLagV5aGBbEZeih350HKFYQxJMj3/D19aZPei5NyInDmiaG8s+j6jq+dywM/bhUV+loDMs7aF22E4kJh/wz5rw8usMgtLthvwHsSDDgScAtREzDtO6mpqxTMP+oCsaiRw+GFA8Dghz30pAqg==" />
+    <tfd:TimbreFiscalDigital 
+      xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" 
+      xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" 
+      Version="1.1" 
+      UUID="C25F75BE-7E79-4656-9367-2DFDB1A651F1" 
+      FechaTimbrado="2023-06-20T13:06:05" 
+      RfcProvCertif="SAT970701NN3" 
+      SelloCFD="j8oFZ6QwaOWu5W5XPvckA/oI5UaO6c4J6ewH5kdoBPF0Tfh+LH1La/Vy0kEHhwrvLD5qhrl116ZalGKXUoNnKbHGuyhlxCwgnSfKHde8EtOZg86GboNjxk9OfUvD3oTzxdUsj2xOG6zedtvzEFVMH7/Mwk0MvjaSUBCtBw+Oyu/O8kG7gdC/b6m/3j9AopzgIhHLp+8MAaAjiXdfGMRQ9479pvfijS8/V4iAeLU5V55jtnNI6dZStVAoWlYncKjNGCuECA5p3vd2leFZLDLm018L04t5fFKpdFK7zIOS/MTOdxOushQ/oc0lE6WTs03Tpvfv5Tg/EjXkP8cQIO/nZw==" 
+      NoCertificadoSAT="00001000000504465028" 
+      SelloSAT="e/w0q/OplOtdhtzzNqaCzjUlUaI8yhBnvF6RNrfYNj1zyDvFHYyu9IjijHpV1OqpHF06+Qku1wG2PJIKjYK9yktbdKb0oRmaZgGINdgoO0Be3sf0V9ZcuK5xdL0zTnU19Mv+um4sft3D911Z0sp+EMHpTQNNn5rI2/y6+IqVJEtJ+KA2TtXjBf2jVhDqc2bBH/8pzrOLagV5aGBbEZeih350HKFYQxJMj3/D19aZPei5NyInDmiaG8s+j6jq+dywM/bhUV+loDMs7aF22E4kJh/wz5rw8usMgtLthvwHsSDDgScAtREzDtO6mpqxTMP+oCsaiRw+GFA8Dghz30pAqg==" />
   </cfdi:Complemento>
 </cfdi:Comprobante>

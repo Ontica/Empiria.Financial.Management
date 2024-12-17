@@ -25,7 +25,7 @@ namespace Empiria.Tests.Billing {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-        string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
+        string xmlFilePath = TestingConstants.XML_CREDIT_NOTE_FILE_PATH;
 
         BillDto sut = usecases.CreateBillTest(xmlFilePath);
 

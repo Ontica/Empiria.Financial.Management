@@ -18,6 +18,7 @@ using Empiria.Billing.SATMexicoImporter;
 
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
+using System.Linq;
 
 namespace Empiria.Billing.UseCases {
 
@@ -42,11 +43,11 @@ namespace Empiria.Billing.UseCases {
     public BillDto CreateBillTest(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
-      //var reader = new SATBillXmlReader(xmlString);
-      //SATBillDto satDto = reader.ReadAsBillDto();
+      var reader = new SATBillXmlReader(xmlString);
+      SATBillDto satDto = reader.ReadAsBillDto();
 
-      var reader = new SATCreditNoteXmlReader(xmlString);
-      SATBillDto satDto = reader.ReadAsCreditNoteDto();
+      //var reader = new SATCreditNoteXmlReader(xmlString);
+      //SATBillDto satDto = reader.ReadAsCreditNoteDto();
 
       BillFields fields = BillFieldsMapper.Map(satDto);
 
@@ -59,9 +60,9 @@ namespace Empiria.Billing.UseCases {
     public BillDto CreateBill(string xmlString, IPayable payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
-
+      
       var reader = new SATBillXmlReader(xmlString);
-
+      
       SATBillDto satDto = reader.ReadAsBillDto();
 
       BillFields fields = BillFieldsMapper.Map(satDto);
@@ -148,12 +149,13 @@ namespace Empiria.Billing.UseCases {
       var bill = new Bill(billCategory, fields.BillNo);
 
       bill.Update(fields);
+      //bill.UpdateCreditNote(fields);
 
       bill.Save();
 
-      FixedList<BillConcept> concepts = CreateBillConcepts(bill, fields.Concepts);
+      //FixedList<BillConcept> concepts = CreateBillConcepts(bill, fields.Concepts);
 
-      bill.Concepts = concepts;
+      bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
 
       return bill;
     }
@@ -164,6 +166,8 @@ namespace Empiria.Billing.UseCases {
       var billCategory = BillCategory.Factura;
 
       var bill = new Bill(payable, billCategory, fields.BillNo);
+
+      //fields.PayableTotal = payable.PayableEntity.Items.Sum(x => x.Total);
 
       bill.Update(fields);
 

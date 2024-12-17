@@ -73,6 +73,18 @@ namespace Empiria.Billing.Data {
 
       var sql = $"SELECT * FROM FMS_BILLS WHERE BILL_NO = '{billNo}' " +
                 $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+      return DataReader.GetPlainObjectList<Bill>(op);
+    }
+
+
+    static internal List<Bill> ValidateIfExistBillsByPayable(int payableId) {
+
+      var sql = $"SELECT * FROM FMS_BILLS WHERE BILL_PAYABLE_ID = {payableId} " +
+                $"AND BILL_CATEGORY_ID = 701" +
+                $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
+
       var op = DataOperation.Parse(sql);
       return DataReader.GetPlainObjectList<Bill>(op);
     }

@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Documents.Services;
+using Empiria.Financial;
 using Empiria.History.Services;
 using Empiria.StateEnums;
 
@@ -33,6 +34,7 @@ namespace Empiria.Billing.Adapters {
 
 
     static internal BillDto MapToBillDto(Bill bill) {
+
       return new BillDto {
         UID = bill.UID,
         BillNo = bill.BillNo,

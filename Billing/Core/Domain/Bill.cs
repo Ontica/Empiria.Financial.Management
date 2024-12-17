@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-
+using System.Linq;
 using Empiria.Billing.Data;
 using Empiria.Financial;
 
@@ -42,7 +42,7 @@ namespace Empiria.Billing {
 
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
-
+      
       PayableId = -1;
       BillCategory = billCategory;
       BillNo = billNo;
@@ -54,7 +54,7 @@ namespace Empiria.Billing {
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
-
+      
       PayableId = payable.Id;
       BillCategory = billCategory;
       BillNo = billNo;
@@ -253,6 +253,7 @@ namespace Empiria.Billing {
 
     protected override void OnSave() {
       if (IsNew) {
+        //PostedBy = Party.Parse(1004);
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
@@ -274,7 +275,7 @@ namespace Empiria.Billing {
     internal void Update(BillFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      fields.EnsureIsValid();
+      fields.EnsureIsValid(PayableId);
       
       BillNoRelated = fields.CFDIRelated;
       IssueDate = PatchField(fields.IssueDate, IssueDate);

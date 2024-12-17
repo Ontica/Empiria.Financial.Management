@@ -188,6 +188,7 @@ namespace Empiria.Billing {
 
     protected override void OnSave() {
       if (IsNew) {
+        //PostedBy = Party.Parse(1004);
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
