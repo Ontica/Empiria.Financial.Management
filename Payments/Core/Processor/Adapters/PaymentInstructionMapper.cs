@@ -15,7 +15,15 @@ namespace Empiria.Payments.Processor.Adapters {
   static internal class PaymentInstructionMapper {
 
     static internal IPaymentInstruction Map(PaymentOrder paymentOrder) {
-      return new PaymentInstructionDto();
+      return new PaymentInstructionDto {
+        Account = paymentOrder.PaymentAccount.CLABE,
+        RequestedDate = System.DateTime.Now,
+        DueDate = System.DateTime.Now,
+        Total = paymentOrder.Total,
+        Reference = paymentOrder.PaymentOrderNo,
+        Description = paymentOrder.Notes
+      };
+
     }
 
   }  // class PaymentInstructionMapper

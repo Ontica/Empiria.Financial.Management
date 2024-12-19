@@ -12,6 +12,10 @@ using Empiria.Services;
 
 using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Adapters;
+using Empiria.Data;
+using Empiria.Payments.BanobrasIntegration.IkosCash;
+using Empiria.Payments.BanobrasIntegration.IkosCash.Adapters;
+using System;
 
 
 namespace Empiria.Payments.Processor.Services {
@@ -58,14 +62,7 @@ namespace Empiria.Payments.Processor.Services {
       return paymentInstruction;
     }
 
-
-    //internal void CheckPaymentInstructionIsPayed(PaymentInstruction paymentInstruction) {
-
-      //
-
-
-
-    //}
+    
 
 
     #endregion Services
@@ -110,8 +107,8 @@ namespace Empiria.Payments.Processor.Services {
       paymentLog.Save();  
 
     }
-    
 
+   
     #endregion Helpers
 
   }  // class PaymentService

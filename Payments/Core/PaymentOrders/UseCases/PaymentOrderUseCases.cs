@@ -129,7 +129,12 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
     internal PaymentOrderHolderDto Pay(string paymentOrderUID) {
-      throw new NotImplementedException();
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var order = PaymentOrder.Parse(paymentOrderUID);
+      var payment = ExternalServices.SendPaymentOrderToPay(order);
+
+      return PaymentOrderMapper.Map(order);
     }
 
     #endregion Use cases

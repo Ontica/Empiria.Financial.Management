@@ -72,4 +72,7 @@
     <ProjectReference Include="..\..\Billing\Core\Empiria.Billing.Core.csproj" />
     <ProjectReference Include="..\..\Budgeting\Transactions\Empiria.Budgeting.Transactions.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\banobras.pyc\ExternalInterfaces\Banobras.PYC.ExternalInterfaces.csproj" />
+  </ItemGroup>
 </Project>

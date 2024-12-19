@@ -60,6 +60,7 @@ namespace Empiria.Tests.Payments {
 
       Assert.NotNull(sut);
     }
+        
 
     #endregion Facts
 

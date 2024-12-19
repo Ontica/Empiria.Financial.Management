@@ -97,12 +97,13 @@ namespace Empiria.Payments {
         return usecases.ValidateIsPaymentInstructionPayed(paymentInstructionUD);
       }
     }
+        
 
-      #endregion Services
+    #endregion Services
 
-      #region Helpers
+    #region Helpers
 
-      static private void InvokeBudgetTransactionService(Payable payable,
+    static private void InvokeBudgetTransactionService(Payable payable,
                                                        BudgetTransactionType budgetTransactionType,
                                                        DateTime applicationDate) {
 
