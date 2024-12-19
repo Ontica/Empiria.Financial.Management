@@ -28,13 +28,15 @@ namespace Empiria.Budgeting.Transactions {
 
     static public BalanceColumn Modified => Parse("Modified");
 
-    static public BalanceColumn Available => Parse("Available");
+    static public BalanceColumn Requested => Parse("Requested");
 
     static public BalanceColumn Commited => Parse("Commited");
 
     static public BalanceColumn ToPay => Parse("ToPay");
 
     static public BalanceColumn Exercised => Parse("Exercised");
+
+    static public BalanceColumn Available => Parse("Available");
 
   }  // class BalanceColumn
 
