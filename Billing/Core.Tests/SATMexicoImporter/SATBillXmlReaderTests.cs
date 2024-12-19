@@ -17,11 +17,13 @@ namespace Empiria.Tests.Billing {
   public class SATBillXmlReaderTests {
 
     [Fact]
-    public void Should_Read_A_Bill_From_An_Xml_File() {
+    public void Should_Read_A_Bill_From_A_Xml_String() {
 
       string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
 
-      var reader = new SATBillXmlReader(xmlFilePath);
+      var xmlText = System.IO.File.ReadAllText(xmlFilePath);
+
+      var reader = new SATBillXmlReader(xmlText);
 
       SATBillDto sut = reader.ReadAsBillDto();
 
@@ -30,11 +32,13 @@ namespace Empiria.Tests.Billing {
 
 
     [Fact]
-    public void Should_Read_A_Credit_Note_From_An_Xml_File() {
+    public void Should_Read_A_Credit_Note_From_A_Xml_String() {
 
       string xmlFilePath = TestingConstants.XML_CREDIT_NOTE_FILE_PATH;
 
-      var reader = new SATCreditNoteXmlReader(xmlFilePath);
+      var xmlText = System.IO.File.ReadAllText(xmlFilePath);
+
+      var reader = new SATCreditNoteXmlReader(xmlText);
 
       SATBillDto sut = reader.ReadAsCreditNoteDto();
 

@@ -44,11 +44,8 @@ namespace Empiria.Billing.UseCases {
     public BillDto CreateBillTest(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
-      //var reader = new SATBillXmlReader(xmlString);
-      //SATBillDto satDto = reader.ReadAsBillDto();
-
-      var reader = new SATCreditNoteXmlReader(xmlString);
-      SATBillDto satDto = reader.ReadAsCreditNoteDto();
+      var reader = new SATBillXmlReader(xmlString);
+      SATBillDto satDto = reader.ReadAsBillDto();
 
       BillFields fields = BillFieldsMapper.Map(satDto);
 
@@ -207,7 +204,7 @@ namespace Empiria.Billing.UseCases {
 
     private Bill CreateBillTest(BillFields fields) {
 
-      var billCategory = BillCategory.NotaDeCredito;
+      var billCategory = BillCategory.Factura;
 
       var bill = new Bill(billCategory, fields.BillNo);
 

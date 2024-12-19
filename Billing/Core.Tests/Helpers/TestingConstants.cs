@@ -20,7 +20,7 @@ namespace Empiria.Tests.Billing {
       get {
         var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
-        return Path.Combine(directory.Parent.FullName, @"Resources\factura2.xml");
+        return Path.Combine(directory.Parent.FullName, @"Resources\factura.xml");
       }
     }
 
