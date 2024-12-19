@@ -65,6 +65,11 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public string TipoComprobante {
+      get; set;
+    } = string.Empty;
+
+
     public string Identificators {
       get; set;
     } = string.Empty;
@@ -118,8 +123,7 @@ namespace Empiria.Billing {
     public FixedList<BillConceptFields> Concepts {
       get; set;
     } = new FixedList<BillConceptFields>();
-
-
+    
   } // class BillFields
 
 
