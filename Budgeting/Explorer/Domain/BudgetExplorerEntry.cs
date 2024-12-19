@@ -15,68 +15,100 @@ namespace Empiria.Budgeting.Explorer {
 
   public class BudgetExplorerEntry {
 
+    internal BudgetExplorerEntry(BudgetExplorerEntry sourceData) {
+      Sum(sourceData);
+      ////Currency = sourceData.Currency;
+      ////OrganizationalUnit = OrganizationalUnit.Parse(sourceData.BudgetAccount.Segment_1.Id);
+      Year = sourceData.Year;
+      Month = sourceData.Month;
+    }
+
+
+    internal BudgetExplorerEntry(BudgetDataInColumns sourceData, bool fullLoad) {
+      Planned = sourceData.Planned;
+      Authorized = sourceData.Authorized;
+      Expanded = sourceData.Expanded;
+      Reduced = sourceData.Reduced;
+      Modified = sourceData.Modified;
+      Requested = sourceData.Requested;
+      Commited = sourceData.Commited;
+      ToPay = sourceData.ToPay;
+      Excercised = sourceData.Excercised;
+      ToExercise = sourceData.ToExercise;
+      Available = sourceData.Available;
+
+      if (fullLoad) {
+        BudgetAccount = sourceData.BudgetAccount;
+        Currency = sourceData.Currency;
+        OrganizationalUnit = OrganizationalUnit.Parse(sourceData.BudgetAccount.Segment_1.Id);
+        Year = sourceData.Year;
+        Month = sourceData.Month;
+      }
+    }
+
+
     public BudgetAccount BudgetAccount {
-      get; internal set;
+      get; private set;
     }
 
     public OrganizationalUnit OrganizationalUnit {
-      get; internal set;
+      get; private set;
     }
 
     public int Year {
-      get; internal set;
+      get; private set;
     }
 
     public int Month {
-      get; internal set;
+      get; private set;
     }
 
     public Currency Currency {
-      get; internal set;
-    }
+      get; private set;
+    } = Currency.Empty;
 
     public decimal Planned {
-      get; internal set;
+      get; private set;
     }
 
     public decimal Authorized {
-      get; internal set;
+      get; private set;
     }
 
     public decimal Expanded {
-      get; internal set;
+      get; private set;
     }
 
     public decimal Reduced {
-      get; internal set;
+      get; private set;
     }
 
     public decimal Modified {
-      get; internal set;
+      get; private set;
     }
 
     public decimal Requested {
-      get; internal set;
+      get; private set;
     }
 
     public decimal Commited {
-      get; internal set;
+      get; private set;
     }
 
     public decimal ToPay {
-      get; internal set;
+      get; private set;
     }
 
     public decimal Excercised {
-      get; internal set;
+      get; private set;
     }
 
     public decimal ToExercise {
-      get; internal set;
+      get; private set;
     }
 
     public decimal Available {
-      get; internal set;
+      get; private set;
     }
 
     internal void Sum(BudgetExplorerEntry entry) {

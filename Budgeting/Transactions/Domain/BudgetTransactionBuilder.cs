@@ -22,6 +22,8 @@ namespace Empiria.Budgeting.Transactions {
     public BudgetTransactionBuilder(IPayableEntity payableEntity,
                                     BudgetTransactionFields fields) {
       Assertion.Require(payableEntity, nameof(payableEntity));
+      Assertion.Require(payableEntity.Items.ToFixedList().Count > 0,
+                        "PayableEntity has no items.");
       Assertion.Require(fields, nameof(fields));
 
       _payableEntity = payableEntity;
@@ -56,10 +58,18 @@ namespace Empiria.Budgeting.Transactions {
     private void BuildEntries() {
       foreach (var item in _payableEntity.Items) {
 
-        if (_transaction.BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente)) {
-          BuildDoubleEntries(item, BalanceColumn.Commited, BalanceColumn.Available);
+        if (_transaction.BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente)) {
+          BuildDoubleEntries(item, BalanceColumn.Requested, BalanceColumn.Available);
+
+        } else if (_transaction.BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente)) {
+          BuildDoubleEntries(item, BalanceColumn.Commited, BalanceColumn.Requested);
+
         } else if (_transaction.BudgetTransactionType.Equals(BudgetTransactionType.EjercerGastoCorriente)) {
           BuildDoubleEntries(item, BalanceColumn.Exercised, BalanceColumn.Commited);
+
+        } else {
+          throw Assertion.EnsureNoReachThisCode($"Budget transaction entries rule is undefined: " +
+                                                $"{_transaction.BudgetTransactionType.DisplayName}");
         }
       }
     }

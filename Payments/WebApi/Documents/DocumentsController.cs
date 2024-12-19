@@ -72,11 +72,16 @@ namespace Empiria.Payments.WebApi {
         return new SingleObjectModel(base.Request, document);
       }
 
-      using (var usecases = PayableDocumentUseCases.UseCaseInteractor()) {
+      try {
+        using (var usecases = PayableDocumentUseCases.UseCaseInteractor()) {
 
-        document = usecases.ProcessPayableDocument(payableUID, document);
+          document = usecases.ProcessPayableDocument(payableUID, document);
 
-        return new SingleObjectModel(base.Request, document);
+          return new SingleObjectModel(base.Request, document);
+        }
+      } catch {
+        DocumentServices.RemoveDocument(payable, Document.Parse(document.UID));
+        throw;
       }
     }
 

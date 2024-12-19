@@ -14,22 +14,29 @@ namespace Empiria.Budgeting.Explorer.Adapters {
   /// <summary>Output DTO with budget explorer entry information.</summary>
   public class DynamicBudgetExplorerEntryDto : BudgetExplorerEntry {
 
+    public DynamicBudgetExplorerEntryDto(BudgetExplorerEntry entry) : base(entry) {
+      OrganizationalUnitName = entry.OrganizationalUnit.FullName;
+      BudgetAccountName = entry.BudgetAccount.Name;
+      Capitulo = entry.BudgetAccount.Segment_2.Parent.FullName;
+      CurrencyCode = entry.Currency.ISOCode;
+    }
+
     public string OrganizationalUnitName {
-      get; internal set;
+      get; private set;
     }
 
     public string BudgetAccountName {
-      get; internal set;
+      get; private set;
     }
 
     public string CurrencyCode {
-      get; internal set;
+      get; private set;
     }
 
     public string Capitulo {
-      get;
-      internal set;
+      get; private set;
     }
+
   } // class DynamicBudgetExplorerEntryDto
 
 }  // namespace Empiria.Budgeting.Explorer.Adapters
