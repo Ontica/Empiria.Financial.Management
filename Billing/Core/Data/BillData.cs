@@ -122,7 +122,7 @@ namespace Empiria.Billing.Data {
         concept.Description, string.Join(" ", concept.Identificators),
         string.Join(" ", concept.Tags), concept.Quantity,
         concept.QuantityUnit.Id, concept.UnitPrice, concept.Subtotal, concept.Discount,
-        "", "", concept.PostedBy.Id, concept.PostingTime);
+        "", "", concept.PostedBy.Id, concept.PostingTime, (char) concept.Status);
 
       DataWriter.Execute(op);
     }

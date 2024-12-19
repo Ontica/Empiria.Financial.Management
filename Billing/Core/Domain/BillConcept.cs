@@ -15,6 +15,7 @@ using Empiria.Parties;
 using Empiria.Products;
 
 using Empiria.Billing.Data;
+using Empiria.StateEnums;
 
 namespace Empiria.Billing {
 
@@ -146,6 +147,13 @@ namespace Empiria.Billing {
     public DateTime PostingTime {
       get; private set;
     }
+
+
+    [DataField("BILL_CONCEPT_STATUS", Default = EntityStatus.Active)]
+    public EntityStatus Status {
+      get; private set;
+    }
+
 
     public BillConceptSchemaData SchemaData {
       get {
