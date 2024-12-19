@@ -19,6 +19,7 @@ using Empiria.Billing.SATMexicoImporter;
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
 using System.Linq;
+using System;
 
 namespace Empiria.Billing.UseCases {
 
@@ -43,11 +44,11 @@ namespace Empiria.Billing.UseCases {
     public BillDto CreateBillTest(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
-      var reader = new SATBillXmlReader(xmlString);
-      SATBillDto satDto = reader.ReadAsBillDto();
+      //var reader = new SATBillXmlReader(xmlString);
+      //SATBillDto satDto = reader.ReadAsBillDto();
 
-      //var reader = new SATCreditNoteXmlReader(xmlString);
-      //SATBillDto satDto = reader.ReadAsCreditNoteDto();
+      var reader = new SATCreditNoteXmlReader(xmlString);
+      SATBillDto satDto = reader.ReadAsCreditNoteDto();
 
       BillFields fields = BillFieldsMapper.Map(satDto);
 
@@ -142,18 +143,13 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateBillTest(BillFields fields) {
+    private Bill CreateBillByCategory(IPayable payable, BillFields fields, BillCategory billCategory) {
 
-      var billCategory = BillCategory.Factura;
-
-      var bill = new Bill(billCategory, fields.BillNo);
+      var bill = new Bill(payable, billCategory, fields.BillNo);
 
       bill.Update(fields);
-      //bill.UpdateCreditNote(fields);
 
       bill.Save();
-
-      //FixedList<BillConcept> concepts = CreateBillConcepts(bill, fields.Concepts);
 
       bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
 
@@ -161,46 +157,8 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateBillImplementation(IPayable payable, BillFields fields) {
-
-      var billCategory = BillCategory.Factura;
-
-      var bill = new Bill(payable, billCategory, fields.BillNo);
-
-      //fields.PayableTotal = payable.PayableEntity.Items.Sum(x => x.Total);
-
-      bill.Update(fields);
-
-      bill.Save();
-
-      FixedList<BillConcept> concepts = CreateBillConcepts(bill, fields.Concepts);
-
-      bill.Concepts = concepts;
-
-      return bill;
-    }
-
-
-    private Bill CreateCreditNoteImplementation(IPayable payable, BillFields fields) {
-
-      var billCategory = BillCategory.NotaDeCredito;
-
-      var bill = new Bill(payable, billCategory, fields.BillNo);
-
-      bill.UpdateCreditNote(fields);
-
-      bill.Save();
-
-      FixedList<BillConcept> concepts = CreateBillConcepts(bill, fields.Concepts);
-
-      bill.Concepts = concepts;
-
-      return bill;
-    }
-
-
-    private FixedList<BillConcept> CreateBillConcepts(Bill bill, FixedList<BillConceptFields> conceptFields) {
-
+    private FixedList<BillConcept> CreateBillConcepts(Bill bill,
+                                                      FixedList<BillConceptFields> conceptFields) {
       var concepts = new List<BillConcept>();
 
       foreach (BillConceptFields fields in conceptFields) {
@@ -220,6 +178,12 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    private Bill CreateBillImplementation(IPayable payable, BillFields fields) {
+
+      return CreateBillByCategory(payable, fields, BillCategory.Factura);
+    }
+
+    
     private FixedList<BillTaxEntry> CreateBillTaxEntries(Bill bill,
                                                          BillConcept billConcept,
                                                          FixedList<BillTaxEntryFields> allTaxesFields) {
@@ -239,6 +203,29 @@ namespace Empiria.Billing.UseCases {
 
       return taxesList.ToFixedList();
     }
+
+
+    private Bill CreateBillTest(BillFields fields) {
+
+      var billCategory = BillCategory.NotaDeCredito;
+
+      var bill = new Bill(billCategory, fields.BillNo);
+
+      bill.Update(fields);
+
+      bill.Save();
+
+      bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
+
+      return bill;
+    }
+
+
+    private Bill CreateCreditNoteImplementation(IPayable payable, BillFields fields) {
+
+      return CreateBillByCategory(payable, fields, BillCategory.NotaDeCredito);
+    }
+
 
     #endregion Private methods
 

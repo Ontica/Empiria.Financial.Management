@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Empiria.Billing.Data;
 using Empiria.Billing.SATMexicoImporter;
@@ -118,51 +119,6 @@ namespace Empiria.Billing {
       get; set;
     } = new FixedList<BillConceptFields>();
 
-
-    public decimal PayableTotal {
-      get; internal set;
-    }
-
-
-    internal void EnsureIsValid(int payableId) {
-
-      var issuedTo = Party.Parse(IssuedToUID);
-      
-      Assertion.Require(BillData.ValidateIfExistBill(BillNo).Count == 0,
-                        "La factura/nota de crédito que se intenta guardar ya esta registrada.");
-      
-      //ToDo validar el importe de n facturas sea igual al del IPayable ligado
-      //var billsByPayable = BillData.ValidateIfExistBillsByPayable(payableId);
-      
-      //if (billsByPayable.Count > 0) {
-      //  Assertion.Require((billsByPayable.Sum(x=>x.Total) + Total) <= PayableTotal,
-      //                  "El monto total de las facturas es mayor al monto total del contrato.");
-      //}
-
-      Assertion.Require(Party.Primary.Equals(issuedTo),
-                        $"El receptor de la factura/nota de crédito no es {Party.Primary.Name}");
-
-      Assertion.Require(IssueDate <= DateTime.Now,
-                        "La fecha de la factura/nota de crédito no debe ser mayor a la fecha actual.");
-    }
-
-
-    internal void EnsureIsValidCreditNote() {
-
-      var billsRelated = BillData.ValidateIfExistBill(CFDIRelated);
-
-      Assertion.Require(billsRelated.Count == 1,
-                        "El CFDI relacionado al que hace referencia no existe.");
-
-      var creditNotesList = BillData.ValidateIfExistCreditNotesByBill(CFDIRelated);
-
-      if (creditNotesList.Count > 0) {
-
-        Assertion.Require((creditNotesList.Sum(x => x.Total) + Total) <= billsRelated.First().Total,
-                        "El total de ésta nota de crédito y la suma de " +
-                        "las notas de crédito registradas exceden el total de la factura.");
-      }
-    }
 
   } // class BillFields
 
@@ -280,5 +236,64 @@ namespace Empiria.Billing {
     } = string.Empty;
 
   } // class BillTaxEntryFields
+
+
+  /// <summary>Extension methods for BillFields type.</summary>
+  static internal class BillFieldsExtensions {
+
+
+    static internal void EnsureIsValid(this BillFields fields) {
+
+      var issuedTo = Party.Parse(fields.IssuedToUID);
+
+      Assertion.Require(BillData.ValidateIfExistBill(fields.BillNo).Count == 0,
+                        "El documento que intenta guardar ya está registrado.");
+
+      Assertion.Require(Party.Primary.Equals(issuedTo),
+                        $"El receptor del CFDI no es {Party.Primary.Name}");
+
+      Assertion.Require(fields.IssueDate <= DateTime.Now,
+                        "La fecha del documento no debe de ser mayor a la fecha actual.");
+    }
+
+
+    static internal void EnsureIsValidBill(this BillFields fields, int payableId,
+                                           decimal payableTotal, BillCategory billCategory) {
+
+      if (billCategory == BillCategory.Factura) {
+
+        var billsByPayable = BillData.ValidateIfExistBillsByPayable(payableId);
+
+        Assertion.Require((billsByPayable.Sum(x => x.Total) + fields.Total) <= payableTotal,
+                          "El monto total de las facturas registradas y/o " +
+                          "la factura que intenta guardar es mayor al monto total del contrato.");
+      }
+    }
+
+
+    static internal void EnsureIsValidCreditNote(this BillFields fields, BillCategory billCategory) {
+
+      if (billCategory == BillCategory.NotaDeCredito) {
+
+        Assertion.Require(fields.CFDIRelated != string.Empty,
+                        "La nota de crédito que intenta guardar no tiene referencia a un CFDI relacionado.");
+
+        var billsRelated = BillData.ValidateIfExistBill(fields.CFDIRelated);
+
+        Assertion.Require(billsRelated.Count == 1,
+                          "El CFDI relacionado al que hace referencia no existe.");
+
+        var creditNotesList = BillData.ValidateIfExistCreditNotesByBill(fields.CFDIRelated);
+
+        Assertion.Require((creditNotesList.Sum(x => x.Total) + fields.Total) <= billsRelated.First().Total,
+                          "El total de ésta nota de crédito y la suma de las notas de crédito " +
+                          "registradas exceden el total de la factura " +
+                          $"(CFDI relacionado: {fields.CFDIRelated}).");
+      }
+    }
+
+
+  } // class BillFieldsExtensions
+
 
 } // namespace Empiria.Billing.Adapters

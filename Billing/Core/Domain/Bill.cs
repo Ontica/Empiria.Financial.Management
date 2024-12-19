@@ -43,9 +43,10 @@ namespace Empiria.Billing {
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
       
-      PayableId = -1;
+      PayableId = 1;
       BillCategory = billCategory;
       BillNo = billNo;
+      PayableTotal = 2170128.00M;
     }
 
     public Bill(IPayable payable,
@@ -58,6 +59,7 @@ namespace Empiria.Billing {
       PayableId = payable.Id;
       BillCategory = billCategory;
       BillNo = billNo;
+      PayableTotal = payable.PayableEntity.Items.Sum(x => x.Total);
     }
 
     static public Bill Empty => ParseEmpty<Bill>();
@@ -89,7 +91,7 @@ namespace Empiria.Billing {
     public string BillNo {
       get; private set;
     }
-
+    
 
     [DataField("BILL_NO_RELATED")]
     public string BillNoRelated {
@@ -247,6 +249,12 @@ namespace Empiria.Billing {
       }
     }
 
+
+    public decimal PayableTotal {
+      get;private set;
+    }
+
+
     #endregion Properties
 
     #region Methods
@@ -275,7 +283,9 @@ namespace Empiria.Billing {
     internal void Update(BillFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      fields.EnsureIsValid(PayableId);
+      fields.EnsureIsValid();
+      fields.EnsureIsValidBill(PayableId, PayableTotal, BillCategory);
+      fields.EnsureIsValidCreditNote(BillCategory);
       
       BillNoRelated = fields.CFDIRelated;
       IssueDate = PatchField(fields.IssueDate, IssueDate);
@@ -289,15 +299,6 @@ namespace Empiria.Billing {
       Subtotal = fields.Subtotal;
       Discount = fields.Discount;
       Total = fields.Total;
-    }
-
-
-    internal void UpdateCreditNote(BillFields fields) {
-      Assertion.Require(fields, nameof(fields));
-
-      Update(fields);
-
-      fields.EnsureIsValidCreditNote();
     }
 
     #endregion Methods
