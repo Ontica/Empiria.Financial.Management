@@ -30,6 +30,12 @@ namespace Empiria.Payments.Processor {
       PaymentOrder = paymentOrder;
     }
 
+    static public PaymentInstruction Parse(int id) => ParseId<PaymentInstruction>(id);
+
+    static public PaymentInstruction Parse(string uid) => ParseKey<PaymentInstruction>(uid);
+
+    static public PaymentInstruction Empty => ParseEmpty<PaymentInstruction>();
+
     #region Properties
 
     [DataField("PAYMENT_INSTRUCTION_TYPE_ID")]
@@ -68,13 +74,13 @@ namespace Empiria.Payments.Processor {
     }
 
 
-    [DataField("PAYABLE_POSTING_TIME")]
+    [DataField("PAYMENT_INSTRUCTION_POSTING_TIME")]
     public DateTime PostingTime {
       get; private set;
     }
 
 
-    [DataField("PAYABLE_STATUS", Default = PaymentInstructionStatus.Capture)]
+    [DataField("PAYMENT_INSTRUCTION_STATUS", Default = PaymentInstructionStatus.Capture)]
     public PaymentInstructionStatus Status {
       get; private set;
     } = PaymentInstructionStatus.Capture;

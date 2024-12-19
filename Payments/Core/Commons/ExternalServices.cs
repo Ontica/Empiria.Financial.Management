@@ -72,7 +72,7 @@ namespace Empiria.Payments {
         return usecases.Pay(paymentOrder);
       }
     }
-
+        
 
     static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
 
@@ -90,11 +90,19 @@ namespace Empiria.Payments {
       return DocumentServices.UpdateDocument(payable, document, fields);
     }
 
-    #endregion Services
 
-    #region Helpers
+    static internal PaymentInstruction ValidateIsPaymentInstructionPayed(string paymentInstructionUD) {
+      using (var usecases = PaymentService.ServiceInteractor()) {
 
-    static private void InvokeBudgetTransactionService(Payable payable,
+        return usecases.ValidateIsPaymentInstructionPayed(paymentInstructionUD);
+      }
+    }
+
+      #endregion Services
+
+      #region Helpers
+
+      static private void InvokeBudgetTransactionService(Payable payable,
                                                        BudgetTransactionType budgetTransactionType,
                                                        DateTime applicationDate) {
 

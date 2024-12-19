@@ -41,6 +41,7 @@ namespace Empiria.Payments.Processor.Services {
 
       var broker = PaymentsBroker.Parse("5800f993-2db1-4aa8-aaad-5bd86db24c78");
 
+
       if (paymentResult.Failed) {
         return RejectedPayment(paymentOrder, paymentResult, broker);
 
@@ -48,6 +49,24 @@ namespace Empiria.Payments.Processor.Services {
         return SuccessfullPayment(paymentOrder, paymentResult, broker);
       }
     }
+           
+
+    internal PaymentInstruction ValidateIsPaymentInstructionPayed(string paymentInstructionUD) {
+      PaymentInstruction paymentInstruction = PaymentInstruction.Parse(paymentInstructionUD);
+      WritePaymentLog(paymentInstruction);
+
+      return paymentInstruction;
+    }
+
+
+    //internal void CheckPaymentInstructionIsPayed(PaymentInstruction paymentInstruction) {
+
+      //
+
+
+
+    //}
+
 
     #endregion Services
 
@@ -79,6 +98,19 @@ namespace Empiria.Payments.Processor.Services {
 
       return payment;
     }
+
+
+    static private void WritePaymentLog(PaymentInstruction paymentInstruction) {
+
+      var paymentLog = new PaymentLog(paymentInstruction);
+      paymentLog.RequestTime = System.DateTime.Now;
+      paymentLog.ApplicationTime = System.DateTime.Now; 
+      paymentLog.RecordingTime = System.DateTime.Now;
+      paymentLog.Status = 'P';
+      paymentLog.Save();  
+
+    }
+    
 
     #endregion Helpers
 

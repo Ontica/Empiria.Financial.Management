@@ -45,10 +45,20 @@ namespace Empiria.Tests.Payments {
     public void Should_Send_PaymentOrder_ToPay() {
       TestsCommonMethods.Authenticate();
 
-      PaymentOrder order = PaymentOrder.Parse("ae03e327-7384-44d7-91b4-48ee6d47d3d4");
+      PaymentOrder order = PaymentOrder.Parse("7eaea2b2-b2b8-4599-af41-f0a89c095cb8");
       var sut = ExternalServices.SendPaymentOrderToPay(order);
 
        Assert.NotNull(sut);
+    }
+            
+
+    [Fact]
+    public void Should_Validate_PaymentInstruction_Is_Payed() {
+      TestsCommonMethods.Authenticate();
+
+      var sut = ExternalServices.ValidateIsPaymentInstructionPayed("2acdb601-af14-41a7-9f28-08fa7b42730e");
+
+      Assert.NotNull(sut);
     }
 
     #endregion Facts
