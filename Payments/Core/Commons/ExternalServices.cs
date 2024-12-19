@@ -50,7 +50,18 @@ namespace Empiria.Payments {
       Assertion.Require(billDocument, nameof(billDocument));
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
-        BillDto returnedValue = usecases.CreateBill(billDocument.ReadAllText(), payable);
+
+        BillDto returnedValue;
+
+        string billType = billDocument.DocumentProduct.ApplicationContentType;
+
+        if (billType == "factura-electronica-sat") {
+          returnedValue = usecases.CreateBill(billDocument.ReadAllText(), payable);
+        } else if (billType == "nota-credito-sat") {
+          returnedValue = usecases.CreateCreditNote(billDocument.ReadAllText(), payable);
+        } else {
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized applicationContentType '{billType}'.");
+        }
 
         return Bill.Parse(returnedValue.UID);
       }
@@ -72,7 +83,7 @@ namespace Empiria.Payments {
         return usecases.Pay(paymentOrder);
       }
     }
-        
+
 
     static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
 
@@ -98,11 +109,11 @@ namespace Empiria.Payments {
       }
     }
 
-      #endregion Services
+    #endregion Services
 
-      #region Helpers
+    #region Helpers
 
-      static private void InvokeBudgetTransactionService(Payable payable,
+    static private void InvokeBudgetTransactionService(Payable payable,
                                                        BudgetTransactionType budgetTransactionType,
                                                        DateTime applicationDate) {
 
