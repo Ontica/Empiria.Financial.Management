@@ -238,16 +238,10 @@ namespace Empiria.Budgeting.Explorer {
     private BudgetExplorerEntry TransformToEntry(FixedList<BudgetDataInColumns> groupedEntries) {
       BudgetDataInColumns baseData = groupedEntries[0];
 
-      var entry = new BudgetExplorerEntry {
-        BudgetAccount = baseData.BudgetAccount,
-        Currency = baseData.Currency,
-        OrganizationalUnit = OrganizationalUnit.Parse(baseData.BudgetAccount.Segment_1.Id),
-        Year = baseData.Year,
-        Month = baseData.Month
-      };
+      var entry = new BudgetExplorerEntry(baseData, true);
 
-      foreach (var sourceData in groupedEntries) {
-        BudgetExplorerEntry sourceDataAsEntry = TransformToEntry(sourceData);
+      for (int i = 1; i < groupedEntries.Count; i++) {
+        BudgetExplorerEntry sourceDataAsEntry = TransformToEntry(groupedEntries[i]);
 
         entry.Sum(sourceDataAsEntry);
       }
@@ -256,40 +250,12 @@ namespace Empiria.Budgeting.Explorer {
     }
 
     private BudgetExplorerEntry TransformToEntry(BudgetDataInColumns sourceData) {
-      return new BudgetExplorerEntry {
-        Planned = sourceData.Planned,
-        Authorized = sourceData.Authorized,
-        Expanded = sourceData.Expanded,
-        Reduced = sourceData.Reduced,
-        Modified = sourceData.Modified,
-        Requested = sourceData.Requested,
-        Commited = sourceData.Commited,
-        ToPay = sourceData.ToPay,
-        Excercised = sourceData.Excercised,
-        ToExercise = sourceData.ToExercise,
-        Available = sourceData.Available,
-      };
+      return new BudgetExplorerEntry(sourceData, false);
     }
 
 
     private BudgetExplorerEntry TransformToFullEntry(BudgetDataInColumns sourceData) {
-      return new BudgetExplorerEntry {
-        BudgetAccount = sourceData.BudgetAccount,
-        Currency = sourceData.Currency,
-        OrganizationalUnit = OrganizationalUnit.Parse(sourceData.BudgetAccount.Segment_1.Id),
-        Year = sourceData.Year,
-        Month = sourceData.Month,
-        Authorized = sourceData.Authorized,
-        Available = sourceData.Available,
-        Commited = sourceData.Commited,
-        Excercised = sourceData.Excercised,
-        Expanded = sourceData.Expanded,
-        Modified = sourceData.Modified,
-        Planned = sourceData.Planned,
-        Reduced = sourceData.Reduced,
-        ToExercise = sourceData.ToExercise,
-        ToPay = sourceData.ToPay,
-      };
+      return new BudgetExplorerEntry(sourceData, true);
     }
 
     #endregion Helpers

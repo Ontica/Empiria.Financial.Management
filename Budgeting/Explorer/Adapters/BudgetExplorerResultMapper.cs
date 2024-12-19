@@ -32,24 +32,7 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     }
 
     static private DynamicBudgetExplorerEntryDto Map(BudgetExplorerEntry entry) {
-      return new DynamicBudgetExplorerEntryDto {
-        OrganizationalUnitName = entry.OrganizationalUnit.FullName,
-        BudgetAccountName = entry.BudgetAccount.Name,
-        Capitulo = entry.BudgetAccount.Segment_2.Parent.FullName,
-        Year = entry.Year,
-        Month = entry.Month,
-        CurrencyCode = entry.Currency.ISOCode,
-        Planned = entry.Planned,
-        Authorized = entry.Authorized,
-        Expanded = entry.Expanded,
-        Reduced = entry.Reduced,
-        Modified = entry.Modified,
-        Available = entry.Available,
-        Commited = entry.Commited,
-        ToPay = entry.ToPay,
-        Excercised = entry.Excercised,
-        ToExercise = entry.ToExercise
-      };
+      return new DynamicBudgetExplorerEntryDto(entry);
     }
 
     #endregion Helpers
