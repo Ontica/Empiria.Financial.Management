@@ -17,7 +17,7 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     public DynamicBudgetExplorerEntryDto(BudgetExplorerEntry entry) : base(entry) {
       OrganizationalUnitName = entry.OrganizationalUnit.FullName;
       BudgetAccountName = entry.BudgetAccount.Name;
-      Capitulo = entry.BudgetAccount.Segment_2.Parent.FullName;
+      Capitulo = entry.BudgetAccount.BaseSegment.Parent.FullName;
       CurrencyCode = entry.Currency.ISOCode;
     }
 

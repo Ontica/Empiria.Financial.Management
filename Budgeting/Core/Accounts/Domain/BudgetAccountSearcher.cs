@@ -24,21 +24,20 @@ namespace Empiria.Budgeting {
       _budgetType = budgetType;
     }
 
-    public FixedList<BudgetAccount> Search(Party party,
-                                           FixedList<BudgetAccountSegment> primarySegments) {
+    public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit,
+                                           FixedList<BudgetAccountSegment> baseSegments) {
 
-      string primarySegmentsFilter = GetSegmentsFilter("BDG_ACCT_SEGMENT_02_ID", primarySegments);
-      string partyFilter = GetPartyFilter(party);
+      string baseSegmentsFilter = GetSegmentsFilter("BDG_ACCT_BASE_SEGMENT_ID", baseSegments);
+      string orgUnitFilter = GetOrgUnitFilter(orgUnit);
       string budgetTypeFilter = GetBudgetTypeFilter();
 
-      var filter = new Filter(primarySegmentsFilter);
+      var filter = new Filter(baseSegmentsFilter);
 
-      filter.AppendAnd(partyFilter);
+      filter.AppendAnd(orgUnitFilter);
       filter.AppendAnd(budgetTypeFilter);
 
       return BudgetAccountDataService.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
     }
-
 
     #region Helpers
 
@@ -47,8 +46,8 @@ namespace Empiria.Budgeting {
     }
 
 
-    private string GetPartyFilter(Party party) {
-      return $"BDG_ACCT_SEGMENT_01_ID = {party.Id}";
+    private string GetOrgUnitFilter(Party party) {
+      return $"BDG_ACCT_ORG_UNIT_ID = {party.Id}";
     }
 
 

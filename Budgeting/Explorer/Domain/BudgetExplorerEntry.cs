@@ -40,7 +40,7 @@ namespace Empiria.Budgeting.Explorer {
       if (fullLoad) {
         BudgetAccount = sourceData.BudgetAccount;
         Currency = sourceData.Currency;
-        OrganizationalUnit = OrganizationalUnit.Parse(sourceData.BudgetAccount.Segment_1.Id);
+        OrganizationalUnit = OrganizationalUnit.Parse(sourceData.BudgetAccount.OrganizationalUnit.Id);
         Year = sourceData.Year;
         Month = sourceData.Month;
       }

@@ -60,28 +60,139 @@ namespace Empiria.Budgeting {
 
     public string Name {
       get {
-        return $"[{Segment_2.Code}] - {Segment_2.Name} ({Segment_1.Code})";
+        return $"[{BaseSegment.Code}] - {BaseSegment.Name} ({OrganizationalUnit.Code})";
       }
     }
 
-    [DataField("BDG_ACCT_SEGMENT_01_ID")]
-    internal BudgetAccountSegment Segment_1 {
+    [DataField("BDG_ACCT_ORG_ID")]
+    internal Organization Organization {
       get; private set;
     }
 
-    [DataField("BDG_ACCT_SEGMENT_02_ID")]
-    internal BudgetAccountSegment Segment_2 {
+
+    [DataField("BDG_ACCT_ORG_UNIT_ID")]
+    internal OrganizationalUnit OrganizationalUnit {
       get; private set;
     }
 
-    [DataField("BDG_ACCT_SEGMENT_03_ID")]
-    internal BudgetAccountSegment Segment_3 {
+
+    [DataField("BDG_ACCT_BASE_SEGMENT_ID")]
+    internal BudgetAccountSegment BaseSegment {
       get; private set;
     }
 
-    [DataField("BDG_ACCT_SEGMENT_04_ID")]
-    internal BudgetAccountSegment Segment_4 {
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_01_ID")]
+    internal BudgetAccountSegment ClassSegment_1 {
       get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_02_ID")]
+    internal BudgetAccountSegment ClassSegment_2 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_03_ID")]
+    internal BudgetAccountSegment ClassSegment_3 {
+      get; private set;
+    }
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_04_ID")]
+    internal BudgetAccountSegment ClassSegment_4 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_05_ID")]
+    internal BudgetAccountSegment ClassSegment_5 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_06_ID")]
+    internal BudgetAccountSegment ClassSegment_6 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_07_ID")]
+    internal BudgetAccountSegment ClassSegment_7 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_08_ID")]
+    internal BudgetAccountSegment ClassSegment_8 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_09_ID")]
+    internal BudgetAccountSegment ClassSegment_9 {
+      get; private set;
+    }
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_10_ID")]
+    internal BudgetAccountSegment ClassSegment_10 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_11_ID")]
+    internal BudgetAccountSegment ClassSegment_11 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_12_ID")]
+    internal BudgetAccountSegment ClassSegment_12 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_13_ID")]
+    internal BudgetAccountSegment ClassSegment_13 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_14_ID")]
+    internal BudgetAccountSegment ClassSegment_14 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_15_ID")]
+    internal BudgetAccountSegment ClassSegment_15 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_CLASS_SEGMENT_16_ID")]
+    internal BudgetAccountSegment ClassSegment_16 {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_IDENTIFICATORS")]
+    private string _identificators = string.Empty;
+
+    public FixedList<string> Identificators {
+      get {
+        return _identificators.Split(' ').ToFixedList();
+      }
+    }
+
+
+    [DataField("BDG_ACCT_TAGS")]
+    private string _tags = string.Empty;
+
+    public FixedList<string> Tags {
+      get {
+        return _tags.Split(' ').ToFixedList();
+      }
     }
 
     [DataField("BDG_ACCT_EXT_DATA")]
