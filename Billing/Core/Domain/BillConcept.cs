@@ -70,6 +70,18 @@ namespace Empiria.Billing {
     }
 
 
+    [DataField("BILL_CONCEPT_SAT_PRODUCT_ID")]
+    public int SATProductID {
+      get; private set;
+    }
+
+
+    [DataField("BILL_CONCEPT_SAT_PRODUCT_CODE")]
+    public string SATProductCode {
+      get; set;
+    }
+
+
     [DataField("BILL_CONCEPT_DESCRIPTION")]
     public string Description {
       get; set;
@@ -175,7 +187,9 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
-
+      
+      SATProductID = -1;
+      SATProductCode = fields.SATProductCode;
       Product = PatchField(fields.ProductUID, Product);
       Description = PatchField(fields.Description, Description);
       _identificators = PatchField(fields.Identificators, _identificators);

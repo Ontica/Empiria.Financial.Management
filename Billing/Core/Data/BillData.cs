@@ -119,6 +119,7 @@ namespace Empiria.Billing.Data {
 
       var op = DataOperation.Parse("write_FMS_Bill_Concept",
         concept.Id, concept.UID, concept.Bill.Id, concept.Product.Id,
+        concept.SATProductID, concept.SATProductCode,
         concept.Description, string.Join(" ", concept.Identificators),
         string.Join(" ", concept.Tags), concept.Quantity,
         concept.QuantityUnit.Id, concept.UnitPrice, concept.Subtotal, concept.Discount,

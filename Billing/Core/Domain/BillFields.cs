@@ -140,6 +140,11 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public string SATProductCode {
+      get; set;
+    }
+
+
     public string Description {
       get; set;
     } = string.Empty;
@@ -188,7 +193,7 @@ namespace Empiria.Billing {
     public FixedList<BillTaxEntryFields> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntryFields>();
-
+    
 
     internal void EnsureIsValid() {
       // ToDo
