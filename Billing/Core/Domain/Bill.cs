@@ -42,7 +42,7 @@ namespace Empiria.Billing {
 
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
-      
+
       PayableId = 1;
       BillCategory = billCategory;
       BillNo = billNo;
@@ -93,7 +93,7 @@ namespace Empiria.Billing {
     public string BillNo {
       get; private set;
     }
-    
+
 
     [DataField("BILL_NO_RELATED")]
     public string BillNoRelated {
@@ -118,7 +118,7 @@ namespace Empiria.Billing {
     public int PayableId {
       get; private set;
     }
-    
+
 
     [DataField("BILL_ISSUE_DATE")]
     public DateTime IssueDate {
@@ -232,16 +232,6 @@ namespace Empiria.Billing {
     }
 
 
-    public string Version {
-      get {
-        return SchemaExtData.Get("version", string.Empty);
-      }
-      private set {
-        SchemaExtData.SetIfValue("version", value);
-      }
-    }
-
-
     public BillSchemaData SchemaData {
       get {
         return new BillSchemaData(this.SchemaExtData);
@@ -271,7 +261,7 @@ namespace Empiria.Billing {
     public decimal PayableTotal {
       get;private set;
     }
-    
+
     #endregion Properties
 
     #region Methods
@@ -303,13 +293,12 @@ namespace Empiria.Billing {
       fields.EnsureIsValid();
       fields.EnsureIsValidBill(PayableId, PayableTotal, BillCategory);
       fields.EnsureIsValidCreditNote(BillCategory);
-      
+
       BillNoRelated = fields.CFDIRelated;
       IssueDate = PatchField(fields.IssueDate, IssueDate);
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
       ManagedBy = PatchField(fields.ManagedByUID, ManagedBy);
-      Version = PatchField(fields.SchemaVersion, Version);
       _identificators = PatchField(fields.Identificators, _identificators);
       _tags = PatchField(fields.Tags, _tags);
       Currency = PatchField(fields.CurrencyUID, Currency);
