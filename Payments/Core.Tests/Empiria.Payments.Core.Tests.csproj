@@ -72,10 +72,12 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Tests" Version="1.0.0" />
     <PackageReference Include="Empiria.Payments.Core" Version="1.0.0" />
+		<PackageReference Include="Empiria.Procurement.Core" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\extensions\Tests\Empiria.Tests.csproj" />
     <ProjectReference Include="..\Core\Empiria.Payments.Core.csproj" />
+	  <ProjectReference Include="..\..\..\operations.management\Procurement\Core\Empiria.Procurement.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">
