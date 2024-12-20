@@ -100,15 +100,14 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal void WriteBill(Bill bill, string extData) {
+    static internal void WriteBill(Bill bill, string schemaExtData) {
 
       var op = DataOperation.Parse("write_FMS_Bill",
         bill.Id, bill.UID, bill.BillType.Id, bill.BillCategory.Id,
         bill.BillNo, bill.BillNoRelated, bill.IssueDate, bill.IssuedBy.Id,
-        bill.IssuedTo.Id, bill.ManagedBy.Id, bill.SchemaVersion,
-        string.Join(" ", bill.Identificators), string.Join(" ", bill.Tags),
-        bill.Currency.Id, bill.Subtotal, bill.Discount, bill.Total,
-        extData, "", "", "",
+        bill.IssuedTo.Id, bill.ManagedBy.Id, string.Join(" ", bill.Identificators),
+        string.Join(" ", bill.Tags), bill.Currency.Id, bill.Subtotal, 
+        bill.Discount, bill.Total, schemaExtData, "", "", "",
         bill.PostedBy.Id, bill.PostingTime, (char) bill.Status,
         bill.PayableId, bill.PayableEntityTypeId, bill.PayableEntityId);
 
