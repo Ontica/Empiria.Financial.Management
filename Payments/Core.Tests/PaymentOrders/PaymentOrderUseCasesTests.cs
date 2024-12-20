@@ -40,11 +40,11 @@ namespace Empiria.Tests.Payments.Orders {
     public void Should_Add_Payment_Order() {
       var fields = new PaymentOrderFields {
         PaymentOrderTypeUID = "32e1b307-676b-4488-b26f-1cbc03878875",
-        PayableUID = "4b0d2fa1-5ce9-453d-ba52-bab230314fc2",
+        PayableUID = "1537c110-e3f1-4ab8-b822-c00733ac3dd5",
         PayToUID = "c6278424-d1ff-492f-b5fe-410b4258292c",
         PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
-        PaymentAccountUID = "-32e1b307-676b-4488-b26f-1cbc03878875",
+        PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
         Notes = "Sin notas",
         Total = 1234567.89m,
         DueTime = DateTime.Today,
@@ -61,7 +61,7 @@ namespace Empiria.Tests.Payments.Orders {
 
     [Fact]
     public void Should_Delete_Payment_Order() {
-      _usecases.DeletePaymentOrder("25dffa89-5d73-469c-84d7-8282a055f1c2");
+      _usecases.DeletePaymentOrder("ed7879fd-79df-4ea9-b83a-b131642b5ca2");
     }
 
 
@@ -78,11 +78,11 @@ namespace Empiria.Tests.Payments.Orders {
     public void Should_Update_Payment_Order() {
       var fields = new PaymentOrderFields {
         PaymentOrderTypeUID = "32e1b307-676b-4488-b26f-1cbc03878875",
-        PayableUID = "4b0d2fa1-5ce9-453d-ba52-bab230314fc2",
+        PayableUID = "1537c110-e3f1-4ab8-b822-c00733ac3dd5",
         PayToUID = "c6278424-d1ff-492f-b5fe-410b4258292c",
         PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
-        PaymentAccountUID = "-32e1b307-676b-4488-b26f-1cbc03878875",
+        PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
         Notes = "updated by test",
         Total = 21.89m,
         DueTime = DateTime.Today,
@@ -91,7 +91,7 @@ namespace Empiria.Tests.Payments.Orders {
 
       };
 
-      var sut = _usecases.UpdatePaymentOrder("bfcd79a5-f8bb-4847-a852-ac353f8db7b2", fields);
+      var sut = _usecases.UpdatePaymentOrder("4954fdf9-b947-48f4-b8fa-610f559448d8", fields);
 
       Assert.NotNull(sut);
     }

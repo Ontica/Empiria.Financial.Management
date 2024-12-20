@@ -49,7 +49,7 @@ namespace Empiria.Payments.Orders.Adapters {
         return query.OrderBy;
       }
 
-      return "ORDER_NO";
+      return "PYMT_ORD_NO";
     }
 
     #endregion Extension methods
@@ -57,8 +57,8 @@ namespace Empiria.Payments.Orders.Adapters {
     #region Helpers
 
     static private string BuildDueTimeRangeFilter(DateTime fromDueTime, DateTime toDueTime) {
-      return $"{DataCommonMethods.FormatSqlDbDate(fromDueTime)} <= ORDER_DUETIME AND " +
-             $"ORDER_DUETIME < {DataCommonMethods.FormatSqlDbDate(toDueTime.Date.AddDays(1))}";
+      return $"{DataCommonMethods.FormatSqlDbDate(fromDueTime)} <= PYMT_ORD_DUETIME AND " +
+             $"PYMT_ORD_DUETIME < {DataCommonMethods.FormatSqlDbDate(toDueTime.Date.AddDays(1))}";
     }
 
 
@@ -66,7 +66,7 @@ namespace Empiria.Payments.Orders.Adapters {
       if (keywords.Length == 0) {
         return string.Empty;
       }
-      return SearchExpression.ParseAndLikeKeywords("ORDER_KEYWORDS", keywords);
+      return SearchExpression.ParseAndLikeKeywords("PYMT_ORD_KEYWORDS", keywords);
     }
 
 
@@ -77,7 +77,7 @@ namespace Empiria.Payments.Orders.Adapters {
 
       var paymentMethod = PaymentMethod.Parse(paymentMethodUID);
 
-      return $"ORDER_PAYMENT_METHOD_ID = {paymentMethod.Id}";
+      return $"PYMT_ORD_PAYMENT_METHOD_ID = {paymentMethod.Id}";
     }
 
 
@@ -88,16 +88,16 @@ namespace Empiria.Payments.Orders.Adapters {
 
       var paymentOrderType = PaymentOrderType.Parse(paymentOrderTypeUID);
 
-      return $"ORDER_TYPE_ID = {paymentOrderType.Id}";
+      return $"PYMT_ORD_TYPE_ID = {paymentOrderType.Id}";
     }
 
 
     static private string BuildRequestStatusFilter(PaymentOrderStatus status) {
       if (status == PaymentOrderStatus.All) {
-        return $"ORDER_STATUS <> 'X'";
+        return $"PYMT_ORD_STATUS <> 'X'";
       }
 
-      return $"ORDER_STATUS = '{(char) status}'";
+      return $"PYMT_ORD_STATUS = '{(char) status}'";
     }
 
 
@@ -108,7 +108,7 @@ namespace Empiria.Payments.Orders.Adapters {
 
       var requesterOrgUnit = OrganizationalUnit.Parse(requesterOrgUnitUID);
 
-      return $"ORDER_REQUESTED_BY_ID = {requesterOrgUnit.Id}";
+      return $"PYMT_ORD_REQUESTED_BY_ID = {requesterOrgUnit.Id}";
     }
 
     #endregion Helpers

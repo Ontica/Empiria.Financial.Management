@@ -48,7 +48,7 @@ namespace Empiria.Payments.Orders {
 
 
     static internal PaymentOrder TryGetFor(Payable payable) {
-     return BaseObject.TryParse<PaymentOrder>($"ORDER_PAYABLE_ID = {payable.Id}");
+     return BaseObject.TryParse<PaymentOrder>($"PYMT_ORD_PAYABLE_ID = {payable.Id} AND PYMT_ORD_STATUS <> 'X' ");
     }
 
     static public PaymentOrder Empty => ParseEmpty<PaymentOrder>();
@@ -57,84 +57,84 @@ namespace Empiria.Payments.Orders {
 
     #region Properties
 
-    [DataField("ORDER_TYPE_ID")]
+    [DataField("PYMT_ORD_TYPE_ID")]
     public PaymentOrderType PaymentOrderType {
       get; private set;
     }
 
 
-    [DataField("ORDER_NO")]
+    [DataField("PYMT_ORD_NO")]
     public string PaymentOrderNo {
       get; private set;
     }
 
 
-    [DataField("ORDER_PAY_TO_ID")]
+    [DataField("PYMT_ORD_PAY_TO_ID")]
     public Party PayTo {
       get; private set;
     }
 
 
-    [DataField("ORDER_PAYABLE_ID")]
+    [DataField("PYMT_ORD_PAYABLE_ID")]
     public Payable Payable {
       get; internal set;
     }
 
-    [DataField("ORDER_PAYABLE_TYPE_ID")]
+    [DataField("PYMT_ORD_PAYABLE_TYPE_ID")]
     public int PayableTypeId {
       get; internal set;
     }
 
 
-    [DataField("ORDER_PAYMENT_METHOD_ID")]
+    [DataField("PYMT_ORD_PAYMENT_METHOD_ID")]
     public PaymentMethod PaymentMethod {
       get; private set;
     }
 
 
-    [DataField("ORDER_CURRENCY_ID")]
+    [DataField("PYMT_ORD_CURRENCY_ID")]
     public Currency Currency {
       get; private set;
     }
 
 
-    [DataField("ORDER_PAYMENT_ACCOUNT_ID")]
+    [DataField("PYMT_ORD_PAYMENT_ACCOUNT_ID")]
     public PaymentAccount PaymentAccount {
       get; private set;
     }
 
 
-    [DataField("ORDER_NOTES")]
+    [DataField("PYMT_ORD_NOTES")]
     public string Notes {
       get; private set;
     }
 
 
-    [DataField("ORDER_REQUESTED_TIME")]
+    [DataField("PYMT_ORD_REQUESTED_TIME")]
     public DateTime RequestedTime {
       get; private set;
     }
 
 
-    [DataField("ORDER_EXT_DATA")]
+    [DataField("PYMT_ORD_EXT_DATA")]
     private JsonObject ExtData {
       get; set;
     }
 
 
-    [DataField("ORDER_TOTAL")]
+    [DataField("PYMT_ORD_TOTAL")]
     public decimal Total {
       get; private set;
     }
 
 
-    [DataField("ORDER_DUETIME")]
+    [DataField("PYMT_ORD_DUETIME")]
     public DateTime DueTime {
       get; private set;
     }
 
 
-    [DataField("ORDER_REQUESTED_BY_ID")]
+    [DataField("PYMT_ORD_REQUESTED_BY_ID")]
     public OrganizationalUnit RequestedBy {
       get; private set;
     }
@@ -148,19 +148,19 @@ namespace Empiria.Payments.Orders {
       }
     }
 
-    [DataField("ORDER_POSTED_BY_ID")]
+    [DataField("PYMT_ORD_POSTED_BY_ID")]
     public Contact PostedBy {
       get; private set;
     }
 
 
-    [DataField("ORDER_POSTING_TIME")]
+    [DataField("PYMT_ORD_POSTING_TIME")]
     public DateTime PostingTime {
       get; private set;
     }
 
 
-    [DataField("ORDER_STATUS", Default = PaymentOrderStatus.Pending)]
+    [DataField("PYMT_ORD_STATUS", Default = PaymentOrderStatus.Pending)]
     public PaymentOrderStatus Status {
       get; private set;
     } = PaymentOrderStatus.Pending;
