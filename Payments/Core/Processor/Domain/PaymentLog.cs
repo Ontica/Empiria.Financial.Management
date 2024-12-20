@@ -37,37 +37,49 @@ namespace Empiria.Payments.Processor {
 
     #region Properties
 
-    [DataField("PAYMENT_LOG_PAYMENT_INSTRUCTION_ID")]
+    [DataField("PYMT_LOG_PYMT_INSTRUCTION_ID")]
     public PaymentInstruction PaymentInstruction {
       get; private set;
     }
 
 
-    [DataField("PAYMENT_LOG_REQUEST_TIME")]
+    [DataField("PYMT_LOG_TEXT")]
+    public string Text {
+      get; private set;
+    } = string.Empty;
+
+
+    [DataField("PYMT_LOG_REQUEST_CODE")]
+    public string RequestCode {
+      get; private set;
+    } = string.Empty;
+
+
+    [DataField("PYMT_LOG_REQUEST_TIME")]
     public DateTime RequestTime {
       get; set;
     }
 
 
-    [DataField("PAYMENT_LOG_APPLICATION_TIME")]
+    [DataField("PYMT_LOG_APPLICATION_TIME")]
     public DateTime ApplicationTime {
       get; set;
     }
 
 
-    [DataField("PAYMENT_LOG_RECORDING_TIME")]
+    [DataField("PYMT_LOG_RECORDING_TIME")]
     public DateTime RecordingTime {
       get; set;
     }
 
 
-    [DataField("PAYMENT_LOG_EXT_DATA")]
+    [DataField("PYMT_LOG_EXT_DATA")]
     protected JsonObject ExtData {
       get; set;
     } = JsonObject.Empty;
 
 
-    [DataField("PAYMENT_LOG_STATUS", Default = PaymentLogStatus.Pending)]
+    [DataField("PYMT_LOG_STATUS", Default = PaymentLogStatus.Pending)]
     public Char Status {
       get; set;
     } = 'P';

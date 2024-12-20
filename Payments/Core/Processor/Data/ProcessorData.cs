@@ -29,8 +29,8 @@ namespace Empiria.Payments.Processor.Data {
 
 
     static internal void WritePaymentLog(PaymentLog o, string extensionData) {
-      var op = DataOperation.Parse("write_FMS_Payment_Log",
-                     o.Id, o.UID, 1, o.RequestTime, o.ApplicationTime, 
+      var op = DataOperation.Parse("apd_FMS_Payment_Log",
+                     o.Id, o.UID, o.PaymentInstruction.Id,o.Text,o.RequestCode, o.RequestTime, o.ApplicationTime, 
                      o.RecordingTime, extensionData, (char) o.Status);
 
       DataWriter.Execute(op);
