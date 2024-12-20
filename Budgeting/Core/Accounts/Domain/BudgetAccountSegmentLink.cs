@@ -30,10 +30,11 @@ namespace Empiria.Budgeting {
     }
 
     internal BudgetAccountSegmentLink(BudgetAccountSegment segment, Product product,
-                                      string observations)
+                                      string code, string description)
               : base(ProcurementProductLink, segment, product) {
 
-      base.Description = EmpiriaString.Clean(observations);
+      base.Code = EmpiriaString.Clean(code);
+      base.Description = EmpiriaString.Clean(description);
     }
 
     static public BudgetAccountSegmentLink Parse(int id) => ParseId<BudgetAccountSegmentLink>(id);
