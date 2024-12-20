@@ -318,6 +318,7 @@ namespace Empiria.Billing {
       Total = fields.Total;
     }
 
+
     #endregion Methods
 
   } // class Bill
