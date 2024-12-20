@@ -109,7 +109,8 @@ namespace Empiria.Billing.Data {
         string.Join(" ", bill.Identificators), string.Join(" ", bill.Tags),
         bill.Currency.Id, bill.Subtotal, bill.Discount, bill.Total,
         "", "", "", "",
-        bill.PostedBy.Id, bill.PostingTime, (char) bill.Status, bill.PayableId);
+        bill.PostedBy.Id, bill.PostingTime, (char) bill.Status,
+        bill.PayableId, bill.PayableEntityTypeId, bill.PayableEntityId);
 
       DataWriter.Execute(op);
     }

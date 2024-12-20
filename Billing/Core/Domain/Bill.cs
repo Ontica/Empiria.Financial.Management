@@ -55,7 +55,9 @@ namespace Empiria.Billing {
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
-      
+
+      PayableEntityTypeId = ObjectTypeInfo.Parse(payable.PayableEntity.Type.UID).Id;
+      PayableEntityId = payable.PayableEntity.Id;
       PayableId = payable.Id;
       BillCategory = billCategory;
       BillNo = billNo;
@@ -97,6 +99,18 @@ namespace Empiria.Billing {
     public string BillNoRelated {
       get;
       private set;
+    }
+
+
+    [DataField("BILL_PAYABLE_ENTITY_TYPE_ID")]
+    public int PayableEntityTypeId {
+      get; private set;
+    }
+
+
+    [DataField("BILL_PAYABLE_ENTITY_ID")]
+    public int PayableEntityId {
+      get; private set;
     }
 
 
@@ -253,8 +267,7 @@ namespace Empiria.Billing {
     public decimal PayableTotal {
       get;private set;
     }
-
-
+    
     #endregion Properties
 
     #region Methods
