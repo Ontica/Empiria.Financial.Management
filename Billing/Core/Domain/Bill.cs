@@ -145,12 +145,6 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_SCHEMA_VERSION")]
-    public string SchemaVersion {
-      get; private set;
-    }
-
-
     [DataField("BILL_IDENTIFICATORS")]
     private string _identificators = string.Empty;
 
@@ -238,6 +232,16 @@ namespace Empiria.Billing {
     }
 
 
+    public string Version {
+      get {
+        return SchemaExtData.Get("version", string.Empty);
+      }
+      private set {
+        SchemaExtData.SetIfValue("version", value);
+      }
+    }
+
+
     public BillSchemaData SchemaData {
       get {
         return new BillSchemaData(this.SchemaExtData);
@@ -274,11 +278,11 @@ namespace Empiria.Billing {
 
     protected override void OnSave() {
       if (IsNew) {
-        //PostedBy = Party.Parse(1004);
-        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostedBy = Party.Parse(1004);
+        //PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
-      BillData.WriteBill(this);
+      BillData.WriteBill(this, SchemaExtData.ToString());
     }
 
 
@@ -305,7 +309,7 @@ namespace Empiria.Billing {
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
       ManagedBy = PatchField(fields.ManagedByUID, ManagedBy);
-      SchemaVersion = PatchField(fields.SchemaVersion, SchemaVersion);
+      Version = PatchField(fields.SchemaVersion, Version);
       _identificators = PatchField(fields.Identificators, _identificators);
       _tags = PatchField(fields.Tags, _tags);
       Currency = PatchField(fields.CurrencyUID, Currency);
