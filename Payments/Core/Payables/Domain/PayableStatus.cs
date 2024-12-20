@@ -13,13 +13,17 @@ namespace Empiria.Payments.Payables {
   /// <summary>Enumerates the status of a payable order.</summary>
   public enum PayableStatus {
 
-    Capture = 'P',
+    Pending = 'P',
 
     OnPayment = 'Y',
 
     Payed = 'C',
 
     Deleted = 'X',
+
+    Rejected = 'J',
+
+    Canceled = 'L',
 
     All = '@',
 
@@ -32,12 +36,16 @@ namespace Empiria.Payments.Payables {
 
     static public string GetName(this PayableStatus status) {
       switch (status) {
-        case PayableStatus.Capture:
-          return "En captura";
+        case PayableStatus.Pending:
+          return "Pendiente";
         case PayableStatus.OnPayment:
           return "Enviado a pago";
         case PayableStatus.Payed:
           return "Pagado";
+        case PayableStatus.Rejected:
+          return "Rechazado";
+        case PayableStatus.Canceled:
+          return "Cancelado";
         case PayableStatus.Deleted:
           return "Eliminado";
         default:
@@ -45,6 +53,10 @@ namespace Empiria.Payments.Payables {
       }
     }
 
-  }  // class PayableStatusExtensions
+    static public NamedEntityDto MapToNamedEntity(this PayableStatus status) {
+      return new NamedEntityDto(status.ToString(), status.GetName());
+    }
+
+    }  // class PayableStatusExtensions
 
 }  // namespace Empiria.Payments.Payables
