@@ -62,15 +62,18 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     public void Should_Create_Payable() {
       var fields = new PayableFields {
         PayableTypeUID = "ObjectTypeInfo.Payable.ContractOrder",
-        PayableEntityUID = "0f2a2a72-0d6c-4dcb-84d1-98534ebb1713",
+        PayableEntityUID = "fda34114-d994-4d81-9f75-6b35dfe20d78",
         Description = "Payable de Prueba",
         OrganizationalUnitUID = "d4b9aae9-cc6e-4fbc-9589-639dec5dab9f",
         PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
-        BudgetTypeUID = "ObjectTypeInfo.Budget.ProgramaFinanciero",
+        PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
+        PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
+        BudgetUID = "f3163d06-10b7-4fe1-8c44-9f10604a6c6b",
         DueTime = DateTime.Today,
     };
 
+      
       var sut = _usecases.CreatePayable(fields);
 
       Assert.NotNull(sut);
@@ -160,7 +163,9 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
         OrganizationalUnitUID = "d4b9aae9-cc6e-4fbc-9589-639dec5dab9f",
         PayToUID = "c6278424-d1ff-492f-b5fe-410b4258292c",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
-        BudgetTypeUID = "ObjectTypeInfo.Budget.ProgramaFinanciero",
+        PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
+        PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
+        BudgetUID = "f3163d06-10b7-4fe1-8c44-9f10604a6c6b",
         DueTime = DateTime.Today,
       };
 

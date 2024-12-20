@@ -30,7 +30,7 @@ namespace Empiria.Payments.Payables.Adapters {
       string statusFilter = BuildRequestStatusFilter(query.Status);
       string payableTypeFilter = BuildPayableTypeFilter(query.PayableTypeUID);
       string requesterOrgUnitFilter = BuildRequesterOrgUnitFilter(query.RequesterOrgUnitUID);
-      string budgetTypeFilter = BuildBudgetTypedFilter(query.BudgetTypeUID);
+      string budgetTypeFilter = BuildBudgetFilter(query.BudgetTypeUID);
       string dateRangeFilter = BuildDueTimeRangeFilter(query.FromDate, query.ToDate);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
 
@@ -82,14 +82,14 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    static private string BuildBudgetTypedFilter(string budgetTypeUID) {
-      if (budgetTypeUID.Length == 0) {
+    static private string BuildBudgetFilter(string budgetUID) {
+      if (budgetUID.Length == 0) {
         return string.Empty;
       }
 
-      var budgetType = BudgetType.Parse(budgetTypeUID);
+      var budget = BudgetType.Parse(budgetUID);
 
-      return $"PAYABLE_BUDGET_TYPE_ID = {budgetType.Id}";
+      return $"PAYABLE_BUDGET_ID = {budget.Id}";
     }
 
 

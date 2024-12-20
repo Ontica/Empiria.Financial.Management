@@ -46,6 +46,11 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
+    public NamedEntityDto Budget {
+      get; internal set;
+    }
+
+
     public NamedEntityDto BudgetType {
       get; internal set;
     }
@@ -108,6 +113,11 @@ namespace Empiria.Payments.Payables.Adapters {
 
 
     public string BudgetTypeName {
+      get; internal set;
+    }
+
+
+    public string BudgetName {
       get; internal set;
     }
 

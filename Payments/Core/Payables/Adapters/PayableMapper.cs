@@ -18,18 +18,19 @@ namespace Empiria.Payments.Payables.Adapters {
       return new PayableDto {
         UID = payable.UID,
         PayableNo = payable.payableNo,
-        PayableType = new NamedEntityDto(payable.PayableType.UID, payable.PayableType.DisplayName),
+        PayableType = payable.PayableType.MapToNamedEntity(),
         Description = payable.Description,
         PayTo = payable.PayTo.MapToNamedEntity(),
-        RequestedBy = new NamedEntityDto(payable.OrganizationalUnit.UID, payable.OrganizationalUnit.Name),
-        BudgetType = new NamedEntityDto(payable.BudgetType.UID, payable.BudgetType.DisplayName),
+        RequestedBy = payable.OrganizationalUnit.MapToNamedEntity(),        
+        BudgetType = payable.Budget.BudgetType.MapToNamedEntity(),
+        Budget = payable.Budget.MapToNamedEntity(),
         Total = payable.Total,
         Currency = payable.Currency.MapToNamedEntity(),
         RequestedTime = payable.RequestedTime,
         DueTime = payable.DueTime,
         PaymentMethod = PaymentMethodMapper.Map(payable.PaymentMethod),
         PaymentAccount = payable.PaymentAccount.MapToNamedEntity(),
-        Status = new NamedEntityDto(payable.Status.ToString(), payable.Status.GetName())
+        Status = payable.Status.MapToNamedEntity()
       };
 
     }
@@ -45,7 +46,8 @@ namespace Empiria.Payments.Payables.Adapters {
         UID = payable.UID,
         PayableNo = payable.payableNo,
         PayableTypeName = payable.PayableType.DisplayName,
-        BudgetTypeName = payable.BudgetType.DisplayName,
+        BudgetTypeName = payable.Budget.BudgetType.DisplayName,
+        BudgetName = payable.Budget.Name,
         ContractNo = payable.PayableEntity.EntityNo,
         PayTo = payable.PayTo.Name,
         Total = payable.Total,

@@ -111,16 +111,10 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PAYABLE_BUDGET_TYPE_ID")]
-    public BudgetType BudgetType {
-      get; private set;
-    }
-
-
+   
+    [DataField("PAYABLE_BUDGET_ID")]
     public Budget Budget {
-      get {
-        return BudgetType.GetCurrentBudget();
-      }
+      get; private set;
     }
 
 
@@ -185,10 +179,10 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PAYABLE_STATUS", Default = PayableStatus.Capture)]
+    [DataField("PAYABLE_STATUS", Default = PayableStatus.Pending)]
     public PayableStatus Status {
       get; private set;
-    } = PayableStatus.Capture;
+    } = PayableStatus.Pending;
 
     #endregion Properties
 
@@ -212,7 +206,7 @@ namespace Empiria.Payments.Payables {
 
 
     internal void Delete() {
-      Assertion.Require(this.Status == PayableStatus.Capture,
+      Assertion.Require(this.Status == PayableStatus.Pending,
                  $"No se puede eliminar una obligación de pago que está en estado {this.Status.GetName()}.");
 
       this.Status = PayableStatus.Deleted;
@@ -220,7 +214,7 @@ namespace Empiria.Payments.Payables {
 
 
     internal void OnPayment() {
-      Assertion.Require(this.Status == PayableStatus.Capture,
+      Assertion.Require(this.Status == PayableStatus.Pending,
                  $"No se puede generar la instrucción de pago de una obligación de pago que está en estado {this.Status.GetName()}.");
 
       this.Status = PayableStatus.OnPayment;
@@ -241,8 +235,8 @@ namespace Empiria.Payments.Payables {
 
       Description = GetDescription(fields.Description);
       OrganizationalUnit = OrganizationalUnit.Parse(fields.OrganizationalUnitUID);
-      PayTo = Party.Parse(fields.PayToUID);
-      BudgetType = BudgetType.Parse(fields.BudgetTypeUID);
+     PayTo = Party.Parse(fields.PayToUID);
+      Budget = Budget.Parse(fields.BudgetUID);
       Currency = Currency.Parse(fields.CurrencyUID);
       DueTime = fields.DueTime;
       RequestedTime = fields.RequestedTime;

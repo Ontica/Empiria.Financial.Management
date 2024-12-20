@@ -52,7 +52,7 @@ namespace Empiria.Payments.Payables.Adapters {
     } = string.Empty;
 
 
-    public string BudgetTypeUID {
+    public string BudgetUID {
       get; set;
     } = string.Empty;
 
@@ -91,8 +91,8 @@ namespace Empiria.Payments.Payables.Adapters {
       Assertion.Require(CurrencyUID, "Necesito la moneda.");
       _ = Currency.Parse(CurrencyUID);
 
-      Assertion.Require(BudgetTypeUID, "Necesito saber con qué presupuesto correspondiente.");
-      _ = BudgetType.Parse(BudgetTypeUID);
+      Assertion.Require(BudgetUID, "Necesito saber con qué presupuesto correspondiente.");
+      _ = Budget.Parse(BudgetUID);
 
       Assertion.Require(PaymentMethodUID, "Necesito el identificador UID del método de pago");
 
