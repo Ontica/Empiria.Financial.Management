@@ -24,6 +24,16 @@ namespace Empiria.Billing {
     }
 
 
+    public string Version {
+      get {
+        return _schemaData.Get("version", string.Empty);
+      }
+      private set {
+        _schemaData.SetIfValue("version", value);
+      }
+    }
+
+
     public string NombreEmisor {
       get {
         return _schemaData.Get("nombreEmisor", string.Empty);
