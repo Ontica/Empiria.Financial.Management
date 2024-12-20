@@ -38,49 +38,55 @@ namespace Empiria.Payments.Processor {
 
     #region Properties
 
-    [DataField("PAYMENT_INSTRUCTION_TYPE_ID")]
+    [DataField("PYMT_INSTRUCTION_TYPE_ID")]
     public int TypeId {
       get; private set;
     }
 
 
-    [DataField("PAYMENT_INSTRUCTION_BROKER_ID")]
+    [DataField("PYMT_INSTRUCTION_NO")]
+    public string PaymentInstructionNo {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_INSTRUCTION_BROKER_ID")]
     public PaymentsBroker Broker {
       get; private set;
     }
 
 
-    [DataField("PAYMENT_INSTRUCTION_ORDER_ID")]
+    [DataField("PYMT_INSTRUCTION_PYMT_ORDER_ID")]
     public PaymentOrder PaymentOrder {
       get; private set;
     }
 
 
-    [DataField("PAYMENT_INSTRUCTION_DESCRIPTION")]
+    [DataField("PYMT_INSTRUCTION_DESCRIPTION")]
     public string Description {
       get; private set;
     }
 
 
-    [DataField("PAYMENT_INSTRUCTION_EXT_DATA")]
+    [DataField("PYMT_INSTRUCTION_EXT_DATA")]
     protected JsonObject ExtData {
       get; set;
     } = JsonObject.Empty;
 
 
-    [DataField("PAYMENT_INSTRUCTION_POSTED_BY_ID")]
+    [DataField("PYMT_INSTRUCTION_POSTED_BY_ID")]
     public Contact PostedBy {
       get; private set;
     }
 
 
-    [DataField("PAYMENT_INSTRUCTION_POSTING_TIME")]
+    [DataField("PYMT_INSTRUCTION_POSTING_TIME")]
     public DateTime PostingTime {
       get; private set;
     }
 
 
-    [DataField("PAYMENT_INSTRUCTION_STATUS", Default = PaymentInstructionStatus.Capture)]
+    [DataField("PYMT_INSTRUCTION_STATUS", Default = PaymentInstructionStatus.Capture)]
     public PaymentInstructionStatus Status {
       get; private set;
     } = PaymentInstructionStatus.Capture;
@@ -92,6 +98,7 @@ namespace Empiria.Payments.Processor {
 
     protected override void OnBeforeSave() {
       if (base.IsNew) {
+        this.PaymentInstructionNo = GeneratePaymentInstructionNo();
         this.PostedBy = ExecutionServer.CurrentContact;
         this.PostingTime = DateTime.Now;
       }
@@ -116,6 +123,15 @@ namespace Empiria.Payments.Processor {
 
 
     #endregion Methods
+
+
+    #region Helpers
+
+    private string GeneratePaymentInstructionNo() {
+      return "PI-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
+    }
+
+    #endregion Helpers
 
   }  // class PaymentInstruction
 

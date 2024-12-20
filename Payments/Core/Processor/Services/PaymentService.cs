@@ -12,10 +12,6 @@ using Empiria.Services;
 
 using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Adapters;
-using Empiria.Data;
-using Empiria.Payments.BanobrasIntegration.IkosCash;
-using Empiria.Payments.BanobrasIntegration.IkosCash.Adapters;
-using System;
 
 
 namespace Empiria.Payments.Processor.Services {
