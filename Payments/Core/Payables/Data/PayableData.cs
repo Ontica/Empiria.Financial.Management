@@ -41,8 +41,8 @@ namespace Empiria.Payments.Payables.Data {
       Assertion.Require(payableItemUID, nameof(payableItemUID));
 
       var sql = "SELECT * FROM FMS_PAYABLE_ITEMS " +
-                $"WHERE PAYABLE_ID = {payable.Id} AND " +
-                $"PAYABLE_ITEM_UID = '{payableItemUID}'";
+                $"WHERE PAYABLE_ITEM_PAYABLE_ID = {payable.Id} AND " +
+                $"PAYABLE_ITEM_UID = '{payableItemUID}' AND PAYABLE_ITEM_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
@@ -54,7 +54,7 @@ namespace Empiria.Payments.Payables.Data {
       Assertion.Require(payable, nameof(payable));
 
       var sql = $"SELECT * FROM FMS_PAYABLE_ITEMS " +
-                $"WHERE PAYABLE_ID = {payable.Id} AND " +
+                $"WHERE PAYABLE_ITEM_PAYABLE_ID = {payable.Id} AND " +
                 $"PAYABLE_ITEM_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);

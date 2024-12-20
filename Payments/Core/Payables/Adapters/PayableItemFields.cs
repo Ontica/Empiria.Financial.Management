@@ -68,6 +68,11 @@ namespace Empiria.Payments.Payables.Adapters {
     } = 1;
 
 
+    public decimal Discount {
+      get; set;
+    } = 0;
+
+
     public string BudgetAccountUID {
       get; set;
     } = string.Empty;

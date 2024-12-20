@@ -106,7 +106,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Get_Payable() {
 
-      var sut = _usecases.GetPayable("abdc27b9-5fb1-4386-aa87-f5ad5ec66fea");
+      var sut = _usecases.GetPayable("f578ae68-8570-4e86-b4d1-6f2fcc6995f2");
 
       Assert.NotNull(sut);
     }
@@ -115,7 +115,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Get_PayableItems() {
 
-      var sut = _usecases.GetPayableItems("713b2755-aee1-44af-9f3c-1f46caebca1c");
+      var sut = _usecases.GetPayableItems("1537c110-e3f1-4ab8-b822-c00733ac3dd5");
 
       Assert.NotNull(sut);
     }

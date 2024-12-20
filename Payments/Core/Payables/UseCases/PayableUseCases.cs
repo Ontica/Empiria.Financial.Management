@@ -76,6 +76,8 @@ namespace Empiria.Payments.Payables.UseCases {
 
 
     public PayableHolderDto GetPayable(string payableUID) {
+      Assertion.Require(payableUID, nameof(payableUID));
+
       var payable = Payable.Parse(payableUID);
 
       return PayableHolderMapper.Map(payable);

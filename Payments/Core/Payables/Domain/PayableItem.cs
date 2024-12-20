@@ -56,7 +56,7 @@ namespace Empiria.Payments.Payables {
 
     #region Properties
 
-    [DataField("PAYABLE_ID")]
+    [DataField("PAYABLE_ITEM_PAYABLE_ID")]
     public Payable Payable {
       get; private set;
     }
@@ -105,6 +105,11 @@ namespace Empiria.Payments.Payables {
 
 
     [DataField("PAYABLE_ITEM_QTY")]
+    public decimal Discount {
+      get; private set;
+    }
+
+    [DataField("PAYABLE_ITEM_UNIT_PRICE")]
     public decimal UnitPrice {
       get; private set;
     }
@@ -112,7 +117,7 @@ namespace Empiria.Payments.Payables {
 
     public decimal Total {
       get {
-        return Math.Round(UnitPrice * Quantity * ExchangeRate, 2);
+        return Math.Round(((UnitPrice * Quantity) - Discount)  * ExchangeRate, 2);
       }
     }
 
@@ -200,6 +205,7 @@ namespace Empiria.Payments.Payables {
       this.Quantity = fields.Quantity;
       this.UnitPrice = fields.UnitPrice;
       this.Currency = Currency.Parse(fields.CurrencyUID);
+      this.Discount = fields.Discount;
       this.ExchangeRate = fields.ExchangeRate;
       this.BudgetAccount = BudgetAccount.Parse(fields.BudgetAccountUID);
     }
