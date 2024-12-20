@@ -47,13 +47,13 @@ namespace Empiria.Billing {
 
     #region Properties
 
-    [DataField("BIILL_TAX_ENTRY_ID")]
+    [DataField("BILL_TAX_ENTRY_ID")]
     public int BillTaxId {
       get; private set;
     }
 
 
-    [DataField("BIILL_TAX_ENTRY_UID")]
+    [DataField("BILL_TAX_ENTRY_UID")]
     public string BillTaxUID {
       get; private set;
     }
