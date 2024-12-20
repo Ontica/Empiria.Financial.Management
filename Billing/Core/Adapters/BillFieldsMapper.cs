@@ -34,8 +34,8 @@ namespace Empiria.Billing.Adapters {
 
     #region Private methods
 
-    static private FixedList<BillConceptFields> MapToBillConceptFields(FixedList<SATBillConceptDto> conceptos) {
-
+    static private FixedList<BillConceptFields> MapToBillConceptFields(
+                                                FixedList<SATBillConceptDto> conceptos) {
       List<BillConceptFields> fields = new List<BillConceptFields>();
 
       foreach (var concepto in conceptos) {
@@ -43,16 +43,18 @@ namespace Empiria.Billing.Adapters {
         var field = new BillConceptFields {
           ProductUID = string.Empty,
           SATProductCode = concepto.ClaveProdServ,
+          ClaveUnidad = concepto.ClaveUnidad,
+          Unidad = concepto.Unidad,
+          NoIdentificacion = concepto.NoIdentificacion,
+          ObjetoImp = concepto.ObjetoImp,
           Description = concepto.Descripcion,
           Quantity = concepto.Cantidad,
           UnitPrice = concepto.ValorUnitario,
           Subtotal = concepto.Importe,
           TaxEntries = MapToBillTaxFields(concepto.Impuestos)
         };
-
         fields.Add(field);
       }
-
       return fields.ToFixedList();
     }
 
@@ -68,11 +70,12 @@ namespace Empiria.Billing.Adapters {
         IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
         SchemaVersion = dto.DatosGenerales.CFDIVersion,
         CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
-        TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
         Subtotal = dto.DatosGenerales.SubTotal,
         Total = dto.DatosGenerales.Total,
         CFDIRelated = MapToCfdiRelated(dto.DatosGenerales.CfdiRelacionados),
-        Concepts = MapToBillConceptFields(dto.Conceptos)
+        Concepts = MapToBillConceptFields(dto.Conceptos),
+        SchemaData = MapToSchemaData(dto),
+        SecurityData = MapToSecurityData(dto)
       };
     }
 
@@ -105,6 +108,67 @@ namespace Empiria.Billing.Adapters {
 
       return cfdiRelacionados.First().UUID;
     }
+
+
+    static private BillOrganizationFields MapToIssuedBy(SATBillOrganizationDto emisor) {
+
+      return new BillOrganizationFields() {
+        Nombre = emisor.Nombre,
+        RFC = emisor.RFC,
+        RegimenFiscal = emisor.RegimenFiscal
+      };
+    }
+
+
+    static private BillOrganizationFields MapToIssuedTo(SATBillOrganizationDto receptor) {
+
+      return new BillOrganizationFields() {
+        Nombre = receptor.Nombre,
+        RFC = receptor.RFC,
+        RegimenFiscal = receptor.RegimenFiscal,
+        DomicilioFiscal = receptor.DomicilioFiscal,
+        UsoCFDI = receptor.UsoCFDI
+      };
+    }
+
+
+    private static BillSchemaDataFields MapToSchemaData(SATBillDto dto) {
+
+      return new BillSchemaDataFields() {
+        IssuedBy = MapToIssuedBy(dto.Emisor),
+        IssuedTo = MapToIssuedTo(dto.Receptor),
+        TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
+        Folio = dto.DatosGenerales.Folio,
+        MetodoPago = dto.DatosGenerales.MetodoPago,
+        FormaPago = dto.DatosGenerales.FormaPago,
+        Exportacion = dto.DatosGenerales.Exportacion,
+        LugarExpedicion = dto.DatosGenerales.LugarExpedicion,
+        Moneda = dto.DatosGenerales.Moneda
+      };
+    }
+
+
+    static private BillSecurityDataFields MapToSecurityData(SATBillDto dto) {
+      
+      return new BillSecurityDataFields() {
+
+        Xmlns_Xsi = dto.SATComplemento.Xmlns_Xsi,
+        Xsi_SchemaLocation = dto.SATComplemento.Xsi_SchemaLocation,
+        NoCertificado = dto.DatosGenerales.NoCertificado,
+        Certificado = dto.DatosGenerales.Certificado,
+        Sello = dto.DatosGenerales.Sello,
+
+        UUID = dto.SATComplemento.UUID,
+        SelloCFD = dto.SATComplemento.SelloCFD,
+        SelloSAT = dto.SATComplemento.SelloSAT,
+        FechaTimbrado = dto.SATComplemento.FechaTimbrado,
+        RfcProvCertif = dto.SATComplemento.RfcProvCertif,
+        NoCertificadoSAT = dto.SATComplemento.NoCertificadoSAT,
+        Tfd_Version = dto.SATComplemento.Tfd_Version,
+        Xmlns_Tfd = dto.SATComplemento.Xmlns_Tfd
+      };
+    }
+
 
     #endregion Private methods
 

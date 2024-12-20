@@ -65,11 +65,6 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public string TipoComprobante {
-      get; set;
-    } = string.Empty;
-
-
     public string Identificators {
       get; set;
     } = string.Empty;
@@ -100,11 +95,6 @@ namespace Empiria.Billing {
     }
 
 
-    public string SchemaExtData {
-      get; set;
-    } = string.Empty;
-
-
     public string SecurityExtData {
       get; set;
     } = string.Empty;
@@ -120,11 +110,104 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public BillSchemaDataFields SchemaData {
+      get; set;
+    } = new BillSchemaDataFields();
+
+
+    public BillSecurityDataFields SecurityData {
+      get; internal set;
+    } = new BillSecurityDataFields();
+
+
     public FixedList<BillConceptFields> Concepts {
       get; set;
     } = new FixedList<BillConceptFields>();
     
   } // class BillFields
+
+
+  public class BillSchemaDataFields {
+
+    public BillOrganizationFields IssuedBy {
+      get; internal set;
+    } = new BillOrganizationFields();
+
+
+    public BillOrganizationFields IssuedTo {
+      get; internal set;
+    } = new BillOrganizationFields();
+
+
+    public string TipoComprobante {
+      get; set;
+    } = string.Empty;
+
+
+    public string Folio {
+      get; set;
+    } = string.Empty;
+
+
+    public string Serie {
+      get; set;
+    } = string.Empty;
+
+
+    public string MetodoPago {
+      get; set;
+    } = string.Empty;
+
+
+    public string FormaPago {
+      get; set;
+    } = string.Empty;
+
+
+    public string Exportacion {
+      get; set;
+    } = string.Empty;
+
+
+    public string LugarExpedicion {
+      get; set;
+    } = string.Empty;
+
+
+    public string Moneda {
+      get; set;
+    } = string.Empty;
+
+
+  }
+
+  public class BillOrganizationFields {
+
+    public string RegimenFiscal {
+      get; internal set;
+    }
+
+
+    public string RFC {
+      get; internal set;
+    }
+
+
+    public string Nombre {
+      get; internal set;
+    }
+
+
+    public string DomicilioFiscal {
+      get; internal set;
+    } = string.Empty;
+
+
+    public string UsoCFDI {
+      get; internal set;
+    } = string.Empty;
+
+  }  // class BillOrganizationFields
 
 
   /// <summary>Input fields DTO used to create and update bill concept.</summary>
@@ -141,6 +224,26 @@ namespace Empiria.Billing {
 
 
     public string SATProductCode {
+      get; set;
+    }
+
+
+    public string ClaveUnidad {
+      get; set;
+    }
+
+
+    public string Unidad {
+      get; set;
+    }
+
+
+    public string NoIdentificacion {
+      get; set;
+    }
+
+
+    public string ObjetoImp {
       get; set;
     }
 
@@ -245,6 +348,75 @@ namespace Empiria.Billing {
     } = string.Empty;
 
   } // class BillTaxEntryFields
+
+
+  public class BillSecurityDataFields {
+
+
+    public string Xmlns_Tfd {
+      get; set;
+    }
+
+
+    public string Xmlns_Xsi {
+      get; set;
+    }
+
+
+    public string Xsi_SchemaLocation {
+      get; set;
+    }
+
+
+    public string Tfd_Version {
+      get; set;
+    }
+
+
+    public string UUID {
+      get; internal set;
+    }
+
+    public string Sello {
+      get; internal set;
+    }
+
+
+    public string NoCertificado {
+      get; internal set;
+    }
+
+
+    public string Certificado {
+      get; internal set;
+    }
+
+
+    public DateTime FechaTimbrado {
+      get; internal set;
+    }
+
+
+    public string RfcProvCertif {
+      get; internal set;
+    }
+
+
+    public string SelloCFD {
+      get; internal set;
+    }
+
+
+    public string NoCertificadoSAT {
+      get; internal set;
+    }
+
+
+    public string SelloSAT {
+      get; internal set;
+    }
+
+  }  // class BillComplementFields
 
 
   /// <summary>Extension methods for BillFields type.</summary>
