@@ -37,10 +37,14 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
+
+    // ToDo: REMOVE
     public NamedEntityDto Currency {
       get; internal set;
     }
 
+
+    // ToDo: REMOVE
     public decimal ExchangeRate {
       get; internal set;
     } = 1;

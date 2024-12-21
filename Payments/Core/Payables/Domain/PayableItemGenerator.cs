@@ -83,8 +83,6 @@ namespace Empiria.Payments.Payables {
         Description = entityItem.Description,
         Quantity = entityItem.Quantity,
         UnitPrice = entityItem.UnitPrice,
-        CurrencyUID = entityItem.Currency.UID,
-        ExchangeRate = decimal.One
       };
     }
 

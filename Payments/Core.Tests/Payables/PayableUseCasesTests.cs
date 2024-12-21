@@ -46,8 +46,6 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
         Description = "Prueba del dia 1 Noviembre",
         Quantity = 3m,
         UnitPrice = 10,
-        CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
-        ExchangeRate = 1m,
         BudgetAccountUID = "ebc50e45-071d-4da4-8c63-0c54c10cfe0a"
       };
 
@@ -73,7 +71,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
         DueTime = DateTime.Today,
     };
 
-      
+
       var sut = _usecases.CreatePayable(fields);
 
       Assert.NotNull(sut);
@@ -187,8 +185,6 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
         Description = "Items actualizados desde las pruebas el 1 Nov",
         Quantity = 3m,
         UnitPrice = 10,
-        CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
-        ExchangeRate = 1m,
         BudgetAccountUID = "ebc50e45-071d-4da4-8c63-0c54c10cfe0a"
       };
 

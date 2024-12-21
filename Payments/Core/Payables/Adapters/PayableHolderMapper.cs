@@ -68,7 +68,7 @@ namespace Empiria.Payments.Payables.Adapters {
         Name = payableItem.Description,
         BudgetAccount = payableItem.BudgetAccount.MapToNamedEntity(),
         BillConcept = billConceptName,
-        PayableEntityItemUID = payableItem.PayableEntityItem.ToString(),
+        PayableEntityItemUID = payableItem.PayableEntityItemId.ToString(),
         Quantity = payableItem.Quantity,
         Unit  = payableItem.Unit.Name,
         Total = payableItem.Total

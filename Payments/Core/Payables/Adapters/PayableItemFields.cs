@@ -58,16 +58,6 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public string CurrencyUID {
-      get; set;
-    } = string.Empty;
-
-
-    public decimal ExchangeRate {
-      get; set;
-    } = 1;
-
-
     public decimal Discount {
       get; set;
     } = 0;
@@ -86,11 +76,9 @@ namespace Empiria.Payments.Payables.Adapters {
       Assertion.Require(Quantity > 0, "Necesito la cantidad.");
       Assertion.Require(UnitPrice > 0, "Necesito el precio unitario.");
 
-      Assertion.Require(CurrencyUID, "Necesito la moneda.");
       Assertion.Require(BudgetAccountUID, "Necesito el número de cuenta del presupuesto.");
 
-      _ = Currency.Parse(CurrencyUID);
-      _ = BudgetAccount.Parse(BudgetAccountUID);
+       _ = BudgetAccount.Parse(BudgetAccountUID);
     }
 
     #endregion Methods

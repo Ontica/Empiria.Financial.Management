@@ -88,9 +88,9 @@ namespace Empiria.Payments.Payables.Data {
 
     static internal void WritePayableItem(PayableItem o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Payable_Item",
-                     o.Id, o.UID, o.Payable.Id, o.PayableEntityItem, o.Product.Id, o.Unit.Id,
-                     o.Description, o.Quantity, o.UnitPrice,
-                     o.Currency.Id, 1, o.ExchangeRate, o.BudgetAccount.Id, 1, extensionData,
+                     o.Id, o.UID, o.Payable.Id, o.PayableEntityItemId, o.Product.Id,
+                     o.Description, o.Unit.Id, o.Quantity, o.UnitPrice, o.Discount,
+                     o.BudgetAccount.Id, o.BillConcept.Id, extensionData, o.Keywords,
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);

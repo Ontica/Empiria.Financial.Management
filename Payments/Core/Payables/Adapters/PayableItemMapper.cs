@@ -29,8 +29,6 @@ namespace Empiria.Payments.Payables.Adapters {
         Unit = payableItem.Unit.MapToNamedEntity(),
         Quantity = payableItem.Quantity,
         UnitPrice = payableItem.UnitPrice,
-        Currency = payableItem.Currency.MapToNamedEntity(),
-        ExchangeRate = payableItem.ExchangeRate,
         Subtotal = payableItem.Total,
         BudgetAccount = payableItem.BudgetAccount.MapToNamedEntity(),
         Status = payableItem.Status.MapToDto()

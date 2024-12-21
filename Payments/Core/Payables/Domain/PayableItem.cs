@@ -62,8 +62,8 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PAYABLE_ENTITY_ITEM_ID")]
-    public int PayableEntityItem {
+    [DataField("PAYABLE_ITEM_ENTITY_ITEM_ID")]
+    public int PayableEntityItemId {
       get; private set;
     }
 
@@ -74,40 +74,23 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PAYABLE_ITEM_UNIT_ID")]
-    public ProductUnit Unit {
-      get; private set;
-    }
-
-
     [DataField("PAYABLE_ITEM_DESCRIPTION")]
     public string Description {
       get; private set;
     }
 
 
-    [DataField("PAYABLE_ITEM_QTY")]
+    [DataField("PAYABLE_ITEM_PRODUCT_UNIT_ID")]
+    public ProductUnit Unit {
+      get; private set;
+    }
+
+
+    [DataField("PAYABLE_ITEM_PRODUCT_QTY")]
     public decimal Quantity {
       get; private set;
     }
 
-
-    [DataField("PAYABLE_ITEM_CURRENCY_ID")]
-    public Currency Currency {
-      get; private set;
-    }
-
-
-    [DataField("PAYABLE_ITEM_EXCH_RATE")]
-    public decimal ExchangeRate {
-      get; private set;
-    } = 1;
-
-
-    [DataField("PAYABLE_ITEM_QTY")]
-    public decimal Discount {
-      get; private set;
-    }
 
     [DataField("PAYABLE_ITEM_UNIT_PRICE")]
     public decimal UnitPrice {
@@ -115,33 +98,36 @@ namespace Empiria.Payments.Payables {
     }
 
 
+    [DataField("PAYABLE_ITEM_DISCOUNT")]
+    public decimal Discount {
+      get; private set;
+    }
+
+
     public decimal Total {
       get {
-        return Math.Round(((UnitPrice * Quantity) - Discount)  * ExchangeRate, 2);
+        return Math.Round((Quantity * UnitPrice) - Discount, 2);
       }
     }
 
 
-    [DataField("PAYABLE_ITEM_BDG_ACCT_ID")]
+    [DataField("PAYABLE_ITEM_BUDGET_ACCOUNT_ID")]
     public BudgetAccount BudgetAccount {
       get; private set;
     }
+
+
+    [DataField("PAYABLE_BILL_CONCEPT_ID")]
+    public BillConcept BillConcept {
+      get; private set;
+    }
+
 
     public bool HasBillConcept {
       get {
         return !BillConcept.IsEmptyInstance;
       }
     }
-
-    public BillConcept BillConcept {
-      get {
-        return ExtData.Get("billConceptId", BillConcept.Empty);
-      }
-      private set {
-        ExtData.SetIf("billConceptId", value.Id, !value.IsEmptyInstance);
-      }
-    }
-
 
     [DataField("PAYABLE_ITEM_EXT_DATA")]
     private JsonObject ExtData {
@@ -166,6 +152,12 @@ namespace Empiria.Payments.Payables {
       get; private set;
     } = EntityStatus.Pending;
 
+
+    public virtual string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(Product.Keywords, Description, Payable.Keywords);
+      }
+    }
 
     #endregion Properties
 
@@ -200,13 +192,11 @@ namespace Empiria.Payments.Payables {
       this.Product = Product.Parse(fields.ProductUID);
       this.Unit = ProductUnit.Parse(fields.UnitUID);
 
-      this.PayableEntityItem = fields.EntityItemId;
+      this.PayableEntityItemId = fields.EntityItemId;
       this.Description = fields.Description;
       this.Quantity = fields.Quantity;
       this.UnitPrice = fields.UnitPrice;
-      this.Currency = Currency.Parse(fields.CurrencyUID);
       this.Discount = fields.Discount;
-      this.ExchangeRate = fields.ExchangeRate;
       this.BudgetAccount = BudgetAccount.Parse(fields.BudgetAccountUID);
     }
 
