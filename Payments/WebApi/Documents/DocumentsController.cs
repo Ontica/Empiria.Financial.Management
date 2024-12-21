@@ -64,7 +64,7 @@ namespace Empiria.Payments.WebApi {
 
       DocumentFields fields = GetFormDataFromHttpRequest<DocumentFields>("document");
 
-      InputFile documentFile = base.GetInputFileFromHttpRequest(fields.DocumentProductUID);
+      InputFile documentFile = base.GetInputFileFromHttpRequest();
 
       var document = DocumentServices.StoreDocument(documentFile, payable, fields);
 
@@ -94,7 +94,7 @@ namespace Empiria.Payments.WebApi {
 
       DocumentFields fields = GetFormDataFromHttpRequest<DocumentFields>("document");
 
-      InputFile documentFile = base.GetInputFileFromHttpRequest(fields.DocumentProductUID);
+      InputFile documentFile = base.GetInputFileFromHttpRequest();
 
       var document = DocumentServices.StoreDocument(documentFile, paymentOrder, fields);
 
