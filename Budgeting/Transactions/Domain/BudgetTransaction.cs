@@ -39,12 +39,12 @@ namespace Empiria.Budgeting.Transactions {
 
     internal protected BudgetTransaction(BudgetTransactionType transactionType,
                                          Budget baseBudget,
-                                         BaseObject baseEntity) : base(transactionType) {
+                                         BaseObject entity) : base(transactionType) {
       Assertion.Require(baseBudget, nameof(baseBudget));
 
       this.BaseBudget = baseBudget;
-      this.BaseEntityTypeId = baseEntity.GetEmpiriaType().Id;
-      this.BaseEntityId = baseEntity.Id;
+      this.EntityTypeId = entity.GetEmpiriaType().Id;
+      this.EntityId = entity.Id;
     }
 
     static public BudgetTransaction Parse(int id) => ParseId<BudgetTransaction>(id);
@@ -72,150 +72,141 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_TXN_SOURCE_ID")]
-    public OperationSource OperationSource {
-      get;
-      private set;
-    }
-
-
     [DataField("BDG_TXN_BASE_BUDGET_ID")]
     public Budget BaseBudget {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_BASE_PARTY_ID")]
     public Party BaseParty {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_NUMBER")]
     public string TransactionNo {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_DESCRIPTION")]
     public string Description {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_IDENTIFICATORS")]
     public string Identificators {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_TAGS")]
     public string Tags {
-      get;
-      private set;
+      get; private set;
     }
 
 
-    [DataField("BDG_TXN_BASE_ENTITY_TYPE_ID")]
-    public int BaseEntityTypeId {
-      get;
-      private set;
+    [DataField("BDG_TXN_ENTITY_TYPE_ID")]
+    internal int EntityTypeId {
+      get; private set;
     }
 
 
-    [DataField("BDG_TXN_BASE_ENTITY_ID")]
-    public int BaseEntityId {
-      get;
-      private set;
+    [DataField("BDG_TXN_ENTITY_ID")]
+    internal int EntityId {
+      get; private set;
+    }
+
+
+    [DataField("BDG_TXN_CONTRACT_ID")]
+    internal int ContractId {
+      get; private set;
+    }
+
+
+    [DataField("BDG_TXN_PAYABLE_ID")]
+    internal int PayableId {
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_APPLICATION_DATE")]
     public DateTime ApplicationDate {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_APPLIED_BY_ID")]
     public Party AppliedBy {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_RECORDING_DATE")]
     public DateTime RecordingDate {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_RECORDED_BY_ID")]
     public Party RecordedBy {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_AUTHORIZATION_TIME")]
     public DateTime AuthorizationTime {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_AUTHORIZED_BY_ID")]
     public Party AuthorizedBy {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_REQUESTED_TIME")]
     public DateTime RequestedTime {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_REQUESTED_BY_ID")]
     public Party RequestedBy {
-      get;
-      private set;
+      get; private set;
+    }
+
+
+    [DataField("BDG_TXN_SOURCE_ID")]
+    public OperationSource OperationSource {
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_EXT_DATA")]
     internal protected JsonObject ExtensionData {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_POSTING_TIME")]
     public DateTime PostingTime {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_POSTED_BY_ID")]
     public Party PostedBy {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_TXN_STATUS", Default = TransactionStatus.Pending)]
     public TransactionStatus Status {
-      get;
-      private set;
+      get; private set;
     }
 
 
@@ -251,7 +242,7 @@ namespace Empiria.Budgeting.Transactions {
 
     internal void Authorize() {
       this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      this.AuthorizationTime = DateTime.UtcNow;
+      this.AuthorizationTime = DateTime.Now;
       this.Status = TransactionStatus.Completed;
     }
 
@@ -300,6 +291,8 @@ namespace Empiria.Budgeting.Transactions {
       Description = PatchCleanField(fields.Description, Description);
       BaseParty = PatchField(fields.BasePartyUID, BaseParty);
       RequestedBy = PatchField(fields.RequestedByUID, RequestedBy);
+      ContractId = fields.ContractId;
+      PayableId = fields.PayableId;
       OperationSource = PatchField(fields.OperationSourceUID, OperationSource);
       ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
     }

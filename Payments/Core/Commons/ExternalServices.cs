@@ -10,6 +10,8 @@
 
 using System;
 
+using Empiria.Parties;
+
 using Empiria.Documents;
 using Empiria.Documents.Services;
 using Empiria.Documents.Services.Adapters;
@@ -21,13 +23,14 @@ using Empiria.Billing.UseCases;
 using Empiria.Budgeting.Transactions;
 using Empiria.Budgeting.Transactions.UseCases;
 
-using Empiria.Parties;
+using Empiria.Procurement.Contracts;
 
 using Empiria.Payments.Payables;
 using Empiria.Payments.Orders;
 
 using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Services;
+
 
 namespace Empiria.Payments {
 
@@ -108,7 +111,7 @@ namespace Empiria.Payments {
         return usecases.ValidateIsPaymentInstructionPayed(paymentInstructionUD);
       }
     }
-        
+
 
     #endregion Services
 
@@ -136,11 +139,21 @@ namespace Empiria.Payments {
 
       var SISTEMA_DE_PAGOS = OperationSource.Parse(12);
 
+      int contractId = -1;
+
+      if (payable.PayableEntity is Contract contract) {
+        contractId = contract.Id;
+      }
+      if (payable.PayableEntity is ContractOrder contractOrder) {
+        contractId = contractOrder.Contract.Id;
+      }
+
       return new BudgetTransactionFields {
         TransactionTypeUID = transactionType.UID,
         BaseBudgetUID = payable.Budget.UID,
         OperationSourceUID = SISTEMA_DE_PAGOS.UID,
         Description = payable.Description,
+        PayableId = payable.Id,
         BasePartyUID = payable.OrganizationalUnit.UID,
         RequestedByUID = payable.PostedBy.UID,
         ApplicationDate = applicationDate

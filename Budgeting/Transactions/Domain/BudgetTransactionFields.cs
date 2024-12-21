@@ -26,11 +26,6 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
-    public string OperationSourceUID {
-      get; set;
-    } = string.Empty;
-
-
     public string BasePartyUID {
       get; set;
     } = string.Empty;
@@ -44,6 +39,21 @@ namespace Empiria.Budgeting.Transactions {
     public string RequestedByUID {
       get; set;
     } = string.Empty;
+
+
+    public string OperationSourceUID {
+      get; set;
+    } = string.Empty;
+
+
+    public int ContractId {
+      get; set;
+    } = -1;
+
+
+    public int PayableId {
+      get; set;
+    } = -1;
 
 
     public DateTime ApplicationDate {
