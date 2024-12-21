@@ -12,6 +12,9 @@ using Empiria.Services;
 
 using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Adapters;
+using Empiria.Payments.BanobrasIntegration.IkosCash.Adapters;
+using System;
+using Empiria.Payments.BanobrasIntegration.IkosCash;
 
 
 namespace Empiria.Payments.Processor.Services {
@@ -41,6 +44,7 @@ namespace Empiria.Payments.Processor.Services {
 
       var broker = PaymentsBroker.Parse("5800f993-2db1-4aa8-aaad-5bd86db24c78");
 
+      SentTransactonToIkosCash();
 
       if (paymentResult.Failed) {
         return RejectedPayment(paymentOrder, paymentResult, broker);
@@ -104,7 +108,54 @@ namespace Empiria.Payments.Processor.Services {
 
     }
 
-   
+    internal  ResultadoTransaccionDto SentTransactonToIkosCash() {
+      IkosCashPaymentService paymentService = new IkosCashPaymentService();
+
+      var transaction = SetValuesOntica();
+
+      var paymentTransaction = paymentService.AddPaymentTransaction(transaction).GetAwaiter().GetResult();
+
+      if (paymentTransaction.Code != 0) {
+        Assertion.EnsureNoReachThisCode($"Encontré el siguiente error en el simefin: {paymentTransaction.ErrorMesage}");
+      }
+
+      return paymentTransaction;
+    }
+
+
+    private TransaccionFields SetValuesOntica() {
+      var transaction = new TransaccionFields();
+      transaction.Header = new Header {
+        IdSistemaExterno = "2024122050003",
+        IdUsuario = 45,
+        IdDepartamento = 40,
+        IdConcepto = 418,
+        ClaveCliente = "VON990614PG4",
+        Cuenta = "012180001556696260",
+        FechaOperacion = Convert.ToDateTime("2024-12-20T00:00:00"),
+        FechaValor = Convert.ToDateTime("2024-12-20T00:00:00"),
+        Monto = 10000.00m,
+        Referencia = "50003",
+        ConceptoPago = "Pago Banobras, S.N.C.",
+        Origen = "O",
+        Firma = "",
+        SerieFirma = "NjcxMTc5ZDE="
+      };
+
+      transaction.Payload = new Payload {
+        InstitucionBen = "040012",
+        ClaveRastreo = "",
+        NomBen = "LA VIA ONTICA, S.C.",
+        RfcBen = "VON990614PG4",
+        TipoCtaBen = 40,
+        CtaBen = "",
+        Iva = 0.00m
+      };
+
+      return transaction;
+    }
+
+
     #endregion Helpers
 
   }  // class PaymentService

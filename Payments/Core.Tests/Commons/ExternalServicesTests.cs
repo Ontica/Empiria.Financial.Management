@@ -45,7 +45,7 @@ namespace Empiria.Tests.Payments {
     public void Should_Send_PaymentOrder_ToPay() {
       TestsCommonMethods.Authenticate();
 
-      PaymentOrder order = PaymentOrder.Parse("7eaea2b2-b2b8-4599-af41-f0a89c095cb8");
+      PaymentOrder order = PaymentOrder.Parse("4954fdf9-b947-48f4-b8fa-610f559448d8");
       var sut = ExternalServices.SendPaymentOrderToPay(order);
 
        Assert.NotNull(sut);

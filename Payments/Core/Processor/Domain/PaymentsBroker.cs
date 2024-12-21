@@ -44,7 +44,7 @@ namespace Empiria.Payments.Processor {
 
     public IPaymentResult Pay(IPaymentInstruction instruction) {
 
-      var response = SentToIkosCash(instruction);
+      //var response = SentToIkosCash(instruction);
 
       return new PaymentResultDto {
          Failed = EmpiriaMath.GetRandomBoolean(),
@@ -75,16 +75,16 @@ namespace Empiria.Payments.Processor {
 
       var transaction = new TransaccionFields();
       transaction.Header = new Header {
-        IdSistemaExterno = "2024121942250",
+        IdSistemaExterno = "2024122012249",
         IdUsuario = 45,
         IdDepartamento = 40,
         IdConcepto = 418,
-        ClaveCliente = "VON990614PG4",
-        Cuenta = "012180001556696260",
-        FechaOperacion = Convert.ToDateTime("2024-12-19T00:00:00"),
-        FechaValor = Convert.ToDateTime("2024-12-19T00:00:00"),
-        Monto = instruction.Total,
-        Referencia = "42250",
+        ClaveCliente = "AHM100719LP6",
+        Cuenta = "014180655077420107",
+        FechaOperacion = Convert.ToDateTime("2024-12-20T00:00:00"),
+        FechaValor = Convert.ToDateTime("2024-12-20T00:00:00"),
+        Monto = 888.00m,
+        Referencia = "12249",
         ConceptoPago = "Pago Banobras, S.N.C.",
         Origen = "O",
         Firma = "",
@@ -92,10 +92,10 @@ namespace Empiria.Payments.Processor {
       };
 
       transaction.Payload = new Payload {
-        InstitucionBen = "040012",
+        InstitucionBen = "40014",
         ClaveRastreo = "",
-        NomBen = "LA VIA ONTICA, S.C.",
-        RfcBen = "VON990614PG4",
+        NomBen = "A2DAHT HEALTH MEXICO, SA DE CV",
+        RfcBen = "AHM100719LP6",
         TipoCtaBen = 40,
         CtaBen = "",
         Iva = 0.00m
