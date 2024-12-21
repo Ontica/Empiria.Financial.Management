@@ -31,10 +31,19 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
+    public string Description {
+      get; set;
+    } = string.Empty;
+
+
     public string ProductUnitUID {
       get; set;
     } = string.Empty;
 
+
+    public decimal ProductQty {
+      get; set;
+    }
 
     public string ProjectUID {
       get; set;
@@ -55,6 +64,7 @@ namespace Empiria.Budgeting.Transactions {
       get; set;
     } = -1;
 
+
     public int BaseEntityItemId {
       get; set;
     } = -1;
@@ -65,9 +75,15 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
+    public decimal OriginalAmount {
+      get; set;
+    }
+
+
     public decimal Deposit {
       get; set;
     }
+
 
     public decimal Withdrawal {
       get; set;
@@ -77,9 +93,6 @@ namespace Empiria.Budgeting.Transactions {
       get; internal set;
     } = 1m;
 
-    public string Description {
-      get; set;
-    } = string.Empty;
 
   }  // class BudgetEntryFields
 

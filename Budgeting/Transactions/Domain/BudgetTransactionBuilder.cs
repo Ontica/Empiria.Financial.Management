@@ -84,8 +84,11 @@ namespace Empiria.Budgeting.Transactions {
         Description = item.Description,
         ProductUID = item.Product.UID,
         ProductUnitUID = item.Unit.UID,
+        ProductQty = item.Quantity,
         BaseEntityItemId = item.Id,
+        //ProjectUID = item.Project.UID,
         CurrencyUID = item.Currency.UID,
+        OriginalAmount = item.Total,
         Deposit = isDeposit ? item.Total : 0,
         Withdrawal = isDeposit ? 0: item.Total,
       };

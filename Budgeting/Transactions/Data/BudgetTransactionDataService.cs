@@ -89,10 +89,11 @@ namespace Empiria.Budgeting.Transactions.Data {
     static internal void WriteEntry(BudgetEntry o) {
       var op = DataOperation.Parse("write_FMS_Budget_Entry",
         o.Id, o.UID, o.BudgetTransaction.Id, o.BudgetEntryTypeId, o.Budget.Id,
-        o.BudgetAccount.Id, o.Product.Id, o.ProductUnit.Id, o.Project.Id, o.Party.Id,
-        o.OperationTypeId, o.OperationId, o.BaseEntityItemId, o.Year, o.Month, o.Day,
-        o.BalanceColumn.Id, o.Currency.Id, o.Deposit, o.Withdrawal, o.ExchangeRate,
-        o.Description, o.Identificators, o.Tags, o.ExtensionData.ToString(), o.Keywords,
+        o.BudgetAccount.Id, o.Product.Id, o.ProductUnit.Id, o.ProductQty,
+        o.Project.Id, o.Party.Id, o.OperationTypeId, o.OperationId, o.BaseEntityItemId,
+        o.Year, o.Month, o.Day, o.BalanceColumn.Id, o.Currency.Id, o.OriginalAmount,
+        o.Deposit, o.Withdrawal, o.ExchangeRate, o.Description, o.Identificators, o.Tags,
+        o.ExtensionData.ToString(), o.Keywords, o.LinkedBudgetEntryId, o.Position,
         o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);

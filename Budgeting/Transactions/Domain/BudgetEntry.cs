@@ -53,92 +53,85 @@ namespace Empiria.Budgeting.Transactions {
 
     [DataField("BDG_ENTRY_TXN_ID")]
     public BudgetTransaction BudgetTransaction {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_TYPE_ID")]
     public int BudgetEntryTypeId {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_BUDGET_ID")]
     public Budget Budget {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_BUDGET_ACCT_ID")]
     public BudgetAccount BudgetAccount {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_PRODUCT_ID")]
     public Product Product {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_PRODUCT_UNIT_ID")]
     public ProductUnit ProductUnit {
-      get;
-      private set;
+      get; private set;
+    }
+
+
+    [DataField("BDG_ENTRY_PRODUCT_QTY")]
+    public decimal ProductQty {
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_PROJECT_ID")]
     public Project Project {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_PARTY_ID")]
     public Party Party {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_OPERATION_TYPE_ID")]
     public int OperationTypeId {
-      get;
-      private set;
-    }
+      get; private set;
+    } = -1;
 
 
     [DataField("BDG_ENTRY_OPERATION_ID")]
     public int OperationId {
-      get;
-      private set;
-    }
+      get; private set;
+    } = -1;
 
 
     [DataField("BDG_ENTRY_BASE_ENTITY_ITEM_ID")]
     public int BaseEntityItemId {
-      get;
-      private set;
-    }
+      get; private set;
+    } = -1;
 
 
     [DataField("BDG_ENTRY_YEAR")]
     public int Year {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_MONTH")]
     public int Month {
-      get;
-      private set;
+      get; private set;
     }
 
 
@@ -151,92 +144,97 @@ namespace Empiria.Budgeting.Transactions {
 
     [DataField("BDG_ENTRY_DAY")]
     public int Day {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_BALANCE_COLUMN_ID")]
     public BalanceColumn BalanceColumn {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_CURRENCY_ID")]
     public Currency Currency {
-      get;
-      private set;
+      get; private set;
+    }
+
+
+    [DataField("BDG_ENTRY_ORIGINAL_AMOUNT")]
+    public decimal OriginalAmount {
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_DEPOSIT_AMOUNT")]
     public decimal Deposit {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_WITHDRAWAL_AMOUNT")]
     public decimal Withdrawal {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_EXCHANGE_RATE")]
     public decimal ExchangeRate {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_DESCRIPTION")]
     public string Description {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_IDENTIFICATORS")]
     public string Identificators {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_TAGS")]
     public string Tags {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_EXT_DATA")]
     internal protected JsonObject ExtensionData {
-      get;
-      private set;
+      get; private set;
+    }
+
+
+    [DataField("BDG_ENTRY_LINKED_BDG_ENTRY_ID")]
+    internal int LinkedBudgetEntryId {
+      get; private set;
+    } = -1;
+
+
+    [DataField("BDG_ENTRY_POSITION")]
+    public int Position {
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_POSTED_BY_ID")]
     public Party PostedBy {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_POSTING_TIME")]
     public DateTime PostingTime {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ENTRY_STATUS", Default = TransactionStatus.Pending)]
     public TransactionStatus Status {
-      get;
-      private set;
+      get; private set;
     }
 
 
@@ -273,6 +271,7 @@ namespace Empiria.Budgeting.Transactions {
       this.BudgetAccount = PatchField(fields.BudgetAccountUID, BudgetAccount);
       this.Product = PatchField(fields.ProductUID, Product);
       this.ProductUnit = PatchField(fields.ProductUnitUID, ProductUnit);
+      this.ProductQty = fields.ProductQty;
       this.Project = PatchField(fields.ProjectUID, Project);
       this.Party = PatchField(fields.PartyUID, Party);
       this.OperationTypeId = fields.OperationTypeId;
@@ -281,6 +280,7 @@ namespace Empiria.Budgeting.Transactions {
       this.BalanceColumn = PatchField(fields.BalanceColumnUID, BalanceColumn);
       this.Description = PatchCleanField(fields.Description, Description);
       this.Currency = PatchField(fields.CurrencyUID, Currency);
+      this.OriginalAmount = fields.OriginalAmount != 0 ? fields.OriginalAmount : fields.Deposit + fields.Withdrawal;
       this.Deposit = fields.Deposit;
       this.Withdrawal = fields.Withdrawal;
       this.ExchangeRate = fields.ExchangeRate;
