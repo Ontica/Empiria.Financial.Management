@@ -74,7 +74,7 @@ namespace Empiria.Payments.Payables {
     }
 
     [DataField("PAYABLE_NO")]
-    public string payableNo {
+    public string PayableNo {
       get; private set;
     }
 
@@ -111,30 +111,28 @@ namespace Empiria.Payments.Payables {
     }
 
 
-   
-    [DataField("PAYABLE_BUDGET_ID")]
-    public Budget Budget {
-      get; private set;
-    }
-
-
     [DataField("PAYABLE_CURRENCY_ID")]
     public Currency Currency {
       get; private set;
     }
 
 
-    [DataField("PAYABLE_TOTAL")]
-    public decimal Total {
+    [DataField("PAYABLE_EXCHANGE_RATE_ID")]
+    public int ExchangeRateTypeId {
+      get; private set;
+    } = -1;
+
+
+    [DataField("PAYABLE_EXCHANGE_RATE")]
+    public decimal ExchangeRate {
+      get; private set;
+    } = 1;
+
+
+    [DataField("PAYABLE_BUDGET_ID")]
+    public Budget Budget {
       get; private set;
     }
-
-
-    [DataField("PAYABLE_DUETIME")]
-    public DateTime DueTime {
-      get; private set;
-    } = ExecutionServer.DateMaxValue;
-
 
     [DataField("PAYABLE_PAYMENT_METHOD_ID")]
     public PaymentMethod PaymentMethod {
@@ -148,23 +146,22 @@ namespace Empiria.Payments.Payables {
     } = PaymentAccount.Empty;
 
 
-    [DataField("PAYABLE_EXT_DATA")]
-    protected JsonObject ExtData {
-      get; set;
-    } = JsonObject.Empty;
-
-
-    public string Keywords {
-      get {
-        return EmpiriaString.BuildKeywords(this.payableNo, this.PayTo.Name, this.PayableType.Name);
-      }
-    }
-
-
     [DataField("PAYABLE_REQUESTED_TIME")]
     public DateTime RequestedTime {
       get; private set;
     }
+
+
+    [DataField("PAYABLE_DUETIME")]
+    public DateTime DueTime {
+      get; private set;
+    } = ExecutionServer.DateMaxValue;
+
+
+    [DataField("PAYABLE_EXT_DATA")]
+    protected JsonObject ExtData {
+      get; set;
+    } = JsonObject.Empty;
 
 
     [DataField("PAYABLE_POSTED_BY_ID")]
@@ -184,6 +181,19 @@ namespace Empiria.Payments.Payables {
       get; private set;
     } = PayableStatus.Pending;
 
+
+    [DataField("PAYABLE_TOTAL")]
+    public decimal Total {
+      get; private set;
+    }
+
+    public string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(this.PayableNo, this.PayTo.Name, this.PayableType.Name);
+      }
+    }
+
+
     #endregion Properties
 
     #region Methods
@@ -192,15 +202,12 @@ namespace Empiria.Payments.Payables {
       return PayableType.PayableEntityType.ParseObject(_payableEntityId);
     }
 
-    protected override void OnBeforeSave() {
+    protected override void OnSave() {
       if (base.IsNew) {
-        this.payableNo = GeneratePayableNo();
+        this.PayableNo = GeneratePayableNo();
         this.PostedBy = ExecutionServer.CurrentContact;
         this.PostingTime = DateTime.Now;
       }
-    }
-
-    protected override void OnSave() {
       PayableData.WritePayable(this, this.ExtData.ToString());
     }
 
@@ -235,9 +242,11 @@ namespace Empiria.Payments.Payables {
 
       Description = GetDescription(fields.Description);
       OrganizationalUnit = OrganizationalUnit.Parse(fields.OrganizationalUnitUID);
-     PayTo = Party.Parse(fields.PayToUID);
+      PayTo = Party.Parse(fields.PayToUID);
       Budget = Budget.Parse(fields.BudgetUID);
       Currency = Currency.Parse(fields.CurrencyUID);
+      // ExchangeRateType = fields.ExchangeRateTypeUID;
+      ExchangeRate = fields.ExchangeRate;
       DueTime = fields.DueTime;
       RequestedTime = fields.RequestedTime;
 

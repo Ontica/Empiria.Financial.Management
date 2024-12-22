@@ -52,17 +52,22 @@ namespace Empiria.Payments.Payables.Adapters {
     } = string.Empty;
 
 
+    public string ExchangeRateTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public decimal ExchangeRate {
+      get; set;
+    } = 1;
+
+
     public string BudgetUID {
       get; set;
     } = string.Empty;
 
 
-    public DateTime DueTime {
-      get; set;
-    } = ExecutionServer.DateMinValue;
-
-
-      public string PaymentMethodUID {
+    public string PaymentMethodUID {
       get; set;
     } = string.Empty;
 
@@ -73,6 +78,11 @@ namespace Empiria.Payments.Payables.Adapters {
 
 
     public DateTime RequestedTime {
+      get; set;
+    } = ExecutionServer.DateMinValue;
+
+
+    public DateTime DueTime {
       get; set;
     } = ExecutionServer.DateMinValue;
 

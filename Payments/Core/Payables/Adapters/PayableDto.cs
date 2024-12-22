@@ -66,12 +66,11 @@ namespace Empiria.Payments.Payables.Adapters {
     }
 
 
-    public DateTime RequestedTime {
+    public NamedEntityDto ExchangeRateType {
       get; internal set;
     }
 
-
-    public DateTime DueTime {
+    public decimal ExchangeRate {
       get; internal set;
     }
 
@@ -85,6 +84,13 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
+    public DateTime RequestedTime {
+      get; internal set;
+    }
+
+    public DateTime DueTime {
+      get; internal set;
+    }
 
     public NamedEntityDto Status {
       get; internal set;
@@ -188,5 +194,5 @@ namespace Empiria.Payments.Payables.Adapters {
 
   } // class PayableLinkDto
 
-  
+
 }  // namespace Empiria.Payments.Payables.Adapters

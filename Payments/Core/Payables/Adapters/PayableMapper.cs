@@ -17,19 +17,22 @@ namespace Empiria.Payments.Payables.Adapters {
     static internal PayableDto Map(Payable payable) {
       return new PayableDto {
         UID = payable.UID,
-        PayableNo = payable.payableNo,
+        PayableNo = payable.PayableNo,
         PayableType = payable.PayableType.MapToNamedEntity(),
         Description = payable.Description,
         PayTo = payable.PayTo.MapToNamedEntity(),
-        RequestedBy = payable.OrganizationalUnit.MapToNamedEntity(),        
+        RequestedBy = payable.OrganizationalUnit.MapToNamedEntity(),
         BudgetType = payable.Budget.BudgetType.MapToNamedEntity(),
         Budget = payable.Budget.MapToNamedEntity(),
+        // ExchangeRateType = payable.ExchangeRateType,
+        ExchangeRate = payable.ExchangeRate,
         Total = payable.Total,
         Currency = payable.Currency.MapToNamedEntity(),
-        RequestedTime = payable.RequestedTime,
-        DueTime = payable.DueTime,
         PaymentMethod = PaymentMethodMapper.Map(payable.PaymentMethod),
         PaymentAccount = payable.PaymentAccount.MapToNamedEntity(),
+
+        RequestedTime = payable.RequestedTime,
+        DueTime = payable.DueTime,
         Status = payable.Status.MapToNamedEntity()
       };
 
@@ -44,7 +47,7 @@ namespace Empiria.Payments.Payables.Adapters {
     static internal PayableDescriptor MapToDescriptor(Payable payable) {
       return new PayableDescriptor {
         UID = payable.UID,
-        PayableNo = payable.payableNo,
+        PayableNo = payable.PayableNo,
         PayableTypeName = payable.PayableType.DisplayName,
         BudgetTypeName = payable.Budget.BudgetType.DisplayName,
         BudgetName = payable.Budget.Name,
