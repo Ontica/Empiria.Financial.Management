@@ -40,23 +40,17 @@ namespace Empiria.Billing {
 
     static public BillConcept Parse(string uid) => ParseKey<BillConcept>(uid);
 
+    static internal FixedList<BillConcept> GetListFor(Bill bill) {
+      Assertion.Require(bill, nameof(bill));
+
+      return BillData.GetBillConcepts(bill);
+    }
+
     static public BillConcept Empty => ParseEmpty<BillConcept>();
 
     #endregion Constructors and parsers
 
-    #region Public properties
-
-    [DataField("BILL_CONCEPT_ID")]
-    public int BillConceptId {
-      get; private set;
-    }
-
-
-    [DataField("BILL_CONCEPT_UID")]
-    public string BillConceptUID {
-      get; private set;
-    }
-
+    #region Properties
 
     [DataField("BILL_CONCEPT_BILL_ID")]
     public Bill Bill {
@@ -178,7 +172,7 @@ namespace Empiria.Billing {
     } = new FixedList<BillTaxEntry>();
 
 
-    #endregion Public properties
+    #endregion Properties
 
     #region Methods
 
@@ -187,7 +181,7 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
-      
+
       SATProductID = -1;
       SATProductCode = fields.SATProductCode;
       Product = PatchField(fields.ProductUID, Product);
@@ -201,12 +195,6 @@ namespace Empiria.Billing {
       this.Discount = fields.Discount;
 
       SchemaData.Update(fields);
-    }
-
-
-    static internal FixedList<BillConcept> GetListByBillId(int billId) {
-
-      return BillData.GetBillConceptsByBillId(billId);
     }
 
 

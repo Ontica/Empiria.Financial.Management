@@ -8,10 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Documents.Services;
-using Empiria.Financial;
-using Empiria.History.Services;
 using Empiria.StateEnums;
+
+using Empiria.Documents.Services;
+using Empiria.History.Services;
 
 namespace Empiria.Billing.Adapters {
 
@@ -92,7 +92,7 @@ namespace Empiria.Billing.Adapters {
 
     static private BillConceptDto MapToBillConceptsDto(BillConcept billConcept) {
       return new BillConceptDto {
-        UID = billConcept.BillConceptUID,
+        UID = billConcept.UID,
         Product = billConcept.Product.MapToNamedEntity(),
         Description = billConcept.Description,
         Quantity = billConcept.Quantity,
@@ -123,7 +123,7 @@ namespace Empiria.Billing.Adapters {
 
     static private BillTaxEntryDto MapToBillTaxesDto(BillTaxEntry taxEntry) {
       return new BillTaxEntryDto {
-        UID = taxEntry.BillTaxUID,
+        UID = taxEntry.UID,
         TaxMethod = taxEntry.TaxMethod.MapToDto(),
         TaxFactorType = taxEntry.TaxFactorType.MapToDto(),
         Factor = taxEntry.Factor,

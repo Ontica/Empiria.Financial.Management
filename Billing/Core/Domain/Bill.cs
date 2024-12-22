@@ -10,12 +10,13 @@
 
 using System;
 using System.Linq;
-using Empiria.Billing.Data;
-using Empiria.Financial;
 
+using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
+
+using Empiria.Billing.Data;
 
 namespace Empiria.Billing {
 
@@ -27,10 +28,6 @@ namespace Empiria.Billing {
 
     protected Bill(BillType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
-    }
-
-    protected Bill() {
-
     }
 
     static public Bill Parse(int id) => ParseId<Bill>(id);
@@ -271,11 +268,10 @@ namespace Empiria.Billing {
 
     internal void AssignConcepts() {
 
-      this.Concepts = BillConcept.GetListByBillId(Id);
+      this.Concepts = BillConcept.GetListFor(this);
 
       foreach (var concept in Concepts) {
-
-        concept.TaxEntries = BillTaxEntry.GetListByBillConceptId(concept.BillConceptId);
+        concept.TaxEntries = BillTaxEntry.GetListFor(concept);
       }
     }
 

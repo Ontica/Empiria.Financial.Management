@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.StateEnums;
-
 namespace Empiria.Billing {
 
   /// <summary>Enumerates the control status of a bill.</summary>
@@ -39,7 +37,7 @@ namespace Empiria.Billing {
       switch (status) {
         case BillStatus.Pending:
           return "Pendiente";
-          
+
         case BillStatus.Validated:
           return "Validada";
 
