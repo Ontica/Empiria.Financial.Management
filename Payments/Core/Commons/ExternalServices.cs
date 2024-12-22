@@ -90,14 +90,6 @@ namespace Empiria.Payments {
     }
 
 
-    static internal string SendIkosCashTransaction() {
-      using (var usecases = PaymentService.ServiceInteractor()) {
-
-        return usecases.GetToken();
-      }
-    }
-
-
     static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
 
       CreatePayableDocumentLinks(payable, document, bill);

@@ -16,7 +16,6 @@ using Empiria.Payments.Payables;
 
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.Data;
-using System.Threading.Tasks;
 
 namespace Empiria.Payments.Orders.UseCases {
 
@@ -83,6 +82,16 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
+    internal PaymentOrderHolderDto Pay(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var order = PaymentOrder.Parse(paymentOrderUID);
+      var payment = ExternalServices.SendPaymentOrderToPay(order);
+
+      return PaymentOrderMapper.Map(order);
+    }
+
+
     public FixedList<PaymentOrderDescriptor> SearchPaymentOrders(PaymentOrdersQuery query) {
       Assertion.Require(query, nameof(query));
 
@@ -129,26 +138,7 @@ namespace Empiria.Payments.Orders.UseCases {
       return PaymentOrderMapper.Map(order);
     }
 
-    internal PaymentOrderHolderDto Pay(string paymentOrderUID) {
-      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
-
-      var order = PaymentOrder.Parse(paymentOrderUID);
-      var payment = ExternalServices.SendPaymentOrderToPay(order);
-
-      return PaymentOrderMapper.Map(order);
-    }
-
-
-    internal string SendIKosCashTransaction() {
-      return ExternalServices.SendIkosCashTransaction();    
-    }
-
-
     #endregion Use cases
-
-    #region Helpers
-
-    #endregion Helpers
 
   }  // class PaymentOrderUseCases
 

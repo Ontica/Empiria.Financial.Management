@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using Empiria.Payments.BanobrasIntegration.IkosCash;
 using Empiria.Payments.BanobrasIntegration.IkosCash.Adapters;
 
@@ -44,7 +43,7 @@ namespace Empiria.Payments.Processor {
 
     public IPaymentResult Pay(IPaymentInstruction instruction) {
 
-      //var response = SentToIkosCash(instruction);
+      var response = SendToIkosCash(instruction);
 
       return new PaymentResultDto {
          Failed = EmpiriaMath.GetRandomBoolean(),
@@ -55,12 +54,12 @@ namespace Empiria.Payments.Processor {
 
     #region Helpers
 
-    internal ResultadoTransaccionDto SentToIkosCash(IPaymentInstruction instruction) {
-      IkosCashPaymentService paymentService = new IkosCashPaymentService();
-    
-      var transaction = LoadValues(instruction);
+    internal ResultadoTransaccionDto SendToIkosCash(IPaymentInstruction instruction) {
+      var paymentService = new IkosCashPaymentService();
 
-      var paymentTransaction = paymentService.AddPaymentTransaction(transaction).GetAwaiter().GetResult();
+      var transaction = new TransaccionFields();
+
+      var paymentTransaction = paymentService.SendPaymentTransaction(transaction).Result;
 
       if (paymentTransaction.Code != 0) {
         Assertion.EnsureNoReachThisCode($"Encontré el siguiente error en el simefin: {paymentTransaction.ErrorMesage}" );
@@ -69,47 +68,6 @@ namespace Empiria.Payments.Processor {
       return paymentTransaction;
     }
 
-
-    private TransaccionFields LoadValues(IPaymentInstruction instruction) {
-      var referencia = GetReferenceNumber();
-
-      var transaction = new TransaccionFields();
-      transaction.Header = new Header {
-        IdSistemaExterno = "2024122012249",
-        IdUsuario = 45,
-        IdDepartamento = 40,
-        IdConcepto = 418,
-        ClaveCliente = "AHM100719LP6",
-        Cuenta = "014180655077420107",
-        FechaOperacion = Convert.ToDateTime("2024-12-20T00:00:00"),
-        FechaValor = Convert.ToDateTime("2024-12-20T00:00:00"),
-        Monto = 888.00m,
-        Referencia = "12249",
-        ConceptoPago = "Pago Banobras, S.N.C.",
-        Origen = "O",
-        Firma = "",
-        SerieFirma = "NjnecxMTc5ZDE="
-      };
-
-      transaction.Payload = new Payload {
-        InstitucionBen = "40014",
-        ClaveRastreo = "",
-        NomBen = "A2DAHT HEALTH MEXICO, SA DE CV",
-        RfcBen = "AHM100719LP6",
-        TipoCtaBen = 40,
-        CtaBen = "",
-        Iva = 0.00m
-      };
-
-      return transaction;
-    }
-
-    private string GetReferenceNumber() {
-      Random rng = new Random();
-      return rng.Next(999999).ToString(); 
-    }
-
-    
     #endregion Helpers
 
   }  // class PaymentsBroker

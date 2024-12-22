@@ -50,18 +50,6 @@ namespace Empiria.Tests.Payments {
 
        Assert.NotNull(sut);
     }
-            
-
-    [Fact]
-    public void Should_Validate_PaymentInstruction_Is_Payed() {
-      TestsCommonMethods.Authenticate();
-
-      
-      var sut = ExternalServices.SendIkosCashTransaction();
-
-      Assert.NotNull(sut);
-    }
-        
 
     #endregion Facts
 

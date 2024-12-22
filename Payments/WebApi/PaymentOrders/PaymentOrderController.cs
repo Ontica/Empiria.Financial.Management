@@ -94,25 +94,12 @@ namespace Empiria.Payments.Orders.WebApi {
     [HttpPost]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/pay")]
     public SingleObjectModel SentToPay([FromUri] string paymentOrderUID) {
-           
+
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
         PaymentOrderHolderDto paymentOrder = usecases.Pay(paymentOrderUID);
 
         return new SingleObjectModel(this.Request, paymentOrder);
-      }
-    }
-
-
-    [HttpPost]
-    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/ikos")]
-    public SingleObjectModel SentToIkos([FromUri] string paymentOrderUID) {
-
-      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
-
-        var response = usecases.SendIKosCashTransaction();
-
-        return new SingleObjectModel(this.Request, response);
       }
     }
 
