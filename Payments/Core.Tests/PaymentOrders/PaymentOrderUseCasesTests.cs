@@ -112,6 +112,15 @@ namespace Empiria.Tests.Payments.Orders {
     }
 
 
+    [Fact]
+    public void Should_SendTToIkosCash() {
+
+      var sut = _usecases.SendIcosCashTransaction();
+
+      Assert.NotNull(sut);
+    }
+
+
     #endregion Facts
 
   }  // class PaymentOrderUseCasesTests

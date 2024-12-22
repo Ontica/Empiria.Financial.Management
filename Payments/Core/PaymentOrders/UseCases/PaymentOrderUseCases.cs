@@ -137,6 +137,12 @@ namespace Empiria.Payments.Orders.UseCases {
       return PaymentOrderMapper.Map(order);
     }
 
+
+    internal string SendIcosCashTransaction() {
+      return ExternalServices.SendIkosCashTransaction();    
+    }
+
+
     #endregion Use cases
 
     #region Helpers

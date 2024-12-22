@@ -105,6 +105,19 @@ namespace Empiria.Payments.Orders.WebApi {
 
 
     [HttpPost]
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/ikos")]
+    public SingleObjectModel SentToIkos([FromUri] string paymentOrderUID) {
+
+      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
+
+        var response = usecases.SendIcosCashTransaction();
+
+        return new SingleObjectModel(this.Request, response);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/suspend")]
     public SingleObjectModel SuspendPaymentOrder([FromUri] string paymentOrderUID,
                                                  [FromUri] string suspendedByUID,

@@ -44,7 +44,7 @@ namespace Empiria.Payments.Processor.Services {
 
       var broker = PaymentsBroker.Parse("5800f993-2db1-4aa8-aaad-5bd86db24c78");
 
-      SentTransactonToIkosCash();
+      //SentTransactonToIkosCash();
 
       if (paymentResult.Failed) {
         return RejectedPayment(paymentOrder, paymentResult, broker);
@@ -108,11 +108,19 @@ namespace Empiria.Payments.Processor.Services {
 
     }
 
+    internal string GetFirma() {
+      var transaction = SetValuesOntica();
+
+      IkosCashPaymentService paymentService = new IkosCashPaymentService();
+          
+      return paymentService.GetFirma(transaction);
+    }
+
     internal  ResultadoTransaccionDto SentTransactonToIkosCash() {
       IkosCashPaymentService paymentService = new IkosCashPaymentService();
 
       var transaction = SetValuesOntica();
-
+      
       var paymentTransaction = paymentService.AddPaymentTransaction(transaction).GetAwaiter().GetResult();
 
       if (paymentTransaction.Code != 0) {
