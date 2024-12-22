@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Collections.Generic;
 using Empiria.Data;
 
 namespace Empiria.Billing.Data {
@@ -16,13 +15,13 @@ namespace Empiria.Billing.Data {
   /// <summary>Provides data read and write methods for billing.</summary>
   static internal class BillData {
 
+    #region Methods
 
-    #region Public methods
+    internal static FixedList<BillConcept> GetBillConcepts(Bill bill) {
 
-
-    internal static FixedList<BillConcept> GetBillConceptsByBillId(int billId) {
-
-      var sql = $"SELECT * FROM FMS_BILL_CONCEPTS WHERE BILL_CONCEPT_BILL_ID = {billId}";
+      var sql = $"SELECT * FROM FMS_BILL_CONCEPTS " +
+                $"WHERE BILL_CONCEPT_BILL_ID = {bill.Id} AND " +
+                $"BILL_CONCEPT_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
@@ -30,39 +29,69 @@ namespace Empiria.Billing.Data {
     }
 
 
-    internal static List<BillTaxEntry> GetBillTaxesByBillConceptId(int billConceptId) {
+    static internal FixedList<BillTaxEntry> GetBillConceptTaxEntries(BillConcept billConcept) {
 
-      var sql = $"SELECT * FROM FMS_BILL_TAXES WHERE BILL_TAX_BILL_CONCEPT_ID = {billConceptId}";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetPlainObjectList<BillTaxEntry>(op);
-    }
-
-
-    static internal FixedList<Bill> GetBillList(string filtering, string sorting) {
-
-      var sql = "SELECT * FROM FMS_BILLS WHERE BILL_ID > 0 ";
-
-      if (!string.IsNullOrWhiteSpace(filtering)) {
-        sql += $"AND {filtering} ";
-      }
-
-      if (!string.IsNullOrWhiteSpace(sorting)) {
-        sql += $"ORDER BY {sorting} ";
-      }
+      var sql = $"SELECT * FROM FMS_BILL_TAXES " +
+                $"WHERE BILL_TAX_BILL_CONCEPT_ID = {billConcept.Id} AND " +
+                "BILL_TAX_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetPlainObjectFixedList<Bill>(op);
+      return DataReader.GetFixedList<BillTaxEntry>(op);
     }
 
 
-    internal static void SetBillAsPayed(string billUID) {
+
+    static internal FixedList<Bill> GetBillCreditNotes(string billNo) {
+
+      var sql = $"SELECT * FROM FMS_BILLS " +
+                $"WHERE BILL_RELATED_BILL_NO = '{billNo}' AND " +
+                $"BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<Bill>(op);
+    }
+
+
+    static internal FixedList<Bill> GetBillsForPayable(int payableId) {
+
+      var sql = $"SELECT * FROM FMS_BILLS " +
+                $"WHERE BILL_PAYABLE_ID = {payableId} AND " +
+                $"BILL_CATEGORY_ID = {BillCategory.FacturaProveedores.Id} AND " +
+                $"BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<Bill>(op);
+    }
+
+
+    static internal FixedList<Bill> SearchBills(string filter, string sort) {
+
+      var sql = "SELECT * FROM FMS_BILLS";
+
+      if (!string.IsNullOrWhiteSpace(filter)) {
+        sql += $" AND {filter}";
+      }
+
+      if (!string.IsNullOrWhiteSpace(sort)) {
+        sql += $" ORDER BY {sort}";
+      }
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<Bill>(op);
+    }
+
+
+    static internal void SetBillAsPayed(string billUID) {
 
       Bill bill = Bill.Parse(billUID);
 
-      var sql = $"UPDATE FMS_BILLS SET BILL_STATUS = '{(char) BillStatus.Payed}' WHERE BILL_ID = {bill.Id}";
+      var sql = $"UPDATE FMS_BILLS " +
+                $"SET BILL_STATUS = '{(char) BillStatus.Payed}' " +
+                $"WHERE BILL_ID = {bill.Id}";
 
       var op = DataOperation.Parse(sql);
 
@@ -70,38 +99,16 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal List<Bill> ValidateIfExistBill(string billNo) {
-
-      var sql = $"SELECT * FROM FMS_BILLS WHERE BILL_NO = '{billNo}' " +
-                $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetPlainObjectList<Bill>(op);
-    }
-
-
-    static internal List<Bill> ValidateIfExistBillsByPayable(int payableId) {
-
-      var sql = $"SELECT * FROM FMS_BILLS WHERE BILL_PAYABLE_ID = {payableId} " +
-                $"AND BILL_CATEGORY_ID = 701" +
-                $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetPlainObjectList<Bill>(op);
-    }
-
-
-    static internal List<Bill> ValidateIfExistCreditNotesByBill(string relatedCFDI) {
+    static internal Bill TryGetBillWithBillNo(string billNo) {
+      Assertion.Require(billNo, nameof(billNo));
 
       var sql = $"SELECT * FROM FMS_BILLS " +
-                $"WHERE BILL_RELATED_BILL_NO = '{relatedCFDI}' " +
-                $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
+                $"WHERE BILL_NO = '{billNo}' AND " +
+                $"BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetPlainObjectList<Bill>(op);
+      return DataReader.GetObject<Bill>(op, null);
     }
 
 
@@ -134,20 +141,18 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal void WriteBillTaxEntry(BillTaxEntry o) {
+    static internal void WriteBillTaxEntry(BillTaxEntry o, string extensionData) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Tax",
-          o.Id, o.UID, o.Bill.Id, o.BillConcept.Id,
-          o.TaxType.Id, (char) o.TaxMethod, (char) o.TaxFactorType,
-          o.Factor, o.BaseAmount, o.Total, "",
+          o.Id, o.UID, o.TaxType.Id, o.Bill.Id, o.BillConcept.Id,
+          (char) o.TaxMethod, (char) o.TaxFactorType,
+          o.Factor, o.BaseAmount, o.Total, extensionData,
           o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
 
-
-    #endregion Public methods
-
+    #endregion Methods
 
   } // class BillData
 

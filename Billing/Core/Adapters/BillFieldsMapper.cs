@@ -9,14 +9,12 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Collections.Generic;
+using System.Linq;
 
 using Empiria.Parties;
-
 using Empiria.Products.SATMexico;
 
 using Empiria.Billing.SATMexicoImporter;
-using System;
-using System.Linq;
 
 namespace Empiria.Billing.Adapters {
 
@@ -62,7 +60,7 @@ namespace Empiria.Billing.Adapters {
     static private BillFields MapToBillFields(SATBillDto dto) {
 
       return new BillFields {
-        BillCategoryUID = BillCategory.Factura.UID,
+        BillCategoryUID = BillCategory.FacturaProveedores.UID,
         BillNo = dto.SATComplemento.UUID,
         CertificationNo = dto.DatosGenerales.NoCertificado,
         IssueDate = dto.DatosGenerales.Fecha,
@@ -149,7 +147,7 @@ namespace Empiria.Billing.Adapters {
 
 
     static private BillSecurityDataFields MapToSecurityData(SATBillDto dto) {
-      
+
       return new BillSecurityDataFields() {
 
         Xmlns_Xsi = dto.SATComplemento.Xmlns_Xsi,

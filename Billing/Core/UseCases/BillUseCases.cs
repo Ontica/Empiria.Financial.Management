@@ -18,8 +18,6 @@ using Empiria.Billing.SATMexicoImporter;
 
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
-using System.Linq;
-using System;
 
 namespace Empiria.Billing.UseCases {
 
@@ -58,9 +56,9 @@ namespace Empiria.Billing.UseCases {
     public BillDto CreateBill(string xmlString, IPayable payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
-      
+
       var reader = new SATBillXmlReader(xmlString);
-      
+
       SATBillDto satDto = reader.ReadAsBillDto();
 
       BillFields fields = BillFieldsMapper.Map(satDto);
@@ -107,13 +105,13 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public FixedList<BillDescriptorDto> GetBillList(BillsQuery query) {
+    public FixedList<BillDescriptorDto> SearchBills(BillsQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var filtering = query.MapToFilterString();
-      var sorting = query.MapToSortString();
+      var filter = query.MapToFilterString();
+      var sort = query.MapToSortString();
 
-      FixedList<Bill> bills = BillData.GetBillList(filtering, sorting);
+      FixedList<Bill> bills = BillData.SearchBills(filter, sort);
 
       return BillMapper.MapToBillListDto(bills);
     }
@@ -131,11 +129,11 @@ namespace Empiria.Billing.UseCases {
 
     private void AssignConcepts(Bill bill) {
 
-      bill.Concepts = BillConcept.GetListByBillId(bill.Id);
+      bill.Concepts = BillConcept.GetListFor(bill);
 
       foreach (var concept in bill.Concepts) {
 
-        concept.TaxEntries = BillTaxEntry.GetListByBillConceptId(concept.Id);
+        concept.TaxEntries = BillTaxEntry.GetListFor(concept);
       }
     }
 
@@ -177,10 +175,10 @@ namespace Empiria.Billing.UseCases {
 
     private Bill CreateBillImplementation(IPayable payable, BillFields fields) {
 
-      return CreateBillByCategory(payable, fields, BillCategory.Factura);
+      return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
     }
 
-    
+
     private FixedList<BillTaxEntry> CreateBillTaxEntries(Bill bill,
                                                          BillConcept billConcept,
                                                          FixedList<BillTaxEntryFields> allTaxesFields) {
@@ -204,7 +202,7 @@ namespace Empiria.Billing.UseCases {
 
     private Bill CreateBillTest(BillFields fields) {
 
-      var billCategory = BillCategory.Factura;
+      var billCategory = BillCategory.FacturaProveedores;
 
       var bill = new Bill(billCategory, fields.BillNo);
 
@@ -220,7 +218,7 @@ namespace Empiria.Billing.UseCases {
 
     private Bill CreateCreditNoteImplementation(IPayable payable, BillFields fields) {
 
-      return CreateBillByCategory(payable, fields, BillCategory.NotaDeCredito);
+      return CreateBillByCategory(payable, fields, BillCategory.NotaDeCreditoProveedores);
     }
 
 

@@ -8,11 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.WebApi;
 using System.Web.Http;
 
-using Empiria.Billing.UseCases;
+using Empiria.WebApi;
+
 using Empiria.Billing.Adapters;
+using Empiria.Billing.UseCases;
 
 namespace Empiria.Billing.WebApi {
 
@@ -39,9 +40,9 @@ namespace Empiria.Billing.WebApi {
     public CollectionModel SearchBills([FromBody] BillsQuery query) {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
-        FixedList<BillDescriptorDto> billList = usecases.GetBillList(query);
+        FixedList<BillDescriptorDto> bills = usecases.SearchBills(query);
 
-        return new CollectionModel(this.Request, billList);
+        return new CollectionModel(this.Request, bills);
       }
     }
 

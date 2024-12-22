@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using System.Collections.Generic;
 
 using Empiria.Financial;
 using Empiria.Json;
@@ -31,7 +30,9 @@ namespace Empiria.Billing {
 
     public BillTaxEntry(Bill bill, BillConcept billConcept) {
       Assertion.Require(bill, nameof(bill));
+      Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
       Assertion.Require(billConcept, nameof(billConcept));
+      Assertion.Require(!billConcept.IsEmptyInstance, nameof(billConcept));
 
       this.Bill = bill;
       this.BillConcept = billConcept;
@@ -41,20 +42,20 @@ namespace Empiria.Billing {
 
     static internal BillTaxEntry Parse(string uid) => ParseKey<BillTaxEntry>(uid);
 
+    static internal FixedList<BillTaxEntry> GetListFor(BillConcept billConcept) {
+      Assertion.Require(billConcept, nameof(billConcept));
+
+      return BillData.GetBillConceptTaxEntries(billConcept);
+    }
+
     static public BillTaxEntry Empty => ParseEmpty<BillTaxEntry>();
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    [DataField("BILL_TAX_ENTRY_ID")]
-    public int BillTaxId {
-      get; private set;
-    }
-
-
-    [DataField("BILL_TAX_ENTRY_UID")]
-    public string BillTaxUID {
+    [DataField("BILL_TAX_TYPE_ID")]
+    public TaxType TaxType {
       get; private set;
     }
 
@@ -67,12 +68,6 @@ namespace Empiria.Billing {
 
     [DataField("BILL_TAX_BILL_CONCEPT_ID")]
     public BillConcept BillConcept {
-      get; private set;
-    }
-
-
-    [DataField("BILL_TAX_TYPE_ID")]
-    public TaxType TaxType {
       get; private set;
     }
 
@@ -134,17 +129,6 @@ namespace Empiria.Billing {
 
     #region Private methods
 
-    internal static FixedList<BillTaxEntry> GetListByBillConceptId(int billConceptId) {
-
-      List<BillTaxEntry> taxList = BillData.GetBillTaxesByBillConceptId(billConceptId);
-      if (taxList.Count == 0) {
-        return new FixedList<BillTaxEntry>();
-      }
-
-      return taxList.ToFixedList();
-    }
-
-
     internal void Update (BillTaxEntryFields fields) {
       this.TaxType = TaxType.Empty;
       this.TaxMethod = fields.TaxMethod;
@@ -152,7 +136,6 @@ namespace Empiria.Billing {
       this.Factor = fields.Factor;
       this.BaseAmount = fields.BaseAmount;
       this.Total = fields.Total;
-      this.ExtData = new JsonObject();
     }
 
 
@@ -161,7 +144,7 @@ namespace Empiria.Billing {
         this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
-      BillData.WriteBillTaxEntry(this);
+      BillData.WriteBillTaxEntry(this, ExtData.ToString());
     }
 
 

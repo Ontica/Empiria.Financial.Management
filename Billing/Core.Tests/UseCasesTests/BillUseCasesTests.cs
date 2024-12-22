@@ -8,11 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using Empiria.Billing.Adapters;
-using Empiria.Billing.SATMexicoImporter;
-using Empiria.Billing.UseCases;
-using Empiria.Financial;
+
 using Xunit;
+
+using Empiria.Billing.Adapters;
+using Empiria.Billing.UseCases;
 
 namespace Empiria.Tests.Billing {
 
@@ -70,7 +70,7 @@ namespace Empiria.Tests.Billing {
 
         BillsQuery query = GetBillsQuery();
 
-        FixedList<BillDescriptorDto> sut = usecases.GetBillList(query);
+        FixedList<BillDescriptorDto> sut = usecases.SearchBills(query);
 
         Assert.NotNull(sut);
       }
