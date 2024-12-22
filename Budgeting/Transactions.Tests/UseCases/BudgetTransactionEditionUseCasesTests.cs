@@ -40,15 +40,15 @@ namespace Empiria.Tests.Budgeting.Transactions {
 
     #region Facts
 
-    [Fact]
-    public void Should_Create_A_Budget_Transaction() {
-      var fields = new BudgetTransactionFields {
-        BaseBudgetUID = "bdd6ebe8-303c-41b3-917d-fdf49fb0e96e",
-        WorkItemUID = "07288961-55d9-4e73-871e-7a48e8b0dac2"
-      };
+    //[Fact]
+    //public void Should_Create_A_Budget_Transaction() {
+    //  var fields = new BudgetTransactionFields {
+    //    BaseBudgetUID = "bdd6ebe8-303c-41b3-917d-fdf49fb0e96e",
+    //    WorkItemUID = "07288961-55d9-4e73-871e-7a48e8b0dac2"
+    //  };
 
-      _usecases.CreateTransaction(fields);
-    }
+    //  _usecases.CreateTransaction(fields);
+    //}
 
     #endregion Facts
 

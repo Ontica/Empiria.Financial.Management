@@ -18,7 +18,7 @@ using Empiria.Budgeting.Transactions.Adapters;
 namespace Empiria.Budgeting.Transactions.UseCases {
 
   /// <summary>Use cases used to edit budget transactions.</summary>
-  public class BudgetTransactionEditionUseCases : WorkflowUseCase {
+  public class BudgetTransactionEditionUseCases : UseCase {
 
     #region Constructors and parsers
 
@@ -47,12 +47,12 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    [WorkflowEvent("BudgetTransactionCreated")]
-    public void CreateTransaction(BudgetTransactionFields fields) {
-      Assertion.Require(fields, nameof(fields));
+    //[WorkflowEvent("BudgetTransactionCreated")]
+    //public void CreateTransaction(BudgetTransactionFields fields) {
+    //  Assertion.Require(fields, nameof(fields));
 
-      base.SendWorkflowEvent("BudgetTransactionCreated", fields);
-    }
+    //  base.SendWorkflowEvent("BudgetTransactionCreated", fields);
+    //}
 
 
     public BudgetTransaction CreateTransaction(IPayableEntity payable,
