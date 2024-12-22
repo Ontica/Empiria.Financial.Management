@@ -125,7 +125,7 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_TAX_STATUS", Default = EntityStatus.Active)]
+    [DataField("BILL_TAX_STATUS", Default = EntityStatus.Pending)]
     public EntityStatus Status {
       get; private set;
     }

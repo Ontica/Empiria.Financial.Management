@@ -100,14 +100,14 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal void WriteBill(Bill bill, string schemaExtData) {
+    static internal void WriteBill(Bill bill, string schemaExtData, string securityExtData) {
 
       var op = DataOperation.Parse("write_FMS_Bill",
         bill.Id, bill.UID, bill.BillType.Id, bill.BillCategory.Id,
         bill.BillNo, bill.BillNoRelated, bill.IssueDate, bill.IssuedBy.Id,
         bill.IssuedTo.Id, bill.ManagedBy.Id, string.Join(" ", bill.Identificators),
         string.Join(" ", bill.Tags), bill.Currency.Id, bill.Subtotal, 
-        bill.Discount, bill.Total, schemaExtData, "", "", "",
+        bill.Discount, bill.Total, schemaExtData, securityExtData, "", "",
         bill.PostedBy.Id, bill.PostingTime, (char) bill.Status,
         bill.PayableId, bill.PayableEntityTypeId, bill.PayableEntityId);
 
@@ -115,7 +115,7 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal void WriteBillConcept(BillConcept concept) {
+    static internal void WriteBillConcept(BillConcept concept, string schemaExtData) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Concept",
         concept.Id, concept.UID, concept.Bill.Id, concept.Product.Id,
@@ -123,7 +123,7 @@ namespace Empiria.Billing.Data {
         concept.Description, string.Join(" ", concept.Identificators),
         string.Join(" ", concept.Tags), concept.Quantity,
         concept.QuantityUnit.Id, concept.UnitPrice, concept.Subtotal, concept.Discount,
-        "", "", concept.PostedBy.Id, concept.PostingTime, (char) concept.Status);
+        schemaExtData, "", concept.PostedBy.Id, concept.PostingTime, (char) concept.Status);
 
       DataWriter.Execute(op);
     }

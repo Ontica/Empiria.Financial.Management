@@ -85,6 +85,17 @@ namespace Empiria.Billing {
       }
     }
 
+
+    internal void Update(BillSecurityDataFields securityData) {
+      Assertion.Require(securityData, nameof(securityData));
+
+      Certificado = securityData.Certificado;
+      Sello = securityData.Sello;
+      SelloCFD = securityData.SelloCFD;
+      SelloSAT = securityData.SelloSAT;
+      FechaTimbrado = securityData.FechaTimbrado;
+      RFCProveedorCertificacion = securityData.RfcProvCertif;
+    }
   }  // BillSecurityData
 
 } // namespace Empiria.Billing

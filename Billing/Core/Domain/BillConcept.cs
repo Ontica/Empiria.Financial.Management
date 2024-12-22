@@ -161,7 +161,7 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_CONCEPT_STATUS", Default = EntityStatus.Active)]
+    [DataField("BILL_CONCEPT_STATUS", Default = EntityStatus.Pending)]
     public EntityStatus Status {
       get; private set;
     }
@@ -199,6 +199,8 @@ namespace Empiria.Billing {
       this.UnitPrice = fields.UnitPrice;
       this.Subtotal = fields.Subtotal;
       this.Discount = fields.Discount;
+
+      SchemaData.Update(fields);
     }
 
 
@@ -215,7 +217,7 @@ namespace Empiria.Billing {
         PostingTime = DateTime.Now;
       }
 
-      BillData.WriteBillConcept(this);
+      BillData.WriteBillConcept(this, this.SchemaExtData.ToString());
     }
 
     #endregion Methods

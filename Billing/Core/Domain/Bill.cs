@@ -272,7 +272,7 @@ namespace Empiria.Billing {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
-      BillData.WriteBill(this, SchemaExtData.ToString());
+      BillData.WriteBill(this, this.SchemaExtData.ToString(), this.SecurityExtData.ToString());
     }
 
 
@@ -305,6 +305,9 @@ namespace Empiria.Billing {
       Subtotal = fields.Subtotal;
       Discount = fields.Discount;
       Total = fields.Total;
+
+      SchemaData.Update(fields.SchemaData);
+      SecurityData.Update(fields.SecurityData);
     }
 
 

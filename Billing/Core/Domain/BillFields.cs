@@ -60,11 +60,6 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public string SchemaVersion {
-      get; set;
-    } = string.Empty;
-
-
     public string Identificators {
       get; set;
     } = string.Empty;
@@ -137,6 +132,11 @@ namespace Empiria.Billing {
     public BillOrganizationFields IssuedTo {
       get; internal set;
     } = new BillOrganizationFields();
+
+
+    public string SchemaVersion {
+      get; set;
+    } = string.Empty;
 
 
     public string TipoComprobante {

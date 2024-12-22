@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+using Empiria.Financial;
 using Empiria.Json;
 
 namespace Empiria.Billing {
@@ -183,6 +185,27 @@ namespace Empiria.Billing {
       }
     }
 
+
+    internal void Update(BillSchemaDataFields schemaData) {
+      Assertion.Require(schemaData, nameof(schemaData));
+
+      Version = schemaData.SchemaVersion;
+      RFCEmisor = schemaData.IssuedBy.RFC;
+      NombreEmisor = schemaData.IssuedBy.Nombre;
+      RFCReceptor = schemaData.IssuedTo.RFC;
+      NombreReceptor = schemaData.IssuedTo.Nombre;
+      RegimenFiscalEmisor =schemaData.IssuedBy.RegimenFiscal;
+      DomicilioFiscalReceptor = schemaData.IssuedTo.DomicilioFiscal;
+      UsoCFDI = schemaData.IssuedTo.UsoCFDI;
+      TipoComprobante = schemaData.TipoComprobante;
+      Folio = schemaData.Folio;
+      Serie = schemaData.Serie;
+      MetodoPago = schemaData.MetodoPago;
+      FormaPago = schemaData.FormaPago;
+      Exportacion = schemaData.Exportacion;
+      LugarExpedicion = schemaData.LugarExpedicion;
+      Moneda = schemaData.Moneda;
+    }
   }
 
 } // namespace Empiria.Billing

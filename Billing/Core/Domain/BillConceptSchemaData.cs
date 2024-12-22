@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Json;
 
 namespace Empiria.Billing {
@@ -73,6 +74,16 @@ namespace Empiria.Billing {
       }
     }
 
+
+    internal void Update(BillConceptFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      ClaveProdServ = fields.SATProductCode;
+      ClaveUnidad = fields.ClaveUnidad;
+      Unidad = fields.Unidad;
+      NoIdentificacion = fields.NoIdentificacion;
+      ObjetoImp = fields.ObjetoImp;
+    }
   }  // class BillConceptSchemaData
 
 } // namespace Empiria.Billing

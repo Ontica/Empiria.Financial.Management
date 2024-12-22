@@ -68,7 +68,6 @@ namespace Empiria.Billing.Adapters {
         IssueDate = dto.DatosGenerales.Fecha,
         IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
         IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
-        SchemaVersion = dto.DatosGenerales.CFDIVersion,
         CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
         Subtotal = dto.DatosGenerales.SubTotal,
         Total = dto.DatosGenerales.Total,
@@ -137,6 +136,7 @@ namespace Empiria.Billing.Adapters {
       return new BillSchemaDataFields() {
         IssuedBy = MapToIssuedBy(dto.Emisor),
         IssuedTo = MapToIssuedTo(dto.Receptor),
+        SchemaVersion = dto.DatosGenerales.CFDIVersion,
         TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
         Folio = dto.DatosGenerales.Folio,
         MetodoPago = dto.DatosGenerales.MetodoPago,
