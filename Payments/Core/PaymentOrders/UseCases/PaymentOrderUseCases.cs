@@ -16,6 +16,7 @@ using Empiria.Payments.Payables;
 
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.Data;
+using System.Threading.Tasks;
 
 namespace Empiria.Payments.Orders.UseCases {
 
@@ -138,7 +139,7 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
-    internal string SendIcosCashTransaction() {
+    internal string SendIKosCashTransaction() {
       return ExternalServices.SendIkosCashTransaction();    
     }
 

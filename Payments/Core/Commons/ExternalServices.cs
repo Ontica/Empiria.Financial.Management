@@ -30,6 +30,8 @@ using Empiria.Payments.Orders;
 
 using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Services;
+using System.Threading.Tasks;
+using Empiria.Payments.BanobrasIntegration.IkosCash.Adapters;
 
 
 namespace Empiria.Payments {
@@ -91,7 +93,7 @@ namespace Empiria.Payments {
     static internal string SendIkosCashTransaction() {
       using (var usecases = PaymentService.ServiceInteractor()) {
 
-        return usecases.GetFirma();
+        return usecases.GetToken();
       }
     }
 

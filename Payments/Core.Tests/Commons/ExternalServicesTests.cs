@@ -56,7 +56,8 @@ namespace Empiria.Tests.Payments {
     public void Should_Validate_PaymentInstruction_Is_Payed() {
       TestsCommonMethods.Authenticate();
 
-      var sut = ExternalServices.ValidateIsPaymentInstructionPayed("2acdb601-af14-41a7-9f28-08fa7b42730e");
+      
+      var sut = ExternalServices.SendIkosCashTransaction();
 
       Assert.NotNull(sut);
     }

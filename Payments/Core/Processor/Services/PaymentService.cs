@@ -15,6 +15,8 @@ using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.BanobrasIntegration.IkosCash.Adapters;
 using System;
 using Empiria.Payments.BanobrasIntegration.IkosCash;
+using System.Threading.Tasks;
+using Empiria.Data;
 
 
 namespace Empiria.Payments.Processor.Services {
@@ -108,13 +110,42 @@ namespace Empiria.Payments.Processor.Services {
 
     }
 
+    #region TemporalIkosCashServices
+
+    internal string GetToken() {
+      IkosCashPaymentService paymentService = new IkosCashPaymentService();
+     
+      return paymentService.GetToken().Result;
+    }
+
+
     internal string GetFirma() {
       var transaction = SetValuesOntica();
 
       IkosCashPaymentService paymentService = new IkosCashPaymentService();
-          
-      return paymentService.GetFirma(transaction);
+      var organizationConcepts = paymentService.GetOrganizationUnitConcepts(1).Result;
+
+      var firma = paymentService.GetFirma(transaction);
+
+      return firma;
     }
+
+
+    internal FixedList<OrganizationUnitDto> GetIkosOrganizationUnitConcepts() {
+      IkosCashPaymentService paymentService = new IkosCashPaymentService();
+      var organizationConcepts =  paymentService.GetOrganizationUnitConcepts(1).Result;
+
+      return organizationConcepts.ToFixedList();
+    }
+
+
+    internal PaymentStatusResultDto GetIkosPaymentStatus(string paymentCode) {
+      IkosCashPaymentService paymentService = new IkosCashPaymentService();
+      var paymentStatus = paymentService.GetPaymentsStatus(paymentCode).Result;
+
+      return paymentStatus;
+    }
+
 
     internal  ResultadoTransaccionDto SentTransactonToIkosCash() {
       IkosCashPaymentService paymentService = new IkosCashPaymentService();
@@ -162,6 +193,8 @@ namespace Empiria.Payments.Processor.Services {
 
       return transaction;
     }
+
+    #endregion TemporalIkosCashServices
 
 
     #endregion Helpers

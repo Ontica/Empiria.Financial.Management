@@ -110,7 +110,7 @@ namespace Empiria.Payments.Orders.WebApi {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-        var response = usecases.SendIcosCashTransaction();
+        var response = usecases.SendIKosCashTransaction();
 
         return new SingleObjectModel(this.Request, response);
       }
