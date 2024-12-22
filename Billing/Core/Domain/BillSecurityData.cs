@@ -85,6 +85,9 @@ namespace Empiria.Billing {
       }
     }
 
+    internal string ToJsonString() {
+      return _securityData.ToString();
+    }
 
     internal void Update(BillSecurityDataFields securityData) {
       Assertion.Require(securityData, nameof(securityData));

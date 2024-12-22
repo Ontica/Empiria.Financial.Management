@@ -8,9 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Empiria.Data;
 
 namespace Empiria.Billing.Data {
@@ -25,6 +23,7 @@ namespace Empiria.Billing.Data {
     internal static FixedList<BillConcept> GetBillConceptsByBillId(int billId) {
 
       var sql = $"SELECT * FROM FMS_BILL_CONCEPTS WHERE BILL_CONCEPT_BILL_ID = {billId}";
+
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetPlainObjectFixedList<BillConcept>(op);
@@ -34,6 +33,7 @@ namespace Empiria.Billing.Data {
     internal static List<BillTaxEntry> GetBillTaxesByBillConceptId(int billConceptId) {
 
       var sql = $"SELECT * FROM FMS_BILL_TAXES WHERE BILL_TAX_BILL_CONCEPT_ID = {billConceptId}";
+
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetPlainObjectList<BillTaxEntry>(op);
@@ -63,6 +63,7 @@ namespace Empiria.Billing.Data {
       Bill bill = Bill.Parse(billUID);
 
       var sql = $"UPDATE FMS_BILLS SET BILL_STATUS = '{(char) BillStatus.Payed}' WHERE BILL_ID = {bill.Id}";
+
       var op = DataOperation.Parse(sql);
 
       DataWriter.Execute(op);
@@ -75,6 +76,7 @@ namespace Empiria.Billing.Data {
                 $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
+
       return DataReader.GetPlainObjectList<Bill>(op);
     }
 
@@ -86,56 +88,59 @@ namespace Empiria.Billing.Data {
                 $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
+
       return DataReader.GetPlainObjectList<Bill>(op);
     }
 
 
-    static internal List<Bill> ValidateIfExistCreditNotesByBill(string cfdiRelated) {
+    static internal List<Bill> ValidateIfExistCreditNotesByBill(string relatedCFDI) {
 
       var sql = $"SELECT * FROM FMS_BILLS " +
-                $"WHERE BILL_NO_RELATED = '{cfdiRelated}' " +
+                $"WHERE BILL_RELATED_BILL_NO = '{relatedCFDI}' " +
                 $"AND BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
+
       var op = DataOperation.Parse(sql);
+
       return DataReader.GetPlainObjectList<Bill>(op);
     }
 
 
-    static internal void WriteBill(Bill bill, string schemaExtData, string securityExtData) {
+    static internal void WriteBill(Bill o, string extData) {
 
       var op = DataOperation.Parse("write_FMS_Bill",
-        bill.Id, bill.UID, bill.BillType.Id, bill.BillCategory.Id,
-        bill.BillNo, bill.BillNoRelated, bill.IssueDate, bill.IssuedBy.Id,
-        bill.IssuedTo.Id, bill.ManagedBy.Id, string.Join(" ", bill.Identificators),
-        string.Join(" ", bill.Tags), bill.Currency.Id, bill.Subtotal, 
-        bill.Discount, bill.Total, schemaExtData, securityExtData, "", "",
-        bill.PostedBy.Id, bill.PostingTime, (char) bill.Status,
-        bill.PayableId, bill.PayableEntityTypeId, bill.PayableEntityId);
+          o.Id, o.UID, o.BillType.Id, o.BillCategory.Id,
+          o.BillNo, o.RelatedBillNo, o.IssueDate, o.IssuedBy.Id, o.IssuedTo.Id,
+          o.ManagedBy.Id, o.PayableEntityTypeId, o.PayableEntityId, o.PayableId,
+          o.Currency.Id, o.Subtotal, o.Discount, o.Total,
+          string.Join(" ", o.Identificators), string.Join(" ", o.Tags),
+          o.SchemaData.ToJsonString(), o.SecurityData.ToJsonString(), string.Empty,
+          extData, o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
 
 
-    static internal void WriteBillConcept(BillConcept concept, string schemaExtData) {
+    static internal void WriteBillConcept(BillConcept o, string schemaExtData) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Concept",
-        concept.Id, concept.UID, concept.Bill.Id, concept.Product.Id,
-        concept.SATProductID, concept.SATProductCode,
-        concept.Description, string.Join(" ", concept.Identificators),
-        string.Join(" ", concept.Tags), concept.Quantity,
-        concept.QuantityUnit.Id, concept.UnitPrice, concept.Subtotal, concept.Discount,
-        schemaExtData, "", concept.PostedBy.Id, concept.PostingTime, (char) concept.Status);
+        o.Id, o.UID, o.Bill.Id, o.Product.Id,
+        o.SATProductID, o.SATProductCode,
+        o.Description, string.Join(" ", o.Identificators),
+        string.Join(" ", o.Tags), o.Quantity,
+        o.QuantityUnit.Id, o.UnitPrice, o.Subtotal, o.Discount,
+        schemaExtData, "", o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
 
 
-    static internal void WriteBillTaxEntry(BillTaxEntry tax) {
+    static internal void WriteBillTaxEntry(BillTaxEntry o) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Tax",
-        tax.Id, tax.UID, tax.Bill.Id, tax.BillConcept.Id,
-        tax.TaxType.Id, (char) tax.TaxMethod, (char) tax.TaxFactorType,
-        tax.Factor, tax.BaseAmount, tax.Total, "",
-        tax.PostedBy.Id, tax.PostingTime, (char) tax.Status);
+          o.Id, o.UID, o.Bill.Id, o.BillConcept.Id,
+          o.TaxType.Id, (char) o.TaxMethod, (char) o.TaxFactorType,
+          o.Factor, o.BaseAmount, o.Total, "",
+          o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }

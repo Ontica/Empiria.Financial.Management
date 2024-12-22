@@ -37,7 +37,7 @@ namespace Empiria.Billing {
     public string CFDIRelated {
       get;
       internal set;
-    }
+    } = string.Empty;
 
 
     public DateTime IssueDate {
@@ -118,7 +118,7 @@ namespace Empiria.Billing {
     public FixedList<BillConceptFields> Concepts {
       get; set;
     } = new FixedList<BillConceptFields>();
-    
+
   } // class BillFields
 
 
@@ -178,24 +178,25 @@ namespace Empiria.Billing {
       get; set;
     } = string.Empty;
 
-
   }
+
+
 
   public class BillOrganizationFields {
 
     public string RegimenFiscal {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public string RFC {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public string Nombre {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public string DomicilioFiscal {
@@ -225,27 +226,27 @@ namespace Empiria.Billing {
 
     public string SATProductCode {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string ClaveUnidad {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string Unidad {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string NoIdentificacion {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string ObjetoImp {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string Description {
@@ -296,7 +297,7 @@ namespace Empiria.Billing {
     public FixedList<BillTaxEntryFields> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntryFields>();
-    
+
 
     internal void EnsureIsValid() {
       // ToDo
@@ -355,41 +356,42 @@ namespace Empiria.Billing {
 
     public string Xmlns_Tfd {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string Xmlns_Xsi {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string Xsi_SchemaLocation {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string Tfd_Version {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string UUID {
       get; internal set;
-    }
+    } = string.Empty;
+
 
     public string Sello {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public string NoCertificado {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public string Certificado {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public DateTime FechaTimbrado {
@@ -399,22 +401,22 @@ namespace Empiria.Billing {
 
     public string RfcProvCertif {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public string SelloCFD {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public string NoCertificadoSAT {
       get; internal set;
-    }
+    } = string.Empty;
 
 
     public string SelloSAT {
       get; internal set;
-    }
+    } = string.Empty;
 
   }  // class BillComplementFields
 

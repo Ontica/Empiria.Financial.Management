@@ -77,12 +77,6 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_UID")]
-    public string BillUID {
-      get; private set;
-    }
-
-
     [DataField("BILL_CATEGORY_ID")]
     public BillCategory BillCategory {
       get; private set;
@@ -95,28 +89,10 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_NO_RELATED")]
-    public string BillNoRelated {
+    [DataField("BILL_RELATED_BILL_NO")]
+    public string RelatedBillNo {
       get;
       private set;
-    }
-
-
-    [DataField("BILL_PAYABLE_ENTITY_TYPE_ID")]
-    public int PayableEntityTypeId {
-      get; private set;
-    }
-
-
-    [DataField("BILL_PAYABLE_ENTITY_ID")]
-    public int PayableEntityId {
-      get; private set;
-    }
-
-
-    [DataField("BILL_PAYABLE_ID")]
-    public int PayableId {
-      get; private set;
     }
 
 
@@ -138,31 +114,27 @@ namespace Empiria.Billing {
     }
 
 
-
     [DataField("BILL_MANAGED_BY_ID")]
     public Party ManagedBy {
       get; private set;
     }
 
 
-    [DataField("BILL_IDENTIFICATORS")]
-    private string _identificators = string.Empty;
-
-
-    public FixedList<string> Identificators {
-      get {
-        return _identificators.Split(' ').ToFixedList();
-      }
+    [DataField("BILL_PAYABLE_ENTITY_TYPE_ID")]
+    internal int PayableEntityTypeId {
+      get; private set;
     }
 
 
-    [DataField("BILL_TAGS")]
-    private string _tags = string.Empty;
+    [DataField("BILL_PAYABLE_ENTITY_ID")]
+    internal int PayableEntityId {
+      get; private set;
+    }
 
-    public FixedList<string> Tags {
-      get {
-        return _tags.Split(' ').ToFixedList();
-      }
+
+    [DataField("BILL_PAYABLE_ID")]
+    internal int PayableId {
+      get; private set;
     }
 
 
@@ -190,15 +162,50 @@ namespace Empiria.Billing {
     }
 
 
+    [DataField("BILL_IDENTIFICATORS")]
+    private string _identificators = string.Empty;
+
+
+    public FixedList<string> Identificators {
+      get {
+        return _identificators.Split(' ').ToFixedList();
+      }
+    }
+
+
+    [DataField("BILL_TAGS")]
+    private string _tags = string.Empty;
+
+    public FixedList<string> Tags {
+      get {
+        return _tags.Split(' ').ToFixedList();
+      }
+    }
+
+
+
     [DataField("BILL_SCHEMA_EXT_DATA")]
     private JsonObject SchemaExtData {
       get; set;
+    }
+
+    public BillSchemaData SchemaData {
+      get {
+        return new BillSchemaData(this.SchemaExtData);
+      }
     }
 
 
     [DataField("BILL_SECURITY_EXT_DATA")]
     private JsonObject SecurityExtData {
       get; set;
+    }
+
+
+    public BillSecurityData SecurityData {
+      get {
+        return new BillSecurityData(this.SecurityExtData);
+      }
     }
 
 
@@ -232,20 +239,6 @@ namespace Empiria.Billing {
     }
 
 
-    public BillSchemaData SchemaData {
-      get {
-        return new BillSchemaData(this.SchemaExtData);
-      }
-    }
-
-
-    public BillSecurityData SecurityData {
-      get {
-        return new BillSecurityData(this.SecurityExtData);
-      }
-    }
-
-
     internal FixedList<BillConcept> Concepts {
       get; set;
     } = new FixedList<BillConcept>();
@@ -253,7 +246,8 @@ namespace Empiria.Billing {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(BillNo, IssuedBy.Name);
+        return EmpiriaString.BuildKeywords(BillNo, RelatedBillNo, BillCategory.Keywords,
+                                          _identificators, _tags,  IssuedBy.Keywords, IssuedTo.Keywords);
       }
     }
 
@@ -271,7 +265,7 @@ namespace Empiria.Billing {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
-      BillData.WriteBill(this, this.SchemaExtData.ToString(), this.SecurityExtData.ToString());
+      BillData.WriteBill(this, ExtData.ToString());
     }
 
 
@@ -293,7 +287,7 @@ namespace Empiria.Billing {
       fields.EnsureIsValidBill(PayableId, PayableTotal, BillCategory);
       fields.EnsureIsValidCreditNote(BillCategory);
 
-      BillNoRelated = fields.CFDIRelated;
+      RelatedBillNo = fields.CFDIRelated;
       IssueDate = PatchField(fields.IssueDate, IssueDate);
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);

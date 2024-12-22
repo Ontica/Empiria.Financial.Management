@@ -92,7 +92,6 @@ namespace Empiria.Billing.Adapters {
 
     static private BillConceptDto MapToBillConceptsDto(BillConcept billConcept) {
       return new BillConceptDto {
-        //BillUID = billConcept.Bill.UID,
         UID = billConcept.BillConceptUID,
         Product = billConcept.Product.MapToNamedEntity(),
         Description = billConcept.Description,
@@ -109,7 +108,7 @@ namespace Empiria.Billing.Adapters {
 
     static private BillDescriptorDto MapToBillDescriptorDto(Bill bill) {
       return new BillDescriptorDto() {
-        UID = bill.BillUID,
+        UID = bill.UID,
         BillNo = bill.BillNo,
         BillTypeName = bill.BillType.DisplayName,
         IssuedByName = bill.IssuedBy.Name,
@@ -124,8 +123,6 @@ namespace Empiria.Billing.Adapters {
 
     static private BillTaxEntryDto MapToBillTaxesDto(BillTaxEntry taxEntry) {
       return new BillTaxEntryDto {
-        //BillUID = taxEntry.Bill.UID,
-        //BillConceptUID = taxEntry.BillConcept.UID,
         UID = taxEntry.BillTaxUID,
         TaxMethod = taxEntry.TaxMethod.MapToDto(),
         TaxFactorType = taxEntry.TaxFactorType.MapToDto(),
