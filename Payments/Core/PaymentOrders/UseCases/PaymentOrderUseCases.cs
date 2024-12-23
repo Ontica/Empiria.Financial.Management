@@ -16,6 +16,9 @@ using Empiria.Payments.Payables;
 
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.Data;
+using Empiria.Payments.Processor.Services;
+using Empiria.Payments.Processor;
+using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Orders.UseCases {
 
@@ -82,13 +85,21 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
-    internal PaymentOrderHolderDto Pay(string paymentOrderUID) {
+    public PaymentOrderHolderDto SendPaymentOrderToPay(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
-      var order = PaymentOrder.Parse(paymentOrderUID);
-      var payment = ExternalServices.SendPaymentOrderToPay(order);
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
 
-      return PaymentOrderMapper.Map(order);
+      // Validate local not sent and not payed
+
+      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
+
+      using (var usecases = PaymentService.ServiceInteractor()) {
+
+        _ = usecases.SendToPay(broker, paymentOrder);
+
+        return PaymentOrderMapper.Map(paymentOrder);
+      }
     }
 
 

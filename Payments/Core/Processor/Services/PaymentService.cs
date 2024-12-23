@@ -8,16 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Services;
 
 using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Adapters;
-using Empiria.Payments.BanobrasIntegration.IkosCash.Adapters;
-using System;
-using Empiria.Payments.BanobrasIntegration.IkosCash;
-using System.Threading.Tasks;
-using Empiria.Data;
-
 
 namespace Empiria.Payments.Processor.Services {
 
@@ -37,16 +33,17 @@ namespace Empiria.Payments.Processor.Services {
 
     #region Services
 
-    internal PaymentInstruction Pay(PaymentOrder paymentOrder) {
-      IPaymentInstruction paymentInstruction = PaymentInstructionMapper.Map(paymentOrder);
+    internal PaymentInstruction SendToPay(PaymentsBroker broker, PaymentOrder paymentOrder) {
+      Assertion.Require(broker, nameof(broker));
+      Assertion.Require(paymentOrder, nameof(paymentOrder));
 
-      IPaymentsBroker brokerProvider = PaymentsBroker.SelectPaymentBroker(paymentInstruction);
+      // ToDo: Validate not sent and not payed
 
-      IPaymentResult paymentResult = brokerProvider.Pay(paymentInstruction);
+      PaymentInstructionDto instruction = PaymentInstructionMapper.Map(paymentOrder);
 
-      var broker = PaymentsBroker.Parse("5800f993-2db1-4aa8-aaad-5bd86db24c78");
+      IPaymentsBroker paymentsService = broker.GetService();
 
-      //SentTransactonToIkosCash();
+      PaymentResultDto paymentResult = paymentsService.SendPaymentInstruction(instruction);
 
       if (paymentResult.Failed) {
         return RejectedPayment(paymentOrder, paymentResult, broker);
@@ -59,21 +56,19 @@ namespace Empiria.Payments.Processor.Services {
 
     internal PaymentInstruction ValidateIsPaymentInstructionPayed(string paymentInstructionUD) {
       PaymentInstruction paymentInstruction = PaymentInstruction.Parse(paymentInstructionUD);
+
       WritePaymentLog(paymentInstruction);
 
       return paymentInstruction;
     }
-
-
-
 
     #endregion Services
 
     #region Helpers
 
     private static PaymentInstruction RejectedPayment(PaymentOrder paymentOrder,
-                                                 IPaymentResult paymentResult,
-                                                 PaymentsBroker broker) {
+                                                      PaymentResultDto paymentResult,
+                                                      PaymentsBroker broker) {
 
       var rejectedPaymentData = new RejectedPaymentData(paymentResult);
 
@@ -86,8 +81,8 @@ namespace Empiria.Payments.Processor.Services {
 
 
     static private PaymentInstruction SuccessfullPayment(PaymentOrder paymentOrder,
-                                                    IPaymentResult paymentResult,
-                                                    PaymentsBroker broker) {
+                                                         PaymentResultDto paymentResult,
+                                                         PaymentsBroker broker) {
 
       var successfulPaymentData = new SuccessfulPaymentData(paymentResult);
 
@@ -102,6 +97,7 @@ namespace Empiria.Payments.Processor.Services {
     static private void WritePaymentLog(PaymentInstruction paymentInstruction) {
 
       var paymentLog = new PaymentLog(paymentInstruction);
+
       var date = DateTime.Now;
 
       paymentLog.RequestTime = date;
@@ -111,42 +107,6 @@ namespace Empiria.Payments.Processor.Services {
 
       paymentLog.Save();
     }
-
-    #region TemporalIkosCashServices
-
-
-    internal FixedList<OrganizationUnitDto> GetIkosOrganizationUnitConcepts() {
-      IkosCashPaymentService paymentService = new IkosCashPaymentService();
-      var organizationConcepts =  paymentService.GetOrganizationUnitConcepts(1).Result;
-
-      return organizationConcepts.ToFixedList();
-    }
-
-
-    internal PaymentStatusResultDto GetIkosPaymentStatus(string paymentCode) {
-      IkosCashPaymentService paymentService = new IkosCashPaymentService();
-      var paymentStatus = paymentService.GetPaymentTransactionStatus(paymentCode).Result;
-
-      return paymentStatus;
-    }
-
-
-    internal  ResultadoTransaccionDto SentTransactonToIkosCash() {
-      IkosCashPaymentService paymentService = new IkosCashPaymentService();
-
-      var transaction = new TransaccionFields();
-
-      var paymentTransaction = paymentService.SendPaymentTransaction(transaction).GetAwaiter().GetResult();
-
-      if (paymentTransaction.Code != 0) {
-        Assertion.EnsureNoReachThisCode($"Encontré el siguiente error en el simefin: {paymentTransaction.ErrorMesage}");
-      }
-
-      return paymentTransaction;
-    }
-
-    #endregion TemporalIkosCashServices
-
 
     #endregion Helpers
 

@@ -26,13 +26,6 @@ using Empiria.Budgeting.Transactions.UseCases;
 using Empiria.Procurement.Contracts;
 
 using Empiria.Payments.Payables;
-using Empiria.Payments.Orders;
-
-using Empiria.Payments.Processor;
-using Empiria.Payments.Processor.Services;
-using System.Threading.Tasks;
-using Empiria.Payments.BanobrasIntegration.IkosCash.Adapters;
-
 
 namespace Empiria.Payments {
 
@@ -80,16 +73,6 @@ namespace Empiria.Payments {
     }
 
 
-    static internal PaymentInstruction SendPaymentOrderToPay(PaymentOrder paymentOrder) {
-      Assertion.Require(paymentOrder, nameof(paymentOrder));
-
-      using (var usecases = PaymentService.ServiceInteractor()) {
-
-        return usecases.Pay(paymentOrder);
-      }
-    }
-
-
     static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
 
       CreatePayableDocumentLinks(payable, document, bill);
@@ -105,15 +88,6 @@ namespace Empiria.Payments {
 
       return DocumentServices.UpdateDocument(payable, document, fields);
     }
-
-
-    static internal PaymentInstruction ValidateIsPaymentInstructionPayed(string paymentInstructionUD) {
-      using (var usecases = PaymentService.ServiceInteractor()) {
-
-        return usecases.ValidateIsPaymentInstructionPayed(paymentInstructionUD);
-      }
-    }
-
 
     #endregion Services
 
