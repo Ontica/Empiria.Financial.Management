@@ -17,11 +17,13 @@ namespace Empiria.Payments.Processor {
   /// <summary>Holds data about a successful payment.</summary>
   internal class SuccessfulPaymentData {
 
-    #region Constructors and Parsers 
-    public SuccessfulPaymentData(IPaymentResult paymentResult) {
+    #region Constructors and Parsers
+
+    public SuccessfulPaymentData(PaymentResultDto paymentResult) {
+
     }
 
-    #endregion Constructors and Parsers 
+    #endregion Constructors and Parsers
 
     #region Properties
 
@@ -52,10 +54,9 @@ namespace Empiria.Payments.Processor {
 
     public DateTime TimeStamp {
       get; internal set;
-    } = DateTime.Today;  
+    } = DateTime.Today;
 
     #endregion Properties
-
 
   }  // class SuccessfulPaymentData
 

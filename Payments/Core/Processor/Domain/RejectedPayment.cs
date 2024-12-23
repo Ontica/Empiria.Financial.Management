@@ -15,7 +15,8 @@ namespace Empiria.Payments.Processor {
   /// <summary>Represents a rejected payment.</summary>
   internal class RejectedPayment : PaymentInstruction {
 
-    #region Constructors and Parsers
+    #region Constructors and parsers
+
     public RejectedPayment(PaymentsBroker broker,
                            PaymentOrder paymentOrder,
                            RejectedPaymentData failResult) : base(broker, paymentOrder) {
@@ -26,8 +27,7 @@ namespace Empiria.Payments.Processor {
       this.SetFailPayment();
     }
 
-    #endregion Constructors and Parsers
-
+    #endregion Constructors and parsers
 
     #region Properties
 

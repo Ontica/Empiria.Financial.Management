@@ -16,12 +16,13 @@ namespace Empiria.Payments.Processor {
   /// <summary>Holds data about a rejected payment instruction.</summary>
   internal class RejectedPaymentData {
 
-    #region Constructors and Parsers 
+    #region Constructors and Parsers
 
-    public RejectedPaymentData(IPaymentResult paymentResult) {
+    public RejectedPaymentData(PaymentResultDto paymentResult) {
+
     }
 
-    #endregion Constructors and Parsers 
+    #endregion Constructors and Parsers
 
     #region Properties
 
@@ -56,10 +57,10 @@ namespace Empiria.Payments.Processor {
 
     #endregion Properties
 
-
     #region Methods
 
     #endregion Methods
+
   }  // class RejectedPaymentData
 
 }  // namespace Empiria.Payments.Processor
