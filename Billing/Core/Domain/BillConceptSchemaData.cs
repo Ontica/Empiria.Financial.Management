@@ -75,6 +75,11 @@ namespace Empiria.Billing {
     }
 
 
+    internal string ToJsonString() {
+      return _schemaData.ToString();
+    }
+
+
     internal void Update(BillConceptFields fields) {
       Assertion.Require(fields, nameof(fields));
 

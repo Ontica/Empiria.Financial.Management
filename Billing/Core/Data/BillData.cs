@@ -118,7 +118,7 @@ namespace Empiria.Billing.Data {
           o.Id, o.UID, o.BillType.Id, o.BillCategory.Id,
           o.BillNo, o.RelatedBillNo, o.IssueDate, o.IssuedBy.Id, o.IssuedTo.Id,
           o.ManagedBy.Id, o.PayableEntityTypeId, o.PayableEntityId, o.PayableId,
-          o.Currency.Id, o.Subtotal, o.Discount, o.Total,
+          o.Currency.Id, o.Subtotal, o.Discount, o.Total, o.PaymentMethod,
           string.Join(" ", o.Identificators), string.Join(" ", o.Tags),
           o.SchemaData.ToJsonString(), o.SecurityData.ToJsonString(), string.Empty,
           extData, o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
@@ -127,15 +127,15 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal void WriteBillConcept(BillConcept o, string schemaExtData) {
+    static internal void WriteBillConcept(BillConcept o, string extensionData) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Concept",
-        o.Id, o.UID, o.Bill.Id, o.Product.Id,
-        o.SATProductID, o.SATProductCode,
-        o.Description, string.Join(" ", o.Identificators),
-        string.Join(" ", o.Tags), o.Quantity,
-        o.QuantityUnit.Id, o.UnitPrice, o.Subtotal, o.Discount,
-        schemaExtData, "", o.PostedBy.Id, o.PostingTime, (char) o.Status);
+        o.Id, o.UID, o.BillConceptTypeId, o.Bill.Id, o.Product.Id,
+        o.SATProduct.Id, o.SATProductCode, o.Description,
+        string.Join(" ", o.Identificators), string.Join(" ", o.Tags),
+        o.Quantity, o.QuantityUnit.Id, o.UnitPrice, o.Subtotal, o.Discount,
+        o.SchemaData.ToJsonString(), extensionData, o.Keywords,
+        o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
@@ -145,8 +145,8 @@ namespace Empiria.Billing.Data {
 
       var op = DataOperation.Parse("write_FMS_Bill_Tax",
           o.Id, o.UID, o.TaxType.Id, o.Bill.Id, o.BillConcept.Id,
-          (char) o.TaxMethod, (char) o.TaxFactorType,
-          o.Factor, o.BaseAmount, o.Total, extensionData,
+          (char) o.TaxMethod, (char) o.TaxFactorType, o.Factor,
+          o.BaseAmount, o.Total, extensionData,
           o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);

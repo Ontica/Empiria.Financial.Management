@@ -40,6 +40,7 @@ namespace Empiria.Billing.Adapters {
 
         var field = new BillConceptFields {
           ProductUID = string.Empty,
+          SATProductUID = string.Empty,
           SATProductCode = concepto.ClaveProdServ,
           ClaveUnidad = concepto.ClaveUnidad,
           Unidad = concepto.Unidad,

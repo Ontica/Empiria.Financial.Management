@@ -210,6 +210,11 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public string SATProductUID {
+      get; set;
+    } = string.Empty;
+
+
     public string SATProductCode {
       get; set;
     } = string.Empty;
@@ -240,14 +245,14 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public string Identificators {
+    public string[] Identificators {
       get; set;
-    } = string.Empty;
+    } = new string[0];
 
 
-    public string Tags {
+    public string[] Tags {
       get; set;
-    } = string.Empty;
+    } = new string[0];
 
 
     public decimal Quantity {

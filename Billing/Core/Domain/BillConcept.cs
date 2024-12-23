@@ -13,9 +13,11 @@ using System;
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.Products;
+using Empiria.StateEnums;
+
+using Empiria.Products.SATMexico;
 
 using Empiria.Billing.Data;
-using Empiria.StateEnums;
 
 namespace Empiria.Billing {
 
@@ -30,6 +32,7 @@ namespace Empiria.Billing {
 
     public BillConcept(Bill bill, Product product) {
       Assertion.Require(bill, nameof(bill));
+      Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
       Assertion.Require(product, nameof(product));
 
       this.Bill = bill;
@@ -52,6 +55,12 @@ namespace Empiria.Billing {
 
     #region Properties
 
+    [DataField("BILL_CONCEPT_TYPE_ID")]
+    public int BillConceptTypeId {
+      get; private set;
+    } = -1;
+
+
     [DataField("BILL_CONCEPT_BILL_ID")]
     public Bill Bill {
       get; private set;
@@ -65,7 +74,7 @@ namespace Empiria.Billing {
 
 
     [DataField("BILL_CONCEPT_SAT_PRODUCT_ID")]
-    public int SATProductID {
+    public SATProducto SATProduct {
       get; private set;
     }
 
@@ -89,6 +98,9 @@ namespace Empiria.Billing {
       get {
         return _identificators.Split(' ').ToFixedList();
       }
+      private set {
+        _identificators = string.Join(" ", value);
+      }
     }
 
 
@@ -98,6 +110,9 @@ namespace Empiria.Billing {
     public FixedList<string> Tags {
       get {
         return _tags.Split(' ').ToFixedList();
+      }
+      private set {
+        _tags = string.Join(" ", value);
       }
     }
 
@@ -172,6 +187,13 @@ namespace Empiria.Billing {
     } = new FixedList<BillTaxEntry>();
 
 
+    public virtual string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(SATProductCode, Description, _identificators, _tags,
+                                           SATProduct.Keywords, Product.Keywords);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -182,12 +204,12 @@ namespace Empiria.Billing {
 
       fields.EnsureIsValid();
 
-      SATProductID = -1;
+      SATProduct = PatchField(fields.SATProductUID, SATProducto.Empty);
       SATProductCode = fields.SATProductCode;
       Product = PatchField(fields.ProductUID, Product);
       Description = PatchField(fields.Description, Description);
-      _identificators = PatchField(fields.Identificators, _identificators);
-      _tags = PatchField(fields.Tags, _tags);
+      Identificators = fields.Identificators.ToFixedList();
+      Tags = fields.Tags.ToFixedList();
       Quantity = fields.Quantity;
       QuantityUnit = Product.BaseUnit;
       this.UnitPrice = fields.UnitPrice;
@@ -204,7 +226,7 @@ namespace Empiria.Billing {
         PostingTime = DateTime.Now;
       }
 
-      BillData.WriteBillConcept(this, this.SchemaExtData.ToString());
+      BillData.WriteBillConcept(this, this.ExtData.ToString());
     }
 
     #endregion Methods
