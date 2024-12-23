@@ -30,7 +30,7 @@ namespace Empiria.Payments.Payables {
   /// A payable can be a bill, a contract supply order, a service order, a loan, travel expenses,
   /// fixed fund provision, etc.</summary>
   [PartitionedType(typeof(PayableType))]
-  internal class Payable : BaseObject, IPayable {
+  public class Payable : BaseObject, IPayable {
 
     #region Fields
 
@@ -117,7 +117,7 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PAYABLE_EXCHANGE_RATE_ID")]
+    [DataField("PAYABLE_EXCHANGE_RATE_TYPE_ID")]
     public int ExchangeRateTypeId {
       get; private set;
     } = -1;

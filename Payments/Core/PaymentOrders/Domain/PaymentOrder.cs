@@ -22,7 +22,7 @@ using Empiria.Payments.Payables;
 namespace Empiria.Payments.Orders {
 
   /// <summary>Represents a payment order.</summary>
-  internal class PaymentOrder : BaseObject {
+  public class PaymentOrder : BaseObject {
 
     #region Constructors and parsers
 
