@@ -8,15 +8,17 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Payments.BanobrasIntegration.IkosCash;
-using Empiria.Payments.BanobrasIntegration.IkosCash.Adapters;
+using System;
 
+using Empiria.Reflection;
+
+using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Processor {
 
   /// <summary>Represents a payments broker.</summary>
-  internal class PaymentsBroker : GeneralObject, IPaymentsBroker {
+  internal class PaymentsBroker : GeneralObject {
 
     #region Constructors and parsers
 
@@ -31,44 +33,42 @@ namespace Empiria.Payments.Processor {
 
     static public PaymentsBroker Empty => ParseEmpty<PaymentsBroker>();
 
-    static internal IPaymentsBroker SelectPaymentBroker(IPaymentInstruction paymentInstruction) {
-      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
 
-      return new PaymentsBroker();
+    static internal PaymentsBroker GetPaymentsBroker(PaymentOrder paymentOrder) {
+      Assertion.Require(paymentOrder, nameof(paymentOrder));
+
+      return Parse(750);
     }
 
     #endregion Constructors and parsers
 
+    #region Properties
+
+
+    private string ServiceAssemblyName {
+      get {
+        return base.ExtendedDataField.Get<string>("serviceAssemblyName");
+      }
+    }
+
+    private string ServiceTypeName {
+      get {
+        return base.ExtendedDataField.Get<string>("serviceTypeName");
+      }
+    }
+
+    #endregion Properties
+
     #region Methods
 
-    public IPaymentResult Pay(IPaymentInstruction instruction) {
+    public IPaymentsBroker GetService() {
+      Type brokerServiceType = ObjectFactory.GetType(ServiceAssemblyName,
+                                                     ServiceTypeName);
 
-      var response = SendToIkosCash(instruction);
-
-      return new PaymentResultDto {
-         Failed = EmpiriaMath.GetRandomBoolean(),
-      };
+      return (IPaymentsBroker) ObjectFactory.CreateObject(brokerServiceType);
     }
 
     #endregion Methods
-
-    #region Helpers
-
-    internal ResultadoTransaccionDto SendToIkosCash(IPaymentInstruction instruction) {
-      var paymentService = new IkosCashPaymentService();
-
-      var transaction = new TransaccionFields();
-
-      var paymentTransaction = paymentService.SendPaymentTransaction(transaction).Result;
-
-      if (paymentTransaction.Code != 0) {
-        Assertion.EnsureNoReachThisCode($"Encontré el siguiente error en el simefin: {paymentTransaction.ErrorMesage}" );
-      }
-
-      return paymentTransaction;
-    }
-
-    #endregion Helpers
 
   }  // class PaymentsBroker
 

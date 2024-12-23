@@ -1,31 +1,35 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Adapters Layer                          *
-*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Integration interface                   *
-*  Type     : IPaymentResult                             License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Integration Data Transfer Object        *
+*  Type     : PaymentResultDto                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Integration interface that represents a payment result sent by a payments broker.              *
+*  Summary  : Integration DTO that holds a a payment result sent by a payments broker.                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Payments.Processor.Adapters {
 
-    /// <summary>Integration interface that represents a payment result sent by a payments broker.</summary>
-    public interface IPaymentResult {
+  /// <summary>Integration DTO that holds a a payment result sent by a payments broker.</summary>
+  public class PaymentResultDto {
 
-    bool Failed {
-      get;
-    }
-
-  }  // interface IPaymentResult
+    public string RequestID {
+      get; set;
+    } = string.Empty;
 
 
+    public string Status {
+      get; set;
+    } = string.Empty;
 
-   public class PaymentResultDto : IPaymentResult {
+
+    public string StatusName {
+      get; set;
+    } = string.Empty;
+
 
     public bool Failed {
-      get;
-      set;
+      get; set;
     }
 
   }  // class PaymentResultDto

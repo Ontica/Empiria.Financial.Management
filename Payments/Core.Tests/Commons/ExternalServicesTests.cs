@@ -40,17 +40,6 @@ namespace Empiria.Tests.Payments {
       ExternalServices.ExerciseBudget(sut);
     }
 
-
-    [Fact]
-    public void Should_Send_PaymentOrder_ToPay() {
-      TestsCommonMethods.Authenticate();
-
-      PaymentOrder order = PaymentOrder.Parse("4954fdf9-b947-48f4-b8fa-610f559448d8");
-      var sut = ExternalServices.SendPaymentOrderToPay(order);
-
-       Assert.NotNull(sut);
-    }
-
     #endregion Facts
 
   }  // class PayableTests

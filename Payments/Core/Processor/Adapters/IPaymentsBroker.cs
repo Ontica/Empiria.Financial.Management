@@ -13,11 +13,11 @@ namespace Empiria.Payments.Processor.Adapters {
   /// <summary>Interface to integrate payment brokers with Empiria Payments.</summary>
   public interface IPaymentsBroker {
 
-    string UID {
-      get;
-    }
+    PaymentResultDto CancelPaymentInstruction(PaymentInstructionDto instruction);
 
-    IPaymentResult Pay(IPaymentInstruction instruction);
+    PaymentResultDto GetPaymentInstructionStatus(string instructionUID);
+
+    PaymentResultDto SendPaymentInstruction(PaymentInstructionDto instruction);
 
   }  // interface IPaymentsBroker
 

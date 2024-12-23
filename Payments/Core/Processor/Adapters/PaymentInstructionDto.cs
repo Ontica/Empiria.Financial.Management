@@ -10,65 +10,29 @@
 
 using System;
 
+using Empiria.Payments.Orders;
+
 namespace Empiria.Payments.Processor.Adapters {
 
-    /// <summary>Interface that represents a payment instruction to integrate
-    /// Empiria Payment with payments brokers.</summary>
-  public interface IPaymentInstruction {
-   string Account {
-    get; set;
-   }
+  /// <summary>Output DTO that holds information about a payment instruction
+  /// to be sent to a payments broker.</summary>
+  public class PaymentInstructionDto {
 
-   DateTime RequestedDate {
-    get; set;
-   }
-
-   DateTime DueDate {
-     get; set;
+    public PaymentOrder PaymentOrder {
+      get; internal set;
     }
 
-    decimal Total {
-      get; set;
+    public string ReferenceNo {
+      get; internal set;
     }
 
-    string Reference {
-      get; set;
+    public string RequestUniqueNo {
+      get; internal set;
     }
 
-   string Description {
-     get; set;
+    public DateTime RequestedTime {
+      get; internal set;
     }
-
-    }  // interface IPaymentInstruction
-
-
-
-    /// <summary>Output DTO that holds information about a payment instruction
-    /// to be sent to a payments broker.</summary>
-  public class PaymentInstructionDto : IPaymentInstruction {
-   public string Account {
-    get; set;
-   }
-
-   public DateTime RequestedDate {
-     get; set;
-   }
-
-  public DateTime DueDate {
-    get; set;
-  }
-
-  public decimal Total {
-    get; set;
-  }
-
-  public string Reference {
-    get; set;
-  }
-
-  public string Description {
-    get; set;
-  }
 
   }  // class PaymentInstructionDto
 
