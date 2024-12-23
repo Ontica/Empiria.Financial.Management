@@ -159,6 +159,17 @@ namespace Empiria.Billing {
     }
 
 
+    public string PaymentMethod {
+      get {
+        if (SchemaData.MetodoPago.Length != 0) {
+          return SchemaData.MetodoPago;
+        } else {
+          return "ND";
+        }
+      }
+    }
+
+
     [DataField("BILL_IDENTIFICATORS")]
     private string _identificators = string.Empty;
 
