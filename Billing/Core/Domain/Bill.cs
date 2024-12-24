@@ -295,7 +295,7 @@ namespace Empiria.Billing {
       fields.EnsureIsValidCreditNote(BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;
-      IssueDate = PatchField(fields.IssueDate, IssueDate);
+      IssueDate = PatchField(fields.SchemaData.Fecha, IssueDate);
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
       ManagedBy = PatchField(fields.ManagedByUID, ManagedBy);

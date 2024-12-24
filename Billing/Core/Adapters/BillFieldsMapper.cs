@@ -64,12 +64,9 @@ namespace Empiria.Billing.Adapters {
         BillCategoryUID = BillCategory.FacturaProveedores.UID,
         BillNo = dto.SATComplemento.UUID,
         CertificationNo = dto.DatosGenerales.NoCertificado,
-        IssueDate = dto.DatosGenerales.Fecha,
         IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
         IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
         CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
-        Subtotal = dto.DatosGenerales.SubTotal,
-        Total = dto.DatosGenerales.Total,
         CFDIRelated = MapToCfdiRelated(dto.DatosGenerales.CfdiRelacionados),
         Concepts = MapToBillConceptFields(dto.Conceptos),
         SchemaData = MapToSchemaData(dto),
@@ -89,6 +86,7 @@ namespace Empiria.Billing.Adapters {
           TaxFactorType = GetFactorTypeByTax(tax.TipoFactor),
           Factor = tax.TasaOCuota,
           BaseAmount = tax.Base,
+          Impuesto = tax.Impuesto,
           Total = tax.Importe
         };
 
@@ -136,13 +134,16 @@ namespace Empiria.Billing.Adapters {
         IssuedBy = MapToIssuedBy(dto.Emisor),
         IssuedTo = MapToIssuedTo(dto.Receptor),
         SchemaVersion = dto.DatosGenerales.CFDIVersion,
-        TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
+        Fecha = dto.DatosGenerales.Fecha,
         Folio = dto.DatosGenerales.Folio,
         MetodoPago = dto.DatosGenerales.MetodoPago,
         FormaPago = dto.DatosGenerales.FormaPago,
         Exportacion = dto.DatosGenerales.Exportacion,
         LugarExpedicion = dto.DatosGenerales.LugarExpedicion,
-        Moneda = dto.DatosGenerales.Moneda
+        Moneda = dto.DatosGenerales.Moneda,
+        Subtotal = dto.DatosGenerales.SubTotal,
+        Total = dto.DatosGenerales.Total,
+        TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
       };
     }
 

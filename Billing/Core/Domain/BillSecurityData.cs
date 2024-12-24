@@ -26,6 +26,36 @@ namespace Empiria.Billing {
     }
 
 
+    public string TFDVersion {
+      get {
+        return _securityData.Get("tFDVersion", string.Empty);
+      }
+      private set {
+        _securityData.SetIfValue("tFDVersion", value);
+      }
+    }
+
+
+    public string UUID {
+      get {
+        return _securityData.Get("uUID", string.Empty);
+      }
+      private set {
+        _securityData.SetIfValue("uUID", value);
+      }
+    }
+
+
+    public string NoCertificado {
+      get {
+        return _securityData.Get("noCertificado", string.Empty);
+      }
+      private set {
+        _securityData.SetIfValue("noCertificado", value);
+      }
+    }
+
+
     public string Certificado {
       get {
         return _securityData.Get("certificado", string.Empty);
@@ -92,12 +122,16 @@ namespace Empiria.Billing {
     internal void Update(BillSecurityDataFields securityData) {
       Assertion.Require(securityData, nameof(securityData));
 
-      Certificado = securityData.Certificado;
       Sello = securityData.Sello;
-      SelloCFD = securityData.SelloCFD;
-      SelloSAT = securityData.SelloSAT;
+      NoCertificado = securityData.NoCertificado;
+      Certificado = securityData.Certificado;
+
+      TFDVersion = securityData.Tfd_Version;
+      UUID = securityData.UUID;
       FechaTimbrado = securityData.FechaTimbrado;
       RFCProveedorCertificacion = securityData.RfcProvCertif;
+      SelloCFD = securityData.SelloCFD;
+      SelloSAT = securityData.SelloSAT;
     }
   }  // BillSecurityData
 

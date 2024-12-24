@@ -35,6 +35,16 @@ namespace Empiria.Billing {
     }
 
 
+    public decimal Cantidad {
+      get {
+        return _schemaData.Get("cantidad", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("cantidad", value);
+      }
+    }
+
+
     public string ClaveUnidad {
       get {
         return _schemaData.Get("claveUnidad", string.Empty);
@@ -51,6 +61,36 @@ namespace Empiria.Billing {
       }
       private set {
         _schemaData.SetIfValue("unidad", value);
+      }
+    }
+
+
+    public string Descripcion {
+      get {
+        return _schemaData.Get("descripcion", string.Empty);
+      }
+      private set {
+        _schemaData.SetIfValue("descripcion", value);
+      }
+    }
+
+
+    public decimal ValorUnitario {
+      get {
+        return _schemaData.Get("valorUnitario", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("valorUnitario", value);
+      }
+    }
+
+
+    public decimal Importe {
+      get {
+        return _schemaData.Get("importe", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("importe", value);
       }
     }
 
@@ -84,8 +124,12 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       ClaveProdServ = fields.SATProductCode;
+      Cantidad = fields.Quantity;
       ClaveUnidad = fields.ClaveUnidad;
       Unidad = fields.Unidad;
+      Descripcion = fields.Description;
+      ValorUnitario = fields.UnitPrice;
+      Importe = fields.Subtotal;
       NoIdentificacion = fields.NoIdentificacion;
       ObjetoImp = fields.ObjetoImp;
     }

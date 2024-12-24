@@ -41,11 +41,6 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public DateTime IssueDate {
-      get; set;
-    } = ExecutionServer.DateMaxValue;
-
-
     public string IssuedByUID {
       get; set;
     } = string.Empty;
@@ -125,6 +120,11 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public DateTime Fecha {
+      get; set;
+    } = ExecutionServer.DateMaxValue;
+
+
     public string TipoComprobante {
       get; set;
     } = string.Empty;
@@ -163,6 +163,21 @@ namespace Empiria.Billing {
     public string Moneda {
       get; set;
     } = string.Empty;
+
+
+    public decimal Subtotal {
+      get; set;
+    }
+
+
+    public decimal Discount {
+      get; set;
+    }
+
+
+    public decimal Total {
+      get; set;
+    }
 
   }
 
@@ -329,6 +344,11 @@ namespace Empiria.Billing {
       get; set;
     }
 
+
+    public string Impuesto {
+      get; set;
+    }
+
   } // class BillTaxEntryFields
 
 
@@ -416,7 +436,7 @@ namespace Empiria.Billing {
       Assertion.Require(Party.Primary.Equals(issuedTo),
                         $"El receptor del CFDI no es {Party.Primary.Name}");
 
-      Assertion.Require(fields.IssueDate <= DateTime.Now,
+      Assertion.Require(fields.SchemaData.Fecha <= DateTime.Now,
                         "La fecha del documento no debe de ser mayor a la fecha actual.");
     }
 

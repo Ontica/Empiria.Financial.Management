@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Json;
 
 namespace Empiria.Billing {
@@ -30,6 +31,16 @@ namespace Empiria.Billing {
       }
       private set {
         _schemaData.SetIfValue("version", value);
+      }
+    }
+
+
+    public DateTime Fecha {
+      get {
+        return _schemaData.Get("fecha", DateTime.MaxValue);
+      }
+      private set {
+        _schemaData.SetIfValue("fecha", value);
       }
     }
 
@@ -183,6 +194,37 @@ namespace Empiria.Billing {
       }
     }
 
+
+    public decimal SubTotal {
+      get {
+        return _schemaData.Get("subTotal", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("subTotal", value);
+      }
+    }
+
+
+    public decimal Total {
+      get {
+        return _schemaData.Get("total", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("total", value);
+      }
+    }
+
+
+    public string TipoDeComprobante {
+      get {
+        return _schemaData.Get<string>("tipoDeComprobante", string.Empty);
+      }
+      private set {
+        _schemaData.SetIfValue("tipoDeComprobante", value);
+      }
+    }
+
+
     internal string ToJsonString() {
       return _schemaData.ToString();
     }
@@ -191,6 +233,7 @@ namespace Empiria.Billing {
       Assertion.Require(schemaData, nameof(schemaData));
 
       Version = schemaData.SchemaVersion;
+      Fecha = schemaData.Fecha;
       RFCEmisor = schemaData.IssuedBy.RFC;
       NombreEmisor = schemaData.IssuedBy.Nombre;
       RFCReceptor = schemaData.IssuedTo.RFC;
@@ -198,7 +241,6 @@ namespace Empiria.Billing {
       RegimenFiscalEmisor =schemaData.IssuedBy.RegimenFiscal;
       DomicilioFiscalReceptor = schemaData.IssuedTo.DomicilioFiscal;
       UsoCFDI = schemaData.IssuedTo.UsoCFDI;
-      TipoComprobante = schemaData.TipoComprobante;
       Folio = schemaData.Folio;
       Serie = schemaData.Serie;
       MetodoPago = schemaData.MetodoPago;
@@ -206,6 +248,9 @@ namespace Empiria.Billing {
       Exportacion = schemaData.Exportacion;
       LugarExpedicion = schemaData.LugarExpedicion;
       Moneda = schemaData.Moneda;
+      SubTotal = schemaData.Subtotal;
+      Total = schemaData.Total;
+      TipoComprobante = schemaData.TipoComprobante;
     }
   }
 

@@ -125,6 +125,13 @@ namespace Empiria.Billing {
       get; private set;
     }
 
+
+    public BillTaxExtData BillTaxExtData {
+      get {
+        return new BillTaxExtData(this.ExtData);
+      }
+    }
+
     #endregion Properties
 
     #region Private methods
@@ -136,6 +143,7 @@ namespace Empiria.Billing {
       this.Factor = fields.Factor;
       this.BaseAmount = fields.BaseAmount;
       this.Total = fields.Total;
+      this.BillTaxExtData.Update(fields);
     }
 
 
