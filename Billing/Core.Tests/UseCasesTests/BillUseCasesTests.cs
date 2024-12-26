@@ -85,13 +85,13 @@ namespace Empiria.Tests.Billing {
         BillTypeUID = "",
         BillCategoryUID = "",
         ManagedByUID = "",
-        Keywords = "",
+        Keywords = "FACTURA ONTICA",
         ConceptsKeywords = "",
         Tags = new string[] { },
         BillDateType = BillQueryDateType.None,
-        FromDate = new DateTime(2024, 10, 29),
-        ToDate = new DateTime(2024, 10, 31),
-        Status = Empiria.Billing.BillStatus.All
+        //FromDate = new DateTime(2024, 10, 29),
+        //ToDate = new DateTime(2024, 10, 31),
+        Status = Empiria.Billing.BillStatus.Pending
       };
 
     }

@@ -69,7 +69,7 @@ namespace Empiria.Billing.Data {
 
     static internal FixedList<Bill> SearchBills(string filter, string sort) {
 
-      var sql = "SELECT * FROM FMS_BILLS";
+      var sql = "SELECT * FROM FMS_BILLS WHERE BILL_ID > 0";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql += $" AND {filter}";

@@ -25,9 +25,9 @@ namespace Empiria.Billing.Adapters {
       string dateFilter = GetDateRangeFilter(query);
       string categoryFilter = GetCategoryFilter(query.BillCategoryUID);
       string managedByFilter = GetManagedByFilter(query.ManagedByUID);
-      string keywordsFilter = GetKeywordsFilter(query.Keywords);
-      string conceptsKeywordsFilter = GetConceptsKeywordsFilter(query.ConceptsKeywords);
       string tagsFilter = GetTagsFilter(query.Tags);
+      string keywordsFilter = GetKeywordsFilter(query.Keywords);
+      //string conceptsKeywordsFilter = GetConceptsKeywordsFilter(query.ConceptsKeywords);
       string statusFilter = GetStatusFilter(query.Status);
       //string billDateType = GetBillDateTypeFilter(query.BillDateType);
 
@@ -36,9 +36,9 @@ namespace Empiria.Billing.Adapters {
       filter.AppendAnd(dateFilter);
       filter.AppendAnd(categoryFilter);
       filter.AppendAnd(managedByFilter);
-      filter.AppendAnd(keywordsFilter);
-      filter.AppendAnd(conceptsKeywordsFilter);
       filter.AppendAnd(tagsFilter);
+      filter.AppendAnd(keywordsFilter);
+      //filter.AppendAnd(conceptsKeywordsFilter);
       filter.AppendAnd(statusFilter);
       //filter.AppendAnd(billDateType);
 
@@ -105,7 +105,7 @@ namespace Empiria.Billing.Adapters {
         return string.Empty;
       }
 
-      return $"{SearchExpression.ParseAndLikeKeywords("Keywords", keywords)} ";
+      return $"{SearchExpression.ParseAndLikeKeywords("BILL_KEYWORDS", keywords)} ";
     }
 
 
