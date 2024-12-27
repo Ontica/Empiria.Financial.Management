@@ -112,6 +112,15 @@ namespace Empiria.Tests.Payments.Orders {
     }
 
 
+    [Fact]
+    public void Should_Send_Payment_Order_To_Pay() {
+
+
+      var sut = _usecases.SendPaymentOrderToPay("4954fdf9-b947-48f4-b8fa-610f559448d8");
+
+      Assert.NotNull(sut);
+    }
+
     #endregion Facts
 
   }  // class PaymentOrderUseCasesTests

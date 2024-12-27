@@ -14,6 +14,7 @@ using Empiria.Contacts;
 using Empiria.Json;
 
 using Empiria.Payments.Orders;
+using Empiria.Payments.Payables;
 using Empiria.Payments.Processor.Data;
 
 
@@ -35,6 +36,10 @@ namespace Empiria.Payments.Processor {
     static public PaymentInstruction Parse(string uid) => ParseKey<PaymentInstruction>(uid);
 
     static public PaymentInstruction Empty => ParseEmpty<PaymentInstruction>();
+
+    static internal PaymentInstruction TryGetFor(PaymentOrder paymentOrder) {
+      return BaseObject.TryParse<PaymentInstruction>($"PYMT_INSTRUCTION_PYMT_ORDER_ID = {paymentOrder.Id} AND PYMT_INSTRUCTION_STATUS <> 'X' ");
+    }
 
     #region Properties
 
@@ -106,6 +111,7 @@ namespace Empiria.Payments.Processor {
 
 
     protected override void OnSave() {
+      
       ProcessorData.WritePaymentInstruction(this, this.ExtData.ToString());
     }
 
