@@ -19,6 +19,8 @@ namespace Empiria.Payments.Processor {
 
     Payed = 'C',
 
+    InPaymentLine = 'L',  
+
     Deleted = 'X',
 
     All = '@',
@@ -38,6 +40,8 @@ namespace Empiria.Payments.Processor {
           return "Rechazado";
         case PaymentInstructionStatus.Payed:
           return "Pagado";
+        case PaymentInstructionStatus.InPaymentLine:
+          return "En linea de pago";
         case PaymentInstructionStatus.Deleted:
           return "Eliminado";
         default:
