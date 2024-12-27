@@ -136,6 +136,7 @@ namespace Empiria.Billing.Adapters {
         SchemaVersion = dto.DatosGenerales.CFDIVersion,
         Fecha = dto.DatosGenerales.Fecha,
         Folio = dto.DatosGenerales.Folio,
+        Serie = dto.DatosGenerales.Serie,
         MetodoPago = dto.DatosGenerales.MetodoPago,
         FormaPago = dto.DatosGenerales.FormaPago,
         Exportacion = dto.DatosGenerales.Exportacion,

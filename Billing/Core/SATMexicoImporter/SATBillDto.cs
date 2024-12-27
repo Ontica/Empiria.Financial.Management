@@ -174,6 +174,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
+    public string Serie {
+      get; internal set;
+    }
+
+
     public string NoCertificado {
       get; internal set;
     }
@@ -227,7 +232,7 @@ namespace Empiria.Billing.SATMexicoImporter {
     public FixedList<SATBillCFDIRelatedDataDto> CfdiRelacionados {
       get; internal set;
     } = new FixedList<SATBillCFDIRelatedDataDto>();
-
+    
   }  // class SATBillGeneralDataDto
 
 

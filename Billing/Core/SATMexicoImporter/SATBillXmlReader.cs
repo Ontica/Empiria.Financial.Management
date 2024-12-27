@@ -146,6 +146,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         Folio = GetAttribute(generalDataNode, "Folio"),
         Fecha = GetAttribute<DateTime>(generalDataNode, "Fecha"),
         Sello = GetAttribute(generalDataNode, "Sello"),
+        Serie = GetAttribute(generalDataNode, "Serie"),
         FormaPago = GetAttribute(generalDataNode, "FormaPago"),
         NoCertificado = GetAttribute(generalDataNode, "NoCertificado"),
         Certificado = GetAttribute(generalDataNode, "Certificado"),
