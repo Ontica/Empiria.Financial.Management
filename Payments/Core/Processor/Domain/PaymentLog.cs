@@ -9,8 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using Empiria.Financial;
 using Empiria.Json;
-
+using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Data;
 
 namespace Empiria.Payments.Processor {
@@ -20,11 +21,11 @@ namespace Empiria.Payments.Processor {
 
     #region Constructors and parsers
 
-    public PaymentLog(PaymentInstruction paymentInstruction) {
+    public PaymentLog(int paymentInstructionId) {
 
-      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
+      Assertion.Require(paymentInstructionId, nameof(paymentInstructionId));
 
-      this.PaymentInstruction = paymentInstruction;
+      this.PaymentInstructionId = paymentInstructionId;
     }
 
     static public PaymentLog Parse(int id) => ParseId<PaymentLog>(id);
@@ -38,7 +39,7 @@ namespace Empiria.Payments.Processor {
     #region Properties
 
     [DataField("PYMT_LOG_PYMT_INSTRUCTION_ID")]
-    public PaymentInstruction PaymentInstruction {
+    public int PaymentInstructionId {
       get; private set;
     }
 
@@ -89,9 +90,23 @@ namespace Empiria.Payments.Processor {
 
     #region Methods
 
+    internal void Update(PaymentResultDto paymentResultDto) {
+      Assertion.Require(paymentResultDto, nameof(paymentResultDto));
+      this.Text = "";
+      this.RequestCode = paymentResultDto.RequestID;
+      this.RequestTime = DateTime.Now;
+      this.ApplicationTime = DateTime.Now;
+      this.RecordingTime = DateTime.Now;
+      this.Status = 'P';
+
+    
+    }
+
+
     protected override void OnSave() {
       ProcessorData.WritePaymentLog(this, this.ExtData.ToString());
     }
+
 
     #endregion Methods
 
