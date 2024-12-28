@@ -2,46 +2,42 @@
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Adapters Layer                          *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Integration Data Transfer Object        *
-*  Type     : PaymentResultDto                           License   : Please read LICENSE.txt file            *
+*  Type     : PaymentInstructionResultDto                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Integration DTO that holds a a payment result sent by a payments broker.                       *
+*  Summary  : Integration DTO that holds a a payment instruction result sent by a payments broker.           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Payments.Processor.Adapters {
 
   /// <summary>Integration DTO that holds a a payment result sent by a payments broker.</summary>
-  public class PaymentResultDto {
+  public class PaymentInstructionResultDto {
 
-    public string RequestID {
+    public string ExternalRequestID {
       get; set;
     } = string.Empty;
 
 
-    public string PaymentNo { 
-      get; set; 
-    } = string.Empty;
-
-
-    public char Status {
-      get; set;
-    } = 'P';
-
-
-    public string StatusName {
+    public string PaymentNo {
       get; set;
     } = string.Empty;
 
 
-    public string Text {
+    public string ExternalStatusName {
       get; set;
     } = string.Empty;
 
 
-    public bool Failed {
+    public string ExternalResultText {
       get; set;
-    }
+    } = string.Empty;
 
-  }  // class PaymentResultDto
+
+    public PaymentInstructionStatus Status {
+      get; set;
+    } = PaymentInstructionStatus.Pending;
+
+
+  }  // class PaymentInstructionResultDto
 
 }  // namespace Empiria.Payments.Processor.Adapters

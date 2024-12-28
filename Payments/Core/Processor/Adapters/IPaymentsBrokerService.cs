@@ -2,23 +2,23 @@
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Adpaters Layer                          *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Integration interface                   *
-*  Type     : IPaymentsBroker                            License   : Please read LICENSE.txt file            *
+*  Type     : IPaymentsBrokerService                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Interface to integrate payment brokers with Empiria Payments.                                  *
+*  Summary  : Interface to integrate payments broker service providers with Empiria Payments.                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Payments.Processor.Adapters {
 
-  /// <summary>Interface to integrate payment brokers with Empiria Payments.</summary>
-  public interface IPaymentsBroker {
+  /// <summary>Interface to integrate payments broker service providers with Empiria Payments.</summary>
+  public interface IPaymentsBrokerService {
 
-    PaymentResultDto CancelPaymentInstruction(PaymentInstructionDto instruction);
+    PaymentInstructionResultDto CancelPaymentInstruction(PaymentInstructionDto instruction);
 
-    PaymentResultDto GetPaymentInstructionStatus(string instructionUID);
+    PaymentInstructionResultDto GetPaymentInstructionStatus(string instructionUID);
 
-    PaymentResultDto SendPaymentInstruction(PaymentInstructionDto instruction);
+    PaymentInstructionResultDto SendPaymentInstruction(PaymentInstructionDto instruction);
 
-  }  // interface IPaymentsBroker
+  }  // interface IPaymentsBrokerService
 
 }  // namespace Empiria.Payments.Processor.Adapters
