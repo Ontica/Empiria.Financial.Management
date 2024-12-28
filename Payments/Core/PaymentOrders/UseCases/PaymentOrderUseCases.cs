@@ -89,10 +89,10 @@ namespace Empiria.Payments.Orders.UseCases {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
       var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-  
+
       using (var usecases = PaymentService.ServiceInteractor()) {
 
-        var paymentLogs = usecases.GetPaymentLogs(paymentOrder);
+        var paymentLogs = usecases.GetPaymentInstructionLogs(paymentOrder);
 
         return PaymentLogMapper.Map(paymentLogs);
       }

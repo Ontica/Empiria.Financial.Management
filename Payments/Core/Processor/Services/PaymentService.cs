@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Services;
 
 using Empiria.Payments.Orders;
@@ -33,133 +31,93 @@ namespace Empiria.Payments.Processor.Services {
 
     #region Services
 
-
-    internal FixedList<PaymentLog> GetPaymentLogs(PaymentOrder paymentOrder) {
+    internal FixedList<PaymentInstructionLogEntry> GetPaymentInstructionLogs(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
-      var paymentInstruction = PaymentInstruction.TryGetFor(paymentOrder);
-
-      return PaymentLog.GetPaymentLog(paymentInstruction.Id);
+      return PaymentInstructionLogEntry.GetListFor(paymentOrder);
     }
 
 
     internal PaymentInstruction SendToPay(PaymentsBroker broker, PaymentOrder paymentOrder) {
       Assertion.Require(broker, nameof(broker));
+      Assertion.Require(!broker.IsEmptyInstance, nameof(broker));
       Assertion.Require(paymentOrder, nameof(paymentOrder));
+      Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
 
-      EnsureIsNotPayed(paymentOrder);
+      EnsureIsNotSent(paymentOrder);
 
-      PaymentInstructionDto instruction = PaymentInstructionMapper.Map(paymentOrder);
+      var instruction = new PaymentInstruction(broker, paymentOrder);
 
-      IPaymentsBroker paymentsService = broker.GetService();
+      PaymentInstructionDto instructionDto = PaymentInstructionMapper.Map(instruction);
 
-      PaymentResultDto paymentResult = paymentsService.SendPaymentInstruction(instruction);
+      IPaymentsBrokerService paymentsService = broker.GetService();
 
-      if (paymentResult.Failed) {
-        var rejectedPayment = RejectedPayment(paymentOrder, paymentResult, broker);
-        WritePaymentLog(rejectedPayment, paymentResult);
+      PaymentInstructionResultDto paymentResult = paymentsService.SendPaymentInstruction(instructionDto);
 
-        return rejectedPayment;
-      } else {
-        var successfullPayment = SuccessfullPayment(paymentOrder, paymentResult, broker);
-        WritePaymentLog(successfullPayment, paymentResult);
+      UpdatePaymentInstruction(instruction, paymentResult);
 
-        return successfullPayment;
-      }
+      return instruction;
     }
-       
 
-    internal void ValidateIsPaymentInstructionIsPayed(PaymentInstruction paymentInstruction) {
 
-      Assertion.Require(paymentInstruction.Status == PaymentInstructionStatus.Payed,
-                        $"La orden de pago ya ha sido pagada ");
+    internal void UpdatePaymentInstructionStatus(PaymentInstruction paymentInstruction) {
+      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
+      Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
+      Assertion.Require(!paymentInstruction.IsNew, "paymentInstruction must be stored.");
 
-      var paymentLog = PaymentLog.TryGetFor(paymentInstruction);
 
-      //send to Simefin Ws
-      PaymentResultDto paymentResult = new PaymentResultDto();
+      Assertion.Require(!paymentInstruction.Status.IsFinal(),
+                        $"La instrucción de pago está en un estado final: {paymentInstruction.Status.GetName()}");
 
-      Assertion.Require(paymentResult.Status == 'K',
-                 $"La orden de pago fue cancelada o rechazada.");
 
-      switch (paymentResult.Status) {
-        case 'O':
-          WritePaymentLog(paymentInstruction, paymentResult);
-          break;
-        case 'P':
-          paymentInstruction.SetAuthorizationRequired();
-          paymentInstruction.Save();
-          WritePaymentLog(paymentInstruction, paymentResult);
-          break;
-        case 'K': {
-          paymentInstruction.SetFailed();
-          paymentInstruction.Save();
-          WritePaymentLog(paymentInstruction, paymentResult);
-          break;
-        }
-        case 'L': {
-          paymentInstruction.SetPayed();
-          paymentInstruction.Save();
-          WritePaymentLog(paymentInstruction, paymentResult);
-          break;
-        }
-        default:
-          throw Assertion.EnsureNoReachThisCode($"Unhandled payment result status .");
-      }
+      IPaymentsBrokerService paymentsService = paymentInstruction.Broker.GetService();
 
+      Assertion.Require(paymentInstruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
+
+      PaymentInstructionStatusDto status = paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
+
+      UpdatePaymentInstruction(paymentInstruction, status);
     }
 
     #endregion Services
 
     #region Helpers
 
+    static private void EnsureIsNotSent(PaymentOrder paymentOrder) {
+      FixedList<PaymentInstruction> instructions = PaymentInstruction.GetListFor(paymentOrder);
 
-    static private void EnsureIsNotPayed(PaymentOrder paymentOrder) {
-      var paymentInstruction = PaymentInstruction.TryGetFor(paymentOrder);
-
-      if (paymentInstruction != null) {
-        Assertion.Require(paymentInstruction.Status != PaymentInstructionStatus.Rejected,
-                $"No es posible enviar la orden de pago, ya que existe una orden pago " +
-                $"con los mismos datos en status: {paymentInstruction.Status.GetName()}.");
+      if (instructions.Contains(x => !x.Status.IsFinal())) {
+        Assertion.RequireFail($"No es posible enviar la orden de pago al sistema de pagos, ya que tiene " +
+                              $"una transacción pendiente.");
       }
     }
 
 
-    static private PaymentInstruction RejectedPayment(PaymentOrder paymentOrder,
-                                                      PaymentResultDto paymentResult,
-                                                      PaymentsBroker broker) {
+    static private void UpdatePaymentInstruction(PaymentInstruction paymentInstruction,
+                                                 PaymentInstructionResultDto paymentResultDto) {
 
-      var rejectedPaymentData = new RejectedPaymentData(paymentResult);
+      var logEntry = new PaymentInstructionLogEntry(paymentInstruction, paymentResultDto);
 
-      var rejectedPayment = new RejectedPayment(broker, paymentOrder, rejectedPaymentData);
+      paymentInstruction.SetExternalUniqueNo(paymentResultDto.ExternalRequestID);
+      paymentInstruction.UpdateStatus(paymentResultDto.Status);
 
-      rejectedPayment.Save();
+      paymentInstruction.Save();
 
-      return rejectedPayment;
+      logEntry.Save();
     }
 
+    private void UpdatePaymentInstruction(PaymentInstruction paymentInstruction,
+                                          PaymentInstructionStatusDto newStatus) {
+      var logEntry = new PaymentInstructionLogEntry(paymentInstruction, newStatus);
 
-    static private PaymentInstruction SuccessfullPayment(PaymentOrder paymentOrder,
-                                                         PaymentResultDto paymentResult,
-                                                         PaymentsBroker broker) {
+      if (paymentInstruction.Status != newStatus.Status) {
+        paymentInstruction.UpdateStatus(newStatus.Status);
+        paymentInstruction.Save();
+      }
 
-      var successfulPaymentData = new SuccessfulPaymentData(paymentResult);
-
-      var payment = new SuccessfulPayment(broker, paymentOrder, successfulPaymentData);
-
-      payment.Save();
-
-      return payment;
-    }
-     
-
-    static private void WritePaymentLog(PaymentInstruction PaymentInstruction, PaymentResultDto paymentResultDto) {
-      PaymentLog paymentLog = new PaymentLog(PaymentInstruction);
-      paymentLog.Update(paymentResultDto);
-      paymentLog.Save();
+      logEntry.Save();
     }
 
- 
     #endregion Helpers
 
   }  // class PaymentService

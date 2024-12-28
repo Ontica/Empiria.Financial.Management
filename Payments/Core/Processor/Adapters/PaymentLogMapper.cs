@@ -17,7 +17,7 @@ namespace Empiria.Payments.Processor.Services {
 
     #region Methods
 
-    internal static FixedList<PaymentLogDto> Map(FixedList<PaymentLog> paymentLogs) {
+    internal static FixedList<PaymentLogDto> Map(FixedList<PaymentInstructionLogEntry> paymentLogs) {
       throw new NotImplementedException();
     }
 

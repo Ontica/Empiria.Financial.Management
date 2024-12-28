@@ -40,4 +40,24 @@ namespace Empiria.Payments.Processor.Adapters {
 
   }  // class PaymentInstructionResultDto
 
+
+
+  public class PaymentInstructionStatusDto {
+
+    public string ExternalRequestID {
+      get; set;
+    } = string.Empty;
+
+
+    public string ExternalStatusName {
+      get; set;
+    } = string.Empty;
+
+
+    public PaymentInstructionStatus Status {
+      get; set;
+    } = PaymentInstructionStatus.Pending;
+
+  }  // class PaymentInstructionStatusDto
+
 }  // namespace Empiria.Payments.Processor.Adapters

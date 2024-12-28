@@ -15,7 +15,7 @@ namespace Empiria.Payments.Processor.Adapters {
 
     PaymentInstructionResultDto CancelPaymentInstruction(PaymentInstructionDto instruction);
 
-    PaymentInstructionResultDto GetPaymentInstructionStatus(string instructionUID);
+    PaymentInstructionStatusDto GetPaymentInstructionStatus(string instructionUID);
 
     PaymentInstructionResultDto SendPaymentInstruction(PaymentInstructionDto instruction);
 

@@ -10,18 +10,16 @@
 
 using System;
 
-using Empiria.Payments.Orders;
-
 namespace Empiria.Payments.Processor.Adapters {
 
   static internal class PaymentInstructionMapper {
 
-    static internal PaymentInstructionDto Map(PaymentOrder paymentOrder) {
+    static internal PaymentInstructionDto Map(PaymentInstruction paymentInstruction) {
       return new PaymentInstructionDto {
         RequestedTime = DateTime.Now,
-        ReferenceNo = "",
-        RequestUniqueNo = "",
-        PaymentOrder = paymentOrder,
+        ReferenceNo = paymentInstruction.PaymentInstructionNo,
+        RequestUniqueNo = paymentInstruction.PaymentInstructionNo,
+        PaymentOrder = paymentInstruction.PaymentOrder,
       };
     }
 
