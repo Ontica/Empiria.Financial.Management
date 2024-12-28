@@ -18,12 +18,22 @@ namespace Empiria.Payments.Processor.Adapters {
     } = string.Empty;
 
 
-    public string Status {
+    public string PaymentNo { 
+      get; set; 
+    } = string.Empty;
+
+
+    public char Status {
+      get; set;
+    } = 'P';
+
+
+    public string StatusName {
       get; set;
     } = string.Empty;
 
 
-    public string StatusName {
+    public string Text {
       get; set;
     } = string.Empty;
 
