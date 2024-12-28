@@ -85,6 +85,20 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
+    public FixedList<PaymentLogDto> GetPaymentOrderLog(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+  
+      using (var usecases = PaymentService.ServiceInteractor()) {
+
+        var paymentLogs = usecases.GetPaymentLogs(paymentOrder);
+
+        return PaymentLogMapper.Map(paymentLogs);
+      }
+    }
+
+
     public PaymentOrderHolderDto SendPaymentOrderToPay(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 

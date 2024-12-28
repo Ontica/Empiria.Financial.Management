@@ -95,8 +95,22 @@ namespace Empiria.Payments.Processor {
 
     #region Methods
 
+
+    protected override void OnSave() {
+      ProcessorData.WritePaymentLog(this, this.ExtData.ToString());
+    }
+
+
+    static internal FixedList<PaymentLog> GetPaymentLog(int paymentInstructionId) {
+      Assertion.Require(paymentInstructionId, nameof(paymentInstructionId));
+
+      return ProcessorData.GetPaymentLog(paymentInstructionId);
+    }
+
+
     internal void Update(PaymentResultDto paymentResultDto) {
       Assertion.Require(paymentResultDto, nameof(paymentResultDto));
+
       this.Text = paymentResultDto.Text;
       this.RequestCode = paymentResultDto.RequestID;
       this.RequestTime = DateTime.Now;
@@ -104,11 +118,7 @@ namespace Empiria.Payments.Processor {
       this.RecordingTime = DateTime.Now;
       this.Status = (PaymentLogStatus) this.PaymentInstruction.Status;
     }
-
-
-    protected override void OnSave() {
-      ProcessorData.WritePaymentLog(this, this.ExtData.ToString());
-    }
+       
 
 
     #endregion Methods

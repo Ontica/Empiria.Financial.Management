@@ -33,16 +33,26 @@ namespace Empiria.Payments.Processor.Services {
 
     #region Services
 
+
+    internal FixedList<PaymentLog> GetPaymentLogs(PaymentOrder paymentOrder) {
+      Assertion.Require(paymentOrder, nameof(paymentOrder));
+
+      var paymentInstruction = PaymentInstruction.TryGetFor(paymentOrder);
+
+      return PaymentLog.GetPaymentLog(paymentInstruction.Id);
+    }
+
+
     internal PaymentInstruction SendToPay(PaymentsBroker broker, PaymentOrder paymentOrder) {
       Assertion.Require(broker, nameof(broker));
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
-      
-     // var paymentInstruction = PaymentInstruction.TryGetFor(paymentOrder);
 
-      //Assertion.Require(paymentInstruction.Status != PaymentInstructionStatus.Rejected,
-      //           $"No es posible enviar la orden de pago, ya que existe una orden pago " +
-      //           $"con los mismos datos en status: {paymentInstruction.Status.GetName()}.");
+      var paymentInstruction = PaymentInstruction.TryGetFor(paymentOrder);
+
+      Assertion.Require(paymentInstruction.Status != PaymentInstructionStatus.Rejected,
+                 $"No es posible enviar la orden de pago, ya que existe una orden pago " +
+                 $"con los mismos datos en status: {paymentInstruction.Status.GetName()}.");
 
       // ToDo: Validate not sent and not payed
 

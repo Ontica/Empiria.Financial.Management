@@ -9,6 +9,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Empiria.Data;
+using Empiria.Payments.Orders;
 
 namespace Empiria.Payments.Processor.Data {
 
@@ -17,7 +18,16 @@ namespace Empiria.Payments.Processor.Data {
   static internal class ProcessorData {
 
     #region Methods
-     
+
+
+    static internal FixedList<PaymentLog> GetPaymentLog(int paymentInstructionId) {
+      var sql = $"SELECT * FROM FMS_PAYMENTS_LOG WHERE PYMT_LOG_PYMT_INSTRUCTION_ID = {paymentInstructionId}";
+           
+      var dataOperation = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<PaymentLog>(dataOperation);
+    }
+
 
     static internal void WritePaymentInstruction(PaymentInstruction o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Payment_Instruction",
@@ -36,6 +46,8 @@ namespace Empiria.Payments.Processor.Data {
       DataWriter.Execute(op);
     }
 
+
+    
 
     #endregion Methods
 
