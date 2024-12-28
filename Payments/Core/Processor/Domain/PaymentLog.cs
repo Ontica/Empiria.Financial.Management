@@ -11,6 +11,7 @@
 using System;
 using Empiria.Financial;
 using Empiria.Json;
+using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Data;
 
@@ -21,11 +22,11 @@ namespace Empiria.Payments.Processor {
 
     #region Constructors and parsers
 
-    public PaymentLog(int paymentInstructionId) {
+    public PaymentLog(PaymentInstruction paymentInstruction) {
 
-      Assertion.Require(paymentInstructionId, nameof(paymentInstructionId));
+      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
 
-      this.PaymentInstructionId = paymentInstructionId;
+      this.PaymentInstruction = paymentInstruction;
     }
 
     static public PaymentLog Parse(int id) => ParseId<PaymentLog>(id);
@@ -34,12 +35,16 @@ namespace Empiria.Payments.Processor {
 
     static public PaymentLog Empty => ParseEmpty<PaymentLog>();
 
+    static internal PaymentLog TryGetFor(PaymentInstruction paymentInstruction) {
+      return BaseObject.TryParse<PaymentLog>($"PYMT_LOG_PYMT_INSTRUCTION_ID = {paymentInstruction.Id} AND PYMT_LOG_STATUS <> 'X' ");
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
 
     [DataField("PYMT_LOG_PYMT_INSTRUCTION_ID")]
-    public int PaymentInstructionId {
+    public PaymentInstruction PaymentInstruction {
       get; private set;
     }
 
@@ -81,9 +86,9 @@ namespace Empiria.Payments.Processor {
 
 
     [DataField("PYMT_LOG_STATUS", Default = PaymentLogStatus.Pending)]
-    public Char Status {
+    public PaymentLogStatus Status {
       get; set;
-    } = 'P';
+    } = PaymentLogStatus.Pending;
 
 
     #endregion Properties
@@ -92,14 +97,12 @@ namespace Empiria.Payments.Processor {
 
     internal void Update(PaymentResultDto paymentResultDto) {
       Assertion.Require(paymentResultDto, nameof(paymentResultDto));
-      this.Text = "";
+      this.Text = paymentResultDto.Text;
       this.RequestCode = paymentResultDto.RequestID;
       this.RequestTime = DateTime.Now;
       this.ApplicationTime = DateTime.Now;
       this.RecordingTime = DateTime.Now;
-      this.Status = 'P';
-
-    
+      this.Status = (PaymentLogStatus) this.PaymentInstruction.Status;
     }
 
 

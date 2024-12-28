@@ -37,6 +37,13 @@ namespace Empiria.Payments.Processor.Services {
       Assertion.Require(broker, nameof(broker));
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
+      
+     // var paymentInstruction = PaymentInstruction.TryGetFor(paymentOrder);
+
+      //Assertion.Require(paymentInstruction.Status != PaymentInstructionStatus.Rejected,
+      //           $"No es posible enviar la orden de pago, ya que existe una orden pago " +
+      //           $"con los mismos datos en status: {paymentInstruction.Status.GetName()}.");
+
       // ToDo: Validate not sent and not payed
 
       PaymentInstructionDto instruction = PaymentInstructionMapper.Map(paymentOrder);
@@ -46,20 +53,57 @@ namespace Empiria.Payments.Processor.Services {
       PaymentResultDto paymentResult = paymentsService.SendPaymentInstruction(instruction);
 
       if (paymentResult.Failed) {
-        return RejectedPayment(paymentOrder, paymentResult, broker);
+        var rejectedPayment = RejectedPayment(paymentOrder, paymentResult, broker);
+        WritePaymentLog(rejectedPayment, paymentResult);
 
+        return rejectedPayment;
       } else {
-        return SuccessfullPayment(paymentOrder, paymentResult, broker);
+        var successfullPayment = SuccessfullPayment(paymentOrder, paymentResult, broker);
+        WritePaymentLog(successfullPayment, paymentResult);
+
+        return successfullPayment; 
       }
     }
 
 
-    internal PaymentInstruction ValidateIsPaymentInstructionPayed(string paymentInstructionUD) {
-      PaymentInstruction paymentInstruction = PaymentInstruction.Parse(paymentInstructionUD);
+    internal void ValidateIsPaymentInstructionIsPayed(PaymentInstruction paymentInstruction) {
 
-      WritePaymentLog(paymentInstruction);
+      Assertion.Require(paymentInstruction.Status == PaymentInstructionStatus.Payed,
+                        $"La orden de pago ya ha sido pagada ");
 
-      return paymentInstruction;
+      var paymentLog = PaymentLog.TryGetFor(paymentInstruction);
+
+      //send to Simefin Ws
+      PaymentResultDto paymentResult = new PaymentResultDto();
+
+      Assertion.Require(paymentResult.Status == 'K',
+                 $"La orden de pago fue cancelada o rechazada.");
+
+      switch (paymentResult.Status) {
+        case 'O':
+          WritePaymentLog(paymentInstruction, paymentResult);
+          break;
+        case 'P':
+          paymentInstruction.SetAuthorizationRequired();
+          paymentInstruction.Save();
+          WritePaymentLog(paymentInstruction, paymentResult);
+          break;
+        case 'K': {
+          paymentInstruction.SetFailed();
+          paymentInstruction.Save();
+          WritePaymentLog(paymentInstruction, paymentResult);
+          break;
+        }
+        case 'L': {
+          paymentInstruction.SetPayed();
+          paymentInstruction.Save();
+          WritePaymentLog(paymentInstruction, paymentResult);
+          break;
+        }
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unhandled payment result status .");
+      }
+
     }
 
     #endregion Services
@@ -92,22 +136,15 @@ namespace Empiria.Payments.Processor.Services {
 
       return payment;
     }
+     
 
-
-    static private void WritePaymentLog(PaymentInstruction paymentInstruction) {
-
-      var paymentLog = new PaymentLog(paymentInstruction);
-
-      var date = DateTime.Now;
-
-      paymentLog.RequestTime = date;
-      paymentLog.ApplicationTime = date;
-      paymentLog.RecordingTime = date;
-      paymentLog.Status = 'P';
-
+    static private void WritePaymentLog(PaymentInstruction PaymentInstruction, PaymentResultDto paymentResultDto) {
+      PaymentLog paymentLog = new PaymentLog(PaymentInstruction);
+      paymentLog.Update(paymentResultDto);
       paymentLog.Save();
     }
 
+ 
     #endregion Helpers
 
   }  // class PaymentService
