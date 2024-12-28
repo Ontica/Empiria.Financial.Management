@@ -12,6 +12,8 @@ using System;
 
 using Empiria.Json;
 
+using Empiria.Payments.Orders;
+
 using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Data;
 
@@ -33,15 +35,35 @@ namespace Empiria.Payments.Processor {
       Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
       Assertion.Require(paymentResultDto, nameof(paymentResultDto));
 
-      this.PaymentInstruction = paymentInstruction;
+      PaymentInstruction = paymentInstruction;
+      PaymentOrder = paymentInstruction.PaymentOrder;
       Load(paymentResultDto);
     }
+
+
+    internal PaymentInstructionLogEntry(PaymentInstruction paymentInstruction,
+                                        PaymentInstructionStatusDto newStatus) {
+      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
+      Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
+      Assertion.Require(newStatus, nameof(newStatus));
+
+      PaymentInstruction = paymentInstruction;
+      PaymentOrder = paymentInstruction.PaymentOrder;
+
+      Load(newStatus);
+    }
+
 
     static public PaymentInstructionLogEntry Parse(int id) => ParseId<PaymentInstructionLogEntry>(id);
 
     static public PaymentInstructionLogEntry Parse(string uid) => ParseKey<PaymentInstructionLogEntry>(uid);
 
     static public PaymentInstructionLogEntry Empty => ParseEmpty<PaymentInstructionLogEntry>();
+
+
+    static internal FixedList<PaymentInstructionLogEntry> GetListFor(PaymentOrder paymentOrder) {
+      return PaymentInstructionData.GetPaymentOrderInstructionLogs(paymentOrder);
+    }
 
     static internal FixedList<PaymentInstructionLogEntry> GetListFor(PaymentInstruction paymentInstruction) {
       return PaymentInstructionData.GetPaymentInstructionLogs(paymentInstruction);
@@ -54,6 +76,13 @@ namespace Empiria.Payments.Processor {
     [DataField("PYMT_LOG_PYMT_INSTRUCTION_ID")]
     public PaymentInstruction PaymentInstruction {
       get; private set;
+    }
+
+
+    [DataField("PYMT_LOG_PYMT_ORDER_ID")]
+    public PaymentOrder PaymentOrder {
+      get;
+      private set;
     }
 
 
@@ -103,21 +132,32 @@ namespace Empiria.Payments.Processor {
     #region Methods
 
     protected override void OnSave() {
+      RecordingTime = DateTime.Now;
       PaymentInstructionData.WritePaymentLog(this, this.ExtData.ToString());
     }
 
 
-    internal void Load(PaymentInstructionResultDto dto) {
-      Assertion.Require(dto, nameof(dto));
-
+    private void Load(PaymentInstructionResultDto dto) {
       var time = DateTime.Now;
 
-      this.ExternalRequestID = dto.ExternalRequestID;
-      this.ExternalResultText = dto.ExternalResultText;
-      this.RequestTime = time;
-      this.ApplicationTime = time;
-      this.RecordingTime = time;
-      this.Status = this.PaymentInstruction.Status;
+      ExternalRequestID = dto.ExternalRequestID;
+      ExternalResultText = dto.ExternalResultText;
+      Status = this.PaymentInstruction.Status;
+
+      RequestTime = time;
+      ApplicationTime = time;
+    }
+
+
+    private void Load(PaymentInstructionStatusDto newStatus) {
+      var time = DateTime.Now;
+
+      ExternalRequestID = newStatus.ExternalRequestID;
+      ExternalResultText = newStatus.ExternalStatusName;
+      Status = newStatus.Status;
+
+      RequestTime = time;
+      ApplicationTime = time;
     }
 
     #endregion Methods

@@ -14,12 +14,13 @@ using Empiria.Reflection;
 
 using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Adapters;
-using Empiria.Payments.Processor.Services;
 
 namespace Empiria.Payments.Processor {
 
   /// <summary>Represents a payments broker.</summary>
   internal class PaymentsBroker : GeneralObject {
+
+    static private int DEFAULT_BROKER_ID = ConfigurationData.Get<int>("Default.PaymentsBroker.Id", 750);
 
     #region Constructors and parsers
 
@@ -32,19 +33,17 @@ namespace Empiria.Payments.Processor {
                        .ToFixedList();
     }
 
-    static public PaymentsBroker Empty => ParseEmpty<PaymentsBroker>();
-
-
     static internal PaymentsBroker GetPaymentsBroker(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
-      return Parse(750);
+      return Parse(DEFAULT_BROKER_ID);
     }
+
+    static public PaymentsBroker Empty => ParseEmpty<PaymentsBroker>();
 
     #endregion Constructors and parsers
 
     #region Properties
-
 
     private string ServiceAssemblyName {
       get {
@@ -62,14 +61,12 @@ namespace Empiria.Payments.Processor {
 
     #region Methods
 
-    public IPaymentsBroker GetService() {
+    public IPaymentsBrokerService GetService() {
       Type brokerServiceType = ObjectFactory.GetType(ServiceAssemblyName,
                                                      ServiceTypeName);
 
-      return (IPaymentsBroker) ObjectFactory.CreateObject(brokerServiceType);
+      return (IPaymentsBrokerService) ObjectFactory.CreateObject(brokerServiceType);
     }
-
-
 
     #endregion Methods
 

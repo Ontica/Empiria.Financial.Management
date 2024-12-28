@@ -10,22 +10,18 @@
 
 namespace Empiria.Payments.Processor {
 
-  /// <summary>EEnumerates the status of a payment instruction.</summary>
+  /// <summary>Enumerates the status of a payment instruction.</summary>
   public enum PaymentInstructionStatus {
 
-    Capture = 'P',
+    Pending = 'P',
 
-    Rejected = 'Y',
-
-    InPaymentLine = 'L',
-
-    AuthorizationRequired = 'R',
+    InProcess = 'A',
 
     Payed = 'C',
 
-    Failed = 'F', 
+    Failed = 'F',
 
-    Deleted = 'X',
+    Canceled = 'X',
 
     All = '@',
 
@@ -33,28 +29,38 @@ namespace Empiria.Payments.Processor {
 
 
 
-  /// <summary>Extension methods for  PaymentInstructionStatus enumeration.</summary>
+  /// <summary>Extension methods for PaymentInstructionStatus enumeration.</summary>
   static public class PaymentInstructionStatusExtensions {
 
     static public string GetName(this PaymentInstructionStatus status) {
       switch (status) {
-        case PaymentInstructionStatus.Capture:
-          return "En captura";
-        case PaymentInstructionStatus.Rejected:
-          return "Rechazado";
-        case PaymentInstructionStatus.InPaymentLine:
-          return "En linea de pago";
-        case PaymentInstructionStatus.AuthorizationRequired:
-          return "Requiere autorizacion";
+
+        case PaymentInstructionStatus.Pending:
+          return "Pendiente de enviar a pagos";
+
+        case PaymentInstructionStatus.InProcess:
+          return "En proceso (pago enviado)";
+
         case PaymentInstructionStatus.Payed:
           return "Pagado";
+
         case PaymentInstructionStatus.Failed:
-          return "Fallida";
-        case PaymentInstructionStatus.Deleted:
-          return "Eliminado";
+          return "Rechazado o fallido";
+
+        case PaymentInstructionStatus.Canceled:
+          return "Cancelado";
+
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled payment order status {status}.");
       }
+    }
+
+
+    static public bool IsFinal(this PaymentInstructionStatus status) {
+      if (status == PaymentInstructionStatus.Pending || status == PaymentInstructionStatus.InProcess) {
+        return false;
+      }
+      return true;
     }
 
   }  // class PaymentInstructionStatusExtensions
