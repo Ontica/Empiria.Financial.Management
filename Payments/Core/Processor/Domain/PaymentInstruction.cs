@@ -116,6 +116,11 @@ namespace Empiria.Payments.Processor {
     }
 
 
+    internal void SetAuthorizationRequired() {
+      this.Status = PaymentInstructionStatus.AuthorizationRequired;
+    }
+
+
     public void SetFailPayment() {
       this.TypeId = 3751;
       this.Status = PaymentInstructionStatus.Rejected;
@@ -124,6 +129,15 @@ namespace Empiria.Payments.Processor {
 
     public void SetSuccessfulPayment() {
       this.TypeId = 3752;
+      this.Status = PaymentInstructionStatus.InPaymentLine;
+    }
+
+    public void SetFailed() {
+      this.Status = PaymentInstructionStatus.Failed;
+    }
+
+
+    public void SetPayed() {
       this.Status = PaymentInstructionStatus.Payed;
     }
 
@@ -137,6 +151,7 @@ namespace Empiria.Payments.Processor {
       return "PI-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
     }
 
+    
     #endregion Helpers
 
   }  // class PaymentInstruction

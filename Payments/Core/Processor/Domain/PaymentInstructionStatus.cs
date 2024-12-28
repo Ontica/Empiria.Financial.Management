@@ -2,34 +2,38 @@
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Domain Layer                            *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Enumeration Type                        *
-*  Type     : PayableStatus                              License   : Please read LICENSE.txt file            *
+*  Type     : PaymentOrderStatus                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Enumerates the status of a payable object.                                                     *
+*  Summary  : Enumerates the status of a payment instruction.                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Payments.Processor {
 
-  /// <summary>Enumerates the status of a payable order.</summary>
+  /// <summary>EEnumerates the status of a payment instruction.</summary>
   public enum PaymentInstructionStatus {
 
     Capture = 'P',
 
     Rejected = 'Y',
 
+    InPaymentLine = 'L',
+
+    AuthorizationRequired = 'R',
+
     Payed = 'C',
 
-    InPaymentLine = 'L',  
+    Failed = 'F', 
 
     Deleted = 'X',
 
     All = '@',
 
-  }  // enum PayableStatus
+  }  // enum  PaymentInstructionStatus
 
 
 
-  /// <summary>Extension methods for PayableStatus enumeration.</summary>
+  /// <summary>Extension methods for  PaymentInstructionStatus enumeration.</summary>
   static public class PaymentInstructionStatusExtensions {
 
     static public string GetName(this PaymentInstructionStatus status) {
@@ -38,10 +42,14 @@ namespace Empiria.Payments.Processor {
           return "En captura";
         case PaymentInstructionStatus.Rejected:
           return "Rechazado";
-        case PaymentInstructionStatus.Payed:
-          return "Pagado";
         case PaymentInstructionStatus.InPaymentLine:
           return "En linea de pago";
+        case PaymentInstructionStatus.AuthorizationRequired:
+          return "Requiere autorizacion";
+        case PaymentInstructionStatus.Payed:
+          return "Pagado";
+        case PaymentInstructionStatus.Failed:
+          return "Fallida";
         case PaymentInstructionStatus.Deleted:
           return "Eliminado";
         default:
@@ -49,6 +57,6 @@ namespace Empiria.Payments.Processor {
       }
     }
 
-  }  // class PayableStatusExtensions
+  }  // class PaymentInstructionStatusExtensions
 
 }  // namespace Empiria.Payments.Payables
