@@ -47,14 +47,7 @@ namespace Empiria.Payments.Processor.Services {
       Assertion.Require(broker, nameof(broker));
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
-
-      var paymentInstruction = PaymentInstruction.TryGetFor(paymentOrder);
-
-      Assertion.Require(paymentInstruction.Status != PaymentInstructionStatus.Rejected,
-                 $"No es posible enviar la orden de pago, ya que existe una orden pago " +
-                 $"con los mismos datos en status: {paymentInstruction.Status.GetName()}.");
-
-      // ToDo: Validate not sent and not payed
+      EnsureIsNotPayed(paymentOrder);
 
       PaymentInstructionDto instruction = PaymentInstructionMapper.Map(paymentOrder);
 
@@ -71,10 +64,10 @@ namespace Empiria.Payments.Processor.Services {
         var successfullPayment = SuccessfullPayment(paymentOrder, paymentResult, broker);
         WritePaymentLog(successfullPayment, paymentResult);
 
-        return successfullPayment; 
+        return successfullPayment;
       }
     }
-
+       
 
     internal void ValidateIsPaymentInstructionIsPayed(PaymentInstruction paymentInstruction) {
 
@@ -120,7 +113,19 @@ namespace Empiria.Payments.Processor.Services {
 
     #region Helpers
 
-    private static PaymentInstruction RejectedPayment(PaymentOrder paymentOrder,
+
+    static private void EnsureIsNotPayed(PaymentOrder paymentOrder) {
+      var paymentInstruction = PaymentInstruction.TryGetFor(paymentOrder);
+
+      if (paymentInstruction != null) {
+        Assertion.Require(paymentInstruction.Status != PaymentInstructionStatus.Rejected,
+                $"No es posible enviar la orden de pago, ya que existe una orden pago " +
+                $"con los mismos datos en status: {paymentInstruction.Status.GetName()}.");
+      }
+    }
+
+
+    static private PaymentInstruction RejectedPayment(PaymentOrder paymentOrder,
                                                       PaymentResultDto paymentResult,
                                                       PaymentsBroker broker) {
 
