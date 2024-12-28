@@ -23,6 +23,10 @@ namespace Empiria.Payments.Processor {
   /// <summary>Abstract class that represents an actual payment or a rejected payment instruction.</summary>
   abstract internal class PaymentInstruction : BaseObject {
 
+    protected PaymentInstruction() {
+      // Required by Empira Framework
+    }
+
     internal PaymentInstruction(PaymentsBroker broker, PaymentOrder paymentOrder) {
       Assertion.Require(broker, nameof(broker));
       Assertion.Require(paymentOrder, nameof(paymentOrder));

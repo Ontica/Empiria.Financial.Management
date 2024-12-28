@@ -17,6 +17,11 @@ namespace Empiria.Payments.Processor {
 
     #region Constructors and parsers
 
+    protected RejectedPayment() {
+      // Required by Empira Framework
+    }
+
+
     public RejectedPayment(PaymentsBroker broker,
                            PaymentOrder paymentOrder,
                            RejectedPaymentData failResult) : base(broker, paymentOrder) {

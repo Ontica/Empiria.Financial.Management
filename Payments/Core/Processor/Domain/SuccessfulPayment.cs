@@ -17,6 +17,10 @@ namespace Empiria.Payments.Processor {
 
     #region Constructors and Parsers 
 
+    protected SuccessfulPayment() {
+      // Required by Empira Framework
+    }
+
     public SuccessfulPayment(PaymentsBroker broker, PaymentOrder paymentOrder,
                              SuccessfulPaymentData successfulResult) : base(broker, paymentOrder) {
 
