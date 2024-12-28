@@ -17,9 +17,13 @@ namespace Empiria.Payments.Processor {
 
     Rejected = 'J',
 
+    AuthorizationRequired = 'R',
+
     Payed = 'C',
 
     Deleted = 'X',
+
+    Failed = 'F',
 
     All = '@',
 
@@ -34,11 +38,15 @@ namespace Empiria.Payments.Processor {
         case PaymentLogStatus.Pending:
           return "Pendiente";               
         case PaymentLogStatus.Rejected:
-          return "Rechazada";        
+          return "Rechazada";  
+        case PaymentLogStatus.AuthorizationRequired:
+          return "Requiere de autorizacion";
         case PaymentLogStatus.Payed:
           return "Pagada";
         case PaymentLogStatus.Deleted:
           return "Eliminada";
+        case PaymentLogStatus.Failed:
+          return "Fallida";
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled payment Log status {status}.");
       }
