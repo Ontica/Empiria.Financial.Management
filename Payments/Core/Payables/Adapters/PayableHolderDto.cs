@@ -12,6 +12,7 @@ using Empiria.Documents.Services.Adapters;
 using Empiria.History.Services.Adapters;
 
 using Empiria.Billing.Adapters;
+using Empiria.Financial.Adapters;
 
 namespace Empiria.Payments.Payables.Adapters {
 
@@ -121,7 +122,19 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto Budget {
+      get; internal set;
+    }
+
+    public NamedEntityDto Currency {
+      get; internal set;
+    }
+
     public NamedEntityDto PayTo {
+      get; internal set;
+    }
+
+    public FixedList<PaymentAccountDto> PaymentAccounts {
       get; internal set;
     }
 

@@ -10,8 +10,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
+using Empiria.Budgeting;
 using Empiria.Financial;
+using Empiria.Financial.Services;
 
 namespace Empiria.Payments.Payables.Adapters {
 
@@ -31,7 +32,10 @@ namespace Empiria.Payments.Payables.Adapters {
         EntityNo = payableEntity.EntityNo,
         Name = payableEntity.Name,
         Description = payableEntity.Description,
+        Budget = Budget.Parse(1).MapToNamedEntity(),
+        Currency = Currency.Parse(600).MapToNamedEntity(),
         PayTo = payableEntity.PayTo.MapToNamedEntity(),
+        PaymentAccounts = PaymentAccountServices.GetPaymentAccounts(payableEntity.PayTo.UID),
         Items = MapItems(payableEntity.Items)
       };
     }
