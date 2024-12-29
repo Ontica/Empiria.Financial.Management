@@ -13,7 +13,7 @@ using System;
 namespace Empiria.Payments.Processor.Adapters {
   
   /// <summary>Data transfer objects used to return payment instruction log.</summary>
-  public class PaymentInstructionLogdDescriptorDto {
+  public class PaymentInstructionLogDescriptorDto {
 
     public string UID {
       get; internal set;

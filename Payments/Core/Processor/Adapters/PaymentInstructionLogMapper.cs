@@ -19,8 +19,8 @@ namespace Empiria.Payments.Processor.Adapters {
 
     #region Methods
 
-    static internal FixedList<PaymentInstructionLogdDescriptorDto> Map(FixedList<PaymentInstructionLogEntry> paymentInstructionLogs) {
-      List<PaymentInstructionLogdDescriptorDto> logs = new List<PaymentInstructionLogdDescriptorDto>();
+    static internal FixedList<PaymentInstructionLogDescriptorDto> Map(FixedList<PaymentInstructionLogEntry> paymentInstructionLogs) {
+      List<PaymentInstructionLogDescriptorDto> logs = new List<PaymentInstructionLogDescriptorDto>();
 
       foreach (var conceppaymentInstructionLog in paymentInstructionLogs) {
         var paymentInstructionLogdDto = Map(conceppaymentInstructionLog);
@@ -31,9 +31,9 @@ namespace Empiria.Payments.Processor.Adapters {
     }
 
 
-    static internal PaymentInstructionLogdDescriptorDto Map(PaymentInstructionLogEntry paymentInstructionLog) {
+    static internal PaymentInstructionLogDescriptorDto Map(PaymentInstructionLogEntry paymentInstructionLog) {
 
-      return new PaymentInstructionLogdDescriptorDto {
+      return new PaymentInstructionLogDescriptorDto {
         UID = paymentInstructionLog.UID,
         PaymentOrdeNo = paymentInstructionLog.PaymentOrder.PaymentOrderNo,
         PaymentMethod = paymentInstructionLog.PaymentOrder.PaymentMethod.Name,

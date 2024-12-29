@@ -83,7 +83,7 @@ namespace Empiria.Payments.Orders.Adapters {
       };
     }
 
-    static private FixedList<PaymentInstructionLogdDescriptorDto> GetPaymentOrderLog(PaymentOrder paymentOrder) {
+    static private FixedList<PaymentInstructionLogDescriptorDto> GetPaymentOrderLog(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
           
       using (var usecases = PaymentService.ServiceInteractor()) {

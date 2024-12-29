@@ -46,7 +46,7 @@ namespace Empiria.Payments.Orders.Adapters {
     }
 
 
-    public FixedList<PaymentInstructionLogdDescriptorDto> Log {
+    public FixedList<PaymentInstructionLogDescriptorDto> Log {
       get; internal set;
     }
 
