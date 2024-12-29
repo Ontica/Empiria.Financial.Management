@@ -15,6 +15,7 @@ using Empiria.Parties;
 using Empiria.Products.SATMexico;
 
 using Empiria.Billing.SATMexicoImporter;
+using System;
 
 namespace Empiria.Billing.Adapters {
 
@@ -31,6 +32,26 @@ namespace Empiria.Billing.Adapters {
     #endregion Public methods
 
     #region Private methods
+
+    static private BillAddendaFields MapToAddendaData(SATBillAddenda addenda) {
+
+      if (addenda != null && addenda.EcoConcepts.Count > 0) {
+
+        return new BillAddendaFields() {
+          NoEstacion = addenda.NoEstacion,
+          ClavePemex = addenda.ClavePemex,
+          TasaIEPS = addenda.EcoConcepts[0].TasaIEPS,
+          IEPS = addenda.EcoConcepts[0].IEPS,
+          TasaIVA = addenda.EcoConcepts[0].TasaIVA,
+          IVA = addenda.EcoConcepts[0].IVA,
+          NoIdentificacion = addenda.EcoConcepts[0].NoIdentificacion,
+          TasaAIEPS = addenda.EcoConcepts[0].TasaAIEPS,
+          AIEPS = addenda.EcoConcepts[0].AIEPS
+        };
+      }
+      return new BillAddendaFields();
+    }
+
 
     static private FixedList<BillConceptFields> MapToBillConceptFields(
                                                 FixedList<SATBillConceptDto> conceptos) {
@@ -70,7 +91,8 @@ namespace Empiria.Billing.Adapters {
         CFDIRelated = MapToCfdiRelated(dto.DatosGenerales.CfdiRelacionados),
         Concepts = MapToBillConceptFields(dto.Conceptos),
         SchemaData = MapToSchemaData(dto),
-        SecurityData = MapToSecurityData(dto)
+        SecurityData = MapToSecurityData(dto),
+        Addenda = MapToAddendaData(dto.Addenda)
       };
     }
 
@@ -128,7 +150,7 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    private static BillSchemaDataFields MapToSchemaData(SATBillDto dto) {
+    static private BillSchemaDataFields MapToSchemaData(SATBillDto dto) {
 
       return new BillSchemaDataFields() {
         IssuedBy = MapToIssuedBy(dto.Emisor),

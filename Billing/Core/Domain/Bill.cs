@@ -229,6 +229,13 @@ namespace Empiria.Billing {
     }
 
 
+    public BillExtData BillExtData {
+      get {
+        return new BillExtData(this.ExtData);
+      }
+    }
+
+
     [DataField("BILL_POSTED_BY_ID")]
     public Party PostedBy {
       get; private set;
@@ -308,6 +315,7 @@ namespace Empiria.Billing {
 
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
+      BillExtData.Update(fields.Addenda);
     }
 
 

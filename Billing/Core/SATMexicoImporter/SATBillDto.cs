@@ -39,63 +39,12 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = new SATBillComplementDto();
 
 
+    public SATBillAddenda Addenda {
+      get; internal set;
+    } = new SATBillAddenda();
+
+
   } // class SATBillDto
-
-
-
-  public class SATBillComplementDto {
-
-
-    public string Xmlns_Tfd {
-      get; set;
-    }
-
-
-    public string Xmlns_Xsi {
-      get; set;
-    }
-
-
-    public string Xsi_SchemaLocation {
-      get; set;
-    }
-
-
-    public string Tfd_Version {
-      get; set;
-    }
-
-
-    public string UUID {
-      get; internal set;
-    }
-
-
-    public DateTime FechaTimbrado {
-      get; internal set;
-    }
-
-
-    public string RfcProvCertif {
-      get; internal set;
-    }
-
-
-    public string SelloCFD {
-      get; internal set;
-    }
-
-
-    public string NoCertificadoSAT {
-      get; internal set;
-    }
-
-
-    public string SelloSAT {
-      get; internal set;
-    }
-
-  }  // class SATBillComplementDto
 
 
   public class SATBillConceptDto {
@@ -306,5 +255,118 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
   }  // class SATBillTaxDto
+
+
+  public class SATBillComplementDto {
+
+
+    public string Xmlns_Tfd {
+      get; set;
+    }
+
+
+    public string Xmlns_Xsi {
+      get; set;
+    }
+
+
+    public string Xsi_SchemaLocation {
+      get; set;
+    }
+
+
+    public string Tfd_Version {
+      get; set;
+    }
+
+
+    public string UUID {
+      get; internal set;
+    }
+
+
+    public DateTime FechaTimbrado {
+      get; internal set;
+    }
+
+
+    public string RfcProvCertif {
+      get; internal set;
+    }
+
+
+    public string SelloCFD {
+      get; internal set;
+    }
+
+
+    public string NoCertificadoSAT {
+      get; internal set;
+    }
+
+
+    public string SelloSAT {
+      get; internal set;
+    }
+
+  }  // class SATBillComplementDto
+
+
+  public class SATBillAddenda {
+
+    public string NoEstacion {
+      get; set;
+    } = string.Empty;
+
+
+    public string ClavePemex {
+      get; set;
+    } = string.Empty;
+
+
+    public FixedList<SATBillAddendaConcept> EcoConcepts {
+      get; set;
+    } = new FixedList<SATBillAddendaConcept>();
+
+  } // class SATBillAddenda
+
+
+  public class SATBillAddendaConcept {
+
+    public decimal TasaIEPS {
+      get; set;
+    }
+
+
+    public decimal IEPS {
+      get; set;
+    }
+
+
+    public decimal TasaIVA {
+      get; set;
+    }
+
+
+    public decimal IVA {
+      get; set;
+    }
+
+
+    public decimal NoIdentificacion {
+      get; set;
+    }
+
+
+    public decimal TasaAIEPS {
+      get; set;
+    }
+
+
+    public decimal AIEPS {
+      get; set;
+    }
+
+  }
 
 } // namespace Empiria.Billing.SATMexicoImporter

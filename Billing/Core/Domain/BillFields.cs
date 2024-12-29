@@ -86,6 +86,11 @@ namespace Empiria.Billing {
     }
 
 
+    public FixedList<BillConceptFields> Concepts {
+      get; set;
+    } = new FixedList<BillConceptFields>();
+
+
     public BillSchemaDataFields SchemaData {
       get; set;
     } = new BillSchemaDataFields();
@@ -96,91 +101,11 @@ namespace Empiria.Billing {
     } = new BillSecurityDataFields();
 
 
-    public FixedList<BillConceptFields> Concepts {
+    public BillAddendaFields Addenda {
       get; set;
-    } = new FixedList<BillConceptFields>();
+    }
 
   } // class BillFields
-
-
-  public class BillSchemaDataFields {
-
-    public BillOrganizationFields IssuedBy {
-      get; internal set;
-    } = new BillOrganizationFields();
-
-
-    public BillOrganizationFields IssuedTo {
-      get; internal set;
-    } = new BillOrganizationFields();
-
-
-    public string SchemaVersion {
-      get; set;
-    } = string.Empty;
-
-
-    public DateTime Fecha {
-      get; set;
-    } = ExecutionServer.DateMaxValue;
-
-
-    public string TipoComprobante {
-      get; set;
-    } = string.Empty;
-
-
-    public string Folio {
-      get; set;
-    } = string.Empty;
-
-
-    public string Serie {
-      get; set;
-    } = string.Empty;
-
-
-    public string MetodoPago {
-      get; set;
-    } = string.Empty;
-
-
-    public string FormaPago {
-      get; set;
-    } = string.Empty;
-
-
-    public string Exportacion {
-      get; set;
-    } = string.Empty;
-
-
-    public string LugarExpedicion {
-      get; set;
-    } = string.Empty;
-
-
-    public string Moneda {
-      get; set;
-    } = string.Empty;
-
-
-    public decimal Subtotal {
-      get; set;
-    }
-
-
-    public decimal Discount {
-      get; set;
-    }
-
-
-    public decimal Total {
-      get; set;
-    }
-
-  }
-
 
 
   public class BillOrganizationFields {
@@ -352,6 +277,86 @@ namespace Empiria.Billing {
   } // class BillTaxEntryFields
 
 
+
+  public class BillSchemaDataFields {
+
+    public BillOrganizationFields IssuedBy {
+      get; internal set;
+    } = new BillOrganizationFields();
+
+
+    public BillOrganizationFields IssuedTo {
+      get; internal set;
+    } = new BillOrganizationFields();
+
+
+    public string SchemaVersion {
+      get; set;
+    } = string.Empty;
+
+
+    public DateTime Fecha {
+      get; set;
+    } = ExecutionServer.DateMaxValue;
+
+
+    public string TipoComprobante {
+      get; set;
+    } = string.Empty;
+
+
+    public string Folio {
+      get; set;
+    } = string.Empty;
+
+
+    public string Serie {
+      get; set;
+    } = string.Empty;
+
+
+    public string MetodoPago {
+      get; set;
+    } = string.Empty;
+
+
+    public string FormaPago {
+      get; set;
+    } = string.Empty;
+
+
+    public string Exportacion {
+      get; set;
+    } = string.Empty;
+
+
+    public string LugarExpedicion {
+      get; set;
+    } = string.Empty;
+
+
+    public string Moneda {
+      get; set;
+    } = string.Empty;
+
+
+    public decimal Subtotal {
+      get; set;
+    }
+
+
+    public decimal Discount {
+      get; set;
+    }
+
+
+    public decimal Total {
+      get; set;
+    }
+
+  } // class BillSchemaDataFields
+
+
   public class BillSecurityDataFields {
 
 
@@ -422,11 +427,62 @@ namespace Empiria.Billing {
   }  // class BillComplementFields
 
 
+  public class BillAddendaFields {
+
+    public string NoEstacion {
+      get; set;
+    } = string.Empty;
+
+
+    public string ClavePemex {
+      get; set;
+    } = string.Empty;
+
+
+    public decimal TasaIEPS {
+      get; set;
+    }
+
+
+    public decimal IEPS {
+      get; set;
+    }
+
+
+    public decimal TasaIVA {
+      get; set;
+    }
+
+
+    public decimal IVA {
+      get; set;
+    }
+
+
+    public decimal NoIdentificacion {
+      get; set;
+    }
+
+
+    public decimal TasaAIEPS {
+      get; set;
+    }
+
+
+    public decimal AIEPS {
+      get; set;
+    }
+
+  } // class BillAddendaFields
+
 
   /// <summary>Extension methods for BillFields type.</summary>
   static internal class BillFieldsExtensions {
 
     static internal void EnsureIsValid(this BillFields fields) {
+
+      Assertion.Require(fields.IssuedToUID != string.Empty,
+                        "El receptor del CFDI no se encuentra registrado.");
 
       var issuedTo = Party.Parse(fields.IssuedToUID);
 

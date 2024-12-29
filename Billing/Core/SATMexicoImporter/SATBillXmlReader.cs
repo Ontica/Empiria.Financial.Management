@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Contexts;
+using System.Security.Cryptography;
 using System.Xml;
 
 namespace Empiria.Billing.SATMexicoImporter {
@@ -57,6 +59,10 @@ namespace Empiria.Billing.SATMexicoImporter {
 
           GenerateComplementData(node);
         }
+        if (node.Name == "cfdi:Addenda") {
+
+          GenerateAddendaEcoComplementData(node);
+        }
       }
 
       return _satBillDto;
@@ -77,6 +83,51 @@ namespace Empiria.Billing.SATMexicoImporter {
       } else {
         return (T) Convert.ChangeType(concept.Attributes[attributeName]?.Value, typeof(T));
       }
+    }
+
+
+    private void GenerateAddendaEcoComplementData(XmlNode complementNode) {
+
+      XmlNode ecoComplement = complementNode.FirstChild;
+
+      if (ecoComplement.Name.Equals("eco:Complementaria")) {
+
+        _satBillDto.Addenda = new SATBillAddenda {
+          NoEstacion = GetAttribute(ecoComplement, "noEstacion"),
+          ClavePemex = GetAttribute(ecoComplement, "clavePemex"),
+          EcoConcepts = GenerateAddendaEcoConcepts(ecoComplement.ChildNodes)
+        };
+      }
+    }
+
+
+    private FixedList<SATBillAddendaConcept> GenerateAddendaEcoConcepts(XmlNodeList ecoComplements) {
+
+      var addendaConcepts = new List<SATBillAddendaConcept>();
+
+      foreach (XmlNode ecoComplement in ecoComplements) {
+
+        if (ecoComplement.Name.Equals("eco:Conceptos")) {
+
+          XmlNode ecoConcept = ecoComplement.FirstChild;
+
+          if (ecoConcept.Name.Equals("eco:Concepto")) {
+
+            addendaConcepts.Add(
+              new SATBillAddendaConcept {
+                TasaIEPS = GetAttribute<decimal>(ecoConcept, "tasaIeps"),
+                IEPS = GetAttribute<decimal>(ecoConcept, "ieps"),
+                TasaIVA = GetAttribute<decimal>(ecoConcept, "tasaIva"),
+                IVA = GetAttribute<decimal>(ecoConcept, "iva"),
+                NoIdentificacion = GetAttribute<decimal>(ecoConcept, "noIdentificacion"),
+                TasaAIEPS = GetAttribute<decimal>(ecoConcept, "tasaAieps"),
+                AIEPS = GetAttribute<decimal>(ecoConcept, "aIeps")
+              }
+            );
+          }
+        }
+      }
+      return addendaConcepts.ToFixedList();
     }
 
 
@@ -201,14 +252,13 @@ namespace Empiria.Billing.SATMexicoImporter {
       var taxesByConceptDto = new List<SATBillTaxDto>();
 
       foreach (XmlNode taxItem in taxNode.ChildNodes) {
-
         var taxDto = new SATBillTaxDto();
 
-        taxDto.Base = Convert.ToDecimal(taxItem.Attributes["Base"].Value);
-        taxDto.Impuesto = taxItem.Attributes["Impuesto"].Value;
-        taxDto.TipoFactor = taxItem.Attributes["TipoFactor"].Value;
-        taxDto.TasaOCuota = Convert.ToDecimal(taxItem.Attributes["TasaOCuota"].Value);
-        taxDto.Importe = Convert.ToDecimal(taxItem.Attributes["Importe"].Value);
+        taxDto.Base = GetAttribute<decimal>(taxItem, "Base");
+        taxDto.Impuesto = GetAttribute(taxItem, "Impuesto");
+        taxDto.TipoFactor = GetAttribute(taxItem, "TipoFactor");
+        taxDto.TasaOCuota = GetAttribute<decimal>(taxItem, "TasaOCuota");
+        taxDto.Importe = GetAttribute<decimal>(taxItem, "Importe");
 
         if (taxItem.Name == "cfdi:Traslado") {
           taxDto.MetodoAplicacion = BillTaxMethod.Traslado;
