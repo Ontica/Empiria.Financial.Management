@@ -16,9 +16,10 @@ using Empiria.Payments.Payables;
 
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.Data;
-using Empiria.Payments.Processor.Services;
+
 using Empiria.Payments.Processor;
-using Empiria.Payments.Processor.Adapters;
+using Empiria.Payments.Processor.Services;
+
 
 namespace Empiria.Payments.Orders.UseCases {
 
@@ -83,20 +84,7 @@ namespace Empiria.Payments.Orders.UseCases {
 
       return paymentOrderTypes.MapToNamedEntityList();
     }
-
-
-    public FixedList<PaymentLogDto> GetPaymentOrderLog(string paymentOrderUID) {
-      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
-
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-
-      using (var usecases = PaymentService.ServiceInteractor()) {
-
-        var paymentLogs = usecases.GetPaymentInstructionLogs(paymentOrder);
-
-        return PaymentLogMapper.Map(paymentLogs);
-      }
-    }
+         
 
 
     public PaymentOrderHolderDto SendPaymentOrderToPay(string paymentOrderUID) {

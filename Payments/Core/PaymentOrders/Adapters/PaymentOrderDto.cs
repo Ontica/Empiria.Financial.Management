@@ -16,6 +16,7 @@ using Empiria.History.Services.Adapters;
 using Empiria.Billing.Adapters;
 
 using Empiria.Payments.Payables.Adapters;
+using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Orders.Adapters {
 
@@ -41,6 +42,11 @@ namespace Empiria.Payments.Orders.Adapters {
 
 
     public FixedList<HistoryDto> History {
+      get; internal set;
+    }
+
+
+    public FixedList<PaymentInstructionLogdDescriptorDto> Log {
       get; internal set;
     }
 

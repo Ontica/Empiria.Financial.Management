@@ -2,49 +2,28 @@
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Adapters Layer                          *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Data Transfer Object                    *
-*  Type     : PaymentLogDto                              License   : Please read LICENSE.txt file            *
+*  Type     : PaymentInstructionLogdDescriptorDto        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Data transfer objects used to return payment logs.                                             *
+*  Summary  : Data transfer objects used to return payment instruction log.                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 
-namespace Empiria.Payments.Processor.Services {
+namespace Empiria.Payments.Processor.Adapters {
   
-  /// <summary>Data transfer objects used to return payment log.</summary>
-  public class PaymentLogDto {
+  /// <summary>Data transfer objects used to return payment instruction log.</summary>
+  public class PaymentInstructionLogdDescriptorDto {
 
     public string UID {
       get; internal set;
     }
 
 
-    public string PaymentOrderTypeName {
+    public string PaymentOrdeNo {
       get; internal set;
     }
-
-
-    public string PaymentOrderNo {
-      get; internal set;
-    }
-
-
-    public string PayTo {
-      get; internal set;
-    }
-
-    public string RequestedBy {
-      get; internal set;
-    }
-
-    public DateTime RequestedDate {
-      get; internal set;
-    }
-
-    public DateTime DueTime {
-      get; internal set;
-    }
+    
 
     public string PaymentMethod {
       get; internal set;
@@ -58,10 +37,23 @@ namespace Empiria.Payments.Processor.Services {
       get; internal set;
     }
 
+    public DateTime RequestTime {
+      get; set;
+    }
+
+    public string RequestCode {
+      get; internal set; 
+    }
+
+    public string Description {
+      get; internal set;
+    }
+
     public string StatusName {
       get; internal set;
     }
 
-  } // class PaymentLogDto
+
+  } // class PaymentInstructionLogdDescriptorDto
 
 }  // namespace Empiria.Payments.Processor.Services

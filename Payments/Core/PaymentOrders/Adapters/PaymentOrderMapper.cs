@@ -13,6 +13,11 @@ using Empiria.History.Services;
 
 using Empiria.Payments.Payables.Adapters;
 
+using Empiria.Payments.Processor;
+using Empiria.Payments.Processor.Adapters;
+using Empiria.Payments.Processor.Services;
+
+
 namespace Empiria.Payments.Orders.Adapters {
 
   /// <summary>Provides data mapping services for payment orders.</summary>
@@ -25,6 +30,7 @@ namespace Empiria.Payments.Orders.Adapters {
         Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
         Documents = DocumentServices.GetEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),
+        Log = GetPaymentOrderLog(paymentOrder),
         Actions = MapActions(paymentOrder)
       };
     }
@@ -75,6 +81,17 @@ namespace Empiria.Payments.Orders.Adapters {
         Total = paymentOrder.Total,
         Status = paymentOrder.Status.MapToNamedEntity()
       };
+    }
+
+    static private FixedList<PaymentInstructionLogdDescriptorDto> GetPaymentOrderLog(PaymentOrder paymentOrder) {
+      Assertion.Require(paymentOrder, nameof(paymentOrder));
+          
+      using (var usecases = PaymentService.ServiceInteractor()) {
+
+        FixedList<PaymentInstructionLogEntry> paymentInstructionLogs = usecases.GetPaymentInstructionLogs(paymentOrder);
+
+        return PaymentInstructionLogMapper.Map(paymentInstructionLogs);
+      }
     }
 
     #endregion Helpers
