@@ -100,6 +100,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public decimal Total {
+      get; internal set;
+    }
+
     public NamedEntityDto Status {
       get; internal set;
     }
