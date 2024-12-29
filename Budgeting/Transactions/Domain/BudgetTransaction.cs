@@ -204,8 +204,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_TXN_STATUS", Default = TransactionStatus.Pending)]
-    public TransactionStatus Status {
+    [DataField("BDG_TXN_STATUS", Default = BudgetTransactionStatus.Pending)]
+    public BudgetTransactionStatus Status {
       get; private set;
     }
 
@@ -243,7 +243,7 @@ namespace Empiria.Budgeting.Transactions {
     internal void Authorize() {
       this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.AuthorizationTime = DateTime.Now;
-      this.Status = TransactionStatus.Completed;
+      this.Status = BudgetTransactionStatus.Authorized;
     }
 
 
@@ -279,7 +279,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal void SendToAuthorization() {
-      this.Status = TransactionStatus.OnAuthorization;
+      this.Status = BudgetTransactionStatus.OnAuthorization;
     }
 
 

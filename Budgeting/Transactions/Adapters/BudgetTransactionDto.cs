@@ -50,6 +50,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public bool CanReject {
+      get; internal set;
+    }
+
   }
 
 
@@ -144,6 +148,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
     public DateTime ApplicationDate {
+      get; internal set;
+    }
+
+    public decimal Total {
       get; internal set;
     }
 

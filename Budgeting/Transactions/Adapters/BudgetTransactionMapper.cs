@@ -57,8 +57,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     #region Helpers
 
     static private BudgetTransactionActions MapActions(BudgetTransaction transaction) {
+      bool canAuthorize = transaction.Status == BudgetTransactionStatus.OnAuthorization ||
+                          transaction.Status == BudgetTransactionStatus.Pending;
+
       return new BudgetTransactionActions {
-        CanAuthorize = true,
+        CanAuthorize = canAuthorize,
+        CanReject = canAuthorize,
+        CanDelete = transaction.Status == BudgetTransactionStatus.Pending,
+        CanUpdate = canAuthorize,
         CanEditDocuments = true
       };
     }
