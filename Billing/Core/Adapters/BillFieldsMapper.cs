@@ -88,6 +88,8 @@ namespace Empiria.Billing.Adapters {
         IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
         IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
         CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
+        Subtotal = dto.DatosGenerales.SubTotal,
+        Total = dto.DatosGenerales.Total,
         CFDIRelated = MapToCfdiRelated(dto.DatosGenerales.CfdiRelacionados),
         Concepts = MapToBillConceptFields(dto.Conceptos),
         SchemaData = MapToSchemaData(dto),
