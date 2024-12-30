@@ -13,7 +13,6 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Contacts;
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
@@ -45,10 +44,16 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    internal Payable(PayableType payableType, IPayableEntity entity) : base(payableType) {
-      Assertion.Require(entity, nameof(entity));
+    internal Payable(PayableType payableType, IPayableEntity payableEntity) : base(payableType) {
+      Assertion.Require(payableEntity, nameof(payableEntity));
 
-      this.PayableEntity = entity;
+      this.PayableEntity = payableEntity;
+      this.Description = payableEntity.Description;
+      this.OrganizationalUnit = (OrganizationalUnit) payableEntity.OrganizationalUnit;
+      this.PayTo = (Party) payableEntity.PayTo;
+      this.Currency = (Currency) payableEntity.Currency;
+      this.Total = payableEntity.Total;
+      this.Budget = (Budget) payableEntity.Budget;
     }
 
     static public Payable Parse(int id) => ParseId<Payable>(id);
@@ -165,7 +170,7 @@ namespace Empiria.Payments.Payables {
 
 
     [DataField("PAYABLE_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -189,7 +194,7 @@ namespace Empiria.Payments.Payables {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.PayableNo, this.PayTo.Name, this.PayableType.Name);
+        return EmpiriaString.BuildKeywords(this.PayableNo, this.PayTo.Keywords, this.PayableType.Name);
       }
     }
 
@@ -205,7 +210,7 @@ namespace Empiria.Payments.Payables {
     protected override void OnSave() {
       if (base.IsNew) {
         this.PayableNo = GeneratePayableNo();
-        this.PostedBy = ExecutionServer.CurrentContact;
+        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
       PayableData.WritePayable(this, this.ExtData.ToString());
@@ -240,30 +245,14 @@ namespace Empiria.Payments.Payables {
 
       fields.EnsureValid();
 
-      Description = GetDescription(fields.Description);
-      OrganizationalUnit = OrganizationalUnit.Parse(fields.OrganizationalUnitUID);
-      PayTo = Party.Parse(fields.PayToUID);
-      Budget = Budget.Parse(fields.BudgetUID);
-      Currency = Currency.Parse(fields.CurrencyUID);
-      // ExchangeRateType = fields.ExchangeRateTypeUID;
+      Description = PatchCleanField(fields.Description, PayableEntity.Description);
       ExchangeRate = fields.ExchangeRate;
+
       DueTime = fields.DueTime;
-      RequestedTime = fields.RequestedTime;
+      RequestedTime = DateTime.Now;
 
       UpdatePaymentData(fields);
     }
-
-
-    private string GetDescription(string description) {
-      description = EmpiriaString.Clean(description);
-
-      if (description.Length != 0) {
-        return description;
-      } else {
-        return PayableEntity.Description;
-      }
-    }
-
 
     #endregion Methods
 

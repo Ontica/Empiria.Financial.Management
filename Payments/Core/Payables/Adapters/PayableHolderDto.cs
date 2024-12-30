@@ -130,6 +130,10 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
+    public decimal Total {
+      get; internal set;
+    }
+
     public NamedEntityDto PayTo {
       get; internal set;
     }
