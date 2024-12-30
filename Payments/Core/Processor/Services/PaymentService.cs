@@ -50,15 +50,24 @@ namespace Empiria.Payments.Processor.Services {
 
       PaymentInstructionDto instructionDto = PaymentInstructionMapper.Map(instruction);
 
-      IPaymentsBrokerService paymentsService = broker.GetService();
+      //IPaymentsBrokerService paymentsService = broker.GetService();
 
-      PaymentInstructionResultDto paymentResult = paymentsService.SendPaymentInstruction(instructionDto);
+      PaymentInstructionResultDto paymentResult = new PaymentInstructionResultDto {
+        ExternalRequestID = "7664399-f7",
+        ExternalStatusName = "En proceso (pago enviado)",
+        ExternalResultText = "Transacción recibida en Ikos",
+        PaymentNo = "OK",
+        Status = PaymentInstructionStatus.InProcess
+      };
+
+      //paymentsService.SendPaymentInstruction(instructionDto);
 
       UpdatePaymentInstruction(instruction, paymentResult);
 
       return instruction;
     }
 
+  
 
     internal void UpdatePaymentInstructionStatus(PaymentInstruction paymentInstruction) {
       Assertion.Require(paymentInstruction, nameof(paymentInstruction));
