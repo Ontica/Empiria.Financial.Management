@@ -489,7 +489,8 @@ namespace Empiria.Billing {
       Assertion.Require(BillData.TryGetBillWithBillNo(fields.BillNo) == null,
                         "El documento que intenta guardar ya está registrado.");
 
-      Assertion.Require(Party.Primary.Equals(issuedTo),
+      //TODO REVISAR 2 REGISTROS QUE EXISTEN DE BANOBRAS EN PARTIES (PARTY_ID: 1, 5984)
+      Assertion.Require(Party.Primary.Code.Equals(issuedTo.Code),
                         $"El receptor del CFDI no es {Party.Primary.Name}");
 
       Assertion.Require(fields.SchemaData.Fecha <= DateTime.Now,
