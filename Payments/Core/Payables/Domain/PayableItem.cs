@@ -117,7 +117,7 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PAYABLE_BILL_CONCEPT_ID")]
+    [DataField("PAYABLE_ITEM_BILL_CONCEPT_ID")]
     public BillConcept BillConcept {
       get; private set;
     }

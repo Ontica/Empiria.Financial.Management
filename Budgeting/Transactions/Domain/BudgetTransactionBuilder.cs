@@ -24,6 +24,7 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(payableEntity, nameof(payableEntity));
       Assertion.Require(payableEntity.Items.ToFixedList().Count > 0,
                         "PayableEntity has no items.");
+
       Assertion.Require(fields, nameof(fields));
 
       _payableEntity = payableEntity;

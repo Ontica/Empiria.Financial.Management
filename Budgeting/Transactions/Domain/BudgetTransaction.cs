@@ -15,7 +15,6 @@ using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
-using Empiria.StateEnums;
 
 using Empiria.Budgeting.Transactions.Data;
 

@@ -524,7 +524,7 @@ namespace Empiria.Billing {
 
       Bill relatedBill = BillData.TryGetBillWithBillNo(fields.CFDIRelated);
 
-      Assertion.Require(relatedBill != null,
+      Assertion.Require(relatedBill,
                         "El CFDI al que hace referencia la nota de crédito, " +
                         "no ha sido registrado en el sistema.");
 

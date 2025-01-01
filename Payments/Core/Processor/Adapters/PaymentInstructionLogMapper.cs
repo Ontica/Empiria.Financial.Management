@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-using Empiria.Billing;
 using System.Collections.Generic;
 
 namespace Empiria.Payments.Processor.Adapters {
@@ -24,6 +22,7 @@ namespace Empiria.Payments.Processor.Adapters {
 
       foreach (var conceppaymentInstructionLog in paymentInstructionLogs) {
         var paymentInstructionLogdDto = Map(conceppaymentInstructionLog);
+
         logs.Add(paymentInstructionLogdDto);
       }
 
