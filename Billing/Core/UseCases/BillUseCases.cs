@@ -46,7 +46,6 @@ namespace Empiria.Billing.UseCases {
       SATBillDto satDto = reader.ReadAsBillDto();
 
       BillFields fields = BillFieldsMapper.Map(satDto);
-
       Bill bill = CreateBillTest(fields);
 
       return BillMapper.MapToBillDto(bill);

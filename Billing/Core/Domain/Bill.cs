@@ -41,6 +41,7 @@ namespace Empiria.Billing {
       Assertion.Require(billNo, nameof(billNo));
 
       PayableId = 1;
+      ManagedBy = Party.Empty;
       BillCategory = billCategory;
       BillNo = billNo;
       PayableTotal = 2170128.00M;
@@ -56,6 +57,7 @@ namespace Empiria.Billing {
       PayableEntityTypeId = ObjectTypeInfo.Parse(payable.PayableEntity.Type.UID).Id;
       PayableEntityId = payable.PayableEntity.Id;
       PayableId = payable.Id;
+      ManagedBy = Party.Parse(payable.PayableEntity.OrganizationalUnit.UID);
       BillCategory = billCategory;
       BillNo = billNo;
       PayableTotal = payable.PayableEntity.Items.Sum(x => x.Total);
@@ -305,7 +307,6 @@ namespace Empiria.Billing {
       IssueDate = PatchField(fields.SchemaData.Fecha, IssueDate);
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
-      ManagedBy = PatchField(fields.ManagedByUID, ManagedBy);
       _identificators = PatchField(fields.Identificators, _identificators);
       _tags = PatchField(fields.Tags, _tags);
       Currency = PatchField(fields.CurrencyUID, Currency);
