@@ -90,9 +90,7 @@ namespace Empiria.Payments.Orders.UseCases {
     public PaymentOrderHolderDto SendPaymentOrderToPay(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-
-      // Validate local not sent and not payed
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);   
 
       PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
 
@@ -104,6 +102,29 @@ namespace Empiria.Payments.Orders.UseCases {
       }
     }
 
+
+    public PaymentOrderHolderDto ValidatePaymentOrderIsPayed(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+
+      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
+
+      var instruction = new PaymentInstruction(broker, paymentOrder);
+
+      using (var usecases = PaymentService.ServiceInteractor()) {
+
+        usecases.UpdatePaymentInstructionStatus(instruction);
+        
+        if (instruction.Status == PaymentInstructionStatus.Payed) {
+          paymentOrder.Pay();
+          paymentOrder.Save();
+        }
+
+        return PaymentOrderMapper.Map(paymentOrder);
+      }
+
+    }
 
     public FixedList<PaymentOrderDescriptor> SearchPaymentOrders(PaymentOrdersQuery query) {
       Assertion.Require(query, nameof(query));
