@@ -25,6 +25,7 @@ namespace Empiria.Budgeting.Adapters {
       return new BudgetTypeDto {
         UID = budgetType.Name,
         Name = budgetType.DisplayName,
+        Multiyear = budgetType.Multiyear,
         SegmentTypes = BudgetSegmentTypesMapper.Map(budgetType.SegmentTypes),
         Budgets = BudgetMapper.Map(budgets.FindAll(x => x.BudgetType.Equals(budgetType))),
         TransactionTypes = budgetType.GetTransactionTypes()

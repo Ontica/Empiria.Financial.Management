@@ -39,6 +39,12 @@ namespace Empiria.Budgeting {
 
     #region Properties
 
+    public bool Multiyear {
+      get {
+        return ExtensionData.Get("multiyear", false);
+      }
+    }
+
     public string Prefix {
       get {
         return ExtensionData.Get("prefix", string.Empty);
