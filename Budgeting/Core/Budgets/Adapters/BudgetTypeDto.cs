@@ -21,6 +21,10 @@ namespace Empiria.Budgeting.Adapters {
       get; internal set;
     }
 
+    public bool Multiyear {
+      get; internal set;
+    }
+
     public FixedList<BudgetDto> Budgets {
       get; internal set;
     }
