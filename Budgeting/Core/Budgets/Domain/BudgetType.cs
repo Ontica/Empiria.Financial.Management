@@ -69,6 +69,22 @@ namespace Empiria.Budgeting {
 
     #region Methods
 
+    public FixedList<Budget> GetBudgets(DateTime fromDate, DateTime toDate) {
+      return Budget.GetFullList<Budget>()
+                   .FindAll(x => x.BudgetType.Equals(this) &&
+                                 fromDate.Year <= x.Year && x.Year <= toDate.Year);
+    }
+
+
+    public FixedList<Budget> GetBudgets(DateTime fromDate, DateTime toDate,
+                                        Predicate<Budget> predicate) {
+      return Budget.GetFullList<Budget>()
+                   .FindAll(x => x.BudgetType.Equals(this) &&
+                                 fromDate.Year <= x.Year && x.Year <= toDate.Year &&
+                                 predicate.Invoke(x));
+    }
+
+
     public Budget GetCurrentBudget() {
       var budget = Budget.GetFullList<Budget>()
                          .Find(x => x.BudgetType.Equals(this) && x.Year == DateTime.Today.Year);

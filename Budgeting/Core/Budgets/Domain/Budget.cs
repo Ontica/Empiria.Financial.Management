@@ -66,6 +66,47 @@ namespace Empiria.Budgeting {
       }
     }
 
+
+    public bool CanPlan {
+      get {
+        return base.ExtendedDataField.Get("can.plan", false);
+      }
+    }
+
+
+    public bool CanAuthorize {
+      get {
+        return base.ExtendedDataField.Get("can.authorize", false);
+      }
+    }
+
+
+    public bool CanModify {
+      get {
+        return base.ExtendedDataField.Get("can.modify", false);
+      }
+    }
+
+
+    public bool CanRequest {
+      get {
+        return base.ExtendedDataField.Get("can.request", false);
+      }
+    }
+
+
+    public bool CanCommit {
+      get {
+        return base.ExtendedDataField.Get("can.commit", false);
+      }
+    }
+
+    public bool CanPay {
+      get {
+        return base.ExtendedDataField.Get("can.pay", false);
+      }
+    }
+
     #endregion Properties
 
   }  // class Budget
