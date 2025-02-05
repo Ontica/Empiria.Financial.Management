@@ -60,14 +60,14 @@ namespace Empiria.Payments.Processor.Services {
         Status = PaymentInstructionStatus.InProcess
       };
 
-      //paymentsService.SendPaymentInstruction(instructionDto);
+    //  paymentsService.SendPaymentInstruction(instructionDto);
 
       UpdatePaymentInstruction(instruction, paymentResult);
 
       return instruction;
     }
 
-  
+
 
     internal void UpdatePaymentInstructionStatus(PaymentInstruction paymentInstruction) {
       Assertion.Require(paymentInstruction, nameof(paymentInstruction));
@@ -86,6 +86,8 @@ namespace Empiria.Payments.Processor.Services {
       PaymentInstructionStatusDto status = paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
 
       UpdatePaymentInstruction(paymentInstruction, status);
+
+      UpdatePaymentOrder(paymentInstruction.PaymentOrder, status);
     }
 
     #endregion Services
@@ -98,6 +100,15 @@ namespace Empiria.Payments.Processor.Services {
       if (instructions.Contains(x => !x.Status.IsFinal())) {
         Assertion.RequireFail($"No es posible enviar la orden de pago al sistema de pagos, ya que tiene " +
                               $"una transacción pendiente.");
+      }
+    }
+
+
+    static private void UpdatePaymentOrder(PaymentOrder paymentOrder,
+                                          PaymentInstructionStatusDto newStatus) {
+      if (newStatus.Status == PaymentInstructionStatus.Payed) {
+        paymentOrder.Pay();
+        paymentOrder.Save();
       }
     }
 

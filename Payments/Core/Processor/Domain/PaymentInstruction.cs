@@ -129,6 +129,10 @@ namespace Empiria.Payments.Processor {
     }
 
 
+    static internal FixedList<PaymentInstruction> GetInProccessPaymentInstructions() {
+      return PaymentInstructionData.GetPaymentOrderInstructionsByInProcessStatus();
+    }
+
     #endregion Methods
 
     #region Helpers

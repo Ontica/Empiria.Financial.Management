@@ -115,12 +115,6 @@ namespace Empiria.Payments.Orders.UseCases {
       using (var usecases = PaymentService.ServiceInteractor()) {
 
         usecases.UpdatePaymentInstructionStatus(instruction);
-        
-        if (instruction.Status == PaymentInstructionStatus.Payed) {
-          paymentOrder.Pay();
-          paymentOrder.Save();
-        }
-
         return PaymentOrderMapper.Map(paymentOrder);
       }
 

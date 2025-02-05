@@ -45,6 +45,18 @@ namespace Empiria.Payments.Processor.Data {
     }
 
 
+    static internal FixedList<PaymentInstruction> GetPaymentOrderInstructionsByInProcessStatus() {
+     
+      var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
+                $"WHERE PYMT_INSTRUCTION_STATUS =  'A'" + 
+                $"ORDER BY PYMT_INSTRUCTION_ID";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<PaymentInstruction>(op);
+    }
+
+
     static internal FixedList<PaymentInstructionLogEntry> GetPaymentOrderInstructionLogs(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
