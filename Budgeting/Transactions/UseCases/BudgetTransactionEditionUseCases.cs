@@ -9,11 +9,10 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Services;
-using Empiria.Services.Aspects;
-
 using Empiria.Financial;
 
 using Empiria.Budgeting.Transactions.Adapters;
+using System;
 
 namespace Empiria.Budgeting.Transactions.UseCases {
 
@@ -46,15 +45,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       return BudgetTransactionMapper.Map(transaction);
     }
 
-
-    //[WorkflowEvent("BudgetTransactionCreated")]
-    //public void CreateTransaction(BudgetTransactionFields fields) {
-    //  Assertion.Require(fields, nameof(fields));
-
-    //  base.SendWorkflowEvent("BudgetTransactionCreated", fields);
-    //}
-
-
     public BudgetTransaction CreateTransaction(IPayableEntity payable,
                                                BudgetTransactionFields fields) {
 
@@ -70,6 +60,50 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.Save();
 
       return transaction;
+    }
+
+    public BudgetTransactionHolderDto CreateTransaction(BudgetTransactionFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      var transactionType = BudgetTransactionType.Parse(fields.TransactionTypeUID);
+      var budget = Budget.Parse(fields.BaseBudgetUID);
+      var baseEntity = BaseObject.Parse(fields.BaseEntityTypeUID, fields.BaseEntityUID);
+
+      var transaction = new BudgetTransaction(transactionType, budget, baseEntity);
+
+      transaction.Update(fields);
+
+      transaction.Save();
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
+    public BudgetTransactionHolderDto DeleteTransaction(string budgetTransactionUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      transaction.Delete();
+
+      transaction.Save();
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
+    public BudgetTransactionHolderDto UpdateTransaction(string budgetTransactionUID,
+                                                        BudgetTransactionFields fields) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+      Assertion.Require(fields, nameof(fields));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      transaction.Update(fields);
+
+      transaction.Save();
+
+      return BudgetTransactionMapper.Map(transaction);
     }
 
     #endregion Use cases

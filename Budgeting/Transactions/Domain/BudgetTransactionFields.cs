@@ -60,6 +60,16 @@ namespace Empiria.Budgeting.Transactions {
       get; set;
     } = ExecutionServer.DateMaxValue;
 
+
+    public string BaseEntityTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string BaseEntityUID {
+      get; set;
+    } = string.Empty;
+
   }  // BudgetTransactionFields
 
 

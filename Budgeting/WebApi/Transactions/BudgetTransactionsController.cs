@@ -35,6 +35,18 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v2/budgeting/transactions")]
+    public SingleObjectModel CreateTransaction([FromBody] BudgetTransactionFields fields) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+        BudgetTransactionHolderDto transaction = usecases.CreateTransaction(fields);
+
+        return new SingleObjectModel(base.Request, transaction);
+      }
+    }
+
+
     [HttpGet]
     [Route("v2/budgeting/transactions/operation-sources")]
     public SingleObjectModel GetOperationSources() {
@@ -60,6 +72,18 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
+    public NoDataModel DeleteTransaction([FromUri] string budgetTransactionUID) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+        _ = usecases.DeleteTransaction(budgetTransactionUID);
+
+        return new NoDataModel(base.Request);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v2/budgeting/transactions/parties")]
     public CollectionModel SearchTransactionsParties([FromBody] TransactionPartiesQuery query) {
 
@@ -79,6 +103,19 @@ namespace Empiria.Budgeting.Transactions.WebApi {
         FixedList<BudgetTransactionDescriptorDto> transactions = usecases.SearchTransactions(query);
 
         return new SingleObjectModel(base.Request, transactions);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
+    public SingleObjectModel UpdateTransaction([FromUri] string budgetTransactionUID,
+                                               [FromBody] BudgetTransactionFields fields) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+        BudgetTransactionHolderDto transaction = usecases.UpdateTransaction(budgetTransactionUID, fields);
+
+        return new SingleObjectModel(base.Request, transaction);
       }
     }
 

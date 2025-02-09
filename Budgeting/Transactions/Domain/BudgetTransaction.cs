@@ -246,6 +246,14 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal void Delete() {
+      Assertion.Require(this.Status == BudgetTransactionStatus.Pending,
+                       $"Can not delete budget transaction. Its status is {Status.GetName()}.");
+
+      this.Status = BudgetTransactionStatus.Deleted;
+    }
+
+
     protected override void OnSave() {
       if (IsNew) {
         TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
