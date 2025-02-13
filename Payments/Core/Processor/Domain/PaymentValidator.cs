@@ -9,10 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
-using Empiria.Payments.Orders.Adapters;
-using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Services;
 
 

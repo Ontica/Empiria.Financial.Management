@@ -197,6 +197,15 @@ namespace Empiria.Payments.Orders {
     }
 
 
+    internal void Reject() {
+      Assertion.Require(this.Status == PaymentOrderStatus.Pending,
+      $"No se puede realizar el pago debido " +
+      $"a que tiene el estado {this.Status.GetName()}.");
+      
+      this.Status = PaymentOrderStatus.Rejected;
+    }
+
+
     internal void Suspend(Contact suspendedBy, DateTime suspendedUntil) {
       Assertion.Require(suspendedBy, nameof(suspendedBy));
 

@@ -109,7 +109,12 @@ namespace Empiria.Payments.Processor.Services {
       if (newStatus.Status == PaymentInstructionStatus.Payed) {
         paymentOrder.Pay();
         paymentOrder.Save();
+      } else if (newStatus.Status == PaymentInstructionStatus.Failed) {
+        paymentOrder.Reject();
+        paymentOrder.Save();
       }
+
+
     }
 
 
