@@ -101,24 +101,7 @@ namespace Empiria.Payments.Orders.UseCases {
         return PaymentOrderMapper.Map(paymentOrder);
       }
     }
-
-
-    public PaymentOrderHolderDto ValidatePaymentOrderIsPayed(string paymentOrderUID) {
-      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
-
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-
-      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
-
-      var instruction = new PaymentInstruction(broker, paymentOrder);
-
-      using (var usecases = PaymentService.ServiceInteractor()) {
-
-        usecases.UpdatePaymentInstructionStatus(instruction);
-        return PaymentOrderMapper.Map(paymentOrder);
-      }
-
-    }
+        
 
     public FixedList<PaymentOrderDescriptor> SearchPaymentOrders(PaymentOrdersQuery query) {
       Assertion.Require(query, nameof(query));
@@ -164,6 +147,27 @@ namespace Empiria.Payments.Orders.UseCases {
       order.Save();
 
       return PaymentOrderMapper.Map(order);
+    }
+
+
+    public PaymentOrderHolderDto ValidatePaymentOrderIsPayed(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+
+      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
+
+      var paymentInstructions = PaymentInstruction.GetListFor(paymentOrder)
+                               .FindAll(instruction => instruction.Status == PaymentInstructionStatus.InProcess);
+   
+      using (var usecases = PaymentService.ServiceInteractor()) {
+        foreach (var instruction in paymentInstructions) {
+          usecases.UpdatePaymentInstructionStatus(instruction);
+        }
+       
+        return PaymentOrderMapper.Map(paymentOrder);
+      }
+
     }
 
     #endregion Use cases

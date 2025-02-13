@@ -114,13 +114,18 @@ namespace Empiria.Tests.Payments.Orders {
 
     [Fact]
     public void Should_Send_Payment_Order_To_Pay() {
-
-
-      var sut = _usecases.SendPaymentOrderToPay("4954fdf9-b947-48f4-b8fa-610f559448d8");
+      var sut = _usecases.SendPaymentOrderToPay("65dccef4-cd85-4b5b-8a99-b6ca255c8ac3");
 
       Assert.NotNull(sut);
     }
 
+
+    [Fact]
+    public void Should_Validate_Is_Payment_Order_Is_Payed() {
+      var sut = _usecases.ValidatePaymentOrderIsPayed("65dccef4-cd85-4b5b-8a99-b6ca255c8ac3");
+
+      Assert.NotNull(sut);
+    }
     #endregion Facts
 
   }  // class PaymentOrderUseCasesTests

@@ -80,6 +80,9 @@
 	  <ProjectReference Include="..\..\..\operations.management\Procurement\Core\Empiria.Procurement.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\banobras.pyc\ExternalInterfaces\Banobras.PYC.ExternalInterfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="empiria.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
