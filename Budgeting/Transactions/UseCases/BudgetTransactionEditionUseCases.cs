@@ -12,7 +12,6 @@ using Empiria.Services;
 using Empiria.Financial;
 
 using Empiria.Budgeting.Transactions.Adapters;
-using System;
 
 namespace Empiria.Budgeting.Transactions.UseCases {
 
@@ -45,9 +44,9 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       return BudgetTransactionMapper.Map(transaction);
     }
 
+
     public BudgetTransaction CreateTransaction(IPayableEntity payable,
                                                BudgetTransactionFields fields) {
-
       Assertion.Require(fields, nameof(fields));
       Assertion.Require(payable, nameof(payable));
 
@@ -61,6 +60,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       return transaction;
     }
+
 
     public BudgetTransactionHolderDto CreateTransaction(BudgetTransactionFields fields) {
       Assertion.Require(fields, nameof(fields));
@@ -89,6 +89,59 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.Save();
 
       return BudgetTransactionMapper.Map(transaction);
+    }
+
+
+    public BudgetEntryDto CreateBudgetEntry(string budgetTransactionUID, BudgetEntryFields fields) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureIsValid();
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      var entry = transaction.AddEntry(fields);
+
+      transaction.Save();
+
+      return BudgetEntryMapper.Map(entry);
+    }
+
+
+    public BudgetEntryDto RemoveBudgetEntry(string budgetTransactionUID, string budgetEntryUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+      Assertion.Require(budgetEntryUID, nameof(budgetEntryUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      var budgetEntry = transaction.GetEntry(budgetEntryUID);
+
+      transaction.RemoveEntry(budgetEntry);
+
+      transaction.Save();
+
+      return BudgetEntryMapper.Map(budgetEntry);
+    }
+
+
+    public BudgetEntryDto UpdateBudgetEntry(string budgetTransactionUID,
+                                            string budgetEntryUID,
+                                            BudgetEntryFields fields) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+      Assertion.Require(budgetEntryUID, nameof(budgetEntryUID));
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureIsValid();
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      var budgetEntry = transaction.GetEntry(budgetEntryUID);
+
+      budgetEntry.Update(fields);
+
+      budgetEntry.Save();
+
+      return BudgetEntryMapper.Map(budgetEntry);
     }
 
 

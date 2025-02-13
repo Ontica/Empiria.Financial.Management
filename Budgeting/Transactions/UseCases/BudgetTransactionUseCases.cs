@@ -31,10 +31,21 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       return CreateInstance<BudgetTransactionUseCases>();
     }
 
-
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public BudgetEntryDto GetBudgetEntry(string budgetTransactionUID, string budgetEntryUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+      Assertion.Require(budgetEntryUID, nameof(budgetEntryUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      BudgetEntry budgetEntry = transaction.GetEntry(budgetEntryUID);
+
+      return BudgetEntryMapper.Map(budgetEntry);
+    }
+
 
     public FixedList<NamedEntityDto> GetOperationSources() {
       return OperationSource.GetList()

@@ -228,7 +228,7 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Methods
 
-    internal void AddEntry(BudgetEntryFields entryFields) {
+    internal BudgetEntry AddEntry(BudgetEntryFields entryFields) {
       Assertion.Require(entryFields, nameof(entryFields));
 
       var entry = new BudgetEntry(this);
@@ -236,6 +236,8 @@ namespace Empiria.Budgeting.Transactions {
       entry.Update(entryFields);
 
       _entries.Value.Add(entry);
+
+      return entry;
     }
 
 
@@ -251,6 +253,17 @@ namespace Empiria.Budgeting.Transactions {
                        $"Can not delete budget transaction. Its status is {Status.GetName()}.");
 
       this.Status = BudgetTransactionStatus.Deleted;
+    }
+
+
+    internal BudgetEntry GetEntry(string budgetEntryUID) {
+      Assertion.Require(budgetEntryUID, nameof(budgetEntryUID));
+
+      BudgetEntry entry = _entries.Value.Find(x => x.UID == budgetEntryUID);
+
+      Assertion.Require(entry, $"Budget entry with UID '{budgetEntryUID}' not found.");
+
+      return entry;
     }
 
 

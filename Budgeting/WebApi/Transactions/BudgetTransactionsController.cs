@@ -71,7 +71,7 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
 
-    [HttpPost]
+    [HttpDelete]
     [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
     public NoDataModel DeleteTransaction([FromUri] string budgetTransactionUID) {
 
@@ -107,7 +107,7 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
 
-    [HttpPost]
+    [HttpPut, HttpPatch]
     [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
     public SingleObjectModel UpdateTransaction([FromUri] string budgetTransactionUID,
                                                [FromBody] BudgetTransactionFields fields) {
