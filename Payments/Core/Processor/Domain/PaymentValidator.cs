@@ -41,7 +41,7 @@ namespace Empiria.Payments.Processor {
           return;
         }
 
-        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 2);
+        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 5);
         timer = new Timer(ValidatePayment, null, 10 * 1000,
                           MESSAGE_ENGINE_EXECUTION_MINUTES * 60 * 1000);
 
@@ -77,16 +77,15 @@ namespace Empiria.Payments.Processor {
 
     static private void ValidatePayment(object stateInfo) {
       var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
-      int count = 0;
 
       foreach (var paymentInstruction in paymentInstructions) {
-        count++;
         using (var usecases = PaymentService.ServiceInteractor()) {
           usecases.UpdatePaymentInstructionStatus(paymentInstruction);
         }
       }
 
     }
+      
 
     #endregion Helpers
 

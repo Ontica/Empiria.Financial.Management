@@ -126,6 +126,7 @@ namespace Empiria.Tests.Payments.Orders {
 
       Assert.NotNull(sut);
     }
+
     #endregion Facts
 
   }  // class PaymentOrderUseCasesTests

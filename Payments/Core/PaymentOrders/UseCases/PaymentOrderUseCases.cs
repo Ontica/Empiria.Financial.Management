@@ -157,18 +157,17 @@ namespace Empiria.Payments.Orders.UseCases {
 
       PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
 
-      var paymentInstructions = PaymentInstruction.GetListFor(paymentOrder)
-                               .FindAll(instruction => instruction.Status == PaymentInstructionStatus.InProcess);
+      var paymentInstruction = PaymentInstruction.GetListFor(paymentOrder)
+                               .Find(instruction => instruction.Status == PaymentInstructionStatus.InProcess);
    
       using (var usecases = PaymentService.ServiceInteractor()) {
-        foreach (var instruction in paymentInstructions) {
-          usecases.UpdatePaymentInstructionStatus(instruction);
-        }
+        usecases.UpdatePaymentInstructionStatus(paymentInstruction);
        
         return PaymentOrderMapper.Map(paymentOrder);
       }
 
     }
+
 
     #endregion Use cases
 
