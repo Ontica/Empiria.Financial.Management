@@ -75,7 +75,7 @@ namespace Empiria.Payments.Orders.Adapters {
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
         RequestedDate = paymentOrder.RequestedTime,
         DueTime = paymentOrder.DueTime,
-        Notes = paymentOrder.Notes,
+        Notes = paymentOrder.Description,
         PaymentMethod = paymentOrder.PaymentMethod.MapToNamedEntity(),
         Currency = paymentOrder.Currency.MapToNamedEntity(),
         Total = paymentOrder.Total,

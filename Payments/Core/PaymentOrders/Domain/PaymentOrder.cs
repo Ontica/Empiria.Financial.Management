@@ -106,7 +106,7 @@ namespace Empiria.Payments.Orders {
 
 
     [DataField("PYMT_ORD_NOTES")]
-    public string Notes {
+    public string Description {
       get; private set;
     }
 
@@ -233,7 +233,7 @@ namespace Empiria.Payments.Orders {
       this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
       this.Currency = Currency.Parse(fields.CurrencyUID);
       this.PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
-      this.Notes = fields.Notes;
+      this.Description = fields.Notes;
       this.RequestedTime = fields.RequestedTime;
       this.DueTime = fields.DueTime;
       this.RequestedBy = OrganizationalUnit.Parse(fields.RequestedByUID);
