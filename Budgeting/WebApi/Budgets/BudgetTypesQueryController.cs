@@ -15,6 +15,8 @@ using Empiria.WebApi;
 using Empiria.Budgeting.Adapters;
 
 using Empiria.Budgeting.UseCases;
+
+using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.UseCases;
 
 namespace Empiria.Budgeting.WebApi {
@@ -30,6 +32,18 @@ namespace Empiria.Budgeting.WebApi {
 
       using (var usecases = BudgetTypesUseCases.UseCaseInteractor()) {
         FixedList<BudgetTypeDto> list = usecases.BudgetTypesList();
+
+        return new CollectionModel(base.Request, list);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v2/budgeting/budget-types/for-edition")]
+    public CollectionModel GetBudgetTypesForEdition() {
+
+      using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
+        FixedList<BudgetTypeForEditionDto> list = usecases.GetBudgetTypesForEdition();
 
         return new CollectionModel(base.Request, list);
       }

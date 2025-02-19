@@ -8,10 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.StateEnums;
-
 using Empiria.Documents.Services;
 using Empiria.History.Services;
+using Empiria.Parties;
+
+using Empiria.Budgeting.Adapters;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
@@ -28,6 +29,12 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         History = HistoryServices.GetEntityHistory(transaction),
         Actions = MapActions(transaction)
       };
+    }
+
+
+    static internal FixedList<BudgetTypeForEditionDto> MapBudgetTypesForEdition(FixedList<BudgetType> budgetTypes) {
+      return budgetTypes.Select(x => MapBudgetTypeForEdition(x))
+                        .ToFixedList();
     }
 
 
@@ -66,6 +73,35 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         CanDelete = transaction.Status == BudgetTransactionStatus.Pending,
         CanUpdate = canAuthorize,
         CanEditDocuments = true
+      };
+    }
+
+
+    static private BudgetTypeForEditionDto MapBudgetTypeForEdition(BudgetType budgetType) {
+      return new BudgetTypeForEditionDto {
+        UID = budgetType.UID,
+        Name = budgetType.DisplayName,
+        Multiyear = budgetType.Multiyear,
+        Budgets = MapBudgetsForEdition(Budget.GetList(budgetType).FindAll(x => x.EditionAllowed))
+      };
+    }
+
+
+    static private FixedList<BudgetForEditionDto> MapBudgetsForEdition(FixedList<Budget> budgets) {
+      return budgets.Select(x => MapBudgetForEdition(x))
+                    .ToFixedList();
+    }
+
+
+    static private BudgetForEditionDto MapBudgetForEdition(Budget budget) {
+      return new BudgetForEditionDto {
+         UID = budget.UID,
+         Name = budget.Name,
+         Year = budget.Year,
+         Type = budget.BudgetType.MapToNamedEntity(),
+         OperationSources = OperationSource.GetList().MapToNamedEntityList(),
+         TransactionTypes = BudgetTransactionType.GetList(budget.BudgetType).MapToNamedEntityList(),
+         SegmentTypes = BudgetSegmentTypesMapper.Map(budget.BudgetType.SegmentTypes),
       };
     }
 

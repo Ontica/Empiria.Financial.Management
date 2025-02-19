@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
 using Empiria.Services;
 
 using Empiria.Parties;
@@ -44,6 +45,14 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       BudgetEntry budgetEntry = transaction.GetEntry(budgetEntryUID);
 
       return BudgetEntryMapper.Map(budgetEntry);
+    }
+
+
+    public FixedList<BudgetTypeForEditionDto> GetBudgetTypesForEdition() {
+      FixedList<Budget> budgets = Budget.GetList()
+                                        .FindAll(x => x.EditionAllowed);
+
+      return BudgetTransactionMapper.MapBudgetTypesForEdition(budgets.SelectDistinct(x => x.BudgetType));
     }
 
 

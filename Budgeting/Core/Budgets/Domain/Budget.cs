@@ -107,6 +107,13 @@ namespace Empiria.Budgeting {
       }
     }
 
+
+    public bool EditionAllowed {
+      get {
+        return CanPlan || CanAuthorize || CanModify || CanRequest || CanCommit;
+      }
+    }
+
     #endregion Properties
 
   }  // class Budget
