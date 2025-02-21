@@ -34,7 +34,6 @@ namespace Empiria.Budgeting.Transactions {
             .ToFixedList();
     }
 
-
     static public FixedList<BudgetTransactionType> GetList(BudgetType budgetType) {
       Assertion.Require(budgetType, nameof(budgetType));
 
@@ -70,6 +69,16 @@ namespace Empiria.Budgeting.Transactions {
     public string Prefix {
       get {
         return ExtensionData.Get("prefix", string.Empty);
+      }
+    }
+
+
+    public FixedList<ObjectTypeInfo> RelatedDocumentTypes {
+      get {
+        var ids = ExtensionData.GetFixedList<int>("relatedDocumentTypes", false);
+
+        return ids.Select(x => ObjectTypeInfo.Parse(x))
+                  .ToFixedList();
       }
     }
 

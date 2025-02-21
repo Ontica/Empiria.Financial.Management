@@ -38,18 +38,36 @@ namespace Empiria.Budgeting.Transactions.Adapters {
   /// <summary>Output DTO used to return budgets for transactions edition.</summary>
   public class BudgetForEditionDto : BudgetDto {
 
-    public FixedList<NamedEntityDto> OperationSources {
-      get; internal set;
-    }
-
     public FixedList<BudgetSegmentTypeDto> SegmentTypes {
       get; internal set;
     }
 
-    public FixedList<NamedEntityDto> TransactionTypes {
+    public FixedList<TransactionTypeForEditionDto> TransactionTypes {
       get; internal set;
     }
 
   }  // class BudgetForEditionDto
+
+
+  /// <summary>Output DTO used to return budgets transaction types for edition.</summary>
+  public class TransactionTypeForEditionDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string Name {
+      get; internal set;
+    }
+
+    public FixedList<NamedEntityDto> OperationSources {
+      get; internal set;
+    }
+
+    public FixedList<NamedEntityDto> RelatedDocumentTypes {
+      get; internal set;
+    }
+
+  }  // class TransactionTypeForEditionDto
 
 }  //namespace Empiria.Budgeting.Transactions.Adapters

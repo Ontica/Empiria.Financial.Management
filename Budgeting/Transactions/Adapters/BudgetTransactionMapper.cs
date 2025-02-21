@@ -99,9 +99,24 @@ namespace Empiria.Budgeting.Transactions.Adapters {
          Name = budget.Name,
          Year = budget.Year,
          Type = budget.BudgetType.MapToNamedEntity(),
-         OperationSources = OperationSource.GetList().MapToNamedEntityList(),
-         TransactionTypes = BudgetTransactionType.GetList(budget.BudgetType).MapToNamedEntityList(),
+         TransactionTypes = MapTransactionTypes(BudgetTransactionType.GetList(budget.BudgetType)),
          SegmentTypes = BudgetSegmentTypesMapper.Map(budget.BudgetType.SegmentTypes),
+      };
+    }
+
+
+    static private FixedList<TransactionTypeForEditionDto> MapTransactionTypes(FixedList<BudgetTransactionType> budgetTransactionTypes) {
+      return budgetTransactionTypes.Select(x => MapTransactionTypeForEdition(x))
+                                   .ToFixedList();
+    }
+
+
+    static private TransactionTypeForEditionDto MapTransactionTypeForEdition(BudgetTransactionType x) {
+      return new TransactionTypeForEditionDto {
+        UID = x.UID,
+        Name = x.DisplayName,
+        OperationSources = OperationSource.GetList().MapToNamedEntityList(),
+        RelatedDocumentTypes = x.RelatedDocumentTypes.MapToNamedEntityList()
       };
     }
 

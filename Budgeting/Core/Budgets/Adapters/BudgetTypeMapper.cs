@@ -11,7 +11,7 @@
 namespace Empiria.Budgeting.Adapters {
 
   /// <summary>Maps BudgetType instances to data transfer objects.</summary>
-  static public class BudgetTypeMapper {
+  static internal class BudgetTypeMapper {
 
     #region Mappers
 
@@ -21,7 +21,7 @@ namespace Empiria.Budgeting.Adapters {
     }
 
 
-    static public BudgetTypeDto Map(BudgetType budgetType, FixedList<Budget> budgets) {
+    static internal BudgetTypeDto Map(BudgetType budgetType, FixedList<Budget> budgets) {
       return new BudgetTypeDto {
         UID = budgetType.Name,
         Name = budgetType.DisplayName,
