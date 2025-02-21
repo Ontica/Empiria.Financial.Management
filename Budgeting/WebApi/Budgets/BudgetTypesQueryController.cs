@@ -39,11 +39,24 @@ namespace Empiria.Budgeting.WebApi {
 
 
     [HttpGet]
-    [Route("v2/budgeting/budget-types/for-edition")]
+    [Route("v2/budgeting/budget-types/for-transaction-edition")]
     public CollectionModel GetBudgetTypesForEdition() {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
-        FixedList<BudgetTypeForEditionDto> list = usecases.GetBudgetTypesForEdition();
+        FixedList<BudgetTypeForEditionDto> list = usecases.GetBudgetTypesForTransactionEdition();
+
+        return new CollectionModel(base.Request, list);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v2/budgeting/organizational-units/for-transaction-edition")]
+    public CollectionModel GetOrgUnitsForTransactionEdition([FromUri] string budgetUID,
+                                                            [FromUri] string transactionTypeUID) {
+
+      using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> list = usecases.GetOrgUnitsForTransactionEdition(budgetUID, transactionTypeUID);
 
         return new CollectionModel(base.Request, list);
       }

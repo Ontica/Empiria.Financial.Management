@@ -8,7 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Linq;
+using System;
+
 using Empiria.Services;
 
 using Empiria.Parties;
@@ -16,6 +17,7 @@ using Empiria.StateEnums;
 
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.Data;
+
 
 namespace Empiria.Budgeting.Transactions.UseCases {
 
@@ -48,7 +50,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public FixedList<BudgetTypeForEditionDto> GetBudgetTypesForEdition() {
+    public FixedList<BudgetTypeForEditionDto> GetBudgetTypesForTransactionEdition() {
       FixedList<Budget> budgets = Budget.GetList()
                                         .FindAll(x => x.EditionAllowed);
 
@@ -59,6 +61,16 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     public FixedList<NamedEntityDto> GetOperationSources() {
       return OperationSource.GetList()
                             .MapToNamedEntityList();
+    }
+
+
+    public FixedList<NamedEntityDto> GetOrgUnitsForTransactionEdition(string budgetUID, string transactionTypeUID) {
+      Assertion.Require(budgetUID, nameof(budgetUID));
+      Assertion.Require(transactionTypeUID, nameof(transactionTypeUID));
+
+      var orgUnits = Party.GetList<OrganizationalUnit>(DateTime.Today);
+
+      return orgUnits.MapToNamedEntityList();
     }
 
 
