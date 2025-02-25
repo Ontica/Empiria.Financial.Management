@@ -40,7 +40,7 @@ namespace Empiria.Budgeting.WebApi {
 
     [HttpGet]
     [Route("v2/budgeting/budget-types/for-transaction-edition")]
-    public CollectionModel GetBudgetTypesForEdition() {
+    public CollectionModel GetBudgetTypesForTransactionEdition() {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
         FixedList<BudgetTypeForEditionDto> list = usecases.GetBudgetTypesForTransactionEdition();

@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Budgeting.Transactions.dll         Pattern   : Use case interactor class               *
 *  Type     : BudgetTransactionUseCases                   License   : Please read LICENSE.txt file           *
 *                                                                                                            *
-*  Summary  : Use cases used to retrive budget transactions.                                                 *
+*  Summary  : Use cases used to retrieve budget transactions.                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -18,10 +18,9 @@ using Empiria.StateEnums;
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.Data;
 
-
 namespace Empiria.Budgeting.Transactions.UseCases {
 
-  /// <summary>Use cases used to retrive budget transactions.</summary>
+  /// <summary>Use cases used to retrieve budget transactions.</summary>
   public class BudgetTransactionUseCases : UseCase {
 
     #region Constructors and parsers

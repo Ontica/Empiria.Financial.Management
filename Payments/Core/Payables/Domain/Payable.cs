@@ -39,7 +39,7 @@ namespace Empiria.Payments.Payables {
 
     #region Constructors and parsers
 
-    private Payable(PayableType payableType) : base(payableType) {
+    protected Payable(PayableType payableType) : base(payableType) {
       // Required by Empiria Framework for all partitioned types.
     }
 

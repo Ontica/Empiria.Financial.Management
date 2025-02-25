@@ -65,19 +65,19 @@ namespace Empiria.Budgeting {
     }
 
     [DataField("BDG_ACCT_ORG_ID")]
-    internal Organization Organization {
+    public Organization Organization {
       get; private set;
     }
 
 
     [DataField("BDG_ACCT_ORG_UNIT_ID")]
-    internal OrganizationalUnit OrganizationalUnit {
+    public OrganizationalUnit OrganizationalUnit {
       get; private set;
     }
 
 
     [DataField("BDG_ACCT_BASE_SEGMENT_ID")]
-    internal BudgetAccountSegment BaseSegment {
+    public BudgetAccountSegment BaseSegment {
       get; private set;
     }
 
