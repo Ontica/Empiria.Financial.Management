@@ -17,7 +17,9 @@
   <cfdi:Emisor Rfc="VON990614PG4" Nombre="LA VIA ONTICA" RegimenFiscal="601" />
   <cfdi:Receptor Rfc="BNO670315CD0" Nombre="BANCO NACIONAL DE OBRAS Y SERVICIOS PUBLICOS SOCIEDAD NACIONAL DE CREDITO INSTITUCION DE BANCA DE DESARROLLO" DomicilioFiscalReceptor="01219" RegimenFiscalReceptor="601" UsoCFDI="G03" />
   <cfdi:Conceptos>
-    <cfdi:Concepto ClaveProdServ="43232804" Cantidad="377.00" ClaveUnidad="E48" Unidad="Unidad de servicio" Descripcion="Puntos de función CFP librados en el ambiente de producción de acuerdo al contrato número LIC/026/2021 relativo al Servicio de Implementación de la Nueva Platforma del Sistema de Contabilidad Financiera (SICOFIN)" ValorUnitario="7725.86" Importe="2912649.22" ObjetoImp="02">
+    <cfdi:Concepto ClaveProdServ="43232804" Cantidad="377.00" ClaveUnidad="E48" Unidad="Unidad de servicio" 
+                   Descripcion="Puntos de función CFP librados en el ambiente de producción de acuerdo al contrato número LIC/026/2021 relativo al Servicio de Implementación de la Nueva Platforma del Sistema de Contabilidad Financiera (SICOFIN)" 
+                   ValorUnitario="7725.86" Importe="2912649.22" ObjetoImp="02">
       <cfdi:Impuestos>
         <cfdi:Traslados>
           <cfdi:Traslado Base="2912649.22" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="466023.88" />

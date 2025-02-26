@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:aieps="http://www.sat.gob.mx/acreditamiento" 
+  xmlns:implocal="http://www.sat.gob.mx/implocal" 
+  xmlns:eco="http://cfd.grupoeco.com.mx" 
+  xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/acreditamiento http://www.sat.gob.mx/sitio_internet/cfd/acreditamiento/AcreditamientoIEPS10.xsd http://www.sat.gob.mx/implocal http://www.sat.gob.mx/sitio_internet/cfd/implocal/implocal.xsd http://cfd.grupoeco.com.mx http://cfd.grupoeco.com.mx/eco_cfd.xsd" 
+  Version="4.0" 
+  Exportacion="01" 
+  Serie="BI" 
+  Folio="451282" 
+  Fecha="2024-12-13T08:38:06" 
+  Sello="BylBQvhLeNi7ZZ3yBSr+19Trq7VzuiGdpd6TH+t2gYx2tigjknRiNGIifRUlipmM1NhJqosCpMDUROlGodNUTKGUwQhMV6H93/+yvG4KKswbNyN1t3gmq2w1kdUDieCZIYps7olHWcv9+ifeyTk33eG3OZT9Rvjy1j2TxBJYccTQjquuLYiRSxDQ5clNrdjmTVS5oBXPwiL64rh1SWVay0ypUAvvv9jMHxKGsM54ZG0J8+zHfPtKyoVkM4W85CGtXPY/e6jSz+lExQ5s8/i9Z+OBOs5luX6INKt5pophiPEsSm6uLXGgPlD3jYJ+66Ulh2IFuCBRd+u3Lm8C3Mv10w==" FormaPago="04" 
+  NoCertificado="00001000000710356291" 
+  Certificado="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" 
+  SubTotal="653.37" 
+  Moneda="MXN" 
+  Total="754.92" 
+  TipoDeComprobante="I" 
+  MetodoPago="PUE" 
+  LugarExpedicion="83288">
+  <cfdi:Emisor Rfc="VON990614PG4" Nombre="GASOLINERA LA VERBENA" RegimenFiscal="601" />
+  <cfdi:Receptor Rfc="BNO670315CD0" Nombre="BANCO NACIONAL DE OBRAS Y SERVICIOS PUBLICOS SOCIEDAD NACIONAL DE CREDITO INSTITUCION DE BANCA DE DESARROLLO" DomicilioFiscalReceptor="01219" RegimenFiscalReceptor="601" UsoCFDI="G03" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="15101515" NoIdentificacion="PL/2749/EXP/ES/2015-3421733" Cantidad="28.064" ClaveUnidad="LTR" Descripcion="GASOLINA PREMIUM MIN. 91 OCTANOS" ValorUnitario="23.28139" Importe="653.37" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="634.700000" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="101.55" />
+        </cfdi:Traslados>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
+  </cfdi:Conceptos>
+  <cfdi:Impuestos TotalImpuestosTrasladados="101.55">
+    <cfdi:Traslados>
+      <cfdi:Traslado Base="634.70" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="101.55" />
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+  <cfdi:Complemento>
+    <tfd:TimbreFiscalDigital 
+      FechaTimbrado="2024-12-13T09:38:06" 
+      NoCertificadoSAT="00001000000705928441" 
+      RfcProvCertif="PPD101129EA3" 
+      SelloCFD="BylBQvhLeNi7ZZ3yBSr+19Trq7VzuiGdpd6TH+t2gYx2tigjknRiNGIifRUlipmM1NhJqosCpMDUROlGodNUTKGUwQhMV6H93/+yvG4KKswbNyN1t3gmq2w1kdUDieCZIYps7olHWcv9+ifeyTk33eG3OZT9Rvjy1j2TxBJYccTQjquuLYiRSxDQ5clNrdjmTVS5oBXPwiL64rh1SWVay0ypUAvvv9jMHxKGsM54ZG0J8+zHfPtKyoVkM4W85CGtXPY/e6jSz+lExQ5s8/i9Z+OBOs5luX6INKt5pophiPEsSm6uLXGgPlD3jYJ+66Ulh2IFuCBRd+u3Lm8C3Mv10w==" 
+      SelloSAT="I21uV5C4o78DuZqF13cqHxwbxi92TF5vQd6thVczMOMsUngLBCSHmyU/FPgnaqziEBaaLrH5OvEDHZsplZHtOuIxUXoclGNHJebt6opeZnA1DVFScxoWq9xTJwcdq8gkZwI8jkNGPzP+lcixJIqd98W8MldSKuqLKtBeldvrLUrlWWPUasTmd75TA06sZfhO1Ii5Ygr/CRl6TpnBu89uu6TkzZjLc9hVLM5lu3RC9JFe4KX9QLaKg+gbcJovbppiroA3yZcdn3VmMD80oKmeacmyr1qLRMoJ0ysz51D9R0l/6+3kxV4m9+rstLFCr93Rt+ShwaElaXONLY3YaRwl6A==" 
+      UUID="E9DEDFFD-966D-4AFD-A435-19EE7C413771" 
+      Version="1.1" 
+      xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" 
+      xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+  </cfdi:Complemento>
+  <cfdi:Addenda>
+    <eco:Complementaria 
+      tipoFolio="0" 
+      nombreComercial="ARCO GASOLINERAS" 
+      noCliente="00003130592" 
+      cadenaOriginal="||4.0|BI|451282|2024-12-13T08:38:06|04|00001000000710356291|653.37|MXN|754.92|I|01|PUE|83288|GVE0804043S6|GASOLINERA LA VERBENA|601|ROVE870706QMA|JOSE EFRAIN RODRIGUEZ VEGA|83287|626|G03|15101515|PL/2749/EXP/ES/2015-3421733|28.064|LTR|GASOLINA PREMIUM MIN. 91 OCTANOS|23.28139|653.37|02|634.700000|002|Tasa|0.160000|101.55|634.70|002|Tasa|0.160000|101.55|101.55||" 
+      fechaVencimiento="2024-12-13T08:38:06" 
+      totalEnLetras="SETECIENTOS CINCUENTA Y CUATRO PESOS CON 92/100 M.N." 
+      leyendaFactura="" 
+      telefono="(662) 136 61 49" 
+      noEstacion="10049" 
+      clavePemex="0000114169" 
+      fechaControlInterno="2024-12-13" 
+      metodoDePago="PUE">
+      <eco:Conceptos>
+        <eco:Concepto tasaIeps="0.6651" ieps="18.67" tasaIva="16.00" iva="101.55" noIdentificacion="32012" tasaAieps="0.0000" aIeps="0.00" />
+      </eco:Conceptos>
+    </eco:Complementaria>
+  </cfdi:Addenda>
+</cfdi:Comprobante>
