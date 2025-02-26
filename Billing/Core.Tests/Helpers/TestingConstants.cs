@@ -33,6 +33,15 @@ namespace Empiria.Tests.Billing {
       }
     }
 
+
+    static public string XML_PAYMENT_COMPLEMENT_FILE_PATH {
+      get {
+        var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+
+        return Path.Combine(directory.Parent.FullName, @"Resources\ComplementoPagoFacturaNov24.xml");
+      }
+    }
+
   }  // class TestingConstants
 
 }  // namespace Empiria.Tests.Billing

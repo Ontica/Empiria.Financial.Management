@@ -45,6 +45,21 @@ namespace Empiria.Tests.Billing {
       Assert.NotNull(sut);
     }
 
+
+    [Fact]
+    public void Should_Read_A_Complement_Payment_From_A_Xml_String() {
+
+      string xmlFilePath = TestingConstants.XML_PAYMENT_COMPLEMENT_FILE_PATH;
+
+      var xmlText = System.IO.File.ReadAllText(xmlFilePath);
+
+      var reader = new SATPaymentComplementXmlReader(xmlText);
+
+      SATBillDto sut = reader.ReadAsPaymentComplementDto();
+
+      Assert.NotNull(sut);
+    }
+
   }  // class SATBillXmlReaderTests
 
 }  // namespace Empiria.Tests.Billing
