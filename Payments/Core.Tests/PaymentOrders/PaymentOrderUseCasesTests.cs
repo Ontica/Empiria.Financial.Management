@@ -46,7 +46,7 @@ namespace Empiria.Tests.Payments.Orders {
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
         PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
         Notes = "Sin notas",
-        Total = 1234567.89m,
+        Total = 34567.89m,
         DueTime = DateTime.Today,
         RequestedByUID  = "6bebca32-c14f-4996-8300-77ac86513a59",
         RequestedTime = DateTime.Now
@@ -75,7 +75,7 @@ namespace Empiria.Tests.Payments.Orders {
 
 
     [Fact]
-    public void Should_Update_Payment_Order() {
+    public void Should_Update_Manual_Payment_Order() {
       var fields = new PaymentOrderFields {
         PaymentOrderTypeUID = "32e1b307-676b-4488-b26f-1cbc03878875",
         PayableUID = "1537c110-e3f1-4ab8-b822-c00733ac3dd5",
@@ -95,7 +95,6 @@ namespace Empiria.Tests.Payments.Orders {
 
       Assert.NotNull(sut);
     }
-
 
 
     [Fact]
@@ -127,6 +126,54 @@ namespace Empiria.Tests.Payments.Orders {
       Assert.NotNull(sut);
     }
 
+
+    [Fact]
+    public void Should_Create_Manual_Payment_Order() {
+      var fields = new  ManualPaymentOrderFields {
+        PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
+        PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
+        CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
+        PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
+        Notes = "pago manual",
+        Total = 1234567.89m,
+        DueTime = DateTime.Today,
+        RequestedByUID = "6bebca32-c14f-4996-8300-77ac86513a59",
+        RequestedTime = DateTime.Now,
+        ReferenceNumber = "1929393-393838"
+
+      };
+
+      var sut = _usecases.CreateManualPaymentOrder(fields);
+
+     Assert.NotNull(sut);
+    }
+
+
+    [Fact]
+    public void Should_Delete_Manual_Payment_Order() {
+      _usecases.DeleteManualPaymentOrder("65dccef4-cd85-4b5b-8a99-b6ca255c8ac3");
+    }
+
+
+    [Fact]
+    public void Should_Update_Payment_Order() {
+      var fields = new ManualPaymentOrderFields {
+        PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
+        PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
+        CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
+        PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
+        Notes = "updated by test",
+        Total = 21.89m,
+        DueTime = DateTime.Today,
+        RequestedByUID = "6bebca32-c14f-4996-8300-77ac86513a59",
+        RequestedTime = DateTime.Now,
+        ReferenceNumber = "9494/8585-09"
+      };
+
+      var sut = _usecases.UpdateManualPaymentOrder("548da252-b2db-4bba-bf11-74481d1883b0", fields);
+
+      Assert.NotNull(sut);
+    }
     #endregion Facts
 
   }  // class PaymentOrderUseCasesTests

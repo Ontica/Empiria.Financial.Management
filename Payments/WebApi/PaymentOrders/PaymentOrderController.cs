@@ -139,6 +139,58 @@ namespace Empiria.Payments.Orders.WebApi {
       }
     }
 
+
+    #region ManualPaymentOrder
+
+
+    [HttpPost]
+    [Route("v2/payments-management/manual-payment-orders")]
+    public SingleObjectModel CreateManualPaymentOrder([FromBody] ManualPaymentOrderFields fields) {
+
+      base.RequireBody(fields);
+
+      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
+        PaymentOrderHolderDto paymentOrder = usecases.CreateManualPaymentOrder(fields);
+
+        return new SingleObjectModel(base.Request, paymentOrder);
+      }
+    }
+
+
+    [HttpDelete]
+    [Route("v2/payments-management/manual-payment-orders/{manualPaymentOrderUID:guid}")]
+    public NoDataModel DeleteManualPaymentOrder([FromUri] string manualPaymentOrderUID) {
+
+      base.RequireResource(manualPaymentOrderUID, nameof(manualPaymentOrderUID));
+
+      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
+
+        usecases.DeleteManualPaymentOrder(manualPaymentOrderUID);
+
+        return new NoDataModel(this.Request);
+      }
+    }
+
+
+    [HttpPut]
+    [Route("v2/payments-management/manual-payment-orders/{manualPaymentOrderUID:guid}")]
+    public SingleObjectModel UpdateManualPaymentOrder([FromUri] string manualPaymentOrderUID,
+                                                [FromBody] ManualPaymentOrderFields fields) {
+
+      base.RequireBody(fields);
+
+      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
+
+        PaymentOrderHolderDto paymentOrder = usecases.UpdateManualPaymentOrder(manualPaymentOrderUID,
+                                                                         fields);
+
+        return new SingleObjectModel(this.Request, paymentOrder);
+      }
+    }
+
+
+    #endregion ManualPaymentOrder
+
     #endregion Command web apis
 
   }  // class PaymentOrderController

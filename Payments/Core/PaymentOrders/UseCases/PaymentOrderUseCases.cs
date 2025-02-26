@@ -169,7 +169,79 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
+    public PaymentOrderHolderDto CreateManualPaymentOrder(ManualPaymentOrderFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      SetManualPaymentOrderDefaultValues(fields);
+
+      fields.EnsureValid();    
+
+      var order = new PaymentOrder(fields);
+
+      order.SetReferenceNumber(fields.ReferenceNumber);
+
+      order.Save();
+
+      return PaymentOrderMapper.Map(order);
+    }
+
+
+    public PaymentOrderHolderDto UpdateManualPaymentOrder(string uid, ManualPaymentOrderFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      SetManualPaymentOrderDefaultValues(fields);
+
+      fields.EnsureValid();    
+
+      var order = PaymentOrder.Parse(uid);
+      order.SetReferenceNumber(fields.ReferenceNumber);
+
+      order.Update(fields);
+
+      order.Save();
+
+      return PaymentOrderMapper.Map(order);
+    }
+
+    public void DeleteManualPaymentOrder(string manaualPaymentOrderUID) {
+      Assertion.Require(manaualPaymentOrderUID, nameof(manaualPaymentOrderUID));
+
+      var order = PaymentOrder.Parse(manaualPaymentOrderUID);
+      
+      Assertion.Require(order.PaymentOrderType.Id  == 654, $"La orden de pago no se puede eliminar por que en es el tipo pago manual");
+
+      order.Delete();
+
+      order.Save();
+    }
+
+
+    public PaymentOrderHolderDto GetManualPaymentOrder(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var order = PaymentOrder.Parse(paymentOrderUID);
+
+      return PaymentOrderMapper.Map(order);
+    }
+
+
+
     #endregion Use cases
+
+    #region Helpers
+
+    private void SetManualPaymentOrderDefaultValues(ManualPaymentOrderFields fields) {
+
+      fields.PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c";
+
+      if ((fields.PayableUID == null) || (fields.PayableUID == string.Empty)) {
+        var payable = Payable.Parse(-1);
+        fields.PayableUID = payable.UID;
+      }
+
+    }
+
+    #endregion  Helpers
 
   }  // class PaymentOrderUseCases
 

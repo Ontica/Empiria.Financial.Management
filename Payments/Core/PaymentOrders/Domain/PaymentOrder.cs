@@ -27,7 +27,7 @@ namespace Empiria.Payments.Orders {
 
     #region Constructors and parsers
 
-    private PaymentOrder() {
+    public PaymentOrder() {
       // Required by Empiria Framework.
     }
 
@@ -81,6 +81,7 @@ namespace Empiria.Payments.Orders {
       get; internal set;
     }
 
+
     [DataField("PYMT_ORD_PAYABLE_TYPE_ID")]
     public int PayableTypeId {
       get; internal set;
@@ -120,6 +121,15 @@ namespace Empiria.Payments.Orders {
     [DataField("PYMT_ORD_EXT_DATA")]
     private JsonObject ExtData {
       get; set;
+    }
+
+    internal string ReferenceNumber {
+      get {
+        return this.ExtData.Get("ReferenceNumber", string.Empty);
+      }
+      private set {
+        this.ExtData.SetIfValue("ReferenceNumber", value);
+      }
     }
 
 
@@ -203,6 +213,15 @@ namespace Empiria.Payments.Orders {
       $"a que tiene el estado {this.Status.GetName()}.");
       
       this.Status = PaymentOrderStatus.Rejected;
+    }
+
+
+    internal void SetReferenceNumber(string referenceNumber) {
+
+      if ((referenceNumber != null) || (referenceNumber != string.Empty)) {
+        this.ReferenceNumber = referenceNumber;
+      }
+
     }
 
 

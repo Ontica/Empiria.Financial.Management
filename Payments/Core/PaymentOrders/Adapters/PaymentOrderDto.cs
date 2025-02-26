@@ -112,6 +112,10 @@ namespace Empiria.Payments.Orders.Adapters {
       get; internal set;
     }
 
+    public string ReferenceNumber {
+      get; internal set; 
+    }
+
     public NamedEntityDto Status {
       get; internal set;
     }
