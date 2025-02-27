@@ -54,7 +54,7 @@ namespace Empiria.Billing.Adapters {
 
 
     static private FixedList<BillConceptFields> MapToBillConceptFields(
-                                                FixedList<SATBillConceptDto> conceptos) {
+                                                FixedList<SATBillConceptWithTaxDto> conceptos) {
       List<BillConceptFields> fields = new List<BillConceptFields>();
 
       foreach (var concepto in conceptos) {
