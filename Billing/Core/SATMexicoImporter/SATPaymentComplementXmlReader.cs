@@ -1,21 +1,29 @@
-﻿using System;
+﻿/* Empiria Financial *****************************************************************************************
+*                                                                                                            *
+*  Module   : Billing SATMexico Importer                 Component : Domain Layer                            *
+*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Service provider                        *
+*  Type     : SATPaymentComplementXmlReader              License   : Please read LICENSE.txt file            *
+*                                                                                                            *
+*  Summary  : Service used to read a payment complement as xml string and return a SATBillDto object.        *
+*                                                                                                            *
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace Empiria.Billing.SATMexicoImporter {
+
+  /// <summary>Service used to read a payment complement as xml string and return a SATBillDto object.</summary>
   internal class SATPaymentComplementXmlReader {
 
-    private readonly SATBillDto _satCreditNoteDto;
+    private readonly SATBillDto _satPaymentComplementDto;
 
     private readonly XmlDocument _xmlDocument;
 
     internal SATPaymentComplementXmlReader(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
-      _satCreditNoteDto = new SATBillDto();
+      _satPaymentComplementDto = new SATBillDto();
 
       _xmlDocument = new XmlDocument();
 
@@ -34,10 +42,10 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode node in nodes) {
 
-        if (node.Name == "cfdi:CfdiRelacionados") {
+        //if (node.Name == "cfdi:CfdiRelacionados") {
 
-          GenerateCfdiRelatedData(node);
-        }
+        //  GenerateCfdiRelatedData(node);
+        //}
         if (node.Name == "cfdi:Emisor") {
 
           GenerateSenderData(node);
@@ -56,7 +64,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         }
       }
 
-      return _satCreditNoteDto;
+      return _satPaymentComplementDto;
     }
 
     #endregion Services
@@ -80,35 +88,64 @@ namespace Empiria.Billing.SATMexicoImporter {
 
         cfdiRelatedListDto.Add(cfdiRelatedDto);
       }
-      _satCreditNoteDto.DatosGenerales.CfdiRelacionados = cfdiRelatedListDto.ToFixedList();
+      _satPaymentComplementDto.DatosGenerales.CfdiRelacionados = cfdiRelatedListDto.ToFixedList();
     }
 
 
     private void GenerateComplementData(XmlNode complementNode) {
 
-      XmlNode timbre = complementNode.FirstChild;
+      XmlNode pago20Pagos = complementNode.FirstChild;
 
-      if (!timbre.Name.Equals("tfd:TimbreFiscalDigital"))
-        Assertion.EnsureFailed("The 'tfd:TimbreFiscalDigital' it doesnt exist.");
+      if (!pago20Pagos.Name.Equals("pago20:Pagos"))
+        Assertion.EnsureFailed("The 'pago20:Pagos' it doesnt exist.");
 
-      _satCreditNoteDto.SATComplemento = new SATBillComplementDto {
-        Xmlns_Tfd = GetAttribute(timbre, "xmlns:tfd"),
-        Xmlns_Xsi = GetAttribute(timbre, "xmlns:xsi"),
-        Xsi_SchemaLocation = GetAttribute(timbre, "xsi:schemaLocation"),
-        Tfd_Version = GetAttribute(timbre, "Version"),
-        UUID = GetAttribute(timbre, "UUID"),
-        FechaTimbrado = GetAttribute<DateTime>(timbre, "FechaTimbrado"),
-        RfcProvCertif = GetAttribute(timbre, "RfcProvCertif"),
-        SelloCFD = GetAttribute(timbre, "SelloCFD"),
-        NoCertificadoSAT = GetAttribute(timbre, "NoCertificadoSAT"),
-        SelloSAT = GetAttribute(timbre, "SelloSAT")
-      };
+      foreach (XmlNode concept in pago20Pagos.ChildNodes) {
+
+        if (concept.Name.Equals("pago20:Totales")) {
+
+          var totalTrasladosBaseIVA16 = Convert.ToDecimal(concept.Attributes["TotalTrasladosBaseIVA16"].Value);
+
+        } else if (concept.Name.Equals("pago20:Pago")) {
+
+          foreach (XmlNode relatedDoc in concept.ChildNodes) {
+
+            if (relatedDoc.Name.Equals("pago20:DoctoRelacionado")) {
+
+              //TODO GENERATE DOCTORELACIONADO OBJECT
+              var idDocumento = GetAttribute(relatedDoc, "IdDocumento");
+              var impSaldoAnt = Convert.ToDecimal(relatedDoc.Attributes["ImpSaldoAnt"].Value);
+
+              if (!relatedDoc.FirstChild.Name.Equals("pago20:ImpuestosDR"))
+                Assertion.EnsureFailed("The 'pago20:ImpuestosDR' it doesnt exist.");
+
+              foreach (XmlNode traslado in relatedDoc.FirstChild.ChildNodes) {
+
+                if (!traslado.Name.Equals("pago20:TrasladosDR"))
+                  Assertion.EnsureFailed("The 'pago20:TrasladosDR' it doesnt exist.");
+
+                foreach (XmlNode tax in traslado.ChildNodes) {
+
+                  if (!tax.Name.Equals("pago20:TrasladoDR"))
+                    Assertion.EnsureFailed("The 'pago20:TrasladoDR' it doesnt exist.");
+
+                  var baseDR = Convert.ToDecimal(tax.Attributes["BaseDR"].Value);
+                  var impuestoDR = GetAttribute(tax, "ImpuestoDR");
+                }
+              }
+
+            } else if (relatedDoc.Name.Equals("pago20:ImpuestosP")) {
+              //TODO ASK IF THIS INFORMATION IS REQUIRED
+            }
+          }
+
+        }
+      }
     }
 
 
     private void GenerateConceptsList(XmlNode conceptsNode) {
 
-      var conceptosDto = new List<SATBillConceptDto>();
+      var conceptosDto = new List<SATBillConceptWithTaxDto>();
 
       foreach (XmlNode concept in conceptsNode.ChildNodes) {
 
@@ -116,7 +153,7 @@ namespace Empiria.Billing.SATMexicoImporter {
           Assertion.EnsureFailed("The concepts node must contain only concepts.");
         }
 
-        var conceptoDto = new SATBillConceptDto() {
+        var conceptoDto = new SATBillConceptWithTaxDto() {
           ClaveProdServ = GetAttribute(concept, "ClaveProdServ"),
           ClaveUnidad = GetAttribute(concept, "ClaveUnidad"),
           Cantidad = GetAttribute<decimal>(concept, "Cantidad"),
@@ -131,7 +168,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         conceptosDto.Add(conceptoDto);
 
       }
-      _satCreditNoteDto.Conceptos = conceptosDto.ToFixedList();
+      _satPaymentComplementDto.Conceptos = conceptosDto.ToFixedList();
     }
 
 
@@ -143,7 +180,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         Assertion.EnsureFailed("The CFDI version is not correct.");
       }
 
-      _satCreditNoteDto.DatosGenerales = new SATBillGeneralDataDto {
+      _satPaymentComplementDto.DatosGenerales = new SATBillGeneralDataDto {
         CFDIVersion = GetAttribute(generalDataNode, "Version"),
         Folio = GetAttribute(generalDataNode, "Folio"),
         Fecha = GetAttribute<DateTime>(generalDataNode, "Fecha"),
@@ -167,7 +204,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private void GenerateReceiverData(XmlNode receiverNode) {
 
-      _satCreditNoteDto.Receptor = new SATBillOrganizationDto {
+      _satPaymentComplementDto.Receptor = new SATBillOrganizationDto {
         RegimenFiscal = GetAttribute(receiverNode, "RegimenFiscalReceptor"),
         RFC = GetAttribute(receiverNode, "Rfc"),
         Nombre = GetAttribute(receiverNode, "Nombre"),
@@ -179,11 +216,23 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private void GenerateSenderData(XmlNode senderNode) {
 
-      _satCreditNoteDto.Emisor = new SATBillOrganizationDto {
+      _satPaymentComplementDto.Emisor = new SATBillOrganizationDto {
         RegimenFiscal = GetAttribute(senderNode, "RegimenFiscal"),
         RFC = GetAttribute(senderNode, "Rfc"),
         Nombre = GetAttribute(senderNode, "Nombre"),
       };
+    }
+
+
+    private FixedList<SATBillTaxDto> GenerateTaxesByConcept(XmlNode taxesNode) {
+
+      var taxesByConceptDto = new List<SATBillTaxDto>();
+
+      foreach (XmlNode taxNode in taxesNode.ChildNodes) {
+
+        taxesByConceptDto.AddRange(GetTaxItems(taxNode));
+      }
+      return taxesByConceptDto.ToFixedList();
     }
 
 
@@ -199,6 +248,37 @@ namespace Empiria.Billing.SATMexicoImporter {
         return (T) Convert.ChangeType(concept.Attributes[attributeName]?.Value, typeof(T));
       }
     }
+
+
+    private IEnumerable<SATBillTaxDto> GetTaxItems(XmlNode taxNode) {
+      var taxesByConceptDto = new List<SATBillTaxDto>();
+
+      foreach (XmlNode taxItem in taxNode.ChildNodes) {
+
+        var taxDto = new SATBillTaxDto();
+
+        taxDto.Base = Convert.ToDecimal(taxItem.Attributes["Base"].Value);
+        taxDto.Impuesto = taxItem.Attributes["Impuesto"].Value;
+        taxDto.TipoFactor = taxItem.Attributes["TipoFactor"].Value;
+        taxDto.TasaOCuota = Convert.ToDecimal(taxItem.Attributes["TasaOCuota"].Value);
+        taxDto.Importe = Convert.ToDecimal(taxItem.Attributes["Importe"].Value);
+
+        if (taxItem.Name == "cfdi:Traslado") {
+          taxDto.MetodoAplicacion = BillTaxMethod.Traslado;
+
+        } else if (taxItem.Name == "cfdi:Retencion") {
+          taxDto.MetodoAplicacion = BillTaxMethod.Retencion;
+
+        } else {
+
+          throw Assertion.EnsureNoReachThisCode($"Unhandled SAT tax type: {taxNode.Name}");
+        }
+        taxesByConceptDto.Add(taxDto);
+      }
+
+      return taxesByConceptDto;
+    }
+
 
     #endregion Helpers
   }
