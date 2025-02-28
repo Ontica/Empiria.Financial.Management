@@ -17,16 +17,24 @@
   <cfdi:Emisor Rfc="VON990614PG4" Nombre="LA VIA ONTICA" RegimenFiscal="601" />
   <cfdi:Receptor Rfc="BNO670315CD0" Nombre="BANCO NACIONAL DE OBRAS Y SERVICIOS PUBLICOS SOCIEDAD NACIONAL DE CREDITO INSTITUCION DE BANCA DE DESARROLLO" DomicilioFiscalReceptor="01219" RegimenFiscalReceptor="601" UsoCFDI="CP01" />
   <cfdi:Conceptos>
-    <cfdi:Concepto ClaveProdServ="84111506" Cantidad="1" ClaveUnidad="ACT" Descripcion="Pago" ValorUnitario="0" Importe="0" ObjetoImp="01" />
+    <cfdi:Concepto ClaveProdServ="84111506" Cantidad="1" ClaveUnidad="ACT" 
+                   Descripcion="Pago" ValorUnitario="0" Importe="0" ObjetoImp="01" />
   </cfdi:Conceptos>
   <cfdi:Complemento>
     <pago20:Pagos Version="2.0">
-      <pago20:Totales TotalTrasladosBaseIVA16="109567.00" TotalTrasladosImpuestoIVA16="17530.72" MontoTotalPagos="127097.72" />
-      <pago20:Pago FechaPago="2024-12-17T12:00:00" FormaDePagoP="03" MonedaP="MXN" TipoCambioP="1" Monto="127097.72" NumOperacion="11">
-        <pago20:DoctoRelacionado IdDocumento="7EF6C2C7-8F72-455E-B0F2-EE4AF08B726C" MonedaDR="MXN" EquivalenciaDR="1" NumParcialidad="11" ImpSaldoAnt="254195.44" ImpPagado="127097.72" ImpSaldoInsoluto="127097.72" ObjetoImpDR="02">
+      <pago20:Totales TotalTrasladosBaseIVA16="109567.00" TotalTrasladosImpuestoIVA16="17530.72" 
+                      MontoTotalPagos="127097.72" />
+      
+      <pago20:Pago FechaPago="2024-12-17T12:00:00" FormaDePagoP="03" MonedaP="MXN" 
+                   TipoCambioP="1" Monto="127097.72" NumOperacion="11">
+        
+        <pago20:DoctoRelacionado IdDocumento="7EF6C2C7-8F72-455E-B0F2-EE4AF08B726C" MonedaDR="MXN" 
+                                 EquivalenciaDR="1" NumParcialidad="11" ImpSaldoAnt="254195.44" 
+                                 ImpPagado="127097.72" ImpSaldoInsoluto="127097.72" ObjetoImpDR="02">
           <pago20:ImpuestosDR>
             <pago20:TrasladosDR>
-              <pago20:TrasladoDR BaseDR="109567.00" ImpuestoDR="002" TipoFactorDR="Tasa" TasaOCuotaDR="0.160000" ImporteDR="17530.72" />
+              <pago20:TrasladoDR BaseDR="109567.00" ImpuestoDR="002" TipoFactorDR="Tasa" 
+                                 TasaOCuotaDR="0.160000" ImporteDR="17530.72" />
             </pago20:TrasladosDR>
           </pago20:ImpuestosDR>
         </pago20:DoctoRelacionado>

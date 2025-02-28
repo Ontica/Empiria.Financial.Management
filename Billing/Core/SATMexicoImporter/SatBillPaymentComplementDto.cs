@@ -12,7 +12,7 @@ using System;
 namespace Empiria.Billing.SATMexicoImporter {
 
   /// <summary>Output DTO used to return a SAT Mexico bill payment complement object.</summary>
-  internal class SatBillPaymentComplementDto {
+  public class SatBillPaymentComplementDto {
 
     public SATBillGeneralDataDto DatosGenerales {
       get; internal set;
@@ -33,6 +33,138 @@ namespace Empiria.Billing.SATMexicoImporter {
       get; internal set;
     } = new FixedList<SATBillConceptDto>();
 
+
+    public PaymentComplementDataDto Complemento {
+      get; internal set;
+    } = new PaymentComplementDataDto();
+
   } // class SatBillPaymentComplementDto
+
+
+  public class PaymentComplementDataDto {
+
+    public string Version {
+      get; internal set;
+    }
+
+
+    public FixedList<ComplementBalanceDataDto> SaldosTotales {
+      get; internal set;
+    } = new FixedList<ComplementBalanceDataDto>();
+
+
+    public FixedList<ComplementRelatedPayoutDataDto> DatosComplementoPago {
+      get; internal set;
+    } = new FixedList<ComplementRelatedPayoutDataDto>();
+
+  }
+
+
+  public class ComplementBalanceDataDto {
+
+    public decimal TotalTrasladosBaseIVA16 {
+      get; internal set;
+    }
+
+
+    public decimal TotalTrasladosImpuestoIVA16 {
+      get; internal set;
+    }
+
+
+    public decimal MontoTotalPagos {
+      get; internal set;
+    }
+
+  }
+
+
+  public class ComplementRelatedPayoutDataDto {
+
+    public DateTime FechaPago {
+      get; internal set;
+    }
+
+
+    public string FormaDePagoP {
+      get; internal set;
+    }
+
+
+    public string MonedaP {
+      get; internal set;
+    }
+
+
+    public string TipoCambioP {
+      get; internal set;
+    }
+
+
+    public decimal Monto {
+      get; internal set;
+    }
+
+
+    public string NumOperacion {
+      get; internal set;
+    }
+
+
+    public FixedList<ComplementRelatedDocumentDataDto> RelatedDocumentData {
+      get; internal set;
+    } = new FixedList<ComplementRelatedDocumentDataDto>();
+
+  }
+
+
+  public class ComplementRelatedDocumentDataDto {
+
+    public string IdDocumento {
+      get; internal set;
+    }
+
+
+    public string MonedaDR {
+      get; internal set;
+    }
+
+
+    public string EquivalenciaDR {
+      get; internal set;
+    }
+
+
+    public string NumParcialidad {
+      get; internal set;
+    }
+
+
+    public decimal ImpSaldoAnt {
+      get; internal set;
+    }
+
+
+    public decimal ImpPagado {
+      get; internal set;
+    }
+
+
+    public decimal ImpSaldoInsoluto {
+      get; internal set;
+    }
+
+
+    public string ObjetoImpDR {
+      get; internal set;
+    }
+
+
+    public FixedList<SATBillTaxDto> Taxes {
+      get; internal set;
+    } = new FixedList<SATBillTaxDto>();
+
+  }
+
 
 } // namespace Empiria.Billing.SATMexicoImporter

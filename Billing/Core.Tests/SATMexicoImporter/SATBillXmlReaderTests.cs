@@ -55,7 +55,7 @@ namespace Empiria.Tests.Billing {
 
       var reader = new SATPaymentComplementXmlReader(xmlText);
 
-      SATBillDto sut = reader.ReadAsPaymentComplementDto();
+      SatBillPaymentComplementDto sut = reader.ReadAsPaymentComplementDto();
 
       Assert.NotNull(sut);
     }
