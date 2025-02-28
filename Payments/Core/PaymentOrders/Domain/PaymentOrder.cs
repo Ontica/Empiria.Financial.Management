@@ -70,6 +70,12 @@ namespace Empiria.Payments.Orders {
     }
 
 
+    [DataField("PYMT_ORD_CONTROL_NO")]
+    public string ControlNo {
+      get; private set;
+    }
+
+
     [DataField("PYMT_ORD_PAY_TO_ID")]
     public Party PayTo {
       get; private set;
@@ -159,6 +165,7 @@ namespace Empiria.Payments.Orders {
       }
     }
 
+
     [DataField("PYMT_ORD_POSTED_BY_ID")]
     public Contact PostedBy {
       get; private set;
@@ -245,6 +252,7 @@ namespace Empiria.Payments.Orders {
 
       fields.EnsureValid();
 
+      this.ControlNo = (fields.ControlNo is null) ? String.Empty : fields.ControlNo ;
       this.PaymentOrderType = PaymentOrderType.Parse(fields.PaymentOrderTypeUID);
       this.PayTo = Party.Parse(fields.PayToUID);
       this.Payable = Payable.Parse(fields.PayableUID);

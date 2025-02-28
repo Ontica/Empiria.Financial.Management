@@ -18,6 +18,11 @@ namespace Empiria.Payments.Orders.Adapters {
   /// <summary>Fields structure used for create and update payment orders.</summary>
   public class PaymentOrderFields {
 
+    public string ControlNo {
+      get; set;
+    }
+
+
     public string PaymentOrderTypeUID {
       get; set;
     }
