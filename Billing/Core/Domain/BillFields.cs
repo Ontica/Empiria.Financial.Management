@@ -17,8 +17,13 @@ using Empiria.Billing.Data;
 
 namespace Empiria.Billing {
 
+
+  internal interface IBillFields {
+
+  }
+
   /// <summary>Input fields DTO used to create and update bill.</summary>
-  internal class BillFields {
+  internal class BillFields : IBillFields {
 
     public string BillCategoryUID {
       get; set;

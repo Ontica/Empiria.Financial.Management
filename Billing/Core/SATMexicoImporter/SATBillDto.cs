@@ -11,8 +11,14 @@ using System;
 
 namespace Empiria.Billing.SATMexicoImporter {
 
+
+  public interface ISATBillDto {
+
+  }
+
+
   /// <summary>Output DTO used to return a SAT Mexico bill object.</summary>
-  public class SATBillDto {
+  public class SATBillDto : ISATBillDto {
 
     public SATBillGeneralDataDto DatosGenerales {
       get; internal set;

@@ -24,10 +24,17 @@ namespace Empiria.Billing.Adapters {
 
     #region Public methods
 
-    static internal BillFields Map(SATBillDto satTBillDto) {
+    static internal IBillFields Map(SATBillDto satTBillDto) {
 
       return MapToBillFields(satTBillDto);
     }
+
+
+    static internal IBillFields Map(SatBillPaymentComplementDto paymentComplementDto) {
+
+      return MapToPaymentComplementFields(paymentComplementDto);
+    }
+
 
     #endregion Public methods
 
@@ -79,7 +86,7 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private BillFields MapToBillFields(SATBillDto dto) {
+    static private IBillFields MapToBillFields(SATBillDto dto) {
 
       return new BillFields {
         BillCategoryUID = BillCategory.FacturaProveedores.UID,
@@ -127,6 +134,12 @@ namespace Empiria.Billing.Adapters {
       }
 
       return cfdiRelacionados.First().UUID;
+    }
+
+
+    static private IBillFields MapToPaymentComplementFields(SatBillPaymentComplementDto paymentComplementDto) {
+
+      return new BillPaymentComplementFields();
     }
 
 

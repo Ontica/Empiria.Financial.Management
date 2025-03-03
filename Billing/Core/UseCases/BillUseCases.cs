@@ -43,10 +43,23 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(xmlString, nameof(xmlString));
 
       var reader = new SATBillXmlReader(xmlString);
-      SATBillDto satDto = reader.ReadAsBillDto();
+      ISATBillDto satDto = reader.ReadAsBillDto();
 
-      BillFields fields = BillFieldsMapper.Map(satDto);
-      Bill bill = CreateBillTest(fields);
+      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
+      Bill bill = CreateBillTest((BillFields) fields);
+
+      return BillMapper.MapToBillDto(bill);
+    }
+
+
+    public BillDto CreateBillPaymentComplementTest(string xmlString) {
+      Assertion.Require(xmlString, nameof(xmlString));
+
+      var reader = new SATBillXmlReader(xmlString);
+      ISATBillDto satDto = reader.ReadAsBillDto();
+
+      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
+      Bill bill = CreateBillTest((BillFields) fields);
 
       return BillMapper.MapToBillDto(bill);
     }
@@ -58,11 +71,11 @@ namespace Empiria.Billing.UseCases {
 
       var reader = new SATBillXmlReader(xmlString);
 
-      SATBillDto satDto = reader.ReadAsBillDto();
+      ISATBillDto satDto = reader.ReadAsBillDto();
 
-      BillFields fields = BillFieldsMapper.Map(satDto);
+      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
 
-      Bill bill = CreateBillImplementation(payable, fields);
+      Bill bill = CreateBillImplementation(payable, (BillFields) fields);
 
       return BillMapper.MapToBillDto(bill);
     }
@@ -74,11 +87,11 @@ namespace Empiria.Billing.UseCases {
 
       var reader = new SATCreditNoteXmlReader(xmlString);
 
-      SATBillDto satDto = reader.ReadAsCreditNoteDto();
+      ISATBillDto satDto = reader.ReadAsCreditNoteDto();
 
-      BillFields fields = BillFieldsMapper.Map(satDto);
+      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
 
-      Bill bill = CreateCreditNoteImplementation(payable, fields);
+      Bill bill = CreateCreditNoteImplementation(payable, (BillFields) fields);
 
       return BillMapper.MapToBillDto(bill);
     }

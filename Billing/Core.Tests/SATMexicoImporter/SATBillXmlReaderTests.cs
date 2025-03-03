@@ -40,7 +40,7 @@ namespace Empiria.Tests.Billing {
 
       var reader = new SATCreditNoteXmlReader(xmlText);
 
-      SATBillDto sut = reader.ReadAsCreditNoteDto();
+      ISATBillDto sut = reader.ReadAsCreditNoteDto();
 
       Assert.NotNull(sut);
     }
@@ -55,7 +55,7 @@ namespace Empiria.Tests.Billing {
 
       var reader = new SATPaymentComplementXmlReader(xmlText);
 
-      SatBillPaymentComplementDto sut = reader.ReadAsPaymentComplementDto();
+      ISATBillDto sut = reader.ReadAsPaymentComplementDto();
 
       Assert.NotNull(sut);
     }

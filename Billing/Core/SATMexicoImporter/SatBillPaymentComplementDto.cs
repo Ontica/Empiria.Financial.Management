@@ -12,7 +12,7 @@ using System;
 namespace Empiria.Billing.SATMexicoImporter {
 
   /// <summary>Output DTO used to return a SAT Mexico bill payment complement object.</summary>
-  public class SatBillPaymentComplementDto {
+  public class SatBillPaymentComplementDto : ISATBillDto {
 
     public SATBillGeneralDataDto DatosGenerales {
       get; internal set;
