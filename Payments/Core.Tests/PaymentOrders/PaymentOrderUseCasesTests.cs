@@ -130,6 +130,7 @@ namespace Empiria.Tests.Payments.Orders {
     [Fact]
     public void Should_Create_Manual_Payment_Order() {
       var fields = new  ManualPaymentOrderFields {
+        ControlNo = "494844",
         PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
         PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
@@ -158,6 +159,7 @@ namespace Empiria.Tests.Payments.Orders {
     [Fact]
     public void Should_Update_Payment_Order() {
       var fields = new ManualPaymentOrderFields {
+        ControlNo = "494844",
         PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
         PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
@@ -170,7 +172,7 @@ namespace Empiria.Tests.Payments.Orders {
         ReferenceNumber = "9494/8585-09"
       };
 
-      var sut = _usecases.UpdateManualPaymentOrder("548da252-b2db-4bba-bf11-74481d1883b0", fields);
+      var sut = _usecases.UpdateManualPaymentOrder("d6c30ff7-51cb-4644-9736-a28805fad701", fields);
 
       Assert.NotNull(sut);
     }
