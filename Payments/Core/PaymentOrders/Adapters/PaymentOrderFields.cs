@@ -20,12 +20,17 @@ namespace Empiria.Payments.Orders.Adapters {
 
     public string ControlNo {
       get; set;
-    }
+    } = string.Empty;
+
+
+    public string ReferenceNumber {
+      get; set;
+    } = string.Empty;
 
 
     public string PaymentOrderTypeUID {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string PayableUID {
@@ -35,22 +40,22 @@ namespace Empiria.Payments.Orders.Adapters {
 
     public string PayToUID {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string PaymentMethodUID {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string CurrencyUID {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string PaymentAccountUID {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string Notes {
@@ -70,7 +75,7 @@ namespace Empiria.Payments.Orders.Adapters {
 
     public string RequestedByUID {
       get; set;
-    }
+    } = string.Empty;
 
 
     public DateTime RequestedTime {
@@ -101,7 +106,7 @@ namespace Empiria.Payments.Orders.Adapters {
 
   public class ManualPaymentOrderFields : PaymentOrderFields {
 
-    public string ReferenceNumber {
+    public string ReferenceNumber1 {
       get; set;
     } = string.Empty;
 

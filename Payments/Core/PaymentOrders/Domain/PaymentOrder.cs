@@ -265,6 +265,7 @@ namespace Empiria.Payments.Orders {
       this.DueTime = fields.DueTime;
       this.RequestedBy = OrganizationalUnit.Parse(fields.RequestedByUID);
       this.Total = fields.Total;
+      this.ReferenceNumber = fields.ReferenceNumber;
     }
 
     #endregion Methods
