@@ -136,15 +136,8 @@ namespace Empiria.Payments.Orders.UseCases {
 
       fields.EnsureValid();
 
-      if (fields.PaymentOrderTypeUID == "fe85b014-9929-4339-b56f-5e650d3bd42c") {
-
-        if ((fields.PayableUID == null) || (fields.PayableUID == string.Empty)) {
-          var payable = Payable.Parse(-1);
-          fields.PayableUID = payable.UID;
-        }
-
-      }
-
+      fields.PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c";
+              
       var order = PaymentOrder.Parse(uid);
 
       order.Update(fields);

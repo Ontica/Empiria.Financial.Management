@@ -78,6 +78,7 @@ namespace Empiria.Payments.Orders.Adapters {
         DueTime = paymentOrder.DueTime,
         Notes = paymentOrder.Description,
         PaymentMethod = paymentOrder.PaymentMethod.MapToNamedEntity(),
+        PaymentAccount =paymentOrder.PaymentAccount.MapToNamedEntity(),
         Currency = paymentOrder.Currency.MapToNamedEntity(),
         Total = paymentOrder.Total,
         Status = paymentOrder.Status.MapToNamedEntity(),

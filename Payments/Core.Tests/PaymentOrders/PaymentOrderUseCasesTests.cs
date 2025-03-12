@@ -77,7 +77,6 @@ namespace Empiria.Tests.Payments.Orders {
     [Fact]
     public void Should_Update_Payment_Order() {
       var fields = new PaymentOrderFields {
-        PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c",
         ControlNo = "4945",
         PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
         PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
@@ -92,7 +91,7 @@ namespace Empiria.Tests.Payments.Orders {
 
       };
 
-      var sut = _usecases.UpdatePaymentOrder("3c97430d-41e2-445e-81d2-2b6f9ef75207", fields);
+      var sut = _usecases.UpdatePaymentOrder("abe5bd58-91fc-4e0f-b96b-bed19953940e", fields);
 
       Assert.NotNull(sut);
     }

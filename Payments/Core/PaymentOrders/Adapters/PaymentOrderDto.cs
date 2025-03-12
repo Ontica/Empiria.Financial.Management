@@ -108,6 +108,10 @@ namespace Empiria.Payments.Orders.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto PaymentAccount {
+      get; internal set;
+    }
+
     public NamedEntityDto Currency {
       get; internal set;
     }
