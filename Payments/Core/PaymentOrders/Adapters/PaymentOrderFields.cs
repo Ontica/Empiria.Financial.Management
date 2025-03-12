@@ -84,10 +84,7 @@ namespace Empiria.Payments.Orders.Adapters {
 
 
     internal void EnsureValid() {
-
-      //Assertion.Require(PayableUID == string.Empty,
-      // PayableUID = "Empty");
-
+           
       Assertion.Require(PaymentMethodUID, "Necesito el método de pago.");
       var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);        
 

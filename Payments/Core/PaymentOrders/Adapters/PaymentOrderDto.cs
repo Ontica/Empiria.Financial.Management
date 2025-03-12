@@ -51,17 +51,18 @@ namespace Empiria.Payments.Orders.Adapters {
     }
 
 
-    public PaymentOrderActions Actions {
+    public PaymentOrderActionsDto Actions {
       get; internal set;
     }
 
   }  // class PaymentOrderHolderDto
 
-  public class PaymentOrderActions : BaseActions {
-
+  public class PaymentOrderActionsDto : BaseActions {
+       
     public bool CanSendToPay {
       get; internal set;
     }
+    
 
   }
 
