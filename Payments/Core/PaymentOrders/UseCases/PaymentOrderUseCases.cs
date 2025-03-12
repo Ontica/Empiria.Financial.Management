@@ -45,22 +45,8 @@ namespace Empiria.Payments.Orders.UseCases {
 
       fields.EnsureValid();
 
-
-      if(fields.PaymentOrderTypeUID == "fe85b014-9929-4339-b56f-5e650d3bd42c") {
-
-        if ((fields.PayableUID == null) || (fields.PayableUID == string.Empty)) {
-          var payable = Payable.Parse(-1);
-          fields.PayableUID = payable.UID;
-        }
-
-      } else {
-        var payable = Payable.Parse(fields.PayableUID);
-
-        if (PaymentOrder.TryGetFor(payable) != null) {
-          Assertion.EnsureNoReachThisCode("La obligación de pago ya cuenta con una orden de pago");
-        }
-      }
-
+      fields.PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c";
+            
       var order = new PaymentOrder(fields);
 
       order.Save();

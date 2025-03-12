@@ -84,32 +84,29 @@ namespace Empiria.Payments.Orders.Adapters {
 
 
     internal void EnsureValid() {
-      Assertion.Require(PaymentOrderTypeUID, "Necesito el tipo de orden de pago.");
-      _ = PaymentOrderType.Parse(PaymentOrderTypeUID);
 
-      //Assertion.Require(PayableUID, "Necesito el objeto ligado al pago.");
-      //_ = Payable.Parse(PayableUID);
+      //Assertion.Require(PayableUID == string.Empty,
+      // PayableUID = "Empty");
 
       Assertion.Require(PaymentMethodUID, "Necesito el método de pago.");
-      _ = PaymentMethod.Parse(PaymentMethodUID);
+      var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);        
+
+      if (paymentMethod.LinkedToAccount == true) {
+        Assertion.Require(PaymentAccountUID, "Necesito el número de cuenta.");
+        _ = PaymentAccount.Parse(PaymentAccountUID);
+      } else {
+        PaymentAccountUID = "Empty";
+      }
+
 
       Assertion.Require(CurrencyUID, "Necesito la moneda.");
       _ = Currency.Parse(CurrencyUID);
 
-      //Assertion.Require(PaymentAccountUID, "Necesito el número de cuenta.");
-    //  _ = PaymentAccount.Parse(PaymentAccountUID); ToDo
 
       Assertion.Require(Total > 0, "Necesito que el importe a pagar sea mayor a cero.");
     }
 
   }  // class PaymentOrderFields
 
-  public class ManualPaymentOrderFields : PaymentOrderFields {
-
-    public string ReferenceNumber1 {
-      get; set;
-    } = string.Empty;
-
-  }
 
   }  // namespace Empiria.Payments.Orders.Adapters

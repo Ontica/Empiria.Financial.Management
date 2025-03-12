@@ -255,7 +255,7 @@ namespace Empiria.Payments.Orders {
       this.ControlNo = (fields.ControlNo is null) ? String.Empty : fields.ControlNo ;
       this.PaymentOrderType = PaymentOrderType.Parse(fields.PaymentOrderTypeUID);
       this.PayTo = Party.Parse(fields.PayToUID);
-      this.Payable = Payable.Parse(fields.PayableUID);
+      this.Payable = Payable.Parse(-1);
       this.PayableTypeId = this.Payable.PayableType.Id;
       this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
       this.Currency = Currency.Parse(fields.CurrencyUID);
