@@ -8,40 +8,67 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 namespace Empiria.Payments.Orders.Adapters {
 
   /// <summary>Class used to set payment order actions.</summary>
   public class PaymentOrderActions : BaseActions {
 
+    #region Constructors and parsers
+
+    static private PaymentOrderActions _actions = new PaymentOrderActions();
+
     private PaymentOrderActions() {}
+
+    #endregion Constructors and parsers
+
+
+    #region Properties
 
     public bool CanSendToPay {
       get; internal set;
     }
 
-    static internal PaymentOrderActions SetActions(PaymentOrderStatus status) {
+    #endregion Properties
 
-      var actions = new PaymentOrderActions();
+    #region Public Methods
+
+    static internal PaymentOrderActions SetActions(PaymentOrderStatus status) {
 
       switch (status) {
         case PaymentOrderStatus.Pending: {
-          actions.CanDelete = true;
-          actions.CanSendToPay = true;
-          actions.CanUpdate = true;
-          actions.CanEditDocuments = true;
+          SetPendingActions();
         }
         break;
         default: {
-          actions.CanDelete = false;
-          actions.CanSendToPay = false;
-          actions.CanUpdate = false;
-          actions.CanEditDocuments = false;
+          SetDeletedActions();
         }
         break;
-      }
+      } 
 
-      return actions;
+      return _actions;
     }
+
+    #endregion Public Methods
+
+    #region Helpers
+
+    static private void SetPendingActions() {
+      _actions.CanDelete = true;
+      _actions.CanSendToPay = true;
+      _actions.CanUpdate = true;
+      _actions.CanEditDocuments = true;
+    }
+
+    static private void SetDeletedActions() {
+      _actions.CanDelete = false;
+      _actions.CanSendToPay = false;
+      _actions.CanUpdate = false;
+      _actions.CanEditDocuments = false;
+    }
+
+    #endregion Helpers
 
   } // class PaymentOrderActions
 
