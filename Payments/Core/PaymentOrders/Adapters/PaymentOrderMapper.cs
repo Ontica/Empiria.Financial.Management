@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Documents.Services;
+using Empiria.Financial;
+using Empiria.Financial.Adapters;
 using Empiria.History.Services;
 
 using Empiria.Payments.Payables.Adapters;
@@ -69,6 +71,12 @@ namespace Empiria.Payments.Orders.Adapters {
 
     }
 
+
+    static private PaymentAccountDto MapPaymentAccount(PaymentAccount paymentAccount) {
+      return PaymentAccountMapper.Map(paymentAccount);
+    }
+
+
     static private PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
         UID = paymentOrder.UID,
@@ -81,13 +89,14 @@ namespace Empiria.Payments.Orders.Adapters {
         DueTime = paymentOrder.DueTime,
         Notes = paymentOrder.Description,
         PaymentMethod = paymentOrder.PaymentMethod.MapToNamedEntity(),
-        PaymentAccount =paymentOrder.PaymentAccount.MapToNamedEntity(),
+        PaymentAccount = MapPaymentAccount(paymentOrder.PaymentAccount),
         Currency = paymentOrder.Currency.MapToNamedEntity(),
         Total = paymentOrder.Total,
         Status = paymentOrder.Status.MapToNamedEntity(),
         ReferenceNumber = paymentOrder.ReferenceNumber,
       };
     }
+    
 
     static private FixedList<PaymentInstructionLogDescriptorDto> GetPaymentOrderLog(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));

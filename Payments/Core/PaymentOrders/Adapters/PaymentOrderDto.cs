@@ -17,6 +17,7 @@ using Empiria.Billing.Adapters;
 
 using Empiria.Payments.Payables.Adapters;
 using Empiria.Payments.Processor.Adapters;
+using Empiria.Financial.Adapters;
 
 namespace Empiria.Payments.Orders.Adapters {
 
@@ -109,7 +110,7 @@ namespace Empiria.Payments.Orders.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto PaymentAccount {
+    public PaymentAccountDto PaymentAccount {
       get; internal set;
     }
 
