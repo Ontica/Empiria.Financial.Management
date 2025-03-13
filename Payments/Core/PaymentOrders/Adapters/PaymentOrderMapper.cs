@@ -69,13 +69,15 @@ namespace Empiria.Payments.Orders.Adapters {
         CanUpdate = paymentOrderActions.CanUpdate,
       };
 
-    }
-
+    }   
 
     static private PaymentAccountDto MapPaymentAccount(PaymentAccount paymentAccount) {
       return PaymentAccountMapper.Map(paymentAccount);
     }
 
+    static private PaymentMethodDto MapPaymentMethod(PaymentMethod paymentMethod) {
+      return PaymentMethodMapper.Map(paymentMethod);
+    }
 
     static private PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
@@ -88,7 +90,7 @@ namespace Empiria.Payments.Orders.Adapters {
         RequestedDate = paymentOrder.RequestedTime,
         DueTime = paymentOrder.DueTime,
         Notes = paymentOrder.Description,
-        PaymentMethod = paymentOrder.PaymentMethod.MapToNamedEntity(),
+        PaymentMethod = MapPaymentMethod(paymentOrder.PaymentMethod),
         PaymentAccount = MapPaymentAccount(paymentOrder.PaymentAccount),
         Currency = paymentOrder.Currency.MapToNamedEntity(),
         Total = paymentOrder.Total,

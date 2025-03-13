@@ -106,7 +106,7 @@ namespace Empiria.Payments.Orders.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto PaymentMethod {
+    public PaymentMethodDto PaymentMethod {
       get; internal set;
     }
 
