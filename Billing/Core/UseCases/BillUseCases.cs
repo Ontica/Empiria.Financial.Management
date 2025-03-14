@@ -55,11 +55,11 @@ namespace Empiria.Billing.UseCases {
     public BillDto CreateBillPaymentComplementTest(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
-      var reader = new SATBillXmlReader(xmlString);
-      ISATBillDto satDto = reader.ReadAsBillDto();
+      var reader = new SATPaymentComplementXmlReader(xmlString);
+      ISATBillDto satDto = reader.ReadAsPaymentComplementDto();
 
-      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
-      Bill bill = CreateBillTest((BillFields) fields);
+      IBillFields fields = BillFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
+      Bill bill = CreatePaymentComplementTest((BillFields) fields);
 
       return BillMapper.MapToBillDto(bill);
     }
@@ -165,10 +165,10 @@ namespace Empiria.Billing.UseCases {
 
 
     private FixedList<BillConcept> CreateBillConcepts(Bill bill,
-                                                      FixedList<BillConceptFields> conceptFields) {
+                                                      FixedList<BillConceptWithTaxFields> conceptFields) {
       var concepts = new List<BillConcept>();
 
-      foreach (BillConceptFields fields in conceptFields) {
+      foreach (BillConceptWithTaxFields fields in conceptFields) {
 
         var billConcept = new BillConcept(bill, Product.Empty);
 
@@ -231,6 +231,28 @@ namespace Empiria.Billing.UseCases {
     private Bill CreateCreditNoteImplementation(IPayable payable, BillFields fields) {
 
       return CreateBillByCategory(payable, fields, BillCategory.NotaDeCreditoProveedores);
+    }
+
+
+    private Bill CreatePaymentComplementImplementation(IPayable payable, BillFields fields) {
+
+      return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
+    }
+
+
+    private Bill CreatePaymentComplementTest(BillFields fields) {
+
+      var billCategory = BillCategory.FacturaProveedores;
+
+      var bill = new Bill(billCategory, fields.BillNo);
+
+      bill.Update(fields);
+
+      bill.Save();
+
+      bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
+
+      return bill;
     }
 
 
