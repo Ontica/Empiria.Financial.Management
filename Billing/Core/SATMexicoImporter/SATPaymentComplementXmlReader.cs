@@ -77,7 +77,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         if (complementChild.Name.Equals("pago20:Pagos")) {
 
           GetPaymentData(complementChild);
-        } else if (complementChild.Name.Equals("pago20:Pagos")) {
+        } else if (complementChild.Name.Equals("tfd:TimbreFiscalDigital")) {
 
           GetDigitalTaxStampData(complementChild);
         }
