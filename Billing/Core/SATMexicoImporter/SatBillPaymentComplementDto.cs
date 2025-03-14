@@ -34,16 +34,21 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = new FixedList<SATBillConceptDto>();
 
 
-    public PaymentComplementDataDto Complemento {
+    public PaymentComplementDataDto DatosComplemento {
       get; internal set;
     } = new PaymentComplementDataDto();
+
+
+    public SATBillComplementDto SATComplemento {
+      get; internal set;
+    } = new SATBillComplementDto();
 
   } // class SatBillPaymentComplementDto
 
 
   public class PaymentComplementDataDto {
 
-    public string Version {
+    public string PagosVersion {
       get; internal set;
     }
 

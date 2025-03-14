@@ -72,13 +72,44 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private void GenerateComplementData(XmlNode complementNode) {
 
-      XmlNode pago20Pagos = complementNode.FirstChild;
+      foreach (XmlNode complementChild in complementNode.ChildNodes) {
 
-      if (!pago20Pagos.Name.Equals("pago20:Pagos"))
-        Assertion.EnsureFailed("The 'pago20:Pagos' payment complement node it doesnt exist.");
+        if (complementChild.Name.Equals("pago20:Pagos")) {
 
-      _satPaymentComplementDto.Complemento = new PaymentComplementDataDto {
-        Version = GetAttribute(pago20Pagos, "Version")
+          GetPaymentData(complementChild);
+        } else if (complementChild.Name.Equals("pago20:Pagos")) {
+
+          GetDigitalTaxStampData(complementChild);
+        }
+      }
+    }
+
+
+    private void GetDigitalTaxStampData(XmlNode timbre) {
+
+      if (!timbre.Name.Equals("tfd:TimbreFiscalDigital")) {
+        Assertion.EnsureFailed("The 'tfd:TimbreFiscalDigital' does not exist.");
+      }
+
+      _satPaymentComplementDto.SATComplemento = new SATBillComplementDto {
+        Xmlns_Tfd = GetAttribute(timbre, "xmlns:tfd"),
+        Xmlns_Xsi = GetAttribute(timbre, "xmlns:xsi"),
+        Xsi_SchemaLocation = GetAttribute(timbre, "xsi:schemaLocation"),
+        Tfd_Version = GetAttribute(timbre, "Version"),
+        UUID = GetAttribute(timbre, "UUID"),
+        FechaTimbrado = GetAttribute<DateTime>(timbre, "FechaTimbrado"),
+        RfcProvCertif = GetAttribute(timbre, "RfcProvCertif"),
+        SelloCFD = GetAttribute(timbre, "SelloCFD"),
+        NoCertificadoSAT = GetAttribute(timbre, "NoCertificadoSAT"),
+        SelloSAT = GetAttribute(timbre, "SelloSAT")
+      };
+    }
+
+
+    private void GetPaymentData(XmlNode pago20Pagos) {
+
+      _satPaymentComplementDto.DatosComplemento = new PaymentComplementDataDto {
+        PagosVersion = GetAttribute(pago20Pagos, "Version")
       };
 
       var balancesDataList = new List<ComplementBalanceDataDto>();
@@ -95,10 +126,10 @@ namespace Empiria.Billing.SATMexicoImporter {
           payoutDataList.Add(GetPayoutData(concept));
         }
       }
-      _satPaymentComplementDto.Complemento.SaldosTotales = balancesDataList.ToFixedList();
-      _satPaymentComplementDto.Complemento.DatosComplementoPago = payoutDataList.ToFixedList();
-    }
+      _satPaymentComplementDto.DatosComplemento.SaldosTotales = balancesDataList.ToFixedList();
+      _satPaymentComplementDto.DatosComplemento.DatosComplementoPago = payoutDataList.ToFixedList();
 
+    }
 
     private void GenerateConceptsList(XmlNode conceptsNode) {
 

@@ -47,7 +47,7 @@ namespace Empiria.Tests.Billing {
 
 
     [Fact]
-    public void Should_Read_A_Complement_Payment_From_A_Xml_String() {
+    public void Should_Read_A_Payment_Complement_From_A_Xml_String() {
 
       string xmlFilePath = TestingConstants.XML_PAYMENT_COMPLEMENT_FILE_PATH;
 
