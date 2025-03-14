@@ -60,13 +60,13 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private FixedList<BillConceptFields> MapToBillConceptFields(
+    static private FixedList<BillConceptWithTaxFields> MapToBillConceptFields(
                                                 FixedList<SATBillConceptWithTaxDto> conceptos) {
-      List<BillConceptFields> fields = new List<BillConceptFields>();
+      List<BillConceptWithTaxFields> fields = new List<BillConceptWithTaxFields>();
 
       foreach (var concepto in conceptos) {
 
-        var field = new BillConceptFields {
+        var field = new BillConceptWithTaxFields {
           ProductUID = string.Empty,
           SATProductUID = string.Empty,
           SATProductCode = concepto.ClaveProdServ,
@@ -137,11 +137,87 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private IBillFields MapToPaymentComplementFields(SatBillPaymentComplementDto paymentComplementDto) {
+    static private IBillFields MapToPaymentComplementFields(SatBillPaymentComplementDto dto) {
 
-      return new BillPaymentComplementFields();
+      return new BillPaymentComplementFields {
+        BillCategoryUID = BillCategory.FacturaProveedores.UID,
+        BillNo = dto.SATComplemento.UUID,
+        CertificationNo = dto.DatosGenerales.NoCertificado,
+        IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
+        IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
+        CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
+        Subtotal = dto.DatosGenerales.SubTotal,
+        Total = dto.DatosGenerales.Total,
+        CFDIRelated = MapToCfdiRelated(dto.DatosGenerales.CfdiRelacionados),
+        Concepts = MapToPaymentComplementConceptFields(dto.Conceptos),
+        SchemaData = MapToPaymentComplementSchemaData(dto),
+        SecurityData = MapToPaymentComplementSecurityData(dto)
+      };
     }
 
+    private static BillSecurityDataFields MapToPaymentComplementSecurityData(SatBillPaymentComplementDto dto) {
+      return new BillSecurityDataFields() {
+
+        Xmlns_Xsi = dto.SATComplemento.Xmlns_Xsi,
+        Xsi_SchemaLocation = dto.SATComplemento.Xsi_SchemaLocation,
+        NoCertificado = dto.DatosGenerales.NoCertificado,
+        Certificado = dto.DatosGenerales.Certificado,
+        Sello = dto.DatosGenerales.Sello,
+
+        UUID = dto.SATComplemento.UUID,
+        SelloCFD = dto.SATComplemento.SelloCFD,
+        SelloSAT = dto.SATComplemento.SelloSAT,
+        FechaTimbrado = dto.SATComplemento.FechaTimbrado,
+        RfcProvCertif = dto.SATComplemento.RfcProvCertif,
+        NoCertificadoSAT = dto.SATComplemento.NoCertificadoSAT,
+        Tfd_Version = dto.SATComplemento.Tfd_Version,
+        Xmlns_Tfd = dto.SATComplemento.Xmlns_Tfd
+      };
+    }
+
+    private static BillSchemaDataFields MapToPaymentComplementSchemaData(SatBillPaymentComplementDto dto) {
+      return new BillSchemaDataFields() {
+        IssuedBy = MapToIssuedBy(dto.Emisor),
+        IssuedTo = MapToIssuedTo(dto.Receptor),
+        SchemaVersion = dto.DatosGenerales.CFDIVersion,
+        Fecha = dto.DatosGenerales.Fecha,
+        Folio = dto.DatosGenerales.Folio,
+        Serie = dto.DatosGenerales.Serie,
+        MetodoPago = dto.DatosGenerales.MetodoPago,
+        FormaPago = dto.DatosGenerales.FormaPago,
+        Exportacion = dto.DatosGenerales.Exportacion,
+        LugarExpedicion = dto.DatosGenerales.LugarExpedicion,
+        Moneda = dto.DatosGenerales.Moneda,
+        Subtotal = dto.DatosGenerales.SubTotal,
+        Total = dto.DatosGenerales.Total,
+        TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
+      };
+    }
+
+
+    private static FixedList<BillConceptFields> MapToPaymentComplementConceptFields(FixedList<SATBillConceptDto> conceptos) {
+      
+      List<BillConceptFields> fields = new List<BillConceptFields>();
+
+      foreach (var concepto in conceptos) {
+
+        var field = new BillConceptFields {
+          ProductUID = string.Empty,
+          SATProductUID = string.Empty,
+          SATProductCode = concepto.ClaveProdServ,
+          ClaveUnidad = concepto.ClaveUnidad,
+          Unidad = concepto.Unidad,
+          NoIdentificacion = concepto.NoIdentificacion,
+          ObjetoImp = concepto.ObjetoImp,
+          Description = concepto.Descripcion,
+          Quantity = concepto.Cantidad,
+          UnitPrice = concepto.ValorUnitario,
+          Subtotal = concepto.Importe
+        };
+        fields.Add(field);
+      }
+      return fields.ToFixedList();
+    }
 
     static private BillOrganizationFields MapToIssuedBy(SATBillOrganizationDto emisor) {
 
