@@ -37,6 +37,22 @@ namespace Empiria.Tests.Billing {
 
 
     [Fact]
+    public void Create_Payment_Complement_Test() {
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+        string xmlFilePath = TestingConstants.XML_PAYMENT_COMPLEMENT_FILE_PATH;
+
+        var xmlText = System.IO.File.ReadAllText(xmlFilePath);
+
+        BillDto sut = usecases.CreateBillPaymentComplementTest(xmlText);
+
+        Assert.NotNull(sut);
+      }
+    }
+
+
+    [Fact]
     public void Get_Bill_By_UID_Test() {
 
       string billUID = "ba126f25-5b52-419a-b226-d710898a7487";

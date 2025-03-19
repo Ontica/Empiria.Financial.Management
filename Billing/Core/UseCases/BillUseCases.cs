@@ -58,7 +58,7 @@ namespace Empiria.Billing.UseCases {
       var reader = new SATPaymentComplementXmlReader(xmlString);
       ISATBillDto satDto = reader.ReadAsPaymentComplementDto();
 
-      IBillFields fields = BillFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
+      IBillFields fields = BillPaymentComplementFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
       Bill bill = CreatePaymentComplementTest((BillFields) fields);
 
       return BillMapper.MapToBillDto(bill);
@@ -242,7 +242,7 @@ namespace Empiria.Billing.UseCases {
 
     private Bill CreatePaymentComplementTest(BillFields fields) {
 
-      var billCategory = BillCategory.FacturaProveedores;
+      var billCategory = BillCategory.ComplementoPagoProveedores;
 
       var bill = new Bill(billCategory, fields.BillNo);
 
