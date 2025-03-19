@@ -47,6 +47,8 @@ namespace Empiria.Billing {
 
     static public BillCategory NotaDeCreditoProveedores => Parse(702);
 
+    static public BillCategory ComplementoPagoProveedores => Parse(702); // TODO REGISTRAR COMPLEMENTO EN BD CON ID NUEVO
+
     #endregion Constructors and parsers
 
     #region Properties

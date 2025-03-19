@@ -284,6 +284,22 @@ namespace Empiria.Billing {
       get; set;
     }
 
+
+    static public BillTaxFactorType GetFactorTypeByTax(string tipoFactor) {
+
+      switch (tipoFactor) {
+
+        case "Cuota":
+          return BillTaxFactorType.Cuota;
+
+        case "Tasa":
+          return BillTaxFactorType.Tasa;
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unhandled bill tax factor type for '{tipoFactor}'.");
+      }
+    }
+
   } // class BillTaxEntryFields
 
 

@@ -102,17 +102,14 @@ namespace Empiria.Billing {
     } = new BillSecurityDataFields();
 
 
-    public FixedList<ComplementBalanceDataDto> SaldosTotales {
+    public FixedList<ComplementBalanceDataDto> ComplementBalances {
       get; internal set;
     } = new FixedList<ComplementBalanceDataDto>();
 
 
-    public FixedList<ComplementRelatedPayoutDataDto> DatosComplementoPago {
+    public FixedList<ComplementRelatedPayoutDataFields> ComplementRelatedPayoutData {
       get; internal set;
-    } = new FixedList<ComplementRelatedPayoutDataDto>();
-
-
-
+    } = new FixedList<ComplementRelatedPayoutDataFields>();
 
   } // class BillPaymentComplementFields
 
@@ -141,7 +138,7 @@ namespace Empiria.Billing {
   }
 
 
-  public class ComplementRelatedPayoutDataDto {
+  public class ComplementRelatedPayoutDataFields {
 
     public DateTime FechaPago {
       get; internal set;
@@ -173,14 +170,14 @@ namespace Empiria.Billing {
     }
 
 
-    public FixedList<ComplementRelatedDocumentDataDto> RelatedDocumentData {
+    public FixedList<ComplementRelatedDocumentDataFields> RelatedDocumentData {
       get; internal set;
-    } = new FixedList<ComplementRelatedDocumentDataDto>();
+    } = new FixedList<ComplementRelatedDocumentDataFields>();
 
   }
 
 
-  public class ComplementRelatedDocumentDataDto {
+  public class ComplementRelatedDocumentDataFields {
 
     public string IdDocumento {
       get; internal set;
@@ -222,9 +219,9 @@ namespace Empiria.Billing {
     }
 
 
-    public FixedList<SATBillTaxDto> Taxes {
+    public FixedList<BillTaxEntryFields> Taxes {
       get; internal set;
-    } = new FixedList<SATBillTaxDto>();
+    } = new FixedList<BillTaxEntryFields>();
 
   }
 
