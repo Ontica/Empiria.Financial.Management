@@ -320,6 +320,28 @@ namespace Empiria.Billing {
     }
 
 
+    internal void UpdatePaymentComplement(BillPaymentComplementFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureIsValidPaymentComplement(PayableId, PayableTotal, BillCategory);
+      fields.EnsureIsValidDocument(BillCategory);
+
+      RelatedBillNo = fields.CFDIRelated;
+      IssueDate = PatchField(fields.SchemaData.Fecha, IssueDate);
+      IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
+      IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
+      _identificators = PatchField(fields.Identificators, _identificators);
+      _tags = PatchField(fields.Tags, _tags);
+      Currency = PatchField(fields.CurrencyUID, Currency);
+      Subtotal = fields.Subtotal;
+      Discount = fields.Discount;
+      Total = fields.Total;
+
+      SchemaData.Update(fields.SchemaData);
+      SecurityData.Update(fields.SecurityData);
+    }
+
+
     #endregion Methods
 
   } // class Bill

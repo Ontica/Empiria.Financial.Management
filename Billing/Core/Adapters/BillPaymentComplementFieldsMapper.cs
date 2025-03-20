@@ -68,7 +68,7 @@ namespace Empiria.Billing.Adapters {
     static private IBillFields MapToPaymentComplementFields(SatBillPaymentComplementDto dto) {
 
       return new BillPaymentComplementFields {
-        BillCategoryUID = BillCategory.FacturaProveedores.UID,
+        BillCategoryUID = BillCategory.ComplementoPagoProveedores.UID,
         BillNo = dto.SATComplemento.UUID,
         CertificationNo = dto.DatosGenerales.NoCertificado,
         IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,

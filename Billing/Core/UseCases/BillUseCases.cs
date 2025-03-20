@@ -59,7 +59,7 @@ namespace Empiria.Billing.UseCases {
       ISATBillDto satDto = reader.ReadAsPaymentComplementDto();
 
       IBillFields fields = BillPaymentComplementFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
-      Bill bill = CreatePaymentComplementTest((BillFields) fields);
+      Bill bill = CreatePaymentComplementTest((BillPaymentComplementFields) fields);
 
       return BillMapper.MapToBillDto(bill);
     }
@@ -240,17 +240,17 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreatePaymentComplementTest(BillFields fields) {
+    private Bill CreatePaymentComplementTest(BillPaymentComplementFields fields) {
 
       var billCategory = BillCategory.ComplementoPagoProveedores;
 
       var bill = new Bill(billCategory, fields.BillNo);
 
-      bill.Update(fields);
+      bill.UpdatePaymentComplement(fields);
 
       bill.Save();
 
-      bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
+      //bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
 
       return bill;
     }

@@ -54,11 +54,11 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal FixedList<Bill> GetBillsForPayable(int payableId) {
+    static internal FixedList<Bill> GetBillsForPayable(int payableId, BillCategory billCategory) {
 
       var sql = $"SELECT * FROM FMS_BILLS " +
                 $"WHERE BILL_PAYABLE_ID = {payableId} AND " +
-                $"BILL_CATEGORY_ID = {BillCategory.FacturaProveedores.Id} AND " +
+                $"BILL_CATEGORY_ID = {billCategory.Id} AND " +
                 $"BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
