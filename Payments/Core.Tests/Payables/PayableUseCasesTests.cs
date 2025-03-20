@@ -103,7 +103,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Get_Payable() {
 
-      var sut = _usecases.GetPayable("f578ae68-8570-4e86-b4d1-6f2fcc6995f2");
+      var sut = _usecases.GetPayable("a2ec6468-7eb1-4158-be50-41b011d4d276");
 
       Assert.NotNull(sut);
     }

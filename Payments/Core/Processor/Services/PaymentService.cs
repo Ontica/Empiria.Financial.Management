@@ -45,7 +45,7 @@ namespace Empiria.Payments.Processor.Services {
       Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
 
       EnsureIsNotSent(paymentOrder);
-
+           
       var instruction = new PaymentInstruction(broker, paymentOrder);
 
       PaymentInstructionDto instructionDto = PaymentInstructionMapper.Map(instruction);
@@ -60,9 +60,10 @@ namespace Empiria.Payments.Processor.Services {
         Status = PaymentInstructionStatus.InProcess
       };
 
-    //  paymentsService.SendPaymentInstruction(instructionDto);
+      //  paymentsService.SendPaymentInstruction(instructionDto);
 
       UpdatePaymentInstruction(instruction, paymentResult);
+      NotifyPaymentOrderHasBeenSentToPay(paymentOrder);
 
       return instruction;
     }
@@ -101,6 +102,12 @@ namespace Empiria.Payments.Processor.Services {
         Assertion.RequireFail($"No es posible enviar la orden de pago al sistema de pagos, ya que tiene " +
                               $"una transacción pendiente.");
       }
+    }
+
+
+    static private void NotifyPaymentOrderHasBeenSentToPay(PaymentOrder paymentOrder) {
+      paymentOrder.SentToPay();
+      paymentOrder.Save();
     }
 
 
