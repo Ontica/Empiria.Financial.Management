@@ -26,7 +26,7 @@ namespace Empiria.Billing {
 
     #region Constructors and parsers
 
-    private BillConcept() {
+    internal BillConcept() {
       // Required by Empiria Framework.
     }
 

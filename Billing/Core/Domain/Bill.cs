@@ -90,8 +90,7 @@ namespace Empiria.Billing {
 
     [DataField("BILL_RELATED_BILL_NO")]
     public string RelatedBillNo {
-      get;
-      private set;
+      get; private set;
     }
 
 
@@ -261,6 +260,11 @@ namespace Empiria.Billing {
     } = new FixedList<BillConcept>();
 
 
+    internal FixedList<BillTaxEntry> BillTaxes{
+      get; set;
+    } = new FixedList<BillTaxEntry>();
+
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(BillNo, RelatedBillNo, BillCategory.Keywords,
@@ -323,8 +327,8 @@ namespace Empiria.Billing {
     internal void UpdatePaymentComplement(BillPaymentComplementFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      fields.EnsureIsValidPaymentComplement(PayableId, PayableTotal, BillCategory);
       fields.EnsureIsValidDocument(BillCategory);
+      fields.EnsureIsValidPaymentComplement(PayableId, PayableTotal, BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;
       IssueDate = PatchField(fields.SchemaData.Fecha, IssueDate);

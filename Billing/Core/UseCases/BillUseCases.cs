@@ -18,6 +18,7 @@ using Empiria.Billing.SATMexicoImporter;
 
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
+using System;
 
 namespace Empiria.Billing.UseCases {
 
@@ -185,6 +186,27 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    private FixedList<BillConcept> CreatePaymentComplementConcepts(Bill bill,
+                                    FixedList<BillConceptFields> conceptFields) {
+      var concepts = new List<BillConcept>();
+
+      foreach (BillConceptFields fields in conceptFields) {
+
+        var billConcept = new BillConcept(bill, Product.Empty);
+
+        billConcept.Update(fields);
+
+        billConcept.Save();
+
+        //billConcept.TaxEntries = CreateBillTaxEntries(bill, billConcept, fields.TaxEntries);
+
+        concepts.Add(billConcept);
+      }
+
+      return concepts.ToFixedList();
+    }
+
+
     private Bill CreateBillImplementation(IPayable payable, BillFields fields) {
 
       return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
@@ -250,9 +272,31 @@ namespace Empiria.Billing.UseCases {
 
       bill.Save();
 
-      //bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
+      bill.Concepts = CreatePaymentComplementConcepts(bill, fields.Concepts);
+
+      foreach (var complementRelatedPayout in fields.ComplementRelatedPayoutData) {
+
+        bill.BillTaxes = CreatePaymentComplementTaxes(bill, complementRelatedPayout);
+
+      }
 
       return bill;
+    }
+
+
+    private FixedList<BillTaxEntry> CreatePaymentComplementTaxes(Bill bill,
+              ComplementRelatedPayoutDataFields complementRelatedPayoutData) {
+
+      //TODO CREATE COMPLEMENT RELATED PAYOUT DATA
+
+      var taxesList = new List<BillTaxEntry>();
+      foreach (var relatedDoc in complementRelatedPayoutData.RelatedDocumentData) {
+          //TODO CREATE RELATED DOCUMENT DATA
+          
+        taxesList.AddRange(CreateBillTaxEntries(bill, new BillConcept(), relatedDoc.Taxes));
+      }
+
+      return taxesList.ToFixedList();
     }
 
 

@@ -42,7 +42,7 @@ namespace Empiria.Billing.Data {
 
 
 
-    static internal FixedList<Bill> GetBillCreditNotes(string billNo) {
+    static internal FixedList<Bill> GetRelatedDocuments(string billNo) {
 
       var sql = $"SELECT * FROM FMS_BILLS " +
                 $"WHERE BILL_RELATED_BILL_NO = '{billNo}' AND " +
