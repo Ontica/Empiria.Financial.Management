@@ -19,6 +19,7 @@ using Empiria.Billing.SATMexicoImporter;
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
 using System;
+using System.Linq;
 
 namespace Empiria.Billing.UseCases {
 
@@ -177,7 +178,8 @@ namespace Empiria.Billing.UseCases {
 
         billConcept.Save();
 
-        billConcept.TaxEntries = CreateBillTaxEntries(bill, billConcept, fields.TaxEntries);
+        billConcept.TaxEntries = CreateBillTaxEntries(bill, billConcept.Id,
+                                                      billConcept.BillConceptTypeId, fields.TaxEntries);
 
         concepts.Add(billConcept);
       }
@@ -214,14 +216,14 @@ namespace Empiria.Billing.UseCases {
 
 
     private FixedList<BillTaxEntry> CreateBillTaxEntries(Bill bill,
-                                                         BillConcept billConcept,
+                                                         int billRelatedDocumentId, int billTaxTypeId,
                                                          FixedList<BillTaxEntryFields> allTaxesFields) {
 
       var taxesList = new List<BillTaxEntry>(allTaxesFields.Count);
 
       foreach (BillTaxEntryFields taxFields in allTaxesFields) {
 
-        var billTaxEntry = new BillTaxEntry(bill, billConcept);
+        var billTaxEntry = new BillTaxEntry(bill,  billRelatedDocumentId, billTaxTypeId);
 
         billTaxEntry.Update(taxFields);
 
@@ -274,31 +276,25 @@ namespace Empiria.Billing.UseCases {
 
       bill.Concepts = CreatePaymentComplementConcepts(bill, fields.Concepts);
 
-      foreach (var complementRelatedPayout in fields.ComplementRelatedPayoutData) {
-
-        bill.BillTaxes = CreatePaymentComplementTaxes(bill, complementRelatedPayout);
-
-      }
+      //bill.BillRelatedBills = CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
 
       return bill;
     }
 
+    private FixedList<BillRelatedBill> CreateBillRelatedBills(Bill bill,
+              FixedList<ComplementRelatedPayoutDataFields> complementRelatedPayoutData) {
 
-    private FixedList<BillTaxEntry> CreatePaymentComplementTaxes(Bill bill,
-              ComplementRelatedPayoutDataFields complementRelatedPayoutData) {
+      var relatedList = new List<BillRelatedBill>();
+      foreach (var relatedPayoutFields in complementRelatedPayoutData) {
 
-      //TODO CREATE COMPLEMENT RELATED PAYOUT DATA
+        var billRelated = new BillRelatedBill(bill);
+        billRelated.Update(relatedPayoutFields);
 
-      var taxesList = new List<BillTaxEntry>();
-      foreach (var relatedDoc in complementRelatedPayoutData.RelatedDocumentData) {
-          //TODO CREATE RELATED DOCUMENT DATA
-          
-        taxesList.AddRange(CreateBillTaxEntries(bill, new BillConcept(), relatedDoc.Taxes));
+        billRelated.BillTaxes = CreateBillTaxEntries(bill, billRelated.Id,
+                                                  billRelated.BillRelatedTypeId, relatedPayoutFields.Taxes);
       }
-
-      return taxesList.ToFixedList();
+      return relatedList.ToFixedList();
     }
-
 
     #endregion Private methods
 

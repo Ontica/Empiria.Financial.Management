@@ -203,15 +203,15 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
-
-      SATProduct = PatchField(fields.SATProductUID, SATProducto.Empty);
-      SATProductCode = fields.SATProductCode;
-      Product = PatchField(fields.ProductUID, Product);
-      Description = PatchField(fields.Description, Description);
-      Identificators = fields.Identificators.ToFixedList();
-      Tags = fields.Tags.ToFixedList();
-      Quantity = fields.Quantity;
-      QuantityUnit = Product.BaseUnit;
+      this.BillConceptTypeId = -1; //TODO ASIGNAR EN BD
+      this.SATProduct = PatchField(fields.SATProductUID, SATProducto.Empty);
+      this.SATProductCode = fields.SATProductCode;
+      this.Product = PatchField(fields.ProductUID, Product);
+      this.Description = PatchField(fields.Description, Description);
+      this.Identificators = fields.Identificators.ToFixedList();
+      this.Tags = fields.Tags.ToFixedList();
+      this.Quantity = fields.Quantity;
+      this.QuantityUnit = Product.BaseUnit;
       this.UnitPrice = fields.UnitPrice;
       this.Subtotal = fields.Subtotal;
       this.Discount = fields.Discount;

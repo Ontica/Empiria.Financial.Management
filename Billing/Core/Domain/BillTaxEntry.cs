@@ -28,14 +28,15 @@ namespace Empiria.Billing {
       // Required by Empiria Framework.
     }
 
-    public BillTaxEntry(Bill bill, BillConcept billConcept) {
+    public BillTaxEntry(Bill bill, int billRelatedDocumentId, int billTaxTypeId) {
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
-      Assertion.Require(billConcept, nameof(billConcept));
-      Assertion.Require(!billConcept.IsEmptyInstance, nameof(billConcept));
+      Assertion.Require(billRelatedDocumentId, nameof(billRelatedDocumentId));
+      Assertion.Require(billTaxTypeId, nameof(billTaxTypeId));
 
       this.Bill = bill;
-      this.BillConcept = billConcept;
+      this.BillRelatedDocumentId = billRelatedDocumentId;
+      this.TaxType = TaxType.Parse(billTaxTypeId);
     }
 
     static internal BillTaxEntry Parse(int id) => ParseId<BillTaxEntry>(id);
@@ -66,8 +67,8 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_TAX_BILL_CONCEPT_ID")]
-    public BillConcept BillConcept {
+    [DataField("BILL_TAX_BILL_RELATED_DOCUMENT_ID")]
+    public int BillRelatedDocumentId {
       get; private set;
     }
 
@@ -137,6 +138,7 @@ namespace Empiria.Billing {
     #region Private methods
 
     internal void Update (BillTaxEntryFields fields) {
+      //TODO ASIGNAR ID A TAXTYPE PARA CASO DE TAX DE CONCEPTS/ TAX DE RELATED DOC
       this.TaxType = TaxType.Empty;
       this.TaxMethod = fields.TaxMethod;
       this.TaxFactorType = fields.TaxFactorType;
@@ -149,7 +151,7 @@ namespace Empiria.Billing {
 
     protected override void OnSave() {
       if (IsNew) {
-        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
       BillData.WriteBillTaxEntry(this, ExtData.ToString());

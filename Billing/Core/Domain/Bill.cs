@@ -260,9 +260,9 @@ namespace Empiria.Billing {
     } = new FixedList<BillConcept>();
 
 
-    internal FixedList<BillTaxEntry> BillTaxes{
+    internal FixedList<BillRelatedBill> BillRelatedBills{
       get; set;
-    } = new FixedList<BillTaxEntry>();
+    } = new FixedList<BillRelatedBill>();
 
 
     public string Keywords {
