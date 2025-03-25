@@ -80,29 +80,8 @@ namespace Empiria.Billing.Adapters {
         Concepts = MapToPaymentComplementConceptFields(dto.Conceptos),
         SchemaData = MapToPaymentComplementSchemaData(dto),
         SecurityData = MapToPaymentComplementSecurityData(dto),
-        ComplementBalances = MapToComplementBalances(dto.DatosComplemento),
         ComplementRelatedPayoutData = MapToComplementRelatedPayout(dto.DatosComplemento.DatosComplementoPago)
       };
-    }
-
-
-    private static FixedList<ComplementBalanceDataDto> MapToComplementBalances(
-                                                        PaymentComplementDataDto datosComplementoDto) {
-      var complementBalances = new List<ComplementBalanceDataDto>();
-
-      foreach (var saldos in datosComplementoDto.SaldosTotales) {
-
-        complementBalances.Add(
-          new ComplementBalanceDataDto {
-            PagosVersion = datosComplementoDto.PagosVersion,
-            TotalTrasladosBaseIVA16 = saldos.TotalTrasladosBaseIVA16,
-            TotalTrasladosImpuestoIVA16 = saldos.TotalTrasladosImpuestoIVA16,
-            MontoTotalPagos = saldos.MontoTotalPagos
-          }
-        );
-      }
-
-      return complementBalances.ToFixedList();
     }
 
 
@@ -120,36 +99,19 @@ namespace Empiria.Billing.Adapters {
             TipoCambioP = complemento.TipoCambioP,
             Monto = complemento.Monto,
             NumOperacion = complemento.NumOperacion,
-            RelatedDocumentData = MapToRelatedDocument(complemento.RelatedDocumentData)
+            IdDocumento = complemento.RelatedDocumentData[0].IdDocumento,
+            MonedaDR = complemento.RelatedDocumentData[0].MonedaDR,
+            EquivalenciaDR = complemento.RelatedDocumentData[0].EquivalenciaDR,
+            NumParcialidad = complemento.RelatedDocumentData[0].NumParcialidad,
+            ImpSaldoAnt = complemento.RelatedDocumentData[0].ImpSaldoAnt,
+            ImpPagado = complemento.RelatedDocumentData[0].ImpPagado,
+            ImpSaldoInsoluto = complemento.RelatedDocumentData[0].ImpSaldoInsoluto,
+            ObjetoImpDR = complemento.RelatedDocumentData[0].ObjetoImpDR,
+            Taxes = MapToTaxes(complemento.RelatedDocumentData[0].Taxes)
           }
         );
       }
       return datosComplementos.ToFixedList();
-    }
-
-
-    private static FixedList<ComplementRelatedDocumentDataFields> MapToRelatedDocument(
-      FixedList<ComplementRelatedDocumentDataDto> relatedDocumentDto) {
-
-      var relatedDocuments = new List<ComplementRelatedDocumentDataFields>();
-
-      foreach (var complemento in relatedDocumentDto) {
-
-        relatedDocuments.Add(
-          new ComplementRelatedDocumentDataFields {
-            IdDocumento = complemento.IdDocumento,
-            MonedaDR = complemento.MonedaDR,
-            EquivalenciaDR = complemento.EquivalenciaDR,
-            NumParcialidad = complemento.NumParcialidad,
-            ImpSaldoAnt = complemento.ImpSaldoAnt,
-            ImpPagado = complemento.ImpPagado,
-            ImpSaldoInsoluto = complemento.ImpSaldoInsoluto,
-            ObjetoImpDR = complemento.ObjetoImpDR,
-            Taxes = MapToTaxes(complemento.Taxes)
-          }
-        );
-      }
-      return relatedDocuments.ToFixedList();
     }
 
 

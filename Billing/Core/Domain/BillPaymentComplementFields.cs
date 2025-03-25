@@ -105,40 +105,11 @@ namespace Empiria.Billing {
     } = new BillSecurityDataFields();
 
 
-    public FixedList<ComplementBalanceDataDto> ComplementBalances {
-      get; internal set;
-    } = new FixedList<ComplementBalanceDataDto>();
-
-
     public FixedList<ComplementRelatedPayoutDataFields> ComplementRelatedPayoutData {
       get; internal set;
     } = new FixedList<ComplementRelatedPayoutDataFields>();
 
   } // class BillPaymentComplementFields
-
-
-  public class ComplementBalanceDataDto {
-
-    public string PagosVersion {
-      get; internal set;
-    }
-
-
-    public decimal TotalTrasladosBaseIVA16 {
-      get; internal set;
-    }
-
-
-    public decimal TotalTrasladosImpuestoIVA16 {
-      get; internal set;
-    }
-
-
-    public decimal MontoTotalPagos {
-      get; internal set;
-    }
-
-  }
 
 
   public class ComplementRelatedPayoutDataFields {
@@ -173,9 +144,54 @@ namespace Empiria.Billing {
     }
 
 
-    public FixedList<ComplementRelatedDocumentDataFields> RelatedDocumentData {
+    public string IdDocumento {
       get; internal set;
-    } = new FixedList<ComplementRelatedDocumentDataFields>();
+    }
+
+
+    public string MonedaDR {
+      get; internal set;
+    }
+
+
+    public string EquivalenciaDR {
+      get; internal set;
+    }
+
+
+    public string NumParcialidad {
+      get; internal set;
+    }
+
+
+    public decimal ImpSaldoAnt {
+      get; internal set;
+    }
+
+
+    public decimal ImpPagado {
+      get; internal set;
+    }
+
+
+    public decimal ImpSaldoInsoluto {
+      get; internal set;
+    }
+
+
+    public string ObjetoImpDR {
+      get; internal set;
+    }
+
+
+    public FixedList<BillTaxEntryFields> Taxes {
+      get; internal set;
+    } = new FixedList<BillTaxEntryFields>();
+
+
+    //public FixedList<ComplementRelatedDocumentDataFields> RelatedDocumentData {
+    //  get; internal set;
+    //} = new FixedList<ComplementRelatedDocumentDataFields>();
 
   }
 
