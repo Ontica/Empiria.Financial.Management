@@ -179,7 +179,7 @@ namespace Empiria.Billing.UseCases {
         billConcept.Save();
 
         billConcept.TaxEntries = CreateBillTaxEntries(bill, billConcept.Id,
-                                                      billConcept.BillConceptTypeId, fields.TaxEntries);
+                                                      TaxType.Empty, fields.TaxEntries);
 
         concepts.Add(billConcept);
       }
@@ -200,8 +200,6 @@ namespace Empiria.Billing.UseCases {
 
         billConcept.Save();
 
-        //billConcept.TaxEntries = CreateBillTaxEntries(bill, billConcept, fields.TaxEntries);
-
         concepts.Add(billConcept);
       }
 
@@ -216,14 +214,15 @@ namespace Empiria.Billing.UseCases {
 
 
     private FixedList<BillTaxEntry> CreateBillTaxEntries(Bill bill,
-                                                         int billRelatedDocumentId, int billTaxTypeId,
+                                                         int billRelatedDocumentId,
+                                                         TaxType taxType,
                                                          FixedList<BillTaxEntryFields> allTaxesFields) {
 
       var taxesList = new List<BillTaxEntry>(allTaxesFields.Count);
 
       foreach (BillTaxEntryFields taxFields in allTaxesFields) {
 
-        var billTaxEntry = new BillTaxEntry(bill,  billRelatedDocumentId, billTaxTypeId);
+        var billTaxEntry = new BillTaxEntry(bill,  billRelatedDocumentId, taxType);
 
         billTaxEntry.Update(taxFields);
 
@@ -276,7 +275,7 @@ namespace Empiria.Billing.UseCases {
 
       bill.Concepts = CreatePaymentComplementConcepts(bill, fields.Concepts);
 
-      //bill.BillRelatedBills = CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
+      bill.BillRelatedBills = CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
 
       return bill;
     }
@@ -289,9 +288,12 @@ namespace Empiria.Billing.UseCases {
 
         var billRelated = new BillRelatedBill(bill);
         billRelated.Update(relatedPayoutFields);
+        billRelated.Save();
 
         billRelated.BillTaxes = CreateBillTaxEntries(bill, billRelated.Id,
-                                                  billRelated.BillRelatedTypeId, relatedPayoutFields.Taxes);
+                                                     TaxType.Empty,
+                                                     relatedPayoutFields.Taxes);
+        relatedList.Add(billRelated);
       }
       return relatedList.ToFixedList();
     }

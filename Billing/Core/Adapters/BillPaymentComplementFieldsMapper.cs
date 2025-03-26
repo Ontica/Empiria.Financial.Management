@@ -76,7 +76,7 @@ namespace Empiria.Billing.Adapters {
         CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
         Subtotal = dto.DatosGenerales.SubTotal,
         Total = dto.DatosGenerales.Total,
-        CFDIRelated = MapToCfdiRelated(dto.DatosComplemento.DatosComplementoPago.First()),
+        //CFDIRelated = MapToCfdiRelated(dto.DatosComplemento.DatosComplementoPago.First()),
         Concepts = MapToPaymentComplementConceptFields(dto.Conceptos),
         SchemaData = MapToPaymentComplementSchemaData(dto),
         SecurityData = MapToPaymentComplementSecurityData(dto),

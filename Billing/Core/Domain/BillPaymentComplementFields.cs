@@ -35,8 +35,7 @@ namespace Empiria.Billing {
 
 
     public string CFDIRelated {
-      get;
-      internal set;
+      get; set;
     } = string.Empty;
 
 

@@ -117,7 +117,7 @@ namespace Empiria.Billing {
         this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
-      BillData.WriteBillRelatedBillEntry(this, BillRelatedSchemaExtData.ToString());
+      BillData.WriteBillRelatedBillEntry(this, ExtData.ToString());
     }
 
 
