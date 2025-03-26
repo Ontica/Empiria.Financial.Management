@@ -560,8 +560,8 @@ namespace Empiria.Billing {
     }
 
 
-    static internal void EnsureIsValidPaymentComplement(this BillPaymentComplementFields fields, int payableId,
-                                           decimal payableTotal, BillCategory billCategory) {
+    static internal void EnsureIsValidPaymentComplement(this BillPaymentComplementFields fields,
+                                                        BillCategory billCategory) {
 
       Assertion.Require(billCategory == BillCategory.ComplementoPagoProveedores,
                         "El documento que intenta guardar no es un complemento de pago.");
@@ -569,42 +569,64 @@ namespace Empiria.Billing {
       Assertion.Require(BillData.TryGetBillWithBillNo(fields.BillNo) == null,
                         "El documento que intenta guardar ya está registrado.");
 
-      Assertion.Require(fields.CFDIRelated != string.Empty,
-                      "El complemento de pago que intenta guardar no tiene referencia a un CFDI relacionado.");
-
       Assertion.Require(fields.SchemaData.Fecha <= DateTime.Now,
                         "La fecha del documento no debe de ser mayor a la fecha actual.");
 
       Assertion.Require(fields.IssuedToUID != string.Empty,
                         "El receptor del CFDI no se encuentra registrado.");
+    }
+
+
+    static internal void EnsureIsValidDocument(this BillPaymentComplementFields fields,
+                                               BillCategory billCategory,
+                                               int payableId,
+                                               decimal payableTotal) {
+
+      Assertion.Require(fields.ComplementRelatedPayoutData.Count > 0,
+                        $"El documento {billCategory.Name} " +
+                        $"con folio fiscal {fields.BillNo} " +
+                        $"no contiene información de un complemento de pago");
+      decimal fieldsTotal = 0;
+      foreach (var relatedDataFields in fields.ComplementRelatedPayoutData) {
+
+        Assertion.Require(relatedDataFields.IdDocumento != string.Empty,
+                          $"El documento {billCategory.Name} " +
+                          $"con folio fiscal {fields.BillNo} " +
+                          $"que intenta guardar no tiene referencia a un CFDI relacionado.");
+
+        Bill relatedBill = BillData.TryGetBillWithBillNo(relatedDataFields.IdDocumento);
+
+        Assertion.Require(relatedBill,
+                          $"El documento {billCategory.Name} " +
+                          $"con folio fiscal {fields.BillNo} " +
+                          $"hace referencia a un CFDI que no ha sido registrado en el sistema.");
+        fieldsTotal += relatedDataFields.ImpPagado;
+      }
 
       var billsByPayable = BillData.GetBillsForPayable(payableId, billCategory);
 
-      Assertion.Require((billsByPayable.Sum(x => x.Total) + fields.Total) <= payableTotal,
-                        "El monto total de las facturas registradas y/o " +
-                        "la factura que intenta guardar es mayor al monto total del contrato.");
+      var totalsByBillCategory = GetTotalsByBillCategory(billsByPayable);
+
+      //TODO RETORNAR bill.BillRelatedBills;
+      Assertion.Require((totalsByBillCategory + fieldsTotal) <= payableTotal,
+                          "El monto total de las facturas registradas y/o " +
+                          "la factura que intenta guardar es mayor al monto total del contrato.");
     }
 
 
-    static internal void EnsureIsValidDocument(this BillPaymentComplementFields fields, BillCategory billCategory) {
+    static private decimal GetTotalsByBillCategory(FixedList<Bill> billsByPayable) {
 
-      Assertion.Require(fields.CFDIRelated != string.Empty,
-                      $"El documento {billCategory.Name} que intenta guardar no tiene referencia a un CFDI relacionado.");
+      decimal totals = 0;
+      foreach (var bill in billsByPayable) {
 
-      Bill relatedBill = BillData.TryGetBillWithBillNo(fields.CFDIRelated);
-
-      Assertion.Require(relatedBill,
-                        $"El CFDI al que hace referencia el documento {billCategory.Name}, " +
-                        "no ha sido registrado en el sistema.");
-
-      var relatedDocuments = BillData.GetRelatedDocuments(fields.CFDIRelated);
-
-      Assertion.Require((relatedDocuments.Sum(x => x.Total) + fields.Total) <= relatedBill.Total,
-                        $"El total de éste documento {billCategory.Name} y la suma de " +
-                        $"los documentos registrados exceden el total de la factura " +
-                        $"(CFDI relacionado: {fields.CFDIRelated}).");
+        if (bill.BillCategory == BillCategory.ComplementoPagoProveedores) {
+          totals += bill.BillRelatedBills.Sum(x => x.BillRelatedSchemaExtData.ImpPagado);
+        } else {
+          totals += bill.Total;
+        }
+      }
+      return totals;
     }
-
   } // class BillFieldsExtensions
 
 } // namespace Empiria.Billing.Adapters

@@ -327,8 +327,8 @@ namespace Empiria.Billing {
     internal void UpdatePaymentComplement(BillPaymentComplementFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      fields.EnsureIsValidDocument(BillCategory);
-      fields.EnsureIsValidPaymentComplement(PayableId, PayableTotal, BillCategory);
+      fields.EnsureIsValidDocument(BillCategory, PayableId, PayableTotal);
+      fields.EnsureIsValidPaymentComplement(BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;
       IssueDate = PatchField(fields.SchemaData.Fecha, IssueDate);

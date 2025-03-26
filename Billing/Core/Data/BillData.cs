@@ -141,6 +141,20 @@ namespace Empiria.Billing.Data {
     }
 
 
+    static internal void WriteBillRelatedBillEntry(BillRelatedBill o, string extData) {
+      var schema = o.BillRelatedSchemaExtData.ToJsonString();
+
+      var op = DataOperation.Parse("write_FMS_Bill_Related_Bill",
+          o.Id, o.UID, o.Bill.Id,
+          o.BillRelatedTypeId, o.RelatedDocument,
+          o.BillRelatedSchemaExtData.ToJsonString(), extData,
+          o.PostedBy.Id, o.PostingTime,
+          (char) o.Status);
+
+      DataWriter.Execute(op);
+    }
+
+
     static internal void WriteBillTaxEntry(BillTaxEntry o, string extensionData) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Tax",
@@ -148,19 +162,6 @@ namespace Empiria.Billing.Data {
           (char) o.TaxMethod, (char) o.TaxFactorType, o.Factor,
           o.BaseAmount, o.Total, extensionData,
           o.PostedBy.Id, o.PostingTime, (char) o.Status);
-
-      DataWriter.Execute(op);
-    }
-
-
-    static internal void WriteBillRelatedBillEntry(BillRelatedBill o, string schemaExtData) {
-
-      var op = DataOperation.Parse("write_FMS_Bill_Related_Bill",
-          o.Id, o.UID, o.Bill.Id,
-          o.BillRelatedTypeId, o.RelatedDocument,
-          schemaExtData, string.Empty,
-          o.PostedBy.Id, o.PostingTime,
-          (char) o.Status);
 
       DataWriter.Execute(op);
     }
