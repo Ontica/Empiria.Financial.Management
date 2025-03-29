@@ -12,6 +12,7 @@ using Empiria.StateEnums;
 
 using Empiria.Documents.Services;
 using Empiria.History.Services;
+using System;
 
 namespace Empiria.Billing.Adapters {
 
@@ -25,11 +26,11 @@ namespace Empiria.Billing.Adapters {
       return new BillHolderDto() {
         Bill = MapToBillDto(bill),
         Concepts = MapBillConcepts(bill.Concepts),
+        BillRelatedBills = MapBillRelatedBills(bill.BillRelatedBills),
         Documents = DocumentServices.GetEntityDocuments(bill),
         History = HistoryServices.GetEntityHistory(bill),
         Actions = MapActions()
       };
-
     }
 
 
@@ -64,7 +65,8 @@ namespace Empiria.Billing.Adapters {
     static internal BillWithConceptsDto MapToBillWithConcepts(Bill bill) {
       return new BillWithConceptsDto {
         Bill = MapToBillDto(bill),
-        Concepts = MapBillConcepts(bill.Concepts)
+        Concepts = MapBillConcepts(bill.Concepts),
+        BillRelatedBills = MapBillRelatedBills(bill.BillRelatedBills)
       };
     }
 
@@ -78,8 +80,17 @@ namespace Empiria.Billing.Adapters {
       };
     }
 
+
     static private FixedList<BillConceptDto> MapBillConcepts(FixedList<BillConcept> billConcepts) {
       return billConcepts.Select((x) => MapToBillConceptsDto(x))
+                         .ToFixedList();
+    }
+
+
+    static private FixedList<BillRelatedBillDto> MapBillRelatedBills(
+                    FixedList<BillRelatedBill> billRelatedBills) {
+      
+      return billRelatedBills.Select((x) => MapToBillRelatedBillsDto(x))
                          .ToFixedList();
     }
 
@@ -117,6 +128,18 @@ namespace Empiria.Billing.Adapters {
         Total = bill.Total,
         IssueDate = bill.IssueDate,
         StatusName = bill.Status.GetName()
+      };
+    }
+
+
+    static private BillRelatedBillDto MapToBillRelatedBillsDto(BillRelatedBill x) {
+
+      return new BillRelatedBillDto {
+        UID = x.BillRelatedBillUID,
+        RelatedDocument = x.RelatedDocument,
+        PostedBy = x.PostedBy.MapToNamedEntity(),
+        PostingTime = x.PostingTime,
+        TaxEntries = MapBillTaxes(x.TaxEntries)
       };
     }
 

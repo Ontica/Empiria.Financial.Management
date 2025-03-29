@@ -295,7 +295,17 @@ namespace Empiria.Billing {
       this.Concepts = BillConcept.GetListFor(this);
 
       foreach (var concept in Concepts) {
-        concept.TaxEntries = BillTaxEntry.GetListFor(concept);
+        concept.TaxEntries = BillTaxEntry.GetListFor(concept.BillConceptId);
+      }
+    }
+
+
+    internal void AssignBillRelatedBills() {
+
+      this.BillRelatedBills = BillRelatedBill.GetListFor(this);
+
+      foreach (var relatedBill in BillRelatedBills) {
+        relatedBill.TaxEntries = BillTaxEntry.GetListFor(relatedBill.BillRelatedBillId);
       }
     }
 
@@ -337,12 +347,18 @@ namespace Empiria.Billing {
       _identificators = PatchField(fields.Identificators, _identificators);
       _tags = PatchField(fields.Tags, _tags);
       Currency = PatchField(fields.CurrencyUID, Currency);
-      Subtotal = fields.Subtotal;
+      GetTotals(fields.ComplementRelatedPayoutData);
       Discount = fields.Discount;
-      Total = fields.Total;
 
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
+    }
+
+
+    private void GetTotals(FixedList<ComplementRelatedPayoutDataFields> payoutData) {
+
+      Subtotal = payoutData.Select(x => x.Taxes.Sum(y => y.BaseAmount)).Sum();
+      Total = payoutData.Sum(x => x.Monto);
     }
 
 

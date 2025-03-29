@@ -43,10 +43,10 @@ namespace Empiria.Billing {
 
     static internal BillTaxEntry Parse(string uid) => ParseKey<BillTaxEntry>(uid);
 
-    static internal FixedList<BillTaxEntry> GetListFor(BillConcept billConcept) {
-      Assertion.Require(billConcept, nameof(billConcept));
+    static internal FixedList<BillTaxEntry> GetListFor(int relatedDocumentId) {
+      Assertion.Require(relatedDocumentId, nameof(relatedDocumentId));
 
-      return BillData.GetBillConceptTaxEntries(billConcept);
+      return BillData.GetBillRelatedDocumentTaxEntries(relatedDocumentId);
     }
 
     static public BillTaxEntry Empty => ParseEmpty<BillTaxEntry>();

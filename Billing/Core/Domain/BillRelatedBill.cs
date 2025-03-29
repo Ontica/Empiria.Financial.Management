@@ -37,9 +37,27 @@ namespace Empiria.Billing {
 
     static public BillRelatedBill Parse(string uid) => ParseKey<BillRelatedBill>(uid);
 
+    static internal FixedList<BillRelatedBill> GetListFor(Bill bill) {
+      Assertion.Require(bill, nameof(bill));
+
+      return BillData.GetBillRelatedBills(bill);
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
+
+    [DataField("BILL_RELATED_BILL_ID")]
+    public int BillRelatedBillId {
+      get; private set;
+    }
+
+
+    [DataField("BILL_RELATED_BILL_UID")]
+    public string BillRelatedBillUID {
+      get; private set;
+    }
+
 
     [DataField("BILL_RELATED_BILL_BILL_ID")]
     public Bill Bill {
@@ -96,7 +114,7 @@ namespace Empiria.Billing {
     }
 
 
-    internal FixedList<BillTaxEntry> BillTaxes {
+    internal FixedList<BillTaxEntry> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntry>();
 

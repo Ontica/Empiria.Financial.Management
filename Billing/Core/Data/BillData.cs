@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Data;
 
 namespace Empiria.Billing.Data {
@@ -29,11 +30,23 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal FixedList<BillTaxEntry> GetBillConceptTaxEntries(BillConcept billConcept) {
+    internal static FixedList<BillRelatedBill> GetBillRelatedBills(Bill bill) {
+
+      var sql = $"SELECT * FROM FMS_BILL_RELATED_BILLS " +
+                $"WHERE BILL_RELATED_BILL_BILL_ID = {bill.Id} AND " +
+                $"BILL_RELATED_BILL_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetPlainObjectFixedList<BillRelatedBill>(op);
+    }
+
+
+    static internal FixedList<BillTaxEntry> GetBillRelatedDocumentTaxEntries(int relatedDocId) {
 
       var sql = $"SELECT * FROM FMS_BILL_TAXES " +
-                $"WHERE BILL_TAX_BILL_CONCEPT_ID = {billConcept.Id} AND " +
-                "BILL_TAX_STATUS <> 'X'";
+                $"WHERE BILL_TAX_BILL_RELATED_DOCUMENT_ID = {relatedDocId} " +
+                $"AND BILL_TAX_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
 

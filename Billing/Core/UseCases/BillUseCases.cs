@@ -104,6 +104,7 @@ namespace Empiria.Billing.UseCases {
 
       Bill bill = Bill.Parse(billUID);
       bill.AssignConcepts();
+      bill.AssignBillRelatedBills();
 
       return BillMapper.Map(bill);
     }
@@ -114,6 +115,7 @@ namespace Empiria.Billing.UseCases {
 
       Bill bill = Bill.Parse(billUID);
       bill.AssignConcepts();
+      bill.AssignBillRelatedBills();
 
       return BillMapper.MapToBillWithConcepts(bill);
     }
@@ -147,7 +149,7 @@ namespace Empiria.Billing.UseCases {
 
       foreach (var concept in bill.Concepts) {
 
-        concept.TaxEntries = BillTaxEntry.GetListFor(concept);
+        concept.TaxEntries = BillTaxEntry.GetListFor(concept.Id);
       }
     }
 
@@ -290,7 +292,7 @@ namespace Empiria.Billing.UseCases {
         billRelated.Update(relatedPayoutFields);
         billRelated.Save();
 
-        billRelated.BillTaxes = CreateBillTaxEntries(bill, billRelated.Id,
+        billRelated.TaxEntries = CreateBillTaxEntries(bill, billRelated.Id,
                                                      TaxType.Empty,
                                                      relatedPayoutFields.Taxes);
         relatedList.Add(billRelated);

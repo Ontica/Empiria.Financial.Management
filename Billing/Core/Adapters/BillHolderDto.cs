@@ -27,6 +27,10 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
+    public FixedList<BillRelatedBillDto> BillRelatedBills {
+      get; internal set;
+    }
+
     public FixedList<DocumentDto> Documents {
       get; internal set;
     }
@@ -123,6 +127,7 @@ namespace Empiria.Billing.Adapters {
   } // Class BillEntryDto
 
 
+  /// <summary>Output DTO used to return bill concept entry data.</summary>
   public class BillWithConceptsDto {
 
     public BillDto Bill {
@@ -133,6 +138,11 @@ namespace Empiria.Billing.Adapters {
     public FixedList<BillConceptDto> Concepts {
       get; internal set;
     } = new FixedList<BillConceptDto>();
+
+
+    public FixedList<BillRelatedBillDto> BillRelatedBills {
+      get; internal set;
+    }
 
   } // class BillWithConceptsDto
 
@@ -198,6 +208,35 @@ namespace Empiria.Billing.Adapters {
 
 
   } // class BillConceptDto
+
+
+  /// <summary>Output DTO used to return bill related bill entry data.</summary>
+  public class BillRelatedBillDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+
+    public string RelatedDocument {
+      get; internal set;
+    }
+
+
+    public NamedEntityDto PostedBy {
+      get; internal set;
+    }
+
+
+    public DateTime PostingTime {
+      get; internal set;
+    }
+
+
+    public FixedList<BillTaxEntryDto> TaxEntries {
+      get; internal set;
+    } = new FixedList<BillTaxEntryDto>();
+  }
 
 
   /// <summary>Output DTO used to return bill tax entry data.</summary>

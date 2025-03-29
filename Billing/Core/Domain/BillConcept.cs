@@ -55,6 +55,12 @@ namespace Empiria.Billing {
 
     #region Properties
 
+    [DataField("BILL_CONCEPT_ID")]
+    public int BillConceptId {
+      get; private set;
+    } = -1;
+
+
     [DataField("BILL_CONCEPT_TYPE_ID")]
     public int BillConceptTypeId {
       get; private set;

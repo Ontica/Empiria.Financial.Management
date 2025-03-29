@@ -55,7 +55,7 @@ namespace Empiria.Tests.Billing {
     [Fact]
     public void Get_Bill_By_UID_Test() {
 
-      string billUID = "ba126f25-5b52-419a-b226-d710898a7487";
+      string billUID = "a8161e85-b760-42a4-a170-1a867e97392a";
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
@@ -69,7 +69,7 @@ namespace Empiria.Tests.Billing {
     [Fact]
     public void Get_Bill_Map_By_UID_Test() {
 
-      string billUID = "52c7394e-9d1b-4632-89df-320d2e438874";
+      string billUID = "a8161e85-b760-42a4-a170-1a867e97392a";
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
