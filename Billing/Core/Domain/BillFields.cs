@@ -510,15 +510,15 @@ namespace Empiria.Billing {
       Assertion.Require(fields.IssuedToUID != string.Empty,
                         "El receptor del CFDI no se encuentra registrado.");
 
-      var issuedTo = Party.Parse(fields.IssuedToUID);
-
       Assertion.Require(BillData.TryGetBillWithBillNo(fields.BillNo) == null,
                         "El documento que intenta guardar ya está registrado.");
 
-      // ToDo: REVISAR 2 REGISTROS QUE EXISTEN DE BANOBRAS EN PARTIES (PARTY_ID: 1, 5984)
-      // ToDo: Revisar
-      // Assertion.Require(Party.Primary.Code.Equals(issuedTo.Code),
-      //                   $"El receptor del CFDI no es {Party.Primary.Name}");
+      var issuedTo = Party.Parse(fields.IssuedToUID);
+      
+      var banobras = Party.Primary;
+
+      Assertion.Require(Party.Primary.Equals(issuedTo),
+                        $"El receptor del CFDI no es {Party.Primary.Name}");
 
       Assertion.Require(fields.SchemaData.Fecha <= DateTime.Now,
                         "La fecha del documento no debe de ser mayor a la fecha actual.");
@@ -604,29 +604,12 @@ namespace Empiria.Billing {
       }
 
       var billsByPayable = BillData.GetBillsForPayable(payableId, billCategory);
-
-      var totalsByBillCategory = GetTotalsByBillCategory(billsByPayable);
-
-      //TODO RETORNAR bill.BillRelatedBills;
-      Assertion.Require((totalsByBillCategory + fieldsTotal) <= payableTotal,
+      
+      Assertion.Require((billsByPayable.Sum(x=>x.Total) + fieldsTotal) <= payableTotal,
                           "El monto total de las facturas registradas y/o " +
                           "la factura que intenta guardar es mayor al monto total del contrato.");
     }
 
-
-    static private decimal GetTotalsByBillCategory(FixedList<Bill> billsByPayable) {
-
-      decimal totals = 0;
-      foreach (var bill in billsByPayable) {
-
-        if (bill.BillCategory == BillCategory.ComplementoPagoProveedores) {
-          totals += bill.BillRelatedBills.Sum(x => x.BillRelatedSchemaExtData.ImpPagado);
-        } else {
-          totals += bill.Total;
-        }
-      }
-      return totals;
-    }
   } // class BillFieldsExtensions
 
 } // namespace Empiria.Billing.Adapters
