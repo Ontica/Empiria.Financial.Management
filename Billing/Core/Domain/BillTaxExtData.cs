@@ -28,7 +28,7 @@ namespace Empiria.Billing {
 
     public decimal Base {
       get {
-        return _extData.Get("base", 0);
+        return _extData.Get<decimal>("base", 0);
       }
       private set {
         _extData.SetIfValue("base", value);
@@ -58,7 +58,7 @@ namespace Empiria.Billing {
 
     public decimal TasaOCuota {
       get {
-        return _extData.Get("tasaOCuota", 0);
+        return _extData.Get<decimal>("tasaOCuota", 0);
       }
       private set {
         _extData.SetIfValue("tasaOCuota", value);
@@ -68,7 +68,7 @@ namespace Empiria.Billing {
 
     public decimal Importe {
       get {
-        return _extData.Get("importe", 0);
+        return _extData.Get<decimal>("importe", 0);
       }
       private set {
         _extData.SetIfValue("importe", value);

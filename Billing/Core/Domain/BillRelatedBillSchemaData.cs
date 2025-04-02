@@ -72,7 +72,7 @@ namespace Empiria.Billing {
 
     public decimal Monto {
       get {
-        return _schemaData.Get("monto", 0);
+        return _schemaData.Get<decimal>("monto", 0);
       }
       private set {
         _schemaData.SetIfValue("monto", value);
@@ -132,7 +132,7 @@ namespace Empiria.Billing {
 
     public decimal ImpSaldoAnt {
       get {
-        return _schemaData.Get("impSaldoAnt", 0);
+        return _schemaData.Get<decimal>("impSaldoAnt", 0);
       }
       private set {
         _schemaData.SetIfValue("impSaldoAnt", value);
@@ -142,7 +142,7 @@ namespace Empiria.Billing {
 
     public decimal ImpPagado {
       get {
-        return _schemaData.Get("impPagado", 0);
+        return _schemaData.Get<decimal>("impPagado", 0);
       }
       private set {
         _schemaData.SetIfValue("impPagado", value);
@@ -152,7 +152,7 @@ namespace Empiria.Billing {
 
     public decimal ImpSaldoInsoluto {
       get {
-        return _schemaData.Get("impSaldoInsoluto", 0);
+        return _schemaData.Get<decimal>("impSaldoInsoluto", 0);
       }
       private set {
         _schemaData.SetIfValue("impSaldoInsoluto", value);

@@ -197,7 +197,7 @@ namespace Empiria.Billing {
 
     public decimal SubTotal {
       get {
-        return _schemaData.Get("subTotal", 0);
+        return _schemaData.Get<decimal>("subTotal", 0);
       }
       private set {
         _schemaData.SetIfValue("subTotal", value);
@@ -207,7 +207,7 @@ namespace Empiria.Billing {
 
     public decimal Total {
       get {
-        return _schemaData.Get("total", 0);
+        return _schemaData.Get<decimal>("total", 0);
       }
       private set {
         _schemaData.SetIfValue("total", value);

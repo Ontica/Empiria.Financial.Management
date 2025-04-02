@@ -37,7 +37,7 @@ namespace Empiria.Billing {
 
     public decimal Cantidad {
       get {
-        return _schemaData.Get("cantidad", 0);
+        return _schemaData.Get<decimal>("cantidad", 0);
       }
       private set {
         _schemaData.SetIfValue("cantidad", value);
@@ -77,7 +77,7 @@ namespace Empiria.Billing {
 
     public decimal ValorUnitario {
       get {
-        return _schemaData.Get("valorUnitario", 0);
+        return _schemaData.Get<decimal>("valorUnitario", 0);
       }
       private set {
         _schemaData.SetIfValue("valorUnitario", value);
@@ -87,7 +87,7 @@ namespace Empiria.Billing {
 
     public decimal Importe {
       get {
-        return _schemaData.Get("importe", 0);
+        return _schemaData.Get<decimal>("importe", 0);
       }
       private set {
         _schemaData.SetIfValue("importe", value);
