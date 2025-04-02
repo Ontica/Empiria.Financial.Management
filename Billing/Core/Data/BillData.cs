@@ -42,10 +42,12 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal FixedList<BillTaxEntry> GetBillRelatedDocumentTaxEntries(int relatedDocId) {
+    static internal FixedList<BillTaxEntry> GetBillTaxEntriesByRelatedObject(
+                                              int relatedObjectTypeId, int relatedObjectId) {
 
       var sql = $"SELECT * FROM FMS_BILL_TAXES " +
-                $"WHERE BILL_TAX_BILL_RELATED_DOCUMENT_ID = {relatedDocId} " +
+                $"WHERE BILL_TAX_RELATED_OBJECT_TYPE_ID = {relatedObjectTypeId} " +
+                $"AND BILL_TAX_RELATED_OBJECT_ID = {relatedObjectId} " +
                 $"AND BILL_TAX_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);

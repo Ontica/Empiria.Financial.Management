@@ -149,7 +149,7 @@ namespace Empiria.Billing.UseCases {
 
       foreach (var concept in bill.Concepts) {
 
-        concept.TaxEntries = BillTaxEntry.GetListFor(concept.Id);
+        concept.TaxEntries = BillTaxEntry.GetListFor(bill.BillType.Id, concept.Id);
       }
     }
 

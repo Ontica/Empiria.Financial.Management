@@ -295,7 +295,7 @@ namespace Empiria.Billing {
       this.Concepts = BillConcept.GetListFor(this);
 
       foreach (var concept in Concepts) {
-        concept.TaxEntries = BillTaxEntry.GetListFor(concept.BillConceptId);
+        concept.TaxEntries = BillTaxEntry.GetListFor(this.BillType.Id, concept.BillConceptId);
       }
     }
 
@@ -305,7 +305,7 @@ namespace Empiria.Billing {
       this.BillRelatedBills = BillRelatedBill.GetListFor(this);
 
       foreach (var relatedBill in BillRelatedBills) {
-        relatedBill.TaxEntries = BillTaxEntry.GetListFor(relatedBill.BillRelatedBillId);
+        relatedBill.TaxEntries = BillTaxEntry.GetListFor(this.BillType.Id, relatedBill.BillRelatedBillId);
       }
     }
 
