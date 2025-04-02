@@ -41,6 +41,22 @@ namespace Empiria.Billing.UseCases {
     #region Use cases
 
 
+    public BillDto CreateBill(string xmlString, IPayable payable) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+
+      var reader = new SATBillXmlReader(xmlString);
+
+      ISATBillDto satDto = reader.ReadAsBillDto();
+
+      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
+
+      Bill bill = CreateBillImplementation(payable, (BillFields) fields);
+
+      return BillMapper.MapToBillDto(bill);
+    }
+
+
     public BillDto CreateBillTest(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
@@ -54,6 +70,20 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    public BillDto CreateBillPaymentComplement(string xmlString, IPayable payable) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+
+      var reader = new SATPaymentComplementXmlReader(xmlString);
+      ISATBillDto satDto = reader.ReadAsPaymentComplementDto();
+
+      IBillFields fields = BillPaymentComplementFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
+      Bill bill = CreatePaymentComplementImplementation(payable, (BillPaymentComplementFields) fields);
+
+      return BillMapper.MapToBillDto(bill);
+    }
+
+
     public BillDto CreateBillPaymentComplementTest(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
@@ -62,22 +92,6 @@ namespace Empiria.Billing.UseCases {
 
       IBillFields fields = BillPaymentComplementFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
       Bill bill = CreatePaymentComplementTest((BillPaymentComplementFields) fields);
-
-      return BillMapper.MapToBillDto(bill);
-    }
-
-
-    public BillDto CreateBill(string xmlString, IPayable payable) {
-      Assertion.Require(xmlString, nameof(xmlString));
-      Assertion.Require(payable, nameof(payable));
-
-      var reader = new SATBillXmlReader(xmlString);
-
-      ISATBillDto satDto = reader.ReadAsBillDto();
-
-      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
-
-      Bill bill = CreateBillImplementation(payable, (BillFields) fields);
 
       return BillMapper.MapToBillDto(bill);
     }
@@ -189,23 +203,21 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private FixedList<BillConcept> CreatePaymentComplementConcepts(Bill bill,
-                                    FixedList<BillConceptFields> conceptFields) {
-      var concepts = new List<BillConcept>();
+    private Bill CreateBillTest(BillFields fields) {
 
-      foreach (BillConceptFields fields in conceptFields) {
+      var billCategory = BillCategory.FacturaProveedores;
 
-        var billConcept = new BillConcept(bill, Product.Empty);
+      var bill = new Bill(billCategory, fields.BillNo);
 
-        billConcept.Update(fields);
+      bill.Update(fields);
 
-        billConcept.Save();
+      bill.Save();
 
-        concepts.Add(billConcept);
-      }
+      bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
 
-      return concepts.ToFixedList();
+      return bill;
     }
+
 
 
     private Bill CreateBillImplementation(IPayable payable, BillFields fields) {
@@ -225,29 +237,28 @@ namespace Empiria.Billing.UseCases {
         var billTaxEntry = new BillTaxEntry(bill,  billRelatedDocumentId);
 
         billTaxEntry.Update(taxFields);
-
         billTaxEntry.Save();
-
         taxesList.Add(billTaxEntry);
       }
-
       return taxesList.ToFixedList();
     }
 
 
-    private Bill CreateBillTest(BillFields fields) {
+    private FixedList<BillRelatedBill> CreateBillRelatedBills(Bill bill,
+              FixedList<ComplementRelatedPayoutDataFields> complementRelatedPayoutData) {
 
-      var billCategory = BillCategory.FacturaProveedores;
+      var relatedList = new List<BillRelatedBill>();
+      foreach (var relatedPayoutFields in complementRelatedPayoutData) {
 
-      var bill = new Bill(billCategory, fields.BillNo);
+        var billRelated = new BillRelatedBill(bill);
 
-      bill.Update(fields);
+        billRelated.Update(relatedPayoutFields);
+        billRelated.Save();
 
-      bill.Save();
-
-      bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
-
-      return bill;
+        billRelated.TaxEntries = CreateBillTaxEntries(bill, billRelated.Id, relatedPayoutFields.Taxes);
+        relatedList.Add(billRelated);
+      }
+      return relatedList.ToFixedList();
     }
 
 
@@ -257,9 +268,39 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreatePaymentComplementImplementation(IPayable payable, BillFields fields) {
+    private FixedList<BillConcept> CreatePaymentComplementConcepts(Bill bill,
+                                    FixedList<BillConceptFields> conceptFields) {
+      var concepts = new List<BillConcept>();
 
-      return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
+      foreach (BillConceptFields fields in conceptFields) {
+
+        var billConcept = new BillConcept(bill, Product.Empty);
+
+        billConcept.Update(fields);
+
+        billConcept.Save();
+
+        concepts.Add(billConcept);
+      }
+      return concepts.ToFixedList();
+    }
+
+
+    private Bill CreatePaymentComplementImplementation(IPayable payable, BillPaymentComplementFields fields) {
+
+      var billCategory = BillCategory.ComplementoPagoProveedores;
+
+      var bill = new Bill(payable, billCategory, fields.BillNo);
+
+      bill.UpdatePaymentComplement(fields);
+
+      bill.Save();
+
+      bill.Concepts = CreatePaymentComplementConcepts(bill, fields.Concepts);
+
+      bill.BillRelatedBills = CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
+
+      return bill;
     }
 
 
@@ -280,21 +321,6 @@ namespace Empiria.Billing.UseCases {
       return bill;
     }
 
-    private FixedList<BillRelatedBill> CreateBillRelatedBills(Bill bill,
-              FixedList<ComplementRelatedPayoutDataFields> complementRelatedPayoutData) {
-
-      var relatedList = new List<BillRelatedBill>();
-      foreach (var relatedPayoutFields in complementRelatedPayoutData) {
-
-        var billRelated = new BillRelatedBill(bill);
-        billRelated.Update(relatedPayoutFields);
-        billRelated.Save();
-
-        billRelated.TaxEntries = CreateBillTaxEntries(bill, billRelated.Id, relatedPayoutFields.Taxes);
-        relatedList.Add(billRelated);
-      }
-      return relatedList.ToFixedList();
-    }
 
     #endregion Private methods
 
