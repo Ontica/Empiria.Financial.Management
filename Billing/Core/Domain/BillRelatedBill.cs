@@ -65,12 +65,6 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_RELATED_TYPE_ID")]
-    public int BillRelatedTypeId {
-      get; private set;
-    }
-
-
     [DataField("RELATED_DOCUMENT")]
     public string RelatedDocument {
       get; private set;
@@ -124,7 +118,6 @@ namespace Empiria.Billing {
     #region Private methods
 
     internal void Update(ComplementRelatedPayoutDataFields fields) {
-      this.BillRelatedTypeId = -1; //TODO ASIGNAR EN BD
       this.RelatedDocument = fields.IdDocumento;
       this.BillRelatedSchemaExtData.Update(fields);
     }
@@ -132,8 +125,8 @@ namespace Empiria.Billing {
 
     protected override void OnSave() {
       if (IsNew) {
-        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        this.PostingTime = DateTime.Now;
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
       }
       BillData.WriteBillRelatedBillEntry(this, ExtData.ToString());
     }

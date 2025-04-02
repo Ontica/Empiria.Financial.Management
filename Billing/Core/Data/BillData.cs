@@ -143,7 +143,7 @@ namespace Empiria.Billing.Data {
     static internal void WriteBillConcept(BillConcept o, string extensionData) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Concept",
-        o.Id, o.UID, o.BillConceptTypeId, o.Bill.Id, o.Product.Id,
+        o.Id, o.UID, o.GetEmpiriaType().Id, o.Bill.Id, o.Product.Id,
         o.SATProduct.Id, o.SATProductCode, o.Description,
         string.Join(" ", o.Identificators), string.Join(" ", o.Tags),
         o.Quantity, o.QuantityUnit.Id, o.UnitPrice, o.Subtotal, o.Discount,
@@ -159,7 +159,7 @@ namespace Empiria.Billing.Data {
 
       var op = DataOperation.Parse("write_FMS_Bill_Related_Bill",
           o.Id, o.UID, o.Bill.Id,
-          o.BillRelatedTypeId, o.RelatedDocument,
+          o.GetEmpiriaType().Id, o.RelatedDocument,
           o.BillRelatedSchemaExtData.ToJsonString(), extData,
           o.PostedBy.Id, o.PostingTime,
           (char) o.Status);
@@ -171,9 +171,9 @@ namespace Empiria.Billing.Data {
     static internal void WriteBillTaxEntry(BillTaxEntry o, string extensionData) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Tax",
-          o.Id, o.UID, o.TaxType.Id, o.Bill.Id, o.BillRelatedDocumentId,
-          (char) o.TaxMethod, (char) o.TaxFactorType, o.Factor,
-          o.BaseAmount, o.Total, extensionData,
+          o.Id, o.UID, o.TaxType.Id, o.Bill.Id, o.BillTaxRelatedObjectTypeId,
+          o.BillTaxRelatedObjectId, (char) o.TaxMethod, (char) o.TaxFactorType,
+          o.Factor, o.BaseAmount, o.Total, extensionData,
           o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);

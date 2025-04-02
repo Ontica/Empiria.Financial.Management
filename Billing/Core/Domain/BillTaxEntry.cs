@@ -28,15 +28,13 @@ namespace Empiria.Billing {
       // Required by Empiria Framework.
     }
 
-    public BillTaxEntry(Bill bill, int billRelatedDocumentId, TaxType taxType) {
+    public BillTaxEntry(Bill bill, int BillTaxRelatedObjectId) {
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
-      Assertion.Require(billRelatedDocumentId, nameof(billRelatedDocumentId));
-      Assertion.Require(taxType, nameof(taxType));
+      Assertion.Require(BillTaxRelatedObjectId, nameof(BillTaxRelatedObjectId));
 
       this.Bill = bill;
-      this.BillRelatedDocumentId = billRelatedDocumentId;
-      this.TaxType = taxType;
+      this.BillTaxRelatedObjectId = BillTaxRelatedObjectId;
     }
 
     static internal BillTaxEntry Parse(int id) => ParseId<BillTaxEntry>(id);
@@ -67,8 +65,14 @@ namespace Empiria.Billing {
     }
 
 
-    [DataField("BILL_TAX_BILL_RELATED_DOCUMENT_ID")]
-    public int BillRelatedDocumentId {
+    [DataField("BILL_TAX_RELATED_OBJECT_TYPE_ID")]
+    public int BillTaxRelatedObjectTypeId {
+      get; private set;
+    }
+
+
+    [DataField("BILL_TAX_RELATED_OBJECT_ID")]
+    public int BillTaxRelatedObjectId {
       get; private set;
     }
 
@@ -138,7 +142,8 @@ namespace Empiria.Billing {
     #region Private methods
 
     internal void Update (BillTaxEntryFields fields) {
-      //TODO ASIGNAR ID A TAXTYPE PARA CASO DE TAX DE CONCEPTS/ TAX DE RELATED DOC
+
+      this.BillTaxRelatedObjectTypeId = Bill.BillType.Id;
       this.TaxMethod = fields.TaxMethod;
       this.TaxFactorType = fields.TaxFactorType;
       this.Factor = fields.Factor;
@@ -150,8 +155,8 @@ namespace Empiria.Billing {
 
     protected override void OnSave() {
       if (IsNew) {
-        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        this.PostingTime = DateTime.Now;
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
       }
       BillData.WriteBillTaxEntry(this, ExtData.ToString());
     }

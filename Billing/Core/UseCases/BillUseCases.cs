@@ -180,8 +180,7 @@ namespace Empiria.Billing.UseCases {
 
         billConcept.Save();
 
-        billConcept.TaxEntries = CreateBillTaxEntries(bill, billConcept.Id,
-                                                      TaxType.Empty, fields.TaxEntries);
+        billConcept.TaxEntries = CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
 
         concepts.Add(billConcept);
       }
@@ -217,14 +216,13 @@ namespace Empiria.Billing.UseCases {
 
     private FixedList<BillTaxEntry> CreateBillTaxEntries(Bill bill,
                                                          int billRelatedDocumentId,
-                                                         TaxType taxType,
                                                          FixedList<BillTaxEntryFields> allTaxesFields) {
 
       var taxesList = new List<BillTaxEntry>(allTaxesFields.Count);
 
       foreach (BillTaxEntryFields taxFields in allTaxesFields) {
 
-        var billTaxEntry = new BillTaxEntry(bill,  billRelatedDocumentId, taxType);
+        var billTaxEntry = new BillTaxEntry(bill,  billRelatedDocumentId);
 
         billTaxEntry.Update(taxFields);
 
@@ -292,9 +290,7 @@ namespace Empiria.Billing.UseCases {
         billRelated.Update(relatedPayoutFields);
         billRelated.Save();
 
-        billRelated.TaxEntries = CreateBillTaxEntries(bill, billRelated.Id,
-                                                     TaxType.Empty,
-                                                     relatedPayoutFields.Taxes);
+        billRelated.TaxEntries = CreateBillTaxEntries(bill, billRelated.Id, relatedPayoutFields.Taxes);
         relatedList.Add(billRelated);
       }
       return relatedList.ToFixedList();

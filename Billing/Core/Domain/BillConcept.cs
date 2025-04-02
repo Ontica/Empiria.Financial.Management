@@ -61,12 +61,6 @@ namespace Empiria.Billing {
     } = -1;
 
 
-    [DataField("BILL_CONCEPT_TYPE_ID")]
-    public int BillConceptTypeId {
-      get; private set;
-    } = -1;
-
-
     [DataField("BILL_CONCEPT_BILL_ID")]
     public Bill Bill {
       get; private set;
@@ -209,7 +203,6 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
-      this.BillConceptTypeId = -1; //TODO ASIGNAR EN BD
       this.SATProduct = PatchField(fields.SATProductUID, SATProducto.Empty);
       this.SATProductCode = fields.SATProductCode;
       this.Product = PatchField(fields.ProductUID, Product);
