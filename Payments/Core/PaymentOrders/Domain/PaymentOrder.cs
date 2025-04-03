@@ -52,6 +52,14 @@ namespace Empiria.Payments.Orders {
      return BaseObject.TryParse<PaymentOrder>($"PYMT_ORD_PAYABLE_ID = {payable.Id} AND PYMT_ORD_STATUS <> 'X' ");
     }
 
+
+    static internal PaymentOrder TryGetForControlNo(string controlNo) {
+      Assertion.Require(controlNo, nameof(controlNo));
+
+      return BaseObject.TryParse<PaymentOrder>($"PYMT_ORD_CONTROL_NO = '{controlNo}' AND PYMT_ORD_STATUS <> 'X' ");
+    }
+
+
     static public PaymentOrder Empty => ParseEmpty<PaymentOrder>();
 
     #endregion Constructors and parsers

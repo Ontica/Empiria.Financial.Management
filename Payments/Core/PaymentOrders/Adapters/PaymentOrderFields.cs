@@ -84,7 +84,14 @@ namespace Empiria.Payments.Orders.Adapters {
 
 
     internal void EnsureValid() {
-           
+
+      Assertion.Require(ControlNo, "Necesito el método de pago.");
+
+      var paymentOrder = PaymentOrder.TryGetForControlNo(ControlNo);
+      if (paymentOrder != null) {
+        Assertion.EnsureNoReachThisCode($"Ya existe una orden de pago con el Número de Control: {ControlNo}");
+      }
+
       Assertion.Require(PaymentMethodUID, "Necesito el método de pago.");
       var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);        
 
