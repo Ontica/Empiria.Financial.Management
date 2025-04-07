@@ -40,17 +40,17 @@ namespace Empiria.Tests.Payments.Orders {
     public void Should_Add_Payment_Order() {
       var fields = new PaymentOrderFields {
         PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c",
-        ControlNo = "494844",
+        ControlNo = "20250407002",
         PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
-        PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
+        PaymentMethodUID = "ff779080-f58c-41ac-a48d-c1a00a2c5232",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
         PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
         Notes = "",
-        Total = 1234567.89m,
+        Total = 2100.77m,
         DueTime = DateTime.Today,
         RequestedByUID = "6bebca32-c14f-4996-8300-77ac86513a59",
         RequestedTime = DateTime.Now,
-        ReferenceNumber = "1929393-393838"
+        ReferenceNumber = "777-999-77"
       };
 
       var sut = _usecases.CreatePaymentOrder(fields);
@@ -113,7 +113,7 @@ namespace Empiria.Tests.Payments.Orders {
 
     [Fact]
     public void Should_Send_Payment_Order_To_Pay() {
-      var sut = _usecases.SendPaymentOrderToPay("438263cd-7f86-4f86-bcc0-cf82cff5eb71");
+      var sut = _usecases.SendPaymentOrderToPay("cbad43cc-9cd1-4a9c-b490-54bdfe504f33");
 
       Assert.NotNull(sut);
     }
@@ -126,7 +126,14 @@ namespace Empiria.Tests.Payments.Orders {
       Assert.NotNull(sut);
     }
 
-   
+
+    [Fact]
+    public void Should_Validate_Is_Payments_Orders_Are_Payed() {
+      var sut = _usecases.ValidatePayment();
+
+      Assert.NotEqual(0, sut);
+    }
+
     #endregion Facts
 
   }  // class PaymentOrderUseCasesTests

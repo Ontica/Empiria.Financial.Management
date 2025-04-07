@@ -214,19 +214,18 @@ namespace Empiria.Payments.Orders {
 
 
     internal void Pay() {
-      Assertion.Require(this.Status == PaymentOrderStatus.Pending,
+      Assertion.Require(this.Status == PaymentOrderStatus.Received,
                $"No se puede realizar el pago debido " +
                $"a que tiene el estado {this.Status.GetName()}.");
-
+      
       this.Status = PaymentOrderStatus.Payed;
     }
 
 
     internal void Reject() {
-      Assertion.Require(this.Status == PaymentOrderStatus.Pending,
-      $"No se puede realizar el pago debido " +
-      $"a que tiene el estado {this.Status.GetName()}.");
-      
+      Assertion.Require(this.Status == PaymentOrderStatus.Pending || this.Status == PaymentOrderStatus.Received,
+               $"No se puede realizar el pago debido " +
+               $"a que tiene el estado {this.Status.GetName()}.");
       this.Status = PaymentOrderStatus.Rejected;
     }
 

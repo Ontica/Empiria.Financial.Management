@@ -166,12 +166,26 @@ namespace Empiria.Payments.Orders.UseCases {
 
     }
 
+    public int ValidatePayment() {
+      var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
+       int count = 0;
+
+      foreach (var paymentInstruction in paymentInstructions) {
+        using (var usecases = PaymentService.ServiceInteractor()) {
+          usecases.UpdatePaymentInstructionStatus(paymentInstruction);
+          count++;
+        }
+      }
+
+      return count;
+    }
+
 
     #endregion Use cases
 
     #region Helpers
 
-    
+
 
     #endregion  Helpers
 
