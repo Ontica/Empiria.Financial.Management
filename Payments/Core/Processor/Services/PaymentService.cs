@@ -50,20 +50,13 @@ namespace Empiria.Payments.Processor.Services {
 
       PaymentInstructionDto instructionDto = PaymentInstructionMapper.Map(instruction);
 
-      //IPaymentsBrokerService paymentsService = broker.GetService();
-
-      PaymentInstructionResultDto paymentResult = new PaymentInstructionResultDto {
-        ExternalRequestID = "7664399-f7",
-        ExternalStatusName = "En proceso (pago enviado)",
-        ExternalResultText = "Transacción recibida en Ikos",
-        PaymentNo = "OK",
-        Status = PaymentInstructionStatus.InProcess
-      };
-
-      //  paymentsService.SendPaymentInstruction(instructionDto);
+      IPaymentsBrokerService paymentsService = broker.GetService();
+           
+      PaymentInstructionResultDto paymentResult = paymentsService.SendPaymentInstruction(instructionDto);
 
       UpdatePaymentInstruction(instruction, paymentResult);
-      NotifyPaymentOrderHasBeenSentToPay(paymentOrder);
+     
+      UpdatePaymentOrder(paymentOrder,paymentResult.Status);
 
       return instruction;
     }
@@ -84,11 +77,11 @@ namespace Empiria.Payments.Processor.Services {
 
       Assertion.Require(paymentInstruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
 
-      PaymentInstructionStatusDto status = paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
+      PaymentInstructionStatusDto newStatus = paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
 
-      UpdatePaymentInstruction(paymentInstruction, status);
+      UpdatePaymentInstruction(paymentInstruction, newStatus);
 
-      UpdatePaymentOrder(paymentInstruction.PaymentOrder, status);
+      UpdatePaymentOrder(paymentInstruction.PaymentOrder, newStatus);
     }
 
     #endregion Services
@@ -105,12 +98,6 @@ namespace Empiria.Payments.Processor.Services {
     }
 
 
-    static private void NotifyPaymentOrderHasBeenSentToPay(PaymentOrder paymentOrder) {
-      paymentOrder.SentToPay();
-      paymentOrder.Save();
-    }
-
-
     static private void UpdatePaymentOrder(PaymentOrder paymentOrder,
                                           PaymentInstructionStatusDto newStatus) {
       if (newStatus.Status == PaymentInstructionStatus.Payed) {
@@ -120,10 +107,22 @@ namespace Empiria.Payments.Processor.Services {
         paymentOrder.Reject();
         paymentOrder.Save();
       }
+    }
+
+
+
+    static private void UpdatePaymentOrder(PaymentOrder paymentOrder,
+                                          PaymentInstructionStatus status) {
+      if (status == PaymentInstructionStatus.InProcess) {
+        paymentOrder.SentToPay();
+        paymentOrder.Save();
+      } else if (status == PaymentInstructionStatus.Failed) {
+        paymentOrder.Reject();
+        paymentOrder.Save();
+      }
 
 
     }
-
 
     static private void UpdatePaymentInstruction(PaymentInstruction paymentInstruction,
                                                  PaymentInstructionResultDto paymentResultDto) {
