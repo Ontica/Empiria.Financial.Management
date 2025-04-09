@@ -125,12 +125,17 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return new BudgetTransactionDto {
         UID = transaction.UID,
         TransactionType = transaction.BudgetTransactionType.MapToNamedEntity(),
+        TransactionNo = transaction.TransactionNo,
         BudgetType = transaction.BaseBudget.BudgetType.MapToNamedEntity(),
         Budget = transaction.BaseBudget.MapToNamedEntity(),
-        TransactionNo = transaction.TransactionNo,
         Description = transaction.Description,
+        Justification = transaction.Justification,
         OperationSource = transaction.OperationSource.MapToNamedEntity(),
         BaseParty = transaction.BaseParty.MapToNamedEntity(),
+        BaseEntityType = transaction.HasEntity ?
+            transaction.GetEntity().GetEmpiriaType().MapToNamedEntity() : NamedEntityDto.Empty,
+        BaseEntity = transaction.HasEntity ?
+            ((INamedEntity) transaction.GetEntity()).MapToNamedEntity() : NamedEntityDto.Empty,
         ApplicationDate = transaction.ApplicationDate,
         RequestedDate = transaction.RequestedTime,
         Status = transaction.Status.MapToNamedEntity()

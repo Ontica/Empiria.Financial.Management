@@ -95,6 +95,12 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    [DataField("BDG_TXN_JUSTIFICATION")]
+    public string Justification {
+      get; private set;
+    }
+
+
     [DataField("BDG_TXN_IDENTIFICATORS")]
     public string Identificators {
       get; private set;
@@ -108,14 +114,26 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_TXN_ENTITY_TYPE_ID")]
-    internal int EntityTypeId {
-      get; private set;
+    private int EntityTypeId {
+      get; set;
     }
 
 
     [DataField("BDG_TXN_ENTITY_ID")]
-    internal int EntityId {
-      get; private set;
+    private int EntityId {
+      get; set;
+    }
+
+
+    public bool HasEntity {
+      get {
+        return EntityTypeId != -1;
+      }
+    }
+
+
+    public BaseObject GetEntity() {
+      return BaseObject.Parse(EntityTypeId, EntityId);
     }
 
 
@@ -308,7 +326,8 @@ namespace Empiria.Budgeting.Transactions {
 
       fields.EnsureIsValid();
 
-      Description = PatchCleanField(fields.Description, Description);
+      Description = EmpiriaString.Clean(fields.Description);
+      Justification = EmpiriaString.Clean(fields.Justification);
       BaseParty = PatchField(fields.BasePartyUID, BaseParty);
       RequestedBy = PatchField(fields.RequestedByUID, RequestedBy);
       ContractId = fields.ContractId;

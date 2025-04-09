@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+
 using Empiria.Parties;
 
 namespace Empiria.Budgeting.Transactions {
@@ -32,6 +33,11 @@ namespace Empiria.Budgeting.Transactions {
 
 
     public string Description {
+      get; set;
+    } = string.Empty;
+
+
+    public string Justification {
       get; set;
     } = string.Empty;
 
@@ -79,6 +85,7 @@ namespace Empiria.Budgeting.Transactions {
 
     static internal void EnsureIsValid(this BudgetTransactionFields fields) {
       fields.Description = EmpiriaString.Clean(fields.Description);
+      fields.Justification = EmpiriaString.Clean(fields.Justification);
 
       if (fields.TransactionTypeUID.Length != 0) {
         _ = BudgetTransactionType.Parse(fields.TransactionTypeUID);
