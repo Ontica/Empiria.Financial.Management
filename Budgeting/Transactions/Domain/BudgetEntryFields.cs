@@ -8,8 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
+using System;
+
+using Empiria.Parties;
 using Empiria.Products;
+using Empiria.Projects;
+
+using Empiria.Financial;
 
 namespace Empiria.Budgeting.Transactions {
 
@@ -32,6 +37,11 @@ namespace Empiria.Budgeting.Transactions {
 
 
     public string Description {
+      get; set;
+    } = string.Empty;
+
+
+    public string Justification {
       get; set;
     } = string.Empty;
 
@@ -79,13 +89,7 @@ namespace Empiria.Budgeting.Transactions {
       get; set;
     }
 
-
-    public decimal Deposit {
-      get; set;
-    }
-
-
-    public decimal Withdrawal {
+    public decimal Amount {
       get; set;
     }
 
@@ -103,25 +107,45 @@ namespace Empiria.Budgeting.Transactions {
 
     static public void EnsureIsValid(this BudgetEntryFields fields) {
       fields.Description = EmpiriaString.Clean(fields.Description);
+      fields.Justification = EmpiriaString.Clean(fields.Justification);
 
-      if (fields.BudgetAccountUID.Length == 0) {
-        _ = BudgetAccount.Parse(fields.BudgetAccountUID);
+      _ = BudgetAccount.Parse(fields.BudgetAccountUID);
+      _ = BudgetAccount.Parse(fields.BalanceColumnUID);
+
+      Assertion.Require(fields.Amount != 0, "El importe debe ser distinto a cero.");
+
+      if (fields.OriginalAmount == 0) {
+        fields.OriginalAmount = Math.Abs(fields.Amount);
       }
 
-      if (fields.BalanceColumnUID.Length == 0) {
-        _ = BudgetAccount.Parse(fields.BalanceColumnUID);
-      }
-
-      if (fields.ProductUID.Length == 0) {
+      if (fields.ProductUID.Length != 0) {
         _ = Product.Parse(fields.ProductUID);
       }
 
-      if (fields.CurrencyUID.Length == 0) {
+      if (fields.ProductUID.Length != 0) {
+        Assertion.Require(fields.ProductUnitUID.Length != 0, "Se requiere la unida de medida del producto.");
+        Assertion.Require(fields.ProductQty > 0, "La cantidad del producto debe ser mayor a cero.");
+      }
+
+      if (fields.ProductUnitUID.Length != 0) {
+        _ = ProductUnit.Parse(fields.ProductUnitUID);
+      }
+
+      if (fields.ProjectUID.Length != 0) {
+        _ = Project.Parse(fields.ProjectUID);
+      }
+
+      if (fields.PartyUID.Length != 0) {
+        _ = Party.Parse(fields.PartyUID);
+      }
+
+      if (fields.CurrencyUID.Length != 0) {
         _ = Currency.Parse(fields.CurrencyUID);
       }
 
-      Assertion.Require(fields.Deposit > 0 ^ fields.Withdrawal > 0,
-                        "Uno de los importes de ingreso o egreso debe ser mayor a cero.");
+      if (fields.ExchangeRate == 0) {
+        fields.ExchangeRate = 1;
+      }
 
     }
 

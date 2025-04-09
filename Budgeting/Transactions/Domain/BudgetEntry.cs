@@ -166,6 +166,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public decimal Amount {
+      get {
+        return Deposit + Withdrawal;
+      }
+    }
+
+
     [DataField("BDG_ENTRY_DEPOSIT_AMOUNT")]
     public decimal Deposit {
       get; private set;
@@ -186,6 +193,12 @@ namespace Empiria.Budgeting.Transactions {
 
     [DataField("BDG_ENTRY_DESCRIPTION")]
     public string Description {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ENTRY_JUSTIFICATION")]
+    public string Justification {
       get; private set;
     }
 
@@ -244,6 +257,7 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+
     #endregion Properties
 
     #region Methods
@@ -269,20 +283,21 @@ namespace Empiria.Budgeting.Transactions {
       fields.EnsureIsValid();
 
       this.BudgetAccount = PatchField(fields.BudgetAccountUID, BudgetAccount);
-      this.Product = PatchField(fields.ProductUID, Product);
-      this.ProductUnit = PatchField(fields.ProductUnitUID, ProductUnit);
+      this.Product = PatchField(fields.ProductUID, Product.Empty);
+      this.ProductUnit = PatchField(fields.ProductUnitUID, ProductUnit.Empty);
       this.ProductQty = fields.ProductQty;
-      this.Project = PatchField(fields.ProjectUID, Project);
-      this.Party = PatchField(fields.PartyUID, Party);
+      this.Project = PatchField(fields.ProjectUID, Project.Empty);
+      this.Party = PatchField(fields.PartyUID, Party.Empty);
       this.OperationTypeId = fields.OperationTypeId;
       this.OperationId = fields.OperationId;
       this.BaseEntityItemId = fields.BaseEntityItemId;
       this.BalanceColumn = PatchField(fields.BalanceColumnUID, BalanceColumn);
-      this.Description = PatchCleanField(fields.Description, Description);
-      this.Currency = PatchField(fields.CurrencyUID, Currency);
-      this.OriginalAmount = fields.OriginalAmount != 0 ? fields.OriginalAmount : fields.Deposit + fields.Withdrawal;
-      this.Deposit = fields.Deposit;
-      this.Withdrawal = fields.Withdrawal;
+      this.Description = EmpiriaString.Clean(fields.Description);
+      this.Justification = EmpiriaString.Clean(fields.Justification);
+      this.Currency = PatchField(fields.CurrencyUID, Budget.BudgetType.Currency);
+      this.OriginalAmount = fields.OriginalAmount != 0 ? fields.OriginalAmount : Math.Abs(fields.Amount);
+      this.Deposit = fields.Amount > 0 ? fields.Amount : 0m;
+      this.Withdrawal = fields.Amount < 0 ? Math.Abs(fields.Amount) : 0m;
       this.ExchangeRate = fields.ExchangeRate;
 
       MarkAsDirty();

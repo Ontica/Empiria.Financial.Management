@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
+using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
@@ -25,16 +25,24 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static internal BudgetEntryDto Map(BudgetEntry entry) {
       return new BudgetEntryDto {
         UID = entry.UID,
-        //TransactionType = transaction.BudgetTransactionType.MapToNamedEntity(),
-        //BudgetType = transaction.BaseBudget.BudgetType.MapToNamedEntity(),
-        //Budget = transaction.BaseBudget.MapToNamedEntity(),
-        //TransactionNo = transaction.TransactionNo,
-        //Description = transaction.Description,
-        //OperationSource = transaction.OperationSource.MapToNamedEntity(),
-        //BaseParty = transaction.BaseParty.MapToNamedEntity(),
-        //ApplicationDate = transaction.ApplicationDate,
-        //RequestedDate = transaction.RequestedTime,
-        //Status = transaction.Status.MapToNamedEntity(),
+        TransactionUID = entry.BudgetTransaction.UID,
+        BudgetAccount = entry.BudgetAccount.MapToNamedEntity(),
+        Product = entry.Product.MapToNamedEntity(),
+        ProductUnit = entry.ProductUnit.MapToNamedEntity(),
+        ProductQty = entry.ProductQty,
+        Project = entry.Project.MapToNamedEntity(),
+        Party = entry.Party.MapToNamedEntity(),
+        Description = entry.Description,
+        Justification = entry.Justification,
+        Year = entry.Year,
+        Month = new NamedEntityDto(entry.Month.ToString(), entry.MonthName),
+        Day = entry.Day,
+        Currency = entry.Currency.MapToNamedEntity(),
+        BalanceColumn = entry.BalanceColumn.MapToNamedEntity(),
+        OriginalAmount = entry.OriginalAmount,
+        Amount = entry.Amount,
+        ExchangeRate = entry.ExchangeRate,
+        Status = entry.Status.MapToNamedEntity(),
       };
     }
 

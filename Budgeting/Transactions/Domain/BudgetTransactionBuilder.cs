@@ -90,8 +90,7 @@ namespace Empiria.Budgeting.Transactions {
         //ProjectUID = item.Project.UID,
         CurrencyUID = item.Currency.UID,
         OriginalAmount = item.Total,
-        Deposit = isDeposit ? item.Total : 0,
-        Withdrawal = isDeposit ? 0: item.Total,
+        Amount = isDeposit ? item.Total : -1 * item.Total
       };
     }
 

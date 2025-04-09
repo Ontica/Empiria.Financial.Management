@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using Empiria.Financial;
 using Empiria.Ontology;
 
 namespace Empiria.Budgeting {
@@ -38,6 +39,12 @@ namespace Empiria.Budgeting {
     #endregion Constructors and parsers
 
     #region Properties
+
+    public Currency Currency {
+      get {
+        return ExtensionData.Get("currencyId", Currency.Default);
+      }
+    }
 
     public bool Multiyear {
       get {

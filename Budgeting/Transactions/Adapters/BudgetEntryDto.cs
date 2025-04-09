@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 namespace Empiria.Budgeting.Transactions.Adapters {
 
   /// <summary>Output DTO used for budget entries.</summary>
@@ -19,27 +17,31 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto BudgetType {
+    public string TransactionUID {
       get; internal set;
     }
 
-    public NamedEntityDto TransactionType {
+    public NamedEntityDto BudgetAccount {
       get; internal set;
     }
 
-    public string TransactionNo {
+    public NamedEntityDto Product {
       get; internal set;
     }
 
-    public NamedEntityDto Budget {
+    public NamedEntityDto ProductUnit {
       get; internal set;
     }
 
-    public NamedEntityDto BaseParty {
+    public decimal ProductQty {
+      get; set;
+    }
+
+    public NamedEntityDto Project {
       get; internal set;
     }
 
-    public NamedEntityDto OperationSource {
+    public NamedEntityDto Party {
       get; internal set;
     }
 
@@ -47,13 +49,42 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public DateTime RequestedDate {
+    public string Justification {
       get; internal set;
     }
 
-    public DateTime ApplicationDate {
+    public int Year {
       get; internal set;
     }
+
+    public NamedEntityDto Month {
+      get; internal set;
+    }
+
+    public int Day {
+      get; internal set;
+    }
+
+    public NamedEntityDto Currency {
+      get; internal set;
+    }
+
+    public NamedEntityDto BalanceColumn {
+      get; internal set;
+    }
+
+    public decimal OriginalAmount {
+      get; internal set;
+    }
+
+    public decimal Amount {
+      get; internal set;
+    }
+
+    public decimal ExchangeRate {
+      get; internal set;
+    } = 1m;
+
 
     public NamedEntityDto Status {
       get; internal set;
