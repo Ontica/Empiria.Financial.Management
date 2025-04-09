@@ -99,25 +99,34 @@ namespace Empiria.Budgeting.Transactions.Adapters {
          Name = budget.Name,
          Year = budget.Year,
          Type = budget.BudgetType.MapToNamedEntity(),
-         TransactionTypes = MapTransactionTypes(BudgetTransactionType.GetList(budget.BudgetType)),
+         TransactionTypes = MapTransactionTypes(budget),
          SegmentTypes = BudgetSegmentTypesMapper.Map(budget.BudgetType.SegmentTypes),
       };
     }
 
 
-    static private FixedList<TransactionTypeForEditionDto> MapTransactionTypes(FixedList<BudgetTransactionType> budgetTransactionTypes) {
-      return budgetTransactionTypes.Select(x => MapTransactionTypeForEdition(x))
-                                   .ToFixedList();
+    static private FixedList<TransactionTypeForEditionDto> MapTransactionTypes(Budget budget) {
+      return budget.AvailableTransactionTypes.Select(x => MapTransactionTypeForEdition(BudgetTransactionType.Parse(x.UID)))
+                                             .ToFixedList();
     }
 
 
-    static private TransactionTypeForEditionDto MapTransactionTypeForEdition(BudgetTransactionType x) {
+    static private TransactionTypeForEditionDto MapTransactionTypeForEdition(BudgetTransactionType txn) {
       return new TransactionTypeForEditionDto {
-        UID = x.UID,
-        Name = x.DisplayName,
-        BalanceColumns = x.BalanceColumns.MapToNamedEntityList(),
+        UID = txn.UID,
+        Name = txn.DisplayName,
         OperationSources = OperationSource.GetList().MapToNamedEntityList(),
-        RelatedDocumentTypes = x.RelatedDocumentTypes.MapToNamedEntityList()
+        RelatedDocumentTypes = txn.RelatedDocumentTypes.MapToNamedEntityList(),
+        EntriesRules = MapTransactionTypeEntriesRules(txn)
+      };
+    }
+
+
+    static private TransactionTypeEntriesRulesDto MapTransactionTypeEntriesRules(BudgetTransactionType txn) {
+      return new TransactionTypeEntriesRulesDto {
+        BalanceColumns = txn.BalanceColumns.MapToNamedEntityList(),
+        SelectProduct = txn.SelectProduct,
+        Years = txn.AvailableYears
       };
     }
 

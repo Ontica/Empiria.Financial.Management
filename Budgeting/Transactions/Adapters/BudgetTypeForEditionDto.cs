@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Budgeting.Adapters;
+using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
@@ -60,10 +61,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public FixedList<NamedEntityDto> BalanceColumns {
-      get; internal set;
-    }
-
     public FixedList<NamedEntityDto> OperationSources {
       get; internal set;
     }
@@ -72,6 +69,29 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public TransactionTypeEntriesRulesDto EntriesRules {
+      get; internal set;
+    }
+
   }  // class TransactionTypeForEditionDto
+
+
+
+  /// <summary>Output DTO used to return a budget transaction entries's rule.</summary>
+  public class TransactionTypeEntriesRulesDto {
+
+    public FixedList<NamedEntityDto> BalanceColumns {
+      get; internal set;
+    }
+
+    public ThreeStateValue SelectProduct {
+      get; internal set;
+    }
+
+    public FixedList<int> Years {
+      get; internal set;
+    }
+
+  }  // class TransactionTypeEntriesRulesDto
 
 }  //namespace Empiria.Budgeting.Transactions.Adapters

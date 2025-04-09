@@ -11,6 +11,7 @@
 using System.Linq;
 
 using Empiria.Ontology;
+using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions {
 
@@ -58,6 +59,13 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Properties
 
+    public FixedList<int> AvailableYears {
+      get {
+        return ExtensionData.GetFixedList<int>("availableYears", false);
+      }
+    }
+
+
     public FixedList<BalanceColumn> BalanceColumns {
       get {
         return ExtensionData.GetFixedList<BalanceColumn>("balanceColumns");
@@ -80,6 +88,7 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+
     public string Prefix {
       get {
         return ExtensionData.Get("prefix", string.Empty);
@@ -93,6 +102,13 @@ namespace Empiria.Budgeting.Transactions {
 
         return ids.Select(x => ObjectTypeInfo.Parse(x))
                   .ToFixedList();
+      }
+    }
+
+
+    public ThreeStateValue SelectProduct {
+      get {
+        return ExtensionData.Get("selectProduct", ThreeStateValue.False);
       }
     }
 

@@ -53,6 +53,16 @@ namespace Empiria.Budgeting {
 
     #region Properties
 
+    public FixedList<INamedEntity> AvailableTransactionTypes {
+      get {
+        FixedList<int> ids = base.ExtendedDataField.GetFixedList<int>("availableTransactionTypes", false);
+
+        return ids.Select(x => (INamedEntity) ObjectTypeInfo.Parse(x))
+                  .ToFixedList();
+      }
+    }
+
+
     public BudgetType BudgetType {
       get {
         return (BudgetType) base.GetEmpiriaType();
@@ -60,57 +70,15 @@ namespace Empiria.Budgeting {
     }
 
 
+    public bool EditionAllowed {
+      get {
+        return AvailableTransactionTypes.Count > 0;
+      }
+    }
+
     public int Year {
       get {
         return base.ExtendedDataField.Get<int>("year");
-      }
-    }
-
-
-    public bool CanPlan {
-      get {
-        return base.ExtendedDataField.Get("can.plan", false);
-      }
-    }
-
-
-    public bool CanAuthorize {
-      get {
-        return base.ExtendedDataField.Get("can.authorize", false);
-      }
-    }
-
-
-    public bool CanModify {
-      get {
-        return base.ExtendedDataField.Get("can.modify", false);
-      }
-    }
-
-
-    public bool CanRequest {
-      get {
-        return base.ExtendedDataField.Get("can.request", false);
-      }
-    }
-
-
-    public bool CanCommit {
-      get {
-        return base.ExtendedDataField.Get("can.commit", false);
-      }
-    }
-
-    public bool CanPay {
-      get {
-        return base.ExtendedDataField.Get("can.pay", false);
-      }
-    }
-
-
-    public bool EditionAllowed {
-      get {
-        return CanPlan || CanAuthorize || CanModify || CanRequest || CanCommit;
       }
     }
 
