@@ -60,6 +60,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public FixedList<NamedEntityDto> BalanceColumns {
+      get; internal set;
+    }
+
     public FixedList<NamedEntityDto> OperationSources {
       get; internal set;
     }

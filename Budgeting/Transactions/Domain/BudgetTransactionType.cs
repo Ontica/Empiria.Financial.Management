@@ -58,6 +58,20 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Properties
 
+    public FixedList<BalanceColumn> BalanceColumns {
+      get {
+        return ExtensionData.GetFixedList<BalanceColumn>("balanceColumns");
+      }
+    }
+
+
+    public string BudgetAccountsFilter {
+      get {
+        return ExtensionData.Get("accountsFilter", string.Empty);
+      }
+    }
+
+
     public BudgetType BudgetType {
       get {
         int budgetTypeId = ExtensionData.Get<int>("budgetTypeId");

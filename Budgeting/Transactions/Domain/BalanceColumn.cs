@@ -10,7 +10,9 @@
 
 namespace Empiria.Budgeting.Transactions {
 
-  public class BalanceColumn : GeneralObject {
+  public class BalanceColumn : GeneralObject , INamedEntity {
+
+    #region Constructors and parsers
 
     static public BalanceColumn Parse(int id) => ParseId<BalanceColumn>(id);
 
@@ -37,6 +39,24 @@ namespace Empiria.Budgeting.Transactions {
     static public BalanceColumn Exercised => Parse("Exercised");
 
     static public BalanceColumn Available => Parse("Available");
+
+    #endregion Constructors and parsers
+
+    #region Properties
+
+    string INamedEntity.Name {
+      get {
+        return OperationVerb;
+      }
+    }
+
+    public string OperationVerb {
+      get {
+        return ExtendedDataField.Get("operationVerb", base.Name);
+      }
+    }
+
+    #endregion Properties
 
   }  // class BalanceColumn
 

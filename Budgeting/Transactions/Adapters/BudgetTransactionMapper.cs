@@ -115,6 +115,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return new TransactionTypeForEditionDto {
         UID = x.UID,
         Name = x.DisplayName,
+        BalanceColumns = x.BalanceColumns.MapToNamedEntityList(),
         OperationSources = OperationSource.GetList().MapToNamedEntityList(),
         RelatedDocumentTypes = x.RelatedDocumentTypes.MapToNamedEntityList()
       };
