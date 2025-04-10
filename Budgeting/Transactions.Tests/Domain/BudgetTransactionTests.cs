@@ -11,6 +11,7 @@
 using Xunit;
 
 using Empiria.Budgeting.Transactions;
+using Empiria.Budgeting.Transactions.Data;
 
 namespace Empiria.Tests.Budgeting.Transactions {
 
@@ -18,6 +19,16 @@ namespace Empiria.Tests.Budgeting.Transactions {
   public class BudgetTransactionTests {
 
     #region Facts
+
+    [Fact]
+    public void Clean_Budget_Transactions() {
+      var transactions = BaseObject.GetFullList<BudgetTransaction>();
+
+      foreach (var transaction in transactions) {
+        BudgetTransactionDataService.CleanTransaction(transaction);
+      }
+    }
+
 
     [Fact]
     public void Should_Get_All_Budget_Transactions() {

@@ -19,6 +19,36 @@ namespace Empiria.Budgeting.Transactions.Data {
   /// <summary>Provides data access services for budget transactions.</summary>
   static internal class BudgetTransactionDataService {
 
+    static internal void CleanEntries(BudgetEntry entry) {
+      if (entry.IsEmptyInstance) {
+        return;
+      }
+      var sql = "UPDATE FMS_BUDGET_ENTRIES " +
+               $"SET BDG_ENTRY_UID = '{Guid.NewGuid().ToString()}', " +
+               $"BDG_ENTRY_KEYWORDS = '{entry.Keywords}' " +
+               $"WHERE BGD_ENTRY_ID = {entry.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
+
+
+    static internal void CleanTransaction(BudgetTransaction transaction) {
+      if (transaction.IsEmptyInstance) {
+        return;
+      }
+      var sql = "UPDATE FMS_BUDGET_TRANSACTIONS " +
+               $"SET BDG_TXN_UID = '{Guid.NewGuid().ToString()}', " +
+               $"BDG_TXN_KEYWORDS = '{transaction.Keywords}' " +
+               $"WHERE BDG_TXN_ID = {transaction.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
+
+
     static internal string GetNextTransactionNo(BudgetTransaction transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
@@ -113,6 +143,7 @@ namespace Empiria.Budgeting.Transactions.Data {
 
       DataWriter.Execute(op);
     }
+
 
   }  // class BudgetTransactionDataService
 

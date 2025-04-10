@@ -217,7 +217,7 @@ namespace Empiria.Budgeting {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Code, this.Name);
+        return EmpiriaString.BuildKeywords(this.Code, this.Name, this.OrganizationalUnit.Keywords);
       }
     }
 

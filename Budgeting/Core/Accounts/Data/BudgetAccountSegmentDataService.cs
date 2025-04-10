@@ -8,12 +8,29 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Data;
 
 namespace Empiria.Budgeting.Data {
 
   /// <summary>Provides data access services for budget account segments.</summary>
   static internal class BudgetAccountSegmentDataService {
+
+    static internal void CleanSegment(BudgetAccountSegment segment) {
+      if (segment.IsEmptyInstance) {
+        return;
+      }
+      var sql = "UPDATE FMS_BUDGET_ACCOUNTS_SEGMENTS " +
+               $"SET BDG_ACCT_SEGMENT_UID = '{Guid.NewGuid().ToString()}', " +
+               $"BDG_ACCT_SEGMENT_KEYWORDS = '{segment.Keywords}' " +
+               $"WHERE BDG_ACCT_SEGMENT_ID = {segment.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
+
 
     static internal FixedList<BudgetAccountSegment> BudgetAccountSegments(BudgetAccountSegmentType segmentType,
                                                                           string keywords) {

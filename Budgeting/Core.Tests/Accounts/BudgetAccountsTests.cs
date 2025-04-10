@@ -11,6 +11,7 @@
 using Xunit;
 
 using Empiria.Budgeting;
+using Empiria.Budgeting.Data;
 
 namespace Empiria.Tests.Budgeting {
 
@@ -18,6 +19,16 @@ namespace Empiria.Tests.Budgeting {
   public class BudgetAccountsTests {
 
     #region Facts
+
+    [Fact]
+    public void Clean_Budget_Accounts() {
+      var accounts = BaseObject.GetFullList<BudgetAccount>();
+
+      foreach(var account in accounts) {
+        BudgetAccountDataService.CleanAccount(account);
+      }
+    }
+
 
     [Fact]
     public void Should_Read_Empty_BudgetAccount() {
