@@ -15,6 +15,7 @@ using Empiria.Services;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.Data;
 
@@ -89,6 +90,25 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       return BudgetTransactionType.GetList(budgetType)
                                   .MapToNamedEntityList();
+    }
+
+
+    public FixedList<BudgetAccountDto> SearchTransactionAccounts(string budgetTransactionUID, string keywords) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      keywords = keywords ?? string.Empty;
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      var searcher = new BudgetAccountSearcher(transaction.BaseBudget.BudgetType, keywords);
+
+      FixedList<BudgetAccount> accounts = searcher.Search((OrganizationalUnit) transaction.BaseParty,
+                                                          transaction.BudgetTransactionType.BudgetAccountsFilter);
+
+      FixedList<BudgetAccountSegment> unassignedSegments = searcher.SearchUnassignedBaseSegments((OrganizationalUnit) transaction.BaseParty,
+                                                                                                 transaction.BudgetTransactionType.BudgetAccountsFilter);
+
+      return BudgetAccountMapper.Map(accounts, unassignedSegments);
     }
 
 

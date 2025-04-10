@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
+
 using Empiria.Parties;
 
 using Empiria.Budgeting.Data;
@@ -18,31 +20,84 @@ namespace Empiria.Budgeting {
   public class BudgetAccountSearcher {
 
     private readonly BudgetType _budgetType;
+    private readonly string _keywords;
 
-    public BudgetAccountSearcher(BudgetType budgetType) {
+    public BudgetAccountSearcher(BudgetType budgetType, string keywords) {
+      Assertion.Require(budgetType, nameof(budgetType));
 
       _budgetType = budgetType;
+      _keywords = EmpiriaString.Clean(keywords ?? string.Empty);
     }
+
+    #region Methods
 
     public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit,
                                            FixedList<BudgetAccountSegment> baseSegments) {
 
-      string baseSegmentsFilter = GetSegmentsFilter("BDG_ACCT_BASE_SEGMENT_ID", baseSegments);
-      string orgUnitFilter = GetOrgUnitFilter(orgUnit);
       string budgetTypeFilter = GetBudgetTypeFilter();
+      string orgUnitFilter = GetOrgUnitFilter(orgUnit);
+      string baseSegmentsFilter = GetSegmentsFilter("BDG_ACCT_BASE_SEGMENT_ID", baseSegments);
+      string keywordsFilter = GetKeywordsFilter();
 
-      var filter = new Filter(baseSegmentsFilter);
+      var filter = new Filter(budgetTypeFilter);
 
       filter.AppendAnd(orgUnitFilter);
-      filter.AppendAnd(budgetTypeFilter);
+      filter.AppendAnd(baseSegmentsFilter);
+      filter.AppendAnd(keywordsFilter);
 
       return BudgetAccountDataService.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
     }
+
+
+    public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit, string filterString) {
+      Assertion.Require(orgUnit, nameof(orgUnit));
+
+      filterString = EmpiriaString.Clean(filterString ?? string.Empty);
+
+      string budgetTypeFilter = GetBudgetTypeFilter();
+      string orgUnitFilter = GetOrgUnitFilter(orgUnit);
+      string keywordsFilter = GetKeywordsFilter();
+
+      var filter = new Filter(budgetTypeFilter);
+
+      filter.AppendAnd(orgUnitFilter);
+      filter.AppendAnd(keywordsFilter);
+      filter.AppendAnd(filterString);
+
+      return BudgetAccountDataService.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
+    }
+
+
+    public FixedList<BudgetAccountSegment> SearchUnassignedBaseSegments(OrganizationalUnit orgUnit,
+                                                                        string filterString) {
+      Assertion.Require(orgUnit, nameof(orgUnit));
+
+      filterString = EmpiriaString.Clean(filterString ?? string.Empty);
+
+      FixedList<BudgetAccount> assignedAccounts = Search(orgUnit, filterString);
+
+      FixedList<BudgetAccountSegment> allSegments = _budgetType.ProductProcurementSegmentType.SearchInstances(_keywords);
+
+      return allSegments.Remove(assignedAccounts.Select(x => x.BaseSegment))
+                        .Distinct()
+                        .ToFixedList()
+                        .Sort((x, y) => x.Code.CompareTo(y.Code));
+    }
+
+    #endregion Methods
 
     #region Helpers
 
     private string GetBudgetTypeFilter() {
       return $"BDG_ACCT_BUDGET_TYPE_ID = {_budgetType.Id}";
+    }
+
+
+    private string GetKeywordsFilter() {
+      if (_keywords.Length == 0) {
+        return string.Empty;
+      }
+      return SearchExpression.ParseAndLikeKeywords("BDG_ACCT_KEYWORDS", _keywords);
     }
 
 

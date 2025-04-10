@@ -10,9 +10,11 @@
 
 using System.Web.Http;
 
-using Empiria.StateEnums;
 using Empiria.WebApi;
 
+using Empiria.StateEnums;
+
+using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.UseCases;
 
@@ -47,6 +49,18 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
 
+    [HttpDelete]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
+    public NoDataModel DeleteTransaction([FromUri] string budgetTransactionUID) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+        _ = usecases.DeleteTransaction(budgetTransactionUID);
+
+        return new NoDataModel(base.Request);
+      }
+    }
+
+
     [HttpGet]
     [Route("v2/budgeting/transactions/operation-sources")]
     public SingleObjectModel GetOperationSources() {
@@ -71,14 +85,15 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
 
-    [HttpDelete]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
-    public NoDataModel DeleteTransaction([FromUri] string budgetTransactionUID) {
+    [HttpGet]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/accounts")]
+    public CollectionModel SearchTransactionAccounts([FromUri] string budgetTransactionUID,
+                                                     [FromUri] string keywords = "") {
 
-      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        _ = usecases.DeleteTransaction(budgetTransactionUID);
+      using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
+        FixedList<BudgetAccountDto> accounts = usecases.SearchTransactionAccounts(budgetTransactionUID, keywords);
 
-        return new NoDataModel(base.Request);
+        return new CollectionModel(base.Request, accounts);
       }
     }
 
