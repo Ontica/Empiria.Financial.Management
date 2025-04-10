@@ -92,9 +92,9 @@ namespace Empiria.Budgeting.Transactions.Data {
         o.BudgetAccount.Id, o.Product.Id, o.ProductUnit.Id, o.ProductQty,
         o.Project.Id, o.Party.Id, o.OperationTypeId, o.OperationId, o.BaseEntityItemId,
         o.Year, o.Month, o.Day, o.BalanceColumn.Id, o.Currency.Id, o.OriginalAmount,
-        o.Deposit, o.Withdrawal, o.ExchangeRate, o.Description, o.Identificators, o.Tags,
-        o.ExtensionData.ToString(), o.Keywords, o.LinkedBudgetEntryId, o.Position,
-        o.PostedBy.Id, o.PostingTime, (char) o.Status);
+        o.Deposit, o.Withdrawal, o.ExchangeRate, o.Description, o.Justification,
+        o.Identificators, o.Tags, o.ExtensionData.ToString(), o.Keywords,
+        o.LinkedBudgetEntryId, o.Position, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
@@ -103,8 +103,10 @@ namespace Empiria.Budgeting.Transactions.Data {
     static internal void WriteTransaction(BudgetTransaction o) {
       var op = DataOperation.Parse("write_FMS_Budget_Transaction",
           o.Id, o.UID, o.BudgetTransactionType.Id, o.OperationSource.Id, o.BaseBudget.Id,
-          o.BaseParty.Id, o.TransactionNo, o.Description, o.Identificators, o.Tags, o.ContractId,
-          o.HasEntity ? o.GetEntity().GetEmpiriaType().Id : -1, o.HasEntity ? o.GetEntity().Id : -1,
+          o.BaseParty.Id, o.TransactionNo, o.Description, o.Justification,
+          o.Identificators, o.Tags, o.ContractId,
+          o.HasEntity ? o.GetEntity().GetEmpiriaType().Id : -1,
+          o.HasEntity ? o.GetEntity().Id : -1,
           o.PayableId, o.ApplicationDate, o.AppliedBy.Id, o.RecordingDate, o.RecordedBy.Id,
           o.AuthorizationTime, o.AuthorizedBy.Id, o.RequestedTime, o.RequestedBy.Id,
           o.ExtensionData.ToString(), o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);

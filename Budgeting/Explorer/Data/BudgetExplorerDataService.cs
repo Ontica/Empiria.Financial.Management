@@ -15,8 +15,9 @@ namespace Empiria.Budgeting.Explorer.Data {
   /// <summary>Provides data access services for the budget explorer.</summary>
   static internal class BudgetExplorerDataService {
 
-    static internal FixedList<BudgetDataInColumns> GetBugetDataInMultipleColumns() {
-      var sql = "SELECT * FROM vw_Budget_Multicolumn";
+    static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumns(Budget budget) {
+      var sql = "SELECT * FROM vw_Budget_Multicolumn " +
+                $"WHERE BUDGET_ID = {budget.Id}";
 
       var op = DataOperation.Parse(sql);
 

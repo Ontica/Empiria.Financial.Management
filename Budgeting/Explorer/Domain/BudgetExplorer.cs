@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.DynamicData;
-using Empiria.Parties;
 
 using Empiria.Budgeting.Explorer.Data;
 
@@ -94,7 +93,7 @@ namespace Empiria.Budgeting.Explorer {
 
 
     private FixedList<BudgetDataInColumns> GetBudgetData() {
-      return BudgetExplorerDataService.GetBugetDataInMultipleColumns();
+      return BudgetExplorerDataService.GetBudgetDataInMultipleColumns(_command.Budget);
     }
 
 
