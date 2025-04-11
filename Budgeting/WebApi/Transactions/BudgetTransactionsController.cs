@@ -86,11 +86,8 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/accounts")]
-    public CollectionModel SearchTransactionAccounts([FromUri] string budgetTransactionUID,
-                                                     [FromBody] BudgetTransactionAccountsQuery query) {
-
-      query.TransactionUID = budgetTransactionUID;
+    [Route("v2/budgeting/transactions/accounts/search")]
+    public CollectionModel SearchTransactionAccounts([FromBody] BudgetTransactionAccountsQuery query) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
         FixedList<BudgetAccountDto> accounts = usecases.SearchTransactionAccounts(query);
