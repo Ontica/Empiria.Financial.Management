@@ -23,6 +23,7 @@ namespace Empiria.Budgeting.Data {
       }
       var sql = "UPDATE FMS_BUDGET_ACCOUNTS " +
                $"SET BDG_ACCT_UID = '{Guid.NewGuid().ToString()}', " +
+               $"BDG_ACCT_CODE = '{account.BaseSegment.Code}', " +
                $"BDG_ACCT_KEYWORDS = '{account.Keywords}' " +
                $"WHERE BDG_ACCT_ID = {account.Id}";
 

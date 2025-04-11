@@ -48,7 +48,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static internal FixedList<BudgetEntryDescriptorDto> MapToDescriptor(FixedList<BudgetEntry> entries) {
-      return entries.Select(x => MapToDescriptor(x)).ToFixedList();
+      entries.Sort((x, y) => $"{x.BudgetAccount.Code}.{x.Year}.{x.Month.ToString("00")}"
+                             .CompareTo($"{y.BudgetAccount.Code}.{y.Year}.{y.Month.ToString("00")}"));
+
+      return entries.Select(x => MapToDescriptor(x))
+                    .ToFixedList();
     }
 
 
