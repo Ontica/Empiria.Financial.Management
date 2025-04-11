@@ -68,7 +68,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto TransactionType {
+    public TransactionTypeForEditionDto TransactionType {
       get; internal set;
     }
 

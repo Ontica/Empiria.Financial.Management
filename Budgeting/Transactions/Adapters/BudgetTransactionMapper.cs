@@ -134,7 +134,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static private BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
       return new BudgetTransactionDto {
         UID = transaction.UID,
-        TransactionType = transaction.BudgetTransactionType.MapToNamedEntity(),
+        TransactionType = MapTransactionTypeForEdition(transaction.BudgetTransactionType),
         TransactionNo = transaction.TransactionNo,
         BudgetType = transaction.BaseBudget.BudgetType.MapToNamedEntity(),
         Budget = transaction.BaseBudget.MapToNamedEntity(),

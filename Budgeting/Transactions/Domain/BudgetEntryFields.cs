@@ -110,7 +110,7 @@ namespace Empiria.Budgeting.Transactions {
       fields.Justification = EmpiriaString.Clean(fields.Justification);
 
       _ = BudgetAccount.Parse(fields.BudgetAccountUID);
-      _ = BudgetAccount.Parse(fields.BalanceColumnUID);
+      _ = BalanceColumn.Parse(fields.BalanceColumnUID);
 
       Assertion.Require(fields.Amount != 0, "El importe debe ser distinto a cero.");
 
