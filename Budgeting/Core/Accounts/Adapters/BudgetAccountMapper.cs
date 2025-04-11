@@ -43,7 +43,7 @@ namespace Empiria.Budgeting.Adapters {
         UID = account.UID,
         BaseSegmentUID = account.BaseSegment.UID,
         Code = account.Code,
-        Name = account.Name,
+        Name = $"[{account.Code}] {account.Name} (No asignada)",
         Type = account.BudgetAccountType.MapToNamedEntity(),
         OrganizationalUnit = account.OrganizationalUnit.MapToNamedEntity(),
         Status = account.Status.MapToDto(),
