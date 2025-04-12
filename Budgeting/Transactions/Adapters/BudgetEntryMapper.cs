@@ -12,6 +12,17 @@ using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
+  /// <summary>Describes a budget entry type.</summary>
+  public enum BudgetEntryDtoType {
+
+    Monthly,
+
+    Annually,
+
+  }  // enum BudgetEntryDtoType
+
+
+
   /// <summary>Maps BudgetEntry instances to data transfer objects.</summary>
   static internal class BudgetEntryMapper {
 

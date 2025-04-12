@@ -17,6 +17,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public BudgetEntryDtoType EntryType {
+      get;
+    } = BudgetEntryDtoType.Monthly;
+
+
     public string TransactionUID {
       get; internal set;
     }

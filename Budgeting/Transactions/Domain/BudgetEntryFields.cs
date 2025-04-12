@@ -94,12 +94,11 @@ namespace Empiria.Budgeting.Transactions {
     }
 
     public decimal ExchangeRate {
-      get; internal set;
+      get; set;
     } = 1m;
 
 
   }  // class BudgetEntryFields
-
 
 
   /// <summary>Extension methods for BudgetEntryFields type.</summary>
