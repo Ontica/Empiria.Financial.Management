@@ -249,7 +249,7 @@ namespace Empiria.Budgeting.Transactions {
     internal BudgetEntry AddEntry(BudgetEntryFields entryFields) {
       Assertion.Require(entryFields, nameof(entryFields));
 
-      var entry = new BudgetEntry(this);
+      var entry = new BudgetEntry(this, entryFields.Year, entryFields.Month);
 
       entry.Update(entryFields);
 

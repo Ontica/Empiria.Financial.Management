@@ -30,15 +30,14 @@ namespace Empiria.Budgeting.Transactions {
       // Required by Empiria Framework.
     }
 
-    internal BudgetEntry(BudgetTransaction transaction) {
+    internal BudgetEntry(BudgetTransaction transaction, int year, int month) {
       Assertion.Require(transaction, nameof(transaction));
 
       this.BudgetTransaction = transaction;
       this.Budget = transaction.BaseBudget;
 
-      this.Year = transaction.ApplicationDate.Year;
-      this.Month = transaction.ApplicationDate.Month;
-      this.Day = transaction.ApplicationDate.Day;
+      this.Year = year;
+      this.Month = month;
     }
 
     static public BudgetEntry Parse(int id) => ParseId<BudgetEntry>(id);

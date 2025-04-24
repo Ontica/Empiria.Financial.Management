@@ -85,6 +85,15 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
+    public int Year {
+      get; set;
+    }
+
+    public int Month {
+      get; set;
+    }
+
+
     public decimal OriginalAmount {
       get; set;
     }
@@ -102,7 +111,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
   /// <summary>Extension methods for BudgetEntryFields type.</summary>
-  internal static class BudgetEntryFieldsExtensions {
+  static internal class BudgetEntryFieldsExtensions {
 
     static public void EnsureIsValid(this BudgetEntryFields fields) {
       fields.Description = EmpiriaString.Clean(fields.Description);
@@ -122,7 +131,7 @@ namespace Empiria.Budgeting.Transactions {
       }
 
       if (fields.ProductUID.Length != 0) {
-        Assertion.Require(fields.ProductUnitUID.Length != 0, "Se requiere la unida de medida del producto.");
+        Assertion.Require(fields.ProductUnitUID.Length != 0, "Se requiere la unidad de medida del producto.");
         Assertion.Require(fields.ProductQty > 0, "La cantidad del producto debe ser mayor a cero.");
       }
 
