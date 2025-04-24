@@ -259,6 +259,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal void AddEntries(FixedList<BudgetEntry> entries) {
+      Assertion.Require(entries, nameof(entries));
+
+      _entries.Value.AddRange(entries);
+    }
+
+
     internal void Authorize() {
       this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.AuthorizationTime = DateTime.Now;
@@ -316,6 +323,15 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal void RemoveEntries(FixedList<BudgetEntry> entries) {
+      Assertion.Require(entries, nameof(entries));
+
+      foreach (var entry in entries) {
+        RemoveEntry(entry);
+      }
+    }
+
+
     internal void SendToAuthorization() {
       this.Status = BudgetTransactionStatus.OnAuthorization;
     }
@@ -334,6 +350,13 @@ namespace Empiria.Budgeting.Transactions {
       PayableId = fields.PayableId;
       OperationSource = PatchField(fields.OperationSourceUID, OperationSource);
       ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
+    }
+
+
+    internal void UpdateEntries(FixedList<BudgetEntry> entries) {
+      Assertion.Require(entries, nameof(entries));
+
+      // ToDo: To be implemented
     }
 
     #endregion Methods
