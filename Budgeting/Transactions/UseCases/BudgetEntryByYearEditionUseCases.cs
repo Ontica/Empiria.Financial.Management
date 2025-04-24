@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Services;
 
 using Empiria.Budgeting.Transactions.Adapters;
@@ -33,64 +31,76 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
     #region Use cases
 
-    public BudgetEntryByYearDto CreateBudgetEntryByYear(string budgetTransactionUID,
-                                                        BudgetEntryByYearFields fields) {
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+    public BudgetEntryByYearDto CreateBudgetEntryByYear(BudgetEntryByYearFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      // fields.EnsureIsValid();
+      fields.EnsureIsValid();
 
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+      var transaction = BudgetTransaction.Parse(fields.TransactionUID);
 
-      // var entry = transaction.AddEntry(fields);
+      var byYearTransaction = new BudgetTransactionByYear(transaction);
+
+      FixedList<BudgetEntry> entries = byYearTransaction.GetEntries(fields);
+
+      transaction.UpdateEntries(entries);
+
+      transaction.AddEntries(byYearTransaction.GetNewEntries(fields));
 
       transaction.Save();
 
-      throw new NotImplementedException();
-
-      // return BudgetEntryByYearMapper.Map(entry);
+      return BudgetEntryByYearMapper.Map(byYearTransaction, entries);
     }
 
 
-    public BudgetEntryByYearDto GetBudgetEntryByYear(string budgetTransactionUID, string entryByYearUID) {
-      throw new NotImplementedException();
-    }
-
-
-    public BudgetEntryByYearDto RemoveBudgetEntryByYear(string budgetTransactionUID, string entryByYearUID) {
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+    public BudgetEntryByYearDto GetBudgetEntryByYear(string transactionUID, string entryByYearUID) {
+      Assertion.Require(transactionUID, nameof(transactionUID));
       Assertion.Require(entryByYearUID, nameof(entryByYearUID));
 
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
 
-      var budgetEntry = transaction.GetEntry(entryByYearUID);
+      var transaction = BudgetTransaction.Parse(transactionUID);
 
-      transaction.RemoveEntry(budgetEntry);
+      var byYearTransaction = new BudgetTransactionByYear(transaction);
+
+      FixedList<BudgetEntry> entries = byYearTransaction.GetEntries(entryByYearUID);
+
+      return BudgetEntryByYearMapper.Map(byYearTransaction, entries);
+    }
+
+
+    public BudgetEntryByYearDto RemoveBudgetEntryByYear(string transactionUID, string entryByYearUID) {
+      Assertion.Require(transactionUID, nameof(transactionUID));
+      Assertion.Require(entryByYearUID, nameof(entryByYearUID));
+
+      var transaction = BudgetTransaction.Parse(transactionUID);
+
+      var byYearTransaction = new BudgetTransactionByYear(transaction);
+
+      FixedList<BudgetEntry> entries = byYearTransaction.GetEntries(entryByYearUID);
+
+      transaction.RemoveEntries(entries);
 
       transaction.Save();
 
-      return BudgetEntryByYearMapper.Map(budgetEntry);
+      return BudgetEntryByYearMapper.Map(byYearTransaction, entries);
     }
 
 
-    public BudgetEntryByYearDto UpdateBudgetEntryByYear(string budgetTransactionUID,
-                                                        string entryByYearUID,
-                                                        BudgetEntryByYearFields fields) {
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
-      Assertion.Require(entryByYearUID, nameof(entryByYearUID));
+    public BudgetEntryByYearDto UpdateBudgetEntryByYear(BudgetEntryByYearFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      // fields.EnsureIsValid();
+      fields.EnsureIsValid();
 
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+      var transaction = BudgetTransaction.Parse(fields.TransactionUID);
 
-      var budgetEntry = transaction.GetEntry(entryByYearUID);
+      var byYearTransaction = new BudgetTransactionByYear(transaction);
 
-      // budgetEntry.Update(fields);
+      FixedList<BudgetEntry> entries = byYearTransaction.GetEntries(fields);
 
-      budgetEntry.Save();
+      transaction.UpdateEntries(entries);
 
-      return BudgetEntryByYearMapper.Map(budgetEntry);
+      transaction.Save();
+
+      return BudgetEntryByYearMapper.Map(byYearTransaction, entries);
     }
 
     #endregion Use cases

@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 namespace Empiria.Budgeting.Transactions.Adapters {
 
   /// <summary>Maps budget transaction entries with values for a whole year.</summary>
@@ -17,8 +15,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     #region Public mappers
 
-    internal static BudgetEntryByYearDto Map(BudgetEntry budgetEntry) {
-      throw new NotImplementedException();
+    static internal BudgetEntryByYearDto Map(BudgetTransactionByYear byYearTransaction,
+                                             FixedList<BudgetEntry> entries) {
+      return new BudgetEntryByYearDto {
+
+      };
     }
 
     #endregion Public mappers

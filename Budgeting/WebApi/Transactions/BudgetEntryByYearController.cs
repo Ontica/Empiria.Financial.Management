@@ -27,8 +27,10 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     public SingleObjectModel CreateBudgetEntriesByYear([FromUri] string budgetTransactionUID,
                                                        [FromBody] BudgetEntryByYearFields fields) {
 
+      fields.TransactionUID = budgetTransactionUID;
+
       using (var usecases = BudgetEntryByYearEditionUseCases.UseCaseInteractor()) {
-        BudgetEntryByYearDto entryByYear = usecases.CreateBudgetEntryByYear(budgetTransactionUID, fields);
+        BudgetEntryByYearDto entryByYear = usecases.CreateBudgetEntryByYear(fields);
 
         return new SingleObjectModel(base.Request, entryByYear);
       }
@@ -67,10 +69,11 @@ namespace Empiria.Budgeting.Transactions.WebApi {
                                                        [FromUri] string entryByYearUID,
                                                        [FromBody] BudgetEntryByYearFields fields) {
 
+      fields.UID = entryByYearUID;
+      fields.TransactionUID = budgetTransactionUID;
+
       using (var usecases = BudgetEntryByYearEditionUseCases.UseCaseInteractor()) {
-        BudgetEntryByYearDto entryByYear = usecases.UpdateBudgetEntryByYear(budgetTransactionUID,
-                                                                            entryByYearUID,
-                                                                            fields);
+        BudgetEntryByYearDto entryByYear = usecases.UpdateBudgetEntryByYear(fields);
 
         return new SingleObjectModel(base.Request, entryByYear);
       }
