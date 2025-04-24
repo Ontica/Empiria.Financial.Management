@@ -133,10 +133,12 @@ namespace Empiria.Budgeting {
       get; private set;
     }
 
+
     [DataField("BDG_ACCT_SEGMENT_HISTORIC_ID")]
     public int HistoryId {
       get; private set;
     }
+
 
     internal protected virtual string Keywords {
       get {
@@ -167,7 +169,6 @@ namespace Empiria.Budgeting {
         return _children.Value;
       }
     }
-
 
     #endregion Properties
 
