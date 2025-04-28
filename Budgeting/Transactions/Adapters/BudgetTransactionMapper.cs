@@ -71,6 +71,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         CanAuthorize = canAuthorize,
         CanReject = canAuthorize,
         CanDelete = transaction.Status == BudgetTransactionStatus.Pending,
+        CanSendToAuthorization = true,
         CanUpdate = canAuthorize,
         CanEditDocuments = true
       };

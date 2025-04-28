@@ -147,6 +147,20 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+
+    public BudgetTransactionHolderDto SendToAuthorization(string budgetTransactionUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      transaction.SendToAuthorization();
+
+      transaction.Save();
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public BudgetTransactionHolderDto UpdateTransaction(string budgetTransactionUID,
                                                         BudgetTransactionFields fields) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));

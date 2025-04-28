@@ -121,6 +121,18 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/sendToAuthorization")]
+    public SingleObjectModel SendToAuthorization([FromUri] string budgetTransactionUID) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+        BudgetTransactionHolderDto transaction = usecases.SendToAuthorization(budgetTransactionUID);
+
+        return new SingleObjectModel(base.Request, transaction);
+      }
+    }
+
+
     [HttpPut, HttpPatch]
     [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
     public SingleObjectModel UpdateTransaction([FromUri] string budgetTransactionUID,

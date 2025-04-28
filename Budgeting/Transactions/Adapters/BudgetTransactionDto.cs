@@ -44,6 +44,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
 
+  /// <summary>Action flags for budget transactions.</summary>
   public class BudgetTransactionActions : BaseActions {
 
     public bool CanAuthorize {
@@ -54,7 +55,12 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-  }
+    public bool CanSendToAuthorization {
+      get; internal set;
+    }
+
+  }  // class BudgetTransactionActions
+
 
 
   /// <summary>Output DTO used for budget transactions.</summary>
