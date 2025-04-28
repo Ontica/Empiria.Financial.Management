@@ -10,6 +10,7 @@
 
 using Empiria.Documents.Services;
 using Empiria.History.Services;
+
 using Empiria.Parties;
 
 using Empiria.Budgeting.Adapters;
@@ -27,7 +28,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
         Documents = DocumentServices.GetEntityDocuments(transaction),
         History = HistoryServices.GetEntityHistory(transaction),
-        Actions = MapActions(transaction)
+        Actions = MapActions(transaction.Rules)
       };
     }
 
@@ -63,17 +64,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     #region Helpers
 
-    static private BudgetTransactionActions MapActions(BudgetTransaction transaction) {
-      bool canAuthorize = transaction.Status == BudgetTransactionStatus.OnAuthorization ||
-                          transaction.Status == BudgetTransactionStatus.Pending;
-
+    static private BudgetTransactionActions MapActions(BudgetTransactionRules rules) {
       return new BudgetTransactionActions {
-        CanAuthorize = canAuthorize,
-        CanReject = canAuthorize,
-        CanDelete = transaction.Status == BudgetTransactionStatus.Pending,
-        CanSendToAuthorization = true,
-        CanUpdate = canAuthorize,
-        CanEditDocuments = true
+        CanAuthorize = rules.CanAuthorize,
+        CanDelete = rules.CanDelete,
+        CanEditDocuments = rules.CanEditDocuments,
+        CanReject = rules.CanReject,
+        CanSendToAuthorization = rules.CanSendToAuthorization,
+        CanUpdate = rules.CanUpdate
       };
     }
 
