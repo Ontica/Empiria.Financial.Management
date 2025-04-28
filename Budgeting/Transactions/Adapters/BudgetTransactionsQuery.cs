@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+
 using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
@@ -86,9 +87,9 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = string.Empty;
 
 
-    public TransactionStatus Status {
+    public BudgetTransactionStatus Status {
       get; set;
-    } = TransactionStatus.All;
+    } = BudgetTransactionStatus.All;
 
 
     public TransactionStage Stage {

@@ -125,8 +125,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
-    static private string BuildStatusFilter(TransactionStatus status) {
-      if (status == TransactionStatus.All) {
+    static private string BuildStatusFilter(BudgetTransactionStatus status) {
+      if (status == BudgetTransactionStatus.All) {
         return "BDG_TXN_STATUS <> 'X' ";
       }
 

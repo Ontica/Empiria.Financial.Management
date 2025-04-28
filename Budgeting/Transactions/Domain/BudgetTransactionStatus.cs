@@ -15,7 +15,7 @@ namespace Empiria.Budgeting.Transactions {
 
     Pending = 'P',
 
-    OnAuthorization = 'O',
+    OnAuthorization = 'T',
 
     Authorized = 'A',
 
