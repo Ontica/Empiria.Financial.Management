@@ -122,7 +122,7 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/sendToAuthorization")]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/send-to-authorization")]
     public SingleObjectModel SendToAuthorization([FromUri] string budgetTransactionUID) {
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {

@@ -44,7 +44,7 @@ namespace Empiria.Budgeting.Transactions {
         }
 
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
-                                    new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id})) {
+                                    new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id })) {
           return false;
         }
 
@@ -63,7 +63,7 @@ namespace Empiria.Budgeting.Transactions {
 
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id,
-                                                _transaction.AppliedBy.Id, _transaction.AuthorizedBy.Id})) {
+                                                _transaction.AppliedBy.Id, _transaction.AuthorizedBy.Id })) {
           return false;
         }
 
@@ -101,6 +101,9 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanUpdate {
       get {
+        if (_transaction.IsNew) {
+          return true;
+        }
         if (_transaction.Status != BudgetTransactionStatus.Pending) {
           return false;
         }

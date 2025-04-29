@@ -56,7 +56,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       Assertion.Require(transactionUID, nameof(transactionUID));
       Assertion.Require(entryByYearUID, nameof(entryByYearUID));
 
-
       var transaction = BudgetTransaction.Parse(transactionUID);
 
       var byYearTransaction = new BudgetTransactionByYear(transaction);
