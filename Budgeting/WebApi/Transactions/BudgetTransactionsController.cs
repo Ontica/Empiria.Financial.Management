@@ -13,6 +13,9 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.StateEnums;
+using Empiria.Storage;
+
+using Empiria.Financial.Reporting;
 
 using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
@@ -81,6 +84,21 @@ namespace Empiria.Budgeting.Transactions.WebApi {
         BudgetTransactionHolderDto transaction = usecases.GetTransaction(budgetTransactionUID);
 
         return new SingleObjectModel(base.Request, transaction);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/print")]
+    public SingleObjectModel PrintTransaction([FromUri] string budgetTransactionUID) {
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
+
+        FileDto file = reportingService.ExportTransactionToPdf(transaction);
+
+        return new SingleObjectModel(base.Request, file);
       }
     }
 
