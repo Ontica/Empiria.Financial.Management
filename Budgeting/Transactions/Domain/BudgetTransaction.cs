@@ -322,8 +322,19 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal void Reload() {
-      _entries = new Lazy<List<BudgetEntry>>(() => BudgetTransactionDataService.GetTransactionEntries(this));
+    internal void Reject() {
+      Assertion.Require(Rules.CanReject, "Current user can not reject this transaction.");
+
+      Assertion.Require(this.Status == BudgetTransactionStatus.OnAuthorization,
+                       $"Can not reject this budget transaction. Its status is {Status.GetName()}.");
+
+      this.RequestedBy = Party.Empty;
+      this.RequestedTime = ExecutionServer.DateMaxValue;
+
+      this.AuthorizedBy = Party.Empty;
+      this.AuthorizationTime = ExecutionServer.DateMaxValue;
+
+      this.Status = BudgetTransactionStatus.Pending;
     }
 
 
@@ -384,6 +395,14 @@ namespace Empiria.Budgeting.Transactions {
     }
 
     #endregion Methods
+
+    #region Helpers
+
+    private void Reload() {
+      _entries = new Lazy<List<BudgetEntry>>(() => BudgetTransactionDataService.GetTransactionEntries(this));
+    }
+
+    #endregion Helpers
 
   }  // class BudgetTransaction
 

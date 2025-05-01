@@ -126,6 +126,19 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public BudgetTransactionHolderDto RejectTransaction(string budgetTransactionUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      transaction.Reject();
+
+      transaction.Save();
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public BudgetEntryDto UpdateBudgetEntry(string budgetTransactionUID,
                                             string budgetEntryUID,
                                             BudgetEntryFields fields) {
