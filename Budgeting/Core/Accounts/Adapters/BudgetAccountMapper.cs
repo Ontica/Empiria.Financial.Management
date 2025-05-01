@@ -23,6 +23,20 @@ namespace Empiria.Budgeting.Adapters {
     }
 
 
+    static public BudgetAccountDto Map(BudgetAccount account) {
+      return new BudgetAccountDto {
+        UID = account.UID,
+        BaseSegmentUID = account.BaseSegment.UID,
+        Code = account.Code,
+        Name = account.Name,
+        Type = account.BudgetAccountType.MapToNamedEntity(),
+        OrganizationalUnit = account.OrganizationalUnit.MapToNamedEntity(),
+        Status = account.Status.MapToDto(),
+        IsAssigned = true
+      };
+    }
+
+
     static internal FixedList<BudgetAccountDto> Map(FixedList<BudgetAccount> accounts,
                                                     FixedList<BudgetAccountSegment> unassignedSegments) {
       FixedList<BudgetAccountDto> mappedAccounts = accounts.Select(x => Map(x))
@@ -37,20 +51,6 @@ namespace Empiria.Budgeting.Adapters {
     }
 
     #region Helpers
-
-    static private BudgetAccountDto Map(BudgetAccount account) {
-      return new BudgetAccountDto {
-        UID = account.UID,
-        BaseSegmentUID = account.BaseSegment.UID,
-        Code = account.Code,
-        Name = account.Name,
-        Type = account.BudgetAccountType.MapToNamedEntity(),
-        OrganizationalUnit = account.OrganizationalUnit.MapToNamedEntity(),
-        Status = account.Status.MapToDto(),
-        IsAssigned = true
-      };
-    }
-
 
     static private BudgetAccountDto Map(BudgetAccountSegment segment) {
       return new BudgetAccountDto {

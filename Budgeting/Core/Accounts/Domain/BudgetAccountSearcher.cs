@@ -22,7 +22,7 @@ namespace Empiria.Budgeting {
     private readonly BudgetType _budgetType;
     private readonly string _keywords;
 
-    public BudgetAccountSearcher(BudgetType budgetType, string keywords) {
+    public BudgetAccountSearcher(BudgetType budgetType, string keywords = "") {
       Assertion.Require(budgetType, nameof(budgetType));
 
       _budgetType = budgetType;
@@ -30,6 +30,22 @@ namespace Empiria.Budgeting {
     }
 
     #region Methods
+
+    public bool HasSegment(OrganizationalUnit orgUnit, BudgetAccountSegment segment) {
+      string budgetTypeFilter = GetBudgetTypeFilter();
+      string orgUnitFilter = GetOrgUnitFilter(orgUnit);
+      string baseSegmentFilter = $"BDG_ACCT_BASE_SEGMENT_ID = {segment.Id}";
+
+      var filter = new Filter(budgetTypeFilter);
+
+      filter.AppendAnd(orgUnitFilter);
+      filter.AppendAnd(baseSegmentFilter);
+
+      var accounts = BudgetAccountDataService.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
+
+      return accounts.Count != 0;
+    }
+
 
     public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit,
                                            FixedList<BudgetAccountSegment> baseSegments) {

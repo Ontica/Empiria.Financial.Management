@@ -26,6 +26,8 @@ namespace Empiria.Budgeting {
 
     static public new BudgetAccountType Parse(string typeName) => Parse<BudgetAccountType>(typeName);
 
+    public static BudgetAccountType GastoCorriente => Parse("ObjectTypeInfo.BudgetAccount.GastoCorriente");
+
     #endregion Constructors and parsers
 
   } // class BudgetAccountType

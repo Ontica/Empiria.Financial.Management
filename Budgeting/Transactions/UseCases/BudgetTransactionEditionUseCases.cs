@@ -8,9 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Parties;
 using Empiria.Services;
 using Empiria.Financial;
 
+using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
 
 namespace Empiria.Budgeting.Transactions.UseCases {
@@ -136,6 +138,33 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.Save();
 
       return BudgetTransactionMapper.Map(transaction);
+    }
+
+
+    public BudgetAccountDto RequestBudgetAccount(string budgetTransactionUID,
+                                                 string requestedSegmentUID) {
+
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+      Assertion.Require(requestedSegmentUID, nameof(requestedSegmentUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+      var requestedSegment = BudgetAccountSegment.Parse(requestedSegmentUID);
+      var orgUnit = (OrganizationalUnit) transaction.BaseParty;
+
+      Assertion.Require(transaction.Rules.CanUpdate,
+          "Esta operación sólo está disponible para transacciones abiertas.");
+
+      var searcher = new BudgetAccountSearcher(transaction.BaseBudget.BudgetType);
+
+      Assertion.Require(!searcher.HasSegment(orgUnit, requestedSegment),
+          $"{orgUnit.FullName} ya tiene asignada la cuenta presupuestal {requestedSegment.FullName}");
+
+
+      var newBudgetAccount = new BudgetAccount(BudgetAccountType.GastoCorriente, requestedSegment, orgUnit);
+
+      newBudgetAccount.Save();
+
+      return BudgetAccountMapper.Map(newBudgetAccount);
     }
 
 
