@@ -141,18 +141,20 @@ namespace Empiria.Budgeting.Transactions {
 
     static public void EnsureIsValid(this BudgetMonthEntryFields fields, bool hasProduct) {
 
-      Assertion.Require(1 <= fields.Month && fields.Month <= 12, $"No reconozco el mes {fields.Month}");
+      Assertion.Require(1 <= fields.Month && fields.Month <= 12, $"No reconozco el valor para el mes {fields.Month}.");
 
-      Assertion.Require(fields.Amount >= 0, $"La cantidad del mes {fields.Month} debe ser mayor o igual a cero");
+      string monthName = EmpiriaString.MonthName(fields.Month);
+
+      Assertion.Require(fields.Amount >= 0, $"El importe asignado a {monthName} debe ser mayor o igual a cero.");
 
       if (hasProduct) {
         Assertion.Require(fields.ProductQty > 0,
-            $"Requiero se proporcione la cantidad de producto para el mes {fields.Month}.");
+            $"Requiero se proporcione la cantidad del producto o servicio para el mes de {monthName}.");
 
       } else {
         Assertion.Require(fields.ProductQty == 0,
             $"Este registro no tiene asociado un producto, por lo que requiero que " +
-            $"la cantidad sea cero para el mes {fields.Month}.");
+            $"la cantidad del producto o servicio asignada al mes de {monthName} sea cero.");
 
       }
     }
