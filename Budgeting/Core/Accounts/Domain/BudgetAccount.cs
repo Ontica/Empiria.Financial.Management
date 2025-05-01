@@ -15,6 +15,8 @@ using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Budgeting.Data;
+
 namespace Empiria.Budgeting {
 
   /// <summary>Partitioned type that represents a budget account.</summary>
@@ -26,6 +28,23 @@ namespace Empiria.Budgeting {
     protected BudgetAccount(BudgetAccountType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
+
+
+    public BudgetAccount(BudgetAccountType accountType,
+                         BudgetAccountSegment baseSegment,
+                         OrganizationalUnit orgUnit) : this(accountType) {
+      Assertion.Require(accountType, nameof(accountType));
+      Assertion.Require(baseSegment, nameof(baseSegment));
+      Assertion.Require(orgUnit, nameof(orgUnit));
+
+      this.BudgetType = baseSegment.BudgetSegmentType.BudgetType;
+      this.BaseSegment = baseSegment;
+      this.Code = baseSegment.Code;
+      this.Organization = (Organization) Organization.Primary;
+      this.OrganizationalUnit = orgUnit;
+      this.StartDate = DateTime.Today.Date;
+    }
+
 
     static public BudgetAccount Parse(int id) => ParseId<BudgetAccount>(id);
 
@@ -46,15 +65,19 @@ namespace Empiria.Budgeting {
 
     [DataField("BDG_ACCT_BUDGET_TYPE_ID")]
     public BudgetType BudgetType {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("BDG_ACCT_CODE")]
     public string Code {
-      get;
-      private set;
+      get; private set;
+    }
+
+
+    [DataField("BDG_ACCT_DESCRIPTION")]
+    public string Description {
+      get; private set;
     }
 
 
@@ -63,6 +86,7 @@ namespace Empiria.Budgeting {
         return $"[{BaseSegment.Code}] - {BaseSegment.Name} ({OrganizationalUnit.Code})";
       }
     }
+
 
     [DataField("BDG_ACCT_ORG_ID")]
     public Organization Organization {
@@ -78,100 +102,6 @@ namespace Empiria.Budgeting {
 
     [DataField("BDG_ACCT_BASE_SEGMENT_ID")]
     public BudgetAccountSegment BaseSegment {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_01_ID")]
-    internal BudgetAccountSegment ClassSegment_1 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_02_ID")]
-    internal BudgetAccountSegment ClassSegment_2 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_03_ID")]
-    internal BudgetAccountSegment ClassSegment_3 {
-      get; private set;
-    }
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_04_ID")]
-    internal BudgetAccountSegment ClassSegment_4 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_05_ID")]
-    internal BudgetAccountSegment ClassSegment_5 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_06_ID")]
-    internal BudgetAccountSegment ClassSegment_6 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_07_ID")]
-    internal BudgetAccountSegment ClassSegment_7 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_08_ID")]
-    internal BudgetAccountSegment ClassSegment_8 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_09_ID")]
-    internal BudgetAccountSegment ClassSegment_9 {
-      get; private set;
-    }
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_10_ID")]
-    internal BudgetAccountSegment ClassSegment_10 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_11_ID")]
-    internal BudgetAccountSegment ClassSegment_11 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_12_ID")]
-    internal BudgetAccountSegment ClassSegment_12 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_13_ID")]
-    internal BudgetAccountSegment ClassSegment_13 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_14_ID")]
-    internal BudgetAccountSegment ClassSegment_14 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_15_ID")]
-    internal BudgetAccountSegment ClassSegment_15 {
-      get; private set;
-    }
-
-
-    [DataField("BDG_ACCT_CLASS_SEGMENT_16_ID")]
-    internal BudgetAccountSegment ClassSegment_16 {
       get; private set;
     }
 
@@ -196,22 +126,20 @@ namespace Empiria.Budgeting {
     }
 
     [DataField("BDG_ACCT_EXT_DATA")]
-    private JsonObject ExtData {
-      get;
-      set;
+    protected JsonObject ExtData {
+      get; set;
     } = new JsonObject();
 
 
     [DataField("BDG_ACCT_START_DATE")]
     public DateTime StartDate {
-      get;
-      private set;
+      get; private set;
     }
+
 
     [DataField("BDG_ACCT_END_DATE")]
     public DateTime EndDate {
-      get;
-      private set;
+      get; private set;
     }
 
 
@@ -223,26 +151,36 @@ namespace Empiria.Budgeting {
 
 
     [DataField("BDG_ACCT_POSTED_BY_ID")]
-    public Party PostedById {
-      get;
-      private set;
+    public Party PostedBy {
+      get; private set;
     }
 
 
     [DataField("BDG_ACCT_POSTING_TIME")]
     public DateTime PostingTime {
-      get;
-      private set;
+      get; private set;
     }
 
 
-    [DataField("BDG_ACCT_STATUS", Default = EntityStatus.Active)]
+    [DataField("BDG_ACCT_STATUS", Default = EntityStatus.Pending)]
     public EntityStatus Status {
-      get;
-      private set;
+      get; private set;
     }
 
     #endregion Properties
+
+    #region Methods
+
+    protected override void OnSave() {
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
+
+      BudgetAccountDataService.WriteBudgetAccount(this, ExtData.ToString());
+    }
+
+    #endregion Methods
 
   } // class BudgetAccount
 

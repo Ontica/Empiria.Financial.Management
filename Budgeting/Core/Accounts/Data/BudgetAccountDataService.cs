@@ -49,6 +49,17 @@ namespace Empiria.Budgeting.Data {
       return DataReader.GetFixedList<BudgetAccount>(op);
     }
 
+
+    static internal void WriteBudgetAccount(BudgetAccount o, string extData) {
+      var op = DataOperation.Parse("write_fms_budget_account", o.Id, o.UID,
+              o.BudgetAccountType.Id, o.BudgetType.Id, o.Code, o.Description,
+              o.Organization.Id, o.OrganizationalUnit.Id, o.BaseSegment.Id,
+              string.Join(",", o.Identificators), string.Join(",", o.Tags), extData, o.Keywords,
+              o.Id, o.StartDate, o.EndDate, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+
+      DataWriter.Execute(op);
+    }
+
   }  // class BudgetAccountDataService
 
 }  // namespace Empiria.Budgeting.Data
