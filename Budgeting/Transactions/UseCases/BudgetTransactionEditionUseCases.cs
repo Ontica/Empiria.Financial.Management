@@ -81,19 +81,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public BudgetTransactionHolderDto DeleteTransaction(string budgetTransactionUID) {
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
-
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
-
-      transaction.Delete();
-
-      transaction.Save();
-
-      return BudgetTransactionMapper.Map(transaction);
-    }
-
-
     public BudgetEntryDto CreateBudgetEntry(string budgetTransactionUID, BudgetEntryFields fields) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
       Assertion.Require(fields, nameof(fields));
@@ -107,6 +94,32 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.Save();
 
       return BudgetEntryMapper.Map(entry);
+    }
+
+
+    public BudgetTransactionHolderDto DeleteOrCancelTransaction(string budgetTransactionUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      transaction.DeleteOrCancel();
+
+      transaction.Save();
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
+    public BudgetTransactionHolderDto RejectTransaction(string budgetTransactionUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      transaction.Reject();
+
+      transaction.Save();
+
+      return BudgetTransactionMapper.Map(transaction);
     }
 
 
@@ -125,19 +138,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.Save();
 
       return BudgetEntryMapper.Map(budgetEntry);
-    }
-
-
-    public BudgetTransactionHolderDto RejectTransaction(string budgetTransactionUID) {
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
-
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
-
-      transaction.Reject();
-
-      transaction.Save();
-
-      return BudgetTransactionMapper.Map(transaction);
     }
 
 
@@ -168,6 +168,19 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public BudgetTransactionHolderDto SendToAuthorization(string budgetTransactionUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      transaction.SendToAuthorization();
+
+      transaction.Save();
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public BudgetEntryDto UpdateBudgetEntry(string budgetTransactionUID,
                                             string budgetEntryUID,
                                             BudgetEntryFields fields) {
@@ -186,20 +199,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       budgetEntry.Save();
 
       return BudgetEntryMapper.Map(budgetEntry);
-    }
-
-
-
-    public BudgetTransactionHolderDto SendToAuthorization(string budgetTransactionUID) {
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
-
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
-
-      transaction.SendToAuthorization();
-
-      transaction.Save();
-
-      return BudgetTransactionMapper.Map(transaction);
     }
 
 

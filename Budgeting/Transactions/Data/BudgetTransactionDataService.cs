@@ -52,6 +52,10 @@ namespace Empiria.Budgeting.Transactions.Data {
     static internal string GetNextTransactionNo(BudgetTransaction transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
+      if (transaction.HasTransactionNo) {
+        return transaction.TransactionNo;
+      }
+
       string transactionPrefix = transaction.BudgetTransactionType.Prefix;
       string budgetPrefix = transaction.BaseBudget.BudgetType.Prefix;
 

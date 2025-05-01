@@ -54,10 +54,10 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
     [HttpDelete]
     [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
-    public NoDataModel DeleteTransaction([FromUri] string budgetTransactionUID) {
+    public NoDataModel DeleteOrCancelTransaction([FromUri] string budgetTransactionUID) {
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        _ = usecases.DeleteTransaction(budgetTransactionUID);
+        _ = usecases.DeleteOrCancelTransaction(budgetTransactionUID);
 
         return new NoDataModel(base.Request);
       }

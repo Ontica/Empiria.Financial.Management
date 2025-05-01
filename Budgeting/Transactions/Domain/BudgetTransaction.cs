@@ -26,6 +26,8 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Fields
 
+    private readonly string TO_ASSIGN_TRANSACTION_NO = "Por asignar";
+
     private Lazy<List<BudgetEntry>> _entries = new Lazy<List<BudgetEntry>>();
 
     #endregion Fields
@@ -243,6 +245,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool HasTransactionNo {
+      get {
+        return this.TransactionNo.Length != 0 &&
+               this.TransactionNo != TO_ASSIGN_TRANSACTION_NO;
+      }
+    }
+
     internal BudgetTransactionRules Rules {
       get {
         return new BudgetTransactionRules(this);
@@ -280,19 +289,28 @@ namespace Empiria.Budgeting.Transactions {
     internal void Authorize() {
       Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this transaction.");
 
+      if (!HasTransactionNo) {
+        TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
+      }
+
       this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.AuthorizationTime = DateTime.Now;
       this.Status = BudgetTransactionStatus.Authorized;
     }
 
 
-    internal void Delete() {
-      Assertion.Require(Rules.CanDelete, "Current user can not delete this transaction.");
+    internal void DeleteOrCancel() {
+      Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this transaction.");
 
       Assertion.Require(this.Status == BudgetTransactionStatus.Pending,
-                       $"Can not delete budget transaction. Its status is {Status.GetName()}.");
+                       $"Can not delete or cancel budget transaction. Its status is {Status.GetName()}.");
 
-      this.Status = BudgetTransactionStatus.Deleted;
+      if (HasTransactionNo) {
+        this.Status = BudgetTransactionStatus.Canceled;
+      } else {
+        this.TransactionNo = "Eliminada";
+        this.Status = BudgetTransactionStatus.Deleted;
+      }
     }
 
 
@@ -309,7 +327,7 @@ namespace Empiria.Budgeting.Transactions {
 
     protected override void OnSave() {
       if (IsNew) {
-        TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
+        TransactionNo = TO_ASSIGN_TRANSACTION_NO;
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
@@ -362,6 +380,10 @@ namespace Empiria.Budgeting.Transactions {
 
     internal void SendToAuthorization() {
       Assertion.Require(Rules.CanSendToAuthorization, "Current user can not send this transaction to authorization.");
+
+      if (!HasTransactionNo) {
+        TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
+      }
 
       this.RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.RequestedTime = DateTime.Now;
