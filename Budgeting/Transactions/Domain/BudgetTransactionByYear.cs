@@ -37,23 +37,11 @@ namespace Empiria.Budgeting.Transactions {
       get;
     }
 
-    public FixedList<BudgetEntry> Entries {
-      get {
-        return Transaction.Entries;
-      }
-    }
-
     #endregion Properties
 
     #region Methods
 
-    internal string BuildUID(BudgetEntryByYearFields fields) {
-      return $"{fields.BalanceColumnUID}|{fields.BudgetAccountUID}|{fields.ProductUID}|" +
-             $"{fields.ProjectUID}|{fields.CurrencyUID}|{fields.Year}";
-    }
-
-
-    internal FixedList<BudgetEntry> GetEntries(string entryByYearUID) {
+    internal FixedList<BudgetEntry> GetBudgetEntries(string entryByYearUID) {
       string[] parts = entryByYearUID.Split('|');
 
       var fields = new BudgetEntryByYearFields {
@@ -65,11 +53,11 @@ namespace Empiria.Budgeting.Transactions {
         Year = int.Parse(parts[5])
       };
 
-      return GetEntries(fields);
+      return GetBudgetEntries(fields);
     }
 
 
-    internal FixedList<BudgetEntry> GetEntries(BudgetEntryByYearFields fields) {
+    internal FixedList<BudgetEntry> GetBudgetEntries(BudgetEntryByYearFields fields) {
       var column = FieldPatcher.PatchField(fields.BalanceColumnUID, BalanceColumn.Empty);
       var account = FieldPatcher.PatchField(fields.BudgetAccountUID, BudgetAccount.Empty);
       var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
@@ -77,18 +65,18 @@ namespace Empiria.Budgeting.Transactions {
       var currency = FieldPatcher.PatchField(fields.CurrencyUID, Currency.Default);
       var year = fields.Year > 0 ? fields.Year : Transaction.BaseBudget.Year;
 
-      FixedList<BudgetEntry> entries = Entries.FindAll(x => x.BalanceColumn.Equals(column) &&
-                                                            x.BudgetAccount.Equals(account) &&
-                                                            x.Project.Equals(project) &&
-                                                            x.Product.Equals(product) &&
-                                                            x.Currency.Equals(currency) &&
-                                                            x.Year == year);
+      FixedList<BudgetEntry> entries = Transaction.Entries.FindAll(x => x.BalanceColumn.Equals(column) &&
+                                                                        x.BudgetAccount.Equals(account) &&
+                                                                        x.Project.Equals(project) &&
+                                                                        x.Product.Equals(product) &&
+                                                                        x.Currency.Equals(currency) &&
+                                                                        x.Year == year);
 
       return entries.Sort((x, y) => x.Month.CompareTo(y.Month));
     }
 
 
-    internal FixedList<BudgetEntry> GetNewEntries(BudgetEntryByYearFields fields) {
+    internal FixedList<BudgetEntry> GetNewBudgetEntries(BudgetEntryByYearFields fields) {
       var list = new List<BudgetEntry>(12);
 
       foreach (var amount in fields.Amounts) {
@@ -103,8 +91,8 @@ namespace Empiria.Budgeting.Transactions {
           ProjectUID = fields.ProjectUID,
           ProductUID = fields.ProductUID,
           Description = fields.Description,
-          Justification = fields.Description,
-          OriginalAmount = amount.Amount,
+          Justification = fields.Justification,
+          OriginalAmount = amount.Amount
         };
 
         var entry = new BudgetEntry(Transaction, fields.Year, amount.Month);

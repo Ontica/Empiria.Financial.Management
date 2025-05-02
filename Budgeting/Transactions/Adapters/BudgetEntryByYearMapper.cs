@@ -15,8 +15,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     #region Public mappers
 
+    static internal FixedList<BudgetEntryByYearDto> Map(BudgetTransactionByYear byYearTransaction) {
+      // byYearTransaction.GetGroupedEntries();
+
+      return new FixedList<BudgetEntryByYearDto>();
+    }
+
     static internal BudgetEntryByYearDto Map(BudgetTransactionByYear byYearTransaction,
-                                             FixedList<BudgetEntry> entries) {
+                                             FixedList<BudgetEntry> seletedEntries) {
       return new BudgetEntryByYearDto {
 
       };

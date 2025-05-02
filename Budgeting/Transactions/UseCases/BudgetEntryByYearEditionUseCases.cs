@@ -40,11 +40,11 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var byYearTransaction = new BudgetTransactionByYear(transaction);
 
-      FixedList<BudgetEntry> entries = byYearTransaction.GetEntries(fields);
+      FixedList<BudgetEntry> entries = byYearTransaction.GetBudgetEntries(fields);
 
       transaction.UpdateEntries(entries);
 
-      transaction.AddEntries(byYearTransaction.GetNewEntries(fields));
+      transaction.AddEntries(byYearTransaction.GetNewBudgetEntries(fields));
 
       transaction.Save();
 
@@ -60,7 +60,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var byYearTransaction = new BudgetTransactionByYear(transaction);
 
-      FixedList<BudgetEntry> entries = byYearTransaction.GetEntries(entryByYearUID);
+      FixedList<BudgetEntry> entries = byYearTransaction.GetBudgetEntries(entryByYearUID);
 
       return BudgetEntryByYearMapper.Map(byYearTransaction, entries);
     }
@@ -74,7 +74,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var byYearTransaction = new BudgetTransactionByYear(transaction);
 
-      FixedList<BudgetEntry> entries = byYearTransaction.GetEntries(entryByYearUID);
+      FixedList<BudgetEntry> entries = byYearTransaction.GetBudgetEntries(entryByYearUID);
 
       transaction.RemoveEntries(entries);
 
@@ -93,7 +93,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var byYearTransaction = new BudgetTransactionByYear(transaction);
 
-      FixedList<BudgetEntry> entries = byYearTransaction.GetEntries(fields);
+      FixedList<BudgetEntry> entries = byYearTransaction.GetBudgetEntries(fields);
 
       transaction.UpdateEntries(entries);
 

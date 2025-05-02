@@ -27,6 +27,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public FixedList<BudgetEntryByYearDto> GroupedEntries {
+      get; internal set;
+    }
+
     public FixedList<DocumentDto> Documents {
       get; internal set;
     }
