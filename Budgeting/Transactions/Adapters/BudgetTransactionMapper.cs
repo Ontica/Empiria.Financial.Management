@@ -28,7 +28,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return new BudgetTransactionHolderDto {
         Transaction = MapTransaction(transaction),
         Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
-        GroupedEntries = BudgetEntryByYearMapper.Map(byYearTransaction),
+        GroupedEntries = BudgetEntryByYearMapper.Map(byYearTransaction.GetEntries()),
         Documents = DocumentServices.GetEntityDocuments(transaction),
         History = HistoryServices.GetEntityHistory(transaction),
         Actions = MapActions(transaction.Rules)

@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Collections.Generic;
+using System.Linq;
 
 using Empiria.Financial;
 using Empiria.Products;
@@ -45,12 +46,15 @@ namespace Empiria.Budgeting.Transactions {
       string[] parts = entryByYearUID.Split('|');
 
       var fields = new BudgetEntryByYearFields {
-        BalanceColumnUID = parts[0],
-        BudgetAccountUID = parts[1],
-        ProductUID = parts[2],
-        ProjectUID = parts[3],
-        CurrencyUID = parts[4],
-        Year = int.Parse(parts[5])
+        UID = entryByYearUID,
+        TransactionUID = parts[0],
+        BalanceColumnUID = parts[1],
+        BudgetAccountUID = parts[2],
+        ProductUID = parts[3],
+        ProductUnitUID = parts[4],
+        ProjectUID = parts[5],
+        CurrencyUID = parts[6],
+        Year = int.Parse(parts[7])
       };
 
       return GetBudgetEntries(fields);
@@ -61,14 +65,16 @@ namespace Empiria.Budgeting.Transactions {
       var column = FieldPatcher.PatchField(fields.BalanceColumnUID, BalanceColumn.Empty);
       var account = FieldPatcher.PatchField(fields.BudgetAccountUID, BudgetAccount.Empty);
       var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
+      var productUnit = FieldPatcher.PatchField(fields.ProductUnitUID, ProductUnit.Empty);
       var project = FieldPatcher.PatchField(fields.ProjectUID, Project.Empty);
       var currency = FieldPatcher.PatchField(fields.CurrencyUID, Currency.Default);
       var year = fields.Year > 0 ? fields.Year : Transaction.BaseBudget.Year;
 
       FixedList<BudgetEntry> entries = Transaction.Entries.FindAll(x => x.BalanceColumn.Equals(column) &&
                                                                         x.BudgetAccount.Equals(account) &&
-                                                                        x.Project.Equals(project) &&
                                                                         x.Product.Equals(product) &&
+                                                                        x.ProductUnit.Equals(productUnit) &&
+                                                                        x.Project.Equals(project) &&
                                                                         x.Currency.Equals(currency) &&
                                                                         x.Year == year);
 
@@ -90,6 +96,7 @@ namespace Empiria.Budgeting.Transactions {
           CurrencyUID = fields.CurrencyUID,
           ProjectUID = fields.ProjectUID,
           ProductUID = fields.ProductUID,
+          ProductUnitUID = fields.ProductUnitUID,
           Description = fields.Description,
           Justification = fields.Justification,
           OriginalAmount = amount.Amount
@@ -100,6 +107,20 @@ namespace Empiria.Budgeting.Transactions {
         entry.Update(entryFields);
 
         list.Add(entry);
+      }
+
+      return list.ToFixedList();
+    }
+
+    public FixedList<BudgetEntryByYear> GetEntries() {
+      var groups = Transaction.Entries.GroupBy(x => BudgetEntryByYear.BuildUID(x));
+
+      var list = new List<BudgetEntryByYear>(groups.Count());
+
+      foreach (var group in groups) {
+        var item = new BudgetEntryByYear(group.Key, group.ToFixedList());
+
+        list.Add(item);
       }
 
       return list.ToFixedList();

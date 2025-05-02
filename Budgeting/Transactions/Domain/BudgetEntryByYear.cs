@@ -1,0 +1,101 @@
+﻿/* Empiria Financial *****************************************************************************************
+*                                                                                                            *
+*  Module   : Budget Transactions                        Component : Domain Layer                            *
+*  Assembly : Empiria.Budgeting.Transactions.dll         Pattern   : Information holder                      *
+*  Type     : BudgetEntryByYear                          License   : Please read LICENSE.txt file            *
+*                                                                                                            *
+*  Summary  : Holds a budget transaction entry with values for a whole year.                                 *
+*                                                                                                            *
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
+using Empiria.Financial;
+using Empiria.Products;
+using Empiria.Projects;
+
+namespace Empiria.Budgeting.Transactions {
+
+  /// <summary>Holds a budget transaction entry with values for a whole year.</summary>
+  public class BudgetEntryByYear {
+
+    public BudgetEntryByYear(string entryByYearUID, FixedList<BudgetEntry> entries) {
+      Assertion.Require(entryByYearUID, nameof(entryByYearUID));
+
+      string[] parts = entryByYearUID.Split('|');
+
+      Transaction = BudgetTransaction.Parse(parts[0]);
+      BalanceColumn = BalanceColumn.Parse(parts[1]);
+      BudgetAccount = BudgetAccount.Parse(parts[2]);
+      Product = Product.Parse(parts[3]);
+      ProductUnit = ProductUnit.Parse(parts[4]);
+      Project = Project.Parse(parts[5]);
+      Currency = Currency.Parse(parts[6]);
+      Year = int.Parse(parts[7]);
+      Entries = entries;
+    }
+
+
+    static internal string BuildUID(BudgetEntry entry) {
+      return $"{entry.BudgetTransaction.UID}|{entry.BalanceColumn.UID}|{entry.BudgetAccount.UID}|" +
+             $"{entry.Product.UID}|{entry.ProductUnit.UID}|{entry.Project.UID}|{entry.Currency.UID}|{entry.Year}";
+    }
+
+    #region Properties
+
+    public string UID {
+      get {
+        return $"{Transaction.UID}|{BalanceColumn.UID}|{BudgetAccount.UID}|{Product.UID}|" +
+               $"{ProductUnit.UID}|{Project.UID}|{Currency.UID}|{Year}";
+      }
+    }
+
+    public BudgetTransaction Transaction {
+      get; private set;
+    }
+
+    public BalanceColumn BalanceColumn {
+      get; private set;
+    }
+
+    public BudgetAccount BudgetAccount {
+      get; private set;
+    }
+
+    public Product Product {
+      get; private set;
+    }
+
+    public string Description {
+      get; private set;
+    } = string.Empty;
+
+
+    public ProductUnit ProductUnit {
+      get; private set;
+    }
+
+    public string Justification {
+      get; private set;
+    } = string.Empty;
+
+
+    public Project Project {
+      get; private set;
+    }
+
+    public int Year {
+      get; private set;
+    }
+
+    public Currency Currency {
+      get; private set;
+    }
+
+    public FixedList<BudgetEntry> Entries {
+      get; private set;
+    }
+
+    #endregion Properties
+
+  }  // BudgetEntryByYear
+
+}  // namespace Empiria.Budgeting.Transactions

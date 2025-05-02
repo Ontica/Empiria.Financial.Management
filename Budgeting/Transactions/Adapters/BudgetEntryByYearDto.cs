@@ -46,6 +46,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public string Justification {
+      get; internal set;
+    }
+
     public NamedEntityDto Project {
       get; internal set;
     }
