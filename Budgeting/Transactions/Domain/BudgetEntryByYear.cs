@@ -96,6 +96,20 @@ namespace Empiria.Budgeting.Transactions {
 
     #endregion Properties
 
+    #region Methods
+
+    internal decimal GetAmountForMonth(int month) {
+      BudgetEntry entry = Entries.Find(x => x.Month == month);
+
+      if (entry != null) {
+        return entry.Amount;
+      } else {
+        return 0;
+      }
+    }
+
+    #endregion Methods
+
   }  // BudgetEntryByYear
 
 }  // namespace Empiria.Budgeting.Transactions
