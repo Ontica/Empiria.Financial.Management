@@ -90,7 +90,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     } = 1m;
 
-
     public NamedEntityDto Status {
       get; internal set;
     }
@@ -99,7 +98,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
 
-  /// <summary>Output DTO used to display budget entries in a lists.</summary>
+  /// <summary>Output DTO used to display budget entries in a list.</summary>
   public class BudgetEntryDescriptorDto {
 
     public string UID {
@@ -142,6 +141,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-  }  // BudgetTransactionDescriptorDto
+    public string ItemType {
+      get; internal set;
+    }
+
+  }  // BudgetEntryDescriptorDto
 
 }  // namespace Empiria.Budgeting.Transactions.Adapters

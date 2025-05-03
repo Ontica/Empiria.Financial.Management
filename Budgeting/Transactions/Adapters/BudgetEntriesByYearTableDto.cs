@@ -75,6 +75,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       Project = entry.Project.Name;
       Year = entry.Year;
       Currency = entry.Currency.ISOCode;
+      ItemType = DataTableEntryType.Entry.ToString();
 
       for (int i = 1; i <= 12; i++) {
         decimal amount = entry.GetAmountForMonth(i);
@@ -133,6 +134,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get;
     }
 
+    public string ItemType {
+      get;
+    }
+
     public override IEnumerable<string> GetDynamicMemberNames() {
       var members = new List<string> {
         "UID",
@@ -145,7 +150,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         "Justification",
         "Project",
         "Year",
-        "Currency"
+        "Currency",
+        "ItemType"
       };
 
       members.AddRange(base.GetDynamicMemberNames());

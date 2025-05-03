@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.DynamicData;
 using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
@@ -53,7 +54,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         OriginalAmount = entry.OriginalAmount,
         Amount = entry.Amount,
         ExchangeRate = entry.ExchangeRate,
-        Status = entry.Status.MapToNamedEntity(),
+        Status = entry.Status.MapToNamedEntity()
       };
     }
 
@@ -76,6 +77,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Month = entry.Month,
         MonthName = entry.MonthName,
         Day = entry.Day,
+        ItemType = DataTableEntryType.Entry.ToString(),
         BalanceColumn = entry.BalanceColumn.Name,
         Deposit = entry.Deposit,
         Withdrawal = entry.Withdrawal,
