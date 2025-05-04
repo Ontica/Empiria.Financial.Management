@@ -40,10 +40,18 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     private FixedList<DataTableColumn> BuildColumns() {
       var columns = new List<DataTableColumn> {
-        new DataTableColumn("budgetAccount", "Partida presupuestal", "text-link-wrap"),
-        new DataTableColumn("year", "Año", "text-nowrap"),
-        new DataTableColumn("balanceColumn", "Movimiento", "text-nowrap")
+        new DataTableColumn("itemDescription", "Partida presupuestal", "text-link-wrap"),
       };
+
+      if (_entries.SelectDistinctFlat(x => x.Entries.Select(y => y.Year)).Count() >= 2) {
+        columns.Add(new DataTableColumn("year", "Año", "text-nowrap"));
+      }
+
+      if (_entries.SelectDistinctFlat(x => x.Entries.Select(y => y.BalanceColumn)).Count() >= 2) {
+        columns.Add(new DataTableColumn("balanceColumn", "Movimiento", "text-nowrap"));
+      }
+
+      columns.Add(new DataTableColumn("total", "Total", "decimal"));
 
       FixedList<int> months = _entries.SelectDistinctFlat(x => x.Entries.Select(y => y.Month))
                                       .Sort((x, y) => x.CompareTo(y));
@@ -80,6 +88,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
       var entries = BuildEntries();
 
+      if (entries.Count() == 1) {
+        return new FixedList<BudgetEntryByYearDynamicDto>();
+      }
+
       var groups = entries.GroupBy(x => $"{x.Year}|{x.BalanceColumn}");
 
       var totals = new List<BudgetEntryByYearDynamicDto>(groups.Count());
@@ -104,22 +116,27 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     internal BudgetEntryByYearDynamicDto(BudgetEntryByYearDynamicDto pivot,
                                          FixedList<BudgetEntryByYearDynamicDto> fields) {
       UID = $"{pivot.Year}|{pivot.BalanceColumn}";
-      BudgetAccount = $"Presupuesto {pivot.BalanceColumn} {pivot.Year}";
+      ItemType = DataTableEntryType.Total.ToString();
+      ItemDescription = $"Presupuesto {pivot.BalanceColumn} {pivot.Year}";
       BalanceColumn = pivot.BalanceColumn;
       Year = pivot.Year;
-      ItemType = DataTableEntryType.Total.ToString();
 
+      decimal total = 0m;
       for (int i = 1; i <= 12; i++) {
         decimal amount = fields.Sum(x => x.GetTotalField($"Month_{i}"));
         if (amount != 0) {
           base.SetTotalField($"Month_{i}", amount);
         }
+        total += amount;
       }
+      base.SetTotalField("Total", total);
     }
 
 
     internal BudgetEntryByYearDynamicDto(BudgetEntryByYear entry) {
       UID = entry.UID;
+      ItemType = DataTableEntryType.Entry.ToString();
+      ItemDescription = entry.BudgetAccount.BaseSegment.FullName;
       TransactionUID = entry.Transaction.UID;
       BalanceColumn = entry.BalanceColumn.Name;
       BudgetAccount = entry.BudgetAccount.Name;
@@ -130,23 +147,30 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       Project = entry.Project.Name;
       Year = entry.Year;
       Currency = entry.Currency.ISOCode;
-      ItemType = DataTableEntryType.Entry.ToString();
 
+      decimal total = 0m;
       for (int i = 1; i <= 12; i++) {
         decimal amount = entry.GetAmountForMonth(i);
         if (amount != 0) {
           base.SetTotalField($"Month_{i}", amount);
         }
+        total += amount;
       }
+      base.SetTotalField("Total", total);
     }
+
 
     public string UID {
       get;
     }
 
-    public BudgetEntryDtoType EntryType {
+    public string ItemType {
       get;
-    } = BudgetEntryDtoType.Annually;
+    }
+
+    public string ItemDescription {
+      get;
+    } = string.Empty;
 
 
     public string TransactionUID {
@@ -154,12 +178,12 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = string.Empty;
 
 
-    public string BalanceColumn {
+    public string BudgetAccount {
       get;
     } = string.Empty;
 
 
-    public string BudgetAccount {
+    public string BalanceColumn {
       get;
     } = string.Empty;
 
@@ -198,16 +222,19 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = string.Empty;
 
 
-    public string ItemType {
+    public BudgetEntryDtoType EntryType {
       get;
-    }
+    } = BudgetEntryDtoType.Annually;
+
 
     public override IEnumerable<string> GetDynamicMemberNames() {
       var members = new List<string> {
         "UID",
         "TransactionUID",
-        "BalanceColumn",
+        "ItemType",
+        "ItemDescription",
         "BudgetAccount",
+        "BalanceColumn",
         "Product",
         "Description",
         "ProductUnit",
@@ -215,7 +242,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         "Project",
         "Year",
         "Currency",
-        "ItemType"
+        "EntryType",
       };
 
       members.AddRange(base.GetDynamicMemberNames());
