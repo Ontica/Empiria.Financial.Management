@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Collections.Generic;
+using System.Linq;
 
 using Empiria.DynamicData;
 
@@ -25,22 +26,21 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     public FixedList<DataTableColumn> Columns {
       get {
-        return GetColumns();
+        return BuildColumns();
       }
     }
 
 
     public FixedList<BudgetEntryByYearDynamicDto> Entries {
       get {
-        return _entries.Select(x => new BudgetEntryByYearDynamicDto(x))
-                       .ToFixedList()
-                       .Sort((x, y) => x.BudgetAccount.CompareTo(y.BudgetAccount));
+        return BuildEntriesAndTotals();
       }
     }
 
-    private FixedList<DataTableColumn> GetColumns() {
+
+    private FixedList<DataTableColumn> BuildColumns() {
       var columns = new List<DataTableColumn> {
-        new DataTableColumn("budgetAccount", "Partida presupuestal", "text-link"),
+        new DataTableColumn("budgetAccount", "Partida presupuestal", "text-link-wrap"),
         new DataTableColumn("year", "Año", "text-nowrap"),
         new DataTableColumn("balanceColumn", "Movimiento", "text-nowrap")
       };
@@ -56,12 +56,67 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return columns.ToFixedList();
     }
 
+    private FixedList<BudgetEntryByYearDynamicDto> BuildEntries() {
+      return _entries.Select(x => new BudgetEntryByYearDynamicDto(x))
+                    .ToFixedList()
+                    .Sort((x, y) => x.BudgetAccount.CompareTo(y.BudgetAccount));
+    }
+
+
+    private FixedList<BudgetEntryByYearDynamicDto> BuildEntriesAndTotals() {
+      FixedList<BudgetEntryByYearDynamicDto> entries = BuildEntries();
+
+      var list = new List<BudgetEntryByYearDynamicDto>(entries);
+
+      FixedList<BudgetEntryByYearDynamicDto> totals = BuildTotals();
+
+      list.AddRange(totals);
+
+      return list.ToFixedList();
+    }
+
+
+    private FixedList<BudgetEntryByYearDynamicDto> BuildTotals() {
+
+      var entries = BuildEntries();
+
+      var groups = entries.GroupBy(x => $"{x.Year}|{x.BalanceColumn}");
+
+      var totals = new List<BudgetEntryByYearDynamicDto>(groups.Count());
+
+      foreach (var group in groups) {
+
+        var total = new BudgetEntryByYearDynamicDto(group.First(), group.ToFixedList());
+
+        totals.Add(total);
+      }
+
+      return totals.ToFixedList();
+    }
+
   }  // class BudgetEntriesByYearTableDto
 
 
 
   /// <summary>Dynamic fields DTO that holds a year budget entry with months in columns.</summary>
   public class BudgetEntryByYearDynamicDto : DynamicFields {
+
+    internal BudgetEntryByYearDynamicDto(BudgetEntryByYearDynamicDto pivot,
+                                         FixedList<BudgetEntryByYearDynamicDto> fields) {
+      UID = $"{pivot.Year}|{pivot.BalanceColumn}";
+      BudgetAccount = $"Presupuesto {pivot.BalanceColumn} {pivot.Year}";
+      BalanceColumn = pivot.BalanceColumn;
+      Year = pivot.Year;
+      ItemType = DataTableEntryType.Total.ToString();
+
+      for (int i = 1; i <= 12; i++) {
+        decimal amount = fields.Sum(x => x.GetTotalField($"Month_{i}"));
+        if (amount != 0) {
+          base.SetTotalField($"Month_{i}", amount);
+        }
+      }
+    }
+
 
     internal BudgetEntryByYearDynamicDto(BudgetEntryByYear entry) {
       UID = entry.UID;
@@ -96,35 +151,43 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     public string TransactionUID {
       get;
-    }
+    } = string.Empty;
+
 
     public string BalanceColumn {
       get;
-    }
+    } = string.Empty;
+
 
     public string BudgetAccount {
       get;
-    }
+    } = string.Empty;
+
 
     public string Product {
       get;
-    }
+    } = string.Empty;
+
 
     public string Description {
       get;
-    }
+    } = string.Empty;
+
 
     public string ProductUnit {
       get;
-    }
+    } = string.Empty;
+
 
     public string Justification {
       get;
-    }
+    } = string.Empty;
+
 
     public string Project {
       get;
-    }
+    } = string.Empty;
+
 
     public int Year {
       get;
@@ -132,7 +195,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     public string Currency {
       get;
-    }
+    } = string.Empty;
+
 
     public string ItemType {
       get;
