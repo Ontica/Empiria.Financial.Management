@@ -8,6 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Collections.Generic;
+using System.Linq;
+
 using Empiria.DynamicData;
 using Empiria.StateEnums;
 
@@ -30,7 +33,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     #region Mappers
 
     static internal FixedList<BudgetEntryDto> Map(FixedList<BudgetEntry> entries) {
-      return entries.Select(x => Map(x)).ToFixedList();
+      return entries.Select(x => Map(x))
+                    .ToFixedList();
     }
 
 
@@ -60,11 +64,33 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static internal FixedList<BudgetEntryDescriptorDto> MapToDescriptor(FixedList<BudgetEntry> entries) {
+      var list = new List<BudgetEntryDescriptorDto>(entries.Count + 1);
+
       entries.Sort((x, y) => $"{x.BudgetAccount.Code}.{x.Year}.{x.Month.ToString("00")}"
                              .CompareTo($"{y.BudgetAccount.Code}.{y.Year}.{y.Month.ToString("00")}"));
 
-      return entries.Select(x => MapToDescriptor(x))
-                    .ToFixedList();
+      list.AddRange(entries.Select(x => MapToDescriptor(x)));
+
+      list.AddRange(GetTotalEntries(entries));
+
+      return list.ToFixedList();
+    }
+
+    #endregion Mappers
+
+    #region Helpers
+
+    static private FixedList<BudgetEntryDescriptorDto> GetTotalEntries(FixedList<BudgetEntry> entries) {
+      var groups = entries.GroupBy(x => $"{x.Year}|{x.BalanceColumn.Name}");
+
+      var list = new List<BudgetEntryDescriptorDto>(groups.Count());
+
+      foreach (var group in groups) {
+        var dto = MapToDescriptorTotals(group.First(), group.ToFixedList());
+        list.Add(dto);
+      }
+
+      return list.ToFixedList();
     }
 
 
@@ -84,7 +110,22 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       };
     }
 
-    #endregion Mappers
+
+    static private BudgetEntryDescriptorDto MapToDescriptorTotals(BudgetEntry pivot,
+                                                                  FixedList<BudgetEntry> items) {
+      return new BudgetEntryDescriptorDto {
+        UID = $"{pivot.Year}|{pivot.BalanceColumn.Name}",
+        BudgetAccountCode = string.Empty,
+        BudgetAccountName = $"{pivot.BalanceColumn.Name} {pivot.Budget.Name}",
+        Year = pivot.Year,
+        ItemType = DataTableEntryType.Total.ToString(),
+        BalanceColumn = pivot.BalanceColumn.Name,
+        Deposit = items.Sum(x => x.Deposit),
+        Withdrawal = items.Sum(x => x.Withdrawal)
+      };
+    }
+
+    #endregion Helpers
 
   }  // class BudgetEntryMapper
 
