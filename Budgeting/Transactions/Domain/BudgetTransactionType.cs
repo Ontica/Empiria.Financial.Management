@@ -11,6 +11,7 @@
 using System.Linq;
 
 using Empiria.Ontology;
+using Empiria.Parties;
 using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions {
@@ -89,6 +90,21 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool IsProtected {
+      get {
+        return ExtensionData.Get("isProtected", false);
+      }
+    }
+
+
+    public FixedList<OperationSource> OperationSources {
+      get {
+        return ExtensionData.GetFixedList<OperationSource>("sources", false)
+                            .Sort((x, y) => x.Name.CompareTo(y.Name));
+      }
+    }
+
+
     public string Prefix {
       get {
         return ExtensionData.Get("prefix", string.Empty);
@@ -111,6 +127,7 @@ namespace Empiria.Budgeting.Transactions {
         return ExtensionData.Get("selectProduct", ThreeStateValue.False);
       }
     }
+
 
     #endregion Properties
 

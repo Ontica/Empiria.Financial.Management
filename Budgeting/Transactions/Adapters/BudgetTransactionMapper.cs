@@ -108,27 +108,34 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static private FixedList<TransactionTypeForEditionDto> MapTransactionTypes(Budget budget) {
-      return budget.AvailableTransactionTypes.Select(x => MapTransactionTypeForEdition(BudgetTransactionType.Parse(x.UID)))
+      var principal = ExecutionServer.CurrentPrincipal;
+
+      return budget.AvailableTransactionTypes.Select(x => BudgetTransactionType.Parse(x.UID))
+                                             .ToFixedList()
+                                             .FindAll(x => !x.IsProtected ||
+                                                           principal.IsInRole("budget-manager") ||
+                                                           principal.IsInRole("budget-authorizer"))
+                                             .Select(x => MapTransactionTypeForEdition(BudgetTransactionType.Parse(x.UID)))
                                              .ToFixedList();
     }
 
 
-    static private TransactionTypeForEditionDto MapTransactionTypeForEdition(BudgetTransactionType txn) {
+    static private TransactionTypeForEditionDto MapTransactionTypeForEdition(BudgetTransactionType txnType) {
       return new TransactionTypeForEditionDto {
-        UID = txn.UID,
-        Name = txn.DisplayName,
-        OperationSources = OperationSource.GetList().MapToNamedEntityList(),
-        RelatedDocumentTypes = txn.RelatedDocumentTypes.MapToNamedEntityList(),
-        EntriesRules = MapTransactionTypeEntriesRules(txn)
+        UID = txnType.UID,
+        Name = txnType.DisplayName,
+        OperationSources = txnType.OperationSources.MapToNamedEntityList(),
+        RelatedDocumentTypes = txnType.RelatedDocumentTypes.MapToNamedEntityList(),
+        EntriesRules = MapTransactionTypeEntriesRules(txnType)
       };
     }
 
 
-    static private TransactionTypeEntriesRulesDto MapTransactionTypeEntriesRules(BudgetTransactionType txn) {
+    static private TransactionTypeEntriesRulesDto MapTransactionTypeEntriesRules(BudgetTransactionType txnType) {
       return new TransactionTypeEntriesRulesDto {
-        BalanceColumns = txn.BalanceColumns.MapToNamedEntityList(),
-        SelectProduct = txn.SelectProduct,
-        Years = txn.AvailableYears
+        BalanceColumns = txnType.BalanceColumns.MapToNamedEntityList(),
+        SelectProduct = txnType.SelectProduct,
+        Years = txnType.AvailableYears
       };
     }
 

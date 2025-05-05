@@ -58,7 +58,8 @@ namespace Empiria.Budgeting {
         FixedList<int> ids = base.ExtendedDataField.GetFixedList<int>("availableTransactionTypes", false);
 
         return ids.Select(x => (INamedEntity) ObjectTypeInfo.Parse(x))
-                  .ToFixedList();
+                  .ToFixedList()
+                  .Sort((x, y) => x.Name.CompareTo(y.Name));
       }
     }
 
