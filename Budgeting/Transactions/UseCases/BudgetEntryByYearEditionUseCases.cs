@@ -44,11 +44,15 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       transaction.UpdateEntries(entries);
 
-      transaction.AddEntries(byYearTransaction.GetNewBudgetEntries(fields));
+      entries = byYearTransaction.GetNewBudgetEntries(fields);
+
+      transaction.AddEntries(entries);
 
       transaction.Save();
 
-      return BudgetEntryByYearMapper.Map(byYearTransaction, entries);
+      var entryByYear = new BudgetEntryByYear(byYearTransaction.BuildUID(entries[0]), entries);
+
+      return BudgetEntryByYearMapper.Map(entryByYear);
     }
 
 
@@ -62,11 +66,13 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       FixedList<BudgetEntry> entries = byYearTransaction.GetBudgetEntries(entryByYearUID);
 
-      return BudgetEntryByYearMapper.Map(byYearTransaction, entries);
+      var entryByYear = new BudgetEntryByYear(entryByYearUID, entries);
+
+      return BudgetEntryByYearMapper.Map(entryByYear);
     }
 
 
-    public BudgetEntryByYearDto RemoveBudgetEntryByYear(string transactionUID, string entryByYearUID) {
+    public void RemoveBudgetEntryByYear(string transactionUID, string entryByYearUID) {
       Assertion.Require(transactionUID, nameof(transactionUID));
       Assertion.Require(entryByYearUID, nameof(entryByYearUID));
 
@@ -79,8 +85,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.RemoveEntries(entries);
 
       transaction.Save();
-
-      return BudgetEntryByYearMapper.Map(byYearTransaction, entries);
     }
 
 
@@ -99,7 +103,9 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       transaction.Save();
 
-      return BudgetEntryByYearMapper.Map(byYearTransaction, entries);
+      var entryByYear = new BudgetEntryByYear(fields.UID, entries);
+
+      return BudgetEntryByYearMapper.Map(entryByYear);
     }
 
     #endregion Use cases

@@ -15,24 +15,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     #region Mappers
 
-    static internal FixedList<BudgetEntryByYearDto> Map(FixedList<BudgetEntryByYear> entriesByYear) {
-      return entriesByYear.Select(x => Map(x))
-                          .ToFixedList();
-    }
-
-
-    static internal BudgetEntryByYearDto Map(BudgetTransactionByYear byYearTransaction,
-                                             FixedList<BudgetEntry> selectedEntries) {
-      return new BudgetEntryByYearDto {
-
-      };
-    }
-
-    #endregion Mappers
-
-    #region Helpers
-
-    static private BudgetEntryByYearDto Map(BudgetEntryByYear entry) {
+    static internal BudgetEntryByYearDto Map(BudgetEntryByYear entry) {
       return new BudgetEntryByYearDto {
         UID = entry.UID,
         TransactionUID = entry.Transaction.UID,
@@ -48,6 +31,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Amounts = MapAmounts(entry.Entries),
       };
     }
+
+    #endregion Mappers
+
+    #region Helpers
 
     static private FixedList<BudgetMonthEntryDto> MapAmounts(FixedList<BudgetEntry> entries) {
       return entries.Select(x => Map(x))

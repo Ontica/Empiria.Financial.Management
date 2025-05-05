@@ -38,7 +38,7 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpGet]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{entryByYearUID:guid}/get-annually")]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{entryByYearUID}/get-annually")]
     public SingleObjectModel GetBudgetEntriesByYear([FromUri] string budgetTransactionUID,
                                                     [FromUri] string entryByYearUID) {
 
@@ -51,12 +51,12 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpDelete]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{entryByYearUID:guid}/remove-annually")]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{entryByYearUID}/remove-annually")]
     public NoDataModel RemoveBudgetEntriesByYear([FromUri] string budgetTransactionUID,
                                                  [FromUri] string entryByYearUID) {
 
       using (var usecases = BudgetEntryByYearEditionUseCases.UseCaseInteractor()) {
-        _ = usecases.RemoveBudgetEntryByYear(budgetTransactionUID, entryByYearUID);
+        usecases.RemoveBudgetEntryByYear(budgetTransactionUID, entryByYearUID);
 
         return new NoDataModel(base.Request);
       }
@@ -64,7 +64,7 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPut, HttpPatch]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{entryByYearUID:guid}/update-annually")]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{entryByYearUID}/update-annually")]
     public SingleObjectModel UpdateBudgetEntriesByYear([FromUri] string budgetTransactionUID,
                                                        [FromUri] string entryByYearUID,
                                                        [FromBody] BudgetEntryByYearFields fields) {

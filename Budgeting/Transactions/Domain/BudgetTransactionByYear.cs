@@ -57,18 +57,27 @@ namespace Empiria.Budgeting.Transactions {
         Year = int.Parse(parts[7])
       };
 
+      Assertion.Ensure(fields.TransactionUID == Transaction.UID, "Transaction UID mismatch.");
+
       return GetBudgetEntries(fields);
     }
 
 
+    internal string BuildUID(BudgetEntry entry) {
+      return $"{entry.BudgetTransaction.UID}|{entry.BalanceColumn.UID}|{entry.BudgetAccount.UID}|" +
+             $"{entry.Product.UID}|{entry.ProductUnit.UID}|{entry.Project.UID}|{entry.Currency.UID}|{entry.Year}";
+    }
+
+
     internal FixedList<BudgetEntry> GetBudgetEntries(BudgetEntryByYearFields fields) {
+
       var column = FieldPatcher.PatchField(fields.BalanceColumnUID, BalanceColumn.Empty);
       var account = FieldPatcher.PatchField(fields.BudgetAccountUID, BudgetAccount.Empty);
       var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
       var productUnit = FieldPatcher.PatchField(fields.ProductUnitUID, ProductUnit.Empty);
       var project = FieldPatcher.PatchField(fields.ProjectUID, Project.Empty);
-      var currency = FieldPatcher.PatchField(fields.CurrencyUID, Currency.Default);
-      var year = fields.Year > 0 ? fields.Year : Transaction.BaseBudget.Year;
+      var currency = FieldPatcher.PatchField(fields.CurrencyUID, Currency.Empty);
+      var year = fields.Year;
 
       FixedList<BudgetEntry> entries = Transaction.Entries.FindAll(x => x.BalanceColumn.Equals(column) &&
                                                                         x.BudgetAccount.Equals(account) &&
@@ -111,6 +120,7 @@ namespace Empiria.Budgeting.Transactions {
 
       return list.ToFixedList();
     }
+
 
     public FixedList<BudgetEntryByYear> GetEntries() {
       var groups = Transaction.Entries.GroupBy(x => BudgetEntryByYear.BuildUID(x));

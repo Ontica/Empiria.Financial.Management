@@ -19,6 +19,8 @@ namespace Empiria.Budgeting.Transactions {
 
     public BudgetEntryByYear(string entryByYearUID, FixedList<BudgetEntry> entries) {
       Assertion.Require(entryByYearUID, nameof(entryByYearUID));
+      Assertion.Require(entries, nameof(entries));
+      Assertion.Require(entries.Count > 0, "entries must not be an empty list.");
 
       string[] parts = entryByYearUID.Split('|');
 
@@ -30,6 +32,7 @@ namespace Empiria.Budgeting.Transactions {
       Project = Project.Parse(parts[5]);
       Currency = Currency.Parse(parts[6]);
       Year = int.Parse(parts[7]);
+
       Entries = entries;
     }
 
@@ -49,23 +52,23 @@ namespace Empiria.Budgeting.Transactions {
     }
 
     public BudgetTransaction Transaction {
-      get; private set;
+      get;
     }
 
     public BalanceColumn BalanceColumn {
-      get; private set;
+      get;
     }
 
     public BudgetAccount BudgetAccount {
-      get; private set;
+      get;
     }
 
     public Product Product {
-      get; private set;
+      get;
     }
 
     public string Description {
-      get; private set;
+      get;
     } = string.Empty;
 
 
@@ -79,15 +82,15 @@ namespace Empiria.Budgeting.Transactions {
 
 
     public Project Project {
-      get; private set;
+      get;
     }
 
     public int Year {
-      get; private set;
+      get;
     }
 
     public Currency Currency {
-      get; private set;
+      get;
     }
 
     public FixedList<BudgetEntry> Entries {
