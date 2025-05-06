@@ -83,7 +83,7 @@ namespace Empiria.Budgeting {
 
     public string Name {
       get {
-        return $"[{BaseSegment.Code}] - {BaseSegment.Name} ({OrganizationalUnit.Code})";
+        return $"[{BaseSegment.Code}] - {BaseSegment.Name}";
       }
     }
 
@@ -145,7 +145,8 @@ namespace Empiria.Budgeting {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.Code, this.Name, this.OrganizationalUnit.Keywords);
+        return EmpiriaString.BuildKeywords(this.Code, this.Name, this.BaseSegment.Keywords,
+                                           this.OrganizationalUnit.Keywords);
       }
     }
 

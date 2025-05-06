@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.DynamicData;
+using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
@@ -40,7 +41,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     private FixedList<DataTableColumn> BuildColumns() {
       var columns = new List<DataTableColumn> {
-        new DataTableColumn("itemDescription", "Partida presupuestal", "text-link-wrap"),
+        new DataTableColumn("itemDescription", "Partida presupuestal", "text-italic"),
       };
 
       if (_entries.SelectDistinctFlat(x => x.Entries.Select(y => y.Year)).Count() >= 2) {
@@ -137,6 +138,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       UID = entry.UID;
       ItemType = DataTableEntryType.Entry.ToString();
       ItemDescription = entry.BudgetAccount.BaseSegment.FullName;
+
+      if (entry.BudgetAccount.Status == EntityStatus.Pending) {
+        ItemDescription += " (Requiere autorización)";
+      }
+
       TransactionUID = entry.Transaction.UID;
       BalanceColumn = entry.BalanceColumn.Name;
       BudgetAccount = entry.BudgetAccount.Name;
