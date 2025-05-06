@@ -42,6 +42,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     private FixedList<DataTableColumn> BuildColumns() {
       var columns = new List<DataTableColumn> {
         new DataTableColumn("itemDescription", "Partida presupuestal", "text-italic"),
+        new DataTableColumn("budgetProgram", "PP", "text-no-wrap"),
       };
 
       if (_entries.SelectDistinctFlat(x => x.Entries.Select(y => y.Year)).Count() >= 2) {
@@ -140,12 +141,13 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       ItemDescription = entry.BudgetAccount.BaseSegment.FullName;
 
       if (entry.BudgetAccount.Status == EntityStatus.Pending) {
-        ItemDescription += " (Requiere autorización)";
+        ItemDescription += " (Autorización pendiente)";
       }
 
       TransactionUID = entry.Transaction.UID;
       BalanceColumn = entry.BalanceColumn.Name;
       BudgetAccount = entry.BudgetAccount.Name;
+      BudgetProgram = entry.BudgetAccount.BudgetProgram;
       Product = entry.Product.Name;
       Description = entry.Description;
       ProductUnit = entry.ProductUnit.Name;
@@ -186,6 +188,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     public string BudgetAccount {
       get;
+    } = string.Empty;
+
+
+    public string BudgetProgram {
+      get; private set;
     } = string.Empty;
 
 
@@ -240,6 +247,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         "ItemType",
         "ItemDescription",
         "BudgetAccount",
+        "BudgetProgram",
         "BalanceColumn",
         "Product",
         "Description",

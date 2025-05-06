@@ -105,6 +105,11 @@ namespace Empiria.Budgeting {
       get; private set;
     }
 
+    public string BudgetProgram {
+      get {
+        return ExtData.Get("budgetProgram", "N/D");
+      }
+    }
 
     [DataField("BDG_ACCT_IDENTIFICATORS")]
     private string _identificators = string.Empty;
@@ -146,7 +151,7 @@ namespace Empiria.Budgeting {
     public virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.Code, this.Name, this.BaseSegment.Keywords,
-                                           this.OrganizationalUnit.Keywords);
+                                           this.BudgetProgram, this.OrganizationalUnit.Keywords);
       }
     }
 
