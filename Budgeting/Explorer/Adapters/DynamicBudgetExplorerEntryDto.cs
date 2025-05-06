@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-
 namespace Empiria.Budgeting.Explorer.Adapters {
 
   /// <summary>Output DTO with budget explorer entry information.</summary>

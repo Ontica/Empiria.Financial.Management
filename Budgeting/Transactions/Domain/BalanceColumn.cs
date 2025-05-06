@@ -10,7 +10,7 @@
 
 namespace Empiria.Budgeting.Transactions {
 
-  public class BalanceColumn : GeneralObject , INamedEntity {
+  public class BalanceColumn : GeneralObject, INamedEntity {
 
     #region Constructors and parsers
 

@@ -11,7 +11,6 @@
 using Empiria.Services;
 
 using Empiria.Budgeting.Adapters;
-using Empiria.Budgeting.Data;
 
 namespace Empiria.Budgeting.UseCases {
 

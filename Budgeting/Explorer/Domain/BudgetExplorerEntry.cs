@@ -67,6 +67,7 @@ namespace Empiria.Budgeting.Explorer {
       get; private set;
     } = Currency.Empty;
 
+
     public decimal Planned {
       get; private set;
     }

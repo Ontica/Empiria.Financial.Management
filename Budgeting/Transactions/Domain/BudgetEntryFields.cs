@@ -93,7 +93,6 @@ namespace Empiria.Budgeting.Transactions {
       get; set;
     }
 
-
     public decimal OriginalAmount {
       get; set;
     }
