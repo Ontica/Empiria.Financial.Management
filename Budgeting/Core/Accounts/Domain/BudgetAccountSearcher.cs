@@ -69,6 +69,7 @@ namespace Empiria.Budgeting {
       Assertion.Require(orgUnit, nameof(orgUnit));
 
       filterString = EmpiriaString.Clean(filterString ?? string.Empty);
+      filterString = filterString.Replace("{{ACCOUNT.CODE.FIELD}}", "BDG_ACCT_CODE");
 
       string budgetTypeFilter = GetBudgetTypeFilter();
       string orgUnitFilter = GetOrgUnitFilter(orgUnit);
@@ -92,7 +93,7 @@ namespace Empiria.Budgeting {
 
       FixedList<BudgetAccount> assignedAccounts = Search(orgUnit, filterString);
 
-      FixedList<BudgetAccountSegment> allSegments = _budgetType.ProductProcurementSegmentType.SearchInstances(_keywords);
+      FixedList<BudgetAccountSegment> allSegments = _budgetType.ProductProcurementSegmentType.SearchInstances(filterString, _keywords);
 
       return allSegments.Remove(assignedAccounts.Select(x => x.BaseSegment))
                         .Distinct()

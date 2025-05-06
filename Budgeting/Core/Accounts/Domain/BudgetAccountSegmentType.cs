@@ -96,10 +96,11 @@ namespace Empiria.Budgeting {
     }
 
 
-    public FixedList<BudgetAccountSegment> SearchInstances(string keywords) {
+    public FixedList<BudgetAccountSegment> SearchInstances(string filterString, string keywords) {
+      filterString = filterString ?? string.Empty;
       keywords = keywords ?? string.Empty;
 
-      return BudgetAccountSegmentDataService.BudgetAccountSegments(this, keywords);
+      return BudgetAccountSegmentDataService.BudgetAccountSegments(this, filterString, keywords);
     }
 
     #endregion Properties

@@ -38,7 +38,7 @@ namespace Empiria.Budgeting.UseCases {
 
       var segmentType = BudgetAccountSegmentType.Parse(segmentTypeUID);
 
-      FixedList<BudgetAccountSegment> segments = segmentType.SearchInstances(keywords);
+      FixedList<BudgetAccountSegment> segments = segmentType.SearchInstances(string.Empty, keywords);
 
       return BudgetAccountSegmentMapper.Map(segments);
     }

@@ -23,6 +23,7 @@ namespace Empiria.Budgeting.Data {
       }
       var sql = "UPDATE FMS_BUDGET_ACCOUNTS_SEGMENTS " +
                $"SET BDG_ACCT_SEGMENT_UID = '{Guid.NewGuid().ToString()}', " +
+               $"BDG_ACCT_SEGMENT_NAME = '{EmpiriaString.Clean(segment.Name)}', " +
                $"BDG_ACCT_SEGMENT_KEYWORDS = '{segment.Keywords}' " +
                $"WHERE BDG_ACCT_SEGMENT_ID = {segment.Id}";
 
@@ -33,15 +34,22 @@ namespace Empiria.Budgeting.Data {
 
 
     static internal FixedList<BudgetAccountSegment> BudgetAccountSegments(BudgetAccountSegmentType segmentType,
+                                                                          string filterString,
                                                                           string keywords) {
-      var filter = SearchExpression.ParseAndLikeKeywords("BDG_ACCT_SEGMENT_KEYWORDS", keywords);
+      filterString = EmpiriaString.Clean(filterString ?? string.Empty);
+      filterString = filterString.Replace("{{ACCOUNT.CODE.FIELD}}", "BDG_ACCT_SEGMENT_CODE");
+
+      var keywordsfilter = SearchExpression.ParseAndLikeKeywords("BDG_ACCT_SEGMENT_KEYWORDS", keywords);
 
       var sql = "SELECT * FROM FMS_BUDGET_ACCOUNTS_SEGMENTS " +
                 $"WHERE BDG_ACCT_SEGMENT_TYPE_ID = {segmentType.Id} " +
-                "AND BDG_ACCT_SEGMENT_STATUS <> 'X' ";
+                $"AND BDG_ACCT_SEGMENT_STATUS <> 'X' ";
 
-      if (filter.Length != 0) {
-        sql += $"AND {filter} ";
+      if (filterString.Length != 0) {
+        sql += $"AND {filterString} ";
+      }
+      if (keywordsfilter.Length != 0) {
+        sql += $"AND {keywordsfilter} ";
       }
       sql += $"ORDER BY BDG_ACCT_SEGMENT_CODE";
 
