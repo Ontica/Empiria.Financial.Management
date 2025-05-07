@@ -83,7 +83,8 @@ namespace Empiria.Budgeting {
 
     public string Name {
       get {
-        return $"[{BaseSegment.Code}] - {BaseSegment.Name}";
+        return $"{BaseSegment.Code} - {BaseSegment.Name}" +
+               (Status == EntityStatus.Pending ? " (Autorización pendiente)" : string.Empty);
       }
     }
 

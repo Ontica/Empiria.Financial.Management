@@ -138,12 +138,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     internal BudgetEntryByYearDynamicDto(BudgetEntryByYear entry) {
       UID = entry.UID;
       ItemType = DataTableEntryType.Entry.ToString();
-      ItemDescription = entry.BudgetAccount.BaseSegment.FullName;
-
-      if (entry.BudgetAccount.Status == EntityStatus.Pending) {
-        ItemDescription += " (Autorización pendiente)";
-      }
-
+      ItemDescription = entry.BudgetAccount.Name;
       TransactionUID = entry.Transaction.UID;
       BalanceColumn = entry.BalanceColumn.Name;
       BudgetAccount = entry.BudgetAccount.Name;
