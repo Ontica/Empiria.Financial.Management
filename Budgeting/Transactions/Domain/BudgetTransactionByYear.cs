@@ -11,7 +11,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Empiria.Financial;
 using Empiria.Products;
 using Empiria.Projects;
 
@@ -76,7 +75,7 @@ namespace Empiria.Budgeting.Transactions {
       var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
       var productUnit = FieldPatcher.PatchField(fields.ProductUnitUID, ProductUnit.Empty);
       var project = FieldPatcher.PatchField(fields.ProjectUID, Project.Empty);
-      var currency = FieldPatcher.PatchField(fields.CurrencyUID, Currency.Empty);
+      var currency = FieldPatcher.PatchField(fields.CurrencyUID, Transaction.BaseBudget.BudgetType.Currency);
       var year = fields.Year;
 
       FixedList<BudgetEntry> entries = Transaction.Entries.FindAll(x => x.BalanceColumn.Equals(column) &&

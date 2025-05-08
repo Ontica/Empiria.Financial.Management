@@ -73,7 +73,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public BudgetMonthEntryFields[] Amounts {
       get; set;
-    }
+    } = new BudgetMonthEntryFields[0];
 
   }  // BudgetEntryByYearFields
 
