@@ -277,15 +277,6 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal void AddEntries(FixedList<BudgetEntry> entries) {
-      Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
-
-      Assertion.Require(entries, nameof(entries));
-
-      _entries.Value.AddRange(entries);
-    }
-
-
     internal void Authorize() {
       Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this transaction.");
 
@@ -356,28 +347,6 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal void RemoveEntry(BudgetEntry entry) {
-      Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
-      Assertion.Require(entry, nameof(entry));
-      Assertion.Require(_entries.Value.Contains(entry),
-                        "Entry to remove does not belong to this transaction.");
-
-      entry.Delete();
-
-      _entries.Value.Remove(entry);
-    }
-
-
-    internal void RemoveEntries(FixedList<BudgetEntry> entries) {
-      Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
-      Assertion.Require(entries, nameof(entries));
-
-      foreach (var entry in entries) {
-        RemoveEntry(entry);
-      }
-    }
-
-
     internal void SendToAuthorization() {
       Assertion.Require(Rules.CanSendToAuthorization, "Current user can not send this transaction to authorization.");
 
@@ -388,6 +357,20 @@ namespace Empiria.Budgeting.Transactions {
       this.RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.RequestedTime = DateTime.Now;
       this.Status = BudgetTransactionStatus.OnAuthorization;
+    }
+
+
+    internal void RemoveEntry(BudgetEntry entry) {
+      Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
+      Assertion.Require(entry, nameof(entry));
+      Assertion.Require(_entries.Value.Contains(entry),
+                        "Entry to remove does not belong to this transaction.");
+
+      entry.Delete();
+
+      entry.Save(); // ToDo: remove this call after deleted items list rfx
+
+      _entries.Value.Remove(entry);
     }
 
 
@@ -410,10 +393,19 @@ namespace Empiria.Budgeting.Transactions {
 
     internal void UpdateEntries(FixedList<BudgetEntry> entries) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
-
       Assertion.Require(entries, nameof(entries));
 
-      // ToDo: To be implemented
+      Assertion.Require(entries.CountAll(x => x.BudgetTransaction.Equals(this)) == entries.Count,
+                        "All entries must belong to this transaction.");
+
+      foreach (var entry in entries) {
+        if (entry.IsNew) {
+          _entries.Value.Add(entry);
+        } else if (entry.Status == StateEnums.TransactionStatus.Deleted) {
+          _entries.Value.Remove(entry);
+        }
+        entry.Save();     // ToDo: remove this call after deleted items list rfx
+      }
     }
 
     #endregion Methods

@@ -133,8 +133,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       transaction.RemoveEntry(budgetEntry);
 
-      budgetEntry.Save();
-
       transaction.Save();
 
       return BudgetEntryMapper.Map(budgetEntry);
@@ -196,7 +194,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       budgetEntry.Update(fields);
 
-      budgetEntry.Save();
+      transaction.Save();
 
       return BudgetEntryMapper.Map(budgetEntry);
     }

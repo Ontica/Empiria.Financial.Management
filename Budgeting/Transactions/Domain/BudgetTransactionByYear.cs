@@ -41,6 +41,17 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Methods
 
+    internal string BuildUID(BudgetEntry entry) {
+      return $"{entry.BudgetTransaction.UID}|{entry.BalanceColumn.UID}|{entry.BudgetAccount.UID}|" +
+             $"{entry.Product.UID}|{entry.ProductUnit.UID}|{entry.Project.UID}|{entry.Currency.UID}|{entry.Year}";
+    }
+
+
+    internal FixedList<BudgetEntry> CreateBudgetEntries(BudgetEntryByYearFields fields) {
+      return GetNewBudgetEntries(fields);
+    }
+
+
     internal FixedList<BudgetEntry> GetBudgetEntries(string entryByYearUID) {
       string[] parts = entryByYearUID.Split('|');
 
@@ -59,12 +70,6 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Ensure(fields.TransactionUID == Transaction.UID, "Transaction UID mismatch.");
 
       return GetBudgetEntries(fields);
-    }
-
-
-    internal string BuildUID(BudgetEntry entry) {
-      return $"{entry.BudgetTransaction.UID}|{entry.BalanceColumn.UID}|{entry.BudgetAccount.UID}|" +
-             $"{entry.Product.UID}|{entry.ProductUnit.UID}|{entry.Project.UID}|{entry.Currency.UID}|{entry.Year}";
     }
 
 
@@ -90,37 +95,6 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal FixedList<BudgetEntry> GetNewBudgetEntries(BudgetEntryByYearFields fields) {
-      var list = new List<BudgetEntry>(12);
-
-      foreach (var amount in fields.Amounts) {
-        if (amount.Amount == 0) {
-          continue;
-        }
-        var entryFields = new BudgetEntryFields {
-          Amount = amount.Amount,
-          BalanceColumnUID = fields.BalanceColumnUID,
-          BudgetAccountUID = fields.BudgetAccountUID,
-          CurrencyUID = fields.CurrencyUID,
-          ProjectUID = fields.ProjectUID,
-          ProductUID = fields.ProductUID,
-          ProductUnitUID = fields.ProductUnitUID,
-          Description = fields.Description,
-          Justification = fields.Justification,
-          OriginalAmount = amount.Amount
-        };
-
-        var entry = new BudgetEntry(Transaction, fields.Year, amount.Month);
-
-        entry.Update(entryFields);
-
-        list.Add(entry);
-      }
-
-      return list.ToFixedList();
-    }
-
-
     public FixedList<BudgetEntryByYear> GetEntries() {
       var groups = Transaction.Entries.GroupBy(x => BudgetEntryByYear.BuildUID(x));
 
@@ -135,7 +109,54 @@ namespace Empiria.Budgeting.Transactions {
       return list.ToFixedList();
     }
 
+
+    internal FixedList<BudgetEntry> GetUpdatedBudgetEntries(BudgetEntryByYearFields fields) {
+      List<BudgetEntry> currentEntries = GetBudgetEntries(fields.UID).ToList();
+
+      return GetNewBudgetEntries(fields);
+    }
+
     #endregion Methods
+
+    #region Helpers
+
+    private FixedList<BudgetEntry> GetNewBudgetEntries(BudgetEntryByYearFields fields) {
+      var list = new List<BudgetEntry>(12);
+
+      var currentEntries = GetBudgetEntries(fields);
+
+      var newEntries = fields.Amounts.ToFixedList()
+                                     .FindAll(x => x.Amount != 0 &&
+                                                   !currentEntries.Contains(y => y.UID == x.BudgetEntryUID));
+
+      foreach (var amount in newEntries) {
+        var entryFields = new BudgetEntryFields {
+          BalanceColumnUID = fields.BalanceColumnUID,
+          BudgetAccountUID = fields.BudgetAccountUID,
+          CurrencyUID = fields.CurrencyUID,
+          ProjectUID = fields.ProjectUID,
+          ProductUID = fields.ProductUID,
+          ProductUnitUID = fields.ProductUnitUID,
+
+          Description = fields.Description,
+          Justification = fields.Justification,
+
+          Amount = amount.Amount,
+          OriginalAmount = amount.Amount,
+          ProductQty = amount.ProductQty,
+        };
+
+        var entry = new BudgetEntry(Transaction, fields.Year, amount.Month);
+
+        entry.Update(entryFields);
+
+        list.Add(entry);
+      }
+
+      return list.ToFixedList();
+    }
+
+    #endregion Helpers
 
   }  // class BudgetTransactionByYear
 
