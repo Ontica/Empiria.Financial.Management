@@ -113,6 +113,15 @@ namespace Empiria.Budgeting.Transactions {
   static internal class BudgetEntryFieldsExtensions {
 
     static public void EnsureIsValid(this BudgetEntryFields fields) {
+
+      fields.BudgetAccountUID = FieldPatcher.Clean(fields.BudgetAccountUID);
+      fields.BalanceColumnUID = FieldPatcher.Clean(fields.BalanceColumnUID);
+      fields.ProductUID = FieldPatcher.Clean(fields.ProductUID);
+      fields.ProductUnitUID = FieldPatcher.Clean(fields.ProductUnitUID);
+      fields.PartyUID = FieldPatcher.Clean(fields.PartyUID);
+      fields.ProjectUID = FieldPatcher.Clean(fields.ProjectUID);
+      fields.CurrencyUID = FieldPatcher.Clean(fields.CurrencyUID);
+
       fields.Description = EmpiriaString.Clean(fields.Description);
       fields.Justification = EmpiriaString.Clean(fields.Justification);
 
@@ -127,12 +136,11 @@ namespace Empiria.Budgeting.Transactions {
 
       if (fields.ProductUID.Length != 0) {
         _ = Product.Parse(fields.ProductUID);
-      }
 
-      if (fields.ProductUID.Length != 0) {
         Assertion.Require(fields.ProductUnitUID.Length != 0, "Se requiere la unidad de medida del producto.");
         Assertion.Require(fields.ProductQty > 0, "La cantidad del producto debe ser mayor a cero.");
       }
+
 
       if (fields.ProductUnitUID.Length != 0) {
         _ = ProductUnit.Parse(fields.ProductUnitUID);
