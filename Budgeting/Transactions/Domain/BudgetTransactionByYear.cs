@@ -48,7 +48,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal FixedList<BudgetEntry> CreateBudgetEntries(BudgetEntryByYearFields fields) {
-      return GetNewBudgetEntries(fields);
+      return GetNewBudgetEntries(fields).ToFixedList();
     }
 
 
@@ -111,16 +111,62 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal FixedList<BudgetEntry> GetUpdatedBudgetEntries(BudgetEntryByYearFields fields) {
-      List<BudgetEntry> currentEntries = GetBudgetEntries(fields.UID).ToList();
+      FixedList<BudgetEntry> currentEntries = GetBudgetEntries(fields.UID);
 
-      return GetNewBudgetEntries(fields);
+      var updatedBudgetEntries = new List<BudgetEntry>(12);
+
+      updatedBudgetEntries.AddRange(GetNewBudgetEntries(fields));
+      updatedBudgetEntries.AddRange(GetChangedBudgetEntries(fields));
+      updatedBudgetEntries.AddRange(GetDeletedBudgetEntries(fields));
+
+      return updatedBudgetEntries.ToFixedList();
     }
 
     #endregion Methods
 
     #region Helpers
 
-    private FixedList<BudgetEntry> GetNewBudgetEntries(BudgetEntryByYearFields fields) {
+    private List<BudgetEntry> GetDeletedBudgetEntries(BudgetEntryByYearFields fields) {
+      var list = new List<BudgetEntry>(12);
+
+      var currentEntries = GetBudgetEntries(fields);
+
+      var deletedEntries = currentEntries.FindAll(x => !fields.Amounts.ToFixedList().Contains(y => x.Month == y.Month));
+
+      foreach (var entry in deletedEntries) {
+        entry.Delete();
+
+        list.Add(entry);
+      }
+
+      return list;
+    }
+
+
+    private List<BudgetEntry> GetChangedBudgetEntries(BudgetEntryByYearFields fields) {
+      var list = new List<BudgetEntry>(12);
+
+      var currentEntries = GetBudgetEntries(fields);
+
+      var changedEntries = fields.Amounts.ToFixedList()
+                                  .FindAll(x => x.Amount != 0 && x.BudgetEntryUID.Length != 0 &&
+                                                currentEntries.Contains(y => y.UID == x.BudgetEntryUID));
+
+      foreach (var amount in changedEntries) {
+        BudgetEntryFields entryFields = TransformToBudgetEntryFields(fields, amount);
+
+        var entry = currentEntries.Find(x => x.UID == amount.BudgetEntryUID);
+
+        entry.Update(entryFields);
+
+        list.Add(entry);
+      }
+
+      return list;
+    }
+
+
+    private List<BudgetEntry> GetNewBudgetEntries(BudgetEntryByYearFields fields) {
       var list = new List<BudgetEntry>(12);
 
       var currentEntries = GetBudgetEntries(fields);
@@ -130,21 +176,7 @@ namespace Empiria.Budgeting.Transactions {
                                                    !currentEntries.Contains(y => y.UID == x.BudgetEntryUID));
 
       foreach (var amount in newEntries) {
-        var entryFields = new BudgetEntryFields {
-          BalanceColumnUID = fields.BalanceColumnUID,
-          BudgetAccountUID = fields.BudgetAccountUID,
-          CurrencyUID = fields.CurrencyUID,
-          ProjectUID = fields.ProjectUID,
-          ProductUID = fields.ProductUID,
-          ProductUnitUID = fields.ProductUnitUID,
-
-          Description = fields.Description,
-          Justification = fields.Justification,
-
-          Amount = amount.Amount,
-          OriginalAmount = amount.Amount,
-          ProductQty = amount.ProductQty,
-        };
+        BudgetEntryFields entryFields = TransformToBudgetEntryFields(fields, amount);
 
         var entry = new BudgetEntry(Transaction, fields.Year, amount.Month);
 
@@ -153,7 +185,26 @@ namespace Empiria.Budgeting.Transactions {
         list.Add(entry);
       }
 
-      return list.ToFixedList();
+      return list;
+    }
+
+
+    private BudgetEntryFields TransformToBudgetEntryFields(BudgetEntryByYearFields fields, BudgetMonthEntryFields amount) {
+      return new BudgetEntryFields {
+        BalanceColumnUID = fields.BalanceColumnUID,
+        BudgetAccountUID = fields.BudgetAccountUID,
+        CurrencyUID = fields.CurrencyUID,
+        ProjectUID = fields.ProjectUID,
+        ProductUID = fields.ProductUID,
+        ProductUnitUID = fields.ProductUnitUID,
+
+        Description = fields.Description,
+        Justification = fields.Justification,
+
+        Amount = amount.Amount,
+        OriginalAmount = amount.Amount,
+        ProductQty = amount.ProductQty,
+      };
     }
 
     #endregion Helpers
