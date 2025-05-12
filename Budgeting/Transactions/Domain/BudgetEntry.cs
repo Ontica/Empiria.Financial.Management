@@ -293,6 +293,8 @@ namespace Empiria.Budgeting.Transactions {
       this.BalanceColumn = PatchField(fields.BalanceColumnUID, BalanceColumn);
       this.Description = EmpiriaString.Clean(fields.Description);
       this.Justification = EmpiriaString.Clean(fields.Justification);
+      this.Year = fields.Year != 0 ? fields.Year : this.Year;
+      this.Month = fields.Month != 0 ? fields.Month : this.Month;
       this.Currency = PatchField(fields.CurrencyUID, Budget.BudgetType.Currency);
       this.OriginalAmount = fields.OriginalAmount != 0 ? fields.OriginalAmount : Math.Abs(fields.Amount);
       this.Deposit = fields.Amount > 0 ? fields.Amount : 0m;
