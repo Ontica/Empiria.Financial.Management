@@ -75,7 +75,5 @@
     <Folder Include="Credits\Data\" />
     <Folder Include="Credits\Domain\" />
     <Folder Include="Credits\UseCases\" />
-    <Folder Include="Projects\Data\" />
-    <Folder Include="Projects\Domain\" />
   </ItemGroup>
 </Project>

@@ -10,8 +10,6 @@
 
 using Empiria.Services;
 
-using Empiria.Financial.Projects.Adapters;
-
 namespace Empiria.Financial.Projects.UseCases {
 
   /// <summary>Provides use cases for update and retrieve financial projects.</summary>
@@ -31,10 +29,12 @@ namespace Empiria.Financial.Projects.UseCases {
 
     #region Use cases
 
-    public FixedList<ProjectDto> SearchProjects(string keywords) {
+    public FixedList<NamedEntityDto> SearchProjects(string keywords) {
       keywords = keywords ?? string.Empty;
 
-      return new FixedList<ProjectDto>();
+      FixedList<Project> projects = Project.SearchProjects(keywords);
+
+      return projects.MapToNamedEntityList();
     }
 
     #endregion Use cases

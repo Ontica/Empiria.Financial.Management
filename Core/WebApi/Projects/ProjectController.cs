@@ -12,7 +12,6 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Financial.Projects.Adapters;
 using Empiria.Financial.Projects.UseCases;
 
 namespace Empiria.Financial.Projects.WebApi {
@@ -23,11 +22,11 @@ namespace Empiria.Financial.Projects.WebApi {
     #region Web Apis
 
     [HttpGet]
-    [Route("v2/financial-projects")]
+    [Route("v2/financial-projects/{keywords:string}")]
     public CollectionModel SearchProjects([FromUri] string keywords = "") {
 
       using (var usecases = ProjectUseCases.UseCaseInteractor()) {
-        FixedList<ProjectDto> projects = usecases.SearchProjects(keywords);
+        FixedList<NamedEntityDto> projects = usecases.SearchProjects(keywords);
 
         return new CollectionModel(base.Request, projects);
       }

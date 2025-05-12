@@ -8,10 +8,68 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.StateEnums;
+using System;
+
 namespace Empiria.Financial.Projects.Adapters {
 
   /// <summary>Output DTO with financial projects data.</summary>
   public class ProjectDto {
+
+    public string UID {
+      get; set;
+    }
+
+
+    public int StandarAccount {
+      get; set;
+    }
+
+
+    public int CategoryId {
+      get; set;
+    }
+
+
+    public string PrjNo {
+      get; set;
+    }
+
+
+    public string Name {
+      get; set;
+    }
+
+
+    public string OrganizationUnit {
+      get; set;
+    }
+
+    
+    public DateTime StartDate {
+      get; set;
+    }
+
+
+    public DateTime EndDate {
+      get; set;
+    }
+
+
+    public string PostedBy {
+      get; set;
+    }
+
+
+    public DateTime PostingTime {
+      get; set;
+    }
+
+
+    public EntityStatus Status {
+      get; set;
+    }
+
 
   }  // class ProjectDto
 
