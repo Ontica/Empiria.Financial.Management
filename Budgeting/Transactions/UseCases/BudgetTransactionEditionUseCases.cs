@@ -192,7 +192,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var budgetEntry = transaction.GetEntry(budgetEntryUID);
 
-      budgetEntry.Update(fields);
+      transaction.UpdateEntry(budgetEntry, fields);
 
       transaction.Save();
 

@@ -15,6 +15,8 @@ using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
+using Empiria.Products;
+using Empiria.Projects;
 
 using Empiria.Budgeting.Transactions.Data;
 
@@ -267,6 +269,11 @@ namespace Empiria.Budgeting.Transactions {
 
       Assertion.Require(entryFields, nameof(entryFields));
 
+      if (TryGetEntry(entryFields) != null) {
+        Assertion.RequireFail("Ya existe un movimiento con la misma información para el mismo mes y año " +
+                              "en esta transacción presupuestal.");
+      }
+
       var entry = new BudgetEntry(this, entryFields.Year, entryFields.Month);
 
       entry.Update(entryFields);
@@ -374,6 +381,25 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal BudgetEntry TryGetEntry(BudgetEntryFields fields) {
+      var column = FieldPatcher.PatchField(fields.BalanceColumnUID, BalanceColumn.Empty);
+      var account = FieldPatcher.PatchField(fields.BudgetAccountUID, BudgetAccount.Empty);
+      var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
+      var productUnit = FieldPatcher.PatchField(fields.ProductUnitUID, ProductUnit.Empty);
+      var project = FieldPatcher.PatchField(fields.ProjectUID, Project.Empty);
+      var currency = FieldPatcher.PatchField(fields.CurrencyUID, BaseBudget.BudgetType.Currency);
+
+      return _entries.Value.Find(x => x.BalanceColumn.Equals(column) &&
+                                      x.BudgetAccount.Equals(account) &&
+                                      x.Product.Equals(product) &&
+                                      x.ProductUnit.Equals(productUnit) &&
+                                      x.Project.Equals(project) &&
+                                      x.Currency.Equals(currency) &&
+                                      x.Year == fields.Year &&
+                                      x.Month == fields.Month);
+    }
+
+
     internal void Update(BudgetTransactionFields fields) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
       Assertion.Require(fields, nameof(fields));
@@ -390,6 +416,17 @@ namespace Empiria.Budgeting.Transactions {
       ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
     }
 
+
+    internal void UpdateEntry(BudgetEntry budgetEntry, BudgetEntryFields fields) {
+      var currentEntry = TryGetEntry(fields);
+
+      if (currentEntry != null && !budgetEntry.Equals(currentEntry)) {
+        Assertion.RequireFail("Ya existe un movimiento con la misma información para el mismo mes y año " +
+                              "en esta transacción presupuestal.");
+      }
+
+      budgetEntry.Update(fields);
+    }
 
     internal void UpdateEntries(FixedList<BudgetEntry> entries) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
