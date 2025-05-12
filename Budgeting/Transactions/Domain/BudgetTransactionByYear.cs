@@ -52,6 +52,12 @@ namespace Empiria.Budgeting.Transactions {
     internal FixedList<BudgetEntry> CreateBudgetEntries(BudgetEntryByYearFields fields) {
       Assertion.Require(fields, nameof(fields));
 
+      FixedList<BudgetEntry> currentEntries = GetBudgetEntries(fields);
+
+      if (currentEntries.Count > 0) {
+        Assertion.RequireFail(AlreadyExistsMsg(currentEntries[0]));
+      }
+
       return GetNewBudgetEntries(fields).ToFixedList();
     }
 
@@ -120,10 +126,9 @@ namespace Empiria.Budgeting.Transactions {
     internal FixedList<BudgetEntry> GetUpdatedBudgetEntries(BudgetEntryByYearFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      FixedList<BudgetEntry> currentEntries = GetBudgetEntries(fields.UID);
-
       var updatedBudgetEntries = new List<BudgetEntry>(12);
 
+      updatedBudgetEntries.AddRange(GetCurrentEntriesToDelete(fields));
       updatedBudgetEntries.AddRange(GetNewBudgetEntries(fields));
       updatedBudgetEntries.AddRange(GetChangedBudgetEntries(fields));
       updatedBudgetEntries.AddRange(GetDeletedBudgetEntries(fields));
@@ -135,26 +140,23 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Helpers
 
-    private List<BudgetEntry> GetDeletedBudgetEntries(BudgetEntryByYearFields fields) {
-      var list = new List<BudgetEntry>(12);
+    private string AlreadyExistsMsg(BudgetEntry entry) {
+      var msg = $"La transacción ya contiene un movimiento con la partida presupuestal " +
+                $"[{entry.BalanceColumn.Name} - {entry.Year}] {entry.BudgetAccount.Name}.";
 
-      var currentEntries = GetBudgetEntries(fields);
-
-      FixedList<BudgetMonthEntryFields> amounts = fields.Amounts.ToFixedList();
-
-      var deletedEntries = currentEntries.FindAll(x => !amounts.Contains(y => x.Month == y.Month));
-
-      foreach (var entry in deletedEntries) {
-        entry.Delete();
-
-        list.Add(entry);
+      if (!entry.Product.IsEmptyInstance) {
+        msg += $" Producto: {entry.Product.Name}.";
       }
 
-      return list;
+      if (!entry.Project.IsEmptyInstance) {
+        msg += $" Proyecto: {entry.Project.Name}.";
+      }
+
+      return msg;
     }
 
 
-    private List<BudgetEntry> GetChangedBudgetEntries(BudgetEntryByYearFields fields) {
+    private FixedList<BudgetEntry> GetChangedBudgetEntries(BudgetEntryByYearFields fields) {
       var list = new List<BudgetEntry>(12);
 
       var currentEntries = GetBudgetEntries(fields);
@@ -174,11 +176,49 @@ namespace Empiria.Budgeting.Transactions {
         list.Add(entry);
       }
 
-      return list;
+      return list.ToFixedList();
     }
 
 
-    private List<BudgetEntry> GetNewBudgetEntries(BudgetEntryByYearFields fields) {
+    private FixedList<BudgetEntry> GetCurrentEntriesToDelete(BudgetEntryByYearFields fields) {
+      var currentEntries = GetBudgetEntries(fields);
+
+      if (currentEntries.Count() != 0 && BuildUID(currentEntries[0]) == fields.UID) {
+        return new FixedList<BudgetEntry>();
+      } else if (currentEntries.Count() != 0 && BuildUID(currentEntries[0]) != fields.UID) {
+        Assertion.RequireFail(AlreadyExistsMsg(currentEntries[0]));
+      }
+
+      FixedList<BudgetEntry> toDeleteEntries = GetBudgetEntries(fields.UID);
+
+      foreach (var entry in toDeleteEntries) {
+        entry.Delete();
+      }
+
+      return toDeleteEntries;
+    }
+
+
+    private FixedList<BudgetEntry> GetDeletedBudgetEntries(BudgetEntryByYearFields fields) {
+      var list = new List<BudgetEntry>(12);
+
+      var currentEntries = GetBudgetEntries(fields);
+
+      FixedList<BudgetMonthEntryFields> amounts = fields.Amounts.ToFixedList();
+
+      var deletedEntries = currentEntries.FindAll(x => !amounts.Contains(y => x.Month == y.Month));
+
+      foreach (var entry in deletedEntries) {
+        entry.Delete();
+
+        list.Add(entry);
+      }
+
+      return list.ToFixedList();
+    }
+
+
+    private FixedList<BudgetEntry> GetNewBudgetEntries(BudgetEntryByYearFields fields) {
       var list = new List<BudgetEntry>(12);
 
       var currentEntries = GetBudgetEntries(fields);
@@ -198,7 +238,7 @@ namespace Empiria.Budgeting.Transactions {
         list.Add(entry);
       }
 
-      return list;
+      return list.ToFixedList();
     }
 
 
