@@ -31,7 +31,8 @@ namespace Empiria.Budgeting.UseCases {
 
     #region Use cases
 
-    public FixedList<BudgetAccountSegmentDto> GetBudgetAccountSegmentsByType(string segmentTypeUID, string keywords) {
+    public FixedList<BudgetAccountSegmentDto> GetBudgetAccountSegmentsByType(string segmentTypeUID,
+                                                                             string keywords) {
       Assertion.Require(segmentTypeUID, nameof(segmentTypeUID));
       keywords = keywords ?? string.Empty;
 

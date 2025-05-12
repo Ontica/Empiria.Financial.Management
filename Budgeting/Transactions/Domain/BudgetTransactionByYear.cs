@@ -42,17 +42,23 @@ namespace Empiria.Budgeting.Transactions {
     #region Methods
 
     internal string BuildUID(BudgetEntry entry) {
+      Assertion.Require(entry, nameof(entry));
+
       return $"{entry.BudgetTransaction.UID}|{entry.BalanceColumn.UID}|{entry.BudgetAccount.UID}|" +
              $"{entry.Product.UID}|{entry.ProductUnit.UID}|{entry.Project.UID}|{entry.Currency.UID}|{entry.Year}";
     }
 
 
     internal FixedList<BudgetEntry> CreateBudgetEntries(BudgetEntryByYearFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
       return GetNewBudgetEntries(fields).ToFixedList();
     }
 
 
     internal FixedList<BudgetEntry> GetBudgetEntries(string entryByYearUID) {
+      Assertion.Require(entryByYearUID, nameof(entryByYearUID));
+
       string[] parts = entryByYearUID.Split('|');
 
       var fields = new BudgetEntryByYearFields {
@@ -74,6 +80,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal FixedList<BudgetEntry> GetBudgetEntries(BudgetEntryByYearFields fields) {
+      Assertion.Require(fields, nameof(fields));
 
       var column = FieldPatcher.PatchField(fields.BalanceColumnUID, BalanceColumn.Empty);
       var account = FieldPatcher.PatchField(fields.BudgetAccountUID, BudgetAccount.Empty);
@@ -111,6 +118,8 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal FixedList<BudgetEntry> GetUpdatedBudgetEntries(BudgetEntryByYearFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
       FixedList<BudgetEntry> currentEntries = GetBudgetEntries(fields.UID);
 
       var updatedBudgetEntries = new List<BudgetEntry>(12);
@@ -131,7 +140,9 @@ namespace Empiria.Budgeting.Transactions {
 
       var currentEntries = GetBudgetEntries(fields);
 
-      var deletedEntries = currentEntries.FindAll(x => !fields.Amounts.ToFixedList().Contains(y => x.Month == y.Month));
+      FixedList<BudgetMonthEntryFields> amounts = fields.Amounts.ToFixedList();
+
+      var deletedEntries = currentEntries.FindAll(x => !amounts.Contains(y => x.Month == y.Month));
 
       foreach (var entry in deletedEntries) {
         entry.Delete();
@@ -148,8 +159,9 @@ namespace Empiria.Budgeting.Transactions {
 
       var currentEntries = GetBudgetEntries(fields);
 
-      var changedEntries = fields.Amounts.ToFixedList()
-                                  .FindAll(x => x.Amount != 0 && x.BudgetEntryUID.Length != 0 &&
+      FixedList<BudgetMonthEntryFields> amounts = fields.Amounts.ToFixedList();
+
+      var changedEntries = amounts.FindAll(x => x.Amount != 0 && x.BudgetEntryUID.Length != 0 &&
                                                 currentEntries.Contains(y => y.UID == x.BudgetEntryUID));
 
       foreach (var amount in changedEntries) {
@@ -171,9 +183,10 @@ namespace Empiria.Budgeting.Transactions {
 
       var currentEntries = GetBudgetEntries(fields);
 
-      var newEntries = fields.Amounts.ToFixedList()
-                                     .FindAll(x => x.Amount != 0 &&
-                                                   !currentEntries.Contains(y => y.UID == x.BudgetEntryUID));
+      FixedList<BudgetMonthEntryFields> amounts = fields.Amounts.ToFixedList();
+
+      var newEntries = amounts.FindAll(x => x.Amount != 0 &&
+                                            !currentEntries.Contains(y => y.UID == x.BudgetEntryUID));
 
       foreach (var amount in newEntries) {
         BudgetEntryFields entryFields = TransformToBudgetEntryFields(fields, amount);
@@ -189,7 +202,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    private BudgetEntryFields TransformToBudgetEntryFields(BudgetEntryByYearFields fields, BudgetMonthEntryFields amount) {
+    private BudgetEntryFields TransformToBudgetEntryFields(BudgetEntryByYearFields fields,
+                                                           BudgetMonthEntryFields amount) {
       return new BudgetEntryFields {
         BalanceColumnUID = fields.BalanceColumnUID,
         BudgetAccountUID = fields.BudgetAccountUID,
