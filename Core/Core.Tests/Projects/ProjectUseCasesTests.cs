@@ -12,6 +12,8 @@ using Xunit;
 
 using Empiria.Financial.Projects.UseCases;
 
+using Empiria.Financial.Projects.Adapters;
+
 namespace Empiria.Tests.Financial.Projects {
 
   /// <summary>Test cases for financial projects use cases.</summary>
@@ -45,6 +47,22 @@ namespace Empiria.Tests.Financial.Projects {
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
     }
+
+
+    [Fact]
+    public void Should_Search_ProjectsByQuery() {
+      var query = new ProjectQuery {
+        Keywords = "Agua",
+        OrganizationUnitUID = "",
+        Status = StateEnums.EntityStatus.Active
+      };
+
+      var sut = _usecases.SearchProjects(query);
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
 
     #endregion Facts
 
