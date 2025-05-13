@@ -11,24 +11,35 @@
 using System;
 
 using Empiria.Json;
-using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Financial.Data;
+using Empiria.Financial.Projects.Adapters;
+using Empiria.Contacts;
 
 
 namespace Empiria.Financial {
 
   /// <summary>Represents a financial project.</summary>
   public class Project : BaseObject, INamedEntity {
+    //private ProjectFields fields;
 
     #region Constructors and parsers
 
+    public Project() {
+      // Require by Empiria FrameWork
+    }
+
     static public Project Parse(int id) => ParseId<Project>(id);
 
-    static public Project Parse(string uid) => ParseKey<Project>(uid);   
+    static public Project Parse(string uid) => ParseKey<Project>(uid);
 
     static public Project Empty => ParseEmpty<Project>();
+
+    public Project(ProjectFields fields) {
+      Assertion.Require(fields, nameof(fields));
+      Update(fields);
+    }
 
     #endregion Constructors and parsers
 
@@ -41,7 +52,7 @@ namespace Empiria.Financial {
 
 
     [DataField("PRJ_STD_ACCT_ID")]
-    public int StandarAccount {
+    public int StandarAccountId {
       get; private set;
     }
 
@@ -65,7 +76,7 @@ namespace Empiria.Financial {
 
 
     [DataField("PRJ_ORG_UNIT_ID")]
-    public Party OrganizationUnit {
+    public Contact OrganizationUnit {
       get; private set;
     }
 
@@ -96,7 +107,7 @@ namespace Empiria.Financial {
 
 
     [DataField("PRJ_PARENT_ID")]
-    private int ParentId {
+    public int ParentId {
       get; set;
     }
 
@@ -114,13 +125,13 @@ namespace Empiria.Financial {
 
 
     [DataField("PRJ_HISTORIC_ID")]
-    private int HistoricId {
+    public int HistoricId {
       get; set;
     }
 
 
     [DataField("PRJ_POSTED_BY_ID")]
-    public Party PostedBy {
+    public Contact PostedBy {
       get; private set;
     }
 
@@ -144,12 +155,47 @@ namespace Empiria.Financial {
     internal static FixedList<Project> SearchProjects(string keywords) {
       keywords = keywords ?? string.Empty;
 
-       return ProjectDataService.SearchProjects(keywords);
+      return ProjectDataService.SearchProjects(keywords);
     }
 
     internal static FixedList<Project> SearchProjects(string filter, string sort) {
 
       return ProjectDataService.SearchProjects(filter, sort);
+    }
+
+    internal void Update(ProjectFields fields) {
+      Assertion.Require(fields, nameof(fields));
+      fields.EnsureValid();
+
+      this.ProjectTypeId = fields.TypeId;
+      this.CategoryId = fields.CategoryId;
+      this.StandarAccountId = fields.StandarAccountId;
+      this.PrjNo = fields.PrjNo;
+      this.Name = fields.Name;
+      this.OrganizationUnit = Contact.Parse(fields.OrganizationUnitUID);
+      this.Identifiers = string.Empty;
+      this.Tags = string.Empty;
+      this.ExtData = JsonObject.Empty;
+      this.ParentId = -1;
+      this.StartDate = ExecutionServer.DateMinValue;
+      this.EndDate = ExecutionServer.DateMaxValue;
+      this.HistoricId = 1;
+      this.PostedBy = ExecutionServer.CurrentContact;
+      this.PostingTime = DateTime.Now;
+      this.Status = fields.Status;
+    }
+
+    protected override void OnSave() {
+      if (base.IsNew) {
+        this.PostedBy = ExecutionServer.CurrentContact;
+        this.PostingTime = DateTime.Now;
+      }
+
+      ProjectDataService.WriteProject(this, this.ExtData.ToString());
+    }
+
+    internal void Delete() {
+      this.Status = EntityStatus.Deleted;
     }
 
     #endregion Methods

@@ -13,6 +13,7 @@ using Xunit;
 using Empiria.Financial.Projects.UseCases;
 
 using Empiria.Financial.Projects.Adapters;
+using System.CodeDom;
 
 namespace Empiria.Tests.Financial.Projects {
 
@@ -63,6 +64,47 @@ namespace Empiria.Tests.Financial.Projects {
       Assert.NotEmpty(sut);
     }
 
+    [Fact]
+    public void Create() {
+
+      var fields = new ProjectFields {
+        TypeId = 3800,
+        StandarAccountId = 1,
+        CategoryId = 501,
+        PrjNo = "00",
+        Name = "Name",
+        OrganizationUnitUID = "e166a051-f848-4cbf-82df-e2f9a266b005"
+      };
+
+
+      var sut = _usecases.CreateProject(fields);
+
+      Assert.NotNull(sut);
+    }
+
+    [Fact]
+    public void Update() {
+      var fields = new ProjectFields {
+        TypeId = 3800,
+        StandarAccountId = 206400,
+        CategoryId = 502,
+        PrjNo = "0900",
+        Name = "Mesa de trabajo",
+        OrganizationUnitUID = "e166a051-f848-4cbf-82df-e2f9a266b005"
+      };
+
+      var UID = "2b11c01c-50d0-4ae3-a3cd-bf89c7a8779a";
+      var sut = _usecases.UpdateProject(UID, fields);
+
+      Assert.NotNull(sut);
+    }
+
+
+    [Fact]
+    public void Delete() {
+      var UID = "2b11c01c-50d0-4ae3-a3cd-bf89c7a8779a";
+      _usecases.DeleteProject(UID);
+    }
 
     #endregion Facts
 

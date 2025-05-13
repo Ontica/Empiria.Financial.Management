@@ -30,6 +30,44 @@ namespace Empiria.Financial.Projects.UseCases {
 
     #region Use cases
 
+    public ProjectDto CreateProject(ProjectFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      var project = new Project(fields);
+
+      project.Save();
+
+      return ProjectMapper.Map(project);
+    }
+
+    public ProjectDto UpdateProject(string UID, ProjectFields fields) {
+
+      Assertion.Require(UID, nameof(UID));
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      var project = Project.Parse(UID);
+
+      project.Update(fields);
+
+      project.Save();
+
+      return ProjectMapper.Map(project);
+    }
+
+    public void DeleteProject(string UID) {
+      Assertion.Require(UID, nameof(UID));
+      var project = Project.Parse(UID);
+
+      project.Delete();
+
+      project.Save();
+
+    }
+
     public FixedList<NamedEntityDto> SearchProjects(string keywords) {
       keywords = keywords ?? string.Empty;
 

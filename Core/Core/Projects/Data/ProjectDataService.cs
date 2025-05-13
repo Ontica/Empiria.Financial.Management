@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Data;
 
 namespace Empiria.Financial.Data {
@@ -16,9 +17,10 @@ namespace Empiria.Financial.Data {
   static internal class ProjectDataService {
 
 
-    static internal FixedList<Project> SearchProjects(string keyewords)  {
+      static internal FixedList<Project> SearchProjects(string keyewords) {
+      
       var sql = "SELECT * FROM FMS_PROJECTS " +
-               $"WHERE PRJ_KEYWORDS LIKE '% {keyewords} %'"  + " AND " +
+               $"WHERE PRJ_KEYWORDS LIKE '% {keyewords} %'" + " AND " +
                $"PRJ_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
@@ -27,6 +29,7 @@ namespace Empiria.Financial.Data {
     }
 
     static internal FixedList<Project> SearchProjects(string filter, string sortBy) {
+      
       var sql = "SELECT * FROM FMS_PROJECTS ";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
@@ -42,7 +45,14 @@ namespace Empiria.Financial.Data {
       return DataReader.GetFixedList<Project>(dataOperation);
     }
 
+    internal static void WriteProject(Project o, string extensionData) {
+      var op = DataOperation.Parse("write_FMS_Project",
+         o.Id, o.UID, o.ProjectTypeId, o.StandarAccountId, o.CategoryId, o.PrjNo, o.Name,
+         o.OrganizationUnit.Id, o.Identifiers, o.Tags, extensionData, o.Keywords, o.ParentId,
+         o.StartDate, o.EndDate, o.HistoricId, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
+      DataWriter.Execute(op);
+    }
   }  // class ProjectDataService
 
 }  // namespace Empiria.Financial.Data
