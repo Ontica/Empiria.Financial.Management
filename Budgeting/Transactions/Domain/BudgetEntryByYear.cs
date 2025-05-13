@@ -76,9 +76,14 @@ namespace Empiria.Budgeting.Transactions {
       get; private set;
     }
 
+
     public string Justification {
-      get; private set;
-    } = string.Empty;
+      get {
+        var modes = Entries.GetModes(x => x.Justification);
+
+        return modes.Count == 1 ? modes[0] : string.Empty;
+      }
+    }
 
 
     public Project Project {
