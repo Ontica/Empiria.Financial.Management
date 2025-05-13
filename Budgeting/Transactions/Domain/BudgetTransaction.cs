@@ -438,7 +438,7 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
       Assertion.Require(entries, nameof(entries));
 
-      Assertion.Require(entries.CountAll(x => x.BudgetTransaction.Equals(this)) == entries.Count,
+      Assertion.Require(entries.CountAll(x => x.Transaction.Equals(this)) == entries.Count,
                         "All entries must belong to this transaction.");
 
       foreach (var entry in entries) {

@@ -41,7 +41,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static internal BudgetEntryDto Map(BudgetEntry entry) {
       return new BudgetEntryDto {
         UID = entry.UID,
-        TransactionUID = entry.BudgetTransaction.UID,
+        TransactionUID = entry.Transaction.UID,
         BudgetAccount = entry.BudgetAccount.MapToNamedEntity(),
         Product = entry.Product.MapToNamedEntity(),
         ProductUnit = entry.ProductUnit.MapToNamedEntity(),

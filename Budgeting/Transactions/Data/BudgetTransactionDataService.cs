@@ -122,7 +122,7 @@ namespace Empiria.Budgeting.Transactions.Data {
 
     static internal void WriteEntry(BudgetEntry o) {
       var op = DataOperation.Parse("write_FMS_Budget_Entry",
-        o.Id, o.UID, o.BudgetTransaction.Id, o.BudgetEntryTypeId, o.Budget.Id,
+        o.Id, o.UID, o.Transaction.Id, o.BudgetEntryTypeId, o.Budget.Id,
         o.BudgetAccount.Id, o.Product.Id, o.ProductUnit.Id, o.ProductQty,
         o.Project.Id, o.Party.Id, o.OperationTypeId, o.OperationId, o.BaseEntityItemId,
         o.Year, o.Month, o.Day, o.BalanceColumn.Id, o.Currency.Id, o.OriginalAmount,

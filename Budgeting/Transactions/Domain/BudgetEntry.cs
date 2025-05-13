@@ -33,7 +33,7 @@ namespace Empiria.Budgeting.Transactions {
     internal BudgetEntry(BudgetTransaction transaction, int year, int month) {
       Assertion.Require(transaction, nameof(transaction));
 
-      this.BudgetTransaction = transaction;
+      this.Transaction = transaction;
       this.Budget = transaction.BaseBudget;
 
       this.Year = year;
@@ -51,7 +51,7 @@ namespace Empiria.Budgeting.Transactions {
     #region Properties
 
     [DataField("BDG_ENTRY_TXN_ID")]
-    public BudgetTransaction BudgetTransaction {
+    public BudgetTransaction Transaction {
       get; private set;
     }
 
@@ -252,7 +252,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(BudgetAccount.Keywords, BudgetTransaction.Keywords);
+        return EmpiriaString.BuildKeywords(BudgetAccount.Keywords, Transaction.Keywords);
       }
     }
 

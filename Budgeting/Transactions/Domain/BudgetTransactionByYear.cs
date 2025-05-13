@@ -11,6 +11,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Empiria.Financial;
 using Empiria.Products;
 using Empiria.Projects;
 
@@ -44,10 +45,36 @@ namespace Empiria.Budgeting.Transactions {
     internal string BuildUID(BudgetEntry entry) {
       Assertion.Require(entry, nameof(entry));
 
-      return $"{entry.BudgetTransaction.UID}|{entry.BalanceColumn.UID}|{entry.BudgetAccount.UID}|" +
-             $"{entry.Product.UID}|{entry.ProductUnit.UID}|{entry.Project.UID}|{entry.Currency.UID}|{entry.Year}";
+      return $"{entry.Transaction.Id}|{entry.BalanceColumn.Id}|{entry.BudgetAccount.Id}|" +
+             $"{entry.Product.Id}|{entry.ProductUnit.Id}|{entry.Project.Id}|{entry.Currency.Id}|{entry.Year}";
     }
 
+
+    static internal string BuildUID(BudgetEntryByYear entry) {
+      Assertion.Require(entry, nameof(entry));
+
+      return $"{entry.Transaction.Id}|{entry.BalanceColumn.Id}|{entry.BudgetAccount.Id}|" +
+             $"{entry.Product.Id}|{entry.ProductUnit.Id}|{entry.Project.Id}|{entry.Currency.Id}|{entry.Year}";
+    }
+
+
+    static internal BudgetEntryByYearFields BuildFields(string entryByYearUID) {
+      Assertion.Require(entryByYearUID, nameof(entryByYearUID));
+
+      int[] parts = EmpiriaString.SplitToIntArray(entryByYearUID, '|');
+
+      return new BudgetEntryByYearFields {
+         UID = entryByYearUID,
+         TransactionUID = BudgetTransaction.Parse(parts[0]).UID,
+         BalanceColumnUID = BalanceColumn.Parse(parts[1]).UID,
+         BudgetAccountUID = BudgetAccount.Parse(parts[2]).UID,
+         ProductUID = Product.Parse(parts[3]).UID,
+         ProductUnitUID = ProductUnit.Parse(parts[4]).UID,
+         ProjectUID = Project.Parse(parts[5]).UID,
+         CurrencyUID = Currency.Parse(parts[6]).UID,
+         Year = parts[7],
+      };
+    }
 
     internal FixedList<BudgetEntry> CreateBudgetEntries(BudgetEntryByYearFields fields) {
       Assertion.Require(fields, nameof(fields));
@@ -65,23 +92,19 @@ namespace Empiria.Budgeting.Transactions {
     internal FixedList<BudgetEntry> GetBudgetEntries(string entryByYearUID) {
       Assertion.Require(entryByYearUID, nameof(entryByYearUID));
 
-      string[] parts = entryByYearUID.Split('|');
+      int[] parts = EmpiriaString.SplitToIntArray(entryByYearUID, '|');
 
-      var fields = new BudgetEntryByYearFields {
-        UID = entryByYearUID,
-        TransactionUID = parts[0],
-        BalanceColumnUID = parts[1],
-        BudgetAccountUID = parts[2],
-        ProductUID = parts[3],
-        ProductUnitUID = parts[4],
-        ProjectUID = parts[5],
-        CurrencyUID = parts[6],
-        Year = int.Parse(parts[7])
-      };
+      Assertion.Ensure(parts[0] == Transaction.Id, "Transaction Id mismatch.");
 
-      Assertion.Ensure(fields.TransactionUID == Transaction.UID, "Transaction UID mismatch.");
+      FixedList<BudgetEntry> entries = Transaction.Entries.FindAll(x => x.BalanceColumn.Id == parts[1] &&
+                                                                        x.BudgetAccount.Id == parts[2] &&
+                                                                        x.Product.Id == parts[3] &&
+                                                                        x.ProductUnit.Id == parts[4] &&
+                                                                        x.Project.Id == parts[5] &&
+                                                                        x.Currency.Id == parts[6] &&
+                                                                        x.Year == parts[7]);
 
-      return GetBudgetEntries(fields);
+      return entries.Sort((x, y) => x.Month.CompareTo(y.Month));
     }
 
 
@@ -109,7 +132,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     public FixedList<BudgetEntryByYear> GetEntries() {
-      var groups = Transaction.Entries.GroupBy(x => BudgetEntryByYear.BuildUID(x));
+      var groups = Transaction.Entries.GroupBy(x => BuildUID(x));
 
       var list = new List<BudgetEntryByYear>(groups.Count());
 

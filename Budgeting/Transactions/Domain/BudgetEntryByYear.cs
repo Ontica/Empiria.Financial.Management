@@ -22,32 +22,25 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(entries, nameof(entries));
       Assertion.Require(entries.Count > 0, "entries must not be an empty list.");
 
-      string[] parts = entryByYearUID.Split('|');
+      BudgetEntryByYearFields fields = BudgetTransactionByYear.BuildFields(entryByYearUID);
 
-      Transaction = BudgetTransaction.Parse(parts[0]);
-      BalanceColumn = BalanceColumn.Parse(parts[1]);
-      BudgetAccount = BudgetAccount.Parse(parts[2]);
-      Product = Product.Parse(parts[3]);
-      ProductUnit = ProductUnit.Parse(parts[4]);
-      Project = Project.Parse(parts[5]);
-      Currency = Currency.Parse(parts[6]);
-      Year = int.Parse(parts[7]);
+      Transaction = BudgetTransaction.Parse(fields.TransactionUID);
+      BalanceColumn = BalanceColumn.Parse(fields.BalanceColumnUID);
+      BudgetAccount = BudgetAccount.Parse(fields.BudgetAccountUID);
+      Product = Product.Parse(fields.ProductUID);
+      ProductUnit = ProductUnit.Parse(fields.ProductUnitUID);
+      Project = Project.Parse(fields.ProjectUID);
+      Currency = Currency.Parse(fields.CurrencyUID);
+      Year = fields.Year;
 
       Entries = entries;
-    }
-
-
-    static internal string BuildUID(BudgetEntry entry) {
-      return $"{entry.BudgetTransaction.UID}|{entry.BalanceColumn.UID}|{entry.BudgetAccount.UID}|" +
-             $"{entry.Product.UID}|{entry.ProductUnit.UID}|{entry.Project.UID}|{entry.Currency.UID}|{entry.Year}";
     }
 
     #region Properties
 
     public string UID {
       get {
-        return $"{Transaction.UID}|{BalanceColumn.UID}|{BudgetAccount.UID}|{Product.UID}|" +
-               $"{ProductUnit.UID}|{Project.UID}|{Currency.UID}|{Year}";
+        return BudgetTransactionByYear.BuildUID(this);
       }
     }
 
