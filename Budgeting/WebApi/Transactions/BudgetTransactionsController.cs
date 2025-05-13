@@ -120,10 +120,14 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
     [HttpPost]
     [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/reject")]
-    public SingleObjectModel RejectTransaction([FromUri] string budgetTransactionUID) {
+    public SingleObjectModel RejectTransaction([FromUri] string budgetTransactionUID,
+                                               [FromBody] RejectFields fields = null) {
+
+      fields = fields ?? new RejectFields();
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        BudgetTransactionHolderDto transaction = usecases.RejectTransaction(budgetTransactionUID);
+        BudgetTransactionHolderDto transaction = usecases.RejectTransaction(budgetTransactionUID,
+                                                                            fields.Message);
 
         return new SingleObjectModel(base.Request, transaction);
       }
@@ -156,12 +160,12 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
     [HttpPost]
     [Route("v2/budgeting/transactions/search")]
-    public SingleObjectModel SearchTransactions([FromBody] BudgetTransactionsQuery query) {
+    public CollectionModel SearchTransactions([FromBody] BudgetTransactionsQuery query) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
         FixedList<BudgetTransactionDescriptorDto> transactions = usecases.SearchTransactions(query);
 
-        return new SingleObjectModel(base.Request, transactions);
+        return new CollectionModel(base.Request, transactions);
       }
     }
 
@@ -193,5 +197,15 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     #endregion Web Apis
 
   }  // class BudgetTransactionsController
+
+
+
+  public class RejectFields {
+
+    public string Message {
+      get; set;
+    } = "No se indicó el motivo.";
+
+  }  // class RejectFields
 
 }  // namespace Empiria.Budgeting.Transactions.WebApi

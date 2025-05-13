@@ -110,7 +110,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public BudgetTransactionHolderDto RejectTransaction(string budgetTransactionUID) {
+    public BudgetTransactionHolderDto RejectTransaction(string budgetTransactionUID,
+                                                        string reason) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
 
       var transaction = BudgetTransaction.Parse(budgetTransactionUID);
