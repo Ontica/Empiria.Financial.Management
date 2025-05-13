@@ -41,30 +41,11 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
 
-    public string OrganizationUnit {
+    public NamedEntityDto OrganizationUnit {
       get; set;
     }
 
-    
-    public DateTime StartDate {
-      get; set;
-    }
-
-
-    public DateTime EndDate {
-      get; set;
-    }
-
-
-    public string PostedBy {
-      get; set;
-    }
-
-
-    public DateTime PostingTime {
-      get; set;
-    }
-
+  
 
     public EntityStatus Status {
       get; set;

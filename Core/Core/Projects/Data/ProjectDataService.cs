@@ -26,6 +26,22 @@ namespace Empiria.Financial.Data {
       return DataReader.GetFixedList<Project>(op);
     }
 
+    static internal FixedList<Project> SearchProjects(string filter, string sortBy) {
+      var sql = "SELECT * FROM FMS_PROJECTS ";
+
+      if (!string.IsNullOrWhiteSpace(filter)) {
+        sql += $" WHERE {filter}";
+      }
+
+      if (!string.IsNullOrWhiteSpace(sortBy)) {
+        sql += $" ORDER BY {sortBy}";
+      }
+
+      var dataOperation = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<Project>(dataOperation);
+    }
+
 
   }  // class ProjectDataService
 

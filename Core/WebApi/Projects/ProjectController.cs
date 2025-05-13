@@ -13,6 +13,7 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.Financial.Projects.UseCases;
+using Empiria.Financial.Projects.Adapters;
 
 namespace Empiria.Financial.Projects.WebApi {
 
@@ -27,6 +28,18 @@ namespace Empiria.Financial.Projects.WebApi {
 
       using (var usecases = ProjectUseCases.UseCaseInteractor()) {
         FixedList<NamedEntityDto> projects = usecases.SearchProjects(keywords);
+
+        return new CollectionModel(base.Request, projects);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/financial-projects/search")]
+    public CollectionModel SearchProjects([FromBody] ProjectQuery query) {
+
+      using (var usecases = ProjectUseCases.UseCaseInteractor()) {
+        FixedList<ProjectDto> projects = usecases.SearchProjects(query);
 
         return new CollectionModel(base.Request, projects);
       }

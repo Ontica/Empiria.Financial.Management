@@ -147,6 +147,11 @@ namespace Empiria.Financial {
        return ProjectDataService.SearchProjects(keywords);
     }
 
+    internal static FixedList<Project> SearchProjects(string filter, string sort) {
+
+      return ProjectDataService.SearchProjects(filter, sort);
+    }
+
     #endregion Methods
 
   } // class Project

@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial.Projects.Adapters;
 using Empiria.Services;
 
 namespace Empiria.Financial.Projects.UseCases {
@@ -36,6 +37,21 @@ namespace Empiria.Financial.Projects.UseCases {
 
       return projects.MapToNamedEntityList();
     }
+
+
+    public FixedList<ProjectDto> SearchProjects(ProjectQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      query.EnsureIsValid();
+
+      string filter = query.MapToFilterString();
+      string sort = query.MapToSortString();
+
+      FixedList<Project> projects = Project.SearchProjects(filter, sort);
+
+      return ProjectMapper.Map(projects);
+    }
+
 
     #endregion Use cases
 
