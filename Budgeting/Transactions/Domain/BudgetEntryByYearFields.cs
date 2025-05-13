@@ -115,7 +115,8 @@ namespace Empiria.Budgeting.Transactions {
       if (fields.ProductUID.Length != 0) {
         _ = Product.Parse(fields.ProductUID);
 
-        Assertion.Require(fields.ProductUnitUID.Length != 0, "Se requiere la unidad de medida del producto.");
+        Assertion.Require(fields.ProductUnitUID.Length != 0,
+                          "Se requiere la unidad de medida del producto.");
 
         _ = ProductUnit.Parse(fields.ProductUnitUID);
       }
@@ -130,7 +131,8 @@ namespace Empiria.Budgeting.Transactions {
         _ = Currency.Parse(fields.CurrencyUID);
       }
 
-      Assertion.Require(fields.Amounts.Length > 0, "Requiero se proporcione cuando menos el importe de un mes.");
+      Assertion.Require(fields.Amounts.Length > 0,
+                        "Requiero se proporcione cuando menos el importe de un mes.");
 
       foreach (var amount in fields.Amounts) {
         amount.EnsureIsValid(fields.ProductUID.Length > 0);
@@ -151,7 +153,8 @@ namespace Empiria.Budgeting.Transactions {
 
       string monthName = EmpiriaString.MonthName(fields.Month);
 
-      Assertion.Require(fields.Amount >= 0, $"El importe asignado a {monthName} debe ser mayor o igual a cero.");
+      Assertion.Require(fields.Amount >= 0,
+                        $"El importe asignado a {monthName} debe ser mayor o igual a cero.");
 
       if (fields.Amount == 0 && fields.ProductQty == 0) {
         return;
