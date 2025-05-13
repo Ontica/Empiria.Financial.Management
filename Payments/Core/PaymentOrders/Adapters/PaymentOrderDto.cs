@@ -42,7 +42,7 @@ namespace Empiria.Payments.Orders.Adapters {
     }
 
 
-    public FixedList<HistoryDto> History {
+    public FixedList<HistoryEntryDto> History {
       get; internal set;
     }
 
