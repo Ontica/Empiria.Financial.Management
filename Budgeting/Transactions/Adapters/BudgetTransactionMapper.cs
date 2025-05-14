@@ -12,6 +12,7 @@ using Empiria.Documents.Services;
 using Empiria.History.Services;
 
 using Empiria.Budgeting.Adapters;
+using DocumentFormat.OpenXml.Vml;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
@@ -52,6 +53,9 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         BasePartyName = transaction.BaseParty.Name,
         ApplicationDate = transaction.ApplicationDate,
         RequestedDate = transaction.RequestedTime,
+        RequestedBy = transaction.RequestedBy.Name,
+        AuthorizedBy = transaction.AuthorizedBy.Name,
+        Total = transaction.GetTotal(),
         StatusName = transaction.Status.GetName(),
       };
     }
@@ -154,7 +158,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         BaseEntity = transaction.HasEntity ?
             ((INamedEntity) transaction.GetEntity()).MapToNamedEntity() : NamedEntityDto.Empty,
         ApplicationDate = transaction.ApplicationDate,
+        Total = transaction.GetTotal(),
         RequestedDate = transaction.RequestedTime,
+        RequestedBy = transaction.RequestedBy.MapToNamedEntity(),
+        AuthorizedBy = transaction.AuthorizedBy.MapToNamedEntity(),
         Status = transaction.Status.MapToNamedEntity()
       };
     }

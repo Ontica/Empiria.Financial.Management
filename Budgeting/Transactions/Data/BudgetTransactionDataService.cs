@@ -110,7 +110,7 @@ namespace Empiria.Budgeting.Transactions.Data {
       Assertion.Require(filter, nameof(filter));
       Assertion.Require(sort, nameof(sort));
 
-      var sql = "SELECT * FROM FMS_BUDGET_TRANSACTIONS " +
+      var sql = "SELECT * FROM VW_FMS_BUDGET_TRANSACTIONS " +
                $"WHERE {filter} " +
                $"ORDER BY {sort}";
 

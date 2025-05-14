@@ -118,7 +118,15 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto RequestedBy {
+      get; internal set;
+    }
+
     public DateTime ApplicationDate {
+      get; internal set;
+    }
+
+    public NamedEntityDto AuthorizedBy {
       get; internal set;
     }
 
@@ -173,7 +181,15 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public string RequestedBy {
+      get; internal set;
+    }
+
     public DateTime ApplicationDate {
+      get; internal set;
+    }
+
+    public string AuthorizedBy {
       get; internal set;
     }
 
