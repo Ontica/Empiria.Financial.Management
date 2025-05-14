@@ -137,6 +137,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       transaction.Save();
 
+      SetOnReviewAccountsToPending(transaction);
+
       HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Rechazada", reason));
 
       return BudgetTransactionMapper.Map(transaction);
@@ -242,6 +244,22 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     #endregion Use cases
 
     #region Helpers
+
+    private void SetOnReviewAccountsToPending(BudgetTransaction transaction) {
+      var onReviewAccounts = transaction.Entries.FindAll(x => x.BudgetAccount.Status == EntityStatus.OnReview)
+                                                .SelectDistinct(x => x.BudgetAccount)
+                                                .Sort((x, y) => x.BaseSegment.Code.CompareTo(y.BaseSegment.Code));
+
+      foreach (var account in onReviewAccounts) {
+        account.SetStatus(EntityStatus.Pending);
+
+        account.Save();
+
+        HistoryServices.CreateHistoryEntry(transaction,
+                                           new HistoryFields("Desautorización de nueva cuenta", account.Name));
+      }
+    }
+
 
     private void SetPendingAccountsToOnReview(BudgetTransaction transaction) {
 

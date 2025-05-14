@@ -344,10 +344,8 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal void Reject() {
-      Assertion.Require(Rules.CanReject, "Current user can not reject this transaction.");
-
-      Assertion.Require(this.Status == BudgetTransactionStatus.OnAuthorization,
-                       $"Can not reject this budget transaction. Its status is {Status.GetName()}.");
+      Assertion.Require(Rules.CanReject,
+                        $"Can not reject this budget transaction. Its status is {Status.GetName()}.");
 
       this.RequestedBy = Party.Empty;
       this.RequestedTime = ExecutionServer.DateMaxValue;

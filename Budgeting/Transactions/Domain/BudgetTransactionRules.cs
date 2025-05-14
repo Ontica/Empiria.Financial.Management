@@ -74,7 +74,15 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanReject {
       get {
-        return CanAuthorize;
+        if (_transaction.Status != BudgetTransactionStatus.OnAuthorization &&
+            _transaction.Status != BudgetTransactionStatus.Authorized) {
+          return false;
+        }
+        if (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer")) {
+          return true;
+        }
+        return false;
       }
     }
 
