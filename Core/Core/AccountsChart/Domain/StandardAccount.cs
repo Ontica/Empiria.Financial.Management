@@ -13,7 +13,6 @@ using System;
 using Empiria.Json;
 using Empiria.StateEnums;
 
-using Empiria.Financial.Data;
 using Empiria.Contacts;
 
 
@@ -82,13 +81,13 @@ namespace Empiria.Financial {
 
 
     [DataField("STD_ACCT_ROLE")]
-    public char Role {
+    public string Role {
       get; protected set;
     }
 
 
     [DataField("STD_ACCT_DEBTOR")]
-    public char Debtor {
+    public string Debtor {
       get; protected set;
     }
 

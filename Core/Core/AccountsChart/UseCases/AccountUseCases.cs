@@ -39,20 +39,13 @@ namespace Empiria.Financial.Accounts.UseCases {
       return stdAcccounts.MapToNamedEntityList();
     }
 
+       
 
-    public FixedList<ProjectDto> SearchProjects(ProjectQuery query) {
-      Assertion.Require(query, nameof(query));
+    public StandardAccount GetStandardAccount(string uid) {
+      Assertion.Require(uid, nameof(uid));
 
-      query.EnsureIsValid();
-
-      string filter = query.MapToFilterString();
-      string sort = query.MapToSortString();
-
-      FixedList<FinancialProject> projects = FinancialProject.SearchProjects(filter, sort);
-
-      return ProjectMapper.Map(projects);
+     return StandardAccount.Parse(uid);
     }
-
 
     #endregion Use cases
 

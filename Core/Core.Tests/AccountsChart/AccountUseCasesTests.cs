@@ -36,14 +36,10 @@ namespace Empiria.Tests.Financial.Projects {
     #region Facts
 
     [Fact]
-    public void Should_Search_StandardAcccounts() {
-
-      string keywords = "servico";
-
-      var sut = _usecases.SearchStandardAccounts(keywords);
+    public void Should_Parse_StandardAcccounts() {
+      var sut = _usecases.GetStandardAccount("207181");
 
       Assert.NotNull(sut);
-      Assert.NotEmpty(sut);
     }
 
 

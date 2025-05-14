@@ -20,7 +20,7 @@ namespace Empiria.Financial.Projects.Adapters {
     static public ProjectDto Map(FinancialProject project) {
       return new ProjectDto {
         UID = project.UID,
-        StandarAccount = project.StandarAccountId,
+        StandarAccount = project.StandarAccount.MapToNamedEntity(),
         CategoryId = project.CategoryId,
         PrjNo = project.PrjNo,
         Name = project.Name,  

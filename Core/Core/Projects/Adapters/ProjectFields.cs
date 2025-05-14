@@ -23,9 +23,9 @@ namespace Empiria.Financial.Projects.Adapters {
     } = 0;
 
 
-    public int StandarAccountId {
+    public string StandarAccountUID {
       get; set;
-    } = 0;
+    } = string.Empty;
 
 
     public int CategoryId {

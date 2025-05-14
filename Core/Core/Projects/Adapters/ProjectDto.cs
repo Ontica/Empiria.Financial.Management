@@ -21,7 +21,7 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
 
-    public int StandarAccount {
+    public NamedEntityDto StandarAccount {
       get; set;
     }
 

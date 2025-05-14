@@ -68,8 +68,8 @@ namespace Empiria.Tests.Financial.Projects {
     public void Create() {
 
       var fields = new ProjectFields {
-        TypeId = 3800,
-        StandarAccountId = 1,
+        TypeId = 3281,
+        StandarAccountUID = "206400",
         CategoryId = 501,
         PrjNo = "00",
         Name = "Name",
@@ -85,11 +85,11 @@ namespace Empiria.Tests.Financial.Projects {
     [Fact]
     public void Update() {
       var fields = new ProjectFields {
-        TypeId = 3800,
-        StandarAccountId = 206400,
+        TypeId = 3281,
+        StandarAccountUID = "206102",
         CategoryId = 502,
         PrjNo = "0900",
-        Name = "Mesa de trabajo",
+        Name = "Otra prueba",
         OrganizationUnitUID = "e166a051-f848-4cbf-82df-e2f9a266b005"
       };
 
