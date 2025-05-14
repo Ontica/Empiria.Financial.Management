@@ -15,16 +15,16 @@ using Empiria.Services;
 namespace Empiria.Financial.Accounts.UseCases {
 
   /// <summary>Provides use cases for update and retrieve financial projects.</summary>
-  public class AccountUseCases : UseCase {
+  public class FinancialAccountUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected AccountUseCases() {
+    protected FinancialAccountUseCases() {
       // no-op
     }
 
-    static public AccountUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<AccountUseCases>();
+    static public FinancialAccountUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<FinancialAccountUseCases>();
     }
 
     #endregion Constructors and parsers
@@ -33,7 +33,7 @@ namespace Empiria.Financial.Accounts.UseCases {
     public FixedList<NamedEntityDto> SearchAccounts(string keywords) {
       keywords = keywords ?? string.Empty;
 
-      FixedList<Account> acccounts = AccountDataService.SearchAccount(keywords);
+      FixedList<FinancialAccount> acccounts = FinancialAccountDataService.SearchAccount(keywords);
 
       return acccounts.MapToNamedEntityList();
     }

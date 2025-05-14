@@ -21,19 +21,19 @@ using Empiria.Parties;
 namespace Empiria.Financial {
 
   /// <summary>Represents a financial account.</summary>
-  public class Account : BaseObject, INamedEntity {
+  public class FinancialAccount : BaseObject, INamedEntity {
 
     #region Constructors and parsers
 
-    public Account() {
+    public FinancialAccount() {
       // Require by Empiria FrameWork
     }
 
-    static public Account Parse(int id) => ParseId<Account>(id);
+    static public FinancialAccount Parse(int id) => ParseId<FinancialAccount>(id);
 
-    static public Account Parse(string uid) => ParseKey<Account>(uid);
+    static public FinancialAccount Parse(string uid) => ParseKey<FinancialAccount>(uid);
 
-    static public Account Empty => ParseEmpty<Account>();
+    static public FinancialAccount Empty => ParseEmpty<FinancialAccount>();
 
 
     #endregion Constructors and parsers
@@ -181,15 +181,15 @@ namespace Empiria.Financial {
 
     #region Methods
 
-    internal static FixedList<Account> SearchProjects(string keywords) {
+    internal static FixedList<FinancialAccount> SearchProjects(string keywords) {
       keywords = keywords ?? string.Empty;
 
-      return AccountDataService.SearchAccount(keywords);
+      return FinancialAccountDataService.SearchAccount(keywords);
     }
 
-    internal static FixedList<Account> SearchAccount(string filter, string sort) {
+    internal static FixedList<FinancialAccount> SearchAccount(string filter, string sort) {
 
-      return AccountDataService.SearchAccount(filter, sort);
+      return FinancialAccountDataService.SearchAccount(filter, sort);
     }
 
 

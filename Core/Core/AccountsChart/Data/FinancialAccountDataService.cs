@@ -13,10 +13,10 @@ using Empiria.Data;
 namespace Empiria.Financial.Data {
 
   /// <summary>Provides data access services for financial accounts.</summary>
-  static internal class AccountDataService {
+  static internal class FinancialAccountDataService {
 
 
-      static internal FixedList<Account> SearchAccount(string keyewords) {
+      static internal FixedList<FinancialAccount> SearchAccount(string keyewords) {
       
       var sql = "SELECT * FROM FMS_ACCOUNTS " +
                $"WHERE ACCT_KEYWORDS LIKE '%{keyewords}%'" + " AND " +
@@ -24,10 +24,10 @@ namespace Empiria.Financial.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<Account>(op);
+      return DataReader.GetFixedList<FinancialAccount>(op);
     }
 
-    static internal FixedList<Account> SearchAccount(string filter, string sortBy) {
+    static internal FixedList<FinancialAccount> SearchAccount(string filter, string sortBy) {
       
       var sql = "SELECT * FROM FMS_ACCOUNTS ";
 
@@ -41,7 +41,7 @@ namespace Empiria.Financial.Data {
 
       var dataOperation = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<Account>(dataOperation);
+      return DataReader.GetFixedList<FinancialAccount>(dataOperation);
     }
 
   }  // class AccountDataService

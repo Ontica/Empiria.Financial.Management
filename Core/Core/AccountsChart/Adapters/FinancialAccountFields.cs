@@ -14,7 +14,7 @@ using Empiria.StateEnums;
 namespace Empiria.Financial.Accounts.Adapters {
 
   /// <summary>Input field with financial account data.</summary>
-  public class AccountFields {
+  public class FinancialAccountFields {
 
     public int TypeId {
       get; set;

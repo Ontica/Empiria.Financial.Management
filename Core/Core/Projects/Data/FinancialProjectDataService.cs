@@ -14,7 +14,8 @@ namespace Empiria.Financial.Projects.Data {
 
   /// <summary>Provides data access services for financial projects.</summary>
   static internal class FinancialProjectDataService {
-      static internal FixedList<FinancialProject> SearchProjects(string keyewords) {
+      
+    static internal FixedList<FinancialProject> SearchProjects(string keyewords) {
       
       var sql = "SELECT * FROM FMS_PROJECTS " +
                $"WHERE PRJ_KEYWORDS LIKE '%{keyewords}%'" + " AND " +

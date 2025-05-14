@@ -15,19 +15,19 @@ using Empiria.Financial.Accounts.UseCases;
 namespace Empiria.Tests.Financial.Projects {
 
   /// <summary>Test cases for financial projects use cases.</summary>
-  public class AccountUseCasesTests {
+  public class FinancialAccountUseCasesTests {
 
     #region Use cases initialization
 
-    private readonly AccountUseCases _usecases;
+    private readonly FinancialAccountUseCases _usecases;
 
-    public AccountUseCasesTests() {
+    public FinancialAccountUseCasesTests() {
       TestsCommonMethods.Authenticate();
 
-      _usecases = AccountUseCases.UseCaseInteractor();
+      _usecases = FinancialAccountUseCases.UseCaseInteractor();
     }
 
-    ~AccountUseCasesTests() {
+    ~FinancialAccountUseCasesTests() {
       _usecases.Dispose();
     }
 

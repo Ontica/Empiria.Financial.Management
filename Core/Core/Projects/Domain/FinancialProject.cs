@@ -36,6 +36,7 @@ namespace Empiria.Financial {
     static public FinancialProject Empty => ParseEmpty<FinancialProject>();
 
     public FinancialProject(FinancialProjectFields fields) {
+
       Assertion.Require(fields, nameof(fields));
       Update(fields);
     }
