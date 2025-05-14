@@ -1,8 +1,8 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Projects                                   Component : Adapters Layer                          *
+*  Module   : Financial Projects                         Component : Adapters Layer                          *
 *  Assembly : Empiria.Financial.Management.Core.dll      Pattern   : Mapping class                           *
-*  Type     : ProjectMapper                              License   : Please read LICENSE.txt file            *
+*  Type     : FinancialProjectMapper                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Mapping methods for financial projects.                                                        *
 *                                                                                                            *
@@ -11,24 +11,25 @@
 namespace Empiria.Financial.Projects.Adapters {
 
   /// <summary> Mapping methods for financial projects.</summary>
-  static public class ProjectMapper {
+  static public class FinancialProjectMapper {
 
-    static public FixedList<ProjectDto> Map(FixedList<FinancialProject> project) {
+    static public FixedList<FinancialProjectDto> Map(FixedList<FinancialProject> project) {
       return project.Select(x => Map(x)).ToFixedList();
     }
 
-    static public ProjectDto Map(FinancialProject project) {
-      return new ProjectDto {
+
+    static public FinancialProjectDto Map(FinancialProject project) {
+      return new FinancialProjectDto {
         UID = project.UID,
-        StandarAccount = project.StandarAccount.MapToNamedEntity(),
+        StandardAccount = project.StandardAccount.MapToNamedEntity(),
         Category = project.Category.MapToNamedEntity(),
-        PrjNo = project.PrjNo,
+        ProjectNo = project.ProjectNo,
         Name = project.Name,  
         OrganizationUnit = project.OrganizationUnit.MapToNamedEntity(),
         Status = project.Status,
       };
     }
 
-  }  // class BudgetAccountSegmentMapper
+  }  // class FinancialProjectMapper
 
-}  // namespace Empiria.Budgeting.Adapters
+}  // namespace Empiria.Financial.Projects.Adapters

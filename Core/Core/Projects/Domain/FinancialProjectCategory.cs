@@ -1,16 +1,16 @@
 ﻿/* Empiria Financial  ****************************************************************************************
 *                                                                                                            *
-*  Module   : Project                                    Component : Domain Layer                            *
+*  Module   : Financial Projects                         Component : Domain Layer                            *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Information Holder                      *
 *  Type     : FinancialProjectCategory                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents Project Category category.                                                          *
+*  Summary  : Represents financial project category.                                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Financial {
 
-  /// <summary>Represents a standard account category.</summary>
+  /// <summary>Represents financial project category.</summary>
   public class FinancialProjectCategory : CommonStorage {
 
     #region Constructors and parsers

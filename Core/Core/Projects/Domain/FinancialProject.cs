@@ -1,8 +1,8 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Projects                                   Component : Domain Layer                            *
-*  Assembly : Empiria.Projects.Core.dll                  Pattern   : Partitioned Type                        *
-*  Type     : Project                                    License   : Please read LICENSE.txt file            *
+*  Module   : Financial Projects                         Component : Domain Layer                            *
+*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Base Object                             *
+*  Type     : FinancialProject                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a financial project.                                                                *
 *                                                                                                            *
@@ -12,12 +12,10 @@ using System;
 
 using Empiria.Json;
 using Empiria.StateEnums;
-
-using Empiria.Financial.Data;
-using Empiria.Financial.Projects.Adapters;
-using Empiria.Contacts;
 using Empiria.Parties;
 
+using Empiria.Financial.Projects.Adapters;
+using Empiria.Financial.Projects.Data;
 
 namespace Empiria.Financial {
 
@@ -37,7 +35,7 @@ namespace Empiria.Financial {
 
     static public FinancialProject Empty => ParseEmpty<FinancialProject>();
 
-    public FinancialProject(ProjectFields fields) {
+    public FinancialProject(FinancialProjectFields fields) {
       Assertion.Require(fields, nameof(fields));
       Update(fields);
     }
@@ -45,15 +43,9 @@ namespace Empiria.Financial {
     #endregion Constructors and parsers
 
     #region Properties       
-
-    [DataField("PRJ_TYPE_ID")]
-    public int ProjectTypeId {
-      get; private set;
-    }
-
-
+       
     [DataField("PRJ_STD_ACCT_ID")]
-    public StandardAccount StandarAccount {
+    public StandardAccount StandardAccount {
       get; private set;
     }
 
@@ -65,7 +57,7 @@ namespace Empiria.Financial {
 
 
     [DataField("PRJ_NO")]
-    public string PrjNo {
+    public string ProjectNo {
       get; private set;
     }
 
@@ -102,7 +94,7 @@ namespace Empiria.Financial {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(PrjNo, Name);
+        return EmpiriaString.BuildKeywords(ProjectNo, Name);
       }
     }
 
@@ -110,7 +102,7 @@ namespace Empiria.Financial {
     [DataField("PRJ_PARENT_ID")]
     public int ParentId {
       get; set;
-    }
+    } = -1;
 
 
     [DataField("PRJ_START_DATE", Default = "ExecutionServer.DateMinValue")]
@@ -125,14 +117,8 @@ namespace Empiria.Financial {
     }
 
 
-    [DataField("PRJ_HISTORIC_ID")]
-    public int HistoricId {
-      get; set;
-    }
-
-
     [DataField("PRJ_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -148,59 +134,57 @@ namespace Empiria.Financial {
       get; private set;
     }
 
-
     #endregion Properties
 
     #region Methods
-
-    internal static FixedList<FinancialProject> SearchProjects(string keywords) {
-      keywords = keywords ?? string.Empty;
-
-      return ProjectDataService.SearchProjects(keywords);
-    }
-
-    internal static FixedList<FinancialProject> SearchProjects(string filter, string sort) {
-
-      return ProjectDataService.SearchProjects(filter, sort);
-    }
-
-    internal void Update(ProjectFields fields) {
-      Assertion.Require(fields, nameof(fields));
-      fields.EnsureValid();
-
-      this.ProjectTypeId = fields.TypeId;
-      this.Category = FinancialProjectCategory.Parse(fields.CategoryUID);
-      this.StandarAccount = StandardAccount.Parse(fields.StandarAccountUID);
-      this.PrjNo = fields.PrjNo;
-      this.Name = fields.Name;
-      this.OrganizationUnit = Party.Parse(fields.OrganizationUnitUID);
-      this.Identifiers = string.Empty;
-      this.Tags = string.Empty;
-      this.ExtData = JsonObject.Empty;
-      this.ParentId = -1;
-      this.StartDate = ExecutionServer.DateMinValue;
-      this.EndDate = ExecutionServer.DateMaxValue;
-      this.HistoricId = 1;
-      this.PostedBy = ExecutionServer.CurrentContact;
-      this.PostingTime = DateTime.Now;
-      this.Status = fields.Status;
-    }
-
-    protected override void OnSave() {
-      if (base.IsNew) {
-        this.PostedBy = ExecutionServer.CurrentContact;
-        this.PostingTime = DateTime.Now;
-      }
-
-      ProjectDataService.WriteProject(this, this.ExtData.ToString());
-    }
 
     internal void Delete() {
       this.Status = EntityStatus.Deleted;
     }
 
+
+    internal static FixedList<FinancialProject> SearchProjects(string keywords) {
+      keywords = keywords ?? string.Empty;
+
+      return FinancialProjectDataService.SearchProjects(keywords);
+    }
+
+
+    internal static FixedList<FinancialProject> SearchProjects(string filter, string sort) {
+
+      return FinancialProjectDataService.SearchProjects(filter, sort);
+    }
+
+
+    protected override void OnSave() {
+      if (base.IsNew) {
+        this.StartDate = ExecutionServer.DateMinValue;
+        this.EndDate = ExecutionServer.DateMaxValue;
+
+        this.ParentId = -1;
+
+        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        this.PostingTime = DateTime.Now;
+      }
+
+      FinancialProjectDataService.WriteProject(this, this.ExtData.ToString());
+    }
+
+
+    internal void Update(FinancialProjectFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+     
+      this.Category = FinancialProjectCategory.Parse(fields.CategoryUID);
+      this.StandardAccount = StandardAccount.Parse(fields.StandardAccountUID);
+      this.ProjectNo = fields.ProjectNo;
+      this.Name = fields.Name;
+      this.OrganizationUnit = Party.Parse(fields.OrganizationUnitUID);
+    }
+
     #endregion Methods
 
-  } // class Project
+  } // class FinancialProject
 
 } // namespace Empiria.Financial

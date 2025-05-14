@@ -1,28 +1,28 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Projects Management                        Component : Adapters Layer                          *
+*  Module   : Financial Projects                         Component : Adapters Layer                          *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Type Extension methods                  *
-*  Type     : ProjectQueryExtensions                     License   : Please read LICENSE.txt file            *
+*  Type     : FinancialProjectQueryExtensions            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Query DTO used to extend financial projects extensions.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Parties;
 using Empiria.StateEnums;
+using Empiria.Parties;
 
 namespace Empiria.Financial.Projects.Adapters {
 
   /// <summary>Query DTO used to extend financial projects extensions.</summary>
-  static internal class ProjectQueryExtensions {
+  static internal class FinancialProjectQueryExtensions {
 
     #region Extension methods
 
-    static internal void EnsureIsValid(this ProjectQuery query) {
+    static internal void EnsureIsValid(this FinancialProjectQuery query) {
       // no-op
     }
 
-    static internal string MapToFilterString(this ProjectQuery query) {
+    static internal string MapToFilterString(this FinancialProjectQuery query) {
       string statusFilter = BuildRequestStatusFilter(query.Status);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
       string requesterOrgUnitFilter = BuildRequesterOrgUnitFilter(query.OrganizationUnitUID);
@@ -35,7 +35,7 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
 
-    static internal string MapToSortString(this ProjectQuery query) {
+    static internal string MapToSortString(this FinancialProjectQuery query) {
       if (query.OrderBy.Length != 0) {
         return query.OrderBy;
       }
@@ -76,6 +76,6 @@ namespace Empiria.Financial.Projects.Adapters {
 
     #endregion Helpers
 
-  }  // class ProjectQueryExtensions
+  }  // class FinancialProjectQueryExtensions
 
 }  // namespace Empiria.Financial.Projects.Adapters

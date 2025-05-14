@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Financial Projects                           Component : Web Api                               *
 *  Assembly : Empiria.Financial.WebApi.dll                 Pattern   : Web api Controller                    *
-*  Type     : ProjectController                            License   : Please read LICENSE.txt file          *
+*  Type     : FinancialProjectController                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Web API used to retrive and update financial projects.                                         *
 *                                                                                                            *
@@ -18,7 +18,7 @@ using Empiria.Financial.Projects.Adapters;
 namespace Empiria.Financial.Projects.WebApi {
 
   /// <summary>Web API used to retrive and update financial projects.</summary>
-  public class ProjectController : WebApiController {
+  public class FinancialProjectController : WebApiController {
         
     #region Query web apis
 
@@ -26,7 +26,7 @@ namespace Empiria.Financial.Projects.WebApi {
     [Route("v2/financial-projects/{keywords:string}")]
     public CollectionModel SearchProjects([FromUri] string keywords = "") {
 
-      using (var usecases = ProjectUseCases.UseCaseInteractor()) {
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
         FixedList<NamedEntityDto> projects = usecases.SearchProjects(keywords);
 
         return new CollectionModel(base.Request, projects);
@@ -36,10 +36,10 @@ namespace Empiria.Financial.Projects.WebApi {
 
     [HttpPost]
     [Route("v2/financial-projects/search")]
-    public CollectionModel SearchProjects([FromBody] ProjectQuery query) {
+    public CollectionModel SearchProjects([FromBody] FinancialProjectQuery query) {
 
-      using (var usecases = ProjectUseCases.UseCaseInteractor()) {
-        FixedList<ProjectDto> projects = usecases.SearchProjects(query);
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FixedList<FinancialProjectDto> projects = usecases.SearchProjects(query);
 
         return new CollectionModel(base.Request, projects);
       }
@@ -51,12 +51,12 @@ namespace Empiria.Financial.Projects.WebApi {
 
     [HttpPost]
     [Route("v2/financial-projects")]
-    public SingleObjectModel CreateFinancialProject([FromBody] ProjectFields fields) {
+    public SingleObjectModel CreateFinancialProject([FromBody] FinancialProjectFields fields) {
 
       base.RequireBody(fields);
 
-      using (var usecases = ProjectUseCases.UseCaseInteractor()) {
-        ProjectDto paymentOrder = usecases.CreateProject(fields);
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FinancialProjectDto paymentOrder = usecases.CreateProject(fields);
 
         return new SingleObjectModel(base.Request, paymentOrder);
       }
@@ -69,7 +69,7 @@ namespace Empiria.Financial.Projects.WebApi {
 
       base.RequireResource(financialProjectUID, nameof(financialProjectUID));
 
-      using (var usecases = ProjectUseCases.UseCaseInteractor()) {
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
 
         usecases.DeleteProject(financialProjectUID);
 
@@ -81,22 +81,21 @@ namespace Empiria.Financial.Projects.WebApi {
     [HttpPut]
     [Route("v2/financial-projects/{financialProjectUID:guid}")]
     public SingleObjectModel UpdatePaymentOrder([FromUri] string financialProjectUID,
-                                               [FromBody] ProjectFields fields) {
+                                               [FromBody] FinancialProjectFields fields) {
 
       base.RequireBody(fields);
 
-      using (var usecases = ProjectUseCases.UseCaseInteractor()) {
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
 
-        ProjectDto paymentOrder = usecases.UpdateProject(financialProjectUID,
+        FinancialProjectDto paymentOrder = usecases.UpdateProject(financialProjectUID,
                                                                          fields);
 
         return new SingleObjectModel(this.Request, paymentOrder);
       }
     }
 
-
     #endregion Web Apis
 
-  }  // class ProjectController
+  }  // class FinancialProjectController
 
 }  // namespace Empiria.Financial.Projects.WebApi

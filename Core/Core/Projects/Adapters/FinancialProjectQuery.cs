@@ -1,8 +1,8 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Projects Management                        Component : Adapters Layer                          *
+*  Module   : Financial Projects                         Component : Adapters Layer                          *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Query Data Transfer Object              *
-*  Type     : ProjectsQuery                              License   : Please read LICENSE.txt file            *
+*  Type     : FinancialProjectQuery                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Query DTO used to search financial projects.                                                   *
 *                                                                                                            *
@@ -13,7 +13,7 @@ using Empiria.StateEnums;
 namespace Empiria.Financial.Projects.Adapters {
 
   /// <summary>Query DTO used to search financial projects.</summary>
-  public class ProjectQuery {
+  public class FinancialProjectQuery {
 
     public string OrganizationUnitUID {
       get; set;
@@ -40,6 +40,6 @@ namespace Empiria.Financial.Projects.Adapters {
     } = string.Empty;
 
 
-  }  // class ProjectsQuery
+  }  // class FinancialProjectQuery
 
 }  // namespace Empiria.Financial.Projects.Adapters
