@@ -110,6 +110,9 @@ namespace Empiria.Budgeting {
       get {
         return ExtData.Get("budgetProgram", "N/D");
       }
+      private set {
+        ExtData.SetIfValue("budgetProgram", value);
+      }
     }
 
     [DataField("BDG_ACCT_IDENTIFICATORS")]
@@ -185,6 +188,20 @@ namespace Empiria.Budgeting {
       }
 
       BudgetAccountDataService.WriteBudgetAccount(this, ExtData.ToString());
+    }
+
+
+    internal void SetStatus(EntityStatus newStatus) {
+
+      if (Status == EntityStatus.Pending && newStatus == EntityStatus.OnReview) {
+        BudgetProgram = OrganizationalUnit.ExtendedData.Get("budgetProgram", "N/A");
+
+      } else if (Status == EntityStatus.OnReview && newStatus == EntityStatus.Pending) {
+        BudgetProgram = "N/D";
+
+      }
+
+      Status = newStatus;
     }
 
     #endregion Methods

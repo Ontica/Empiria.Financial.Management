@@ -42,7 +42,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     private FixedList<DataTableColumn> BuildColumns() {
       var columns = new List<DataTableColumn> {
         new DataTableColumn("itemDescription", "Partida presupuestal", "text-italic"),
-        new DataTableColumn("budgetProgram", "PP", "text-no-wrap"),
+        new DataTableColumn("budgetProgram", "Programa", "text-no-wrap"),
       };
 
       if (_entries.SelectDistinctFlat(x => x.Entries.Select(y => y.Year)).Count() >= 2) {
