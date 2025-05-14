@@ -19,8 +19,8 @@ namespace Empiria.Financial.Projects.WebApi {
 
   /// <summary>Web API used to retrive and update financial projects.</summary>
   public class ProjectController : WebApiController {
-
-    #region Web Apis
+        
+    #region Query web apis
 
     [HttpGet]
     [Route("v2/financial-projects/{keywords:string}")]
@@ -44,6 +44,56 @@ namespace Empiria.Financial.Projects.WebApi {
         return new CollectionModel(base.Request, projects);
       }
     }
+
+    #endregion Query web apis
+
+    #region Web Apis
+
+    [HttpPost]
+    [Route("v2/financial-projects")]
+    public SingleObjectModel CreateFinancialProject([FromBody] ProjectFields fields) {
+
+      base.RequireBody(fields);
+
+      using (var usecases = ProjectUseCases.UseCaseInteractor()) {
+        ProjectDto paymentOrder = usecases.CreateProject(fields);
+
+        return new SingleObjectModel(base.Request, paymentOrder);
+      }
+    }
+
+
+    [HttpDelete]
+    [Route("v2/financial-projects/{financialProjectUID:guid}")]
+    public NoDataModel DeletePaymentOrder([FromUri] string financialProjectUID) {
+
+      base.RequireResource(financialProjectUID, nameof(financialProjectUID));
+
+      using (var usecases = ProjectUseCases.UseCaseInteractor()) {
+
+        usecases.DeleteProject(financialProjectUID);
+
+        return new NoDataModel(this.Request);
+      }
+    }
+
+
+    [HttpPut]
+    [Route("v2/financial-projects/{financialProjectUID:guid}")]
+    public SingleObjectModel UpdatePaymentOrder([FromUri] string financialProjectUID,
+                                               [FromBody] ProjectFields fields) {
+
+      base.RequireBody(fields);
+
+      using (var usecases = ProjectUseCases.UseCaseInteractor()) {
+
+        ProjectDto paymentOrder = usecases.UpdateProject(financialProjectUID,
+                                                                         fields);
+
+        return new SingleObjectModel(this.Request, paymentOrder);
+      }
+    }
+
 
     #endregion Web Apis
 
