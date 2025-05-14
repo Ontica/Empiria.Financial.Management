@@ -89,7 +89,7 @@ namespace Empiria.Tests.Financial.Projects {
       var fields = new ProjectFields {
         TypeId = 3281,
         StandarAccountUID = "206400",
-        CategoryId = 501,
+        CategoryUID = "f0f98712-54da-40e8-bb7e-dac99350d9ab",
         PrjNo = "00",
         Name = "Name",
         OrganizationUnitUID = "e166a051-f848-4cbf-82df-e2f9a266b005"
@@ -106,7 +106,7 @@ namespace Empiria.Tests.Financial.Projects {
       var fields = new ProjectFields {
         TypeId = 3281,
         StandarAccountUID = "206102",
-        CategoryId = 502,
+        CategoryUID = "f0f98712-54da-40e8-bb7e-dac99350d9ab",
         PrjNo = "0900",
         Name = "Otra prueba",
         OrganizationUnitUID = "e166a051-f848-4cbf-82df-e2f9a266b005"
