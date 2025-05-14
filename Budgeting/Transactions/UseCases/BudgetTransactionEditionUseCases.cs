@@ -12,6 +12,8 @@ using Empiria.Parties;
 using Empiria.Services;
 using Empiria.Financial;
 
+using Empiria.History.Services;
+
 using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
 
@@ -43,6 +45,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       transaction.Save();
 
+      HistoryServices.CreateEntityHistoryEntry(transaction, new HistoryFields("Autorizada"));
+
       return BudgetTransactionMapper.Map(transaction);
     }
 
@@ -60,6 +64,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       transaction.Save();
 
+      HistoryServices.CreateEntityHistoryEntry(transaction, new HistoryFields("Creada"));
+
       return transaction;
     }
 
@@ -76,6 +82,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.Update(fields);
 
       transaction.Save();
+
+      HistoryServices.CreateEntityHistoryEntry(transaction, new HistoryFields("Creada"));
 
       return BudgetTransactionMapper.Map(transaction);
     }
@@ -106,6 +114,12 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       transaction.Save();
 
+      if (transaction.Status == BudgetTransactionStatus.Canceled) {
+        HistoryServices.CreateEntityHistoryEntry(transaction, new HistoryFields("Cancelada"));
+      } else {
+        HistoryServices.CreateEntityHistoryEntry(transaction, new HistoryFields("Eliminada"));
+      }
+
       return BudgetTransactionMapper.Map(transaction);
     }
 
@@ -119,6 +133,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.Reject();
 
       transaction.Save();
+
+      HistoryServices.CreateEntityHistoryEntry(transaction, new HistoryFields("Rechazada", reason));
 
       return BudgetTransactionMapper.Map(transaction);
     }
@@ -163,6 +179,9 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       newBudgetAccount.Save();
 
+      HistoryServices.CreateEntityHistoryEntry(transaction, new HistoryFields("Envío de solicitud de autorización de partida presupuestal",
+                                                                              $"Partida {newBudgetAccount.Name}"));
+
       return BudgetAccountMapper.Map(newBudgetAccount);
     }
 
@@ -175,6 +194,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.SendToAuthorization();
 
       transaction.Save();
+
+      HistoryServices.CreateEntityHistoryEntry(transaction, new HistoryFields("Enviada a autorización"));
 
       return BudgetTransactionMapper.Map(transaction);
     }

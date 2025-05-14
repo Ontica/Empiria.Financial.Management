@@ -39,7 +39,7 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-    public FixedList<HistoryDto> History {
+    public FixedList<HistoryEntryDto> History {
       get; internal set;
     }
 
@@ -50,14 +50,14 @@ namespace Empiria.Payments.Payables.Adapters {
   } // class PayableDataDto
 
 
-  public class PayableActions : BaseActions {
 
+  public class PayableActions : BaseActions {
 
     public bool CanGeneratePaymentOrder {
       get; internal set;
     }
 
-  }
+  }  // class PayableActions
 
 
 

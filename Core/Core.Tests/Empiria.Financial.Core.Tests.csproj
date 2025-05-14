@@ -86,7 +86,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AccountsChart\" />
     <Folder Include="Credits\" />
   </ItemGroup>
 </Project>

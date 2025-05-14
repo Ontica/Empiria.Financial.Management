@@ -128,7 +128,8 @@ namespace Empiria.Budgeting.Transactions {
       _ = BudgetAccount.Parse(fields.BudgetAccountUID);
       _ = BalanceColumn.Parse(fields.BalanceColumnUID);
 
-      Assertion.Require(fields.Amount != 0, "El importe debe ser distinto a cero.");
+      Assertion.Require(fields.Amount != 0,
+                        "El importe debe ser distinto a cero.");
 
       if (fields.OriginalAmount == 0) {
         fields.OriginalAmount = Math.Abs(fields.Amount);
@@ -137,8 +138,10 @@ namespace Empiria.Budgeting.Transactions {
       if (fields.ProductUID.Length != 0) {
         _ = Product.Parse(fields.ProductUID);
 
-        Assertion.Require(fields.ProductUnitUID.Length != 0, "Se requiere la unidad de medida del producto.");
-        Assertion.Require(fields.ProductQty > 0, "La cantidad del producto debe ser mayor a cero.");
+        Assertion.Require(fields.ProductUnitUID.Length != 0,
+                          "Se requiere la unidad de medida del producto.");
+        Assertion.Require(fields.ProductQty > 0,
+                          "La cantidad del producto debe ser mayor a cero.");
       }
 
 

@@ -7,9 +7,8 @@
 *  Summary  : Output DTO used to return bill data.                                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-using Empiria.StateEnums;
+using System;
 
 using Empiria.Documents.Services.Adapters;
 using Empiria.History.Services.Adapters;
@@ -35,7 +34,7 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
-    public FixedList<HistoryDto> History {
+    public FixedList<HistoryEntryDto> History {
       get; internal set;
     }
 
@@ -164,7 +163,7 @@ namespace Empiria.Billing.Adapters {
     public NamedEntityDto Product {
       get; internal set;
     }
-    
+
 
     public string Description {
       get; internal set;
