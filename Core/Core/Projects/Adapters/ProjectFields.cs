@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Contacts;
 using Empiria.Parties;
 using Empiria.StateEnums;
 using System;
@@ -55,7 +56,7 @@ namespace Empiria.Financial.Projects.Adapters {
       Assertion.Require(Name, "Necesito el nombre de proyecto.");
       Assertion.Require(CategoryId, "Necesito el tipo de proyecto.");
       Assertion.Require(OrganizationUnitUID, "Necesito el area.");
-      _ = OrganizationalUnit.Parse(OrganizationUnitUID);
+      _ = Party.Parse(OrganizationUnitUID);
     }
   }  // class ProjecFields
 

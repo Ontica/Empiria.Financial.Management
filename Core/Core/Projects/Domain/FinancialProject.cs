@@ -16,27 +16,28 @@ using Empiria.StateEnums;
 using Empiria.Financial.Data;
 using Empiria.Financial.Projects.Adapters;
 using Empiria.Contacts;
+using Empiria.Parties;
 
 
 namespace Empiria.Financial {
 
   /// <summary>Represents a financial project.</summary>
-  public class Project : BaseObject, INamedEntity {
+  public class FinancialProject : BaseObject, INamedEntity {
     //private ProjectFields fields;
 
     #region Constructors and parsers
 
-    public Project() {
+    public FinancialProject() {
       // Require by Empiria FrameWork
     }
 
-    static public Project Parse(int id) => ParseId<Project>(id);
+    static public FinancialProject Parse(int id) => ParseId<FinancialProject>(id);
 
-    static public Project Parse(string uid) => ParseKey<Project>(uid);
+    static public FinancialProject Parse(string uid) => ParseKey<FinancialProject>(uid);
 
-    static public Project Empty => ParseEmpty<Project>();
+    static public FinancialProject Empty => ParseEmpty<FinancialProject>();
 
-    public Project(ProjectFields fields) {
+    public FinancialProject(ProjectFields fields) {
       Assertion.Require(fields, nameof(fields));
       Update(fields);
     }
@@ -76,7 +77,7 @@ namespace Empiria.Financial {
 
 
     [DataField("PRJ_ORG_UNIT_ID")]
-    public Contact OrganizationUnit {
+    public Party OrganizationUnit {
       get; private set;
     }
 
@@ -152,13 +153,13 @@ namespace Empiria.Financial {
 
     #region Methods
 
-    internal static FixedList<Project> SearchProjects(string keywords) {
+    internal static FixedList<FinancialProject> SearchProjects(string keywords) {
       keywords = keywords ?? string.Empty;
 
       return ProjectDataService.SearchProjects(keywords);
     }
 
-    internal static FixedList<Project> SearchProjects(string filter, string sort) {
+    internal static FixedList<FinancialProject> SearchProjects(string filter, string sort) {
 
       return ProjectDataService.SearchProjects(filter, sort);
     }
@@ -172,7 +173,7 @@ namespace Empiria.Financial {
       this.StandarAccountId = fields.StandarAccountId;
       this.PrjNo = fields.PrjNo;
       this.Name = fields.Name;
-      this.OrganizationUnit = Contact.Parse(fields.OrganizationUnitUID);
+      this.OrganizationUnit = Party.Parse(fields.OrganizationUnitUID);
       this.Identifiers = string.Empty;
       this.Tags = string.Empty;
       this.ExtData = JsonObject.Empty;

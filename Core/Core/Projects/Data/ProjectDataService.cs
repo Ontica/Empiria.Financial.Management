@@ -17,7 +17,7 @@ namespace Empiria.Financial.Data {
   static internal class ProjectDataService {
 
 
-      static internal FixedList<Project> SearchProjects(string keyewords) {
+      static internal FixedList<FinancialProject> SearchProjects(string keyewords) {
       
       var sql = "SELECT * FROM FMS_PROJECTS " +
                $"WHERE PRJ_KEYWORDS LIKE '% {keyewords} %'" + " AND " +
@@ -25,10 +25,10 @@ namespace Empiria.Financial.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<Project>(op);
+      return DataReader.GetFixedList<FinancialProject>(op);
     }
 
-    static internal FixedList<Project> SearchProjects(string filter, string sortBy) {
+    static internal FixedList<FinancialProject> SearchProjects(string filter, string sortBy) {
       
       var sql = "SELECT * FROM FMS_PROJECTS ";
 
@@ -42,10 +42,10 @@ namespace Empiria.Financial.Data {
 
       var dataOperation = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<Project>(dataOperation);
+      return DataReader.GetFixedList<FinancialProject>(dataOperation);
     }
 
-    internal static void WriteProject(Project o, string extensionData) {
+    internal static void WriteProject(FinancialProject o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Project",
          o.Id, o.UID, o.ProjectTypeId, o.StandarAccountId, o.CategoryId, o.PrjNo, o.Name,
          o.OrganizationUnit.Id, o.Identifiers, o.Tags, extensionData, o.Keywords, o.ParentId,

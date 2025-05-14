@@ -13,11 +13,11 @@ namespace Empiria.Financial.Projects.Adapters {
   /// <summary> Mapping methods for financial projects.</summary>
   static public class ProjectMapper {
 
-    static public FixedList<ProjectDto> Map(FixedList<Project> project) {
+    static public FixedList<ProjectDto> Map(FixedList<FinancialProject> project) {
       return project.Select(x => Map(x)).ToFixedList();
     }
 
-    static public ProjectDto Map(Project project) {
+    static public ProjectDto Map(FinancialProject project) {
       return new ProjectDto {
         UID = project.UID,
         StandarAccount = project.StandarAccountId,

@@ -35,7 +35,7 @@ namespace Empiria.Financial.Projects.UseCases {
 
       fields.EnsureValid();
 
-      var project = new Project(fields);
+      var project = new FinancialProject(fields);
 
       project.Save();
 
@@ -49,7 +49,7 @@ namespace Empiria.Financial.Projects.UseCases {
 
       fields.EnsureValid();
 
-      var project = Project.Parse(UID);
+      var project = FinancialProject.Parse(UID);
 
       project.Update(fields);
 
@@ -60,7 +60,7 @@ namespace Empiria.Financial.Projects.UseCases {
 
     public void DeleteProject(string UID) {
       Assertion.Require(UID, nameof(UID));
-      var project = Project.Parse(UID);
+      var project = FinancialProject.Parse(UID);
 
       project.Delete();
 
@@ -71,7 +71,7 @@ namespace Empiria.Financial.Projects.UseCases {
     public FixedList<NamedEntityDto> SearchProjects(string keywords) {
       keywords = keywords ?? string.Empty;
 
-      FixedList<Project> projects = Project.SearchProjects(keywords);
+      FixedList<FinancialProject> projects = FinancialProject.SearchProjects(keywords);
 
       return projects.MapToNamedEntityList();
     }
@@ -85,7 +85,7 @@ namespace Empiria.Financial.Projects.UseCases {
       string filter = query.MapToFilterString();
       string sort = query.MapToSortString();
 
-      FixedList<Project> projects = Project.SearchProjects(filter, sort);
+      FixedList<FinancialProject> projects = FinancialProject.SearchProjects(filter, sort);
 
       return ProjectMapper.Map(projects);
     }
