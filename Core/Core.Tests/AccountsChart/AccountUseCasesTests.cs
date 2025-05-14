@@ -43,7 +43,22 @@ namespace Empiria.Tests.Financial.Projects {
     }
 
 
-   
+    [Fact]
+    public void Should_Get_StandardAcccountCategories() {
+      var sut = _usecases.GetStandardAccountCategories();
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+
+    [Fact]
+    public void Should_Parse_StandardAcccountCategory() {
+      var sut = _usecases.GetStandardAccountCategory("7418d18f-04f9-486b-9c93-a2d52b0be246");
+
+      Assert.NotNull(sut);
+    }
+
     #endregion Facts
 
   }  // class ProjectUseCasesTests
