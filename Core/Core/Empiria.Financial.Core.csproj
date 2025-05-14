@@ -67,7 +67,6 @@
     <ProjectReference Include="..\..\..\extensions\Services\Empiria.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AccountsChart\Adapters\" />
     <Folder Include="Credits\Adapters\" />
     <Folder Include="Credits\Data\" />
     <Folder Include="Credits\Domain\" />

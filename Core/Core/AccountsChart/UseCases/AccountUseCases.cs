@@ -30,6 +30,13 @@ namespace Empiria.Financial.Accounts.UseCases {
     #endregion Constructors and parsers
 
     #region Use cases
+    public FixedList<NamedEntityDto> SearchAccounts(string keywords) {
+      keywords = keywords ?? string.Empty;
+
+      FixedList<Account> acccounts = AccountDataService.SearchAccount(keywords);
+
+      return acccounts.MapToNamedEntityList();
+    }
 
     public FixedList<NamedEntityDto> SearchStandardAccounts(string keywords) {
       keywords = keywords ?? string.Empty;

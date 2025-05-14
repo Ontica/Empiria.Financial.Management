@@ -44,6 +44,14 @@ namespace Empiria.Tests.Financial.Projects {
 
 
     [Fact]
+    public void Should_Search_Acccount() {
+      var sut = _usecases.SearchAccounts("eva");
+
+      Assert.NotNull(sut);
+    }
+
+
+    [Fact]
     public void Should_Get_StandardAcccountCategories() {
       var sut = _usecases.GetStandardAccountCategories();
 
