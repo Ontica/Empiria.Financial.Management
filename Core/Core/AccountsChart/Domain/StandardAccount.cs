@@ -45,7 +45,7 @@ namespace Empiria.Financial {
 
 
     [DataField("STD_ACCT_CATEGORY_ID")]
-    public int CategoryId {
+    public StandardAccountCategory Category {
       get; private set;
     }
 

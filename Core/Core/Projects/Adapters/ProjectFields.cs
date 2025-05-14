@@ -28,9 +28,9 @@ namespace Empiria.Financial.Projects.Adapters {
     } = string.Empty;
 
 
-    public int CategoryId {
+    public string CategoryUID {
       get; set;
-    } = 0;
+    } = string.Empty;
 
 
     public string PrjNo {
@@ -54,7 +54,7 @@ namespace Empiria.Financial.Projects.Adapters {
     internal void EnsureValid() {
       Assertion.Require(PrjNo, "Necesito el numero de proyecto.");
       Assertion.Require(Name, "Necesito el nombre de proyecto.");
-      Assertion.Require(CategoryId, "Necesito el tipo de proyecto.");
+      Assertion.Require(CategoryUID, "Necesito la categoria del proyecto.");
       Assertion.Require(OrganizationUnitUID, "Necesito el area.");
       _ = Party.Parse(OrganizationUnitUID);
     }

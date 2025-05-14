@@ -59,7 +59,7 @@ namespace Empiria.Financial {
 
 
     [DataField("PRJ_CATEGORY_ID")]
-    public int CategoryId {
+    public FinancialProjectCategory Category {
       get; private set;
     }
 
@@ -169,7 +169,7 @@ namespace Empiria.Financial {
       fields.EnsureValid();
 
       this.ProjectTypeId = fields.TypeId;
-      this.CategoryId = fields.CategoryId;
+      this.Category = FinancialProjectCategory.Parse(fields.CategoryUID);
       this.StandarAccount = StandardAccount.Parse(fields.StandarAccountUID);
       this.PrjNo = fields.PrjNo;
       this.Name = fields.Name;

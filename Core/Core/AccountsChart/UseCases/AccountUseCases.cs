@@ -39,12 +39,23 @@ namespace Empiria.Financial.Accounts.UseCases {
       return stdAcccounts.MapToNamedEntityList();
     }
 
-       
 
     public StandardAccount GetStandardAccount(string uid) {
       Assertion.Require(uid, nameof(uid));
 
      return StandardAccount.Parse(uid);
+    }
+
+
+    public FixedList<NamedEntityDto> GetStandardAccountCategories() {
+      return StandardAccountCategory.GetList().MapToNamedEntityList();
+    }
+
+
+    public StandardAccountCategory GetStandardAccountCategory(string uid) {
+      Assertion.Require(uid, nameof(uid));
+
+      return StandardAccountCategory.Parse(uid);
     }
 
     #endregion Use cases

@@ -38,6 +38,25 @@ namespace Empiria.Tests.Financial.Projects {
 
     #region Facts
 
+
+    [Fact]
+    public void Should_GetFinacialProjectCategories() {
+
+      var sut = _usecases.GetFinancialQueryCategories();
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+
+    [Fact]
+    public void Should_GetFinacialProjectCategory() {
+
+      var sut = _usecases.GetFinancialQueryCategory("bdf57f96-27d4-4007-a38c-30c567298803");
+
+      Assert.NotNull(sut);
+    }
+
     [Fact]
     public void Should_Search_Projects() {
 
@@ -70,7 +89,7 @@ namespace Empiria.Tests.Financial.Projects {
       var fields = new ProjectFields {
         TypeId = 3281,
         StandarAccountUID = "206400",
-        CategoryId = 501,
+        CategoryUID = "f0f98712-54da-40e8-bb7e-dac99350d9ab",
         PrjNo = "00",
         Name = "Name",
         OrganizationUnitUID = "e166a051-f848-4cbf-82df-e2f9a266b005"
@@ -87,7 +106,7 @@ namespace Empiria.Tests.Financial.Projects {
       var fields = new ProjectFields {
         TypeId = 3281,
         StandarAccountUID = "206102",
-        CategoryId = 502,
+        CategoryUID = "f0f98712-54da-40e8-bb7e-dac99350d9ab",
         PrjNo = "0900",
         Name = "Otra prueba",
         OrganizationUnitUID = "e166a051-f848-4cbf-82df-e2f9a266b005"
