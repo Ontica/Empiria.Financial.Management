@@ -72,6 +72,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static private BudgetTransactionActions MapActions(BudgetTransactionRules rules) {
       return new BudgetTransactionActions {
         CanAuthorize = rules.CanAuthorize,
+        CanClose = rules.CanClose,
         CanDelete = rules.CanDelete,
         CanEditDocuments = rules.CanEditDocuments,
         CanReject = rules.CanReject,

@@ -54,6 +54,21 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public BudgetTransactionHolderDto CloseTransaction(string budgetTransactionUID) {
+      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+
+      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      transaction.Close();
+
+      transaction.Save();
+
+      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Cerrada"));
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public BudgetTransaction CreateTransaction(IPayableEntity payable,
                                                BudgetTransactionFields fields) {
       Assertion.Require(fields, nameof(fields));

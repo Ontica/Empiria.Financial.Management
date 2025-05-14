@@ -41,6 +41,18 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
+    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/close")]
+    public SingleObjectModel CloseTransaction([FromUri] string budgetTransactionUID) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+        BudgetTransactionHolderDto transaction = usecases.CloseTransaction(budgetTransactionUID);
+
+        return new SingleObjectModel(base.Request, transaction);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v2/budgeting/transactions")]
     public SingleObjectModel CreateTransaction([FromBody] BudgetTransactionFields fields) {
 

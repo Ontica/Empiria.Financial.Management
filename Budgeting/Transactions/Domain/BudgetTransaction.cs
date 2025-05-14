@@ -299,6 +299,15 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal void Close() {
+      Assertion.Require(Rules.CanClose, "Current user can not close this transaction.");
+
+      this.RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      this.RecordingDate = DateTime.Now;
+      this.Status = BudgetTransactionStatus.Closed;
+    }
+
+
     internal void DeleteOrCancel() {
       Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this transaction.");
 
