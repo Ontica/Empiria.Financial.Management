@@ -30,6 +30,16 @@ namespace Empiria.Financial.Projects.UseCases {
 
     #region Use cases
 
+    public FixedList<NamedEntityDto> GetFinancialQueryCategories() {
+      return FinancialProjectCategory.GetList().MapToNamedEntityList();
+
+    }
+
+    public FinancialProjectCategory GetFinancialQueryCategory(string UID) {
+      return FinancialProjectCategory.Parse(UID);
+
+    }
+
     public ProjectDto CreateProject(ProjectFields fields) {
       Assertion.Require(fields, nameof(fields));
 

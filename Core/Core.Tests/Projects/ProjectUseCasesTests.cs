@@ -38,6 +38,25 @@ namespace Empiria.Tests.Financial.Projects {
 
     #region Facts
 
+
+    [Fact]
+    public void Should_GetFinacialProjectCategories() {
+
+      var sut = _usecases.GetFinancialQueryCategories();
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+
+    [Fact]
+    public void Should_GetFinacialProjectCategory() {
+
+      var sut = _usecases.GetFinancialQueryCategory("bdf57f96-27d4-4007-a38c-30c567298803");
+
+      Assert.NotNull(sut);
+    }
+
     [Fact]
     public void Should_Search_Projects() {
 
