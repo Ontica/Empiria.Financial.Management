@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Empiria.Financial;
 using Empiria.Json;
@@ -321,6 +322,18 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(entry, $"Budget entry with UID '{budgetEntryUID}' not found.");
 
       return entry;
+    }
+
+
+    [DataField("BDG_TXN_TOTAL")]
+    private decimal _total = 0;
+
+    internal decimal GetTotal() {
+      if (_entries.IsValueCreated) {
+        return _entries.Value.Sum(x => x.Deposit);
+      } else {
+        return _total;
+      }
     }
 
 

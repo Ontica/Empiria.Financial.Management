@@ -26,7 +26,7 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
 
-    public int CategoryId {
+    public NamedEntityDto Category {
       get; set;
     }
 
