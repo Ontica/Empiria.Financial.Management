@@ -8,14 +8,16 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial.Accounts.Adapters;
 using Empiria.Financial.Data;
 using Empiria.Financial.Projects.Adapters;
 using Empiria.Services;
 
-namespace Empiria.Financial.Accounts.UseCases {
+namespace Empiria.Financial.Accounts.UseCases
+{
 
-  /// <summary>Provides use cases for update and retrieve financial projects.</summary>
-  public class FinancialAccountUseCases : UseCase {
+    /// <summary>Provides use cases for update and retrieve financial projects.</summary>
+    public class FinancialAccountUseCases : UseCase {
 
     #region Constructors and parsers
 
@@ -30,6 +32,21 @@ namespace Empiria.Financial.Accounts.UseCases {
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public FixedList<FinancialAccountDto> SearchAccount(FinancialAccountQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      query.EnsureIsValid();
+
+      string filter = query.MapToFilterString();
+      string sort = query.MapToSortString();
+
+      FixedList<FinancialAccount> accounts = FinancialAccount.SearchAccount(filter, sort);
+
+      return FinancialAccountMapper.Map(accounts);
+    }
+
+
     public FixedList<NamedEntityDto> SearchAccounts(string keywords) {
       keywords = keywords ?? string.Empty;
 

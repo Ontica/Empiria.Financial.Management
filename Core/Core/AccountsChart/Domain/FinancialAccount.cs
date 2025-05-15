@@ -53,7 +53,7 @@ namespace Empiria.Financial {
 
 
     [DataField("ACCT_STD_ACCT_ID")]
-    public int StdAcctId {
+    public StandardAccount StandardAccount {
       get; private set;
     }
 

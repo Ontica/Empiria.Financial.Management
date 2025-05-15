@@ -11,6 +11,8 @@
 using Xunit;
 
 using Empiria.Financial.Accounts.UseCases;
+using Empiria.Financial.Projects.Adapters;
+using Empiria.Financial.Accounts.Adapters;
 
 namespace Empiria.Tests.Financial.Projects {
 
@@ -66,6 +68,22 @@ namespace Empiria.Tests.Financial.Projects {
 
       Assert.NotNull(sut);
     }
+
+
+    [Fact]
+    public void Should_Search_AccountsByQuery() {
+      var query = new FinancialAccountQuery {
+        Keywords = "Agua",
+        OrganizationUnitUID = "",
+        Status = StateEnums.EntityStatus.Active
+      };
+
+      var sut = _usecases.SearchAccount(query);
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
 
     #endregion Facts
 
