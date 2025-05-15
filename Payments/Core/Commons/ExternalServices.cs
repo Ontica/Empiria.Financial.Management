@@ -9,12 +9,11 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.IO;
 
 using Empiria.Parties;
 
 using Empiria.Documents;
-using Empiria.Documents.Services;
-using Empiria.Documents.Services.Adapters;
 
 using Empiria.Billing;
 using Empiria.Billing.Adapters;
@@ -26,6 +25,8 @@ using Empiria.Budgeting.Transactions.UseCases;
 using Empiria.Procurement.Contracts;
 
 using Empiria.Payments.Payables;
+using Empiria.Budgeting;
+
 
 namespace Empiria.Payments {
 
@@ -44,19 +45,19 @@ namespace Empiria.Payments {
     }
 
 
-    static internal Bill GenerateBill(Payable payable, Document billDocument) {
+    static internal Bill GenerateBill(Payable payable, DocumentDto billDocument) {
       Assertion.Require(billDocument, nameof(billDocument));
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
         BillDto returnedValue;
 
-        string billType = billDocument.DocumentProduct.ApplicationContentType;
+        string billType = billDocument.ApplicationContentType;
 
         if (billType == "factura-electronica-sat") {
-          returnedValue = usecases.CreateBill(billDocument.ReadAllText(), payable);
+          returnedValue = usecases.CreateBill(File.ReadAllText(billDocument.FullLocalName), payable);
         } else if (billType == "nota-credito-sat") {
-          returnedValue = usecases.CreateCreditNote(billDocument.ReadAllText(), payable);
+          returnedValue = usecases.CreateCreditNote(File.ReadAllText(billDocument.FullLocalName), payable);
         } else {
           throw Assertion.EnsureNoReachThisCode($"Unrecognized applicationContentType '{billType}'.");
         }
@@ -73,7 +74,7 @@ namespace Empiria.Payments {
     }
 
 
-    static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, Document document, Bill bill) {
+    static internal DocumentDto UpdatePayableDocumentWithBillData(Payable payable, DocumentDto document, Bill bill) {
 
       CreatePayableDocumentLinks(payable, document, bill);
 
@@ -126,7 +127,7 @@ namespace Empiria.Payments {
 
       return new BudgetTransactionFields {
         TransactionTypeUID = transactionType.UID,
-        BaseBudgetUID = payable.Budget.UID,
+        BaseBudgetUID = Budget.Parse(1).UID,
         OperationSourceUID = SISTEMA_DE_PAGOS.UID,
         Description = payable.Description,
         PayableId = payable.Id,
@@ -137,41 +138,27 @@ namespace Empiria.Payments {
     }
 
 
-    static private void CreatePayableDocumentLinks(Payable payable, Document document, Bill bill) {
+    static private void CreatePayableDocumentLinks(Payable payable, DocumentDto document, Bill bill) {
       DocumentLinkServices.CreateLink(document, bill);
 
       DocumentLinkServices.CreateLink(document, payable.GetPayableEntity());
 
-      foreach (var payableEntityDocument in DocumentServices.GetEntityBaseDocuments(payable.GetPayableEntity())) {
-        DocumentLinkServices.CreateLink(Document.Parse(payableEntityDocument.UID), bill);
+      foreach (var baseDocument in DocumentServices.GetEntityDocuments(payable.GetPayableEntity())) {
+        DocumentLinkServices.CreateLink(baseDocument, bill);
       }
 
-      // if (payable.GetPayableEntity() is ContractOrder contractOrder) {
-
-      //   foreach (var contractDocument in DocumentServices.GetEntityBaseDocuments(contractOrder.Contract)) {
-      //     DocumentLinkServices.CreateLink(Document.Parse(contractDocument.UID), bill);
-      //   }
-      //}
     }
 
 
     static private void CreateBudgetTransactionDocumentLinks(Payable payable, BudgetTransaction transaction) {
 
-      foreach (var payableDocument in DocumentServices.GetEntityBaseDocuments(payable)) {
-        DocumentLinkServices.CreateLink(Document.Parse(payableDocument.UID), transaction);
+      foreach (var baseDocument in DocumentServices.GetEntityDocuments(payable)) {
+        DocumentLinkServices.CreateLink(baseDocument, transaction);
       }
 
-      foreach (var payableEntityDocument in DocumentServices.GetEntityBaseDocuments(payable.GetPayableEntity())) {
-        DocumentLinkServices.CreateLink(Document.Parse(payableEntityDocument.UID), transaction);
+      foreach (var baseDocument in DocumentServices.GetEntityDocuments(payable.GetPayableEntity())) {
+        DocumentLinkServices.CreateLink(baseDocument, transaction);
       }
-
-
-      // if (payable.GetPayableEntity() is ContractOrder contractOrder) {
-
-      // foreach (var contractDocument in DocumentServices.GetEntityBaseDocuments(contractOrder.Contract)) {
-      //   DocumentLinkServices.CreateLink(Document.Parse(contractDocument.UID), transaction);
-      // }
-      // }
     }
 
     #endregion Helpers

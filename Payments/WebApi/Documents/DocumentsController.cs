@@ -14,7 +14,6 @@ using Empiria.Storage;
 using Empiria.WebApi;
 
 using Empiria.Documents;
-using Empiria.Documents.Services;
 
 using Empiria.Payments.Orders;
 
@@ -34,7 +33,7 @@ namespace Empiria.Payments.WebApi {
                                              [FromUri] string documentUID) {
 
       var payable = Payable.Parse(payableUID);
-      var document = Document.Parse(documentUID);
+      var document = DocumentServices.GetDocument(documentUID);
 
       DocumentServices.RemoveDocument(payable, document);
 
@@ -48,7 +47,7 @@ namespace Empiria.Payments.WebApi {
                                                   [FromUri] string documentUID) {
 
       var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-      var document = Document.Parse(documentUID);
+      var document = DocumentServices.GetDocument(documentUID);
 
       DocumentServices.RemoveDocument(paymentOrder, document);
 
@@ -80,7 +79,7 @@ namespace Empiria.Payments.WebApi {
           return new SingleObjectModel(base.Request, document);
         }
       } catch {
-        DocumentServices.RemoveDocument(payable, Document.Parse(document.UID));
+        DocumentServices.RemoveDocument(payable, document);
         throw;
       }
     }
@@ -110,7 +109,7 @@ namespace Empiria.Payments.WebApi {
       base.RequireBody(fields);
 
       var payable = Payable.Parse(payableUID);
-      var document = Document.Parse(documentUID);
+      var document = DocumentServices.GetDocument(documentUID);
 
       var documentDto = DocumentServices.UpdateDocument(payable, document, fields);
 
@@ -126,7 +125,7 @@ namespace Empiria.Payments.WebApi {
       base.RequireBody(fields);
 
       var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-      var document = Document.Parse(documentUID);
+      var document = DocumentServices.GetDocument(documentUID);
 
       var documentDto = DocumentServices.UpdateDocument(paymentOrder, document, fields);
 

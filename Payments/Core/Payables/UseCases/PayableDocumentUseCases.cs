@@ -7,14 +7,12 @@
 *  Summary  : Use cases for payable documents management.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using Empiria.Services;
 
-using Empiria.Documents.Services.Adapters;
+using Empiria.Documents;
 
 using Empiria.Billing;
-using Empiria.Documents;
 
 namespace Empiria.Payments.Payables.UseCases {
 
@@ -36,16 +34,15 @@ namespace Empiria.Payments.Payables.UseCases {
     #region Use cases
 
     public DocumentDto ProcessPayableDocument(string payableUID,
-                                              DocumentDto documentDto) {
+                                              DocumentDto document) {
       Assertion.Require(payableUID, nameof(payableUID));
-      Assertion.Require(documentDto, nameof(documentDto));
+      Assertion.Require(document, nameof(document));
 
-      if (documentDto.ApplicationContentType.Length == 0) {
-        return documentDto;
+      if (document.ApplicationContentType.Length == 0) {
+        return document;
       }
 
       var payable = Payable.Parse(payableUID);
-      var document = Document.Parse(documentDto.UID);
 
       Bill bill = ExternalServices.GenerateBill(payable, document);
 

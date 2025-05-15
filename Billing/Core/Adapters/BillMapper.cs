@@ -10,9 +10,8 @@
 
 using Empiria.StateEnums;
 
-using Empiria.Documents.Services;
+using Empiria.Documents;
 using Empiria.History.Services;
-using System;
 
 namespace Empiria.Billing.Adapters {
 
@@ -27,7 +26,7 @@ namespace Empiria.Billing.Adapters {
         Bill = MapToBillDto(bill),
         Concepts = MapBillConcepts(bill.Concepts),
         BillRelatedBills = MapBillRelatedBills(bill.BillRelatedBills),
-        Documents = DocumentServices.GetEntityDocuments(bill),
+        Documents = DocumentServices.GetAllEntityDocuments(bill),
         History = HistoryServices.GetEntityHistory(bill),
         Actions = MapActions()
       };
@@ -89,7 +88,7 @@ namespace Empiria.Billing.Adapters {
 
     static private FixedList<BillRelatedBillDto> MapBillRelatedBills(
                     FixedList<BillRelatedBill> billRelatedBills) {
-      
+
       return billRelatedBills.Select((x) => MapToBillRelatedBillsDto(x))
                          .ToFixedList();
     }

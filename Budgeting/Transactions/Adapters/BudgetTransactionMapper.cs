@@ -8,11 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Documents.Services;
+using Empiria.Documents;
 using Empiria.History.Services;
 
 using Empiria.Budgeting.Adapters;
-using DocumentFormat.OpenXml.Vml;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
@@ -28,7 +27,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Transaction = MapTransaction(transaction),
         Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
         GroupedEntries = new BudgetEntriesByYearTableDto(byYearTransaction.GetEntries()),
-        Documents = DocumentServices.GetEntityDocuments(transaction),
+        Documents = DocumentServices.GetAllEntityDocuments(transaction),
         History = HistoryServices.GetEntityHistory(transaction),
         Actions = MapActions(transaction.Rules)
       };

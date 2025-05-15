@@ -8,10 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Documents.Services;
+using Empiria.Documents;
+using Empiria.History.Services;
+
 using Empiria.Financial;
 using Empiria.Financial.Adapters;
-using Empiria.History.Services;
 
 using Empiria.Payments.Payables.Adapters;
 
@@ -30,7 +31,7 @@ namespace Empiria.Payments.Orders.Adapters {
         PaymentOrder = MapPaymentOrder(paymentOrder),
         Items = PayableItemMapper.Map(paymentOrder.Payable.GetItems()),
         Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
-        Documents = DocumentServices.GetEntityDocuments(paymentOrder),
+        Documents = DocumentServices.GetAllEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),
         Log = GetPaymentOrderLog(paymentOrder),
         Actions = MapActions(paymentOrder)
@@ -69,7 +70,7 @@ namespace Empiria.Payments.Orders.Adapters {
         CanUpdate = paymentOrderActions.CanUpdate,
       };
 
-    }   
+    }
 
     static private PaymentAccountDto MapPaymentAccount(PaymentAccount paymentAccount) {
       return PaymentAccountMapper.Map(paymentAccount);
@@ -98,11 +99,11 @@ namespace Empiria.Payments.Orders.Adapters {
         ReferenceNumber = paymentOrder.ReferenceNumber,
       };
     }
-    
+
 
     static private FixedList<PaymentInstructionLogDescriptorDto> GetPaymentOrderLog(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
-          
+
       using (var usecases = PaymentService.ServiceInteractor()) {
 
         FixedList<PaymentInstructionLogEntry> paymentInstructionLogs = usecases.GetPaymentInstructionLogs(paymentOrder);

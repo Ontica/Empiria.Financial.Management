@@ -14,10 +14,8 @@ using Empiria.Storage;
 using Empiria.WebApi;
 
 using Empiria.Documents;
-using Empiria.Documents.Services;
 
 using Empiria.Budgeting.Transactions;
-
 
 namespace Empiria.Budgeting.WebApi {
 
@@ -32,7 +30,7 @@ namespace Empiria.Budgeting.WebApi {
                                                  [FromUri] string documentUID) {
 
       var transaction = BudgetTransaction.Parse(budgetTransactionUID);
-      var document = Document.Parse(documentUID);
+      var document = DocumentServices.GetDocument(documentUID);
 
       DocumentServices.RemoveDocument(transaction, document);
 
@@ -64,7 +62,7 @@ namespace Empiria.Budgeting.WebApi {
       base.RequireBody(fields);
 
       var transaction = BudgetTransaction.Parse(budgetTransactionUID);
-      var document = Document.Parse(documentUID);
+      var document = DocumentServices.GetDocument(documentUID);
 
       var documentDto = DocumentServices.UpdateDocument(transaction, document, fields);
 

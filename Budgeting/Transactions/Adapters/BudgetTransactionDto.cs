@@ -10,7 +10,7 @@
 
 using System;
 
-using Empiria.Documents.Services.Adapters;
+using Empiria.Documents;
 using Empiria.History.Services.Adapters;
 
 namespace Empiria.Budgeting.Transactions.Adapters {

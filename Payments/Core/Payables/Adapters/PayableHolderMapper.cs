@@ -10,7 +10,7 @@
 
 using System.Collections.Generic;
 
-using Empiria.Documents.Services;
+using Empiria.Documents;
 using Empiria.History.Services;
 
 namespace Empiria.Payments.Payables.Adapters {
@@ -25,7 +25,7 @@ namespace Empiria.Payments.Payables.Adapters {
         PayableEntity = PayableEntityMapper.Map(payable.PayableEntity),
         Items = MapPayableItems(payable.GetItems()),
         Bills = ExternalServices.GetPayableBills(payable),
-        Documents = DocumentServices.GetEntityDocuments(payable),
+        Documents = DocumentServices.GetAllEntityDocuments(payable),
         History = HistoryServices.GetEntityHistory(payable),
         Actions = MapActions(),
       };

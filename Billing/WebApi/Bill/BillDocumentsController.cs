@@ -14,7 +14,6 @@ using Empiria.Storage;
 using Empiria.WebApi;
 
 using Empiria.Documents;
-using Empiria.Documents.Services;
 
 namespace Empiria.Billing.WebApi {
 
@@ -29,7 +28,7 @@ namespace Empiria.Billing.WebApi {
                                           [FromUri] string documentUID) {
 
       var bill = Bill.Parse(billUID);
-      var document = Document.Parse(documentUID);
+      var document = DocumentServices.GetDocument(documentUID);
 
       DocumentServices.RemoveDocument(bill, document);
 
@@ -61,7 +60,7 @@ namespace Empiria.Billing.WebApi {
       base.RequireBody(fields);
 
       var bill = Bill.Parse(billUID);
-      var document = Document.Parse(documentUID);
+      var document = DocumentServices.GetDocument(documentUID);
 
       var documentDto = DocumentServices.UpdateDocument(bill, document, fields);
 

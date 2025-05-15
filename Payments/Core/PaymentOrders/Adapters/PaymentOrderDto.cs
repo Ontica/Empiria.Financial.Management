@@ -10,7 +10,7 @@
 
 using System;
 
-using Empiria.Documents.Services.Adapters;
+using Empiria.Documents;
 using Empiria.History.Services.Adapters;
 
 using Empiria.Billing.Adapters;
@@ -59,11 +59,11 @@ namespace Empiria.Payments.Orders.Adapters {
   }  // class PaymentOrderHolderDto
 
   public class PaymentOrderActionsDto : BaseActions {
-       
+
     public bool CanSendToPay {
       get; internal set;
     }
-    
+
 
   }
 
@@ -123,7 +123,7 @@ namespace Empiria.Payments.Orders.Adapters {
     }
 
     public string ReferenceNumber {
-      get; internal set; 
+      get; internal set;
     }
 
     public NamedEntityDto Status {
