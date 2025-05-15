@@ -81,9 +81,10 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     [Route("v2/budgeting/transactions/bulk-operation/export-entries")]
     public SingleObjectModel ExportBudgetTransactionEntriesToExcel([FromBody] BulkOperationCommand command) {
 
-      FixedList<BudgetTransaction> transactions = command.Items.Select(x => BudgetTransaction.Parse(x))
-                                                               .ToFixedList()
-                                                               .Sort((x, y) => x.TransactionNo.CompareTo(y.TransactionNo));
+      FixedList<BudgetTransactionByYear> transactions =
+            command.Items.Select(x => new BudgetTransactionByYear(BudgetTransaction.Parse(x)))
+                         .ToFixedList()
+                         .Sort((x, y) => x.Transaction.TransactionNo.CompareTo(y.Transaction.TransactionNo));
 
       using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
 

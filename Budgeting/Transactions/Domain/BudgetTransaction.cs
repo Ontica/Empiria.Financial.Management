@@ -348,7 +348,7 @@ namespace Empiria.Budgeting.Transactions {
     [DataField("BDG_TXN_TOTAL")]
     private decimal _total = 0;
 
-    internal decimal GetTotal() {
+    public decimal GetTotal() {
       if (_entries.IsValueCreated) {
         return _entries.Value.Sum(x => x.Deposit);
       } else {

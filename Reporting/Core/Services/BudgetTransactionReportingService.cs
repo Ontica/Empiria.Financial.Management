@@ -12,6 +12,7 @@ using Empiria.Services;
 using Empiria.Storage;
 
 using Empiria.Budgeting.Transactions;
+using Empiria.Office;
 
 namespace Empiria.Financial.Reporting {
 
@@ -40,9 +41,18 @@ namespace Empiria.Financial.Reporting {
     }
 
 
-    public FileDto ExportTransactionEntriesToExcel(FixedList<BudgetTransaction> transactions) {
-      return new FileDto(FileType.Pdf,
-                   FileTemplateConfig.GeneratedFilesBaseUrl + "/budget.transaction.entries.xlsx");
+    public FileDto ExportTransactionEntriesToExcel(FixedList<BudgetTransactionByYear> transactions) {
+      Assertion.Require(transactions, nameof(transactions));
+
+      var templateUID = $"{this.GetType().Name}.ExportTransactionEntriesToExcel";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new BudgetTransactionEntriesToExcelBuilder(templateConfig);
+
+      ExcelFile excelFile = exporter.CreateExcelFile(transactions);
+
+      return excelFile.ToFileDto();
     }
 
     #endregion Services

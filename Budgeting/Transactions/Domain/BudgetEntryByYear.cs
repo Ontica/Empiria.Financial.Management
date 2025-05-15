@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
+
 using Empiria.Financial;
 using Empiria.Products;
 using Empiria.Projects;
@@ -95,11 +97,17 @@ namespace Empiria.Budgeting.Transactions {
       get; private set;
     }
 
+    public decimal Total {
+      get {
+        return Entries.Sum(x => x.Amount);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
 
-    internal decimal GetAmountForMonth(int month) {
+    public decimal GetAmountForMonth(int month) {
       BudgetEntry entry = Entries.Find(x => x.Month == month);
 
       if (entry != null) {
