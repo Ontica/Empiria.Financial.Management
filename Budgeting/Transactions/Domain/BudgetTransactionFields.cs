@@ -86,6 +86,8 @@ namespace Empiria.Budgeting.Transactions {
     static internal void EnsureIsValid(this BudgetTransactionFields fields) {
       fields.Description = EmpiriaString.Clean(fields.Description);
       fields.Justification = EmpiriaString.Clean(fields.Justification);
+      fields.BaseEntityTypeUID = FieldPatcher.Clean(fields.BaseEntityTypeUID);
+      fields.BaseEntityUID = FieldPatcher.Clean(fields.BaseEntityUID);
 
       if (fields.TransactionTypeUID.Length != 0) {
         _ = BudgetTransactionType.Parse(fields.TransactionTypeUID);

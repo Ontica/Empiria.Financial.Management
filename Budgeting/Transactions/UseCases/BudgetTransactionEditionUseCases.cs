@@ -96,9 +96,17 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var transactionType = BudgetTransactionType.Parse(fields.TransactionTypeUID);
       var budget = Budget.Parse(fields.BaseBudgetUID);
-      var baseEntity = budget; //BaseObject.Parse(fields.BaseEntityTypeUID, fields.BaseEntityUID);
 
-      var transaction = new BudgetTransaction(transactionType, budget, baseEntity);
+      BudgetTransaction transaction;
+
+      if (fields.BaseEntityTypeUID.Length != 0) {
+        var baseEntity = BaseObject.Parse(fields.BaseEntityTypeUID, fields.BaseEntityUID);
+
+        transaction = new BudgetTransaction(transactionType, budget, baseEntity);
+
+      } else {
+        transaction = new BudgetTransaction(transactionType, budget);
+      }
 
       transaction.Update(fields);
 

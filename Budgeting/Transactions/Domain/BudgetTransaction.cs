@@ -43,6 +43,15 @@ namespace Empiria.Budgeting.Transactions {
     }
 
     internal protected BudgetTransaction(BudgetTransactionType transactionType,
+                                         Budget baseBudget) : base(transactionType) {
+      Assertion.Require(baseBudget, nameof(baseBudget));
+
+      this.BaseBudget = baseBudget;
+      this.EntityTypeId = -1;
+      this.EntityId = -1;
+    }
+
+    internal protected BudgetTransaction(BudgetTransactionType transactionType,
                                          Budget baseBudget,
                                          BaseObject entity) : base(transactionType) {
       Assertion.Require(baseBudget, nameof(baseBudget));
