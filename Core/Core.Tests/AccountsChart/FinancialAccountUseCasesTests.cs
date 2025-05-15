@@ -1,22 +1,21 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Projects Management                        Component : Test cases                              *
-*  Assembly : Empiria.Projects.Core.Tests.dll            Pattern   : Use cases tests                         *
-*  Type     : ProjectUseCasesTests                       License   : Please read LICENSE.txt file            *
+*  Module   : Accounts Management                        Component : Test cases                              *
+*  Assembly : Empiria.Tests.Financial.Accounts.dll       Pattern   : Use cases tests                         *
+*  Type     : FinancialAccountUseCasesTests              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Test cases for financial projects use cases.                                                   *
+*  Summary  : Test cases for financial accounts use cases.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Xunit;
 
-using Empiria.Financial.Accounts.UseCases;
-using Empiria.Financial.Projects.Adapters;
 using Empiria.Financial.Accounts.Adapters;
+using Empiria.Financial.Accounts.UseCases;
 
-namespace Empiria.Tests.Financial.Projects {
+namespace Empiria.Tests.Financial.Accounts {
 
-  /// <summary>Test cases for financial projects use cases.</summary>
+  /// <summary>Test cases for financial accounts use cases.</summary>
   public class FinancialAccountUseCasesTests {
 
     #region Use cases initialization
@@ -84,9 +83,8 @@ namespace Empiria.Tests.Financial.Projects {
       Assert.NotEmpty(sut);
     }
 
-
     #endregion Facts
 
-  }  // class ProjectUseCasesTests
+  }  // class FinancialAccountUseCasesTests
 
-}  // namespace Empiria.Tests.Financial.Projects
+}  // namespace Empiria.Tests.Financial.Accounts

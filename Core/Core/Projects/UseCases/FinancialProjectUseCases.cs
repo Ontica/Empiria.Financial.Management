@@ -29,17 +29,7 @@ namespace Empiria.Financial.Projects.UseCases {
 
     #endregion Constructors and parsers
 
-    #region Use cases
-
-    public FixedList<NamedEntityDto> GetFinancialQueryCategories() {
-      return FinancialProjectCategory.GetList().MapToNamedEntityList();
-
-    }
-
-    public FinancialProjectCategory GetFinancialQueryCategory(string UID) {
-      return FinancialProjectCategory.Parse(UID);
-
-    }
+    #region Use cases   
 
     public FinancialProjectDto CreateProject(FinancialProjectFields fields) {
       Assertion.Require(fields, nameof(fields));
@@ -61,6 +51,18 @@ namespace Empiria.Financial.Projects.UseCases {
       project.Delete();
 
       project.Save();
+
+    }
+
+
+    public FixedList<NamedEntityDto> GetFinancialQueryCategories() {
+      return FinancialProjectCategory.GetList().MapToNamedEntityList();
+
+    }
+
+
+    public FinancialProjectCategory GetFinancialQueryCategory(string UID) {
+      return FinancialProjectCategory.Parse(UID);
 
     }
 
