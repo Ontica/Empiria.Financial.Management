@@ -36,7 +36,8 @@ namespace Empiria.Financial.Accounts.Adapters {
 
     public NamedEntityDto Parent {
       get; set;
-    } 
+    }
+    
 
     public NamedEntityDto OrganizationUnit {
       get; set;
@@ -46,7 +47,6 @@ namespace Empiria.Financial.Accounts.Adapters {
     public EntityStatus Status {
       get; set;
     }
-
 
   } // Class FinancialAccountDto
 

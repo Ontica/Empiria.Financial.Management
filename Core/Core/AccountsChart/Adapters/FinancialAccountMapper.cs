@@ -17,6 +17,7 @@ namespace Empiria.Financial.Accounts.Adapters {
       return accounts.Select(x => Map(x)).ToFixedList();
     }
 
+
     static public FinancialAccountDto Map(FinancialAccount account) {
       return new FinancialAccountDto {
         UID = account.UID,

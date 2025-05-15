@@ -1,8 +1,8 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Accounts                                   Component : Domain Layer                            *
-*  Assembly : Empiria.Projects.Core.dll                  Pattern   : Partitioned Type                        *
-*  Type     : Account                                    License   : Please read LICENSE.txt file            *
+*  Module   : FinancialAccounts                          Component : Domain Layer                            *
+*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Partitioned Type                        *
+*  Type     : FinancialAccount                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a financial account.                                                                *
 *                                                                                                            *
@@ -10,14 +10,13 @@
 
 using System;
 
-using Empiria.Json;
 using Empiria.StateEnums;
+using Empiria.Json;
 using Empiria.Parties;
 
 using Empiria.Financial.Data;
-using Empiria.Contacts;
-using Empiria.Financial.Accounts.Adapters;
 
+using Empiria.Financial.Accounts.Adapters;
 
 namespace Empiria.Financial {
 
@@ -33,7 +32,6 @@ namespace Empiria.Financial {
     public FinancialAccount(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
       Update(fields);
-
     }
 
     static public FinancialAccount Parse(int id) => ParseId<FinancialAccount>(id);
@@ -41,7 +39,6 @@ namespace Empiria.Financial {
     static public FinancialAccount Parse(string uid) => ParseKey<FinancialAccount>(uid);
 
     static public FinancialAccount Empty => ParseEmpty<FinancialAccount>();
-
 
     #endregion Constructors and parsers
 
@@ -189,10 +186,15 @@ namespace Empiria.Financial {
       get; private set;
     } = EntityStatus.Active;
 
-
     #endregion Properties
 
     #region Methods
+
+    internal void Delete() {
+      this.Status = EntityStatus.Deleted;
+
+    }
+
 
     internal static FixedList<FinancialAccount> SearchProjects(string keywords) {
       keywords = keywords ?? string.Empty;
@@ -200,10 +202,11 @@ namespace Empiria.Financial {
       return FinancialAccountDataService.SearchAccount(keywords);
     }
 
-    internal static FixedList<FinancialAccount> SearchAccount(string filter, string sort) {
 
+    internal static FixedList<FinancialAccount> SearchAccount(string filter, string sort) {
       return FinancialAccountDataService.SearchAccount(filter, sort);
     }
+
 
     protected override void OnSave() {
       if (base.IsNew) {
@@ -239,13 +242,8 @@ namespace Empiria.Financial {
       this.ParentId = fields.ParentId;
     }
 
-    internal void Delete() {
-      this.Status = EntityStatus.Deleted;
-
-    }
-
     #endregion Methods
 
-  } // class Account
+  } // class FinancialAccount
 
 } // namespace Empiria.Financial

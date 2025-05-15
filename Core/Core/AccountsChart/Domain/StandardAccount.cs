@@ -15,7 +15,6 @@ using Empiria.StateEnums;
 
 using Empiria.Contacts;
 
-
 namespace Empiria.Financial {
 
   /// <summary>Represents a standard account.</summary>

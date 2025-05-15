@@ -48,6 +48,17 @@ namespace Empiria.Financial.Accounts.Adapters {
 
     #region Helpers
 
+    static private string BuildRequesterAccountFilter(string requesterAccountUID) {
+      if (requesterAccountUID.Length == 0) {
+        return string.Empty;
+      }
+
+      var requesterProject = FinancialProject.Parse(requesterAccountUID);
+
+      return $"ACCT_PROJECT_ID = {requesterProject.Id}";
+    }
+
+
     private static string BuildKeywordsFilter(string keywords) {
       if (keywords.Length == 0) {
         return string.Empty;
@@ -74,18 +85,6 @@ namespace Empiria.Financial.Accounts.Adapters {
 
       return $"ACCT_ORG_UNIT_ID = {requesterOrgUnit.Id}";
     }
-
-
-    static private string BuildRequesterAccountFilter(string requesterAccountUID) {
-      if (requesterAccountUID.Length == 0) {
-        return string.Empty;
-      }
-
-      var requesterProject = FinancialProject.Parse(requesterAccountUID);
-
-      return $"ACCT_PROJECT_ID = {requesterProject.Id}";
-    }
-
 
     #endregion Helpers
 

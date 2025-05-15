@@ -12,7 +12,6 @@ using Xunit;
 
 using Empiria.Financial.Accounts.Adapters;
 using Empiria.Financial.Accounts.UseCases;
-using Empiria.Financial.Projects.Adapters;
 
 namespace Empiria.Tests.Financial.Accounts {
 
@@ -56,44 +55,11 @@ namespace Empiria.Tests.Financial.Accounts {
       Assert.NotNull(sut);
     }
 
-    [Fact]
-    public void Should_Update_FinancialAccount() {
-      var fields = new FinancialAccountFields {
-        StandarAccountUID = "1d87bbf6-a36a-4a53-8134-674ad323b335",
-        OrganizationUID = "e166a051-f848-4cbf-82df-e2f9a266b005",
-        OrganizationUnitUID = "e166a051-f848-4cbf-82df-e2f9a266b005",
-        PartyUID = "e99b4454-1e0e-47b9-a746-9798b015094a",
-        ProjectUID = "0eca8e61-66c1-4801-9b0d-05e6587841ce",
-        AcctNo = "0000001",
-        Description = "Test Update",
-        ParentId = -1,
-      };
-
-      var UID = "989fafcc-01e0-48d7-b2c0-3375b860874b";
-      var sut = _usecases.UpdateAccount(UID, fields);
-
-      Assert.NotNull(sut);
-    }
 
     [Fact]
     public void Should_Delete_FinancialAccount() {
       var UID = "989fafcc-01e0-48d7-b2c0-3375b860874b";
       _usecases.DeleteAccount(UID);
-    }
-
-    [Fact]
-    public void Should_Parse_StandardAcccounts() {
-      var sut = _usecases.GetStandardAccount("207181");
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public void Should_Search_Acccount() {
-      var sut = _usecases.SearchAccounts("eva");
-
-      Assert.NotNull(sut);
     }
 
 
@@ -107,8 +73,24 @@ namespace Empiria.Tests.Financial.Accounts {
 
 
     [Fact]
+    public void Should_Parse_StandardAcccounts() {
+      var sut = _usecases.GetStandardAccount("207181");
+
+      Assert.NotNull(sut);
+    }
+
+
+    [Fact]
     public void Should_Parse_StandardAcccountCategory() {
       var sut = _usecases.GetStandardAccountCategory("7418d18f-04f9-486b-9c93-a2d52b0be246");
+
+      Assert.NotNull(sut);
+    }
+
+
+    [Fact]
+    public void Should_Search_Acccount() {
+      var sut = _usecases.SearchAccounts("eva");
 
       Assert.NotNull(sut);
     }
@@ -126,6 +108,26 @@ namespace Empiria.Tests.Financial.Accounts {
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
+    }
+
+
+    [Fact]
+    public void Should_Update_FinancialAccount() {
+      var fields = new FinancialAccountFields {
+        StandarAccountUID = "1d87bbf6-a36a-4a53-8134-674ad323b335",
+        OrganizationUID = "e166a051-f848-4cbf-82df-e2f9a266b005",
+        OrganizationUnitUID = "e166a051-f848-4cbf-82df-e2f9a266b005",
+        PartyUID = "e99b4454-1e0e-47b9-a746-9798b015094a",
+        ProjectUID = "0eca8e61-66c1-4801-9b0d-05e6587841ce",
+        AcctNo = "0000001",
+        Description = "Test Update",
+        ParentId = -1,
+      };
+
+      var UID = "989fafcc-01e0-48d7-b2c0-3375b860874b";
+      var sut = _usecases.UpdateAccount(UID, fields);
+
+      Assert.NotNull(sut);
     }
 
     #endregion Facts

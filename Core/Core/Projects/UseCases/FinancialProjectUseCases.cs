@@ -108,6 +108,6 @@ namespace Empiria.Financial.Projects.UseCases {
 
     #endregion Use cases
 
-  }  // class ProjectUseCases
+  }  // class FinancialProjectUseCases
 
 }  // namespace Empiria.Financial.Projects.UseCases

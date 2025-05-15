@@ -8,15 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
-using Empiria.Parties;
 using Empiria.StateEnums;
-
+using Empiria.Parties;
 
 namespace Empiria.Financial.Accounts.Adapters {
 
   /// <summary>Input field with financial account data.</summary>
   public class FinancialAccountFields {
+
+    #region Properties
 
     public int TypeId {
       get; set;
@@ -96,6 +96,10 @@ namespace Empiria.Financial.Accounts.Adapters {
       get; set;
     } = EntityStatus.Active;
 
+    #endregion Properties
+
+    #region Methods
+
     internal void EnsureValid() {
       Assertion.Require(AcctNo, "Necesito el número de cuenta.");
       Assertion.Require(Description, "Necesito el nombre de cuenta.");
@@ -103,14 +107,19 @@ namespace Empiria.Financial.Accounts.Adapters {
 
       Assertion.Require(OrganizationUnitUID, "Necesito el area.");
       _ = Party.Parse(OrganizationUnitUID);
+
       Assertion.Require(ProjectUID, "Necesito el número de proyecto.");
       _ = FinancialProject.Parse(ProjectUID);
+
       Assertion.Require(PartyUID, "Necesito el area de proyecto.");
       _ = Party.Parse(PartyUID);
+
       Assertion.Require(OrganizationUID, "Necesito el area de proyecto.");
       _ = Party.Parse(OrganizationUID);
-
     }
+
+    #endregion Methods
+
   }  // class AccountFields
 
 }  // namespace Empiria.Financial.Accounts.Adapters
