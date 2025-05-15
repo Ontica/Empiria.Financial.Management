@@ -22,6 +22,7 @@ namespace Empiria.Financial.Projects.Adapters {
       // no-op
     }
 
+
     static internal string MapToFilterString(this FinancialProjectQuery query) {
       string statusFilter = BuildRequestStatusFilter(query.Status);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);

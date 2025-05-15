@@ -54,8 +54,7 @@ namespace Empiria.Financial.Projects.Adapters {
     internal void EnsureValid() {
       Assertion.Require(ProjectNo, "Necesito el numero de proyecto.");
       Assertion.Require(Name, "Necesito el nombre de proyecto.");
-      Assertion.Require(CategoryUID, "Necesito la categoria del proyecto.");
-
+     
       Assertion.Require(CategoryUID, "Necesito la categoria del proyecto");
       _ = FinancialProjectCategory.Parse(CategoryUID);
 
