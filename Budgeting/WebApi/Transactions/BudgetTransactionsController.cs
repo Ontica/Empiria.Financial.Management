@@ -8,12 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
 using System.Web.Http;
-
-using Empiria.WebApi;
 
 using Empiria.StateEnums;
 using Empiria.Storage;
+
+using Empiria.WebApi;
 
 using Empiria.Financial.Reporting;
 
@@ -72,6 +73,28 @@ namespace Empiria.Budgeting.Transactions.WebApi {
         _ = usecases.DeleteOrCancelTransaction(budgetTransactionUID);
 
         return new NoDataModel(base.Request);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/budgeting/transactions/bulk-operation/export-entries")]
+    public SingleObjectModel ExportBudgetTransactionEntriesToExcel([FromBody] BulkOperationCommand command) {
+
+      FixedList<BudgetTransaction> transactions = command.Items.Select(x => BudgetTransaction.Parse(x))
+                                                               .ToFixedList()
+                                                               .Sort((x, y) => x.TransactionNo.CompareTo(y.TransactionNo));
+
+      using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
+
+        var result = new BulkOperationResult {
+          File = reportingService.ExportTransactionEntriesToExcel(transactions),
+          Message = $"Se exportaron {transactions.Count} transacciones presupuestales a Excel.",
+        };
+
+        base.SetOperation(result.Message);
+
+        return new SingleObjectModel(base.Request, result);
       }
     }
 
@@ -217,5 +240,31 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     } = "No se indicó el motivo.";
 
   }  // class RejectFields
+
+
+  public class BulkOperationCommand {
+
+    public string[] Items {
+      get; set;
+    }
+
+  }  // class BulkOperationCommand
+
+
+  public class BulkOperationResult {
+
+    internal BulkOperationResult() {
+      // no-op
+    }
+
+    public string Message {
+      get; internal set;
+    }
+
+    public FileDto File {
+      get; internal set;
+    }
+
+  }  // class BulkOperationResult
 
 }  // namespace Empiria.Budgeting.Transactions.WebApi

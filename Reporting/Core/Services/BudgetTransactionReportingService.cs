@@ -39,6 +39,12 @@ namespace Empiria.Financial.Reporting {
                          FileTemplateConfig.GeneratedFilesBaseUrl + "/budgeting.transactions/" + "cedula.pdf");
     }
 
+
+    public FileDto ExportTransactionEntriesToExcel(FixedList<BudgetTransaction> transactions) {
+      return new FileDto(FileType.Pdf,
+                   FileTemplateConfig.GeneratedFilesBaseUrl + "/budget.transaction.entries.xlsx");
+    }
+
     #endregion Services
 
   } // class BudgetTransactionReportingService
