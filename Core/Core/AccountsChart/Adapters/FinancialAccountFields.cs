@@ -8,8 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
 using Empiria.Parties;
 using Empiria.StateEnums;
+
 
 namespace Empiria.Financial.Accounts.Adapters {
 
@@ -26,10 +28,9 @@ namespace Empiria.Financial.Accounts.Adapters {
     } = string.Empty;
 
 
-    public string CategoryUID {
+    public string OrganizationUID {
       get; set;
     } = string.Empty;
-
 
     public string OrganizationUnitUID {
       get; set;
@@ -91,18 +92,24 @@ namespace Empiria.Financial.Accounts.Adapters {
     } = 0;
 
 
-
     public EntityStatus Status {
       get; set;
     } = EntityStatus.Active;
 
     internal void EnsureValid() {
-      Assertion.Require(AcctNo, "Necesito el numero de cuenta.");
+      Assertion.Require(AcctNo, "Necesito el número de cuenta.");
       Assertion.Require(Description, "Necesito el nombre de cuenta.");
       Assertion.Require(StandarAccountUID, "Necesito la cuenta estandar.");
-      Assertion.Require(CategoryUID, "Necesito la categoria del cuenta.");
+
       Assertion.Require(OrganizationUnitUID, "Necesito el area.");
       _ = Party.Parse(OrganizationUnitUID);
+      Assertion.Require(ProjectUID, "Necesito el número de proyecto.");
+      _ = FinancialProject.Parse(ProjectUID);
+      Assertion.Require(PartyUID, "Necesito el area de proyecto.");
+      _ = Party.Parse(PartyUID);
+      Assertion.Require(OrganizationUID, "Necesito el area de proyecto.");
+      _ = Party.Parse(OrganizationUID);
+
     }
   }  // class AccountFields
 

@@ -12,10 +12,11 @@ using System;
 
 using Empiria.Json;
 using Empiria.StateEnums;
+using Empiria.Parties;
 
 using Empiria.Financial.Data;
 using Empiria.Contacts;
-using Empiria.Parties;
+using Empiria.Financial.Accounts.Adapters;
 
 
 namespace Empiria.Financial {
@@ -27,6 +28,12 @@ namespace Empiria.Financial {
 
     public FinancialAccount() {
       // Require by Empiria FrameWork
+    }
+
+    public FinancialAccount(FinancialAccountFields fields) {
+      Assertion.Require(fields, nameof(fields));
+      Update(fields);
+
     }
 
     static public FinancialAccount Parse(int id) => ParseId<FinancialAccount>(id);
@@ -59,7 +66,13 @@ namespace Empiria.Financial {
 
 
     [DataField("ACCT_ORG_ID")]
-    public Contact OrganizationUnit {
+    public Party Organization {
+      get; private set;
+    }
+
+
+    [DataField("ACCT_ORG_UNIT_ID")]
+    public Party OrganizationUnit {
       get; private set;
     }
 
@@ -160,7 +173,7 @@ namespace Empiria.Financial {
 
 
     [DataField("ACCT_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -174,7 +187,7 @@ namespace Empiria.Financial {
     [DataField("ACCT_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get; private set;
-    }
+    } = EntityStatus.Active;
 
 
     #endregion Properties
@@ -192,6 +205,44 @@ namespace Empiria.Financial {
       return FinancialAccountDataService.SearchAccount(filter, sort);
     }
 
+    protected override void OnSave() {
+      if (base.IsNew) {
+        this.StartDate = ExecutionServer.DateMinValue;
+        this.EndDate = ExecutionServer.DateMaxValue;
+
+        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        this.PostingTime = DateTime.Now;
+      }
+
+      FinancialAccountDataService.WriteAccount(this, this.ExtData.ToString());
+    }
+
+
+    internal void Update(FinancialAccountFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      this.StandardAccount = StandardAccount.Parse(fields.StandarAccountUID);
+      this.Organization = Party.Parse(fields.OrganizationUID);
+      this.OrganizationUnit = Party.Parse(fields.OrganizationUnitUID);
+      this.Party = Party.Parse(fields.PartyUID);
+      this.Project = FinancialProject.Parse(fields.ProjectUID);
+      this.LedgerId = fields.LedgerId;
+      this.AcctNo = fields.AcctNo;
+      this.Name = fields.Description;
+      this.Identifiers = fields.Identifiers;
+      this.Tags = fields.Tags;
+      this.Attributes = fields.Attributes;
+      this.FinancialData = fields.FinancialData;
+      this.ConfigData = fields.ConfigData;
+      this.ParentId = fields.ParentId;
+    }
+
+    internal void Delete() {
+      this.Status = EntityStatus.Deleted;
+
+    }
 
     #endregion Methods
 

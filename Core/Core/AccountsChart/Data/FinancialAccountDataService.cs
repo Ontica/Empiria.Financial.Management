@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Data;
 
 namespace Empiria.Financial.Data {
@@ -42,6 +43,16 @@ namespace Empiria.Financial.Data {
       var dataOperation = DataOperation.Parse(sql);
 
       return DataReader.GetFixedList<FinancialAccount>(dataOperation);
+    }
+
+    internal static void WriteAccount(FinancialAccount o, string extensionData) {
+      var op = DataOperation.Parse("write_FMS_Account",
+         o.Id, o.UID, o.GetEmpiriaType().Id, o.StandardAccount.Id, o.Organization.Id, 
+         o.OrganizationUnit.Id, o.Party.Id, o.Project.Id, o.LedgerId, o.AcctNo, o.Name, 
+         o.Identifiers, o.Tags, o.Attributes, o.FinancialData, o.ConfigData, extensionData,
+         o.Keywords, o.ParentId, o.StartDate, o.EndDate, o.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+
+      DataWriter.Execute(op);
     }
 
   }  // class AccountDataService

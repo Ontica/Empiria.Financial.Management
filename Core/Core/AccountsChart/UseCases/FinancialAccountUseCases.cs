@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Financial Projects                           Component : Use Cases Layer                       *
+*  Module   : Financial Accounts                           Component : Use Cases Layer                       *
 *  Assembly : Empiria.Financial.Core.dll                   Pattern   : Use cases                             *
-*  Type     : ProjectUseCases                              License   : Please read LICENSE.txt file          *
+*  Type     : AccountUseCases                              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Provides use cases for update and retrieve financial projects.                                 *
+*  Summary  : Provides use cases for update and retrieve financial accounts.                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -16,7 +16,7 @@ using Empiria.Services;
 namespace Empiria.Financial.Accounts.UseCases
 {
 
-    /// <summary>Provides use cases for update and retrieve financial projects.</summary>
+    /// <summary>Provides use cases for update and retrieve financial accounts.</summary>
     public class FinancialAccountUseCases : UseCase {
 
     #region Constructors and parsers
@@ -32,6 +32,20 @@ namespace Empiria.Financial.Accounts.UseCases
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public FinancialAccountDto CreateAccount(FinancialAccountFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      var account = new FinancialAccount(fields);
+
+      account.Save();
+
+      return FinancialAccountMapper.Map(account);
+    }
+
+
 
     public FixedList<FinancialAccountDto> SearchAccount(FinancialAccountQuery query) {
       Assertion.Require(query, nameof(query));
@@ -82,8 +96,34 @@ namespace Empiria.Financial.Accounts.UseCases
       return StandardAccountCategory.Parse(uid);
     }
 
+    public void DeleteAccount(string UID) {
+      Assertion.Require(UID, nameof(UID));
+      var account = FinancialAccount.Parse(UID);
+
+      account.Delete();
+      account.Save();
+    }
+
+
+    public FinancialAccountDto UpdateAccount(string UID, FinancialAccountFields fields) {
+
+      Assertion.Require(UID, nameof(UID));
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      var account = FinancialAccount.Parse(UID);
+
+      account.Update(fields);
+
+      account.Save();
+
+      return FinancialAccountMapper.Map(account);
+    }
+
+
     #endregion Use cases
 
-  }  // class ProjectUseCases
+  }  // class AccountUseCases
 
-}  // namespace Empiria.Financial.Projects.UseCases
+}  // namespace Empiria.Financial.Accounts.UseCases
