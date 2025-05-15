@@ -11,8 +11,9 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Data;
 using Empiria.Financial;
+
+using Empiria.Data;
 
 namespace Empiria.Budgeting.Transactions.Data {
 
@@ -94,6 +95,20 @@ namespace Empiria.Budgeting.Transactions.Data {
     }
 
 
+    static internal FixedList<BudgetTransaction> GetTransactions(Budget budget,
+                                                                 BudgetTransactionType transactionType) {
+      var sql = "SELECT * FROM VW_FMS_BUDGET_TRANSACTIONS " +
+               $"WHERE BDG_TXN_TYPE_ID = {transactionType.Id} AND " +
+               $"BDG_TXN_BASE_BUDGET_ID = {budget.Id} AND " +
+               $"BDG_TXN_STATUS <> 'X' " +
+               $"ORDER BY BDG_TXN_NUMBER";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<BudgetTransaction>(op);
+    }
+
+
     static internal List<BudgetEntry> GetTransactionEntries(BudgetTransaction transaction) {
       var sql = "SELECT * FROM FMS_BUDGET_ENTRIES " +
                $"WHERE BDG_ENTRY_TXN_ID = {transaction.Id} AND " +
@@ -147,7 +162,6 @@ namespace Empiria.Budgeting.Transactions.Data {
 
       DataWriter.Execute(op);
     }
-
 
   }  // class BudgetTransactionDataService
 

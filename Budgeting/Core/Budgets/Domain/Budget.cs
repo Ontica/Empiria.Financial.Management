@@ -77,6 +77,18 @@ namespace Empiria.Budgeting {
       }
     }
 
+
+    public FixedList<INamedEntity> PlanningAutoGenerationTransactionTypes {
+      get {
+        FixedList<int> ids = base.ExtendedDataField.GetFixedList<int>("planningAutoGenerationTransactionTypes", false);
+
+        return ids.Select(x => (INamedEntity) ObjectTypeInfo.Parse(x))
+                  .ToFixedList()
+                  .Sort((x, y) => x.Name.CompareTo(y.Name));
+      }
+    }
+
+
     public int Year {
       get {
         return base.ExtendedDataField.Get<int>("year");

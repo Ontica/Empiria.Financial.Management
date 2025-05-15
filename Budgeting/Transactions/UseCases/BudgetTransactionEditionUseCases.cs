@@ -145,6 +145,25 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public FixedList<BudgetTransactionDescriptorDto> GeneratePlanningTransactions(string budgetUID) {
+      Assertion.Require(budgetUID, nameof(budgetUID));
+
+      var generator = new BudgetTransactionsGenerator();
+
+      Budget budget = Budget.Parse(budgetUID);
+
+      FixedList<BudgetTransaction> transactions = generator.GenerateForPlanning(budget);
+
+      foreach (var transaction in transactions) {
+        transaction.Save();
+
+        HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Generada automáticamente"));
+      }
+
+      return BudgetTransactionMapper.MapToDescriptor(transactions);
+    }
+
+
     public BudgetTransactionHolderDto RejectTransaction(string budgetTransactionUID,
                                                         string reason) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
