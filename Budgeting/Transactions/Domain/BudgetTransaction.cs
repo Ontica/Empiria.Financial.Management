@@ -180,7 +180,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_TXN_AUTHORIZATION_TIME")]
-    public DateTime AuthorizationTime {
+    public DateTime AuthorizationDate {
       get; private set;
     }
 
@@ -192,7 +192,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_TXN_REQUESTED_TIME")]
-    public DateTime RequestedTime {
+    public DateTime RequestedDate {
       get; private set;
     }
 
@@ -294,7 +294,7 @@ namespace Empiria.Budgeting.Transactions {
       }
 
       this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      this.AuthorizationTime = DateTime.Now;
+      this.AuthorizationDate = DateTime.Now;
       this.Status = BudgetTransactionStatus.Authorized;
     }
 
@@ -302,8 +302,10 @@ namespace Empiria.Budgeting.Transactions {
     internal void Close() {
       Assertion.Require(Rules.CanClose, "Current user can not close this transaction.");
 
-      this.RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      this.RecordingDate = DateTime.Now;
+      this.AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      if (ApplicationDate == ExecutionServer.DateMaxValue) {
+        ApplicationDate = DateTime.Now;
+      }
       this.Status = BudgetTransactionStatus.Closed;
     }
 
@@ -351,6 +353,9 @@ namespace Empiria.Budgeting.Transactions {
         TransactionNo = TO_ASSIGN_TRANSACTION_NO;
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
+      } else if (Status == BudgetTransactionStatus.Pending) {
+        RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        RecordingDate = DateTime.Now;
       }
 
       BudgetTransactionDataService.WriteTransaction(this);
@@ -370,10 +375,10 @@ namespace Empiria.Budgeting.Transactions {
                         $"Can not reject this budget transaction. Its status is {Status.GetName()}.");
 
       this.RequestedBy = Party.Empty;
-      this.RequestedTime = ExecutionServer.DateMaxValue;
+      this.RequestedDate = ExecutionServer.DateMaxValue;
 
       this.AuthorizedBy = Party.Empty;
-      this.AuthorizationTime = ExecutionServer.DateMaxValue;
+      this.AuthorizationDate = ExecutionServer.DateMaxValue;
 
       this.Status = BudgetTransactionStatus.Pending;
     }
@@ -388,7 +393,7 @@ namespace Empiria.Budgeting.Transactions {
       }
 
       this.RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      this.RequestedTime = DateTime.Now;
+      this.RequestedDate = DateTime.Now;
       this.Status = BudgetTransactionStatus.OnAuthorization;
     }
 

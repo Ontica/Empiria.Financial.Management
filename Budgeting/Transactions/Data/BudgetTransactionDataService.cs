@@ -142,7 +142,7 @@ namespace Empiria.Budgeting.Transactions.Data {
           o.HasEntity ? o.GetEntity().GetEmpiriaType().Id : -1,
           o.HasEntity ? o.GetEntity().Id : -1,
           o.PayableId, o.ApplicationDate, o.AppliedBy.Id, o.RecordingDate, o.RecordedBy.Id,
-          o.AuthorizationTime, o.AuthorizedBy.Id, o.RequestedTime, o.RequestedBy.Id,
+          o.AuthorizationDate, o.AuthorizedBy.Id, o.RequestedDate, o.RequestedBy.Id,
           o.ExtensionData.ToString(), o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);

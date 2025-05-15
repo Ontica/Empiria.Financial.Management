@@ -49,13 +49,17 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         BudgetName = transaction.BaseBudget.Name,
         TransactionNo = transaction.TransactionNo,
         Description = transaction.Description,
+        Total = transaction.GetTotal(),
         OperationSourceName = transaction.OperationSource.Name,
         BasePartyName = transaction.BaseParty.Name,
-        ApplicationDate = transaction.ApplicationDate,
-        RequestedDate = transaction.RequestedTime,
+        RecordingDate = transaction.RecordingDate,
+        RecordedBy = transaction.RecordedBy.Name,
+        RequestedDate = transaction.RequestedDate,
         RequestedBy = transaction.RequestedBy.Name,
+        AuthorizationDate = transaction.AuthorizationDate,
         AuthorizedBy = transaction.AuthorizedBy.Name,
-        Total = transaction.GetTotal(),
+        ApplicationDate = transaction.ApplicationDate,
+        AppliedBy = transaction.AppliedBy.Name,
         StatusName = transaction.Status.GetName(),
       };
     }
@@ -158,11 +162,15 @@ namespace Empiria.Budgeting.Transactions.Adapters {
             transaction.GetEntity().GetEmpiriaType().MapToNamedEntity() : NamedEntityDto.Empty,
         BaseEntity = transaction.HasEntity ?
             ((INamedEntity) transaction.GetEntity()).MapToNamedEntity() : NamedEntityDto.Empty,
-        ApplicationDate = transaction.ApplicationDate,
         Total = transaction.GetTotal(),
-        RequestedDate = transaction.RequestedTime,
+        RecordingDate = transaction.RequestedDate,
+        RecordedBy = transaction.RecordedBy.MapToNamedEntity(),
+        RequestedDate = transaction.RequestedDate,
         RequestedBy = transaction.RequestedBy.MapToNamedEntity(),
+        AuthorizationDate = transaction.AuthorizationDate,
         AuthorizedBy = transaction.AuthorizedBy.MapToNamedEntity(),
+        ApplicationDate = transaction.ApplicationDate,
+        AppliedBy = transaction.AppliedBy.MapToNamedEntity(),
         Status = transaction.Status.MapToNamedEntity()
       };
     }

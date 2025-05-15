@@ -118,6 +118,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public DateTime RecordingDate {
+      get; internal set;
+    }
+
+    public NamedEntityDto RecordedBy {
+      get; internal set;
+    }
+
     public DateTime RequestedDate {
       get; internal set;
     }
@@ -126,11 +134,19 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public DateTime ApplicationDate {
+    public DateTime AuthorizationDate {
       get; internal set;
     }
 
     public NamedEntityDto AuthorizedBy {
+      get; internal set;
+    }
+
+    public DateTime ApplicationDate {
+      get; internal set;
+    }
+
+    public NamedEntityDto AppliedBy {
       get; internal set;
     }
 
@@ -181,6 +197,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public DateTime RecordingDate {
+      get; internal set;
+    }
+
+    public string RecordedBy {
+      get; internal set;
+    }
+
     public DateTime RequestedDate {
       get; internal set;
     }
@@ -189,11 +213,19 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public DateTime ApplicationDate {
+    public DateTime AuthorizationDate {
       get; internal set;
     }
 
     public string AuthorizedBy {
+      get; internal set;
+    }
+
+    public DateTime ApplicationDate {
+      get; internal set;
+    }
+
+    public string AppliedBy {
       get; internal set;
     }
 
