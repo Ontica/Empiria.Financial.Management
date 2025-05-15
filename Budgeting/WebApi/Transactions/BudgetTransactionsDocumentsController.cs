@@ -46,6 +46,12 @@ namespace Empiria.Budgeting.WebApi {
 
       DocumentFields fields = GetFormDataFromHttpRequest<DocumentFields>("document");
 
+      FixedList<DocumentDto> currentDocuments = DocumentServices.GetEntityDocuments(transaction);
+
+      if (currentDocuments.Contains(x => x.DocumentProduct.UID == fields.DocumentProductUID)) {
+        Assertion.RequireFail("Esta transacción presupuestal ya tiene un documento del mismo tipo.");
+      }
+
       InputFile documentFile = base.GetInputFileFromHttpRequest();
 
       var document = DocumentServices.StoreDocument(documentFile, transaction, fields);

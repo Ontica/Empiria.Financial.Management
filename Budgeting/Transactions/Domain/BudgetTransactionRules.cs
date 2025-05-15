@@ -68,9 +68,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanEditDocuments {
       get {
-        if (_transaction.Status == BudgetTransactionStatus.Canceled ||
-            _transaction.Status == BudgetTransactionStatus.Deleted ||
-            _transaction.Status == BudgetTransactionStatus.Closed) {
+        if (_transaction.Status != BudgetTransactionStatus.Authorized) {
           return false;
         }
 

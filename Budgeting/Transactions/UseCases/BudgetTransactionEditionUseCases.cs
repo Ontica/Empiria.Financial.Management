@@ -8,11 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
 using Empiria.Parties;
 using Empiria.Services;
 using Empiria.StateEnums;
-using Empiria.Financial;
 
+using Empiria.Documents;
 using Empiria.History.Services;
 
 using Empiria.Budgeting.Adapters;
@@ -58,6 +59,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
 
       var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+
+      AssertHasAllDocuments(transaction);
 
       transaction.Close();
 
@@ -153,6 +156,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.Save();
 
       SetOnReviewAccountsToPending(transaction);
+
+      RemoveDocumentsIfNeeded(transaction);
 
       HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Rechazada", reason));
 
@@ -259,6 +264,23 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     #endregion Use cases
 
     #region Helpers
+
+    private void AssertHasAllDocuments(BudgetTransaction transaction) {
+      FixedList<DocumentDto> documents = DocumentServices.GetEntityDocuments(transaction);
+
+      Assertion.Require(documents.Count == 2, "Para poder cerrar la transacción es necesario subir " +
+                                              "todos los documentos que le correspondan.");
+    }
+
+
+    private void RemoveDocumentsIfNeeded(BudgetTransaction transaction) {
+      FixedList<DocumentDto> documents = DocumentServices.GetEntityDocuments(transaction);
+
+      foreach (var document in documents) {
+        DocumentServices.RemoveDocument(transaction, document);
+      }
+    }
+
 
     private void SetOnReviewAccountsToPending(BudgetTransaction transaction) {
       var onReviewAccounts = transaction.Entries.FindAll(x => x.BudgetAccount.Status == EntityStatus.OnReview)
