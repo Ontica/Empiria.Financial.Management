@@ -62,7 +62,7 @@ namespace Empiria.Tests.Financial.Projects {
 
     [Fact]
     public void Should_GetFinacialProjectCategories() {
-      var sut = _usecases.GetFinancialQueryCategories();
+      var sut = _usecases.GetProjectCategories();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
@@ -71,7 +71,7 @@ namespace Empiria.Tests.Financial.Projects {
 
     [Fact]
     public void Should_GetFinacialProjectCategory() {
-      var sut = _usecases.GetFinancialQueryCategory("bdf57f96-27d4-4007-a38c-30c567298803");
+      var sut = _usecases.GetProjectCategory("bdf57f96-27d4-4007-a38c-30c567298803");
 
       Assert.NotNull(sut);
     }

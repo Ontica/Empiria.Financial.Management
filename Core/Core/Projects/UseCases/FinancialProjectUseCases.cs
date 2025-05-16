@@ -55,13 +55,13 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetFinancialQueryCategories() {
+    public FixedList<NamedEntityDto> GetProjectCategories() {
       return FinancialProjectCategory.GetList().MapToNamedEntityList();
 
     }
 
 
-    public FinancialProjectCategory GetFinancialQueryCategory(string UID) {
+    public FinancialProjectCategory GetProjectCategory(string UID) {
       return FinancialProjectCategory.Parse(UID);
 
     }
