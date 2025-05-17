@@ -33,11 +33,16 @@ namespace Empiria.Financial.Reporting {
 
     #region Services
 
-    public FileDto ExportTransactionToPdf(BudgetTransaction transaction) {
+    public FileDto ExportTransactionToPdf(BudgetTransactionByYear transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
-      return new FileDto(FileType.Pdf,
-                         FileTemplateConfig.GeneratedFilesBaseUrl + "/budgeting.transactions/" + "cedula.pdf");
+      var templateUID = $"{this.GetType().Name}.ExportTransactionToPdf";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new BudgetTransactionVoucherBuilder(templateConfig);
+
+      return exporter.CreateVoucher(transaction);
     }
 
 

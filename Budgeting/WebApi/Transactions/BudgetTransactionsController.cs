@@ -166,7 +166,9 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
       using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
 
-        FileDto file = reportingService.ExportTransactionToPdf(transaction);
+        var byYearTransaction = new BudgetTransactionByYear(transaction);
+
+        FileDto file = reportingService.ExportTransactionToPdf(byYearTransaction);
 
         return new SingleObjectModel(base.Request, file);
       }
