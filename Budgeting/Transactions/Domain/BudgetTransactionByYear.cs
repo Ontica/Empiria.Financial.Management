@@ -146,6 +146,24 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public FixedList<BudgetTotalByYear> GetTotals() {
+      var groups = Transaction.Entries.GroupBy(x => $"{x.Year}|{x.Budget.Id}|{x.BalanceColumn.Id}");
+
+      var list = new List<BudgetTotalByYear>(groups.Count());
+
+      foreach (var group in groups) {
+        int year = int.Parse(group.Key.Split('|')[0]);
+        var budget = Budget.Parse(int.Parse(group.Key.Split('|')[1]));
+        var balanceColumn = BalanceColumn.Parse(int.Parse(group.Key.Split('|')[2]));
+
+        var item = new BudgetTotalByYear(budget, year, balanceColumn, group.ToFixedList());
+
+        list.Add(item);
+      }
+
+      return list.ToFixedList();
+    }
+
     internal FixedList<BudgetEntry> GetUpdatedBudgetEntries(BudgetEntryByYearFields fields) {
       Assertion.Require(fields, nameof(fields));
 
