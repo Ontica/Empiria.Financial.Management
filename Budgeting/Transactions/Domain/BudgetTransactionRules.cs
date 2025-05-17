@@ -107,7 +107,11 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Entries.Count == 0) {
           return false;
         }
-
+        if (_transaction.BudgetTransactionType.IsProtected &&
+           (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
+           ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer"))) {
+          return true;
+        }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id })) {
           return false;
@@ -126,7 +130,11 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Status != BudgetTransactionStatus.Pending) {
           return false;
         }
-
+        if (_transaction.BudgetTransactionType.IsProtected &&
+            (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
+             ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer"))) {
+          return true;
+        }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id })) {
           return false;

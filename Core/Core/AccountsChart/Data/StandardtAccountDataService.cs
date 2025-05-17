@@ -15,7 +15,6 @@ namespace Empiria.Financial.Data {
   /// <summary>Provides data access services for standard accounts.</summary>
   static internal class StandardtAccountDataService {
 
-
       static internal FixedList<StandardAccount> SearchStandardtAccounts(string keyewords) {
       
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
@@ -44,7 +43,6 @@ namespace Empiria.Financial.Data {
 
       return DataReader.GetFixedList<StandardAccount>(dataOperation);
     }
-
 
   }  // class StandardtAccountDataService
 

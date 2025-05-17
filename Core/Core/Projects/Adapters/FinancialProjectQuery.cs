@@ -39,7 +39,6 @@ namespace Empiria.Financial.Projects.Adapters {
       get; set;
     } = string.Empty;
 
-
   }  // class FinancialProjectQuery
 
 }  // namespace Empiria.Financial.Projects.Adapters

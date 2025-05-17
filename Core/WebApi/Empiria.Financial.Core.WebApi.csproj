@@ -69,7 +69,6 @@
     <ProjectReference Include="..\Core\Empiria.Financial.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AccountsChart\" />
     <Folder Include="Credits\" />
   </ItemGroup>
 </Project>

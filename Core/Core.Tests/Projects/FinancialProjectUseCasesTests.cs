@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Projects Management                        Component : Test cases                              *
 *  Assembly : Empiria.Projects.Core.Tests.dll            Pattern   : Use cases tests                         *
-*  Type     : ProjectUseCasesTests                       License   : Please read LICENSE.txt file            *
+*  Type     : FinancialProjectUseCasesTests              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Test cases for financial projects use cases.                                                   *
 *                                                                                                            *
@@ -117,10 +117,10 @@ namespace Empiria.Tests.Financial.Projects {
       var sut = _usecases.UpdateProject(UID, fields);
 
       Assert.NotNull(sut);
-    }  
+    }
 
     #endregion Facts
 
-  }  // class ProjectUseCasesTests
+  }  // class FinancialProjectUseCasesTests
 
 }  // namespace Empiria.Tests.Financial.Projects

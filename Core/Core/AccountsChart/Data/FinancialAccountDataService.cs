@@ -8,14 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using Empiria.Data;
 
 namespace Empiria.Financial.Data {
 
   /// <summary>Provides data access services for financial accounts.</summary>
   static internal class FinancialAccountDataService {
-
 
       static internal FixedList<FinancialAccount> SearchAccount(string keyewords) {
       
@@ -27,6 +25,7 @@ namespace Empiria.Financial.Data {
 
       return DataReader.GetFixedList<FinancialAccount>(op);
     }
+
 
     static internal FixedList<FinancialAccount> SearchAccount(string filter, string sortBy) {
       
