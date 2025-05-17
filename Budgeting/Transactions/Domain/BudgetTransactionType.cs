@@ -16,6 +16,16 @@ using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions {
 
+  public enum MultiplicityRule {
+
+    None,
+
+    OnePerYear,
+
+    ZeroOrOnePerYear,
+
+  }
+
   /// <summary>Power type that describes a budget transaction.</summary>
   [Powertype(typeof(BudgetTransaction))]
   public sealed class BudgetTransactionType : Powertype {
@@ -128,6 +138,11 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+    public MultiplicityRule MultiplicityRule {
+      get {
+        return ExtensionData.Get("multiplicityRule", MultiplicityRule.None);
+      }
+    }
 
     #endregion Properties
 

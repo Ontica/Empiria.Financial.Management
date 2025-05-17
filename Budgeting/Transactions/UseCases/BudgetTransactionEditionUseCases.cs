@@ -18,6 +18,7 @@ using Empiria.History.Services;
 
 using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
+using Empiria.Budgeting.Transactions.Data;
 
 namespace Empiria.Budgeting.Transactions.UseCases {
 
@@ -95,7 +96,12 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       Assertion.Require(fields, nameof(fields));
 
       var transactionType = BudgetTransactionType.Parse(fields.TransactionTypeUID);
+
       var budget = Budget.Parse(fields.BaseBudgetUID);
+
+      var party = Party.Parse(fields.BasePartyUID);
+
+      AssertTransactionTypeMultiplicity(transactionType, budget, party);
 
       BudgetTransaction transaction;
 
@@ -116,7 +122,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       return BudgetTransactionMapper.Map(transaction);
     }
-
 
     public BudgetEntryDto CreateBudgetEntry(string budgetTransactionUID, BudgetEntryFields fields) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
@@ -297,6 +302,29 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       Assertion.Require(documents.Count == 2, "Para poder cerrar la transacción es necesario subir " +
                                               "todos los documentos que le correspondan.");
+    }
+
+
+    private void AssertTransactionTypeMultiplicity(BudgetTransactionType transactionType, Budget budget, Party baseParty) {
+      MultiplicityRule rule = transactionType.MultiplicityRule;
+
+      if (rule == MultiplicityRule.None) {
+        return;
+      }
+
+      int count = BudgetTransactionDataService.GetTransactions(budget, transactionType)
+                                              .FindAll(x=> x.BaseParty.Equals(baseParty)).Count;
+
+      if (rule == MultiplicityRule.OnePerYear && count >= 1) {
+        Assertion.RequireFail($"Ya existe una transacción del tipo {transactionType.DisplayName} " +
+                              $"del presupuesto {budget.Name}, para el área {baseParty.Name}.");
+      }
+
+      if (rule == MultiplicityRule.ZeroOrOnePerYear && count >= 1) {
+        Assertion.RequireFail($"Ya existe una transacción del tipo {transactionType.DisplayName} " +
+                              $"del presupuesto {budget.Name}, para el área {baseParty.Name}.");
+      }
+
     }
 
 
