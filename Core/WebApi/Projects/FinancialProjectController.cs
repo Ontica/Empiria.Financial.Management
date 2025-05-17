@@ -23,7 +23,7 @@ namespace Empiria.Financial.Projects.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v2/financial-projects/{keywords:string}")]
+    [Route("v2/financial-projects/{keywords}")]
     public CollectionModel SearchProjects([FromUri] string keywords = "") {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
@@ -45,6 +45,7 @@ namespace Empiria.Financial.Projects.WebApi {
       }
     }
 
+
     #endregion Query web apis
 
     #region Web Apis
@@ -56,16 +57,16 @@ namespace Empiria.Financial.Projects.WebApi {
       base.RequireBody(fields);
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FinancialProjectDto paymentOrder = usecases.CreateProject(fields);
+        FinancialProjectDto projects = usecases.CreateProject(fields);
 
-        return new SingleObjectModel(base.Request, paymentOrder);
+        return new SingleObjectModel(base.Request, projects);
       }
     }
 
 
     [HttpDelete]
     [Route("v2/financial-projects/{financialProjectUID:guid}")]
-    public NoDataModel DeletePaymentOrder([FromUri] string financialProjectUID) {
+    public NoDataModel DeleteFinancialProject([FromUri] string financialProjectUID) {
 
       base.RequireResource(financialProjectUID, nameof(financialProjectUID));
 
@@ -80,17 +81,17 @@ namespace Empiria.Financial.Projects.WebApi {
 
     [HttpPut]
     [Route("v2/financial-projects/{financialProjectUID:guid}")]
-    public SingleObjectModel UpdatePaymentOrder([FromUri] string financialProjectUID,
+    public SingleObjectModel UpdateFinancialProject([FromUri] string financialProjectUID,
                                                [FromBody] FinancialProjectFields fields) {
 
       base.RequireBody(fields);
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
 
-        FinancialProjectDto paymentOrder = usecases.UpdateProject(financialProjectUID,
+        FinancialProjectDto projects = usecases.UpdateProject(financialProjectUID,
                                                                          fields);
 
-        return new SingleObjectModel(this.Request, paymentOrder);
+        return new SingleObjectModel(this.Request, projects);
       }
     }
 
