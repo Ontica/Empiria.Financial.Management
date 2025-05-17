@@ -35,7 +35,6 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
 
-
     [HttpGet]
     [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{budgetEntryUID:guid}")]
     public SingleObjectModel GetBudgetEntry([FromUri] string budgetTransactionUID,

@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Report builder                       *
 *  Type     : BudgetTransactionEntriesToExcelBuilder        License   : Please read LICENSE.txt file         *
 *                                                                                                            *
-*  Summary    Builds an Excel file with all budget transaction entries.                                      *
+*  Summary  : Builds an Excel file with all budget transaction entries.                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 

@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Budget Transactions                        Component : Use cases Layer                         *
 *  Assembly : Empiria.Budgeting.Transactions.dll         Pattern   : Use case interactor class               *
-*  Type     : BudgetTransactionUseCases                   License   : Please read LICENSE.txt file           *
+*  Type     : BudgetTransactionUseCases                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases used to retrieve budget transactions.                                                 *
+*  Summary  : Use cases used to retrieve budget transactions.                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 

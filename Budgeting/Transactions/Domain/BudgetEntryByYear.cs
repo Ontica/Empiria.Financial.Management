@@ -108,13 +108,8 @@ namespace Empiria.Budgeting.Transactions {
     #region Methods
 
     public decimal GetAmountForMonth(int month) {
-      BudgetEntry entry = Entries.Find(x => x.Month == month);
-
-      if (entry != null) {
-        return entry.Amount;
-      } else {
-        return 0;
-      }
+      return Entries.FindAll(x => x.Month == month)
+                    .Sum(x => x.Amount);
     }
 
     #endregion Methods
