@@ -14,6 +14,8 @@ using Empiria.StateEnums;
 using Empiria.Json;
 using Empiria.Parties;
 
+using Empiria.Financial.Projects;
+
 using Empiria.Financial.Data;
 
 using Empiria.Financial.Accounts.Adapters;
@@ -42,7 +44,7 @@ namespace Empiria.Financial {
 
     #endregion Constructors and parsers
 
-    #region Properties       
+    #region Properties
 
     [DataField("ACCT_ID")]
     public int AcctId {
@@ -85,7 +87,7 @@ namespace Empiria.Financial {
       get; private set;
     }
 
-    
+
     [DataField("ACCT_LEDGER_ID")]
     public int LedgerId {
       get; private set;
@@ -96,7 +98,7 @@ namespace Empiria.Financial {
       get; private set;
     }
 
-    
+
     [DataField("ACCT_DESCRIPTION")]
     public string Name {
       get; private set;
@@ -113,7 +115,7 @@ namespace Empiria.Financial {
       get; protected set;
     }
 
-  
+
     [DataField("ACCT_ATTRIBUTES")]
     public string Attributes {
       get; protected set;
@@ -131,7 +133,7 @@ namespace Empiria.Financial {
       get; protected set;
     }
 
-    
+
     [DataField("ACCT_EXT_DATA")]
     private JsonObject ExtData {
       get; set;

@@ -10,6 +10,7 @@
 
 using Xunit;
 
+using Empiria.Financial.Projects;
 using Empiria.Financial.Projects.Adapters;
 using Empiria.Financial.Projects.UseCases;
 
@@ -109,7 +110,7 @@ namespace Empiria.Tests.Financial.Projects {
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
     }
-       
+
 
     [Fact]
     public void Should_Update_FinancialProject() {

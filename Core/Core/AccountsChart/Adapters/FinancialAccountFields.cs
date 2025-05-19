@@ -11,6 +11,8 @@
 using Empiria.StateEnums;
 using Empiria.Parties;
 
+using Empiria.Financial.Projects;
+
 namespace Empiria.Financial.Accounts.Adapters {
 
   /// <summary>Input field with financial account data.</summary>

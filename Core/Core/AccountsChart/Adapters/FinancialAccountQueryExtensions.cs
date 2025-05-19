@@ -11,6 +11,8 @@
 using Empiria.StateEnums;
 using Empiria.Parties;
 
+using Empiria.Financial.Projects;
+
 namespace Empiria.Financial.Accounts.Adapters {
 
   /// <summary>Query DTO used to extend financial accounts extensions.</summary>
@@ -23,15 +25,15 @@ namespace Empiria.Financial.Accounts.Adapters {
     }
 
     static internal string MapToFilterString(this FinancialAccountQuery query) {
-      string statusFilter = BuildRequestStatusFilter(query.Status);
+      string statusFilter = BuildStatusFilter(query.Status);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
-      string requesterOrgUnitFilter = BuildRequesterOrgUnitFilter(query.OrganizationUnitUID);
-      string accountFilter = BuildRequesterAccountFilter(query.ProjectUID);
+      string requesterOrgUnitFilter = BuildOrgUnitFilter(query.OrganizationUnitUID);
+      string projectFilter = BuildProjectFilter(query.ProjectUID);
 
       var filter = new Filter(statusFilter);
       filter.AppendAnd(requesterOrgUnitFilter);
       filter.AppendAnd(keywordsFilter);
-      filter.AppendAnd(accountFilter);
+      filter.AppendAnd(projectFilter);
 
       return filter.ToString();
     }
@@ -48,18 +50,7 @@ namespace Empiria.Financial.Accounts.Adapters {
 
     #region Helpers
 
-    static private string BuildRequesterAccountFilter(string requesterAccountUID) {
-      if (requesterAccountUID.Length == 0) {
-        return string.Empty;
-      }
-
-      var requesterProject = FinancialProject.Parse(requesterAccountUID);
-
-      return $"ACCT_PROJECT_ID = {requesterProject.Id}";
-    }
-
-
-    private static string BuildKeywordsFilter(string keywords) {
+    static private string BuildKeywordsFilter(string keywords) {
       if (keywords.Length == 0) {
         return string.Empty;
       }
@@ -67,23 +58,34 @@ namespace Empiria.Financial.Accounts.Adapters {
     }
 
 
-    static private string BuildRequestStatusFilter(EntityStatus status) {
+    static private string BuildOrgUnitFilter(string orgUnitUID) {
+      if (orgUnitUID.Length == 0) {
+        return string.Empty;
+      }
+
+      var orgUnit = OrganizationalUnit.Parse(orgUnitUID);
+
+      return $"ACCT_ORG_UNIT_ID = {orgUnit.Id}";
+    }
+
+
+    static private string BuildProjectFilter(string projectUID) {
+      if (projectUID.Length == 0) {
+        return string.Empty;
+      }
+
+      var project = FinancialProject.Parse(projectUID);
+
+      return $"ACCT_PROJECT_ID = {project.Id}";
+    }
+
+
+    static private string BuildStatusFilter(EntityStatus status) {
       if (status == EntityStatus.All) {
         return $"ACCT_STATUS <> 'X'";
       }
 
       return $"ACCT_STATUS = '{(char) status}'";
-    }
-
-
-    static private string BuildRequesterOrgUnitFilter(string requesterOrgUnitUID) {
-      if (requesterOrgUnitUID.Length == 0) {
-        return string.Empty;
-      }
-
-      var requesterOrgUnit = OrganizationalUnit.Parse(requesterOrgUnitUID);
-
-      return $"ACCT_ORG_UNIT_ID = {requesterOrgUnit.Id}";
     }
 
     #endregion Helpers

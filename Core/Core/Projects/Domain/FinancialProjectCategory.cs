@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Financial {
+namespace Empiria.Financial.Projects {
 
   /// <summary>Represents financial project category.</summary>
   public class FinancialProjectCategory : CommonStorage {
@@ -42,4 +42,4 @@ namespace Empiria.Financial {
 
   } // class FinancialProjectCategory
 
-} // namespace Empiria.Financial
+} // namespace Empiria.Financial.Projects
