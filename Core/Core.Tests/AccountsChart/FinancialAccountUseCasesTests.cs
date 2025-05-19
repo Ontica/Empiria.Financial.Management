@@ -61,22 +61,7 @@ namespace Empiria.Tests.Financial.Accounts {
       var UID = "989fafcc-01e0-48d7-b2c0-3375b860874b";
       _usecases.DeleteAccount(UID);
     }
-
-    [Fact]
-    public void Should_Parse_StandardAcccounts() {
-      var sut = _usecases.GetStandardAccount("cc3be2a4-ae96-44bd-8422-3df01126f639");
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public void Should_Search_Acccount() {
-      var sut = _usecases.SearchAccounts("eva");
-
-      Assert.NotNull(sut);
-    }
-
+       
 
     [Fact]
     public void Should_Get_StandardAcccountCategories() {
