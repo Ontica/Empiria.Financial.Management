@@ -19,8 +19,20 @@ namespace Empiria.Financial.Projects.WebApi {
 
   /// <summary>Web API used to retrive and update financial projects.</summary>
   public class FinancialProjectController : WebApiController {
-        
+
     #region Query web apis
+
+    [HttpGet]
+    [Route("v2/financial-projects/categories")]
+    public CollectionModel GetProjectCategories() {
+
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> projects = usecases.GetProjectCategories();
+
+        return new CollectionModel(base.Request, projects);
+      }
+    }
+
 
     [HttpGet]
     [Route("v2/financial-projects/{keywords}")]
