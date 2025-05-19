@@ -15,11 +15,10 @@ using Empiria.Financial.Data;
 using Empiria.Financial.Accounts.Adapters;
 using Empiria.Financial.Projects.Adapters;
 
-namespace Empiria.Financial.Accounts.UseCases
-{
+namespace Empiria.Financial.Accounts.UseCases {
 
-    /// <summary>Provides use cases for update and retrieve financial accounts.</summary>
-    public class FinancialAccountUseCases : UseCase {
+  /// <summary>Provides use cases for update and retrieve financial accounts.</summary>
+  public class FinancialAccountUseCases : UseCase {
 
     #region Constructors and parsers
 
@@ -82,6 +81,13 @@ namespace Empiria.Financial.Accounts.UseCases
       FixedList<FinancialAccount> accounts = FinancialAccount.SearchAccount(filter, sort);
 
       return FinancialAccountMapper.Map(accounts);
+    }
+
+
+    public FixedList<NamedEntityDto> GetStdAcctByCategory(int categoryId) {
+      Assertion.Require(categoryId, nameof(categoryId));
+
+      return StandardtAccountDataService.GetStdAcctByCategory(categoryId).MapToNamedEntityList();
     }
 
 

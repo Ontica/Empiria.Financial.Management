@@ -15,8 +15,20 @@ namespace Empiria.Financial.Data {
   /// <summary>Provides data access services for standard accounts.</summary>
   static internal class StandardtAccountDataService {
 
-      static internal FixedList<StandardAccount> SearchStandardtAccounts(string keyewords) {
-      
+    static internal FixedList<StandardAccount> GetStdAcctByCategory(int categoryId) {
+
+      var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
+               $"WHERE STD_ACCT_CATEGORY_ID = {categoryId} " + " AND " +
+               $"STD_ACCT_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<StandardAccount>(op);
+    }
+
+
+    static internal FixedList<StandardAccount> SearchStandardtAccounts(string keyewords) {
+
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
                $"WHERE STD_ACCT_KEYWORDS LIKE '% {keyewords} %'" + " AND " +
                $"STD_ACCT_STATUS <> 'X'";
@@ -28,7 +40,7 @@ namespace Empiria.Financial.Data {
 
 
     static internal FixedList<StandardAccount> SearchStandardtAccounts(string filter, string sortBy) {
-      
+
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS ";
 
       if (!string.IsNullOrWhiteSpace(filter)) {

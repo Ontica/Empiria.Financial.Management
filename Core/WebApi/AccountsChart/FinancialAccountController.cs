@@ -18,8 +18,21 @@ namespace Empiria.Financial.Accounts.WebApi {
 
   /// <summary>Web API used to retrive and update financial accounts.</summary>
   public class FinancialAccountController : WebApiController {
-        
+
     #region Query web apis
+
+
+    [HttpGet]
+    [Route("v2/standard-accounts/{categoryId}")]
+    public CollectionModel GetStdAcctByCategory([FromUri] int categoryId) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> stdAccounts = usecases.GetStdAcctByCategory(categoryId);
+
+        return new CollectionModel(base.Request, stdAccounts);
+      }
+    }
+
 
     [HttpGet]
     [Route("v2/financial-accounts/{keywords}")]
@@ -93,6 +106,8 @@ namespace Empiria.Financial.Accounts.WebApi {
         return new SingleObjectModel(this.Request, paymentOrder);
       }
     }
+
+
 
     #endregion Web Apis
 

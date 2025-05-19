@@ -89,6 +89,14 @@ namespace Empiria.Tests.Financial.Accounts {
 
 
     [Fact]
+    public void Should_Parse_StdAcctBytCategory() {
+      var sut = _usecases.GetStdAcctByCategory(512);
+
+      Assert.NotNull(sut);
+    }
+
+
+    [Fact]
     public void Should_Search_Acccount() {
       var sut = _usecases.SearchAccounts("eva");
 
