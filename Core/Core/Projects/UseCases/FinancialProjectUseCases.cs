@@ -10,6 +10,8 @@
 
 using Empiria.Services;
 
+using Empiria.Parties;
+
 using Empiria.Financial.Projects.Adapters;
 
 namespace Empiria.Financial.Projects.UseCases {
@@ -29,14 +31,16 @@ namespace Empiria.Financial.Projects.UseCases {
 
     #endregion Constructors and parsers
 
-    #region Use cases   
+    #region Use cases
 
     public FinancialProjectDto CreateProject(FinancialProjectFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
 
-      var project = new FinancialProject(fields);
+      var project = new FinancialProject(fields.GetOrganizationalUnit(), fields.Name);
+
+      project.Update(fields);
 
       project.Save();
 

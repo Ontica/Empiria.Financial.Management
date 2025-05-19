@@ -14,19 +14,27 @@ using Empiria.Json;
 using Empiria.StateEnums;
 using Empiria.Parties;
 
-using Empiria.Financial.Projects.Adapters;
 using Empiria.Financial.Projects.Data;
 
-namespace Empiria.Financial {
+namespace Empiria.Financial.Projects {
 
   /// <summary>Represents a financial project.</summary>
   public class FinancialProject : BaseObject, INamedEntity {
-    //private ProjectFields fields;
 
     #region Constructors and parsers
 
-    public FinancialProject() {
-      // Require by Empiria FrameWork
+    private FinancialProject() {
+      // Required by Empiria Framework
+    }
+
+    internal FinancialProject(OrganizationalUnit orgUnit, string name) {
+      Assertion.Require(orgUnit, nameof(orgUnit));
+      Assertion.Require(name, nameof(name));
+
+      this.OrganizationUnit = orgUnit;
+      this.Name = name;
+      this.ProjectNo = "N/D";
+      this.StartDate = DateTime.Today;
     }
 
     static public FinancialProject Parse(int id) => ParseId<FinancialProject>(id);
@@ -35,16 +43,10 @@ namespace Empiria.Financial {
 
     static public FinancialProject Empty => ParseEmpty<FinancialProject>();
 
-    public FinancialProject(FinancialProjectFields fields) {
-
-      Assertion.Require(fields, nameof(fields));
-      Update(fields);
-    }
-
     #endregion Constructors and parsers
 
-    #region Properties       
-       
+    #region Properties
+
     [DataField("PRJ_STD_ACCT_ID")]
     public StandardAccount StandardAccount {
       get; private set;
@@ -101,20 +103,29 @@ namespace Empiria.Financial {
 
 
     [DataField("PRJ_PARENT_ID")]
-    public int ParentId {
-      get; set;
-    } = -1;
+    private int _parentId = -1;
+
+    public FinancialProject Parent {
+      get {
+        if (this.IsEmptyInstance) {
+          return this;
+        }
+        return Parse(_parentId);
+      } private set {
+        _parentId = value.Id;
+      }
+    }
 
 
-    [DataField("PRJ_START_DATE", Default = "ExecutionServer.DateMinValue")]
+    [DataField("PRJ_START_DATE")]
     public DateTime StartDate {
-      get; protected set;
+      get; private set;
     }
 
 
     [DataField("PRJ_END_DATE")]
     public DateTime EndDate {
-      get; protected set;
+      get; private set;
     }
 
 
@@ -130,7 +141,7 @@ namespace Empiria.Financial {
     }
 
 
-    [DataField("PRJ_STATUS", Default = EntityStatus.Active)]
+    [DataField("PRJ_STATUS", Default = EntityStatus.Pending)]
     public EntityStatus Status {
       get; private set;
     }
@@ -161,9 +172,6 @@ namespace Empiria.Financial {
       if (base.IsNew) {
         this.StartDate = ExecutionServer.DateMinValue;
         this.EndDate = ExecutionServer.DateMaxValue;
-
-        this.ParentId = -1;
-
         this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
@@ -176,16 +184,16 @@ namespace Empiria.Financial {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
-     
-      this.Category = FinancialProjectCategory.Parse(fields.CategoryUID);
-      this.StandardAccount = StandardAccount.Parse(fields.StandardAccountUID);
-      this.ProjectNo = fields.ProjectNo;
-      this.Name = fields.Name;
-      this.OrganizationUnit = Party.Parse(fields.OrganizationUnitUID);
+
+      this.Name = PatchField(fields.Name, this.Name);
+      this.ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
+      this.Category = PatchField(fields.CategoryUID, this.Category);
+      this.StandardAccount = PatchField(fields.StandardAccountUID, this.StandardAccount);
+      this.OrganizationUnit = PatchField(fields.OrganizationUnitUID, this.OrganizationUnit);
     }
 
     #endregion Methods
 
   } // class FinancialProject
 
-} // namespace Empiria.Financial
+} // namespace Empiria.Financial.Projects
