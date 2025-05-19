@@ -61,6 +61,14 @@ namespace Empiria.Tests.Financial.Projects {
 
 
     [Fact]
+    public void Should_GetFinacialProject() {
+      var sut = _usecases.GetProject("2b11c01c-50d0-4ae3-a3cd-bf89c7a8779a");
+
+      Assert.NotNull(sut);
+    }
+
+
+    [Fact]
     public void Should_GetFinacialProjectCategories() {
       var sut = _usecases.GetProjectCategories();
 

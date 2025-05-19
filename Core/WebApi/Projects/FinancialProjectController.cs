@@ -91,6 +91,18 @@ namespace Empiria.Financial.Projects.WebApi {
     }
 
 
+    [HttpGet]
+    [Route("v2/financial-projects/{projectUID:GUID}")]
+    public SingleObjectModel GetProject([FromUri] string projectUID) {
+
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FinancialProjectDto project = usecases.GetProject(projectUID);
+
+        return new SingleObjectModel(base.Request, project);
+      }
+    }
+
+
     [HttpPut]
     [Route("v2/financial-projects/{financialProjectUID:guid}")]
     public SingleObjectModel UpdateFinancialProject([FromUri] string financialProjectUID,

@@ -51,7 +51,14 @@ namespace Empiria.Financial.Projects.UseCases {
       project.Delete();
 
       project.Save();
+    }
 
+
+    public FinancialProjectDto GetProject(string UID) {
+      Assertion.Require(UID, nameof(UID));
+      var project = FinancialProject.Parse(UID);
+
+      return FinancialProjectMapper.Map(project);
     }
 
 
@@ -63,7 +70,6 @@ namespace Empiria.Financial.Projects.UseCases {
 
     public FinancialProjectCategory GetProjectCategory(string UID) {
       return FinancialProjectCategory.Parse(UID);
-
     }
 
 
