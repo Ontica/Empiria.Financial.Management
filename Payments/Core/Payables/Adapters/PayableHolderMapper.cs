@@ -11,7 +11,7 @@
 using System.Collections.Generic;
 
 using Empiria.Documents;
-using Empiria.History.Services;
+using Empiria.History;
 
 namespace Empiria.Payments.Payables.Adapters {
 

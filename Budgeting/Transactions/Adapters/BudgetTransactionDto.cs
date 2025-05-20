@@ -11,7 +11,7 @@
 using System;
 
 using Empiria.Documents;
-using Empiria.History.Services.Adapters;
+using Empiria.History;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
