@@ -23,9 +23,9 @@ namespace Empiria.Financial.Accounts.Adapters {
         UID = account.UID,
         StandardAccount = account.StandardAccount.MapToNamedEntity(),
         Project = account.Project.MapToNamedEntity(),
-        Name = account.Name,  
+        Name = account.Name,
         OrganizationUnit = account.OrganizationUnit.MapToNamedEntity(),
-        Parent = FinancialAccount.Parse(account.ParentId).MapToNamedEntity(),
+        Parent = account.Parent.MapToNamedEntity(),
         Status = account.Status,
       };
     }

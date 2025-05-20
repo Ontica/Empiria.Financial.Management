@@ -16,7 +16,7 @@ namespace Empiria.Financial.Data {
   static internal class FinancialAccountDataService {
 
       static internal FixedList<FinancialAccount> SearchAccount(string keyewords) {
-      
+
       var sql = "SELECT * FROM FMS_ACCOUNTS " +
                $"WHERE ACCT_KEYWORDS LIKE '%{keyewords}%'" + " AND " +
                $"ACCT_STATUS <> 'X' AND ACCT_TYPE_ID = 3216";
@@ -28,7 +28,7 @@ namespace Empiria.Financial.Data {
 
 
     static internal FixedList<FinancialAccount> SearchAccount(string filter, string sortBy) {
-      
+
       var sql = "SELECT * FROM FMS_ACCOUNTS ";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
@@ -46,10 +46,11 @@ namespace Empiria.Financial.Data {
 
     internal static void WriteAccount(FinancialAccount o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Account",
-         o.Id, o.UID, o.GetEmpiriaType().Id, o.StandardAccount.Id, o.Organization.Id, 
-         o.OrganizationUnit.Id, o.Party.Id, o.Project.Id, o.LedgerId, o.AcctNo, o.Name, 
-         o.Identifiers, o.Tags, o.Attributes, o.FinancialData, o.ConfigData, extensionData,
-         o.Keywords, o.ParentId, o.StartDate, o.EndDate, o.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+         o.Id, o.UID, o.GetEmpiriaType().Id, o.StandardAccount.Id, o.Organization.Id,
+         o.OrganizationUnit.Id, o.Party.Id, o.Project.Id, o.LedgerId, o.AcctNo, o.Name,
+         o.Identifiers, o.Tags, o.Attributes.ToString(), o.FinancialData.ToString(),
+         o.ConfigData.ToString(), extensionData, o.Keywords, o.Parent.Id,
+         o.StartDate, o.EndDate, o.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }

@@ -27,7 +27,7 @@ namespace Empiria.Financial {
 
     #region Constructors and parsers
 
-    public FinancialAccount() {
+    private FinancialAccount() {
       // Require by Empiria FrameWork
     }
 
@@ -45,18 +45,6 @@ namespace Empiria.Financial {
     #endregion Constructors and parsers
 
     #region Properties
-
-    [DataField("ACCT_ID")]
-    public int AcctId {
-      get; private set;
-    }
-
-
-    [DataField("ACCT_TYPE_ID")]
-    public int TypeId {
-      get; private set;
-    }
-
 
     [DataField("ACCT_STD_ACCT_ID")]
     public StandardAccount StandardAccount {
@@ -89,7 +77,7 @@ namespace Empiria.Financial {
 
 
     [DataField("ACCT_LEDGER_ID")]
-    public int LedgerId {
+    internal int LedgerId {
       get; private set;
     }
 
@@ -117,25 +105,25 @@ namespace Empiria.Financial {
 
 
     [DataField("ACCT_ATTRIBUTES")]
-    public string Attributes {
+    public JsonObject Attributes {
       get; protected set;
     }
 
 
     [DataField("ACCT_FINANCIAL_DATA")]
-    public string FinancialData {
+    public JsonObject FinancialData {
       get; protected set;
     }
 
 
     [DataField("ACCT_CONFIG_DATA")]
-    public string ConfigData {
+    public JsonObject ConfigData {
       get; protected set;
     }
 
 
     [DataField("ACCT_EXT_DATA")]
-    private JsonObject ExtData {
+    protected JsonObject ExtData {
       get; set;
     }
 
@@ -148,26 +136,31 @@ namespace Empiria.Financial {
 
 
     [DataField("ACCT_PARENT_ID")]
-    public int ParentId {
-      get; set;
+    private int _parentId = -1;
+
+    public FinancialAccount Parent {
+      get {
+        if (this.IsEmptyInstance) {
+          return this;
+        }
+        return Parse(_parentId);
+      }
+      private set {
+        _parentId = value.Id;
+      }
     }
 
 
-    [DataField("ACCT_START_DATE", Default = "ExecutionServer.DateMinValue")]
+
+    [DataField("ACCT_START_DATE")]
     public DateTime StartDate {
-      get; protected set;
+      get; private set;
     }
 
 
     [DataField("ACCT_END_DATE")]
     public DateTime EndDate {
-      get; protected set;
-    }
-
-
-    [DataField("ACCT_HISTORIC_ID")]
-    public int HistoricId {
-      get; set;
+      get; private set;
     }
 
 
@@ -238,10 +231,6 @@ namespace Empiria.Financial {
       this.Name = fields.Description;
       this.Identifiers = fields.Identifiers;
       this.Tags = fields.Tags;
-      this.Attributes = fields.Attributes;
-      this.FinancialData = fields.FinancialData;
-      this.ConfigData = fields.ConfigData;
-      this.ParentId = fields.ParentId;
     }
 
     #endregion Methods

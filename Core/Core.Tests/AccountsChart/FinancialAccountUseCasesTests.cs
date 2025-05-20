@@ -47,7 +47,6 @@ namespace Empiria.Tests.Financial.Accounts {
         ProjectUID = "17903a85-4018-4ee1-8218-cc497dc688ee",
         AcctNo = "0000001",
         Description = "Test del 000001",
-        ParentId = -1,
       };
 
       var sut = _usecases.CreateAccount(fields);
@@ -61,7 +60,7 @@ namespace Empiria.Tests.Financial.Accounts {
       var UID = "989fafcc-01e0-48d7-b2c0-3375b860874b";
       _usecases.DeleteAccount(UID);
     }
-       
+
 
     [Fact]
     public void Should_Get_StandardAcccountCategories() {
@@ -129,7 +128,6 @@ namespace Empiria.Tests.Financial.Accounts {
         ProjectUID = "0eca8e61-66c1-4801-9b0d-05e6587841ce",
         AcctNo = "0000001",
         Description = "Test Update",
-        ParentId = -1,
       };
 
       var UID = "989fafcc-01e0-48d7-b2c0-3375b860874b";

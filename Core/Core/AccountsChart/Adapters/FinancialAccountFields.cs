@@ -20,11 +20,6 @@ namespace Empiria.Financial.Accounts.Adapters {
 
     #region Properties
 
-    public int TypeId {
-      get; set;
-    } = 0;
-
-
     public string StandarAccountUID {
       get; set;
     } = string.Empty;
@@ -87,11 +82,6 @@ namespace Empiria.Financial.Accounts.Adapters {
     public string ConfigData {
       get; set;
     } = string.Empty;
-
-
-    public int ParentId {
-      get; set;
-    } = 0;
 
 
     public EntityStatus Status {
