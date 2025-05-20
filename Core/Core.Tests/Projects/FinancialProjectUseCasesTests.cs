@@ -88,7 +88,7 @@ namespace Empiria.Tests.Financial.Projects {
 
     [Fact]
     public void Should_Search_Projects() {
-      string keywords = "agua potable";
+      string keywords = "potable agua";
 
       var sut = _usecases.SearchProjects(keywords);
 

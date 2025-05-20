@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Financial Projects                         Component : Domain Layer                            *
-*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Base Object                             *
+*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Information holder                      *
 *  Type     : FinancialProject                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a financial project.                                                                *
@@ -30,8 +30,10 @@ namespace Empiria.Financial.Projects {
     internal FinancialProject(OrganizationalUnit orgUnit, string name) {
       Assertion.Require(orgUnit, nameof(orgUnit));
       Assertion.Require(name, nameof(name));
+      Assertion.Require(!orgUnit.IsEmptyInstance,
+                        "orgUnit can not be the empty instance.");
 
-      this.OrganizationUnit = orgUnit;
+      this.OrganizationalUnit = orgUnit;
       this.Name = name;
       this.ProjectNo = "N/D";
       this.StartDate = DateTime.Today;
@@ -72,7 +74,7 @@ namespace Empiria.Financial.Projects {
 
 
     [DataField("PRJ_ORG_UNIT_ID")]
-    public Party OrganizationUnit {
+    public OrganizationalUnit OrganizationalUnit {
       get; private set;
     }
 
@@ -111,7 +113,8 @@ namespace Empiria.Financial.Projects {
           return this;
         }
         return Parse(_parentId);
-      } private set {
+      }
+      private set {
         _parentId = value.Id;
       }
     }
@@ -150,7 +153,23 @@ namespace Empiria.Financial.Projects {
 
     #region Methods
 
+    internal void SetParent(FinancialProject parent) {
+      Assertion.Require(parent, nameof(parent));
+
+      this.Parent = parent;
+    }
+
+
+    internal void Suspend() {
+      Assertion.Require(Status == EntityStatus.Active,
+                        $"Can not suspend project. Its status is {Status.GetName()}.");
+      this.Status = EntityStatus.Suspended;
+    }
+
+
     internal void Delete() {
+      Assertion.Require(Status == EntityStatus.Pending,
+                  $"Can not delete project. Its status is {Status.GetName()}.");
       this.Status = EntityStatus.Deleted;
     }
 
@@ -189,7 +208,7 @@ namespace Empiria.Financial.Projects {
       this.ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
       this.Category = PatchField(fields.CategoryUID, this.Category);
       this.StandardAccount = PatchField(fields.StandardAccountUID, this.StandardAccount);
-      this.OrganizationUnit = PatchField(fields.OrganizationUnitUID, this.OrganizationUnit);
+      this.OrganizationalUnit = PatchField(fields.OrganizationUnitUID, this.OrganizationalUnit);
     }
 
     #endregion Methods

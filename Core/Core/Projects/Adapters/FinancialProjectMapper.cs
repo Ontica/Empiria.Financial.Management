@@ -24,8 +24,8 @@ namespace Empiria.Financial.Projects.Adapters {
         StandardAccount = project.StandardAccount.MapToNamedEntity(),
         Category = project.Category.MapToNamedEntity(),
         ProjectNo = project.ProjectNo,
-        Name = project.Name,  
-        OrganizationUnit = project.OrganizationUnit.MapToNamedEntity(),
+        Name = project.Name,
+        OrganizationalUnit = project.OrganizationalUnit.MapToNamedEntity(),
         Status = project.Status,
       };
     }

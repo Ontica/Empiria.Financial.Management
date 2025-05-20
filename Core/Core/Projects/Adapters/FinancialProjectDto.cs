@@ -40,7 +40,7 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
 
-    public NamedEntityDto OrganizationUnit {
+    public NamedEntityDto OrganizationalUnit {
       get; set;
     }
 

@@ -15,11 +15,15 @@ namespace Empiria.Financial.Projects.Data {
   /// <summary>Provides data access services for financial projects.</summary>
   static internal class FinancialProjectDataService {
 
-    static internal FixedList<FinancialProject> SearchProjects(string keyewords) {
+    static internal FixedList<FinancialProject> SearchProjects(string keywords) {
 
+      var filter = SearchExpression.ParseOrLikeKeywords("PRJ_KEYWORDS", keywords);
+      if (filter.Length != 0) {
+        filter += " AND";
+      }
       var sql = "SELECT * FROM FMS_PROJECTS " +
-               $"WHERE PRJ_KEYWORDS LIKE '%{keyewords}%'" + " AND " +
-               $"PRJ_STATUS <> 'X'";
+                $"WHERE {filter} " +
+                $"PRJ_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
 
@@ -47,7 +51,7 @@ namespace Empiria.Financial.Projects.Data {
     internal static void WriteProject(FinancialProject o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Project",
          o.Id, o.UID, o.GetEmpiriaType().Id, o.StandardAccount.Id, o.Category.Id, o.ProjectNo, o.Name,
-         o.OrganizationUnit.Id, o.Identifiers, o.Tags, extensionData, o.Keywords, o.Parent.Id,
+         o.OrganizationalUnit.Id, o.Identifiers, o.Tags, extensionData, o.Keywords, o.Parent.Id,
          o.StartDate, o.EndDate, o.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);

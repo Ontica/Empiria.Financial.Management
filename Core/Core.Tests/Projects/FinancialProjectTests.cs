@@ -32,7 +32,7 @@ namespace Empiria.Tests.Financial.Projects {
 
       var sut = new FinancialProject(orgUnit, name);
 
-      Assert.Equal(orgUnit, sut.OrganizationUnit);
+      Assert.Equal(orgUnit, sut.OrganizationalUnit);
       Assert.Equal(name, sut.Name);
 
       Assert.True(sut.StandardAccount.IsEmptyInstance);
@@ -93,7 +93,7 @@ namespace Empiria.Tests.Financial.Projects {
       var unchangedFields = new FinancialProjectFields {
         StandardAccountUID = sut.StandardAccount.UID,
         CategoryUID = sut.Category.UID,
-        OrganizationUnitUID = sut.OrganizationUnit.UID,
+        OrganizationUnitUID = sut.OrganizationalUnit.UID,
       };
 
       sut.Update(fields);
@@ -102,7 +102,7 @@ namespace Empiria.Tests.Financial.Projects {
       Assert.Equal(fields.Name, sut.Name);
       Assert.Equal(unchangedFields.StandardAccountUID, sut.StandardAccount.UID);
       Assert.Equal(unchangedFields.CategoryUID, sut.Category.UID);
-      Assert.Equal(unchangedFields.OrganizationUnitUID, sut.OrganizationUnit.UID);
+      Assert.Equal(unchangedFields.OrganizationUnitUID, sut.OrganizationalUnit.UID);
     }
 
     #endregion Facts
