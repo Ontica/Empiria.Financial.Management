@@ -63,39 +63,6 @@ namespace Empiria.Tests.Financial.Accounts {
 
 
     [Fact]
-    public void Should_Get_StandardAcccountCategories() {
-      var sut = _usecases.GetStandardAccountCategories();
-
-      Assert.NotNull(sut);
-      Assert.NotEmpty(sut);
-    }
-
-
-    [Fact]
-    public void Should_Parse_StandardAcccounts() {
-      var sut = _usecases.GetStandardAccount("207181");
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public void Should_Parse_StandardAcccountCategory() {
-      var sut = _usecases.GetStandardAccountCategory("7418d18f-04f9-486b-9c93-a2d52b0be246");
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public void Should_Parse_StdAcctBytCategory() {
-      var sut = _usecases.GetStdAcctByCategory(512);
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
     public void Should_Search_Acccount() {
       var sut = _usecases.SearchAccounts("eva");
 

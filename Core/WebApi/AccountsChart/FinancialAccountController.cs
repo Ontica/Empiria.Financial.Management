@@ -21,19 +21,6 @@ namespace Empiria.Financial.Accounts.WebApi {
 
     #region Query web apis
 
-
-    [HttpGet]
-    [Route("v2/standard-accounts/{categoryId}")]
-    public CollectionModel GetStdAcctByCategory([FromUri] int categoryId) {
-
-      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> stdAccounts = usecases.GetStdAcctByCategory(categoryId);
-
-        return new CollectionModel(base.Request, stdAccounts);
-      }
-    }
-
-
     [HttpGet]
     [Route("v2/financial-accounts/{keywords}")]
     public CollectionModel SearchAccounts([FromUri] string keywords = "") {
@@ -56,7 +43,6 @@ namespace Empiria.Financial.Accounts.WebApi {
         return new CollectionModel(base.Request, accounts);
       }
     }
-
 
     #endregion Query web apis
 
@@ -106,8 +92,6 @@ namespace Empiria.Financial.Accounts.WebApi {
         return new SingleObjectModel(this.Request, paymentOrder);
       }
     }
-
-
 
     #endregion Web Apis
 
