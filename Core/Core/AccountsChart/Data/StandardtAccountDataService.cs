@@ -27,10 +27,14 @@ namespace Empiria.Financial.Data {
     }
 
 
-    static internal FixedList<StandardAccount> SearchStandardtAccounts(string keyewords) {
+    static internal FixedList<StandardAccount> SearchStandardtAccounts(string keywords) {
 
+      var filter = SearchExpression.ParseOrLikeKeywords("STD_ACCT_KEYWORDS", keywords);
+      if (filter.Length != 0) {
+        filter += " AND";
+      }
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
-               $"WHERE STD_ACCT_KEYWORDS LIKE '% {keyewords} %'" + " AND " +
+               $"WHERE {filter} " +
                $"STD_ACCT_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);

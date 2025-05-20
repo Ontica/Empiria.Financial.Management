@@ -20,7 +20,7 @@ namespace Empiria.Financial.Accounts.Adapters {
 
     #region Properties
 
-    public string StandarAccountUID {
+    public string StandardAccountUID {
       get; set;
     } = string.Empty;
 
@@ -28,6 +28,7 @@ namespace Empiria.Financial.Accounts.Adapters {
     public string OrganizationUID {
       get; set;
     } = string.Empty;
+
 
     public string OrganizationUnitUID {
       get; set;
@@ -54,7 +55,7 @@ namespace Empiria.Financial.Accounts.Adapters {
     } = string.Empty;
 
 
-    public string Description {
+    public string Name {
       get; set;
     } = string.Empty;
 
@@ -76,38 +77,27 @@ namespace Empiria.Financial.Accounts.Adapters {
 
     public string FinancialData {
       get; set;
-    } = string.Empty;
-
-
-    public string ConfigData {
-      get; set;
-    } = string.Empty;
-
-
-    public EntityStatus Status {
-      get; set;
-    } = EntityStatus.Active;
+    } = string.Empty;   
 
     #endregion Properties
 
     #region Methods
 
     internal void EnsureValid() {
-      Assertion.Require(AcctNo, "Necesito el número de cuenta.");
-      Assertion.Require(Description, "Necesito el nombre de cuenta.");
-      Assertion.Require(StandarAccountUID, "Necesito la cuenta estandar.");
 
-      Assertion.Require(OrganizationUnitUID, "Necesito el area.");
-      _ = Party.Parse(OrganizationUnitUID);
+      AcctNo = FieldPatcher.Clean(AcctNo);
+      Name = FieldPatcher.Clean(Name);
+            
+      StandardAccountUID = FieldPatcher.Clean(StandardAccountUID);
+      OrganizationUnitUID = FieldPatcher.Clean(OrganizationUnitUID);
+           
+      if (StandardAccountUID.Length != 0) {
+        _ = StandardAccount.Parse(StandardAccountUID);
+      }
 
-      Assertion.Require(ProjectUID, "Necesito el número de proyecto.");
-      _ = FinancialProject.Parse(ProjectUID);
-
-      Assertion.Require(PartyUID, "Necesito el area de proyecto.");
-      _ = Party.Parse(PartyUID);
-
-      Assertion.Require(OrganizationUID, "Necesito el area de proyecto.");
-      _ = Party.Parse(OrganizationUID);
+      if (OrganizationUnitUID.Length != 0) {
+        _ = StandardAccount.Parse(OrganizationUnitUID);
+      }
     }
 
     #endregion Methods

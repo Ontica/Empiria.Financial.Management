@@ -31,6 +31,19 @@ namespace Empiria.Financial {
       // Require by Empiria FrameWork
     }
 
+    public FinancialAccount(OrganizationalUnit orgUnit, string accountNo, string name) {
+      Assertion.Require(orgUnit, nameof(orgUnit));
+      Assertion.Require(accountNo, nameof(accountNo));
+      Assertion.Require(name, nameof(name));
+      Assertion.Require(!orgUnit.IsEmptyInstance,
+                       "orgUnit can not be the empty instance.");
+
+      this.OrganizationalUnit = orgUnit;
+      this.Name = name;
+      this.AcctNo = accountNo;
+      this.StartDate = DateTime.Today;
+    }
+
     public FinancialAccount(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
       Update(fields);
@@ -59,13 +72,7 @@ namespace Empiria.Financial {
 
 
     [DataField("ACCT_ORG_UNIT_ID")]
-    public Party OrganizationUnit {
-      get; private set;
-    }
-
-
-    [DataField("ACCT_PARTY_ID")]
-    public Party Party {
+    public OrganizationalUnit OrganizationalUnit {
       get; private set;
     }
 
@@ -91,6 +98,7 @@ namespace Empiria.Financial {
     public string Name {
       get; private set;
     }
+
 
     [DataField("ACCT_IDENTIFIERS")]
     public string Identifiers {
@@ -151,7 +159,6 @@ namespace Empiria.Financial {
     }
 
 
-
     [DataField("ACCT_START_DATE")]
     public DateTime StartDate {
       get; private set;
@@ -176,10 +183,10 @@ namespace Empiria.Financial {
     }
 
 
-    [DataField("ACCT_STATUS", Default = EntityStatus.Active)]
+    [DataField("ACCT_STATUS", Default = EntityStatus.Pending)]
     public EntityStatus Status {
       get; private set;
-    } = EntityStatus.Active;
+    } = EntityStatus.Pending;
 
     #endregion Properties
 
@@ -221,14 +228,12 @@ namespace Empiria.Financial {
 
       fields.EnsureValid();
 
-      this.StandardAccount = StandardAccount.Parse(fields.StandarAccountUID);
-      this.Organization = Party.Parse(fields.OrganizationUID);
-      this.OrganizationUnit = Party.Parse(fields.OrganizationUnitUID);
-      this.Party = Party.Parse(fields.PartyUID);
-      this.Project = FinancialProject.Parse(fields.ProjectUID);
-      this.LedgerId = fields.LedgerId;
-      this.AcctNo = fields.AcctNo;
-      this.Name = fields.Description;
+      this.Name = PatchField(fields.Name, this.Name);
+      this.AcctNo = PatchField(fields.AcctNo, this.AcctNo);
+      this.StandardAccount = PatchField(fields.StandardAccountUID, this.StandardAccount);
+      this.Organization = PatchField(fields.OrganizationUID, this.Organization);     
+      this.Project = PatchField(fields.ProjectUID, this.Project);
+      this.LedgerId = -1;
       this.Identifiers = fields.Identifiers;
       this.Tags = fields.Tags;
     }
