@@ -29,6 +29,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       string transactionTypeFilter = BuildTransactionTypeFilter(query.TransactionTypeUID);
       string basePartyFilter = BuildBasePartyFilter(query.BasePartyUID);
       string operationSourceFilter = BuildOperationSourceFilter(query.OperationSourceUID);
+      string transactionStageFilter = BuildTransactionStageFilter(query.Stage);
 
       string tagsFilter = BuildTagsFilter(query.Tags);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
@@ -40,6 +41,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       filter.AppendAnd(transactionTypeFilter);
       filter.AppendAnd(basePartyFilter);
       filter.AppendAnd(operationSourceFilter);
+      filter.AppendAnd(transactionStageFilter);
+
       filter.AppendAnd(tagsFilter);
       filter.AppendAnd(keywordsFilter);
       filter.AppendAnd(statusFilter);
@@ -106,6 +109,21 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
+    static private string BuildTransactionStageFilter(TransactionStage stage) {
+      int userId = ExecutionServer.CurrentUserId;
+
+      if (stage == TransactionStage.MyInbox) {
+        return $"(BDG_TXN_POSTED_BY_ID = {userId} OR " +
+               $"BDG_TXN_RECORDED_BY_ID = {userId} OR " +
+               $"BDG_TXN_REQUESTED_BY_ID = {userId} OR " +
+               $"BDG_TXN_AUTHORIZED_BY_ID = {userId} OR " +
+               $"BDG_TXN_APPLIED_BY_ID = {userId})";
+      }
+
+      return string.Empty;
+    }
+
+
     static private string BuildTransactionTypeFilter(string transactionTypeUID) {
       if (transactionTypeUID.Length == 0) {
         return string.Empty;
@@ -125,12 +143,12 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
-    static private string BuildStatusFilter(BudgetTransactionStatus status) {
-      if (status == BudgetTransactionStatus.All) {
+    static private string BuildStatusFilter(TransactionStatus status) {
+      if (status == TransactionStatus.All) {
         return "BDG_TXN_STATUS <> 'X' ";
       }
 
-      return $"BDG_TXN_STATUS = '{(char) status}'";
+      return $"(BDG_TXN_STATUS = '{(char) status}' AND BDG_TXN_ID <> -1)";
     }
 
 

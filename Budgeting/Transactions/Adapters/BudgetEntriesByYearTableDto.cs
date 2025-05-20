@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.DynamicData;
-using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 

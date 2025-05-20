@@ -87,9 +87,9 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = string.Empty;
 
 
-    public BudgetTransactionStatus Status {
+    public TransactionStatus Status {
       get; set;
-    } = BudgetTransactionStatus.All;
+    } = TransactionStatus.All;
 
 
     public TransactionStage Stage {

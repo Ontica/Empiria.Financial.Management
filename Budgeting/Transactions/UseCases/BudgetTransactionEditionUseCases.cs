@@ -148,7 +148,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       transaction.Save();
 
-      if (transaction.Status == BudgetTransactionStatus.Canceled) {
+      if (transaction.Status == TransactionStatus.Canceled) {
         HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Cancelada"));
       } else {
         HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Eliminada"));

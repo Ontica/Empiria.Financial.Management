@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.StateEnums;
+
 namespace Empiria.Budgeting.Transactions {
 
   /// <summary>Provides services to control budget transaction's rules.</summary>
@@ -25,7 +27,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanAuthorize {
       get {
-        if (_transaction.Status != BudgetTransactionStatus.OnAuthorization) {
+        if (_transaction.Status != TransactionStatus.OnAuthorization) {
           return false;
         }
         if (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
@@ -39,7 +41,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanClose {
       get {
-        if (_transaction.Status != BudgetTransactionStatus.Authorized) {
+        if (_transaction.Status != TransactionStatus.Authorized) {
           return false;
         }
         if (ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer")) {
@@ -52,7 +54,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanDelete {
       get {
-        if (_transaction.Status != BudgetTransactionStatus.Pending) {
+        if (_transaction.Status != TransactionStatus.Pending) {
           return false;
         }
 
@@ -68,7 +70,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanEditDocuments {
       get {
-        if (_transaction.Status != BudgetTransactionStatus.Authorized) {
+        if (_transaction.Status != TransactionStatus.Authorized) {
           return false;
         }
 
@@ -85,8 +87,8 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanReject {
       get {
-        if (_transaction.Status != BudgetTransactionStatus.OnAuthorization &&
-            _transaction.Status != BudgetTransactionStatus.Authorized) {
+        if (_transaction.Status != TransactionStatus.OnAuthorization &&
+            _transaction.Status != TransactionStatus.Authorized) {
           return false;
         }
         if (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
@@ -100,7 +102,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanSendToAuthorization {
       get {
-        if (_transaction.Status != BudgetTransactionStatus.Pending) {
+        if (_transaction.Status != TransactionStatus.Pending) {
           return false;
         }
 
@@ -127,7 +129,7 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.IsNew) {
           return true;
         }
-        if (_transaction.Status != BudgetTransactionStatus.Pending) {
+        if (_transaction.Status != TransactionStatus.Pending) {
           return false;
         }
         if (_transaction.BudgetTransactionType.IsProtected &&

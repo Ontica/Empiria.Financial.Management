@@ -18,6 +18,7 @@ using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.Products;
 using Empiria.Projects;
+using Empiria.StateEnums;
 
 using Empiria.Budgeting.Transactions.Data;
 
@@ -236,8 +237,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_TXN_STATUS", Default = BudgetTransactionStatus.Pending)]
-    public BudgetTransactionStatus Status {
+    [DataField("BDG_TXN_STATUS", Default = TransactionStatus.Pending)]
+    public TransactionStatus Status {
       get; private set;
     }
 
@@ -304,7 +305,7 @@ namespace Empiria.Budgeting.Transactions {
 
       this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.AuthorizationDate = DateTime.Now;
-      this.Status = BudgetTransactionStatus.Authorized;
+      this.Status = TransactionStatus.Authorized;
     }
 
 
@@ -315,21 +316,21 @@ namespace Empiria.Budgeting.Transactions {
       if (ApplicationDate == ExecutionServer.DateMaxValue) {
         ApplicationDate = DateTime.Now;
       }
-      this.Status = BudgetTransactionStatus.Closed;
+      this.Status = TransactionStatus.Closed;
     }
 
 
     internal void DeleteOrCancel() {
       Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this transaction.");
 
-      Assertion.Require(this.Status == BudgetTransactionStatus.Pending,
+      Assertion.Require(this.Status == TransactionStatus.Pending,
                        $"Can not delete or cancel budget transaction. Its status is {Status.GetName()}.");
 
       if (HasTransactionNo) {
-        this.Status = BudgetTransactionStatus.Canceled;
+        this.Status = TransactionStatus.Canceled;
       } else {
         this.TransactionNo = "Eliminada";
-        this.Status = BudgetTransactionStatus.Deleted;
+        this.Status = TransactionStatus.Deleted;
       }
     }
 
@@ -362,7 +363,7 @@ namespace Empiria.Budgeting.Transactions {
         TransactionNo = TO_ASSIGN_TRANSACTION_NO;
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
-      } else if (Status == BudgetTransactionStatus.Pending) {
+      } else if (Status == TransactionStatus.Pending) {
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         RecordingDate = DateTime.Now;
       }
@@ -389,7 +390,7 @@ namespace Empiria.Budgeting.Transactions {
       this.AuthorizedBy = Party.Empty;
       this.AuthorizationDate = ExecutionServer.DateMaxValue;
 
-      this.Status = BudgetTransactionStatus.Pending;
+      this.Status = TransactionStatus.Pending;
     }
 
 
@@ -403,7 +404,7 @@ namespace Empiria.Budgeting.Transactions {
 
       this.RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.RequestedDate = DateTime.Now;
-      this.Status = BudgetTransactionStatus.OnAuthorization;
+      this.Status = TransactionStatus.OnAuthorization;
     }
 
 
@@ -478,7 +479,7 @@ namespace Empiria.Budgeting.Transactions {
       foreach (var entry in entries) {
         if (entry.IsNew) {
           _entries.Value.Add(entry);
-        } else if (entry.Status == StateEnums.TransactionStatus.Deleted) {
+        } else if (entry.Status == TransactionStatus.Deleted) {
           _deletedEntries.Add(entry);
           _entries.Value.Remove(entry);
         }

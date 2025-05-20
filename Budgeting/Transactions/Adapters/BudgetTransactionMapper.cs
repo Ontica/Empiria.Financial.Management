@@ -10,6 +10,7 @@
 
 using Empiria.Documents;
 using Empiria.History.Services;
+using Empiria.StateEnums;
 
 using Empiria.Budgeting.Adapters;
 

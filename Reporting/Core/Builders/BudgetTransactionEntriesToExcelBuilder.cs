@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Office;
+using Empiria.StateEnums;
 using Empiria.Storage;
 
 using Empiria.Budgeting.Transactions;
