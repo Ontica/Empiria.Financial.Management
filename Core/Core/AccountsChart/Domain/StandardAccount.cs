@@ -15,7 +15,7 @@ using Empiria.StateEnums;
 
 using Empiria.Contacts;
 
-namespace Empiria.Financial.Accounts {
+namespace Empiria.Financial {
 
   /// <summary>Represents a standard account.</summary>
   public class StandardAccount : BaseObject, INamedEntity {

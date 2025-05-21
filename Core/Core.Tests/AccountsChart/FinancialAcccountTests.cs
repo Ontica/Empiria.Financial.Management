@@ -14,7 +14,7 @@ using System;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
-using Empiria.Financial.Accounts;
+using Empiria.Financial;
 using Empiria.Financial.Accounts.Adapters;
 
 using Empiria.Tests.Financial.Projects;
