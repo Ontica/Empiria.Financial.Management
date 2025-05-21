@@ -96,6 +96,20 @@ namespace Empiria.Financial.Accounts.UseCases {
       return FinancialAccountMapper.Map(account);
     }
 
+
+    public FinancialAccountDto UpdateCreditData(string UID, CreditExtDataFields fields) {
+      Assertion.Require(UID, nameof(UID));
+      Assertion.Require(fields, nameof(fields));
+
+      var account = FinancialAccount.Parse(UID);
+
+      account.UpdateCreditData(fields);
+
+      account.Save();
+
+      return FinancialAccountMapper.Map(account);
+    }
+
     #endregion Use cases
 
   }  // class FinancialAccountUseCases

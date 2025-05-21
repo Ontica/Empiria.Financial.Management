@@ -12,6 +12,8 @@ using Xunit;
 
 using Empiria.Financial.Accounts.Adapters;
 using Empiria.Financial.Accounts.UseCases;
+using Empiria.Financial.Accounts;
+using System;
 
 namespace Empiria.Tests.Financial.Accounts {
 
@@ -99,6 +101,20 @@ namespace Empiria.Tests.Financial.Accounts {
 
       var UID = "989fafcc-01e0-48d7-b2c0-3375b860874b";
       var sut = _usecases.UpdateAccount(UID, fields);
+
+      Assert.NotNull(sut);
+    }
+
+
+    [Fact]
+    public void Should_Update_CreditData() {
+      var fields = new CreditExtDataFields {
+      Plazo = "Tres meses",
+      Monto = 9000
+      };
+
+      var UID = "32b5a7ca-9494-4db6-8ea6-f8f38016d266";
+      var sut = _usecases.UpdateCreditData(UID, fields);
 
       Assert.NotNull(sut);
     }

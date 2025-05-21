@@ -19,6 +19,7 @@ using Empiria.Financial.Projects;
 using Empiria.Financial.Data;
 
 using Empiria.Financial.Accounts.Adapters;
+using Empiria.Financial.Accounts;
 
 namespace Empiria.Financial {
 
@@ -136,6 +137,13 @@ namespace Empiria.Financial {
     }
 
 
+    public CreditExtData CreditData {
+      get {
+        return new CreditExtData(this.ExtData);
+      }
+    }
+
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(AcctNo, Name);
@@ -194,7 +202,6 @@ namespace Empiria.Financial {
 
     internal void Delete() {
       this.Status = EntityStatus.Deleted;
-
     }
 
 
@@ -236,6 +243,13 @@ namespace Empiria.Financial {
       this.LedgerId = -1;
       this.Identifiers = fields.Identifiers;
       this.Tags = fields.Tags;
+    }
+
+
+    internal void UpdateCreditData(CreditExtDataFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+     CreditData.Update(fields);
     }
 
     #endregion Methods
