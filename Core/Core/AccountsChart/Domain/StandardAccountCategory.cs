@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Financial {
+namespace Empiria.Financial.Accounts {
 
   /// <summary>Represents a standard account category.</summary>
   public class StandardAccountCategory : CommonStorage {

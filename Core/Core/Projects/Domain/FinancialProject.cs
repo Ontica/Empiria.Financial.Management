@@ -14,6 +14,8 @@ using Empiria.Json;
 using Empiria.StateEnums;
 using Empiria.Parties;
 
+using Empiria.Financial.Accounts;
+
 using Empiria.Financial.Projects.Data;
 
 namespace Empiria.Financial.Projects {

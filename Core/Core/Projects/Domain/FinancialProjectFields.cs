@@ -9,7 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Parties;
-using Empiria.StateEnums;
+
+using Empiria.Financial.Accounts;
 
 namespace Empiria.Financial.Projects {
 

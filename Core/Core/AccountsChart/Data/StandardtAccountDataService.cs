@@ -10,6 +10,8 @@
 
 using Empiria.Data;
 
+using Empiria.Financial.Accounts;
+
 namespace Empiria.Financial.Data {
 
   /// <summary>Provides data access services for standard accounts.</summary>

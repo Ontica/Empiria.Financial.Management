@@ -20,7 +20,7 @@ using Empiria.Financial.Data;
 
 using Empiria.Financial.Accounts.Adapters;
 
-namespace Empiria.Financial {
+namespace Empiria.Financial.Accounts {
 
   /// <summary>Represents a financial account.</summary>
   public class FinancialAccount : BaseObject, INamedEntity {
