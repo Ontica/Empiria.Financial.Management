@@ -41,7 +41,7 @@ namespace Empiria.Tests.Cashflow.Projections {
 
     [Fact]
     public void Should_Parse_All_Cashflow_Projection_Categories() {
-      var list = BaseObject.GetFullList<CashflowProjectionCategory>();
+      var list = CashflowProjectionCategory.GetList();
 
       foreach (var sut in list) {
         Assert.NotEmpty(sut.Name);

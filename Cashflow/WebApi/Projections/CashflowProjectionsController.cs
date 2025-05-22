@@ -24,8 +24,20 @@ namespace Empiria.Cashflow.Projections.WebApi {
     #region Query web apis
 
     [HttpGet]
+    [Route("v1/cashflow/projections/operation-sources")]
+    public SingleObjectModel GetOperationSources() {
+
+      using (var usecases = CashflowProjectionUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> operationSources = usecases.GetOperationSources();
+
+        return new SingleObjectModel(base.Request, operationSources);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/cashflow/projections/{projectionUID:guid}")]
-    public SingleObjectModel GetTransaction([FromUri] string projectionUID) {
+    public SingleObjectModel GetProjection([FromUri] string projectionUID) {
 
       using (var usecases = CashflowProjectionUseCases.UseCaseInteractor()) {
         CashflowProjectionHolderDto projection = usecases.GetProjection(projectionUID);

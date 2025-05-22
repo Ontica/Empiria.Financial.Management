@@ -97,7 +97,8 @@ namespace Empiria.Cashflow.Projections.Adapters {
         AuthorizedBy = projection.AuthorizedBy.MapToNamedEntity(),
         RequestedTime = projection.RequestedTime,
         RequestedBy = projection.RequestedBy.MapToNamedEntity(),
-        AdjustmentOf = projection.AdjustmentOf.MapToNamedEntity(),
+        AdjustmentOf = projection.AdjustmentOf.IsEmptyInstance ?
+                                  NamedEntityDto.Empty : projection.AdjustmentOf.MapToNamedEntity(),
         // Total = projection.GetTotal(),
         Status = projection.Status.MapToNamedEntity(),
       };

@@ -29,7 +29,7 @@ namespace Empiria.Cashflow.Projections {
     static public CashflowProjectionCategory Parse(string uid) => ParseKey<CashflowProjectionCategory>(uid);
 
     static public FixedList<CashflowProjectionCategory> GetList() {
-      return BaseObject.GetList<CashflowProjectionCategory>(string.Empty, "ObjectName")
+      return BaseObject.GetList<CashflowProjectionCategory>(string.Empty, "Object_Name")
                        .FindAll(x => x.Status != EntityStatus.Deleted)
                        .ToFixedList();
     }

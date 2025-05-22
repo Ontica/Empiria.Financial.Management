@@ -37,6 +37,13 @@ namespace Empiria.Cashflow.Projections.UseCases {
 
     #region Use cases
 
+    public FixedList<NamedEntityDto> GetOperationSources() {
+      return OperationSource.GetList()
+                            .FindAll(x => x.Id == 11 || x.Id == 13)
+                            .MapToNamedEntityList();
+    }
+
+
     public CashflowProjectionHolderDto GetProjection(string projectionUID) {
       Assertion.Require(projectionUID, nameof(projectionUID));
 
