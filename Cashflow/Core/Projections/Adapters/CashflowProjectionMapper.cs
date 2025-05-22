@@ -10,6 +10,7 @@
 
 using Empiria.Documents;
 using Empiria.History;
+
 using Empiria.StateEnums;
 
 namespace Empiria.Cashflow.Projections.Adapters {
@@ -60,15 +61,15 @@ namespace Empiria.Cashflow.Projections.Adapters {
         UID = projection.UID,
         PlanName = projection.Plan.Name,
         CategoryName = projection.Category.Name,
-        //ClassificationName = projection.Classification.Name,
+        ClassificationName = projection.Classification.Name,
         ProjectionNo = projection.ProjectionNo,
         BasePartyName = projection.BaseParty.Name,
-        SourceName = projection.Source.Name,
+        OperationSourceName = projection.OperationSource.Name,
         AuthorizationTime = projection.AuthorizationTime,
         AuthorizedByName = projection.AuthorizedBy.Name,
         RecordingTime = projection.RecordingTime,
         RecordedByName = projection.RecordedBy.Name,
-        // Total = projection.Total,
+        // Total = projection.GetTotal(),
         StatusName = projection.Status.GetName(),
       };
     }
@@ -79,12 +80,12 @@ namespace Empiria.Cashflow.Projections.Adapters {
         UID = projection.UID,
         Plan = projection.Plan.MapToNamedEntity(),
         Category = projection.Category.MapToNamedEntity(),
-        // Classification = projection.Classification.MapToNamedEntity(),
+        Classification = projection.Classification.MapToNamedEntity(),
         ProjectionNo = projection.ProjectionNo,
         BaseParty = projection.BaseParty.MapToNamedEntity(),
         BaseProject = projection.BaseProject.MapToNamedEntity(),
         BaseAccount = projection.BaseAccount.MapToNamedEntity(),
-        Source = projection.Source.MapToNamedEntity(),
+        OperationSource = projection.OperationSource.MapToNamedEntity(),
         Description = projection.Description,
         Justification = projection.Justification,
         Tags = projection.Tags.Split(' '),
@@ -96,7 +97,7 @@ namespace Empiria.Cashflow.Projections.Adapters {
         AuthorizedBy = projection.AuthorizedBy.MapToNamedEntity(),
         RequestedTime = projection.RequestedTime,
         RequestedBy = projection.RequestedBy.MapToNamedEntity(),
-        AdjustmentOf = projection.AdjustementOf.MapToNamedEntity(),
+        AdjustmentOf = projection.AdjustmentOf.MapToNamedEntity(),
         // Total = projection.GetTotal(),
         Status = projection.Status.MapToNamedEntity(),
       };

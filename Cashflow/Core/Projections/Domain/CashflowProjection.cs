@@ -73,6 +73,12 @@ namespace Empiria.Cashflow.Projections {
     }
 
 
+    [DataField("CFW_PJC_CLASSIFICATION_ID")]
+    public FinancialProjectCategory Classification {
+      get; private set;
+    }
+
+
     [DataField("CFW_PJC_NO")]
     public string ProjectionNo {
       get; private set;
@@ -97,7 +103,7 @@ namespace Empiria.Cashflow.Projections {
 
 
     [DataField("CFW_PJC_SOURCE_ID")]
-    public OperationSource Source {
+    public OperationSource OperationSource {
       get; private set;
     }
 
@@ -200,7 +206,7 @@ namespace Empiria.Cashflow.Projections {
     [DataField("CFW_PJC_ADJUSTMENT_OF_ID")]
     private int _adjustmentOfId = -1;
 
-    public CashflowProjection AdjustementOf {
+    public CashflowProjection AdjustmentOf {
       get {
         if (IsEmptyInstance) {
           return this;
@@ -240,8 +246,9 @@ namespace Empiria.Cashflow.Projections {
     public virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(ProjectionNo, Description, Identificators, Tags,
-                                           ProjectionType.DisplayName,
-                                           Plan.Keywords, BaseParty.Keywords);
+                                           Category.Keywords, Classification.Keywords,
+                                           BaseProject.Keywords, BaseAccount.Keywords,
+                                           BaseParty.Keywords, AdjustmentOf.ProjectionNo, Plan.Keywords);
       }
     }
 

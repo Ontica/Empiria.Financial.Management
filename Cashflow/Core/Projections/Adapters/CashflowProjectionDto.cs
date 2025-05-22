@@ -114,7 +114,7 @@ namespace Empiria.Cashflow.Projections.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto Source {
+    public NamedEntityDto OperationSource {
       get; internal set;
     }
 
@@ -205,7 +205,7 @@ namespace Empiria.Cashflow.Projections.Adapters {
       get; internal set;
     }
 
-    public string SourceName {
+    public string OperationSourceName {
       get; internal set;
     }
 

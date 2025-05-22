@@ -59,13 +59,13 @@ namespace Empiria.Cashflow.Projections.Data {
 
     static internal void WriteProjection(CashflowProjection o) {
       var op = DataOperation.Parse("write_FMS_Cashflow_Projection",
-          o.Id, o.UID, o.ProjectionType.Id, o.Category.Id, o.Plan.Id, o.ProjectionNo,
-          o.BaseParty.Id, o.BaseProject.Id, o.BaseAccount.Id, o.Source.Id, o.Description,
-          o.Justification, o.Identificators, o.Tags, o.AttributesData.ToString(),
+          o.Id, o.UID, o.ProjectionType.Id, o.Category.Id, o.Plan.Id, o.Classification.Id,
+          o.ProjectionNo, o.BaseParty.Id, o.BaseProject.Id, o.BaseAccount.Id, o.OperationSource.Id,
+          o.Description, o.Justification, o.Identificators, o.Tags, o.AttributesData.ToString(),
           o.FinancialData.ToString(), o.ConfigData.ToString(), o.ExtData.ToString(),
           o.ApplicationDate, o.AppliedBy.Id, o.RecordingTime, o.RecordedBy.Id,
           o.AuthorizationTime, o.AuthorizedBy.Id, o.RequestedTime, o.RequestedBy.Id,
-          o.Keywords, o.AdjustementOf.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+          o.Keywords, o.AdjustmentOf.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }

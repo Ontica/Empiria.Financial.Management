@@ -35,7 +35,7 @@ namespace Empiria.Tests.Cashflow.Projections {
       Assert.NotNull(sut);
       Assert.Equal("Empty", sut.UID);
       Assert.Equal(CashflowProjection.Parse("Empty"), sut);
-      Assert.Equal(sut, sut.AdjustementOf);
+      Assert.Equal(sut, sut.AdjustmentOf);
     }
 
 
@@ -44,7 +44,7 @@ namespace Empiria.Tests.Cashflow.Projections {
       var list = BaseObject.GetFullList<CashflowProjection>();
 
       foreach (var sut in list) {
-        Assert.NotNull(sut.AdjustementOf);
+        Assert.NotNull(sut.AdjustmentOf);
         Assert.NotNull(sut.AppliedBy);
         Assert.NotNull(sut.AttributesData);
         Assert.NotNull(sut.AuthorizedBy);
@@ -52,6 +52,7 @@ namespace Empiria.Tests.Cashflow.Projections {
         Assert.NotNull(sut.BaseParty);
         Assert.NotNull(sut.BaseProject);
         Assert.NotNull(sut.Category);
+        Assert.NotNull(sut.Classification);
         Assert.NotNull(sut.ConfigData);
         Assert.NotNull(sut.Description);
         Assert.NotNull(sut.FinancialData);
@@ -63,7 +64,7 @@ namespace Empiria.Tests.Cashflow.Projections {
         Assert.NotEmpty(sut.ProjectionNo);
         Assert.NotNull(sut.ProjectionType);
         Assert.NotNull(sut.Rules);
-        Assert.NotNull(sut.Source);
+        Assert.NotNull(sut.OperationSource);
         Assert.NotNull(sut.Tags);
       }
     }

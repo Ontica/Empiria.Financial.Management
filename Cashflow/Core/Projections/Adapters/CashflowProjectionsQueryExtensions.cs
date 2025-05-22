@@ -122,7 +122,13 @@ namespace Empiria.Cashflow.Projections.Adapters {
 
 
     static private string BuildClassificationFilter(string classificationUID) {
-      return string.Empty;
+      if (classificationUID.Length == 0) {
+        return string.Empty;
+      }
+
+      var classification = FinancialProjectCategory.Parse(classificationUID);
+
+      return $"CFW_PJC_CLASSIFICATION_ID = {classification.Id}";
     }
 
 
