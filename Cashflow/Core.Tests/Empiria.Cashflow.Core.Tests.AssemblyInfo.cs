@@ -1,10 +1,10 @@
 ﻿/*Empiria Financial ******************************************************************************************
 *                                                                                                            *
-*  System   : Cashflow Management System                   Module  : Core Types and Services Tests           *
-*  Assembly : Empiria.Cashflow.Core.Tests.dll              Pattern : Assembly Attributes File                *
+*  System   : CashFlow Management System                   Module  : Core Types and Services Tests           *
+*  Assembly : Empiria.CashFlow.Core.Tests.dll              Pattern : Assembly Attributes File                *
 *                                                          License : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Tests suite for Empiria Cashflow Management System core types, use cases and services.         *
+*  Summary  : Tests suite for Empiria CashFlow Management System core types, use cases and services.         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

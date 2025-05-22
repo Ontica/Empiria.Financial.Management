@@ -1,6 +1,6 @@
-﻿# Empiria Cashflow Management System - Core Module Tests
+﻿# Empiria CashFlow Management System - Core Module Tests
 
-Tests suite for Empiria Cashflow Management System core types, use cases and services.
+Tests suite for Empiria CashFlow Management System core types, use cases and services.
 
 ## Licencia
 

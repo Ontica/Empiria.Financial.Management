@@ -1,6 +1,6 @@
-﻿# Empiria Cashflow Management System - Web Api Module
+﻿# Empiria CashFlow Management System - Web Api Module
 
-HTTP/JSON web api used to interact with the Cashflow Management System's backend.
+HTTP/JSON web api used to interact with the CashFlow Management System's backend.
 
 ## Licencia
 

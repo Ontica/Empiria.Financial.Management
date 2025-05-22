@@ -1,21 +1,21 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Data Layer                              *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Data Service                            *
-*  Type     : CashflowProjectionDataService              License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Data Layer                              *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Data Service                            *
+*  Type     : CashFlowProjectionDataService              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides data access services for cashflow projections.                                        *
+*  Summary  : Provides data access services for cash flow projections.                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Data;
 
-namespace Empiria.Cashflow.Projections.Data {
+namespace Empiria.CashFlow.Projections.Data {
 
-  /// <summary>Provides data access services for cashflow projections.</summary>
-  static internal class CashflowProjectionDataService {
+  /// <summary>Provides data access services for cash flow projections.</summary>
+  static internal class CashFlowProjectionDataService {
 
-    static internal string GetNextProjectionNo(CashflowProjection projection) {
+    static internal string GetNextProjectionNo(CashFlowProjection projection) {
       Assertion.Require(projection, nameof(projection));
 
       if (projection.HasProjectionNo) {
@@ -42,7 +42,7 @@ namespace Empiria.Cashflow.Projections.Data {
     }
 
 
-    static internal FixedList<CashflowProjection> SearchProjections(string filter, string sort) {
+    static internal FixedList<CashFlowProjection> SearchProjections(string filter, string sort) {
       Assertion.Require(filter, nameof(filter));
       Assertion.Require(sort, nameof(sort));
 
@@ -52,13 +52,13 @@ namespace Empiria.Cashflow.Projections.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<CashflowProjection>(op);
+      return DataReader.GetFixedList<CashFlowProjection>(op);
 
     }
 
 
-    static internal void WriteProjection(CashflowProjection o) {
-      var op = DataOperation.Parse("write_FMS_Cashflow_Projection",
+    static internal void WriteProjection(CashFlowProjection o) {
+      var op = DataOperation.Parse("write_FMS_CashFlow_Projection",
           o.Id, o.UID, o.ProjectionType.Id, o.Category.Id, o.Plan.Id, o.Classification.Id,
           o.ProjectionNo, o.BaseParty.Id, o.BaseProject.Id, o.BaseAccount.Id, o.OperationSource.Id,
           o.Description, o.Justification, o.Identificators, o.Tags, o.AttributesData.ToString(),
@@ -70,6 +70,6 @@ namespace Empiria.Cashflow.Projections.Data {
       DataWriter.Execute(op);
     }
 
-  }  // class CashflowProjectionDataService
+  }  // class CashFlowProjectionDataService
 
-}  // namespace Empiria.Cashflow.Projections.Data
+}  // namespace Empiria.CashFlow.Projections.Data

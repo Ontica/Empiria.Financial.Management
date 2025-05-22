@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Adapters Layer                          *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Query DTO                               *
-*  Type     : CashflowProjectionsQuery                   License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Adapters Layer                          *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Query DTO                               *
+*  Type     : CashFlowProjectionsQuery                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Input query DTO used to retrieve cashflow projections.                                          *
+*  Summary  : Input query DTO used to retrieve cash flow projections.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,10 +12,10 @@ using System;
 
 using Empiria.StateEnums;
 
-namespace Empiria.Cashflow.Projections.Adapters {
+namespace Empiria.CashFlow.Projections.Adapters {
 
-  /// <summary>Input query DTO used to retrieve cashflow projections.</summary>
-  public class CashflowProjectionsQuery {
+  /// <summary>Input query DTO used to retrieve cash flow projections.</summary>
+  public class CashFlowProjectionsQuery {
 
     public string PlanUID {
       get; set;
@@ -111,6 +111,6 @@ namespace Empiria.Cashflow.Projections.Adapters {
       get; set;
     } = string.Empty;
 
-  }  // class CashflowProjectionsQuery
+  }  // class CashFlowProjectionsQuery
 
-}  // namespace Empiria.Cashflow.Projections.Adapters
+}  // namespace Empiria.CashFlow.Projections.Adapters

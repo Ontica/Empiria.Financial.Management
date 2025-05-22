@@ -1,10 +1,10 @@
 ﻿/*Empiria Financial ******************************************************************************************
 *                                                                                                            *
-*  System   : Cashflow Management System                   Module  : Cashflow Management Web Api             *
-*  Assembly : Empiria.Cashflow.WebApi.dll                  Pattern : Assembly Attributes File                *
+*  System   : CashFlow Management System                   Module  : CashFlow Management Web Api             *
+*  Assembly : Empiria.CashFlow.WebApi.dll                  Pattern : Assembly Attributes File                *
 *                                                          License : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : HTTP/JSON web api used to interact with the Cashflow Management System's backend.              *
+*  Summary  : HTTP/JSON web api used to interact with the CashFlow Management System's backend.              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

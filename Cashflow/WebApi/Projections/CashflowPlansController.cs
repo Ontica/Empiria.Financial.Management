@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                          Component : Web Api                               *
-*  Assembly : Empiria.Cashflow.WebApi.dll                  Pattern   : Query web api controller              *
-*  Type     : CashflowPlansController                      License   : Please read LICENSE.txt file          *
+*  Module   : CashFlow Management                          Component : Web Api                               *
+*  Assembly : Empiria.CashFlow.WebApi.dll                  Pattern   : Query web api controller              *
+*  Type     : CashFlowPlansController                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrieve cashflow plans.                                                       *
+*  Summary  : Web API used to retrieve cash flow plans.                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,18 +12,18 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-namespace Empiria.Cashflow.Projections.WebApi {
+namespace Empiria.CashFlow.Projections.WebApi {
 
-  /// <summary>Web API used to retrieve cashflow plans.</summary>
-  public class CashflowPlansController : WebApiController {
+  /// <summary>Web API used to retrieve cash flow plans.</summary>
+  public class CashFlowPlansController : WebApiController {
 
     #region Command web apis
 
     [HttpGet]
-    [Route("v1/cashflow/projections/plans")]
+    [Route("v1/cash-flow/projections/plans")]
     public CollectionModel GetPlans() {
 
-      FixedList<NamedEntityDto> plans = CashflowPlan.GetList()
+      FixedList<NamedEntityDto> plans = CashFlowPlan.GetList()
                                                     .MapToNamedEntityList();
 
       return new CollectionModel(this.Request, plans);
@@ -31,6 +31,6 @@ namespace Empiria.Cashflow.Projections.WebApi {
 
     #endregion Command web apis
 
-  }  // class CashflowPlansController
+  }  // class CashFlowPlansController
 
-}  // namespace Empiria.Cashflow.Projections.WebApi
+}  // namespace Empiria.CashFlow.Projections.WebApi

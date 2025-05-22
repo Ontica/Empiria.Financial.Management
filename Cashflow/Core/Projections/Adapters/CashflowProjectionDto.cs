@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Adapters Layer                          *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Output DTOs                             *
-*  Type     : CashflowProjectionDto                      License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Adapters Layer                          *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Output DTOs                             *
+*  Type     : CashFlowProjectionDto                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTOs for cashflow projections.                                                          *
+*  Summary  : Output DTOs for cash flow projections.                                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -13,20 +13,20 @@ using System;
 using Empiria.Documents;
 using Empiria.History;
 
-namespace Empiria.Cashflow.Projections.Adapters {
+namespace Empiria.CashFlow.Projections.Adapters {
 
-  /// <summary>Output holder DTO used for a cashflow projection.</summary>
-  public class CashflowProjectionHolderDto {
+  /// <summary>Output holder DTO used for a cash flow projection.</summary>
+  public class CashFlowProjectionHolderDto {
 
-    public CashflowProjectionDto Projection {
+    public CashFlowProjectionDto Projection {
       get; internal set;
     }
 
-    //public FixedList<CashflowProjectionEntryDescriptorDto> Entries {
+    //public FixedList<CashFlowProjectionEntryDescriptorDto> Entries {
     //  get; internal set;
     //}
 
-    //public CashflowProjectionEntriesByYearTableDto GroupedEntries {
+    //public CashFlowProjectionEntriesByYearTableDto GroupedEntries {
     //  get; internal set;
     //}
 
@@ -48,16 +48,16 @@ namespace Empiria.Cashflow.Projections.Adapters {
       get; internal set;
     }
 
-    public CashflowProjectionActions Actions {
+    public CashFlowProjectionActions Actions {
       get; internal set;
     }
 
-  }  // class CashflowProjectionHolderDto
+  }  // class CashFlowProjectionHolderDto
 
 
 
-  /// <summary>Action flags for cashflow projections.</summary>
-  public class CashflowProjectionActions : BaseActions {
+  /// <summary>Action flags for cash flow projections.</summary>
+  public class CashFlowProjectionActions : BaseActions {
 
     public bool CanAuthorize {
       get; internal set;
@@ -75,12 +75,12 @@ namespace Empiria.Cashflow.Projections.Adapters {
       get; internal set;
     }
 
-  }  // class CashflowProjectionActions
+  }  // class CashFlowProjectionActions
 
 
 
-  /// <summary>Output DTO used for cashflow projections.</summary>
-  public class CashflowProjectionDto {
+  /// <summary>Output DTO used for cash flow projections.</summary>
+  public class CashFlowProjectionDto {
 
     public string UID {
       get; internal set;
@@ -174,12 +174,12 @@ namespace Empiria.Cashflow.Projections.Adapters {
       get; internal set;
     }
 
-  }  // CashflowProjectionDto
+  }  // CashFlowProjectionDto
 
 
 
-  /// <summary>Output DTO used to display cashflow projections in lists.</summary>
-  public class CashflowProjectionDescriptorDto {
+  /// <summary>Output DTO used to display cash flow projections in lists.</summary>
+  public class CashFlowProjectionDescriptorDto {
 
     public string UID {
       get; internal set;
@@ -233,6 +233,6 @@ namespace Empiria.Cashflow.Projections.Adapters {
       get; internal set;
     }
 
-  }  // CashflowProjectionDescriptorDto
+  }  // CashFlowProjectionDescriptorDto
 
-}  // namespace Empiria.Cashflow.Projections.Adapters
+}  // namespace Empiria.CashFlow.Projections.Adapters

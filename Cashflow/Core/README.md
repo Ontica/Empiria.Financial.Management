@@ -1,6 +1,6 @@
-﻿# Empiria Cashflow Management System - Core Module
+﻿# Empiria CashFlow Management System - Core Module
 
-Empiria Cashflow Management System core types, use cases and services.
+Empiria CashFlow Management System core types, use cases and services.
 
 ## Licencia
 

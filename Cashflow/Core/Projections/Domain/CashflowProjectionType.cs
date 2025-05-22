@@ -1,8 +1,8 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Cash flow Management                       Component : Domain Layer                            *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Power type                              *
-*  Type     : CashflowProjectionType                     License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Power type                              *
+*  Type     : CashFlowProjectionType                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Power type that describes a cash flow projection.                                              *
 *                                                                                                            *
@@ -13,30 +13,29 @@ using System.Linq;
 using Empiria.Ontology;
 using Empiria.Parties;
 
-namespace Empiria.Cashflow.Projections {
-
+namespace Empiria.CashFlow.Projections {
 
   /// <summary>Power type that describes a cash flow projection.</summary>
-  [Powertype(typeof(CashflowProjection))]
-  public sealed class CashflowProjectionType : Powertype {
+  [Powertype(typeof(CashFlowProjection))]
+  public sealed class CashFlowProjectionType : Powertype {
 
     #region Constructors and parsers
 
-    private CashflowProjectionType() {
+    private CashFlowProjectionType() {
       // Empiria power types always have this constructor.
     }
 
-    static public new CashflowProjectionType Parse(int typeId) => Parse<CashflowProjectionType>(typeId);
+    static public new CashFlowProjectionType Parse(int typeId) => Parse<CashFlowProjectionType>(typeId);
 
-    static public new CashflowProjectionType Parse(string typeName) => Parse<CashflowProjectionType>(typeName);
+    static public new CashFlowProjectionType Parse(string typeName) => Parse<CashFlowProjectionType>(typeName);
 
-    static public FixedList<CashflowProjectionType> GetList() {
+    static public FixedList<CashFlowProjectionType> GetList() {
       return Empty.GetAllSubclasses()
-            .Select(x => (CashflowProjectionType) x)
+            .Select(x => (CashFlowProjectionType) x)
             .ToFixedList();
     }
 
-    static public CashflowProjectionType Empty => Parse("ObjectTypeInfo.CashflowProjection");
+    static public CashFlowProjectionType Empty => Parse("ObjectTypeInfo.CashFlowProjection");
 
     #endregion Constructors and parsers
 
@@ -75,6 +74,6 @@ namespace Empiria.Cashflow.Projections {
 
     #endregion Properties
 
-  } // class CashflowProjectionType
+  } // class CashFlowProjectionType
 
-}  // namespace Empiria.Cashflow.Projections
+}  // namespace Empiria.CashFlow.Projections

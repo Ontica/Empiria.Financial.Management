@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Company>Ontica</Company>
-    <Product>Empiria Cashflow</Product>
+    <Product>Empiria CashFlow</Product>
     <Description>
-      Empiria Cashflow Management System core types, use cases and services.
+      Empiria CashFlow Management System core types, use cases and services.
     </Description>
     <Copyright>(c) 2024-2025. La Vía Óntica SC, Ontica LLC y de los autores. Todos los derechos reservados.</Copyright>
     <Version>1.0.0</Version>
@@ -11,21 +11,21 @@
     <FileVersion>1.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Cashflow/blob/master/Core/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/Ontica/Empiria.Cashflow/tree/master/Core</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Financial.Management/blob/master/CashFlow/Core/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Financial.Management/tree/master/CashFlow/Core</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
     <PackageTags>
-      flujo de efectivo, cashflow management, administración, Banca de desarrollo, BANOBRAS, México
+      flujo de efectivo, cash flow management, administración, Banca de desarrollo, BANOBRAS, México
     </PackageTags>
-    <RepositoryUrl>https://github.com/Ontica/Empiria.Cashflow</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Ontica/Empiria.Financial.Management</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Authors>Ontica</Authors>
     <TargetFramework>net48</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <Configurations>Debug;Release;Multisolutions</Configurations>
-    <AssemblyName>Empiria.Cashflow.Core</AssemblyName>
-    <RootNamespace>Empiria.Cashflow</RootNamespace>
+    <AssemblyName>Empiria.CashFlow.Core</AssemblyName>
+    <RootNamespace>Empiria.CashFlow</RootNamespace>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)'=='Multisolutions|AnyCPU' ">

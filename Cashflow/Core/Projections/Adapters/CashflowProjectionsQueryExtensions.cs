@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Adapters Layer                          *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Extension methods                       *
-*  Type     : CashflowProjectionsQueryExtensions         License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Adapters Layer                          *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Extension methods                       *
+*  Type     : CashFlowProjectionsQueryExtensions         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Extension methods for CashflowProjectionsQuery interface adapter.                              *
+*  Summary  : Extension methods for CashFlowProjectionsQuery interface adapter.                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -14,19 +14,19 @@ using Empiria.StateEnums;
 using Empiria.Financial;
 using Empiria.Financial.Projects;
 
-namespace Empiria.Cashflow.Projections.Adapters {
+namespace Empiria.CashFlow.Projections.Adapters {
 
-  /// <summary>Extension methods for CashflowProjectionsQuery interface adapter.</summary>
-  static internal class CashflowProjectionsQueryExtensions {
+  /// <summary>Extension methods for CashFlowProjectionsQuery interface adapter.</summary>
+  static internal class CashFlowProjectionsQueryExtensions {
 
     #region Extension methods
 
-    static internal void EnsureIsValid(this CashflowProjectionsQuery query) {
+    static internal void EnsureIsValid(this CashFlowProjectionsQuery query) {
       // no-op
     }
 
 
-    static internal string MapToFilterString(this CashflowProjectionsQuery query) {
+    static internal string MapToFilterString(this CashFlowProjectionsQuery query) {
       string planFilter = BuildPlanFilter(query.PlanUID);
       string categoryFilter = BuildCategoryFilter(query.CategoryUID);
       string classificationFilter = BuildClassificationFilter(query.ClassificationUID);
@@ -60,7 +60,7 @@ namespace Empiria.Cashflow.Projections.Adapters {
     }
 
 
-    static internal string MapToSortString(this CashflowProjectionsQuery query) {
+    static internal string MapToSortString(this CashFlowProjectionsQuery query) {
       if (query.OrderBy.Length != 0) {
         return query.OrderBy;
       } else {
@@ -115,7 +115,7 @@ namespace Empiria.Cashflow.Projections.Adapters {
         return string.Empty;
       }
 
-      var category = CashflowProjectionCategory.Parse(categoryUID);
+      var category = CashFlowProjectionCategory.Parse(categoryUID);
 
       return $"CFW_PJC_CATEGORY_ID = {category.Id}";
     }
@@ -145,7 +145,7 @@ namespace Empiria.Cashflow.Projections.Adapters {
         return string.Empty;
       }
 
-      var plan = CashflowPlan.Parse(planUID);
+      var plan = CashFlowPlan.Parse(planUID);
 
       return $"CFW_PJC_PLAN_ID = {plan.Id}";
     }
@@ -201,6 +201,6 @@ namespace Empiria.Cashflow.Projections.Adapters {
 
     #endregion Helpers
 
-  }  // class CashflowProjectionsQueryExtensions
+  }  // class CashFlowProjectionsQueryExtensions
 
-}  // namespace Empiria.Cashflow.Projections.Adapters
+}  // namespace Empiria.CashFlow.Projections.Adapters

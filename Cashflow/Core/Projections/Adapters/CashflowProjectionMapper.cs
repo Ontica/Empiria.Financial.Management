@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Adapters Layer                          *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Mapping class                           *
-*  Type     : CashflowProjectionMapper                   License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Adapters Layer                          *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Mapping class                           *
+*  Type     : CashFlowProjectionMapper                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Maps CashflowProjection instances to data transfer objects.                                    *
+*  Summary  : Maps CashFlowProjection instances to data transfer objects.                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -13,20 +13,20 @@ using Empiria.History;
 
 using Empiria.StateEnums;
 
-namespace Empiria.Cashflow.Projections.Adapters {
+namespace Empiria.CashFlow.Projections.Adapters {
 
-  /// <summary>Maps CashflowProjection instances to data transfer objects.</summary>
-  static public class CashflowProjectionMapper {
+  /// <summary>Maps CashFlowProjection instances to data transfer objects.</summary>
+  static public class CashFlowProjectionMapper {
 
     #region Public mappers
 
-    static internal CashflowProjectionHolderDto Map(CashflowProjection projection) {
-      // var byYearProjection = new CashflowProjectionByYear(projection);
+    static internal CashFlowProjectionHolderDto Map(CashFlowProjection projection) {
+      // var byYearProjection = new CashFlowProjectionByYear(projection);
 
-      return new CashflowProjectionHolderDto {
+      return new CashFlowProjectionHolderDto {
         Projection = MapProjection(projection),
-        //Entries = CashflowProjectionEntryMapper.MapToDescriptor(projection.Entries),
-        //GroupedEntries = new CashflowProjectionEntriesByYearTableDto(byYearTransaction.GetEntries()),
+        //Entries = CashFlowProjectionEntryMapper.MapToDescriptor(projection.Entries),
+        //GroupedEntries = new CashFlowProjectionEntriesByYearTableDto(byYearTransaction.GetEntries()),
         Documents = DocumentServices.GetAllEntityDocuments(projection),
         History = HistoryServices.GetEntityHistory(projection),
         Actions = MapActions(projection.Rules)
@@ -34,7 +34,7 @@ namespace Empiria.Cashflow.Projections.Adapters {
     }
 
 
-    static public FixedList<CashflowProjectionDescriptorDto> MapToDescriptor(FixedList<CashflowProjection> projections) {
+    static public FixedList<CashFlowProjectionDescriptorDto> MapToDescriptor(FixedList<CashFlowProjection> projections) {
       return projections.Select(x => MapToDescriptor(x))
                         .ToFixedList();
     }
@@ -43,8 +43,8 @@ namespace Empiria.Cashflow.Projections.Adapters {
 
     #region Helpers
 
-    static private CashflowProjectionActions MapActions(CashflowProjectionRules rules) {
-      return new CashflowProjectionActions {
+    static private CashFlowProjectionActions MapActions(CashFlowProjectionRules rules) {
+      return new CashFlowProjectionActions {
         CanAuthorize = rules.CanAuthorize,
         CanClose = rules.CanClose,
         CanDelete = rules.CanDelete,
@@ -56,8 +56,8 @@ namespace Empiria.Cashflow.Projections.Adapters {
     }
 
 
-    static private CashflowProjectionDescriptorDto MapToDescriptor(CashflowProjection projection) {
-      return new CashflowProjectionDescriptorDto {
+    static private CashFlowProjectionDescriptorDto MapToDescriptor(CashFlowProjection projection) {
+      return new CashFlowProjectionDescriptorDto {
         UID = projection.UID,
         PlanName = projection.Plan.Name,
         CategoryName = projection.Category.Name,
@@ -75,8 +75,8 @@ namespace Empiria.Cashflow.Projections.Adapters {
     }
 
 
-    static private CashflowProjectionDto MapProjection(CashflowProjection projection) {
-      return new CashflowProjectionDto {
+    static private CashFlowProjectionDto MapProjection(CashFlowProjection projection) {
+      return new CashFlowProjectionDto {
         UID = projection.UID,
         Plan = projection.Plan.MapToNamedEntity(),
         Category = projection.Category.MapToNamedEntity(),
@@ -106,6 +106,6 @@ namespace Empiria.Cashflow.Projections.Adapters {
 
     #endregion Helpers
 
-  }  // class CashflowProjectionMapper
+  }  // class CashFlowProjectionMapper
 
-}  // namespace Empiria.Cashflow.Projections.Adapters
+}  // namespace Empiria.CashFlow.Projections.Adapters

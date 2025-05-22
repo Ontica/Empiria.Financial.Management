@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                          Component : Web Api                               *
-*  Assembly : Empiria.Cashflow.WebApi.dll                  Pattern   : Web api controller                    *
-*  Type     : CashflowClassificationsController            License   : Please read LICENSE.txt file          *
+*  Module   : CashFlow Management                          Component : Web Api                               *
+*  Assembly : Empiria.CashFlow.WebApi.dll                  Pattern   : Web api controller                    *
+*  Type     : CashFlowProjectionCategoriesController       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrieve cashflow projection's categories.                                     *
+*  Summary  : Web API used to retrieve cash flow projection's categories.                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -14,18 +14,18 @@ using Empiria.WebApi;
 
 using Empiria.Financial.Projects;
 
-namespace Empiria.Cashflow.Projections.WebApi {
+namespace Empiria.CashFlow.Projections.WebApi {
 
-  /// <summary>Web API used to retrieve cashflow projection's categories.</summary>
-  public class CashflowProjectionCategoriesController : WebApiController {
+  /// <summary>Web API used to retrieve cash flow projection's categories.</summary>
+  public class CashFlowProjectionCategoriesController : WebApiController {
 
     #region Query web apis
 
     [HttpGet]
-    [Route("v1/cashflow/projections/categories")]
+    [Route("v1/cash-flow/projections/categories")]
     public CollectionModel GetCategories() {
 
-      FixedList<NamedEntityDto> categories =CashflowProjectionCategory.GetList()
+      FixedList<NamedEntityDto> categories =CashFlowProjectionCategory.GetList()
                                                                       .MapToNamedEntityList();
 
       return new CollectionModel(this.Request, categories);
@@ -33,6 +33,6 @@ namespace Empiria.Cashflow.Projections.WebApi {
 
     #endregion Query web apis
 
-  }  // class CashflowProjectionCategoriesController
+  }  // class CashFlowProjectionCategoriesController
 
-}  // namespace Empiria.Cashflow.Projections.WebApi
+}  // namespace Empiria.CashFlow.Projections.WebApi

@@ -1,27 +1,27 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Test cases                              *
-*  Assembly : Empiria.Cashflow.Core.Tests.dll            Pattern   : Unit tests                              *
-*  Type     : CashflowProjectionCategoryTests            License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Test cases                              *
+*  Assembly : Empiria.CashFlow.Core.Tests.dll            Pattern   : Unit tests                              *
+*  Type     : CashFlowProjectionCategoryTests            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Unit tests for CashflowProjectionCategory instances.                                           *
+*  Summary  : Unit tests for CashFlowProjectionCategory instances.                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Xunit;
 
-using Empiria.Cashflow.Projections;
+using Empiria.CashFlow.Projections;
 
-namespace Empiria.Tests.Cashflow.Projections {
+namespace Empiria.Tests.CashFlow.Projections {
 
-  /// <summary>Unit tests for CashflowProjectionCategory instances.</summary>
-  public class CashflowProjectionCategoryTests {
+  /// <summary>Unit tests for CashFlowProjectionCategory instances.</summary>
+  public class CashFlowProjectionCategoryTests {
 
     #region Facts
 
     [Fact]
-    public void Should_Get_All_Cashflow_Projection_Categories() {
-      var sut = BaseObject.GetFullList<CashflowProjectionCategory>();
+    public void Should_Get_All_CashFlow_Projection_Categories() {
+      var sut = BaseObject.GetFullList<CashFlowProjectionCategory>();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
@@ -29,19 +29,19 @@ namespace Empiria.Tests.Cashflow.Projections {
 
 
     [Fact]
-    public void Should_Get_Empty_CashflowProjectionCategory() {
-      var sut = CashflowProjectionCategory.Empty;
+    public void Should_Get_Empty_CashFlowProjectionCategory() {
+      var sut = CashFlowProjectionCategory.Empty;
 
       Assert.NotNull(sut);
       Assert.Equal("Empty", sut.UID);
-      Assert.Equal(CashflowProjectionCategory.Parse("Empty"), sut);
+      Assert.Equal(CashFlowProjectionCategory.Parse("Empty"), sut);
       Assert.NotNull(sut.ProjectionType);
     }
 
 
     [Fact]
-    public void Should_Parse_All_Cashflow_Projection_Categories() {
-      var list = CashflowProjectionCategory.GetList();
+    public void Should_Parse_All_CashFlow_Projection_Categories() {
+      var list = CashFlowProjectionCategory.GetList();
 
       foreach (var sut in list) {
         Assert.NotEmpty(sut.Name);
@@ -51,6 +51,6 @@ namespace Empiria.Tests.Cashflow.Projections {
 
     #endregion Facts
 
-  }  // class CashflowProjectionCategoryTests
+  }  // class CashFlowProjectionCategoryTests
 
-}  // namespace Empiria.Tests.Cashflow.Projections
+}  // namespace Empiria.Tests.CashFlow.Projections

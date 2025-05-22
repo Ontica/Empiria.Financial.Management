@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Partitioned Aggregate Root              *
-*  Type     : CashflowProjection                         License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Domain Layer                            *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Partitioned Aggregate Root              *
+*  Type     : CashFlowProjection                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Partitioned type that represents a cashflow projection with its entries.                       *
+*  Summary  : Partitioned type that represents a cash flow projection with its entries.                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -18,13 +18,13 @@ using Empiria.StateEnums;
 using Empiria.Financial;
 using Empiria.Financial.Projects;
 
-using Empiria.Cashflow.Projections.Data;
+using Empiria.CashFlow.Projections.Data;
 
-namespace Empiria.Cashflow.Projections {
+namespace Empiria.CashFlow.Projections {
 
-  /// <summary>Partitioned type that represents a cashflow projection with its entries.</summary>
-  [PartitionedType(typeof(CashflowProjectionType))]
-  public class CashflowProjection : BaseObject, INamedEntity {
+  /// <summary>Partitioned type that represents a cash flow projection with its entries.</summary>
+  [PartitionedType(typeof(CashFlowProjectionType))]
+  public class CashFlowProjection : BaseObject, INamedEntity {
 
     #region Fields
 
@@ -34,41 +34,41 @@ namespace Empiria.Cashflow.Projections {
 
     #region Constructors and parsers
 
-    protected CashflowProjection(CashflowProjectionType powertype) : base(powertype) {
+    protected CashFlowProjection(CashFlowProjectionType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal protected CashflowProjection(CashflowProjectionType projectionType,
-                                          CashflowPlan plan) : base(projectionType) {
+    internal protected CashFlowProjection(CashFlowProjectionType projectionType,
+                                          CashFlowPlan plan) : base(projectionType) {
       Assertion.Require(plan, nameof(plan));
 
       this.Plan = plan;
     }
 
-    static public CashflowProjection Parse(int id) => ParseId<CashflowProjection>(id);
+    static public CashFlowProjection Parse(int id) => ParseId<CashFlowProjection>(id);
 
-    static public CashflowProjection Parse(string uid) => ParseKey<CashflowProjection>(uid);
+    static public CashFlowProjection Parse(string uid) => ParseKey<CashFlowProjection>(uid);
 
-    static public CashflowProjection Empty => ParseEmpty<CashflowProjection>();
+    static public CashFlowProjection Empty => ParseEmpty<CashFlowProjection>();
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public CashflowProjectionType ProjectionType {
+    public CashFlowProjectionType ProjectionType {
       get {
-        return (CashflowProjectionType) base.GetEmpiriaType();
+        return (CashFlowProjectionType) base.GetEmpiriaType();
       }
     }
 
     [DataField("CFW_PJC_CATEGORY_ID")]
-    public CashflowProjectionCategory Category {
+    public CashFlowProjectionCategory Category {
       get; private set;
     }
 
 
     [DataField("CFW_PJC_PLAN_ID")]
-    public CashflowPlan Plan {
+    public CashFlowPlan Plan {
       get; private set;
     }
 
@@ -206,7 +206,7 @@ namespace Empiria.Cashflow.Projections {
     [DataField("CFW_PJC_ADJUSTMENT_OF_ID")]
     private int _adjustmentOfId = -1;
 
-    public CashflowProjection AdjustmentOf {
+    public CashFlowProjection AdjustmentOf {
       get {
         if (IsEmptyInstance) {
           return this;
@@ -260,9 +260,9 @@ namespace Empiria.Cashflow.Projections {
       }
     }
 
-    internal CashflowProjectionRules Rules {
+    internal CashFlowProjectionRules Rules {
       get {
-        return new CashflowProjectionRules(this);
+        return new CashFlowProjectionRules(this);
       }
     }
 
@@ -271,10 +271,10 @@ namespace Empiria.Cashflow.Projections {
     #region Methods
 
     internal void Authorize() {
-      Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this projection.");
+      Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this cash flow projection.");
 
       if (!HasProjectionNo) {
-        ProjectionNo = CashflowProjectionDataService.GetNextProjectionNo(this);
+        ProjectionNo = CashFlowProjectionDataService.GetNextProjectionNo(this);
       }
 
       this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
@@ -284,7 +284,7 @@ namespace Empiria.Cashflow.Projections {
 
 
     internal void Close() {
-      Assertion.Require(Rules.CanClose, "Current user can not close this projection.");
+      Assertion.Require(Rules.CanClose, "Current user can not close this cash flow projection.");
 
       this.AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       if (ApplicationDate == ExecutionServer.DateMaxValue) {
@@ -295,10 +295,10 @@ namespace Empiria.Cashflow.Projections {
 
 
     internal void DeleteOrCancel() {
-      Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this projection.");
+      Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this cash flow projection.");
 
       Assertion.Require(this.Status == TransactionStatus.Pending,
-                       $"Can not delete or cancel this projection. Its status is {Status.GetName()}.");
+                       $"Can not delete or cancel this cash flow projection. Its status is {Status.GetName()}.");
 
       if (HasProjectionNo) {
         this.Status = TransactionStatus.Canceled;
@@ -320,7 +320,7 @@ namespace Empiria.Cashflow.Projections {
         RecordingTime = DateTime.Now;
       }
 
-      CashflowProjectionDataService.WriteProjection(this);
+      CashFlowProjectionDataService.WriteProjection(this);
     }
 
 
@@ -340,10 +340,10 @@ namespace Empiria.Cashflow.Projections {
 
     internal void SendToAuthorization() {
       Assertion.Require(Rules.CanSendToAuthorization,
-                        "Current user can not send this transaction to authorization.");
+                        "Current user can not send this cash flow projection to authorization.");
 
       if (!HasProjectionNo) {
-        ProjectionNo = CashflowProjectionDataService.GetNextProjectionNo(this);
+        ProjectionNo = CashFlowProjectionDataService.GetNextProjectionNo(this);
       }
 
       this.RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
@@ -353,6 +353,6 @@ namespace Empiria.Cashflow.Projections {
 
     #endregion Methods
 
-  }  // class CashflowProjection
+  }  // class CashFlowProjection
 
-}  // namespace Empiria.Cashflow.Projections
+}  // namespace Empiria.CashFlow.Projections

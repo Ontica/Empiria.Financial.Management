@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                          Component : Web Api                               *
-*  Assembly : Empiria.Cashflow.WebApi.dll                  Pattern   : Web api Controller                    *
-*  Type     : CashflowProjectionsDocumentsController       License   : Please read LICENSE.txt file          *
+*  Module   : CashFlow Management                          Component : Web Api                               *
+*  Assembly : Empiria.CashFlow.WebApi.dll                  Pattern   : Web api Controller                    *
+*  Type     : CashFlowProjectionsDocumentsController       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrieve and update cashflow projections documents.                            *
+*  Summary  : Web API used to retrieve and update cash flow projections documents.                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -15,19 +15,19 @@ using Empiria.WebApi;
 
 using Empiria.Documents;
 
-namespace Empiria.Cashflow.Projections.WebApi {
+namespace Empiria.CashFlow.Projections.WebApi {
 
-  /// <summary>Web API used to retrieve and update cashflow projections documents.</summary>
-  public class CashflowProjectionsDocumentsController : WebApiController {
+  /// <summary>Web API used to retrieve and update cash flow projections documents.</summary>
+  public class CashFlowProjectionsDocumentsController : WebApiController {
 
     #region Command web apis
 
     [HttpDelete]
-    [Route("v1/cashflow/projections/{projectionUID:guid}/documents/{documentUID:guid}")]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/documents/{documentUID:guid}")]
     public NoDataModel RemoveDocument([FromUri] string projectionUID,
                                       [FromUri] string documentUID) {
 
-      var projection = CashflowProjection.Parse(projectionUID);
+      var projection = CashFlowProjection.Parse(projectionUID);
       var document = DocumentServices.GetDocument(documentUID);
 
       DocumentServices.RemoveDocument(projection, document);
@@ -37,10 +37,10 @@ namespace Empiria.Cashflow.Projections.WebApi {
 
 
     [HttpPost]
-    [Route("v1/cashflow/projections/{projectionUID:guid}/documents")]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/documents")]
     public SingleObjectModel StoreDocument([FromUri] string projectionUID) {
 
-      var projection = CashflowProjection.Parse(projectionUID);
+      var projection = CashFlowProjection.Parse(projectionUID);
 
       DocumentFields fields = GetFormDataFromHttpRequest<DocumentFields>("document");
 
@@ -59,13 +59,13 @@ namespace Empiria.Cashflow.Projections.WebApi {
 
 
     [HttpPut, HttpPatch]
-    [Route("v1/cashflow/projections/{projectionUID:guid}/documents/{documentUID:guid}")]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/documents/{documentUID:guid}")]
     public SingleObjectModel UpdateDocument([FromUri] string projectionUID,
                                             [FromUri] string documentUID,
                                             [FromBody] DocumentFields fields) {
       base.RequireBody(fields);
 
-      var projection = CashflowProjection.Parse(projectionUID);
+      var projection = CashFlowProjection.Parse(projectionUID);
       var document = DocumentServices.GetDocument(documentUID);
 
       var documentDto = DocumentServices.UpdateDocument(projection, document, fields);
@@ -75,6 +75,6 @@ namespace Empiria.Cashflow.Projections.WebApi {
 
     #endregion Command web apis
 
-  }  // class CashflowProjectionsDocumentsController
+  }  // class CashFlowProjectionsDocumentsController
 
-}  // namespace Empiria.Cashflow.Projections.WebApi
+}  // namespace Empiria.CashFlow.Projections.WebApi

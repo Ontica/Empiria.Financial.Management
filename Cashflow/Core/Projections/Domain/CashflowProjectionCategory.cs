@@ -1,55 +1,55 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Information holder                      *
-*  Type     : CashflowProjectionCategory                 License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Domain Layer                            *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Information holder                      *
+*  Type     : CashFlowProjectionCategory                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a cashflow projection category that serves to classify CashflowProjectionTypes.     *
+*  Summary  : Represents a cash flow projection category that serves to classify CashFlowProjectionTypes.    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Ontology;
 using Empiria.StateEnums;
 
-namespace Empiria.Cashflow.Projections {
+namespace Empiria.CashFlow.Projections {
 
-  /// <summary>Represents a cashflow projection category that serves to
-  /// classify CashflowProjectionTypes.</summary>
-  public class CashflowProjectionCategory : CommonStorage {
+  /// <summary>Represents a cash flow projection category that serves to
+  /// classify CashFlowProjectionTypes.</summary>
+  public class CashFlowProjectionCategory : CommonStorage {
 
     #region Constructors and parsers
 
-    private CashflowProjectionCategory() {
+    private CashFlowProjectionCategory() {
       // Required by Empiria Framework.
     }
 
 
-    static public CashflowProjectionCategory Parse(int id) => ParseId<CashflowProjectionCategory>(id);
+    static public CashFlowProjectionCategory Parse(int id) => ParseId<CashFlowProjectionCategory>(id);
 
-    static public CashflowProjectionCategory Parse(string uid) => ParseKey<CashflowProjectionCategory>(uid);
+    static public CashFlowProjectionCategory Parse(string uid) => ParseKey<CashFlowProjectionCategory>(uid);
 
-    static public FixedList<CashflowProjectionCategory> GetList() {
-      return BaseObject.GetList<CashflowProjectionCategory>(string.Empty, "Object_Name")
+    static public FixedList<CashFlowProjectionCategory> GetList() {
+      return BaseObject.GetList<CashFlowProjectionCategory>(string.Empty, "Object_Name")
                        .FindAll(x => x.Status != EntityStatus.Deleted)
                        .ToFixedList();
     }
 
 
-    static public CashflowProjectionCategory Empty => ParseEmpty<CashflowProjectionCategory>();
+    static public CashFlowProjectionCategory Empty => ParseEmpty<CashFlowProjectionCategory>();
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public CashflowProjectionType ProjectionType {
+    public CashFlowProjectionType ProjectionType {
       get {
         if (IsEmptyInstance) {
-          return CashflowProjectionType.Empty;
+          return CashFlowProjectionType.Empty;
         }
 
         int id = ExtData.Get<int>("projectionTypeId");
 
-        return ObjectTypeInfo.Parse<CashflowProjectionType>(id);
+        return ObjectTypeInfo.Parse<CashFlowProjectionType>(id);
       }
     }
 
@@ -62,6 +62,6 @@ namespace Empiria.Cashflow.Projections {
 
     #endregion Properties
 
-  }  // class CashflowProjectionCategory
+  }  // class CashFlowProjectionCategory
 
-}  // namespace Empiria.Cashflow.Projections
+}  // namespace Empiria.CashFlow.Projections

@@ -1,23 +1,23 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Service provider                        *
-*  Type     : CashflowProjectionRules                    License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Domain Layer                            *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Service provider                        *
+*  Type     : CashFlowProjectionRules                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides services to control cashflow projection's rules.                                      *
+*  Summary  : Provides services to control cash flow projection's rules.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.StateEnums;
 
-namespace Empiria.Cashflow.Projections {
+namespace Empiria.CashFlow.Projections {
 
-  /// <summary>Provides services to control cashflow projection's rules.</summary>
-  internal class CashflowProjectionRules {
+  /// <summary>Provides services to control cash flow projection's rules.</summary>
+  internal class CashFlowProjectionRules {
 
-    private readonly CashflowProjection _projection;
+    private readonly CashFlowProjection _projection;
 
-    internal CashflowProjectionRules(CashflowProjection projection) {
+    internal CashFlowProjectionRules(CashFlowProjection projection) {
       Assertion.Require(projection, nameof(projection));
 
       _projection = projection;
@@ -30,8 +30,8 @@ namespace Empiria.Cashflow.Projections {
         if (_projection.Status != TransactionStatus.OnAuthorization) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("cashflow-manager") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("cashflow-authorizer")) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-manager") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer")) {
           return true;
         }
         return false;
@@ -44,7 +44,7 @@ namespace Empiria.Cashflow.Projections {
         if (_projection.Status != TransactionStatus.Authorized) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("cashflow-authorizer")) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer")) {
           return true;
         }
         return false;
@@ -91,8 +91,8 @@ namespace Empiria.Cashflow.Projections {
             _projection.Status != TransactionStatus.Authorized) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("cashflow-manager") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("cashflow-authorizer")) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-manager") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer")) {
           return true;
         }
         return false;
@@ -106,9 +106,12 @@ namespace Empiria.Cashflow.Projections {
           return false;
         }
 
+        //if (_projection.Entries.Count == 0) {
+        //  return false;
+        //}
         if (_projection.ProjectionType.IsProtected &&
-           (ExecutionServer.CurrentPrincipal.IsInRole("cashflow-manager") ||
-           ExecutionServer.CurrentPrincipal.IsInRole("cashflow-authorizer"))) {
+           (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-manager") ||
+           ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer"))) {
           return true;
         }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
@@ -130,8 +133,8 @@ namespace Empiria.Cashflow.Projections {
           return false;
         }
         if (_projection.ProjectionType.IsProtected &&
-            (ExecutionServer.CurrentPrincipal.IsInRole("cashflow-manager") ||
-             ExecutionServer.CurrentPrincipal.IsInRole("cashflow-authorizer"))) {
+            (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-manager") ||
+             ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer"))) {
           return true;
         }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
@@ -145,6 +148,6 @@ namespace Empiria.Cashflow.Projections {
 
     #endregion Properties
 
-  }  // class CashflowProjectionRules
+  }  // class CashFlowProjectionRules
 
-}  // namespace Empiria.Cashflow.Projections
+}  // namespace Empiria.CashFlow.Projections

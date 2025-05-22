@@ -1,35 +1,34 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Information holder                      *
-*  Type     : CashflowPlan                               License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Domain Layer                            *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Information holder                      *
+*  Type     : CashFlowPlan                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a cashflow plan.                                                                    *
+*  Summary  : Represents a cash flow plan.                                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Ontology;
 using Empiria.StateEnums;
 
-namespace Empiria.Cashflow.Projections {
+namespace Empiria.CashFlow.Projections {
 
-  /// <summary>Represents a cashflow plan.</summary>
-  public class CashflowPlan : CommonStorage {
+  /// <summary>Represents a cash flow plan.</summary>
+  public class CashFlowPlan : CommonStorage {
 
-    static public readonly int MIN_YEAR = ConfigurationData.Get("cashflowPlanMinYear", 2025);
+    static public readonly int MIN_YEAR = ConfigurationData.Get("cashFlowPlanMinYear", 2025);
 
     #region Constructors and parsers
 
-    private CashflowPlan() {
+    private CashFlowPlan() {
       // Required by Empiria Framework.
     }
 
-    static public CashflowPlan Parse(int id) => ParseId<CashflowPlan>(id);
+    static public CashFlowPlan Parse(int id) => ParseId<CashFlowPlan>(id);
 
-    static public CashflowPlan Parse(string uid) => ParseKey<CashflowPlan>(uid);
+    static public CashFlowPlan Parse(string uid) => ParseKey<CashFlowPlan>(uid);
 
-    static public FixedList<CashflowPlan> GetList() {
-      return BaseObject.GetList<CashflowPlan>(string.Empty, "Object_Name")
+    static public FixedList<CashFlowPlan> GetList() {
+      return BaseObject.GetList<CashFlowPlan>(string.Empty, "Object_Name")
                        .FindAll(x => x.Status != EntityStatus.Deleted)
                        .ToFixedList()
                        .Sort((x, y) => x.StartDate.CompareTo(y.StartDate))
@@ -37,15 +36,15 @@ namespace Empiria.Cashflow.Projections {
     }
 
 
-    static public CashflowPlan Empty => ParseEmpty<CashflowPlan>();
+    static public CashFlowPlan Empty => ParseEmpty<CashFlowPlan>();
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public FixedList<CashflowProjectionCategory> AvailableCategories {
+    public FixedList<CashFlowProjectionCategory> AvailableCategories {
       get {
-        return ExtData.GetFixedList<CashflowProjectionCategory>("availableCategories", false);
+        return ExtData.GetFixedList<CashFlowProjectionCategory>("availableCategories", false);
       }
     }
 
@@ -79,6 +78,6 @@ namespace Empiria.Cashflow.Projections {
 
     #endregion Properties
 
-  }  // class CashflowPlan
+  }  // class CashFlowPlan
 
-}  // namespace Empiria.Cashflow.Projections
+}  // namespace Empiria.CashFlow.Projections

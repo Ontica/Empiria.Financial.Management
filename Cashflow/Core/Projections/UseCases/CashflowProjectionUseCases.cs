@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cashflow Management                        Component : Use cases Layer                         *
-*  Assembly : Empiria.Cashflow.Core.dll                  Pattern   : Use case interactor class               *
-*  Type     : CashflowProjectionUseCases                 License   : Please read LICENSE.txt file            *
+*  Module   : CashFlow Management                        Component : Use cases Layer                         *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Use case interactor class               *
+*  Type     : CashFlowProjectionUseCases                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases used to retrieve cashflow projections.                                               *
+*  Summary  : Use cases used to retrieve cash flow projections.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -15,22 +15,22 @@ using Empiria.StateEnums;
 
 using Empiria.Financial.Accounts.Adapters;
 
-using Empiria.Cashflow.Projections.Data;
-using Empiria.Cashflow.Projections.Adapters;
+using Empiria.CashFlow.Projections.Data;
+using Empiria.CashFlow.Projections.Adapters;
 
-namespace Empiria.Cashflow.Projections.UseCases {
+namespace Empiria.CashFlow.Projections.UseCases {
 
-  /// <summary>Use cases used to retrieve cashflow projections.</summary>
-  public class CashflowProjectionUseCases : UseCase {
+  /// <summary>Use cases used to retrieve cash flow projections.</summary>
+  public class CashFlowProjectionUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected CashflowProjectionUseCases() {
+    protected CashFlowProjectionUseCases() {
       // no-op
     }
 
-    static public CashflowProjectionUseCases UseCaseInteractor() {
-      return CreateInstance<CashflowProjectionUseCases>();
+    static public CashFlowProjectionUseCases UseCaseInteractor() {
+      return CreateInstance<CashFlowProjectionUseCases>();
     }
 
     #endregion Constructors and parsers
@@ -44,25 +44,25 @@ namespace Empiria.Cashflow.Projections.UseCases {
     }
 
 
-    public CashflowProjectionHolderDto GetProjection(string projectionUID) {
+    public CashFlowProjectionHolderDto GetProjection(string projectionUID) {
       Assertion.Require(projectionUID, nameof(projectionUID));
 
-      var projection = CashflowProjection.Parse(projectionUID);
+      var projection = CashFlowProjection.Parse(projectionUID);
 
-      return CashflowProjectionMapper.Map(projection);
+      return CashFlowProjectionMapper.Map(projection);
     }
 
 
-    public FixedList<CashflowProjectionDescriptorDto> SearchProjections(CashflowProjectionsQuery query) {
+    public FixedList<CashFlowProjectionDescriptorDto> SearchProjections(CashFlowProjectionsQuery query) {
       Assertion.Require(query, nameof(query));
 
       string filter = query.MapToFilterString();
 
       string sort = query.MapToSortString();
 
-      FixedList<CashflowProjection> projections = CashflowProjectionDataService.SearchProjections(filter, sort);
+      FixedList<CashFlowProjection> projections = CashFlowProjectionDataService.SearchProjections(filter, sort);
 
-      return CashflowProjectionMapper.MapToDescriptor(projections);
+      return CashFlowProjectionMapper.MapToDescriptor(projections);
     }
 
 
@@ -74,6 +74,6 @@ namespace Empiria.Cashflow.Projections.UseCases {
 
     #endregion Use cases
 
-  }  // class CashflowProjectionUseCases
+  }  // class CashFlowProjectionUseCases
 
-}  // namespace Empiria.Cashflow.Projections.UseCases
+}  // namespace Empiria.CashFlow.Projections.UseCases
