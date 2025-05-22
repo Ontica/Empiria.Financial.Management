@@ -16,177 +16,97 @@ namespace Empiria.Financial.Accounts {
   public class CreditExtDataFields {
 
     #region Properties
-
-    public int Year {
-      get; set;
-    } = 0;
-
-
-    public  string OrganizationUnitUID {
-      get; set;
-    } = string.Empty;
-
-
+        
     public string CreditNo {
       get; set;
     } = string.Empty;
 
 
-    public int StageCredit {
+    //PFI_ETAPA_CRED
+    public int EtapaCredito {
       get; set;
     } = 0;
 
 
-    public int PublicWorkNo {
-      get; set;
-    } = 0;
-
-
+    //PFI_ACREDITADO
     public string Acredited {
       get; set;
     } = string.Empty;
 
-
-    public string Muncipality {
-      get; set;
-    } = string.Empty;
-
-
+        
     public int CreditType {
       get; set;
     } = 0;
 
-
-    public string PublicWorkType {
-      get; set;
-    } = string.Empty;
-
-
-    public string ProyectDescription {
-      get; set;
-    } = string.Empty;
-
-
-    public int DirectJobs {
-      get; set;
-    } = 0;
-
-
-    public int BeneficiaryUnit {
-      get; set;
-    } = 0;
-
-    public int TotalBeneficiaries {
-      get; set;
-    } = 0;
-
-
-    public int IndirectJobs {
-      get; set;
-    } = 0;
-
-
+        
     public int Currency {
       get; set;
     } = 0;
 
 
-    public int Disbursements {
-      get; set;
-    } = 0;
-
-
+    //PFI_INTERES_AL
     public decimal Interests {
       get; set;
     } = 0;
 
 
+    //PFI_COMISIONES_AL
     public int Commissions {
       get; set;
     } = 0;
 
 
+    //PFI_SALDO
     public decimal Balances {
       get; set;
     } = 0;
 
 
-    public decimal WorkAmount {
-      get; set;
-    } = 0;
-
-
+    //PFI_PLAZO_INVERSION
     public decimal InvestmentTerm {
       get; set;
     } = 0;
 
 
-    public decimal DisbursementPeriod {
+    //PFI_PLAZO_GRACIA_INT
+    public decimal PlazoGracia {
       get; set;
     } = 0;
 
 
-    public decimal GracePeriod {
-      get; set;
-    } = 0;
-
-
+    //PFI_PLAZO_AMORTIZACION
     public decimal AmortizationTerm {
       get; set;
     } = 0;
 
 
+    //PFI_TASA
     public decimal Rate {
       get; set;
     } = 0;
 
 
+    //PFI_FACTOR_TASA
     public int RateFactor {
       get; set;
     } = 0;
 
 
-    public int Floorrate {
+    public int TasaPiso {
       get; set;
     } = 0;
 
 
-    public int Ceilingrate {
+    public int TasaTecho {
       get; set;
     } = 0;
 
 
-    public int OpeningCommission {
-      get; set;
-    } = 0;
-  
-  
-    public int CommissionAvailability {
-      get; set;
-    } = 0;
-
-
-    public DateTime DisbursementDate {
-      get; set;
-    } = DateTime.Now;
-
-
+    //PFI_FECHA_AMORTIZA
     public DateTime AmortizationDate {
       get; set;
     } = DateTime.Now;
-
-
-    public int Clasification {
-      get; set;
-    } = 0;
-
-
-    /*
-    internal string ToJsonString() {
-      return _extData.ToString();
-    }
-    */
-
+    
     #endregion Properties
 
     #region Methods
