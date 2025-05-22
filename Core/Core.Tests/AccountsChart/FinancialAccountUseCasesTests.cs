@@ -109,8 +109,39 @@ namespace Empiria.Tests.Financial.Accounts {
     [Fact]
     public void Should_Update_CreditData() {
       var fields = new CreditExtDataFields {
-      Plazo = "Tres meses",
-      Monto = 9000
+        Year = 2024,
+        OrganizationUnitUID = "8382a99e-92e7-4d57-978c-d7d7ef8d3e33",
+        CreditNo = "002000",
+        StageCredit = 1,
+        PublicWorkNo = 1,
+        Acredited = "Cia Acme",
+        Muncipality = "Aguitas",
+        CreditType = 1,
+        PublicWorkType = "1",
+        ProyectDescription = "Proyecto prueba",
+        TotalBeneficiaries = 1,
+        BeneficiaryUnit = 2,
+        DirectJobs = 20,
+        IndirectJobs = 21,
+        Currency = 44,
+        Disbursements = 11,
+        Interests = 20.4m,
+        Commissions = 3,
+        Balances = 1000.78m,
+        WorkAmount = 2000.78m,
+        InvestmentTerm = 22,
+        DisbursementPeriod = 5,
+        GracePeriod = 7,
+        AmortizationTerm = 1,
+        Rate = 32,
+        RateFactor = 2 ,
+        Floorrate = 12,
+        Ceilingrate = 12,
+        OpeningCommission = 10,
+        CommissionAvailability = 2,
+        DisbursementDate = DateTime.Now,
+        AmortizationDate = DateTime.Now,
+        Clasification = 1,
       };
 
       var UID = "32b5a7ca-9494-4db6-8ea6-f8f38016d266";
