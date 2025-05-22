@@ -42,6 +42,21 @@ namespace Empiria.Cashflow.Projections.Data {
     }
 
 
+    static internal FixedList<CashflowProjection> SearchProjections(string filter, string sort) {
+      Assertion.Require(filter, nameof(filter));
+      Assertion.Require(sort, nameof(sort));
+
+      var sql = "SELECT * FROM FMS_CASHFLOW_PROJECTIONS " +
+               $"WHERE {filter} " +
+               $"ORDER BY {sort}";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<CashflowProjection>(op);
+
+    }
+
+
     static internal void WriteProjection(CashflowProjection o) {
       var op = DataOperation.Parse("write_FMS_Cashflow_Projection",
           o.Id, o.UID, o.ProjectionType.Id, o.Category.Id, o.Plan.Id, o.ProjectionNo,
