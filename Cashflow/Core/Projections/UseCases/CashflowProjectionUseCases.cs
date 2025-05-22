@@ -37,6 +37,15 @@ namespace Empiria.Cashflow.Projections.UseCases {
 
     #region Use cases
 
+    public CashflowProjectionHolderDto GetProjection(string projectionUID) {
+      Assertion.Require(projectionUID, nameof(projectionUID));
+
+      var projection = CashflowProjection.Parse(projectionUID);
+
+      return CashflowProjectionMapper.Map(projection);
+    }
+
+
     public FixedList<CashflowProjectionDescriptorDto> SearchProjections(CashflowProjectionsQuery query) {
       Assertion.Require(query, nameof(query));
 

@@ -24,7 +24,7 @@ namespace Empiria.Cashflow.Projections {
 
   /// <summary>Partitioned type that represents a cashflow projection with its entries.</summary>
   [PartitionedType(typeof(CashflowProjectionType))]
-  public class CashflowProjection : BaseObject {
+  public class CashflowProjection : BaseObject, INamedEntity {
 
     #region Fields
 
@@ -227,6 +227,13 @@ namespace Empiria.Cashflow.Projections {
     [DataField("CFW_PJC_STATUS", Default = TransactionStatus.Pending)]
     public TransactionStatus Status {
       get; private set;
+    }
+
+
+    public virtual string Name {
+      get {
+        return this.ProjectionNo;
+      }
     }
 
 

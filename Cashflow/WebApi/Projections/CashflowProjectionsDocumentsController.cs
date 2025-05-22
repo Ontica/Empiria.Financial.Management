@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Cashflow.WebApi.dll                  Pattern   : Web api Controller                    *
 *  Type     : CashflowProjectionsDocumentsController       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update cash flow projections documents.                            *
+*  Summary  : Web API used to retrieve and update cashflow projections documents.                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -17,13 +17,13 @@ using Empiria.Documents;
 
 namespace Empiria.Cashflow.Projections.WebApi {
 
-  /// <summary>Web API used to retrive and update cash flow projections documents.</summary>
+  /// <summary>Web API used to retrieve and update cashflow projections documents.</summary>
   public class CashflowProjectionsDocumentsController : WebApiController {
 
     #region Command web apis
 
     [HttpDelete]
-    [Route("v2/cashflow/projections/{projectionUID:guid}/documents/{documentUID:guid}")]
+    [Route("v1/cashflow/projections/{projectionUID:guid}/documents/{documentUID:guid}")]
     public NoDataModel RemoveDocument([FromUri] string projectionUID,
                                       [FromUri] string documentUID) {
 
@@ -37,7 +37,7 @@ namespace Empiria.Cashflow.Projections.WebApi {
 
 
     [HttpPost]
-    [Route("v2/cashflow/projections/{projectionUID:guid}/documents")]
+    [Route("v1/cashflow/projections/{projectionUID:guid}/documents")]
     public SingleObjectModel StoreDocument([FromUri] string projectionUID) {
 
       var projection = CashflowProjection.Parse(projectionUID);
@@ -59,7 +59,7 @@ namespace Empiria.Cashflow.Projections.WebApi {
 
 
     [HttpPut, HttpPatch]
-    [Route("v2/cashflow/projections/{projectionUID:guid}/documents/{documentUID:guid}")]
+    [Route("v1/cashflow/projections/{projectionUID:guid}/documents/{documentUID:guid}")]
     public SingleObjectModel UpdateDocument([FromUri] string projectionUID,
                                             [FromUri] string documentUID,
                                             [FromBody] DocumentFields fields) {
@@ -77,4 +77,4 @@ namespace Empiria.Cashflow.Projections.WebApi {
 
   }  // class CashflowProjectionsDocumentsController
 
-}  // namespace Empiria.Budgeting.WebApi
+}  // namespace Empiria.Cashflow.Projections.WebApi

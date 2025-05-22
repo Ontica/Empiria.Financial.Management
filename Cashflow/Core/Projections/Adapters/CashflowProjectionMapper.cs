@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Documents;
+using Empiria.History;
 using Empiria.StateEnums;
 
 namespace Empiria.Cashflow.Projections.Adapters {
@@ -16,6 +18,20 @@ namespace Empiria.Cashflow.Projections.Adapters {
   static public class CashflowProjectionMapper {
 
     #region Public mappers
+
+    static internal CashflowProjectionHolderDto Map(CashflowProjection projection) {
+      // var byYearProjection = new CashflowProjectionByYear(projection);
+
+      return new CashflowProjectionHolderDto {
+        Projection = MapProjection(projection),
+        //Entries = CashflowProjectionEntryMapper.MapToDescriptor(projection.Entries),
+        //GroupedEntries = new CashflowProjectionEntriesByYearTableDto(byYearTransaction.GetEntries()),
+        Documents = DocumentServices.GetAllEntityDocuments(projection),
+        History = HistoryServices.GetEntityHistory(projection),
+        Actions = MapActions(projection.Rules)
+      };
+    }
+
 
     static public FixedList<CashflowProjectionDescriptorDto> MapToDescriptor(FixedList<CashflowProjection> projections) {
       return projections.Select(x => MapToDescriptor(x))
@@ -26,6 +42,19 @@ namespace Empiria.Cashflow.Projections.Adapters {
 
     #region Helpers
 
+    static private CashflowProjectionActions MapActions(CashflowProjectionRules rules) {
+      return new CashflowProjectionActions {
+        CanAuthorize = rules.CanAuthorize,
+        CanClose = rules.CanClose,
+        CanDelete = rules.CanDelete,
+        CanEditDocuments = rules.CanEditDocuments,
+        CanReject = rules.CanReject,
+        CanSendToAuthorization = rules.CanSendToAuthorization,
+        CanUpdate = rules.CanUpdate
+      };
+    }
+
+
     static private CashflowProjectionDescriptorDto MapToDescriptor(CashflowProjection projection) {
       return new CashflowProjectionDescriptorDto {
         UID = projection.UID,
@@ -35,12 +64,41 @@ namespace Empiria.Cashflow.Projections.Adapters {
         ProjectionNo = projection.ProjectionNo,
         BasePartyName = projection.BaseParty.Name,
         SourceName = projection.Source.Name,
-        RecordingTime = projection.RecordingTime,
-        RecordedByName = projection.RecordedBy.Name,
         AuthorizationTime = projection.AuthorizationTime,
         AuthorizedByName = projection.AuthorizedBy.Name,
+        RecordingTime = projection.RecordingTime,
+        RecordedByName = projection.RecordedBy.Name,
         // Total = projection.Total,
         StatusName = projection.Status.GetName(),
+      };
+    }
+
+
+    static private CashflowProjectionDto MapProjection(CashflowProjection projection) {
+      return new CashflowProjectionDto {
+        UID = projection.UID,
+        Plan = projection.Plan.MapToNamedEntity(),
+        Category = projection.Category.MapToNamedEntity(),
+        // Classification = projection.Classification.MapToNamedEntity(),
+        ProjectionNo = projection.ProjectionNo,
+        BaseParty = projection.BaseParty.MapToNamedEntity(),
+        BaseProject = projection.BaseProject.MapToNamedEntity(),
+        BaseAccount = projection.BaseAccount.MapToNamedEntity(),
+        Source = projection.Source.MapToNamedEntity(),
+        Description = projection.Description,
+        Justification = projection.Justification,
+        Tags = projection.Tags.Split(' '),
+        ApplicationDate = projection.ApplicationDate,
+        AppliedBy = projection.AppliedBy.MapToNamedEntity(),
+        RecordingTime = projection.RecordingTime,
+        RecordedBy = projection.RecordedBy.MapToNamedEntity(),
+        AuthorizationTime = projection.AuthorizationTime,
+        AuthorizedBy = projection.AuthorizedBy.MapToNamedEntity(),
+        RequestedTime = projection.RequestedTime,
+        RequestedBy = projection.RequestedBy.MapToNamedEntity(),
+        AdjustmentOf = projection.AdjustementOf.MapToNamedEntity(),
+        // Total = projection.GetTotal(),
+        Status = projection.Status.MapToNamedEntity(),
       };
     }
 
