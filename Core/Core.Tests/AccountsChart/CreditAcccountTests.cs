@@ -1,0 +1,56 @@
+﻿/* Empiria Financial *****************************************************************************************
+*                                                                                                            *
+*  Module   : Accounts Management                        Component : Test cases                              *
+*  Assembly : Empiria.Tests.Financial.Accounts.dll       Pattern   : Unit tests                              *
+*  Type     : CreditAcccountTests                        License   : Please read LICENSE.txt file            *
+*                                                                                                            *
+*  Summary  : Unit tests for credit accounts objects.                                                        *
+*                                                                                                            *
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
+using Xunit;
+using System;
+
+using Empiria.Financial;
+using Empiria.Financial.Accounts;
+
+namespace Empiria.Tests.Financial.Accounts {
+
+  /// <summary>Unit tests for credit accounts objects.</summary>
+  public class CreditAcccountTests {
+
+    #region Facts
+    [Fact]
+    public void Should_Update_CreditData() {
+      var fields = new CreditExtDataFields {
+        CreditNo = "002000",
+        EtapaCredito = 1,
+        Acredited = "Prueba",
+        CreditType = "Linea directa",
+        Currency = 44,
+        Interests = 20.4m,
+        Commissions = 3,
+        Balances = 1000.78m,
+        InvestmentTerm = 22,
+        PlazoGracia = 7,
+        AmortizationTerm = 1,
+        Rate = 32,
+        RateFactor = 2,
+        TasaTecho = 12,
+        AmortizationDate = DateTime.Now,
+      };
+
+      var UID = "5a1370bc-42c9-40bb-a547-ba4b4c365bd1";
+
+      CreditAccount sut = CreditAccount.Parse(UID);
+
+      sut.Update(fields);
+      Assert.Equal(UID, sut.UID);
+      Assert.Equal(fields.EtapaCredito, sut.CreditData.EtapaCredito);
+    }
+
+    #endregion Facts
+
+  }  // class CreditAcccountTests
+
+}  // namespace Empiria.Tests.Financial.Accounts

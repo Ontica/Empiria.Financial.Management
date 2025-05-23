@@ -28,7 +28,7 @@ namespace Empiria.Financial {
 
     #region Constructors and parsers
 
-    private FinancialAccount() {
+    protected FinancialAccount() {
       // Require by Empiria FrameWork
     }
 
@@ -135,14 +135,7 @@ namespace Empiria.Financial {
     protected JsonObject ExtData {
       get; set;
     }
-
-
-    public CreditExtData CreditData {
-      get {
-        return new CreditExtData(this.ExtData);
-      }
-    }
-
+    
 
     public string Keywords {
       get {
@@ -246,11 +239,7 @@ namespace Empiria.Financial {
     }
 
 
-    internal void UpdateCreditData(CreditExtDataFields fields) {
-      Assertion.Require(fields, nameof(fields));
-
-     CreditData.Update(fields);
-    }
+  
 
     #endregion Methods
 

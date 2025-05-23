@@ -104,33 +104,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
       Assert.NotNull(sut);
     }
-
-
-    [Fact]
-    public void Should_Update_CreditData() {
-      var fields = new CreditExtDataFields {
-        CreditNo = "002000",
-        EtapaCredito = 1,
-        Acredited = "Cia Acme",
-        CreditType = 1,
-        Currency = 44,
-        Interests = 20.4m,
-        Commissions = 3,
-        Balances = 1000.78m,
-        InvestmentTerm = 22,
-        PlazoGracia = 7,
-        AmortizationTerm = 1,
-        Rate = 32,
-        RateFactor = 2 ,
-        TasaTecho = 12,
-        AmortizationDate = DateTime.Now,
-      };
-
-      var UID = "5a1370bc-42c9-40bb-a547-ba4b4c365bd1";
-      var sut = _usecases.UpdateCreditData(UID, fields);
-
-      Assert.NotNull(sut);
-    }
+       
 
     #endregion Facts
 

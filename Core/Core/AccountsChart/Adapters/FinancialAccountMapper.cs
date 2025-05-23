@@ -30,6 +30,19 @@ namespace Empiria.Financial.Accounts.Adapters {
       };
     }
 
+
+    static public FinancialAccountDto Map(CreditAccount account) {
+      return new FinancialAccountDto {
+        UID = account.UID,
+        StandardAccount = account.StandardAccount.MapToNamedEntity(),
+        Project = account.Project.MapToNamedEntity(),
+        Name = account.Name,
+        OrganizationUnit = account.OrganizationalUnit.MapToNamedEntity(),
+        Parent = account.Parent.MapToNamedEntity(),
+        Status = account.Status,
+      };
+    }
+
   }  // class FinancialAccountMapper
 
 }  // namespace Empiria.Financial.Accounts.Adapters
