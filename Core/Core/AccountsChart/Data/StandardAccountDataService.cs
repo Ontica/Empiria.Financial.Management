@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : AccountChart                               Component : Data Layer                              *
 *  Assembly : Empiria.Financial.Management.Core.dll      Pattern   : Data Service                            *
-*  Type     : StandardtAccountDataService                License   : Please read LICENSE.txt file            *
+*  Type     : StandardAccountDataService                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides data access services for standard accounts.                                           *
 *                                                                                                            *
@@ -13,7 +13,23 @@ using Empiria.Data;
 namespace Empiria.Financial.Data {
 
   /// <summary>Provides data access services for standard accounts.</summary>
-  static internal class StandardtAccountDataService {
+  static internal class StandardAccountDataService {
+
+    static internal void CleanStandardAccount(StandardAccount stdAccount) {
+      if (stdAccount.IsEmptyInstance) {
+        return;
+      }
+      var sql = "UPDATE FMS_STD_ACCOUNTS " +
+               $"SET STD_ACCT_UID + {System.Guid.NewGuid().ToString()}, " +
+               $"STD_ACCT_DESCRIPTION = '{EmpiriaString.Clean(stdAccount.Description).Replace("'", "''")}', " +
+               $"STD_ACCT_KEYWORDS = '{stdAccount.Keywords}' " +
+               $"WHERE STD_ACCT_ID = {stdAccount.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
+
 
     static internal FixedList<StandardAccount> GetStdAcctByCategory(int categoryId) {
 
@@ -27,7 +43,7 @@ namespace Empiria.Financial.Data {
     }
 
 
-    static internal FixedList<StandardAccount> SearchStandardtAccounts(string keywords) {
+    static internal FixedList<StandardAccount> SearchStandardAccounts(string keywords) {
 
       var filter = SearchExpression.ParseOrLikeKeywords("STD_ACCT_KEYWORDS", keywords);
       if (filter.Length != 0) {
@@ -43,7 +59,7 @@ namespace Empiria.Financial.Data {
     }
 
 
-    static internal FixedList<StandardAccount> SearchStandardtAccounts(string filter, string sortBy) {
+    static internal FixedList<StandardAccount> SearchStandardAccounts(string filter, string sortBy) {
 
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS ";
 
@@ -60,6 +76,6 @@ namespace Empiria.Financial.Data {
       return DataReader.GetFixedList<StandardAccount>(dataOperation);
     }
 
-  }  // class StandardtAccountDataService
+  }  // class StandardAccountDataService
 
 }  // namespace Empiria.Financial.Data

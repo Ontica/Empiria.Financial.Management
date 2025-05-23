@@ -43,7 +43,7 @@ namespace Empiria.Tests.Financial.Accounts {
     [Fact]
     public void Should_Create_FinancialAccount() {
 
-      string name = "Crédito para obra pública la Estado de Hidalgo";
+      string name = "Crédito para obra pública del estado de Hidalgo";
       string AcctNo = "3494";
       var orgUnit = OrganizationalUnit.Parse(3);
 
@@ -80,7 +80,7 @@ namespace Empiria.Tests.Financial.Accounts {
       var sut = BaseObject.GetFullList<FinancialAccount>();
 
       Assert.NotNull(sut);
-      Assert.True(sut.Count > 0);
+      Assert.NotEmpty(sut);
     }
 
 
@@ -89,6 +89,7 @@ namespace Empiria.Tests.Financial.Accounts {
       var sut = FinancialAccount.Empty;
 
       Assert.NotNull(sut);
+      Assert.Equal(FinancialAccount.Parse("Empty"), sut);
       Assert.Equal(-1, sut.Id);
     }
 

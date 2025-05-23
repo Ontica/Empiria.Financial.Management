@@ -30,7 +30,7 @@ namespace Empiria.Financial.Accounts.UseCases {
     #endregion Constructors and parsers
 
     #region Use cases
-        
+
     public StandardAccount GetStandardAccount(string uid) {
       Assertion.Require(uid, nameof(uid));
 
@@ -41,28 +41,28 @@ namespace Empiria.Financial.Accounts.UseCases {
     public FixedList<NamedEntityDto> GetStandardAccountByCategory(int categoryId) {
       Assertion.Require(categoryId, nameof(categoryId));
 
-      return StandardtAccountDataService.GetStdAcctByCategory(categoryId).MapToNamedEntityList();
+      return StandardAccountDataService.GetStdAcctByCategory(categoryId).MapToNamedEntityList();
     }
 
 
     public FixedList<NamedEntityDto> GetStandardAccountCategories() {
-      return StandardAccountCategory.GetList().MapToNamedEntityList();
+      return StandardAccountCategory.GetList()
+                                    .MapToNamedEntityList();
     }
-        
 
-    public StandardAccountCategory GetStandardAccountCategory(string uid) {
-      Assertion.Require(uid, nameof(uid));
 
-      return StandardAccountCategory.Parse(uid);
-    } 
+    public StandardAccountCategory GetStandardAccountCategory(string stdAccountCategoryUID) {
+      Assertion.Require(stdAccountCategoryUID, nameof(stdAccountCategoryUID));
+
+      return StandardAccountCategory.Parse(stdAccountCategoryUID);
+    }
 
 
     public FixedList<NamedEntityDto> SearchStandardAccounts(string keywords) {
       keywords = keywords ?? string.Empty;
 
-      FixedList<StandardAccount> stdAcccounts = StandardtAccountDataService.SearchStandardtAccounts(keywords);
-
-      return stdAcccounts.MapToNamedEntityList();
+      return StandardAccountDataService.SearchStandardAccounts(keywords)
+                                       .MapToNamedEntityList();
     }
 
     #endregion Use cases

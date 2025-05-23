@@ -10,10 +10,9 @@
 
 using System;
 
+using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.StateEnums;
-
-using Empiria.Contacts;
 
 namespace Empiria.Financial {
 
@@ -35,13 +34,7 @@ namespace Empiria.Financial {
 
     #endregion Constructors and parsers
 
-    #region Properties       
-
-    [DataField("STD_ACCT_TYPE_ID")]
-    public int TypeId {
-      get; private set;
-    }
-
+    #region Properties
 
     [DataField("STD_ACCT_CATEGORY_ID")]
     public StandardAccountCategory Category {
@@ -50,7 +43,7 @@ namespace Empiria.Financial {
 
 
     [DataField("STD_ACCT_CATALOGUE_ID")]
-    public int Catelogue {
+    public StandardAccountsCatalogue Catalogue {
       get; private set;
     }
 
@@ -62,11 +55,19 @@ namespace Empiria.Financial {
 
 
     [DataField("STD_ACCT_DESCRIPTION")]
-    public string Name {
+    public string Description {
       get; private set;
     }
-     
-    
+
+    public string Name {
+      get {
+        if (StdAcctNo.Length != 0) {
+          return $"({StdAcctNo}) {Description}";
+        }
+        return Description;
+      }
+    }
+
     [DataField("STD_ACCT_IDENTIFICATORS")]
     public string Identifiers {
       get; protected set;
@@ -105,7 +106,7 @@ namespace Empiria.Financial {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(StdAcctNo, Name);
+        return EmpiriaString.BuildKeywords(StdAcctNo, Description, Identifiers, Tags, Category.Name);
       }
     }
 
@@ -148,7 +149,7 @@ namespace Empiria.Financial {
     #endregion Properties
 
     #region Methods
-      
+
     #endregion Methods
 
   } // class StandardAccount
