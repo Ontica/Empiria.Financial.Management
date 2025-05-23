@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Web.Http;
+
 using Empiria.WebApi;
 
 using Empiria.Financial.Accounts.Adapters;
@@ -52,8 +53,6 @@ namespace Empiria.Financial.Accounts.WebApi {
     [Route("v2/financial-accounts")]
     public SingleObjectModel CreateFinancialAccount([FromBody] FinancialAccountFields fields) {
 
-      base.RequireBody(fields);
-
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
         FinancialAccountDto createAccount = usecases.CreateAccount(fields);
 
@@ -65,8 +64,6 @@ namespace Empiria.Financial.Accounts.WebApi {
     [HttpDelete]
     [Route("v2/financial-accounts/{financialAccountUID:guid}")]
     public NoDataModel DeleteAccount([FromUri] string financialAccountUID) {
-
-      base.RequireResource(financialAccountUID, nameof(financialAccountUID));
 
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
 
@@ -80,14 +77,11 @@ namespace Empiria.Financial.Accounts.WebApi {
     [HttpPut]
     [Route("v2/financial-accounts/{financialAccountUID:guid}")]
     public SingleObjectModel UpdateAccount([FromUri] string financialAccountUID,
-                                               [FromBody] FinancialAccountFields fields) {
-
-      base.RequireBody(fields);
+                                           [FromBody] FinancialAccountFields fields) {
 
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
 
-        FinancialAccountDto paymentOrder = usecases.UpdateAccount(financialAccountUID,
-                                                                         fields);
+        FinancialAccountDto paymentOrder = usecases.UpdateAccount(financialAccountUID, fields);
 
         return new SingleObjectModel(this.Request, paymentOrder);
       }

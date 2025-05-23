@@ -15,7 +15,21 @@ namespace Empiria.Financial.Data {
   /// <summary>Provides data access services for financial accounts.</summary>
   static internal class FinancialAccountDataService {
 
-      static internal FixedList<FinancialAccount> SearchAccount(string keywords) {
+    static internal void CleanAccount(FinancialAccount account) {
+      if (account.IsEmptyInstance) {
+        return;
+      }
+      var sql = "UPDATE FMS_ACCOUNTS " +
+                $"SET ACCT_DESCRIPTION = '{EmpiriaString.Clean(account.Description).Replace("'", "''")}', " +
+                $"ACCT_KEYWORDS = '{account.Keywords}' " +
+                $"WHERE ACCT_ID = {account.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
+
+    static internal FixedList<FinancialAccount> SearchAccounts(string keywords) {
 
       var filter = SearchExpression.ParseOrLikeKeywords("ACCT_KEYWORDS", keywords);
       if (filter.Length != 0) {
@@ -23,7 +37,7 @@ namespace Empiria.Financial.Data {
       }
       var sql = "SELECT * FROM FMS_ACCOUNTS " +
                $"WHERE {filter} " +
-               $"ACCT_STATUS <> 'X' AND ACCT_TYPE_ID = 3216";
+               $"ACCT_STATUS <> 'X' AND ACCT_TYPE_ID = 3245";
 
       var op = DataOperation.Parse(sql);
 
@@ -31,7 +45,7 @@ namespace Empiria.Financial.Data {
     }
 
 
-    static internal FixedList<FinancialAccount> SearchAccount(string filter, string sortBy) {
+    static internal FixedList<FinancialAccount> SearchAccounts(string filter, string sortBy) {
 
       var sql = "SELECT * FROM FMS_ACCOUNTS ";
 
@@ -51,7 +65,7 @@ namespace Empiria.Financial.Data {
     internal static void WriteAccount(FinancialAccount o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Account",
          o.Id, o.UID, o.GetEmpiriaType().Id, o.StandardAccount.Id, o.Organization.Id,
-         o.OrganizationalUnit.Id, o.Project.Id, o.LedgerId, o.AcctNo, o.Name,
+         o.OrganizationalUnit.Id, o.Project.Id, o.LedgerId, o.AccountNo, o.Description,
          o.Identifiers, o.Tags, o.Attributes.ToString(), o.FinancialData.ToString(),
          o.ConfigData.ToString(), extensionData, o.Keywords, o.Parent.Id,
          o.StartDate, o.EndDate, o.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);

@@ -66,35 +66,35 @@ namespace Empiria.Financial.Accounts.UseCases {
       string filter = query.MapToFilterString();
       string sort = query.MapToSortString();
 
-      FixedList<FinancialAccount> accounts = FinancialAccount.SearchAccount(filter, sort);
+      FixedList<FinancialAccount> accounts = FinancialAccountDataService.SearchAccounts(filter, sort);
 
       return FinancialAccountMapper.Map(accounts);
     }
-   
+
 
     public FixedList<NamedEntityDto> SearchAccounts(string keywords) {
       keywords = keywords ?? string.Empty;
 
-      FixedList<FinancialAccount> acccounts = FinancialAccountDataService.SearchAccount(keywords);
+      FixedList<FinancialAccount> acccounts = FinancialAccountDataService.SearchAccounts(keywords);
 
       return acccounts.MapToNamedEntityList();
     }
 
 
-    public FinancialAccountDto UpdateAccount(string UID, FinancialAccountFields fields) {
-      Assertion.Require(UID, nameof(UID));
+    public FinancialAccountDto UpdateAccount(string accountUID, FinancialAccountFields fields) {
+      Assertion.Require(accountUID, nameof(accountUID));
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
 
-      var account = FinancialAccount.Parse(UID);
+      var account = FinancialAccount.Parse(accountUID);
 
       account.Update(fields);
 
       account.Save();
 
       return FinancialAccountMapper.Map(account);
-    } 
+    }
 
     #endregion Use cases
 

@@ -12,8 +12,6 @@ using Xunit;
 
 using Empiria.Financial.Accounts.Adapters;
 using Empiria.Financial.Accounts.UseCases;
-using Empiria.Financial.Accounts;
-using System;
 
 namespace Empiria.Tests.Financial.Accounts {
 
@@ -48,7 +46,7 @@ namespace Empiria.Tests.Financial.Accounts {
         PartyUID = "8382a99e-92e7-4d57-978c-d7d7ef8d3e33",
         ProjectUID = "17903a85-4018-4ee1-8218-cc497dc688ee",
         AcctNo = "0000001",
-        Name = "Test del 000001",
+        Description = "Test del 000001",
       };
 
       var sut = _usecases.CreateAccount(fields);
@@ -96,7 +94,7 @@ namespace Empiria.Tests.Financial.Accounts {
         PartyUID = "e99b4454-1e0e-47b9-a746-9798b015094a",
         ProjectUID = "0eca8e61-66c1-4801-9b0d-05e6587841ce",
         AcctNo = "0000001",
-        Name = "Test Update",
+        Description = "Test Update",
       };
 
       var UID = "989fafcc-01e0-48d7-b2c0-3375b860874b";
@@ -104,7 +102,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
       Assert.NotNull(sut);
     }
-       
+
 
     #endregion Facts
 

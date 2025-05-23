@@ -55,7 +55,7 @@ namespace Empiria.Financial.Accounts.Adapters {
     } = string.Empty;
 
 
-    public string Name {
+    public string Description {
       get; set;
     } = string.Empty;
 
@@ -77,7 +77,7 @@ namespace Empiria.Financial.Accounts.Adapters {
 
     public string FinancialData {
       get; set;
-    } = string.Empty;   
+    } = string.Empty;
 
     #endregion Properties
 
@@ -86,11 +86,11 @@ namespace Empiria.Financial.Accounts.Adapters {
     internal void EnsureValid() {
 
       AcctNo = FieldPatcher.Clean(AcctNo);
-      Name = FieldPatcher.Clean(Name);
-            
+      Description = FieldPatcher.Clean(Description);
+
       StandardAccountUID = FieldPatcher.Clean(StandardAccountUID);
       OrganizationUnitUID = FieldPatcher.Clean(OrganizationUnitUID);
-           
+
       if (StandardAccountUID.Length != 0) {
         _ = StandardAccount.Parse(StandardAccountUID);
       }

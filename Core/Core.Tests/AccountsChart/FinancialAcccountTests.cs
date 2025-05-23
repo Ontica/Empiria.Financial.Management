@@ -8,16 +8,20 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Xunit;
 using System;
+
+using Xunit;
+
 
 using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Financial;
-using Empiria.Financial.Accounts.Adapters;
+using Empiria.Financial.Data;
 
 using Empiria.Tests.Financial.Projects;
+
+using Empiria.Financial.Accounts.Adapters;
 
 namespace Empiria.Tests.Financial.Accounts {
 
@@ -25,6 +29,16 @@ namespace Empiria.Tests.Financial.Accounts {
   public class FinancialAcccountTests {
 
     #region Facts
+
+    [Fact]
+    public void Clean_Financial_Accounts() {
+      var accounts = BaseObject.GetFullList<FinancialAccount>();
+
+      foreach (var account in accounts) {
+        FinancialAccountDataService.CleanAccount(account);
+      }
+    }
+
 
     [Fact]
     public void Should_Create_FinancialAccount() {
@@ -37,10 +51,10 @@ namespace Empiria.Tests.Financial.Accounts {
 
       Assert.Equal(orgUnit, sut.OrganizationalUnit);
       Assert.Equal(name, sut.Name);
-      Assert.True(sut.AcctNo.Length != 0);
+      Assert.True(sut.AccountNo.Length != 0);
       Assert.NotNull(sut);
 
-      Assert.True(sut.StandardAccount.IsEmptyInstance);      
+      Assert.True(sut.StandardAccount.IsEmptyInstance);
       Assert.Equal(DateTime.Today, sut.StartDate);
       Assert.Equal(ExecutionServer.DateMaxValue, sut.EndDate);
       Assert.Equal(EntityStatus.Pending, sut.Status);
@@ -50,7 +64,7 @@ namespace Empiria.Tests.Financial.Accounts {
     [Fact]
     public void Should_Delete_FinancialAccount() {
       var sut = TestingVariables.TryGetRandomNonEmpty<FinancialAccount>();
-     
+
       if (sut == null) {
         return;
       }
@@ -62,7 +76,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
 
     [Fact]
-    public void Should_Read_All_FinancialAccount() {
+    public void Should_Read_All_Financial_Accounts() {
       var sut = BaseObject.GetFullList<FinancialAccount>();
 
       Assert.NotNull(sut);
@@ -89,7 +103,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
       var fields = new FinancialAccountFields {
         AcctNo = "0920",
-        Name = "Nuevo nombre",
+        Description = "Nuevo nombre",
       };
 
       var unchangedFields = new FinancialAccountFields {
@@ -99,8 +113,8 @@ namespace Empiria.Tests.Financial.Accounts {
 
       sut.Update(fields);
 
-      Assert.Equal(fields.AcctNo, sut.AcctNo);
-      Assert.Equal(fields.Name, sut.Name);
+      Assert.Equal(fields.AcctNo, sut.AccountNo);
+      Assert.Equal(fields.Description, sut.Name);
       Assert.Equal(unchangedFields.StandardAccountUID, sut.StandardAccount.UID);
       Assert.Equal(unchangedFields.OrganizationUnitUID, sut.OrganizationalUnit.UID);
     }

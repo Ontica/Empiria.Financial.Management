@@ -29,7 +29,7 @@ namespace Empiria.Financial.Accounts.Adapters {
     }
 
 
-    public string Name {
+    public string Description {
       get; set;
     }
 
@@ -37,7 +37,7 @@ namespace Empiria.Financial.Accounts.Adapters {
     public NamedEntityDto Parent {
       get; set;
     }
-    
+
 
     public NamedEntityDto OrganizationUnit {
       get; set;

@@ -19,7 +19,6 @@ using Empiria.Financial.Projects;
 using Empiria.Financial.Data;
 
 using Empiria.Financial.Accounts.Adapters;
-using Empiria.Financial.Accounts;
 
 namespace Empiria.Financial {
 
@@ -32,16 +31,16 @@ namespace Empiria.Financial {
       // Require by Empiria FrameWork
     }
 
-    public FinancialAccount(OrganizationalUnit orgUnit, string accountNo, string name) {
+    public FinancialAccount(OrganizationalUnit orgUnit, string accountNo, string description) {
       Assertion.Require(orgUnit, nameof(orgUnit));
       Assertion.Require(accountNo, nameof(accountNo));
-      Assertion.Require(name, nameof(name));
+      Assertion.Require(description, nameof(description));
       Assertion.Require(!orgUnit.IsEmptyInstance,
                        "orgUnit can not be the empty instance.");
 
       this.OrganizationalUnit = orgUnit;
-      this.Name = name;
-      this.AcctNo = accountNo;
+      this.Description = description;
+      this.AccountNo = accountNo;
       this.StartDate = DateTime.Today;
     }
 
@@ -89,15 +88,26 @@ namespace Empiria.Financial {
       get; private set;
     }
 
+
     [DataField("ACCT_NUMBER")]
-    public string AcctNo {
+    public string AccountNo {
       get; private set;
     }
 
 
     [DataField("ACCT_DESCRIPTION")]
-    public string Name {
+    public string Description {
       get; private set;
+    }
+
+
+    public string Name {
+      get {
+        if (AccountNo.Length != 0) {
+          return $"({AccountNo}) {Description}";
+        }
+        return Description;
+      }
     }
 
 
@@ -135,11 +145,12 @@ namespace Empiria.Financial {
     protected JsonObject ExtData {
       get; set;
     }
-    
+
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(AcctNo, Name);
+        return EmpiriaString.BuildKeywords(AccountNo, Description, Identifiers, Tags, Project.Keywords,
+                                           OrganizationalUnit.Keywords, StandardAccount.Keywords);
       }
     }
 
@@ -198,18 +209,6 @@ namespace Empiria.Financial {
     }
 
 
-    internal static FixedList<FinancialAccount> SearchProjects(string keywords) {
-      keywords = keywords ?? string.Empty;
-
-      return FinancialAccountDataService.SearchAccount(keywords);
-    }
-
-
-    internal static FixedList<FinancialAccount> SearchAccount(string filter, string sort) {
-      return FinancialAccountDataService.SearchAccount(filter, sort);
-    }
-
-
     protected override void OnSave() {
       if (base.IsNew) {
         this.StartDate = ExecutionServer.DateMinValue;
@@ -228,18 +227,15 @@ namespace Empiria.Financial {
 
       fields.EnsureValid();
 
-      this.Name = PatchField(fields.Name, this.Name);
-      this.AcctNo = PatchField(fields.AcctNo, this.AcctNo);
+      this.Description = PatchField(fields.Description, this.Description);
+      this.AccountNo = PatchField(fields.AcctNo, this.AccountNo);
       this.StandardAccount = PatchField(fields.StandardAccountUID, this.StandardAccount);
-      this.Organization = PatchField(fields.OrganizationUID, this.Organization);     
+      this.Organization = PatchField(fields.OrganizationUID, this.Organization);
       this.Project = PatchField(fields.ProjectUID, this.Project);
       this.LedgerId = -1;
       this.Identifiers = fields.Identifiers;
       this.Tags = fields.Tags;
     }
-
-
-  
 
     #endregion Methods
 
