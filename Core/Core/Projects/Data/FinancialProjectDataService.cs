@@ -15,7 +15,24 @@ namespace Empiria.Financial.Projects.Data {
   /// <summary>Provides data access services for financial projects.</summary>
   static internal class FinancialProjectDataService {
 
+    static internal void CleanProject(FinancialProject project) {
+      if (project.IsEmptyInstance) {
+        return;
+      }
+      var sql = "UPDATE FMS_PROJECTS " +
+                $"SET PRJ_NAME = '{EmpiriaString.Clean(project.Name).Replace("'", "''")}', " +
+                $"PRJ_KEYWORDS = '{project.Keywords}' " +
+                $"WHERE PRJ_ID = {project.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
+
+
     static internal FixedList<FinancialProject> SearchProjects(string keywords) {
+
+      keywords = keywords ?? string.Empty;
 
       var filter = SearchExpression.ParseOrLikeKeywords("PRJ_KEYWORDS", keywords);
       if (filter.Length != 0) {

@@ -16,6 +16,7 @@ using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Financial.Projects;
+using Empiria.Financial.Projects.Data;
 
 namespace Empiria.Tests.Financial.Projects {
 
@@ -23,6 +24,16 @@ namespace Empiria.Tests.Financial.Projects {
   public class FinancialProjectTests {
 
     #region Facts
+
+    [Fact]
+    public void Clean_Financial_Projects() {
+      var projects = BaseObject.GetFullList<FinancialProject>();
+
+      foreach (var project in projects) {
+        FinancialProjectDataService.CleanProject(project);
+      }
+    }
+
 
     [Fact]
     public void Should_Create_FinancialProject() {

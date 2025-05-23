@@ -73,6 +73,23 @@ namespace Empiria.Financial.Projects {
     }
 
 
+    string INamedEntity.Name {
+      get {
+        if (ProjectNo.Length != 0) {
+          return $"({ProjectNo}) {Name} [{Program}]";
+        }
+        return $"{Name} [{Program}]";
+      }
+    }
+
+
+    public string Program {
+      get {
+        return StandardAccount.Parse(StandardAccount.ParentId).Name;
+      }
+    }
+
+
     [DataField("PRJ_ORG_UNIT_ID")]
     public OrganizationalUnit OrganizationalUnit {
       get; private set;
@@ -99,7 +116,9 @@ namespace Empiria.Financial.Projects {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(ProjectNo, Name);
+        return EmpiriaString.BuildKeywords(ProjectNo, Name, Identifiers, Tags, Program,
+                                           OrganizationalUnit.Keywords, Category.Keywords,
+                                           StandardAccount.Keywords);
       }
     }
 
@@ -171,13 +190,6 @@ namespace Empiria.Financial.Projects {
       Assertion.Require(Status == EntityStatus.Pending,
                   $"Can not delete project. Its status is {Status.GetName()}.");
       this.Status = EntityStatus.Deleted;
-    }
-
-
-    internal static FixedList<FinancialProject> SearchProjects(string keywords) {
-      keywords = keywords ?? string.Empty;
-
-      return FinancialProjectDataService.SearchProjects(keywords);
     }
 
 

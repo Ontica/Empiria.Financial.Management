@@ -92,7 +92,7 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpGet]
-    [Route("v2/financial-projects/{projectUID:GUID}")]
+    [Route("v2/financial-projects/{projectUID:guid}")]
     public SingleObjectModel GetProject([FromUri] string projectUID) {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
@@ -106,16 +106,13 @@ namespace Empiria.Financial.Projects.WebApi {
     [HttpPut]
     [Route("v2/financial-projects/{financialProjectUID:guid}")]
     public SingleObjectModel UpdateFinancialProject([FromUri] string financialProjectUID,
-                                               [FromBody] FinancialProjectFields fields) {
-
-      base.RequireBody(fields);
+                                                    [FromBody] FinancialProjectFields fields) {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
 
-        FinancialProjectDto projects = usecases.UpdateProject(financialProjectUID,
-                                                                         fields);
+        FinancialProjectDto project = usecases.UpdateProject(financialProjectUID, fields);
 
-        return new SingleObjectModel(this.Request, projects);
+        return new SingleObjectModel(this.Request, project);
       }
     }
 

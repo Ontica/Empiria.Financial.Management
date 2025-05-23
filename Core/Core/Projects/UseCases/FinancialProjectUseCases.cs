@@ -10,9 +10,8 @@
 
 using Empiria.Services;
 
-using Empiria.Parties;
-
 using Empiria.Financial.Projects.Adapters;
+using Empiria.Financial.Projects.Data;
 
 namespace Empiria.Financial.Projects.UseCases {
 
@@ -80,7 +79,7 @@ namespace Empiria.Financial.Projects.UseCases {
     public FixedList<NamedEntityDto> SearchProjects(string keywords) {
       keywords = keywords ?? string.Empty;
 
-      FixedList<FinancialProject> projects = FinancialProject.SearchProjects(keywords);
+      FixedList<FinancialProject> projects = FinancialProjectDataService.SearchProjects(keywords);
 
       return projects.MapToNamedEntityList();
     }
