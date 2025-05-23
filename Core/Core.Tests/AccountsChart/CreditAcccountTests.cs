@@ -23,21 +23,21 @@ namespace Empiria.Tests.Financial.Accounts {
     [Fact]
     public void Should_Update_CreditData() {
       var fields = new CreditExtDataFields {
-        CreditNo = "002000",
+        CreditoNo = "002000",
         EtapaCredito = 1,
-        Acredited = "Prueba",
-        CreditType = "Linea directa",
+        Acreditado = "Prueba",
+        TipoCredito = "Linea directa",
         Currency = 44,
-        Interests = 20.4m,
-        Commissions = 3,
-        Balances = 1000.78m,
-        InvestmentTerm = 22,
+        Interes = 20.4m,
+        Comision = 3,
+        Saldo = 1000.78m,
+        PlazoInversion = 22,
         PlazoGracia = 7,
-        AmortizationTerm = 1,
-        Rate = 32,
-        RateFactor = 2,
+        PlazoAmortizacion = 1,
+        Tasa = 32,
+        FactorTasa = 2,
         TasaTecho = 12,
-        AmortizationDate = DateTime.Now,
+        FechaAmortizacion = DateTime.Now,
       };
 
       var UID = "5a1370bc-42c9-40bb-a547-ba4b4c365bd1";

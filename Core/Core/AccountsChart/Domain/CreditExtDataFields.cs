@@ -17,7 +17,7 @@ namespace Empiria.Financial.Accounts {
 
     #region Properties
         
-    public string CreditNo {
+    public string CreditoNo {
       get; set;
     } = string.Empty;
 
@@ -29,14 +29,14 @@ namespace Empiria.Financial.Accounts {
 
 
     //PFI_ACREDITADO
-    public string Acredited {
+    public string Acreditado {
       get; set;
     } = string.Empty;
 
         
-    public int CreditType {
+    public string TipoCredito {
       get; set;
-    } = 0;
+    } = string.Empty;
 
         
     public int Currency {
@@ -45,25 +45,25 @@ namespace Empiria.Financial.Accounts {
 
 
     //PFI_INTERES_AL
-    public decimal Interests {
+    public decimal Interes {
       get; set;
     } = 0;
 
 
     //PFI_COMISIONES_AL
-    public int Commissions {
+    public int Comision {
       get; set;
     } = 0;
 
 
     //PFI_SALDO
-    public decimal Balances {
+    public decimal Saldo {
       get; set;
     } = 0;
 
 
     //PFI_PLAZO_INVERSION
-    public decimal InvestmentTerm {
+    public decimal PlazoInversion {
       get; set;
     } = 0;
 
@@ -75,19 +75,19 @@ namespace Empiria.Financial.Accounts {
 
 
     //PFI_PLAZO_AMORTIZACION
-    public decimal AmortizationTerm {
+    public decimal PlazoAmortizacion {
       get; set;
     } = 0;
 
 
     //PFI_TASA
-    public decimal Rate {
+    public decimal Tasa {
       get; set;
     } = 0;
 
 
     //PFI_FACTOR_TASA
-    public int RateFactor {
+    public int FactorTasa {
       get; set;
     } = 0;
 
@@ -103,7 +103,7 @@ namespace Empiria.Financial.Accounts {
 
 
     //PFI_FECHA_AMORTIZA
-    public DateTime AmortizationDate {
+    public DateTime FechaAmortizacion {
       get; set;
     } = DateTime.Now;
     

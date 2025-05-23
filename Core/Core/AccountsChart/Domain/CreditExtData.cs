@@ -30,162 +30,152 @@ namespace Empiria.Financial.Accounts {
 
     #region Properties
 
-    public string CreditNo {
+    public string CreditoNo {
       get {
-        return _extData.Get("CreditNo", string.Empty);
+        return _extData.Get("creditoNo", string.Empty);
       }
       private set {
-        _extData.SetIfValue("CreditNo", value);
+        _extData.SetIfValue("creditoNo", value);
       }
     }
 
     
     public int EtapaCredito {
       get {
-        return _extData.Get("EtapaCredito", 0);
+        return _extData.Get("etapaCredito", 0);
       }
       private set {
-        _extData.SetIfValue("EtapaCredito", value);
+        _extData.SetIfValue("etapaCredito", value);
       }
     }
     
 
-    public string Acredited {
+    public string Acreditado {
       get {
-        return _extData.Get("Acredited", string.Empty);
+        return _extData.Get("acreditado", string.Empty);
       }
       private set {
-        _extData.SetIfValue("Acredited", value);
+        _extData.SetIfValue("acreditado", value);
       }
     }
       
 
-    public int CreditType {
+    public string TipoCredito {
       get {
-        return _extData.Get("CreditType", 0);
+        return _extData.Get("tipoCredito", string.Empty);
       }
       private set {
-        _extData.SetIfValue("CreditType", value);
+        _extData.SetIfValue("tipoCredito", value);
       }
     }
-    
+  
 
-    public int Currency {
+    public decimal Interes {
       get {
-        return _extData.Get("Currency", 0);
+        return _extData.Get("interes", 0);
       }
       private set {
-        _extData.SetIfValue("Currency", value);
-      }
-    }
-
-
-    public decimal Interests {
-      get {
-        return _extData.Get("Interests", 0);
-      }
-      private set {
-        _extData.SetIfValue("Interests", value);
+        _extData.SetIfValue("interes", value);
       }
     }
 
 
-    public int Commissions {
+    public int Comision {
       get {
-        return _extData.Get("Commissions", 0);
+        return _extData.Get("comision", 0);
       }
       private set {
-        _extData.SetIfValue("Commissions", value);
+        _extData.SetIfValue("comision", value);
       }
     }
 
 
-    public decimal Balances {
+    public decimal Saldo {
       get {
-        return _extData.Get("Balances", 0);
+        return _extData.Get("saldo", 0);
       }
       private set {
-        _extData.SetIfValue("Balances", value);
+        _extData.SetIfValue("saldo", value);
       }
     }
         
 
-    public decimal InvestmentTerm {
+    public decimal PlazoInversion {
       get {
-        return _extData.Get("InvestmentTerm", 0);
+        return _extData.Get("plazoInversion", 0);
       }
       private set {
-        _extData.SetIfValue("InvestmentTerm", value);
+        _extData.SetIfValue("plazoInversion", value);
       }
     }
 
 
     public decimal PeriodoGracia {
       get {
-        return _extData.Get("PeriodoGracia", 0);
+        return _extData.Get("periodoGracia", 0);
       }
       private set {
-        _extData.SetIfValue("PeriodoGracia", value);
+        _extData.SetIfValue("periodoGracia", value);
       }
     }
 
 
-    public decimal AmortizationTerm {
+    public decimal PlazoAmortizacion {
       get {
-        return _extData.Get("AmortizationTerm", 0);
+        return _extData.Get("plazoAmortizacion", 0);
       }
       private set {
-        _extData.SetIfValue("AmortizationTerm", value);
+        _extData.SetIfValue("plazoAmortizacion", value);
       }
     }
 
 
-    public decimal Rate {
+    public decimal Tasa {
       get {
-        return _extData.Get("Rate", 0);
+        return _extData.Get("tasa", 0);
       }
       private set {
-        _extData.SetIfValue("Rate", value);
+        _extData.SetIfValue("tasa", value);
       }
     }
 
 
-    public int RateFactor {
+    public int FactorTasa {
       get {
-        return _extData.Get("RateFactor", 0);
+        return _extData.Get("factorTasa", 0);
       }
       private set {
-        _extData.SetIfValue("RateFactor", value);
+        _extData.SetIfValue("factorTasa", value);
       }
     }
 
 
     public int TasaPiso {
       get {
-        return _extData.Get("TasaPiso", 0);
+        return _extData.Get("tasaPiso", 0);
       }
       private set {
-        _extData.SetIfValue("TasaPiso", value);
+        _extData.SetIfValue("tasaPiso", value);
       }
     }
 
 
     public int TasaTecho {
       get {
-        return _extData.Get("TasaTecho", 0);
+        return _extData.Get("tasaTecho", 0);
       }
       private set {
-        _extData.SetIfValue("TasaTecho", value);
+        _extData.SetIfValue("tasaTecho", value);
       }
     }
 
 
-    public DateTime AmortizationDate {
+    public DateTime FechaAmortizacion {
       get {
-        return _extData.Get("AmortizationDate", DateTime.Now);
+        return _extData.Get("fechaAmortizacion", DateTime.Now);
       }
       private set {
-        _extData.SetIfValue("AmortizationDate", value);
+        _extData.SetIfValue("fechaAmortizacion", value);
       }
     }  
 
@@ -201,22 +191,21 @@ namespace Empiria.Financial.Accounts {
     internal void Update(CreditExtDataFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      CreditNo = fields.CreditNo;
+      CreditoNo = fields.CreditoNo;
       EtapaCredito = fields.EtapaCredito;
-      Acredited = fields.Acredited;
-      CreditType = fields.CreditType;
-      Currency = fields.Currency;
-      Interests = fields.Interests;
-      Commissions = fields.Commissions;
-      Balances = fields.Balances;
-      InvestmentTerm = fields.InvestmentTerm;
+      Acreditado = fields.Acreditado;
+      TipoCredito = fields.TipoCredito;
+      Interes = fields.Interes;
+      Comision = fields.Comision;
+      Saldo = fields.Saldo;
+      PlazoInversion = fields.PlazoInversion;
       PeriodoGracia = fields.PlazoGracia;
-      AmortizationTerm = fields.AmortizationTerm;
-      Rate = fields.Rate;
+      PlazoAmortizacion = fields.PlazoAmortizacion;
+      Tasa = fields.Tasa;
       TasaPiso = fields.TasaPiso;
-      RateFactor = fields.RateFactor;
+      FactorTasa = fields.FactorTasa;
       TasaTecho = fields.TasaTecho;
-      AmortizationDate = fields.AmortizationDate;
+      FechaAmortizacion = fields.FechaAmortizacion;
     }
 
     #endregion Helpers
