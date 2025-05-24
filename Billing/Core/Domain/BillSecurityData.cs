@@ -28,20 +28,20 @@ namespace Empiria.Billing {
 
     public string TFDVersion {
       get {
-        return _securityData.Get("tFDVersion", string.Empty);
+        return _securityData.Get("tfdVersion", string.Empty);
       }
       private set {
-        _securityData.SetIfValue("tFDVersion", value);
+        _securityData.SetIfValue("tfdVersion", value);
       }
     }
 
 
     public string UUID {
       get {
-        return _securityData.Get("uUID", string.Empty);
+        return _securityData.Get("uuid", string.Empty);
       }
       private set {
-        _securityData.SetIfValue("uUID", value);
+        _securityData.SetIfValue("uuid", value);
       }
     }
 

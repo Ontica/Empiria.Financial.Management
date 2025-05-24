@@ -25,8 +25,8 @@ namespace Empiria.CashFlow.Projections.WebApi {
     [Route("v1/cash-flow/projections/categories")]
     public CollectionModel GetCategories() {
 
-      FixedList<NamedEntityDto> categories =CashFlowProjectionCategory.GetList()
-                                                                      .MapToNamedEntityList();
+      FixedList<NamedEntityDto> categories = CashFlowProjectionCategory.GetList()
+                                                                       .MapToNamedEntityList();
 
       return new CollectionModel(this.Request, categories);
     }

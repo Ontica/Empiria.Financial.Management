@@ -202,18 +202,6 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/parties")]
-    public CollectionModel SearchTransactionsParties([FromBody] TransactionPartiesQuery query) {
-
-      using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> parties = usecases.SearchTransactionsParties(query);
-
-        return new CollectionModel(base.Request, parties);
-      }
-    }
-
-
-    [HttpPost]
     [Route("v2/budgeting/transactions/search")]
     public CollectionModel SearchTransactions([FromBody] BudgetTransactionsQuery query) {
 
@@ -221,6 +209,18 @@ namespace Empiria.Budgeting.Transactions.WebApi {
         FixedList<BudgetTransactionDescriptorDto> transactions = usecases.SearchTransactions(query);
 
         return new CollectionModel(base.Request, transactions);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/budgeting/transactions/parties")]
+    public CollectionModel SearchTransactionsParties([FromBody] TransactionPartiesQuery query) {
+
+      using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> parties = usecases.SearchTransactionsParties(query);
+
+        return new CollectionModel(base.Request, parties);
       }
     }
 

@@ -13,7 +13,7 @@ using Empiria.Services;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
-using Empiria.Financial.Accounts.Adapters;
+using Empiria.Financial.Adapters;
 
 using Empiria.CashFlow.Projections.Data;
 using Empiria.CashFlow.Projections.Adapters;
