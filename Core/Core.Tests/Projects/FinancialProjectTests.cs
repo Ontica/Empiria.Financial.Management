@@ -8,14 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Xunit;
+
+using System;
 
 using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Financial.Projects;
+using Empiria.Financial.Projects.Adapters;
 using Empiria.Financial.Projects.Data;
 
 namespace Empiria.Tests.Financial.Projects {
@@ -24,16 +25,6 @@ namespace Empiria.Tests.Financial.Projects {
   public class FinancialProjectTests {
 
     #region Facts
-
-    [Fact]
-    public void Clean_Financial_Projects() {
-      var projects = BaseObject.GetFullList<FinancialProject>();
-
-      foreach (var project in projects) {
-        FinancialProjectDataService.CleanProject(project);
-      }
-    }
-
 
     [Fact]
     public void Should_Create_FinancialProject() {
@@ -58,7 +49,7 @@ namespace Empiria.Tests.Financial.Projects {
 
     [Fact]
     public void Should_Delete_FinancialProject() {
-      var sut = TestingVariables.TryGetRandomNonEmpty<FinancialProject>();
+      FinancialProject sut = TestsObjects.TryGetObject<FinancialProject>(x => x.Status == EntityStatus.Pending);
 
       if (sut == null) {
         return;
@@ -89,8 +80,37 @@ namespace Empiria.Tests.Financial.Projects {
 
 
     [Fact]
+    public void Should_Search_Financial_Projects_By_Keywords() {
+      string keywords = "potable agua";
+
+      FixedList<FinancialProject> sut = FinancialProjectDataService.SearchProjects(keywords);
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+
+    [Fact]
+    public void Should_Search_Financial_Projects_By_Query() {
+      var query = new FinancialProjectQuery {
+        Keywords = "potable agua",
+        OrganizationUnitUID = "",
+        Status = EntityStatus.Active
+      };
+
+      string filter = query.MapToFilterString();
+      string sort = query.MapToSortString();
+
+      FixedList<FinancialProject> sut = FinancialProjectDataService.SearchProjects(filter, sort);
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+
+    [Fact]
     public void Should_Update_FinancialProject() {
-      var sut = TestingVariables.TryGetRandomNonEmpty<FinancialProject>();
+      FinancialProject sut = TestsObjects.TryGetObject<FinancialProject>();
 
       if (sut == null) {
         return;

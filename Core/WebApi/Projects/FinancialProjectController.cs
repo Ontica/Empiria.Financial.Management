@@ -60,7 +60,7 @@ namespace Empiria.Financial.Projects.WebApi {
 
     #endregion Query web apis
 
-    #region Web Apis
+    #region Command Web Apis
 
     [HttpPost]
     [Route("v2/financial-projects")]
@@ -116,7 +116,7 @@ namespace Empiria.Financial.Projects.WebApi {
       }
     }
 
-    #endregion Web Apis
+    #endregion Command Web Apis
 
   }  // class FinancialProjectController
 

@@ -93,7 +93,7 @@ namespace Empiria.Financial.Projects.UseCases {
       string filter = query.MapToFilterString();
       string sort = query.MapToSortString();
 
-      FixedList<FinancialProject> projects = FinancialProject.SearchProjects(filter, sort);
+      FixedList<FinancialProject> projects = FinancialProjectDataService.SearchProjects(filter, sort);
 
       return FinancialProjectMapper.Map(projects);
     }

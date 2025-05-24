@@ -172,30 +172,10 @@ namespace Empiria.Financial.Projects {
 
     #region Methods
 
-    internal void SetParent(FinancialProject parent) {
-      Assertion.Require(parent, nameof(parent));
-
-      this.Parent = parent;
-    }
-
-
-    internal void Suspend() {
-      Assertion.Require(Status == EntityStatus.Active,
-                        $"Can not suspend project. Its status is {Status.GetName()}.");
-      this.Status = EntityStatus.Suspended;
-    }
-
-
     internal void Delete() {
       Assertion.Require(Status == EntityStatus.Pending,
-                  $"Can not delete project. Its status is {Status.GetName()}.");
+                        $"Can not delete project. Its status is {Status.GetName()}.");
       this.Status = EntityStatus.Deleted;
-    }
-
-
-    internal static FixedList<FinancialProject> SearchProjects(string filter, string sort) {
-
-      return FinancialProjectDataService.SearchProjects(filter, sort);
     }
 
 
@@ -208,6 +188,20 @@ namespace Empiria.Financial.Projects {
       }
 
       FinancialProjectDataService.WriteProject(this, this.ExtData.ToString());
+    }
+
+
+    internal void SetParent(FinancialProject parent) {
+      Assertion.Require(parent, nameof(parent));
+
+      this.Parent = parent;
+    }
+
+
+    internal void Suspend() {
+      Assertion.Require(Status == EntityStatus.Active,
+                        $"Can not suspend project. Its status is {Status.GetName()}.");
+      this.Status = EntityStatus.Suspended;
     }
 
 
