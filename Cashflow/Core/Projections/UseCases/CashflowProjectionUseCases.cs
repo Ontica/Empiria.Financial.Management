@@ -62,6 +62,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       FixedList<CashFlowProjection> projections = CashFlowProjectionDataService.SearchProjections(filter, sort);
 
+      projections = query.ApplyRemainingFilters(projections);
+
       return CashFlowProjectionMapper.MapToDescriptor(projections);
     }
 

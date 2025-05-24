@@ -52,7 +52,6 @@ namespace Empiria.Tests.CashFlow.Projections {
         Assert.NotNull(sut.BaseParty);
         Assert.NotNull(sut.BaseProject);
         Assert.NotNull(sut.Category);
-        Assert.NotNull(sut.Classification);
         Assert.NotNull(sut.ConfigData);
         Assert.NotNull(sut.Description);
         Assert.NotNull(sut.FinancialData);

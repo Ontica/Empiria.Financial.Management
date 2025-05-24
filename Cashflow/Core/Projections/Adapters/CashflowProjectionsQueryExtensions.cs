@@ -26,10 +26,21 @@ namespace Empiria.CashFlow.Projections.Adapters {
     }
 
 
+    static internal FixedList<CashFlowProjection> ApplyRemainingFilters(this CashFlowProjectionsQuery query,
+                                                                        FixedList<CashFlowProjection> projections) {
+      if (query.BaseProjectCategoryUID.Length != 0) {
+        var projectCategory = FinancialProjectCategory.Parse(query.BaseProjectCategoryUID);
+
+        return projections.FindAll(x => x.BaseProject.Category.Equals(projectCategory));
+      }
+
+      return projections;
+    }
+
+
     static internal string MapToFilterString(this CashFlowProjectionsQuery query) {
       string planFilter = BuildPlanFilter(query.PlanUID);
       string categoryFilter = BuildCategoryFilter(query.CategoryUID);
-      string classificationFilter = BuildClassificationFilter(query.ClassificationUID);
       string basePartyFilter = BuildBasePartyFilter(query.BasePartyUID);
       string baseProjectFilter = BuildBaseProjectFilter(query.BaseProjectUID);
       string baseAccountFilter = BuildBaseAccountFilter(query.BaseAccountUID);
@@ -44,7 +55,6 @@ namespace Empiria.CashFlow.Projections.Adapters {
       var filter = new Filter(planFilter);
 
       filter.AppendAnd(categoryFilter);
-      filter.AppendAnd(classificationFilter);
       filter.AppendAnd(basePartyFilter);
       filter.AppendAnd(baseProjectFilter);
       filter.AppendAnd(baseAccountFilter);
@@ -64,7 +74,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
       if (query.OrderBy.Length != 0) {
         return query.OrderBy;
       } else {
-        return "CFW_PJC_NO DESC, CFW_PJC_APPLICATION_DATE, CFW_PJC_RECORDING_TIME";
+        return "CFW_PJC_NO, CFW_PJC_APPLICATION_DATE, CFW_PJC_RECORDING_TIME";
       }
     }
 
@@ -118,17 +128,6 @@ namespace Empiria.CashFlow.Projections.Adapters {
       var category = CashFlowProjectionCategory.Parse(categoryUID);
 
       return $"CFW_PJC_CATEGORY_ID = {category.Id}";
-    }
-
-
-    static private string BuildClassificationFilter(string classificationUID) {
-      if (classificationUID.Length == 0) {
-        return string.Empty;
-      }
-
-      var classification = FinancialProjectCategory.Parse(classificationUID);
-
-      return $"CFW_PJC_CLASSIFICATION_ID = {classification.Id}";
     }
 
 

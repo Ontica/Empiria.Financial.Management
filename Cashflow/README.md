@@ -1,4 +1,4 @@
-﻿# Empiria Cashflow System
+﻿# Empiria CashFlow System
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/37b672c4545e40a580cae53c4e696ca6)](https://app.codacy.com/gh/Ontica/Empiria.Cashflow/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 &nbsp; &nbsp;

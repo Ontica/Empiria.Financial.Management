@@ -73,12 +73,6 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    [DataField("CFW_PJC_CLASSIFICATION_ID")]
-    public FinancialProjectCategory Classification {
-      get; private set;
-    }
-
-
     [DataField("CFW_PJC_NO")]
     public string ProjectionNo {
       get; private set;
@@ -246,8 +240,7 @@ namespace Empiria.CashFlow.Projections {
     public virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(ProjectionNo, Description, Identificators, Tags,
-                                           Category.Keywords, Classification.Keywords,
-                                           BaseProject.Keywords, BaseAccount.Keywords,
+                                           Category.Keywords, BaseProject.Keywords, BaseAccount.Keywords,
                                            BaseParty.Keywords, AdjustmentOf.ProjectionNo, Plan.Keywords);
       }
     }

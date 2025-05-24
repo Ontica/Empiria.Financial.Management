@@ -94,10 +94,6 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto Classification {
-      get; internal set;
-    }
-
     public string ProjectionNo {
       get; internal set;
     }
@@ -107,6 +103,11 @@ namespace Empiria.CashFlow.Projections.Adapters {
     }
 
     public NamedEntityDto BaseProject {
+      get; internal set;
+    }
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "Classification")]
+    public NamedEntityDto BaseProjectCategory {
       get; internal set;
     }
 
@@ -193,11 +194,20 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
-    public string ClassificationName {
+    public string ProjectionNo {
       get; internal set;
     }
 
-    public string ProjectionNo {
+    public string BaseProjectName {
+      get; internal set;
+    }
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ClassificationName")]
+    public string BaseProjectCategoryName {
+      get; internal set;
+    }
+
+    public string BaseAccountName {
       get; internal set;
     }
 

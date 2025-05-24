@@ -27,17 +27,18 @@ namespace Empiria.CashFlow.Projections.Adapters {
     } = string.Empty;
 
 
-    public string ClassificationUID {
-      get; set;
-    } = string.Empty;
-
-
     public string BasePartyUID {
       get; set;
     } = string.Empty;
 
 
     public string BaseProjectUID {
+      get; set;
+    } = string.Empty;
+
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ClassificationUID")]
+    public string BaseProjectCategoryUID {
       get; set;
     } = string.Empty;
 
