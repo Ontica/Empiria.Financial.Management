@@ -21,11 +21,12 @@ namespace Empiria.Financial.Accounts.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v2/standard-accounts/{categoryId}")]
-    public CollectionModel GetStandardAccountByCategory([FromUri] int categoryId) {
+    [Route("v2/standard-accounts/categories/{categoryUID:guid}")]
+    public CollectionModel GetStandardAccountByCategory([FromUri] string categoryUID) {
 
       using (var usecases = StandardAccountUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> stdAccounts = usecases.GetStandardAccountByCategory(categoryId);
+
+        FixedList<NamedEntityDto> stdAccounts = usecases.GetStandardAccountsInCategory(categoryUID);
 
         return new CollectionModel(base.Request, stdAccounts);
       }

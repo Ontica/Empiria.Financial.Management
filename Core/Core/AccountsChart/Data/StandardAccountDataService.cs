@@ -20,7 +20,7 @@ namespace Empiria.Financial.Data {
         return;
       }
       var sql = "UPDATE FMS_STD_ACCOUNTS " +
-               $"SET STD_ACCT_UID + {System.Guid.NewGuid().ToString()}, " +
+               $"SET STD_ACCT_UID = '{System.Guid.NewGuid().ToString()}', " +
                $"STD_ACCT_DESCRIPTION = '{EmpiriaString.Clean(stdAccount.Description).Replace("'", "''")}', " +
                $"STD_ACCT_KEYWORDS = '{stdAccount.Keywords}' " +
                $"WHERE STD_ACCT_ID = {stdAccount.Id}";
@@ -30,11 +30,20 @@ namespace Empiria.Financial.Data {
       DataWriter.Execute(op);
     }
 
+    internal static FixedList<StandardAccount> GetStandardAccounts(StandardAccountsCatalogue catalogue) {
+      var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
+         $"WHERE STD_ACCT_CATALOGUE_ID = {catalogue.Id} AND " +
+         $"STD_ACCT_STATUS <> 'X'";
 
-    static internal FixedList<StandardAccount> GetStdAcctByCategory(int categoryId) {
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<StandardAccount>(op);
+    }
+
+    static internal FixedList<StandardAccount> GetStandardAccounts(StandardAccountCategory category) {
 
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
-               $"WHERE STD_ACCT_CATEGORY_ID = {categoryId} " + " AND " +
+               $"WHERE STD_ACCT_CATEGORY_ID = {category.Id} AND " +
                $"STD_ACCT_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);

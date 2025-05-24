@@ -38,16 +38,19 @@ namespace Empiria.Financial.Accounts.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetStandardAccountByCategory(int categoryId) {
-      Assertion.Require(categoryId, nameof(categoryId));
-
-      return StandardAccountDataService.GetStdAcctByCategory(categoryId).MapToNamedEntityList();
-    }
-
-
     public FixedList<NamedEntityDto> GetStandardAccountCategories() {
       return StandardAccountCategory.GetList()
                                     .MapToNamedEntityList();
+    }
+
+
+    public FixedList<NamedEntityDto> GetStandardAccountsInCategory(string stdAccountCategoryUID) {
+      Assertion.Require(stdAccountCategoryUID, nameof(stdAccountCategoryUID));
+
+      var category = StandardAccountCategory.Parse(stdAccountCategoryUID);
+
+      return category.GetStandardAccounts()
+                     .MapToNamedEntityList();
     }
 
 

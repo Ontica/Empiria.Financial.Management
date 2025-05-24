@@ -33,6 +33,22 @@ namespace Empiria.Financial {
 
     #region Properties
 
+    public StandardAccountsCatalogue Catalogue {
+      get {
+        if (this.IsEmptyInstance) {
+          return StandardAccountsCatalogue.Empty;
+        }
+        return base.ExtData.Get<StandardAccountsCatalogue>("standardAccountsCatalogueId");
+      }
+      private set {
+        if (this.IsEmptyInstance) {
+          return;
+        }
+        base.ExtData.Set("standardAccountsCatalogueId", value.Id);
+      }
+    }
+
+
     public StandardAccountCategory Parent {
       get {
         return base.GetParent<StandardAccountCategory>();
@@ -45,6 +61,10 @@ namespace Empiria.Financial {
     #endregion Properties
 
     #region Methods
+
+    public FixedList<StandardAccount> GetStandardAccounts() {
+      return Catalogue.GetStandardAccounts(this);
+    }
 
     #endregion Methods
 

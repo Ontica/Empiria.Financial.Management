@@ -11,7 +11,6 @@
 using Xunit;
 
 using Empiria.Financial;
-using Empiria.Financial.Data;
 
 namespace Empiria.Tests.Financial.Accounts {
 
@@ -19,16 +18,6 @@ namespace Empiria.Tests.Financial.Accounts {
   public class StandardAccountTests {
 
     #region Facts
-
-    [Fact]
-    public void Clean_Standard_Accounts() {
-      var stdAccounts = BaseObject.GetFullList<StandardAccount>();
-
-      foreach (var stdAccount in stdAccounts) {
-        StandardAccountDataService.CleanStandardAccount(stdAccount);
-      }
-    }
-
 
     [Fact]
     public void Should_Read_All_Standard_Accounts() {
