@@ -10,13 +10,13 @@
 
 using System;
 
-namespace Empiria.Financial.Accounts {
+namespace Empiria.Financial {
 
   /// <summary>Input fields with financial credit information.</summary>
   public class CreditExtDataFields {
 
     #region Properties
-        
+
     public string CreditoNo {
       get; set;
     } = string.Empty;
@@ -33,12 +33,12 @@ namespace Empiria.Financial.Accounts {
       get; set;
     } = string.Empty;
 
-        
+
     public string TipoCredito {
       get; set;
     } = string.Empty;
 
-        
+
     public int Currency {
       get; set;
     } = 0;
@@ -106,7 +106,7 @@ namespace Empiria.Financial.Accounts {
     public DateTime FechaAmortizacion {
       get; set;
     } = DateTime.Now;
-    
+
     #endregion Properties
 
     #region Methods

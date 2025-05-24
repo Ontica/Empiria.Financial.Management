@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Financial.Accounts.Adapters {
+namespace Empiria.Financial.Adapters {
 
   /// <summary> Mapping methods for financial accounts.</summary>
   static public class FinancialAccountMapper {
@@ -45,4 +45,4 @@ namespace Empiria.Financial.Accounts.Adapters {
 
   }  // class FinancialAccountMapper
 
-}  // namespace Empiria.Financial.Accounts.Adapters
+}  // namespace Empiria.Financial.Adapters

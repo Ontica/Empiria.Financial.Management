@@ -12,7 +12,7 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Financial.Accounts.UseCases;
+using Empiria.Financial.UseCases;
 
 namespace Empiria.CashFlow.WebApi {
 

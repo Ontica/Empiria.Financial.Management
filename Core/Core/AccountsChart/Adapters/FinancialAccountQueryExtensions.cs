@@ -13,7 +13,7 @@ using Empiria.Parties;
 
 using Empiria.Financial.Projects;
 
-namespace Empiria.Financial.Accounts.Adapters {
+namespace Empiria.Financial.Adapters {
 
   /// <summary>Query DTO used to extend financial accounts extensions.</summary>
   static internal class FinancialAccountQueryExtensions {
@@ -92,4 +92,4 @@ namespace Empiria.Financial.Accounts.Adapters {
 
   }  // class FinancialAccountQueryExtensions
 
-}  // namespace Empiria.Financial.Accounts.Adapters
+}  // namespace Empiria.Financial.Adapters

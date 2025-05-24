@@ -12,8 +12,8 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Financial.Accounts.Adapters;
-using Empiria.Financial.Accounts.UseCases;
+using Empiria.Financial.Adapters;
+using Empiria.Financial.UseCases;
 
 namespace Empiria.Financial.Accounts.WebApi {
 

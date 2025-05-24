@@ -7,14 +7,15 @@
 *  Summary  : Holds financial credit information.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-using Empiria.Json;
-using Empiria.Parties;
 
-namespace Empiria.Financial.Accounts {
+using System;
+
+using Empiria.Json;
+
+namespace Empiria.Financial {
 
   /// <summary>Holds financial credit information.</summary>
-  public class  CreditExtData {
+  public class CreditExtData {
 
     #region Constructors and Parsers
 
@@ -39,7 +40,7 @@ namespace Empiria.Financial.Accounts {
       }
     }
 
-    
+
     public int EtapaCredito {
       get {
         return _extData.Get("etapaCredito", 0);
@@ -48,7 +49,7 @@ namespace Empiria.Financial.Accounts {
         _extData.SetIfValue("etapaCredito", value);
       }
     }
-    
+
 
     public string Acreditado {
       get {
@@ -58,7 +59,7 @@ namespace Empiria.Financial.Accounts {
         _extData.SetIfValue("acreditado", value);
       }
     }
-      
+
 
     public string TipoCredito {
       get {
@@ -68,7 +69,7 @@ namespace Empiria.Financial.Accounts {
         _extData.SetIfValue("tipoCredito", value);
       }
     }
-  
+
 
     public decimal Interes {
       get {
@@ -98,7 +99,7 @@ namespace Empiria.Financial.Accounts {
         _extData.SetIfValue("saldo", value);
       }
     }
-        
+
 
     public decimal PlazoInversion {
       get {
@@ -177,7 +178,7 @@ namespace Empiria.Financial.Accounts {
       private set {
         _extData.SetIfValue("fechaAmortizacion", value);
       }
-    }  
+    }
 
     #endregion Properties
 
@@ -213,4 +214,4 @@ namespace Empiria.Financial.Accounts {
 
   } // class CreditExtData
 
-} // namespace Empiria.Financial.Accounts
+} // namespace Empiria.Financial

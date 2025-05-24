@@ -12,16 +12,11 @@ using System;
 
 using Xunit;
 
-
 using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Financial;
 using Empiria.Financial.Data;
-
-using Empiria.Tests.Financial.Projects;
-
-using Empiria.Financial.Accounts.Adapters;
 
 namespace Empiria.Tests.Financial.Accounts {
 
@@ -31,30 +26,17 @@ namespace Empiria.Tests.Financial.Accounts {
     #region Facts
 
     [Fact]
-    public void Clean_Financial_Accounts() {
-      var accounts = BaseObject.GetFullList<FinancialAccount>();
-
-      foreach (var account in accounts) {
-        FinancialAccountDataService.CleanAccount(account);
-      }
-    }
-
-
-    [Fact]
     public void Should_Create_FinancialAccount() {
 
-      string name = "Crédito para obra pública del estado de Hidalgo";
-      string AcctNo = "3494";
-      var orgUnit = OrganizationalUnit.Parse(3);
+      var stdAccount = TestsObjects.TryGetObject<StandardAccount>();
+      var orgUnit = TestsObjects.TryGetObject<OrganizationalUnit>();
 
-      var sut = new FinancialAccount(orgUnit, AcctNo, name);
+      var sut = new FinancialAccount(stdAccount, orgUnit);
 
       Assert.Equal(orgUnit, sut.OrganizationalUnit);
-      Assert.Equal(name, sut.Name);
-      Assert.True(sut.AccountNo.Length != 0);
-      Assert.NotNull(sut);
-
-      Assert.True(sut.StandardAccount.IsEmptyInstance);
+      Assert.Equal(stdAccount.StdAcctNo, sut.AccountNo);
+      Assert.Equal(stdAccount.Description, sut.Description);
+      Assert.Equal(stdAccount, sut.StandardAccount);
       Assert.Equal(DateTime.Today, sut.StartDate);
       Assert.Equal(ExecutionServer.DateMaxValue, sut.EndDate);
       Assert.Equal(EntityStatus.Pending, sut.Status);
@@ -63,7 +45,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
     [Fact]
     public void Should_Delete_FinancialAccount() {
-      var sut = TestingVariables.TryGetRandomNonEmpty<FinancialAccount>();
+      FinancialAccount sut = TestsObjects.TryGetObject<FinancialAccount>();
 
       if (sut == null) {
         return;
@@ -95,8 +77,20 @@ namespace Empiria.Tests.Financial.Accounts {
 
 
     [Fact]
+    public void Should_Search_Financial_Accounts_Using_Keywords() {
+
+      string keywords = "eva";
+
+      FixedList<FinancialAccount> sut = FinancialAccountDataService.SearchAccounts(keywords);
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+
+    [Fact]
     public void Should_Update_FinancialAccount() {
-      var sut = TestingVariables.TryGetRandomNonEmpty<FinancialAccount>();
+      FinancialAccount sut = TestsObjects.TryGetObject<FinancialAccount>((x) => x.Status == EntityStatus.Pending);
 
       if (sut == null) {
         return;
@@ -109,15 +103,17 @@ namespace Empiria.Tests.Financial.Accounts {
 
       var unchangedFields = new FinancialAccountFields {
         StandardAccountUID = sut.StandardAccount.UID,
-        OrganizationUnitUID = sut.OrganizationalUnit.UID,
+        OrganizationalUnitUID = sut.OrganizationalUnit.UID,
+        ProjectUID = sut.Project.UID,
       };
 
       sut.Update(fields);
 
       Assert.Equal(fields.AcctNo, sut.AccountNo);
-      Assert.Equal(fields.Description, sut.Name);
+      Assert.Equal(fields.Description, sut.Description);
       Assert.Equal(unchangedFields.StandardAccountUID, sut.StandardAccount.UID);
-      Assert.Equal(unchangedFields.OrganizationUnitUID, sut.OrganizationalUnit.UID);
+      Assert.Equal(unchangedFields.OrganizationalUnitUID, sut.OrganizationalUnit.UID);
+      Assert.Equal(unchangedFields.ProjectUID, sut.Project.UID);
     }
 
     #endregion Facts

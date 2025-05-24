@@ -12,10 +12,11 @@ using Empiria.Services;
 
 using Empiria.Financial.Data;
 
-using Empiria.Financial.Accounts.Adapters;
+using Empiria.Financial.Adapters;
 using Empiria.Financial.Projects.Adapters;
+using Empiria.Parties;
 
-namespace Empiria.Financial.Accounts.UseCases {
+namespace Empiria.Financial.UseCases {
 
   /// <summary>Provides use cases for update and retrieve financial accounts.</summary>
   public class FinancialAccountUseCases : UseCase {
@@ -39,7 +40,12 @@ namespace Empiria.Financial.Accounts.UseCases {
 
       fields.EnsureValid();
 
-      var account = new FinancialAccount(fields);
+      var stdAccount = StandardAccount.Parse(fields.StandardAccountUID);
+      var orgUnit = OrganizationalUnit.Parse(fields.OrganizationUID);
+
+      var account = new CreditAccount(stdAccount, orgUnit, fields.AcctNo, fields.Description);
+
+      account.Update(fields);
 
       account.Save();
 

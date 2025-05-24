@@ -11,25 +11,25 @@
 using Empiria.Parties;
 
 using Empiria.Financial.Accounts;
-using Empiria.Financial.Accounts.Adapters;
 
 namespace Empiria.Financial {
 
   /// <summary>Represents a credit account.</summary>
   public class CreditAccount : FinancialAccount {
-  
+
     #region Constructors and parsers
-    internal CreditAccount() {
-      // Require by Empiria FrameWork
+
+    protected CreditAccount() {
+      // Required by Empiria FrameWork
     }
 
-    public CreditAccount(OrganizationalUnit orgUnit, string accountNo, string name) : base(orgUnit,accountNo,name) {
-      // Require by Empiria FrameWork
-    }
-    
-    public CreditAccount(FinancialAccountFields fields) {
-      Assertion.Require(fields, nameof(fields));
-      Update(fields);
+    public CreditAccount(StandardAccount stdAccount, OrganizationalUnit orgUnit,
+                         string accountNo, string description) : base(stdAccount, orgUnit) {
+      Assertion.Require(accountNo, nameof(accountNo));
+      Assertion.Require(description, nameof(description));
+
+      base.AccountNo = accountNo;
+      base.Description = description;
     }
 
     static public new CreditAccount Parse(int id) => ParseId<CreditAccount>(id);
@@ -40,7 +40,7 @@ namespace Empiria.Financial {
 
     #endregion Constructors and parsers
 
-    #region Properties       
+    #region Properties
 
     public CreditExtData CreditData {
       get {

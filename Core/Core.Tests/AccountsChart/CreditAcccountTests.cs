@@ -40,12 +40,10 @@ namespace Empiria.Tests.Financial.Accounts {
         FechaAmortizacion = DateTime.Now,
       };
 
-      var UID = "5a1370bc-42c9-40bb-a547-ba4b4c365bd1";
-
-      CreditAccount sut = CreditAccount.Parse(UID);
+      CreditAccount sut = TestsObjects.TryGetObject<CreditAccount>();
 
       sut.Update(fields);
-      Assert.Equal(UID, sut.UID);
+
       Assert.Equal(fields.EtapaCredito, sut.CreditData.EtapaCredito);
     }
 

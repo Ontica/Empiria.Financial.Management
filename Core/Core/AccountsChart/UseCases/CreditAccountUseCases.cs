@@ -10,9 +10,9 @@
 
 using Empiria.Services;
 
-using Empiria.Financial.Accounts.Adapters;
+using Empiria.Financial.Adapters;
 
-namespace Empiria.Financial.Accounts.UseCases {
+namespace Empiria.Financial.UseCases {
 
   /// <summary>Provides use cases for update and retrieve credit accounts.</summary>
   public class CreditAccountUseCases : UseCase {
@@ -48,4 +48,4 @@ namespace Empiria.Financial.Accounts.UseCases {
 
   }  // class FinancialAccountUseCases
 
-}  // namespace Empiria.Financial.Accounts.UseCases
+}  // namespace Empiria.Financial.UseCases

@@ -10,7 +10,7 @@
 
 using Empiria.StateEnums;
 
-namespace Empiria.Financial.Accounts.Adapters {
+namespace Empiria.Financial.Adapters {
 
   /// <summary>Query DTO used to search financial accounts.</summary>
   public class FinancialAccountQuery {
@@ -42,4 +42,4 @@ namespace Empiria.Financial.Accounts.Adapters {
 
   }  // class FinancialAccountQuery
 
-}  // namespace Empiria.Financial.Accounts.Adapters
+}  // namespace Empiria.Financial.Adapters

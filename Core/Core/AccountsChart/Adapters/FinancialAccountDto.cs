@@ -10,7 +10,7 @@
 
 using Empiria.StateEnums;
 
-namespace Empiria.Financial.Accounts.Adapters {
+namespace Empiria.Financial.Adapters {
 
   public class FinancialAccountDto {
 
@@ -48,6 +48,6 @@ namespace Empiria.Financial.Accounts.Adapters {
       get; set;
     }
 
-  } // Class FinancialAccountDto
+  } // class FinancialAccountDto
 
-} // Namespace Empiria.Financial.Accounts.Adapters
+} // namespace Empiria.Financial.Adapters

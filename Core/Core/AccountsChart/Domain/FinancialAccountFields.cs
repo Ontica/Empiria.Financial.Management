@@ -8,12 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.StateEnums;
-using Empiria.Parties;
-
-using Empiria.Financial.Projects;
-
-namespace Empiria.Financial.Accounts.Adapters {
+namespace Empiria.Financial {
 
   /// <summary>Input field with financial account data.</summary>
   public class FinancialAccountFields {
@@ -30,7 +25,7 @@ namespace Empiria.Financial.Accounts.Adapters {
     } = string.Empty;
 
 
-    public string OrganizationUnitUID {
+    public string OrganizationalUnitUID {
       get; set;
     } = string.Empty;
 
@@ -89,14 +84,14 @@ namespace Empiria.Financial.Accounts.Adapters {
       Description = FieldPatcher.Clean(Description);
 
       StandardAccountUID = FieldPatcher.Clean(StandardAccountUID);
-      OrganizationUnitUID = FieldPatcher.Clean(OrganizationUnitUID);
+      OrganizationalUnitUID = FieldPatcher.Clean(OrganizationalUnitUID);
 
       if (StandardAccountUID.Length != 0) {
         _ = StandardAccount.Parse(StandardAccountUID);
       }
 
-      if (OrganizationUnitUID.Length != 0) {
-        _ = StandardAccount.Parse(OrganizationUnitUID);
+      if (OrganizationalUnitUID.Length != 0) {
+        _ = StandardAccount.Parse(OrganizationalUnitUID);
       }
     }
 
@@ -104,4 +99,4 @@ namespace Empiria.Financial.Accounts.Adapters {
 
   }  // class AccountFields
 
-}  // namespace Empiria.Financial.Accounts.Adapters
+}  // namespace Empiria.Financial

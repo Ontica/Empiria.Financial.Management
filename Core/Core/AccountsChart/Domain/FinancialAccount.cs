@@ -18,8 +18,6 @@ using Empiria.Financial.Projects;
 
 using Empiria.Financial.Data;
 
-using Empiria.Financial.Accounts.Adapters;
-
 namespace Empiria.Financial {
 
   /// <summary>Represents a financial account.</summary>
@@ -28,25 +26,27 @@ namespace Empiria.Financial {
     #region Constructors and parsers
 
     protected FinancialAccount() {
-      // Require by Empiria FrameWork
+      // Required by Empiria FrameWork
     }
 
-    public FinancialAccount(OrganizationalUnit orgUnit, string accountNo, string description) {
+    protected FinancialAccount(StandardAccount stdAccount) {
+      // Required by Empiria FrameWork
+    }
+
+    public FinancialAccount(StandardAccount stdAccount, OrganizationalUnit orgUnit) {
+      Assertion.Require(stdAccount, nameof(stdAccount));
+      Assertion.Require(!stdAccount.IsEmptyInstance, nameof(stdAccount));
       Assertion.Require(orgUnit, nameof(orgUnit));
-      Assertion.Require(accountNo, nameof(accountNo));
-      Assertion.Require(description, nameof(description));
       Assertion.Require(!orgUnit.IsEmptyInstance,
                        "orgUnit can not be the empty instance.");
 
-      this.OrganizationalUnit = orgUnit;
-      this.Description = description;
-      this.AccountNo = accountNo;
-      this.StartDate = DateTime.Today;
-    }
+      this.StandardAccount = stdAccount;
+      this.AccountNo = stdAccount.StdAcctNo;
+      this.Description = stdAccount.Description;
 
-    public FinancialAccount(FinancialAccountFields fields) {
-      Assertion.Require(fields, nameof(fields));
-      Update(fields);
+      this.OrganizationalUnit = orgUnit;
+
+      this.StartDate = DateTime.Today;
     }
 
     static public FinancialAccount Parse(int id) => ParseId<FinancialAccount>(id);
@@ -91,13 +91,13 @@ namespace Empiria.Financial {
 
     [DataField("ACCT_NUMBER")]
     public string AccountNo {
-      get; private set;
+      get; protected set;
     }
 
 
     [DataField("ACCT_DESCRIPTION")]
     public string Description {
-      get; private set;
+      get; protected set;
     }
 
 
