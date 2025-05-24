@@ -28,7 +28,7 @@ namespace Empiria.CashFlow.Projections {
 
     #region Fields
 
-    private readonly string TO_ASSIGN_PROJECTION_NO = "Por asignar";
+    static private readonly string TO_ASSIGN_PROJECTION_NO = "Por asignar";
 
     #endregion Fields
 
@@ -38,11 +38,20 @@ namespace Empiria.CashFlow.Projections {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal protected CashFlowProjection(CashFlowProjectionType projectionType,
-                                          CashFlowPlan plan) : base(projectionType) {
+    internal CashFlowProjection(CashFlowPlan plan, CashFlowProjectionCategory category,
+                                OrganizationalUnit baseParty) : this(category.ProjectionType) {
       Assertion.Require(plan, nameof(plan));
+      Assertion.Require(!plan.IsEmptyInstance, nameof(plan));
+      Assertion.Require(category, nameof(category));
+      Assertion.Require(!category.IsEmptyInstance, nameof(category));
+      Assertion.Require(baseParty, nameof(baseParty));
+      Assertion.Require(!baseParty.IsEmptyInstance, nameof(baseParty));
 
-      this.Plan = plan;
+      Plan = plan;
+      Category = category;
+      BaseParty = baseParty;
+      OperationSource = OperationSource.Default;
+      ProjectionNo = TO_ASSIGN_PROJECTION_NO;
     }
 
     static public CashFlowProjection Parse(int id) => ParseId<CashFlowProjection>(id);
@@ -304,7 +313,6 @@ namespace Empiria.CashFlow.Projections {
 
     protected override void OnSave() {
       if (IsNew) {
-        ProjectionNo = TO_ASSIGN_PROJECTION_NO;
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }

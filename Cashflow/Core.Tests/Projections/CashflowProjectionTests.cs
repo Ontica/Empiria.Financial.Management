@@ -10,6 +10,12 @@
 
 using Xunit;
 
+using Empiria.Parties;
+using Empiria.StateEnums;
+
+using Empiria.Financial;
+using Empiria.Financial.Projects;
+
 using Empiria.CashFlow.Projections;
 
 namespace Empiria.Tests.CashFlow.Projections {
@@ -18,6 +24,31 @@ namespace Empiria.Tests.CashFlow.Projections {
   public class CashFlowProjectionTests {
 
     #region Facts
+
+    [Fact]
+    public void Should_Create_CashFlowProjection() {
+
+      var plan = TestsObjects.TryGetObject<CashFlowPlan>();
+      var category = TestsObjects.TryGetObject<CashFlowProjectionCategory>();
+      var baseParty = TestsObjects.TryGetObject<OrganizationalUnit>();
+
+      var sut = new CashFlowProjection(plan, category, baseParty);
+
+      Assert.Equal(plan, sut.Plan);
+      Assert.Equal(category, sut.Category);
+      Assert.Equal(category.ProjectionType, sut.ProjectionType);
+      Assert.Equal(baseParty, sut.BaseParty);
+      Assert.False(sut.HasProjectionNo);
+      Assert.Equal(FinancialAccount.Empty, sut.BaseAccount);
+      Assert.Equal(FinancialProject.Empty, sut.BaseProject);
+      Assert.Equal(OperationSource.Default, sut.OperationSource);
+      Assert.Equal(CashFlowProjection.Empty, sut.AdjustmentOf);
+      Assert.Equal(TransactionStatus.Pending, sut.Status);
+      Assert.Empty(sut.Description);
+      Assert.Empty(sut.Justification);
+      Assert.True(sut.Rules.CanUpdate);
+    }
+
 
     [Fact]
     public void Should_Get_All_CashFlow_Projections() {
