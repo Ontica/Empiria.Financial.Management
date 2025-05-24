@@ -50,7 +50,7 @@ namespace Empiria.Budgeting.Transactions {
         var transaction = new BudgetTransaction(transactionType, budget);
         var fields = new BudgetTransactionFields {
           BasePartyUID = orgUnit.UID,
-          OperationSourceUID = OperationSource.Parse(11).UID,
+          OperationSourceUID = OperationSource.Default.UID,
         };
 
         transaction.Update(fields);

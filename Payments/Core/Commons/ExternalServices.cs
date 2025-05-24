@@ -114,8 +114,6 @@ namespace Empiria.Payments {
                                                                               BudgetTransactionType transactionType,
                                                                               DateTime applicationDate) {
 
-      var SISTEMA_DE_PAGOS = OperationSource.Parse(12);
-
       int contractId = -1;
 
       if (payable.PayableEntity is Contract contract) {
@@ -128,7 +126,7 @@ namespace Empiria.Payments {
       return new BudgetTransactionFields {
         TransactionTypeUID = transactionType.UID,
         BaseBudgetUID = Budget.Parse(1).UID,
-        OperationSourceUID = SISTEMA_DE_PAGOS.UID,
+        OperationSourceUID = OperationSource.ParseNamedKey("SISTEMA_DE_PAGOS").UID,
         Description = payable.Description,
         PayableId = payable.Id,
         BasePartyUID = payable.OrganizationalUnit.UID,

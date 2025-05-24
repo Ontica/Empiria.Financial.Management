@@ -28,14 +28,12 @@ namespace Empiria.CashFlow.Projections {
 
     static public CashFlowProjectionCategory Parse(string uid) => ParseKey<CashFlowProjectionCategory>(uid);
 
-    static public FixedList<CashFlowProjectionCategory> GetList() {
-      return BaseObject.GetList<CashFlowProjectionCategory>(string.Empty, "Object_Name")
-                       .FindAll(x => x.Status != EntityStatus.Deleted)
-                       .ToFixedList();
-    }
-
-
     static public CashFlowProjectionCategory Empty => ParseEmpty<CashFlowProjectionCategory>();
+
+    static public FixedList<CashFlowProjectionCategory> GetList() {
+      return GetStorageObjects<CashFlowProjectionCategory>()
+            .FindAll(x => x.Status != EntityStatus.Deleted);
+    }
 
     #endregion Constructors and parsers
 

@@ -27,16 +27,14 @@ namespace Empiria.CashFlow.Projections {
 
     static public CashFlowPlan Parse(string uid) => ParseKey<CashFlowPlan>(uid);
 
-    static public FixedList<CashFlowPlan> GetList() {
-      return BaseObject.GetList<CashFlowPlan>(string.Empty, "Object_Name")
-                       .FindAll(x => x.Status != EntityStatus.Deleted)
-                       .ToFixedList()
-                       .Sort((x, y) => x.StartDate.CompareTo(y.StartDate))
-                       .Reverse();
-    }
-
-
     static public CashFlowPlan Empty => ParseEmpty<CashFlowPlan>();
+
+    static public FixedList<CashFlowPlan> GetList() {
+      return GetStorageObjects<CashFlowPlan>()
+             .FindAll(x => x.Status != EntityStatus.Deleted)
+             .Sort((x, y) => x.StartDate.CompareTo(y.StartDate))
+             .Reverse();
+    }
 
     #endregion Constructors and parsers
 

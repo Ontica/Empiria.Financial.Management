@@ -26,8 +26,7 @@ namespace Empiria.Financial {
     static public StandardAccountsCatalogue Empty => ParseEmpty<StandardAccountsCatalogue>();
 
     static public FixedList<StandardAccountsCatalogue> GetList() {
-      return GetList<StandardAccountsCatalogue>()
-            .ToFixedList();
+      return GetStorageObjects<StandardAccountsCatalogue>();
     }
 
     #endregion Constructors and parsers

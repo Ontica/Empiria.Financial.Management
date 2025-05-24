@@ -26,8 +26,7 @@ namespace Empiria.Financial.Projects {
     static public FinancialProjectCategory Empty => ParseEmpty<FinancialProjectCategory>();
 
     static public FixedList<FinancialProjectCategory> GetList() {
-      return GetList<FinancialProjectCategory>()
-            .ToFixedList();
+      return GetStorageObjects<FinancialProjectCategory>();
     }
 
     #endregion Constructors and parsers
