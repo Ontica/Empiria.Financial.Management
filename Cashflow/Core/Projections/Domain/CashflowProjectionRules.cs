@@ -15,13 +15,26 @@ namespace Empiria.CashFlow.Projections {
   /// <summary>Provides services to control cash flow projection's rules.</summary>
   internal class CashFlowProjectionRules {
 
+    #region Fields
+
+    static internal readonly string CASH_FLOW_AUTHORIZER = "cash-flow-authorizer";
+    static internal readonly string CASH_FLOW_MANAGER = "cash-flow-manager";
+    static internal readonly string CASH_FLOW_PROJECTOR = "cash-flow-projector";
+    static internal readonly string CASH_FLOW_ROLE = "cash-flow";
+
     private readonly CashFlowProjection _projection;
+
+    #endregion Fields
+
+    #region Constructors and parsers
 
     internal CashFlowProjectionRules(CashFlowProjection projection) {
       Assertion.Require(projection, nameof(projection));
 
       _projection = projection;
     }
+
+    #endregion Constructors and parsers
 
     #region Properties
 
@@ -30,8 +43,8 @@ namespace Empiria.CashFlow.Projections {
         if (_projection.Status != TransactionStatus.OnAuthorization) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-manager") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer")) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_AUTHORIZER) ||
+            ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER)) {
           return true;
         }
         return false;
@@ -44,7 +57,7 @@ namespace Empiria.CashFlow.Projections {
         if (_projection.Status != TransactionStatus.Authorized) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer")) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_AUTHORIZER)) {
           return true;
         }
         return false;
@@ -91,8 +104,8 @@ namespace Empiria.CashFlow.Projections {
             _projection.Status != TransactionStatus.Authorized) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-manager") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer")) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_AUTHORIZER) ||
+            ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER)) {
           return true;
         }
         return false;
@@ -110,8 +123,8 @@ namespace Empiria.CashFlow.Projections {
         //  return false;
         //}
         if (_projection.ProjectionType.IsProtected &&
-           (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-manager") ||
-           ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer"))) {
+           (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_AUTHORIZER) ||
+           ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER))) {
           return true;
         }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
@@ -134,12 +147,13 @@ namespace Empiria.CashFlow.Projections {
           return false;
         }
         if (_projection.ProjectionType.IsProtected &&
-            (ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-manager") ||
-             ExecutionServer.CurrentPrincipal.IsInRole("cash-flow-authorizer"))) {
+            (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_AUTHORIZER) ||
+             ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER))) {
           return true;
         }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
-                                    new int[] { _projection.PostedBy.Id, _projection.RecordedBy.Id })) {
+                                    new int[] { _projection.PostedBy.Id,
+                                                _projection.RecordedBy.Id })) {
           return false;
         }
 

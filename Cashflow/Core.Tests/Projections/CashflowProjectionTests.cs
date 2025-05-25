@@ -30,7 +30,8 @@ namespace Empiria.Tests.CashFlow.Projections {
 
       var plan = TestsObjects.TryGetObject<CashFlowPlan>();
       var category = TestsObjects.TryGetObject<CashFlowProjectionCategory>();
-      var baseParty = TestsObjects.TryGetObject<OrganizationalUnit>();
+      var baseParty = TestsObjects.TryGetObject<Party>(x =>
+                                      x.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE));
 
       var sut = new CashFlowProjection(plan, category, baseParty);
 
@@ -47,6 +48,7 @@ namespace Empiria.Tests.CashFlow.Projections {
       Assert.Empty(sut.Description);
       Assert.Empty(sut.Justification);
       Assert.True(sut.Rules.CanUpdate);
+
     }
 
 
