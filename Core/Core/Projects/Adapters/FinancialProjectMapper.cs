@@ -31,7 +31,7 @@ namespace Empiria.Financial.Projects.Adapters {
         Subprogram = project.Subprogram.MapToNamedEntity(),
         ProjectNo = project.ProjectNo,
         Name = project.Name,
-        Party = project.OrganizationalUnit.MapToNamedEntity(),
+        Party = project.Party.MapToNamedEntity(),
         Status = project.Status,
       };
     }
@@ -48,7 +48,7 @@ namespace Empiria.Financial.Projects.Adapters {
         SubprogramName = project.Subprogram.Name,
         ProjectNo = project.ProjectNo,
         Name = project.Name,
-        PartyName = project.OrganizationalUnit.FullName,
+        PartyName = project.Party.Name,
         StatusName = project.Status.GetName(),
       };
     }

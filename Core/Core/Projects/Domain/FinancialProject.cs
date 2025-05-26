@@ -27,16 +27,24 @@ namespace Empiria.Financial.Projects {
       // Required by Empiria Framework
     }
 
-    internal FinancialProject(OrganizationalUnit orgUnit, string name) {
-      Assertion.Require(orgUnit, nameof(orgUnit));
+    internal FinancialProject(FinancialProjectCategory category, Party party,
+                              INamedEntity subprogram, string name) {
+      Assertion.Require(category, nameof(category));
+      Assertion.Require(!category.IsEmptyInstance, nameof(category));
+      Assertion.Require(party, nameof(party));
+      Assertion.Require(!party.IsEmptyInstance, nameof(party));
+      Assertion.Require(subprogram, nameof(subprogram));
       Assertion.Require(name, nameof(name));
-      Assertion.Require(!orgUnit.IsEmptyInstance,
+
+      Assertion.Require(!party.IsEmptyInstance,
                         "orgUnit can not be the empty instance.");
 
-      this.OrganizationalUnit = orgUnit;
-      this.Name = name;
-      this.ProjectNo = "N/D";
-      this.StartDate = DateTime.Today;
+      Category = category;
+      Party = party;
+      _subprogram = StandardAccount.Parse(subprogram.UID);
+      Name = EmpiriaString.Clean(name);
+      ProjectNo = "N/D";
+      StartDate = DateTime.Today;
     }
 
     static public FinancialProject Parse(int id) => ParseId<FinancialProject>(id);
@@ -104,8 +112,8 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    [DataField("PRJ_ORG_UNIT_ID")]
-    public OrganizationalUnit OrganizationalUnit {
+    [DataField("PRJ_PARTY_ID")]
+    public Party Party {
       get; private set;
     }
 
@@ -131,7 +139,7 @@ namespace Empiria.Financial.Projects {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(ProjectNo, Name, Identifiers, Tags, Program.Name,
-                                           OrganizationalUnit.Keywords, Category.Keywords,
+                                           Party.Keywords, Category.Keywords,
                                            _subprogram.Keywords);
       }
     }
@@ -195,10 +203,10 @@ namespace Empiria.Financial.Projects {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.StartDate = ExecutionServer.DateMinValue;
-        this.EndDate = ExecutionServer.DateMaxValue;
-        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        this.PostingTime = DateTime.Now;
+        StartDate = ExecutionServer.DateMinValue;
+        EndDate = ExecutionServer.DateMaxValue;
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
       }
 
       FinancialProjectDataService.WriteProject(this, _subprogram, this.ExtData.ToString());
@@ -208,7 +216,7 @@ namespace Empiria.Financial.Projects {
     internal void SetParent(FinancialProject parent) {
       Assertion.Require(parent, nameof(parent));
 
-      this.Parent = parent;
+      Parent = parent;
     }
 
 
@@ -224,11 +232,11 @@ namespace Empiria.Financial.Projects {
 
       fields.EnsureValid();
 
-      this.Name = PatchField(fields.Name, this.Name);
-      this.ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
-      this.Category = PatchField(fields.CategoryUID, this.Category);
+      Category = PatchField(fields.CategoryUID, this.Category);
       _subprogram = PatchField(fields.SubprogramUID, _subprogram);
-      this.OrganizationalUnit = PatchField(fields.OrganizationUnitUID, this.OrganizationalUnit);
+      Name = PatchField(fields.Name, this.Name);
+      ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
+      Party = PatchField(fields.PartyUID, this.Party);
     }
 
     #endregion Methods

@@ -30,15 +30,22 @@ namespace Empiria.Tests.Financial.Projects {
     public void Should_Create_FinancialProject() {
 
       string name = "Proyecto de Prueba";
-      var orgUnit = OrganizationalUnit.Parse(3);
 
-      var sut = new FinancialProject(orgUnit, name);
+      var category = TestsObjects.TryGetObject<FinancialProjectCategory>();
 
-      Assert.Equal(orgUnit, sut.OrganizationalUnit);
+      var party = TestsObjects.TryGetObject<Party>(x => x.PlaysRole("cash-flow"));
+
+      var subprograms = FinancialProject.GetClassificationList(FinancialProjectClassificator.Subprograma);
+
+      var subprogram = TestsObjects.TryGetObject(subprograms);
+
+      var sut = new FinancialProject(category, party, subprogram, name);
+
+      Assert.Equal(party, sut.Party);
       Assert.Equal(name, sut.Name);
 
-      Assert.Equal("Empty", sut.Subprogram.UID);
-      Assert.Equal(FinancialProjectCategory.Empty, sut.Category);
+      Assert.Equal(subprogram, sut.Subprogram);
+      Assert.Equal(category, sut.Category);
       Assert.True(sut.ProjectNo.Length != 0);
       Assert.Equal(DateTime.Today, sut.StartDate);
       Assert.Equal(ExecutionServer.DateMaxValue, sut.EndDate);
@@ -123,7 +130,7 @@ namespace Empiria.Tests.Financial.Projects {
       var unchangedFields = new FinancialProjectFields {
         SubprogramUID = sut.Subprogram.UID,
         CategoryUID = sut.Category.UID,
-        OrganizationUnitUID = sut.OrganizationalUnit.UID,
+        PartyUID = sut.Party.UID,
       };
 
       sut.Update(fields);
@@ -132,7 +139,7 @@ namespace Empiria.Tests.Financial.Projects {
       Assert.Equal(fields.Name, sut.Name);
       Assert.Equal(unchangedFields.SubprogramUID, sut.Subprogram.UID);
       Assert.Equal(unchangedFields.CategoryUID, sut.Category.UID);
-      Assert.Equal(unchangedFields.OrganizationUnitUID, sut.OrganizationalUnit.UID);
+      Assert.Equal(unchangedFields.PartyUID, sut.Party.UID);
     }
 
     #endregion Facts

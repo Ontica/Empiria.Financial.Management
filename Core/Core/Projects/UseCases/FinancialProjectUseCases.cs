@@ -8,11 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Parties;
 using Empiria.Services;
 
 using Empiria.Financial.Projects.Adapters;
 using Empiria.Financial.Projects.Data;
-using System;
 
 namespace Empiria.Financial.Projects.UseCases {
 
@@ -38,7 +38,14 @@ namespace Empiria.Financial.Projects.UseCases {
 
       fields.EnsureValid();
 
-      var project = new FinancialProject(fields.GetOrganizationalUnit(), fields.Name);
+      var category = FinancialProjectCategory.Parse(fields.CategoryUID);
+      var party = Party.Parse(fields.PartyUID);
+
+      var subprograms = FinancialProject.GetClassificationList(FinancialProjectClassificator.Subprograma);
+
+      var subprogram = subprograms.Find(x => x.UID == fields.SubprogramUID);
+
+      var project = new FinancialProject(category, party, subprogram, fields.Name);
 
       project.Update(fields);
 

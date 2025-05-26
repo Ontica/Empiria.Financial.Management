@@ -22,6 +22,11 @@ namespace Empiria.Financial.Projects {
     } = string.Empty;
 
 
+    public string PartyUID {
+      get; set;
+    } = string.Empty;
+
+
     public string SubprogramUID {
       get; set;
     } = string.Empty;
@@ -37,11 +42,6 @@ namespace Empiria.Financial.Projects {
     } = string.Empty;
 
 
-    public string OrganizationUnitUID {
-      get; set;
-    } = string.Empty;
-
-
     #endregion Properties
 
     #region Methods
@@ -52,7 +52,7 @@ namespace Empiria.Financial.Projects {
 
       CategoryUID = FieldPatcher.Clean(CategoryUID);
       SubprogramUID = FieldPatcher.Clean(SubprogramUID);
-      OrganizationUnitUID = FieldPatcher.Clean(OrganizationUnitUID);
+      PartyUID = FieldPatcher.Clean(PartyUID);
 
       if (CategoryUID.Length != 0) {
         _ = FinancialProjectCategory.Parse(CategoryUID);
@@ -62,14 +62,9 @@ namespace Empiria.Financial.Projects {
         _ = StandardAccount.Parse(SubprogramUID);
       }
 
-      if (OrganizationUnitUID.Length != 0) {
-        _ = OrganizationalUnit.Parse(OrganizationUnitUID);
+      if (PartyUID.Length != 0) {
+        _ = Party.Parse(PartyUID);
       }
-    }
-
-
-    internal OrganizationalUnit GetOrganizationalUnit() {
-      return OrganizationalUnit.Parse(OrganizationUnitUID);
     }
 
     #endregion Methods
