@@ -15,12 +15,22 @@ namespace Empiria.Financial.Projects.Adapters {
   /// <summary>Query DTO used to search financial projects.</summary>
   public class FinancialProjectQuery {
 
-    public string OrganizationUnitUID {
-      get; set;
+    public string StandardAccountUID {
+      get; internal set;
     } = string.Empty;
 
 
     public string CategoryUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string ProgramUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string PartyUID {
       get; set;
     } = string.Empty;
 

@@ -8,13 +8,18 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.StateEnums;
+
 namespace Empiria.Financial.Projects.Adapters {
 
   /// <summary> Mapping methods for financial projects.</summary>
   static public class FinancialProjectMapper {
 
-    static public FixedList<FinancialProjectDto> Map(FixedList<FinancialProject> project) {
-      return project.Select(x => Map(x)).ToFixedList();
+    #region Mappers
+
+    static public FixedList<FinancialProjectDescriptor> Map(FixedList<FinancialProject> project) {
+      return project.Select(x => MapToDescriptor(x))
+                    .ToFixedList();
     }
 
 
@@ -23,12 +28,32 @@ namespace Empiria.Financial.Projects.Adapters {
         UID = project.UID,
         StandardAccount = project.StandardAccount.MapToNamedEntity(),
         Category = project.Category.MapToNamedEntity(),
+        Program = project.Program.MapToNamedEntity(),
         ProjectNo = project.ProjectNo,
         Name = project.Name,
-        OrganizationalUnit = project.OrganizationalUnit.MapToNamedEntity(),
+        Party = project.OrganizationalUnit.MapToNamedEntity(),
         Status = project.Status,
       };
     }
+
+    #endregion Mappers
+
+    #region Helpers
+
+    static private FinancialProjectDescriptor MapToDescriptor(FinancialProject project) {
+      return new FinancialProjectDescriptor {
+        UID = project.UID,
+        StandardAccountName = project.StandardAccount.Name,
+        CategoryName = project.Category.Name,
+        ProgramName = project.Program.Name,
+        ProjectNo = project.ProjectNo,
+        Name = project.Name,
+        PartyName = project.OrganizationalUnit.FullName,
+        StatusName = project.Status.GetName(),
+      };
+    }
+
+    #endregion Helpers
 
   }  // class FinancialProjectMapper
 

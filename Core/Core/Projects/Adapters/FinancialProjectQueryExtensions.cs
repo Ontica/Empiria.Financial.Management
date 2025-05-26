@@ -26,8 +26,8 @@ namespace Empiria.Financial.Projects.Adapters {
     static internal string MapToFilterString(this FinancialProjectQuery query) {
       string statusFilter = BuildRequestStatusFilter(query.Status);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
-      string requesterOrgUnitFilter = BuildRequesterOrgUnitFilter(query.OrganizationUnitUID);
-          
+      string requesterOrgUnitFilter = BuildRequesterOrgUnitFilter(query.PartyUID);
+
       var filter = new Filter(statusFilter);
       filter.AppendAnd(requesterOrgUnitFilter);
       filter.AppendAnd(keywordsFilter);

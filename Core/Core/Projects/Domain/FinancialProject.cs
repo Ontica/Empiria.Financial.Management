@@ -83,9 +83,9 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    public string Program {
+    public INamedEntity Program {
       get {
-        return StandardAccount.Parse(StandardAccount.ParentId).Name;
+        return StandardAccount.Parse(StandardAccount.ParentId);
       }
     }
 
@@ -116,7 +116,7 @@ namespace Empiria.Financial.Projects {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(ProjectNo, Name, Identifiers, Tags, Program,
+        return EmpiriaString.BuildKeywords(ProjectNo, Name, Identifiers, Tags, Program.Name,
                                            OrganizationalUnit.Keywords, Category.Keywords,
                                            StandardAccount.Keywords);
       }

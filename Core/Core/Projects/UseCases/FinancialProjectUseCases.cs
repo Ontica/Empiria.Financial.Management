@@ -85,7 +85,7 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
-    public FixedList<FinancialProjectDto> SearchProjects(FinancialProjectQuery query) {
+    public FixedList<FinancialProjectDescriptor> SearchProjects(FinancialProjectQuery query) {
       Assertion.Require(query, nameof(query));
 
       query.EnsureIsValid();

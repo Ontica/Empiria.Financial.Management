@@ -16,39 +16,76 @@ namespace Empiria.Financial.Projects.Adapters {
   public class FinancialProjectDto {
 
     public string UID {
-      get; set;
+      get; internal set;
     }
-
 
     public NamedEntityDto StandardAccount {
-      get; set;
+      get; internal set;
     }
-
 
     public NamedEntityDto Category {
-      get; set;
+      get; internal set;
     }
 
+    public NamedEntityDto Program {
+      get; internal set;
+    }
+
+    public NamedEntityDto Party {
+      get; internal set;
+    }
 
     public string ProjectNo {
-      get; set;
+      get; internal set;
     }
-
 
     public string Name {
-      get; set;
+      get; internal set;
     }
-
-
-    public NamedEntityDto OrganizationalUnit {
-      get; set;
-    }
-
 
     public EntityStatus Status {
-      get; set;
+      get; internal set;
     }
 
   }  // class FinancialProjectDto
+
+
+
+  /// <summary>Output DTO for financial projects data for use in lists.</summary>
+  public class FinancialProjectDescriptor {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string StandardAccountName {
+      get; internal set;
+    }
+
+    public string CategoryName {
+      get; internal set;
+    }
+
+    public string ProgramName {
+      get; internal set;
+    }
+
+    public string PartyName {
+      get; internal set;
+    }
+
+    public string ProjectNo {
+      get; internal set;
+    }
+
+    public string Name {
+      get; internal set;
+    }
+
+    public string StatusName {
+      get; internal set;
+    }
+
+  }  // class FinancialProjectDescriptor
 
 }  // namespace Empiria.Financial.Projects.Adapters

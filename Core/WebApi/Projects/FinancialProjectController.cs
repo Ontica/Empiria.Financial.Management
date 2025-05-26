@@ -51,7 +51,7 @@ namespace Empiria.Financial.Projects.WebApi {
     public CollectionModel SearchProjects([FromBody] FinancialProjectQuery query) {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FixedList<FinancialProjectDto> projects = usecases.SearchProjects(query);
+        FixedList<FinancialProjectDescriptor> projects = usecases.SearchProjects(query);
 
         return new CollectionModel(base.Request, projects);
       }

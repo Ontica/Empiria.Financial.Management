@@ -94,7 +94,6 @@ namespace Empiria.Tests.Financial.Projects {
     public void Should_Search_Financial_Projects_By_Query() {
       var query = new FinancialProjectQuery {
         Keywords = "potable agua",
-        OrganizationUnitUID = "",
         Status = EntityStatus.Active
       };
 
