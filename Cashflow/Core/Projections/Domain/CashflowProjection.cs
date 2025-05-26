@@ -281,20 +281,20 @@ namespace Empiria.CashFlow.Projections {
         ProjectionNo = CashFlowProjectionDataService.GetNextProjectionNo(this);
       }
 
-      this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      this.AuthorizationTime = DateTime.Now;
-      this.Status = TransactionStatus.Authorized;
+      AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      AuthorizationTime = DateTime.Now;
+      Status = TransactionStatus.Authorized;
     }
 
 
     internal void Close() {
       Assertion.Require(Rules.CanClose, "Current user can not close this cash flow projection.");
 
-      this.AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       if (ApplicationDate == ExecutionServer.DateMaxValue) {
         ApplicationDate = DateTime.Now;
       }
-      this.Status = TransactionStatus.Closed;
+      Status = TransactionStatus.Closed;
     }
 
 
@@ -305,10 +305,10 @@ namespace Empiria.CashFlow.Projections {
                        $"Can not delete or cancel this cash flow projection. Its status is {Status.GetName()}.");
 
       if (HasProjectionNo) {
-        this.Status = TransactionStatus.Canceled;
+        Status = TransactionStatus.Canceled;
       } else {
-        this.ProjectionNo = "Eliminada";
-        this.Status = TransactionStatus.Deleted;
+        ProjectionNo = "Eliminada";
+        Status = TransactionStatus.Deleted;
       }
     }
 
@@ -331,13 +331,13 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(Rules.CanReject,
                         $"Can not reject this cash flow projection. Its status is {Status.GetName()}.");
 
-      this.RequestedBy = Party.Empty;
-      this.RequestedTime = ExecutionServer.DateMaxValue;
+      RequestedBy = Party.Empty;
+      RequestedTime = ExecutionServer.DateMaxValue;
 
-      this.AuthorizedBy = Party.Empty;
-      this.AuthorizationTime = ExecutionServer.DateMaxValue;
+      AuthorizedBy = Party.Empty;
+      AuthorizationTime = ExecutionServer.DateMaxValue;
 
-      this.Status = TransactionStatus.Pending;
+      Status = TransactionStatus.Pending;
     }
 
 
@@ -349,9 +349,28 @@ namespace Empiria.CashFlow.Projections {
         ProjectionNo = CashFlowProjectionDataService.GetNextProjectionNo(this);
       }
 
-      this.RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      this.RequestedTime = DateTime.Now;
-      this.Status = TransactionStatus.OnAuthorization;
+      RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      RequestedTime = DateTime.Now;
+      Status = TransactionStatus.OnAuthorization;
+    }
+
+    internal void Update(CashFlowProjectionFields fields) {
+      Assertion.Require(Rules.CanUpdate, "Current user can not update this cash flow projection.");
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      BaseParty = PatchField(fields.BasePartyUID, BaseParty);
+      BaseProject = PatchField(fields.BaseProjectUID, BaseProject);
+      BaseAccount = PatchField(fields.BaseAccountUID, BaseAccount);
+      OperationSource = PatchField(fields.OperationSourceUID, OperationSource);
+
+      Description = EmpiriaString.Clean(fields.Description);
+      Justification = EmpiriaString.Clean(fields.Justification);
+      Tags = string.Join(" ", fields.Tags);
+
+      ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
+
     }
 
     #endregion Methods

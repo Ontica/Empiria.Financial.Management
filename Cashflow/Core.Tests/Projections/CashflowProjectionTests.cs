@@ -30,8 +30,9 @@ namespace Empiria.Tests.CashFlow.Projections {
 
       var plan = TestsObjects.TryGetObject<CashFlowPlan>();
       var category = TestsObjects.TryGetObject<CashFlowProjectionCategory>();
-      var baseParty = TestsObjects.TryGetObject<Party>(x =>
-                                      x.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE));
+      var baseParty = TestsObjects.TryGetObject<Party>(
+                                      x => x.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE)
+                                   );
 
       var sut = new CashFlowProjection(plan, category, baseParty);
 
@@ -99,6 +100,39 @@ namespace Empiria.Tests.CashFlow.Projections {
         Assert.NotNull(sut.OperationSource);
         Assert.NotNull(sut.Tags);
       }
+    }
+
+
+    [Fact]
+    public void Should_Update_CashFlowProjection() {
+
+      TestsCommonMethods.Authenticate();
+
+      CashFlowProjection sut = TestsObjects.TryGetObject<CashFlowProjection>(
+                                              x => x.Rules.CanUpdate
+                                            );
+
+      var updatedAccount = TestsObjects.TryGetObject<CreditAccount>(
+                                          x => x.OrganizationalUnit.Distinct(sut.BaseParty) &&
+                                               x.Project.Distinct(sut.BaseProject));
+
+      Assert.True(updatedAccount != null, nameof(updatedAccount));
+
+      var fields = new CashFlowProjectionFields {
+        BasePartyUID = updatedAccount.OrganizationalUnit.UID,
+        BaseProjectUID = updatedAccount.Project.UID,
+        BaseAccountUID = updatedAccount.UID,
+        Justification = "Updated justification",
+        Description = "Updated description"
+      };
+
+      sut.Update(fields);
+
+      Assert.Equal(fields.BasePartyUID, sut.BaseParty.UID);
+      Assert.Equal(fields.BaseProjectUID, sut.BaseProject.UID);
+      Assert.Equal(fields.BaseAccountUID, sut.BaseAccount.UID);
+      Assert.Equal(fields.Description, sut.Description);
+      Assert.Equal(fields.Justification, sut.Justification);
     }
 
     #endregion Facts

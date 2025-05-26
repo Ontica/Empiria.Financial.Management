@@ -24,6 +24,18 @@ namespace Empiria.CashFlow.Projections.WebApi {
 
     #region Query web apis
 
+    [HttpPost]
+    [Route("v1/cash-flow/projections")]
+    public SingleObjectModel CreateProjection([FromBody] CashFlowProjectionFields fields) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+        CashFlowProjectionHolderDto projection = usecases.CreateProjection(fields);
+
+        return new SingleObjectModel(base.Request, projection);
+      }
+    }
+
+
     [HttpGet]
     [Route("v1/cash-flow/projections/operation-sources")]
     public SingleObjectModel GetOperationSources() {
@@ -80,6 +92,19 @@ namespace Empiria.CashFlow.Projections.WebApi {
         FixedList<NamedEntityDto> parties = usecases.SearchProjectionsParties(query);
 
         return new CollectionModel(base.Request, parties);
+      }
+    }
+
+
+    [HttpPut, HttpPatch]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}")]
+    public SingleObjectModel UpdateProjection([FromUri] string projectionUID,
+                                              [FromBody] CashFlowProjectionFields fields) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+        CashFlowProjectionHolderDto projection = usecases.UpdateProjection(projectionUID, fields);
+
+        return new SingleObjectModel(base.Request, projection);
       }
     }
 

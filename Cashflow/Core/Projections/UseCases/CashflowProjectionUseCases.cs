@@ -8,15 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Services;
-
 using Empiria.Parties;
+using Empiria.Services;
 using Empiria.StateEnums;
 
-using Empiria.Financial.Adapters;
-
-using Empiria.CashFlow.Projections.Data;
 using Empiria.CashFlow.Projections.Adapters;
+using Empiria.CashFlow.Projections.Data;
 
 namespace Empiria.CashFlow.Projections.UseCases {
 
@@ -36,6 +33,25 @@ namespace Empiria.CashFlow.Projections.UseCases {
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public CashFlowProjectionHolderDto CreateProjection(CashFlowProjectionFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      var plan = CashFlowPlan.Parse(fields.PlanUID);
+      var category = CashFlowProjectionCategory.Parse(fields.CategoryUID);
+      var baseParty = Party.Parse(fields.BasePartyUID);
+
+      var projection = new CashFlowProjection(plan, category, baseParty);
+
+      projection.Update(fields);
+
+      projection.Save();
+
+      return CashFlowProjectionMapper.Map(projection);
+    }
+
 
     public FixedList<NamedEntityDto> GetOperationSources() {
       return OperationSource.GetList()
@@ -72,6 +88,23 @@ namespace Empiria.CashFlow.Projections.UseCases {
       var persons = BaseObject.GetList<Person>();
 
       return persons.MapToNamedEntityList();
+    }
+
+
+    public CashFlowProjectionHolderDto UpdateProjection(string projectionUID,
+                                                        CashFlowProjectionFields fields) {
+      Assertion.Require(projectionUID, nameof(projectionUID));
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      var projection = CashFlowProjection.Parse(projectionUID);
+
+      projection.Update(fields);
+
+      projection.Save();
+
+      return CashFlowProjectionMapper.Map(projection);
     }
 
     #endregion Use cases
