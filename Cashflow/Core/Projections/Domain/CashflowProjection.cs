@@ -39,20 +39,23 @@ namespace Empiria.CashFlow.Projections {
       // Required by Empiria Framework for all partitioned types.
     }
 
+
     internal CashFlowProjection(CashFlowPlan plan, CashFlowProjectionCategory category,
-                                Party baseParty) : this(category.ProjectionType) {
+                                FinancialAccount baseAccount) : this(category.ProjectionType) {
       Assertion.Require(plan, nameof(plan));
       Assertion.Require(!plan.IsEmptyInstance, nameof(plan));
       Assertion.Require(category, nameof(category));
-      Assertion.Require(!category.IsEmptyInstance, nameof(category));
-      Assertion.Require(baseParty, nameof(baseParty));
-      Assertion.Require(!baseParty.IsEmptyInstance, nameof(baseParty));
-      Assertion.Require(baseParty.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE),
-                     $"{baseParty.Name} is not configurated to handle cash flow projections.");
+      Assertion.Require(!category.IsEmptyInstance, nameof(baseAccount));
+      Assertion.Require(baseAccount, nameof(category));
+      Assertion.Require(!baseAccount.IsEmptyInstance, nameof(baseAccount));
 
       Plan = plan;
       Category = category;
-      BaseParty = baseParty;
+      BaseAccount = baseAccount;
+
+      BaseProject = baseAccount.Project;
+      BaseParty = baseAccount.OrganizationalUnit;
+
       OperationSource = OperationSource.Default;
       ProjectionNo = TO_ASSIGN_PROJECTION_NO;
     }

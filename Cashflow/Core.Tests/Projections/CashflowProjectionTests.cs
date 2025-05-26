@@ -14,7 +14,6 @@ using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Financial;
-using Empiria.Financial.Projects;
 
 using Empiria.CashFlow.Projections;
 
@@ -28,22 +27,23 @@ namespace Empiria.Tests.CashFlow.Projections {
     [Fact]
     public void Should_Create_CashFlowProjection() {
 
-      var plan = TestsObjects.TryGetObject<CashFlowPlan>();
+      var plan = TestsObjects.TryGetObject<CashFlowPlan>(x => x.Status == OpenCloseStatus.Opened);
       var category = TestsObjects.TryGetObject<CashFlowProjectionCategory>();
-      var baseParty = TestsObjects.TryGetObject<Party>(
-                                      x => x.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE)
-                                   );
+      var baseAccount = TestsObjects.TryGetObject<FinancialAccount>(
+                            x => !x.Project.IsEmptyInstance &&
+                                  x.OrganizationalUnit.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE)
+                           );
 
-      var sut = new CashFlowProjection(plan, category, baseParty);
+      var sut = new CashFlowProjection(plan, category, baseAccount);
 
       Assert.Equal(plan, sut.Plan);
       Assert.Equal(category, sut.Category);
       Assert.Equal(category.ProjectionType, sut.ProjectionType);
-      Assert.Equal(baseParty, sut.BaseParty);
+      Assert.Equal(baseAccount, sut.BaseAccount);
+      Assert.Equal(baseAccount.Project, sut.BaseProject);
+      Assert.Equal(baseAccount.OrganizationalUnit, sut.BaseParty);
       Assert.False(sut.HasProjectionNo);
       Assert.Equal(CashFlowProjection.TO_ASSIGN_PROJECTION_NO, sut.ProjectionNo);
-      Assert.Equal(FinancialAccount.Empty, sut.BaseAccount);
-      Assert.Equal(FinancialProject.Empty, sut.BaseProject);
       Assert.Equal(OperationSource.Default, sut.OperationSource);
       Assert.Equal(CashFlowProjection.Empty, sut.AdjustmentOf);
       Assert.Equal(TransactionStatus.Pending, sut.Status);
