@@ -110,6 +110,8 @@ namespace Empiria.Financial.Projects.UseCases {
 
       FixedList<FinancialProject> projects = FinancialProjectDataService.SearchProjects(filter, sort);
 
+      projects = query.ApplyRemainingFilters(projects);
+
       return FinancialProjectMapper.Map(projects);
     }
 

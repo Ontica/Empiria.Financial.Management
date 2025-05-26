@@ -8,8 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.StateEnums;
 using Empiria.Parties;
+using Empiria.StateEnums;
 
 namespace Empiria.Financial.Projects.Adapters {
 
@@ -18,26 +18,33 @@ namespace Empiria.Financial.Projects.Adapters {
 
     #region Extension methods
 
+    static internal FixedList<FinancialProject> ApplyRemainingFilters(this FinancialProjectQuery query,
+                                                                      FixedList<FinancialProject> projects) {
+      if (query.ProgramUID.Length != 0) {
+        return projects.FindAll(x => x.Program.UID == query.ProgramUID);
+      }
+
+      return projects;
+    }
+
     static internal void EnsureIsValid(this FinancialProjectQuery query) {
       // no-op
     }
 
 
     static internal string MapToFilterString(this FinancialProjectQuery query) {
+      string partyFilter = BuildPartyFilter(query.PartyUID);
       string categoryFilter =  BuildCategoryFilter(query.CategoryUID);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
-      string programFilter = BuildProgramFilter(query.ProgramUID);
-      string partyFilter = BuildPartyFilter(query.PartyUID);
-      string statusFilter = BuildStatusFilter(query.Status);     
+      string statusFilter = BuildStatusFilter(query.Status);
       string subprogramFilter = BuildSubprogramFilter(query.SubprogramUID);
-      
+
       var filter = new Filter(partyFilter);
       filter.AppendAnd(categoryFilter);
       filter.AppendAnd(keywordsFilter);
-      filter.AppendAnd(programFilter);
-      filter.AppendAnd(statusFilter);      
+      filter.AppendAnd(statusFilter);
       filter.AppendAnd(subprogramFilter);
-     
+
       return filter.ToString();
     }
 
@@ -81,15 +88,6 @@ namespace Empiria.Financial.Projects.Adapters {
       var requesterOrgUnit = OrganizationalUnit.Parse(requesterOrgUnitUID);
 
       return $"PRJ_ORG_UNIT_ID = {requesterOrgUnit.Id}";
-    }
-
-
-    static private string BuildProgramFilter(string programUID) {
-      if (programUID.Length == 0) {
-        return string.Empty;
-      }
-
-      return string.Empty;
     }
 
 
