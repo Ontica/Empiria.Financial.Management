@@ -36,6 +36,18 @@ namespace Empiria.CashFlow.Projections.WebApi {
     }
 
 
+    [HttpDelete]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}")]
+    public NoDataModel DeleteOrCancelProjection([FromUri] string projectionUID) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+        _ = usecases.DeleteOrCancelProjection(projectionUID);
+
+        return new NoDataModel(base.Request);
+      }
+    }
+
+
     [HttpGet]
     [Route("v1/cash-flow/projections/operation-sources")]
     public SingleObjectModel GetOperationSources() {

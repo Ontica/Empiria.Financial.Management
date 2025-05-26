@@ -53,6 +53,19 @@ namespace Empiria.CashFlow.Projections.UseCases {
     }
 
 
+    public CashFlowProjectionHolderDto DeleteOrCancelProjection(string projectionUID) {
+      Assertion.Require(projectionUID, nameof(projectionUID));
+
+      var projection = CashFlowProjection.Parse(projectionUID);
+
+      projection.DeleteOrCancel();
+
+      projection.Save();
+
+      return CashFlowProjectionMapper.Map(projection);
+    }
+
+
     public FixedList<NamedEntityDto> GetOperationSources() {
       return OperationSource.GetList()
                             .FindAll(x => x.Id == 11 || x.Id == 13)

@@ -28,7 +28,8 @@ namespace Empiria.CashFlow.Projections {
 
     #region Fields
 
-    static private readonly string TO_ASSIGN_PROJECTION_NO = "Por asignar";
+    static internal readonly string DELETED_PROJECTION_NO = "Eliminada";
+    static internal readonly string TO_ASSIGN_PROJECTION_NO = "Por asignar";
 
     #endregion Fields
 
@@ -307,7 +308,7 @@ namespace Empiria.CashFlow.Projections {
       if (HasProjectionNo) {
         Status = TransactionStatus.Canceled;
       } else {
-        ProjectionNo = "Eliminada";
+        ProjectionNo = DELETED_PROJECTION_NO;
         Status = TransactionStatus.Deleted;
       }
     }
