@@ -24,15 +24,20 @@ namespace Empiria.Financial.Projects.Adapters {
 
 
     static internal string MapToFilterString(this FinancialProjectQuery query) {
-      string partyFilter = BuildPartyFilter(query.PartyUID);
-      string statusFilter = BuildStatusFilter(query.Status);
+      string categoryFilter =  BuildCategoryFilter(query.CategoryUID);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
-
-
+      string programFilter = BuildProgramFilter(query.ProgramUID);
+      string partyFilter = BuildPartyFilter(query.PartyUID);
+      string statusFilter = BuildStatusFilter(query.Status);     
+      string subprogramFilter = BuildSubprogramFilter(query.SubprogramUID);
+      
       var filter = new Filter(partyFilter);
-      filter.AppendAnd(statusFilter);
+      filter.AppendAnd(categoryFilter);
       filter.AppendAnd(keywordsFilter);
-
+      filter.AppendAnd(programFilter);
+      filter.AppendAnd(statusFilter);      
+      filter.AppendAnd(subprogramFilter);
+     
       return filter.ToString();
     }
 
@@ -48,6 +53,17 @@ namespace Empiria.Financial.Projects.Adapters {
     #endregion Extension methods
 
     #region Helpers
+
+    static private string BuildCategoryFilter(string cateogoryUID) {
+      if (cateogoryUID.Length == 0) {
+        return string.Empty;
+      }
+
+      var category = FinancialProjectCategory.Parse(cateogoryUID);
+
+      return $"PRJ_CATEGORY_ID = {category.Id}";
+    }
+
 
     static private string BuildKeywordsFilter(string keywords) {
       if (keywords.Length == 0) {
@@ -68,12 +84,32 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
 
+    static private string BuildProgramFilter(string programUID) {
+      if (programUID.Length == 0) {
+        return string.Empty;
+      }
+
+      return string.Empty;
+    }
+
+
     static private string BuildStatusFilter(EntityStatus status) {
       if (status == EntityStatus.All) {
         return $"PRJ_STATUS <> 'X'";
       }
 
       return $"PRJ_STATUS = '{(char) status}'";
+    }
+
+
+    static private string BuildSubprogramFilter(string subprogramUID) {
+      if (subprogramUID.Length == 0) {
+        return string.Empty;
+      }
+
+      var subprogram = StandardAccount.Parse(subprogramUID);
+
+      return $"PRJ_STD_ACCT_ID = {subprogram.Id}";
     }
 
 
