@@ -19,15 +19,15 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto StandardAccount {
-      get; internal set;
-    }
-
     public NamedEntityDto Category {
       get; internal set;
     }
 
     public NamedEntityDto Program {
+      get; internal set;
+    }
+
+    public NamedEntityDto Subprogram {
       get; internal set;
     }
 
@@ -58,15 +58,15 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-    public string StandardAccountName {
-      get; internal set;
-    }
-
     public string CategoryName {
       get; internal set;
     }
 
     public string ProgramName {
+      get; internal set;
+    }
+
+    public string SubprogramName {
       get; internal set;
     }
 

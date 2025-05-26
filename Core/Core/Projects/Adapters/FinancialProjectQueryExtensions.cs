@@ -24,12 +24,13 @@ namespace Empiria.Financial.Projects.Adapters {
 
 
     static internal string MapToFilterString(this FinancialProjectQuery query) {
-      string statusFilter = BuildRequestStatusFilter(query.Status);
+      string partyFilter = BuildPartyFilter(query.PartyUID);
+      string statusFilter = BuildStatusFilter(query.Status);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
-      string requesterOrgUnitFilter = BuildRequesterOrgUnitFilter(query.PartyUID);
 
-      var filter = new Filter(statusFilter);
-      filter.AppendAnd(requesterOrgUnitFilter);
+
+      var filter = new Filter(partyFilter);
+      filter.AppendAnd(statusFilter);
       filter.AppendAnd(keywordsFilter);
 
       return filter.ToString();
@@ -48,7 +49,7 @@ namespace Empiria.Financial.Projects.Adapters {
 
     #region Helpers
 
-    private static string BuildKeywordsFilter(string keywords) {
+    static private string BuildKeywordsFilter(string keywords) {
       if (keywords.Length == 0) {
         return string.Empty;
       }
@@ -56,16 +57,7 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
 
-    static private string BuildRequestStatusFilter(EntityStatus status) {
-      if (status == EntityStatus.All) {
-        return $"PRJ_STATUS <> 'X'";
-      }
-
-      return $"PRJ_STATUS = '{(char) status}'";
-    }
-
-
-    static private string BuildRequesterOrgUnitFilter(string requesterOrgUnitUID) {
+    static private string BuildPartyFilter(string requesterOrgUnitUID) {
       if (requesterOrgUnitUID.Length == 0) {
         return string.Empty;
       }
@@ -74,6 +66,16 @@ namespace Empiria.Financial.Projects.Adapters {
 
       return $"PRJ_ORG_UNIT_ID = {requesterOrgUnit.Id}";
     }
+
+
+    static private string BuildStatusFilter(EntityStatus status) {
+      if (status == EntityStatus.All) {
+        return $"PRJ_STATUS <> 'X'";
+      }
+
+      return $"PRJ_STATUS = '{(char) status}'";
+    }
+
 
     #endregion Helpers
 

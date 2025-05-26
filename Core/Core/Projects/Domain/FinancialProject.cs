@@ -45,14 +45,18 @@ namespace Empiria.Financial.Projects {
 
     static public FinancialProject Empty => ParseEmpty<FinancialProject>();
 
+
+    static internal FixedList<INamedEntity> GetClassificationList(FinancialProjectClassificator classificator) {
+      var category = CommonStorage.ParseNamedKey<StandardAccountCategory>(classificator.ToString());
+
+      return category.GetStandardAccounts()
+                     .Select(x => (INamedEntity) x)
+                     .ToFixedList();
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
-
-    [DataField("PRJ_STD_ACCT_ID")]
-    public StandardAccount StandardAccount {
-      get; private set;
-    }
 
 
     [DataField("PRJ_CATEGORY_ID")]
@@ -76,16 +80,26 @@ namespace Empiria.Financial.Projects {
     string INamedEntity.Name {
       get {
         if (ProjectNo.Length != 0) {
-          return $"({ProjectNo}) {Name} [{Program}]";
+          return $"({ProjectNo}) {Name} [{Program.Name}]";
         }
-        return $"{Name} [{Program}]";
+        return $"{Name} [{Program.Name}]";
       }
     }
 
 
     public INamedEntity Program {
       get {
-        return StandardAccount.Parse(StandardAccount.ParentId);
+        return StandardAccount.Parse(_subprogram.ParentId);
+      }
+    }
+
+
+    [DataField("PRJ_STD_ACCT_ID")]
+    private StandardAccount _subprogram = StandardAccount.Empty;
+
+    public INamedEntity Subprogram {
+      get {
+        return _subprogram;
       }
     }
 
@@ -118,7 +132,7 @@ namespace Empiria.Financial.Projects {
       get {
         return EmpiriaString.BuildKeywords(ProjectNo, Name, Identifiers, Tags, Program.Name,
                                            OrganizationalUnit.Keywords, Category.Keywords,
-                                           StandardAccount.Keywords);
+                                           _subprogram.Keywords);
       }
     }
 
@@ -187,7 +201,7 @@ namespace Empiria.Financial.Projects {
         this.PostingTime = DateTime.Now;
       }
 
-      FinancialProjectDataService.WriteProject(this, this.ExtData.ToString());
+      FinancialProjectDataService.WriteProject(this, _subprogram, this.ExtData.ToString());
     }
 
 
@@ -213,7 +227,7 @@ namespace Empiria.Financial.Projects {
       this.Name = PatchField(fields.Name, this.Name);
       this.ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
       this.Category = PatchField(fields.CategoryUID, this.Category);
-      this.StandardAccount = PatchField(fields.StandardAccountUID, this.StandardAccount);
+      _subprogram = PatchField(fields.SubprogramUID, _subprogram);
       this.OrganizationalUnit = PatchField(fields.OrganizationUnitUID, this.OrganizationalUnit);
     }
 

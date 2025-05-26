@@ -37,7 +37,7 @@ namespace Empiria.Tests.Financial.Projects {
       Assert.Equal(orgUnit, sut.OrganizationalUnit);
       Assert.Equal(name, sut.Name);
 
-      Assert.True(sut.StandardAccount.IsEmptyInstance);
+      Assert.Equal("Empty", sut.Subprogram.UID);
       Assert.Equal(FinancialProjectCategory.Empty, sut.Category);
       Assert.True(sut.ProjectNo.Length != 0);
       Assert.Equal(DateTime.Today, sut.StartDate);
@@ -121,7 +121,7 @@ namespace Empiria.Tests.Financial.Projects {
       };
 
       var unchangedFields = new FinancialProjectFields {
-        StandardAccountUID = sut.StandardAccount.UID,
+        SubprogramUID = sut.Subprogram.UID,
         CategoryUID = sut.Category.UID,
         OrganizationUnitUID = sut.OrganizationalUnit.UID,
       };
@@ -130,7 +130,7 @@ namespace Empiria.Tests.Financial.Projects {
 
       Assert.Equal(fields.ProjectNo, sut.ProjectNo);
       Assert.Equal(fields.Name, sut.Name);
-      Assert.Equal(unchangedFields.StandardAccountUID, sut.StandardAccount.UID);
+      Assert.Equal(unchangedFields.SubprogramUID, sut.Subprogram.UID);
       Assert.Equal(unchangedFields.CategoryUID, sut.Category.UID);
       Assert.Equal(unchangedFields.OrganizationUnitUID, sut.OrganizationalUnit.UID);
     }

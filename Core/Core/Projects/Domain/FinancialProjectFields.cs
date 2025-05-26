@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Parties;
-using Empiria.StateEnums;
 
 namespace Empiria.Financial.Projects {
 
@@ -18,12 +17,12 @@ namespace Empiria.Financial.Projects {
 
     #region Properties
 
-    public string StandardAccountUID {
+    public string CategoryUID {
       get; set;
     } = string.Empty;
 
 
-    public string CategoryUID {
+    public string SubprogramUID {
       get; set;
     } = string.Empty;
 
@@ -52,19 +51,19 @@ namespace Empiria.Financial.Projects {
       Name = FieldPatcher.Clean(Name);
 
       CategoryUID = FieldPatcher.Clean(CategoryUID);
-      StandardAccountUID = FieldPatcher.Clean(StandardAccountUID);
+      SubprogramUID = FieldPatcher.Clean(SubprogramUID);
       OrganizationUnitUID = FieldPatcher.Clean(OrganizationUnitUID);
 
       if (CategoryUID.Length != 0) {
         _ = FinancialProjectCategory.Parse(CategoryUID);
       }
 
-      if (StandardAccountUID.Length != 0) {
-        _ = StandardAccount.Parse(StandardAccountUID);
+      if (SubprogramUID.Length != 0) {
+        _ = StandardAccount.Parse(SubprogramUID);
       }
 
       if (OrganizationUnitUID.Length != 0) {
-        _ = StandardAccount.Parse(OrganizationUnitUID);
+        _ = OrganizationalUnit.Parse(OrganizationUnitUID);
       }
     }
 

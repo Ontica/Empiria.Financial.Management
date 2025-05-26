@@ -12,6 +12,7 @@ using Empiria.Services;
 
 using Empiria.Financial.Projects.Adapters;
 using Empiria.Financial.Projects.Data;
+using System;
 
 namespace Empiria.Financial.Projects.UseCases {
 
@@ -59,20 +60,34 @@ namespace Empiria.Financial.Projects.UseCases {
 
     public FinancialProjectDto GetProject(string UID) {
       Assertion.Require(UID, nameof(UID));
+
       var project = FinancialProject.Parse(UID);
 
       return FinancialProjectMapper.Map(project);
     }
 
 
-    public FixedList<NamedEntityDto> GetProjectCategories() {
-      return FinancialProjectCategory.GetList().MapToNamedEntityList();
+    public FixedList<NamedEntityDto> GetProjectsCategories() {
+      return FinancialProjectCategory.GetList()
+                                     .MapToNamedEntityList();
 
     }
 
 
-    public FinancialProjectCategory GetProjectCategory(string UID) {
-      return FinancialProjectCategory.Parse(UID);
+    public FixedList<NamedEntityDto> GetProjectsPrograms() {
+      var classificator = FinancialProjectClassificator.Programa;
+      FixedList<INamedEntity> programs = FinancialProject.GetClassificationList(classificator);
+
+      return programs.MapToNamedEntityList();
+    }
+
+
+    public FixedList<NamedEntityDto> GetProjectsSubprograms() {
+      var classificator = FinancialProjectClassificator.Subprograma;
+
+      FixedList<INamedEntity> programs = FinancialProject.GetClassificationList(classificator);
+
+      return programs.MapToNamedEntityList();
     }
 
 

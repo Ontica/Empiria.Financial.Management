@@ -27,9 +27,33 @@ namespace Empiria.Financial.Projects.WebApi {
     public CollectionModel GetProjectCategories() {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> projects = usecases.GetProjectCategories();
+        FixedList<NamedEntityDto> categories = usecases.GetProjectsCategories();
 
-        return new CollectionModel(base.Request, projects);
+        return new CollectionModel(base.Request, categories);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v2/financial-projects/programs")]
+    public CollectionModel GetProjectsPrograms() {
+
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> programs = usecases.GetProjectsPrograms();
+
+        return new CollectionModel(base.Request, programs);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v2/financial-projects/subprograms")]
+    public CollectionModel GetProjectsSubprograms() {
+
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> stdAccounts = usecases.GetProjectsSubprograms();
+
+        return new CollectionModel(base.Request, stdAccounts);
       }
     }
 
@@ -56,7 +80,6 @@ namespace Empiria.Financial.Projects.WebApi {
         return new CollectionModel(base.Request, projects);
       }
     }
-
 
     #endregion Query web apis
 
