@@ -12,6 +12,8 @@ using Empiria.Parties;
 using Empiria.Services;
 using Empiria.StateEnums;
 
+using Empiria.Financial;
+
 using Empiria.CashFlow.Projections.Adapters;
 using Empiria.CashFlow.Projections.Data;
 
@@ -41,9 +43,9 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       var plan = CashFlowPlan.Parse(fields.PlanUID);
       var category = CashFlowProjectionCategory.Parse(fields.CategoryUID);
-      var baseParty = Party.Parse(fields.BasePartyUID);
+      var baseAccount = FinancialAccount.Parse(fields.BaseAccountUID);
 
-      var projection = new CashFlowProjection(plan, category, baseParty);
+      CashFlowProjection projection = plan.AddProjection(category, baseAccount);
 
       projection.Update(fields);
 
@@ -58,7 +60,9 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       var projection = CashFlowProjection.Parse(projectionUID);
 
-      projection.DeleteOrCancel();
+      var plan = projection.Plan;
+
+      plan.RemoveProjection(projection);
 
       projection.Save();
 

@@ -10,6 +10,10 @@
 
 using Xunit;
 
+using Empiria.StateEnums;
+
+using Empiria.Financial;
+
 using Empiria.CashFlow.Projections;
 
 namespace Empiria.Tests.CashFlow.Projections {
@@ -18,6 +22,45 @@ namespace Empiria.Tests.CashFlow.Projections {
   public class CashFlowPlanTests {
 
     #region Facts
+
+    [Fact]
+    public void Should_Add_CashFlowProjection() {
+
+      var sut = TestsObjects.TryGetObject<CashFlowPlan>(x => x.Status == OpenCloseStatus.Opened);
+      var category = TestsObjects.TryGetObject<CashFlowProjectionCategory>();
+      var baseAccount = TestsObjects.TryGetObject<FinancialAccount>(
+                            x => !x.Project.IsEmptyInstance &&
+                                  x.OrganizationalUnit.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE)
+                           );
+
+      var count = sut.Projections.Count;
+
+      CashFlowProjection projection = sut.AddProjection(category, baseAccount);
+
+      Assert.Equal(projection.Plan, sut);
+      Assert.Equal(projection.Category, category);
+      Assert.Equal(projection.BaseAccount, baseAccount);
+      Assert.Equal(count + 1, sut.Projections.Count);
+    }
+
+
+    [Fact]
+    public void Should_Delete_CashFlowProjection() {
+
+      var sut = TestsObjects.TryGetObject<CashFlowPlan>(x => x.Status == OpenCloseStatus.Opened);
+
+      var projection = sut.Projections.Find(x => x.Status == TransactionStatus.Pending);
+
+      var count = sut.Projections.Count;
+
+      sut.RemoveProjection(projection);
+
+      Assert.True(projection.Status == TransactionStatus.Deleted ||
+                  projection.Status == TransactionStatus.Canceled);
+
+      Assert.Equal(count - 1, sut.Projections.Count);
+    }
+
 
     [Fact]
     public void Should_Get_All_CashFlow_Plans() {

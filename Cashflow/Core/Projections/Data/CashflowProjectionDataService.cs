@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Collections.Generic;
+
 using Empiria.Data;
 
 namespace Empiria.CashFlow.Projections.Data {
@@ -42,6 +44,24 @@ namespace Empiria.CashFlow.Projections.Data {
     }
 
 
+    static internal List<CashFlowProjection> GetProjections(CashFlowPlan cashFlowPlan) {
+      Assertion.Require(cashFlowPlan, nameof(cashFlowPlan));
+
+      if (cashFlowPlan.IsEmptyInstance) {
+        return new List<CashFlowProjection>() ;
+      }
+
+      var sql = "SELECT * FROM FMS_CASHFLOW_PROJECTIONS " +
+               $"WHERE CFW_PJC_PLAN_ID = {cashFlowPlan.Id} AND " +
+               $"CFW_PJC_STATUS <> 'X' " +
+               $"ORDER BY CFW_PJC_NO";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetList<CashFlowProjection>(op);
+    }
+
+
     static internal FixedList<CashFlowProjection> SearchProjections(string filter, string sort) {
       Assertion.Require(filter, nameof(filter));
       Assertion.Require(sort, nameof(sort));
@@ -53,7 +73,6 @@ namespace Empiria.CashFlow.Projections.Data {
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetFixedList<CashFlowProjection>(op);
-
     }
 
 
