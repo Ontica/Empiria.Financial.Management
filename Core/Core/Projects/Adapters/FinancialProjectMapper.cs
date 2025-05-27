@@ -65,7 +65,7 @@ namespace Empiria.Financial.Projects.Adapters {
         StartDate = project.StartDate,
         EndDate = project.EndDate,
         ParentProject = project.Parent.MapToNamedEntity(),
-        Status = project.Status,
+        Status = project.Status.MapToDto(),
       };
     }
 

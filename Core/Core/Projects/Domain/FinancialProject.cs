@@ -127,13 +127,13 @@ namespace Empiria.Financial.Projects {
     //[DataField("PRJ_DESCRIPTION")]
     public string Description {
       get; private set;
-    }
+    } = string.Empty;
 
 
     //[DataField("PRJ_JUSTIFICATION")]
     public string Justification {
       get; private set;
-    }
+    } = string.Empty;
 
 
     [DataField("PRJ_IDENTIFIERS")]
@@ -214,7 +214,7 @@ namespace Empiria.Financial.Projects {
     //[DataField("PRJ_RECORDED_BY_ID")]
     public Party RecordedBy {
       get; private set;
-    }
+    } = Party.Empty;
 
 
     //[DataField("PRJ_AUTHORIZATION_TIME")]
@@ -226,7 +226,7 @@ namespace Empiria.Financial.Projects {
     //[DataField("PRJ_AUTHORIZED_BY_ID")]
     public Party AuthorizedBy {
       get; private set;
-    }
+    } = Party.Empty;
 
 
     [DataField("PRJ_START_DATE")]

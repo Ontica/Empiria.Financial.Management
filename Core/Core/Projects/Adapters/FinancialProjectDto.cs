@@ -93,7 +93,7 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-    public EntityStatus Status {
+    public NamedEntityDto Status {
       get; internal set;
     }
 
