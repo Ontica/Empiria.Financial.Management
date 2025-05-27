@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Partitioned Type                        *
 *  Type     : StandardAccount                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a standard account.                                                                 *
+*  Summary  : Partitioned type that represents an standard account.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,11 +12,13 @@ using System;
 
 using Empiria.Contacts;
 using Empiria.Json;
+using Empiria.Ontology;
 using Empiria.StateEnums;
 
 namespace Empiria.Financial {
 
-  /// <summary>Represents a standard account.</summary>
+  /// <summary>Partitioned type that represents an standard account.</summary>
+  [PartitionedType(typeof(StandardAccountType))]
   public class StandardAccount : BaseObject, INamedEntity {
     //private ProjectFields fields;
 
@@ -36,6 +38,13 @@ namespace Empiria.Financial {
 
     #region Properties
 
+    public StandardAccountType StandardAccountType {
+      get {
+        return (StandardAccountType) base.GetEmpiriaType();
+      }
+    }
+
+
     [DataField("STD_ACCT_CATEGORY_ID")]
     public StandardAccountCategory Category {
       get; private set;
@@ -51,6 +60,13 @@ namespace Empiria.Financial {
     [DataField("STD_ACCT_NUMBER")]
     public string StdAcctNo {
       get; private set;
+    }
+
+
+    public string[] StdAcctSegments {
+      get {
+        return StdAcctNo.Split('.');
+      }
     }
 
 
@@ -147,10 +163,6 @@ namespace Empiria.Financial {
     }
 
     #endregion Properties
-
-    #region Methods
-
-    #endregion Methods
 
   } // class StandardAccount
 
