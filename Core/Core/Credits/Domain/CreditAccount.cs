@@ -43,7 +43,7 @@ namespace Empiria.Financial {
 
     public CreditData CreditData {
       get {
-        return new CreditData(base.ConfigExtData);
+        return new CreditData(base.Attributes);
       }
     }
 

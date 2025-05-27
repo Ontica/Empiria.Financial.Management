@@ -29,47 +29,7 @@ namespace Empiria.Financial {
     #endregion Properties
 
     #region Properties
-
-    public string CreditoNo {
-      get {
-        return _extData.Get("creditoNo", string.Empty);
-      }
-      private set {
-        _extData.SetIfValue("creditoNo", value);
-      }
-    }
-
-
-    public int EtapaCredito {
-      get {
-        return _extData.Get("etapaCredito", 0);
-      }
-      private set {
-        _extData.SetIfValue("etapaCredito", value);
-      }
-    }
-
-
-    public string Acreditado {
-      get {
-        return _extData.Get("acreditado", string.Empty);
-      }
-      private set {
-        _extData.SetIfValue("acreditado", value);
-      }
-    }
-
-
-    public string TipoCredito {
-      get {
-        return _extData.Get("tipoCredito", string.Empty);
-      }
-      private set {
-        _extData.SetIfValue("tipoCredito", value);
-      }
-    }
-
-
+        
     public decimal Interes {
       get {
         return _extData.Get("interes", 0);
@@ -191,10 +151,6 @@ namespace Empiria.Financial {
     internal void Update(CreditExtDataFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      CreditoNo = fields.CreditoNo;
-      EtapaCredito = fields.EtapaCredito;
-      Acreditado = fields.Acreditado;
-      TipoCredito = fields.TipoCredito;
       Interes = fields.Interes;
       Comision = fields.Comision;
       Saldo = fields.Saldo;
