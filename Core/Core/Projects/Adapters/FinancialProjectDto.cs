@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Documents;
 using Empiria.History;
 
@@ -69,6 +71,22 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto Assignee {
+      get; internal set;
+    }
+
+    public NamedEntityDto ParentProject {
+      get; internal set;
+    }
+
+    public DateTime StartDate {
+      get; internal set;
+    }
+
+    public DateTime EndDate {
+      get; internal set;
+    }
+
     public EntityStatus Status {
       get; internal set;
     }
@@ -105,6 +123,18 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
     public string Name {
+      get; internal set;
+    }
+
+    public string AssigneeName {
+      get; internal set;
+    }
+
+    public DateTime StartDate {
+      get; internal set;
+    }
+
+    public DateTime EndDate {
       get; internal set;
     }
 

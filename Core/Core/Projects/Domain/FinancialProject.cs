@@ -159,6 +159,12 @@ namespace Empiria.Financial.Projects {
     }
 
 
+    [DataField("PRJ_ASSIGNEE_ID")]
+    public Person Assignee {
+      get; private set;
+    }
+
+
     [DataField("PRJ_START_DATE")]
     public DateTime StartDate {
       get; private set;

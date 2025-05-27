@@ -55,6 +55,10 @@ namespace Empiria.Financial.Projects.Adapters {
         BaseOrgUnit = project.BaseOrgUnit.MapToNamedEntity(),
         ProjectNo = project.ProjectNo,
         Name = project.Name,
+        Assignee = project.Assignee.MapToNamedEntity(),
+        StartDate = project.StartDate,
+        EndDate = project.EndDate,
+        ParentProject = project.Parent.MapToNamedEntity(),
         Status = project.Status,
       };
     }
@@ -68,6 +72,9 @@ namespace Empiria.Financial.Projects.Adapters {
         BaseOrgUnitName = project.BaseOrgUnit.Name,
         ProjectNo = project.ProjectNo,
         Name = project.Name,
+        AssigneeName = project.Assignee.Name,
+        StartDate = project.StartDate,
+        EndDate = project.EndDate,
         StatusName = project.Status.GetName(),
       };
     }
