@@ -4,15 +4,16 @@
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Partitioned Type                        *
 *  Type     : FinancialAccount                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a financial account.                                                                *
+*  Summary  : Partitioned type that represents a financial account.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 
-using Empiria.StateEnums;
 using Empiria.Json;
+using Empiria.Ontology;
 using Empiria.Parties;
+using Empiria.StateEnums;
 
 using Empiria.Financial.Projects;
 
@@ -20,20 +21,18 @@ using Empiria.Financial.Data;
 
 namespace Empiria.Financial {
 
-  /// <summary>Represents a financial account.</summary>
+  /// <summary>Partitioned type that represents a financial account.</summary>
+  [PartitionedType(typeof(FinancialAccountType))]
   public class FinancialAccount : BaseObject, INamedEntity {
 
     #region Constructors and parsers
 
-    protected FinancialAccount() {
+    protected FinancialAccount(FinancialAccountType powertype) : base(powertype) {
       // Required by Empiria FrameWork
     }
 
-    protected FinancialAccount(StandardAccount stdAccount) {
-      // Required by Empiria FrameWork
-    }
 
-    public FinancialAccount(StandardAccount stdAccount, OrganizationalUnit orgUnit) {
+    public FinancialAccount(StandardAccount stdAccount, OrganizationalUnit orgUnit) : base(FinancialAccountType.Empty) {
       Assertion.Require(stdAccount, nameof(stdAccount));
       Assertion.Require(!stdAccount.IsEmptyInstance, nameof(stdAccount));
       Assertion.Require(orgUnit, nameof(orgUnit));
@@ -58,6 +57,13 @@ namespace Empiria.Financial {
     #endregion Constructors and parsers
 
     #region Properties
+
+    public FinancialAccountType FinancialAccountType {
+      get {
+        return (FinancialAccountType) base.GetEmpiriaType();
+      }
+    }
+
 
     [DataField("ACCT_STD_ACCT_ID")]
     public StandardAccount StandardAccount {

@@ -64,7 +64,7 @@ namespace Empiria.Financial.Data {
 
     internal static void WriteAccount(FinancialAccount o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Account",
-         o.Id, o.UID, o.GetEmpiriaType().Id, o.StandardAccount.Id, o.Organization.Id,
+         o.Id, o.UID, o.FinancialAccountType.Id, o.StandardAccount.Id, o.Organization.Id,
          o.OrganizationalUnit.Id, o.Project.Id, o.LedgerId, o.AccountNo, o.Description,
          o.Identifiers, o.Tags, o.Attributes.ToString(), o.FinancialData.ToString(),
          o.ConfigData.ToString(), extensionData, o.Keywords, o.Parent.Id,

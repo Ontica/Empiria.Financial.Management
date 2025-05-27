@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Data;
 
 namespace Empiria.Financial.Projects.Data {
@@ -29,6 +30,15 @@ namespace Empiria.Financial.Projects.Data {
       DataWriter.Execute(op);
     }
 
+    internal static FixedList<FinancialAccount> GetProjectAccounts(FinancialProject project) {
+      var sql = "SELECT * FROM FMS_ACCOUNTS " +
+          $"WHERE ACCT_PROJECT_ID = {project.Id} " +
+          $"ACCT_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<FinancialAccount>(op);
+    }
 
     static internal FixedList<FinancialProject> SearchProjects(string keywords) {
 

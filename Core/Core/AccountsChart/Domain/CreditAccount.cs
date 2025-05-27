@@ -19,7 +19,7 @@ namespace Empiria.Financial {
 
     #region Constructors and parsers
 
-    protected CreditAccount() {
+    protected CreditAccount() : base(FinancialAccountType.Empty) {
       // Required by Empiria FrameWork
     }
 
