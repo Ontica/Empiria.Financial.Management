@@ -81,6 +81,14 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
+    public string Description {
+      get; internal set;
+    }
+
+    public string Justification {
+      get; internal set;
+    }
+
     public NamedEntityDto ParentProject {
       get; internal set;
     }
@@ -129,6 +137,14 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
     public string Name {
+      get; internal set;
+    }
+
+    public string Description {
+      get; internal set;
+    }
+
+    public string Justification {
       get; internal set;
     }
 

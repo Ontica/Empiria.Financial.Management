@@ -124,13 +124,13 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    //[DataField("PRJ_DESCRIPTION")]
+    [DataField("PRJ_DESCRIPTION")]
     public string Description {
       get; private set;
     }
 
 
-    //[DataField("PRJ_JUSTIFICATION")]
+    [DataField("PRJ_JUSTIFICATION")]
     public string Justification {
       get; private set;
     }
@@ -158,7 +158,7 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    //[DataField("PRJ_GOALS_EXT_DATA")]
+    [DataField("PRJ_GOALS_EXT_DATA")]
     private JsonObject _projectGoals = new JsonObject();
 
     public FinancialProjectGoals FinancialGoals {
@@ -205,25 +205,25 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    //[DataField("PRJ_RECORDING_TIME")]
+    [DataField("PRJ_RECORDING_TIME")]
     public DateTime RecordingTime {
       get; private set;
     }
 
 
-    //[DataField("PRJ_RECORDED_BY_ID")]
+    [DataField("PRJ_RECORDED_BY_ID")]
     public Party RecordedBy {
       get; private set;
     }
 
-
-    //[DataField("PRJ_AUTHORIZATION_TIME")]
+    
+    [DataField("PRJ_AUTHORIZATION_TIME")]
     public DateTime AuthorizationTime {
       get; private set;
     }
 
 
-    //[DataField("PRJ_AUTHORIZED_BY_ID")]
+    [DataField("PRJ_AUTHORIZED_BY_ID")]
     public Party AuthorizedBy {
       get; private set;
     }
@@ -332,6 +332,9 @@ namespace Empiria.Financial.Projects {
       Name = PatchField(fields.Name, this.Name);
       ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
       BaseOrgUnit = PatchField(fields.BaseOrgUnitUID, this.BaseOrgUnit);
+      Assignee = PatchField(fields.AssigneeUID, this.Assignee);
+      Description = PatchField(fields.Description, this.Description);
+      Justification = PatchField(fields.Justification, this.Justification);
     }
 
     #endregion Methods
