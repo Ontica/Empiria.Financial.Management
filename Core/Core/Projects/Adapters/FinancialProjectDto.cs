@@ -15,12 +15,18 @@ using Empiria.History;
 
 using Empiria.StateEnums;
 
+using Empiria.Financial.Adapters;
+
 namespace Empiria.Financial.Projects.Adapters {
 
   /// <summary>Output holder DTO used for a cash flow projection.</summary>
   public class FinancialProjectHolderDto {
 
-    public FinancialProjectDto FinancialProject {
+    public FinancialProjectDto Project {
+      get; internal set;
+    }
+
+    public FixedList<FinancialAccountDescriptor> Accounts {
       get; internal set;
     }
 

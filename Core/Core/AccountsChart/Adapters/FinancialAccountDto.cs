@@ -8,46 +8,94 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.StateEnums;
+using System;
 
 namespace Empiria.Financial.Adapters {
 
   public class FinancialAccountDto {
 
     public string UID {
-      get; set;
+      get; internal set;
     }
 
-
-    public NamedEntityDto StandardAccount {
-      get; set;
+    public string AccountNo {
+      get; internal set;
     }
-
-
-    public NamedEntityDto Project {
-      get; set;
-    }
-
 
     public string Description {
-      get; set;
+      get; internal set;
     }
 
+    public NamedEntityDto StandardAccount {
+      get; internal set;
+    }
+
+    public NamedEntityDto Project {
+      get; internal set;
+    }
+
+    public NamedEntityDto OrganizationalUnit {
+      get; internal set;
+    }
+
+    public DateTime StartDate {
+      get; internal set;
+    }
+
+    public DateTime EndDate {
+      get; internal set;
+    }
 
     public NamedEntityDto Parent {
-      get; set;
+      get; internal set;
     }
 
-
-    public NamedEntityDto OrganizationUnit {
-      get; set;
-    }
-
-
-    public EntityStatus Status {
-      get; set;
+    public NamedEntityDto Status {
+      get; internal set;
     }
 
   } // class FinancialAccountDto
+
+
+
+  public class FinancialAccountDescriptor {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string AccountNo {
+      get; internal set;
+    }
+
+    public string Description {
+      get; internal set;
+    }
+
+    public string StandardAccountName {
+      get; internal set;
+    }
+
+    public string ProjectName {
+      get; internal set;
+    }
+
+    public string OrganizationalUnitName {
+      get; internal set;
+    }
+
+    public DateTime StartDate {
+      get; internal set;
+    }
+
+    public DateTime EndDate {
+      get; internal set;
+    }
+
+    public string StatusName {
+      get; internal set;
+    }
+
+  }  // class FinancialAccountDescriptor
 
 } // namespace Empiria.Financial.Adapters

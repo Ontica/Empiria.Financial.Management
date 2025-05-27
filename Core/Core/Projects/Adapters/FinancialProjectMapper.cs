@@ -10,7 +10,10 @@
 
 using Empiria.Documents;
 using Empiria.History;
+
 using Empiria.StateEnums;
+
+using Empiria.Financial.Adapters;
 
 namespace Empiria.Financial.Projects.Adapters {
 
@@ -20,8 +23,11 @@ namespace Empiria.Financial.Projects.Adapters {
     #region Mappers
 
     static public FinancialProjectHolderDto Map(FinancialProject project) {
+      var accounts = project.Accounts.FindAll(x => x.FinancialAccountType.Id == 3245);
+
       return new FinancialProjectHolderDto {
-        FinancialProject = MapProject(project),
+        Project = MapProject(project),
+        Accounts = FinancialAccountMapper.MapToDescriptor(accounts),
         Documents = DocumentServices.GetAllEntityDocuments(project),
         History = HistoryServices.GetEntityHistory(project),
         Actions = MapActions(project.Rules)
