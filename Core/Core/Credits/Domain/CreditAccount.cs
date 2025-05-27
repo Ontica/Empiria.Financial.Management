@@ -10,7 +10,6 @@
 
 using Empiria.Parties;
 
-using Empiria.Financial.Accounts;
 
 namespace Empiria.Financial {
 
@@ -28,8 +27,8 @@ namespace Empiria.Financial {
       Assertion.Require(accountNo, nameof(accountNo));
       Assertion.Require(description, nameof(description));
 
-      base.AccountNo = accountNo;
-      base.Description = description;
+      AccountNo = accountNo;
+      Description = description;
     }
 
     static public new CreditAccount Parse(int id) => ParseId<CreditAccount>(id);
@@ -44,7 +43,7 @@ namespace Empiria.Financial {
 
     public CreditExtData CreditData {
       get {
-        return new CreditExtData(this.ExtData);
+        return new CreditExtData(ExtData);
       }
     }
 

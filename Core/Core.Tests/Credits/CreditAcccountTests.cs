@@ -12,9 +12,8 @@ using Xunit;
 using System;
 
 using Empiria.Financial;
-using Empiria.Financial.Accounts;
 
-namespace Empiria.Tests.Financial.Accounts {
+namespace Empiria.Tests.Financial.Credits {
 
   /// <summary>Unit tests for credit accounts objects.</summary>
   public class CreditAcccountTests {
