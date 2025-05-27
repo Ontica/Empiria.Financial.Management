@@ -68,7 +68,7 @@ namespace Empiria.Financial.Projects.Data {
     internal static void WriteProject(FinancialProject o, IIdentifiable subprogram, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Project",
          o.Id, o.UID, o.GetEmpiriaType().Id, subprogram.Id, o.Category.Id, o.ProjectNo, o.Name,
-         o.Party.Id, o.Identifiers, o.Tags, extensionData, o.Keywords, o.Parent.Id,
+         o.BaseOrgUnit.Id, o.Identifiers, o.Tags, extensionData, o.Keywords, o.Parent.Id,
          o.StartDate, o.EndDate, o.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);

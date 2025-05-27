@@ -33,15 +33,15 @@ namespace Empiria.Tests.Financial.Projects {
 
       var category = TestsObjects.TryGetObject<FinancialProjectCategory>();
 
-      var party = TestsObjects.TryGetObject<Party>(x => x.PlaysRole("cash-flow"));
+      var baseOrgUnit = TestsObjects.TryGetObject<OrganizationalUnit>(x => x.PlaysRole(FinancialProjectRules.PROJECT_MANGER_ROLE));
 
       var subprograms = FinancialProject.GetClassificationList(FinancialProjectClassificator.Subprograma);
 
       var subprogram = TestsObjects.TryGetObject(subprograms);
 
-      var sut = new FinancialProject(category, party, subprogram, name);
+      var sut = new FinancialProject(category, baseOrgUnit, subprogram, name);
 
-      Assert.Equal(party, sut.Party);
+      Assert.Equal(baseOrgUnit, sut.BaseOrgUnit);
       Assert.Equal(name, sut.Name);
 
       Assert.Equal(subprogram, sut.Subprogram);
@@ -130,7 +130,7 @@ namespace Empiria.Tests.Financial.Projects {
       var unchangedFields = new FinancialProjectFields {
         SubprogramUID = sut.Subprogram.UID,
         CategoryUID = sut.Category.UID,
-        PartyUID = sut.Party.UID,
+        BaseOrgUnitUID = sut.BaseOrgUnit.UID,
       };
 
       sut.Update(fields);
@@ -139,7 +139,7 @@ namespace Empiria.Tests.Financial.Projects {
       Assert.Equal(fields.Name, sut.Name);
       Assert.Equal(unchangedFields.SubprogramUID, sut.Subprogram.UID);
       Assert.Equal(unchangedFields.CategoryUID, sut.Category.UID);
-      Assert.Equal(unchangedFields.PartyUID, sut.Party.UID);
+      Assert.Equal(unchangedFields.BaseOrgUnitUID, sut.BaseOrgUnit.UID);
     }
 
     #endregion Facts

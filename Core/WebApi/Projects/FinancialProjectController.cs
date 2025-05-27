@@ -23,7 +23,7 @@ namespace Empiria.Financial.Projects.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v2/financial-projects/categories")]
+    [Route("v1/financial-projects/categories")]
     public CollectionModel GetProjectCategories() {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
@@ -35,7 +35,7 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpGet]
-    [Route("v2/financial-projects/programs")]
+    [Route("v1/financial-projects/programs")]
     public CollectionModel GetProjectsPrograms() {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
@@ -47,7 +47,7 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpGet]
-    [Route("v2/financial-projects/subprograms")]
+    [Route("v1/financial-projects/subprograms")]
     public CollectionModel GetProjectsSubprograms() {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
@@ -59,7 +59,7 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpGet]
-    [Route("v2/financial-projects/{keywords}")]
+    [Route("v1/financial-projects/{keywords}")]
     public CollectionModel SearchProjects([FromUri] string keywords = "") {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
@@ -71,7 +71,7 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpPost]
-    [Route("v2/financial-projects/search")]
+    [Route("v1/financial-projects/search")]
     public CollectionModel SearchProjects([FromBody] FinancialProjectQuery query) {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
@@ -86,13 +86,13 @@ namespace Empiria.Financial.Projects.WebApi {
     #region Command Web Apis
 
     [HttpPost]
-    [Route("v2/financial-projects")]
+    [Route("v1/financial-projects")]
     public SingleObjectModel CreateFinancialProject([FromBody] FinancialProjectFields fields) {
 
       base.RequireBody(fields);
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FinancialProjectDto projects = usecases.CreateProject(fields);
+        FinancialProjectHolderDto projects = usecases.CreateProject(fields);
 
         return new SingleObjectModel(base.Request, projects);
       }
@@ -100,14 +100,14 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpDelete]
-    [Route("v2/financial-projects/{financialProjectUID:guid}")]
+    [Route("v1/financial-projects/{financialProjectUID:guid}")]
     public NoDataModel DeleteFinancialProject([FromUri] string financialProjectUID) {
 
       base.RequireResource(financialProjectUID, nameof(financialProjectUID));
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
 
-        usecases.DeleteProject(financialProjectUID);
+        _ = usecases.DeleteProject(financialProjectUID);
 
         return new NoDataModel(this.Request);
       }
@@ -115,11 +115,11 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpGet]
-    [Route("v2/financial-projects/{projectUID:guid}")]
+    [Route("v1/financial-projects/{projectUID:guid}")]
     public SingleObjectModel GetProject([FromUri] string projectUID) {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FinancialProjectDto project = usecases.GetProject(projectUID);
+        FinancialProjectHolderDto project = usecases.GetProject(projectUID);
 
         return new SingleObjectModel(base.Request, project);
       }
@@ -127,13 +127,13 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpPut]
-    [Route("v2/financial-projects/{financialProjectUID:guid}")]
+    [Route("v1/financial-projects/{financialProjectUID:guid}")]
     public SingleObjectModel UpdateFinancialProject([FromUri] string financialProjectUID,
                                                     [FromBody] FinancialProjectFields fields) {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
 
-        FinancialProjectDto project = usecases.UpdateProject(financialProjectUID, fields);
+        FinancialProjectHolderDto project = usecases.UpdateProject(financialProjectUID, fields);
 
         return new SingleObjectModel(this.Request, project);
       }

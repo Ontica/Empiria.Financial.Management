@@ -27,21 +27,19 @@ namespace Empiria.Financial.Projects {
       // Required by Empiria Framework
     }
 
-    internal FinancialProject(FinancialProjectCategory category, Party party,
+    internal FinancialProject(FinancialProjectCategory category, OrganizationalUnit baseOrgUnit,
                               INamedEntity subprogram, string name) {
       Assertion.Require(category, nameof(category));
       Assertion.Require(!category.IsEmptyInstance, nameof(category));
-      Assertion.Require(party, nameof(party));
-      Assertion.Require(!party.IsEmptyInstance, nameof(party));
+      Assertion.Require(baseOrgUnit, nameof(baseOrgUnit));
+      Assertion.Require(!baseOrgUnit.IsEmptyInstance, nameof(baseOrgUnit));
       Assertion.Require(subprogram, nameof(subprogram));
       Assertion.Require(name, nameof(name));
 
-      Assertion.Require(!party.IsEmptyInstance,
-                        "orgUnit can not be the empty instance.");
-
       Category = category;
-      Party = party;
+      BaseOrgUnit = baseOrgUnit;
       _subprogram = StandardAccount.Parse(subprogram.UID);
+
       Name = EmpiriaString.Clean(name);
       ProjectNo = "N/D";
       StartDate = DateTime.Today;
@@ -112,8 +110,8 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    [DataField("PRJ_PARTY_ID")]
-    public Party Party {
+    [DataField("PRJ_BASE_ORG_UNIT_ID")]
+    public Party BaseOrgUnit {
       get; private set;
     }
 
@@ -139,7 +137,7 @@ namespace Empiria.Financial.Projects {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(ProjectNo, Name, Identifiers, Tags, Program.Name,
-                                           Party.Keywords, Category.Keywords,
+                                           BaseOrgUnit.Keywords, Category.Keywords,
                                            _subprogram.Keywords);
       }
     }
@@ -190,6 +188,12 @@ namespace Empiria.Financial.Projects {
       get; private set;
     }
 
+    internal FinancialProjectRules Rules {
+      get {
+        return new FinancialProjectRules(this);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -236,7 +240,7 @@ namespace Empiria.Financial.Projects {
       _subprogram = PatchField(fields.SubprogramUID, _subprogram);
       Name = PatchField(fields.Name, this.Name);
       ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
-      Party = PatchField(fields.PartyUID, this.Party);
+      BaseOrgUnit = PatchField(fields.BaseOrgUnitUID, this.BaseOrgUnit);
     }
 
     #endregion Methods

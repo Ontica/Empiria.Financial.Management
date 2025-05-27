@@ -33,19 +33,19 @@ namespace Empiria.Financial.Projects.UseCases {
 
     #region Use cases
 
-    public FinancialProjectDto CreateProject(FinancialProjectFields fields) {
+    public FinancialProjectHolderDto CreateProject(FinancialProjectFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
 
       var category = FinancialProjectCategory.Parse(fields.CategoryUID);
-      var party = Party.Parse(fields.PartyUID);
+      var orgUnit = OrganizationalUnit.Parse(fields.BaseOrgUnitUID);
 
       var subprograms = FinancialProject.GetClassificationList(FinancialProjectClassificator.Subprograma);
 
       var subprogram = subprograms.Find(x => x.UID == fields.SubprogramUID);
 
-      var project = new FinancialProject(category, party, subprogram, fields.Name);
+      var project = new FinancialProject(category, orgUnit, subprogram, fields.Name);
 
       project.Update(fields);
 
@@ -55,20 +55,23 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
-    public void DeleteProject(string UID) {
-      Assertion.Require(UID, nameof(UID));
-      var project = FinancialProject.Parse(UID);
+    public FinancialProjectHolderDto DeleteProject(string financialProjectUID) {
+      Assertion.Require(financialProjectUID, nameof(financialProjectUID));
+
+      var project = FinancialProject.Parse(financialProjectUID);
 
       project.Delete();
 
       project.Save();
+
+      return FinancialProjectMapper.Map(project);
     }
 
 
-    public FinancialProjectDto GetProject(string UID) {
-      Assertion.Require(UID, nameof(UID));
+    public FinancialProjectHolderDto GetProject(string financialProjectUID) {
+      Assertion.Require(financialProjectUID, nameof(financialProjectUID));
 
-      var project = FinancialProject.Parse(UID);
+      var project = FinancialProject.Parse(financialProjectUID);
 
       return FinancialProjectMapper.Map(project);
     }
@@ -123,7 +126,7 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
-    public FinancialProjectDto UpdateProject(string UID, FinancialProjectFields fields) {
+    public FinancialProjectHolderDto UpdateProject(string UID, FinancialProjectFields fields) {
 
       Assertion.Require(UID, nameof(UID));
       Assertion.Require(fields, nameof(fields));

@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Documents;
+using Empiria.History;
 using Empiria.StateEnums;
 
 namespace Empiria.Financial.Projects.Adapters {
@@ -17,28 +19,45 @@ namespace Empiria.Financial.Projects.Adapters {
 
     #region Mappers
 
+    static public FinancialProjectHolderDto Map(FinancialProject project) {
+      return new FinancialProjectHolderDto {
+        FinancialProject = MapProject(project),
+        Documents = DocumentServices.GetAllEntityDocuments(project),
+        History = HistoryServices.GetEntityHistory(project),
+        Actions = MapActions(project.Rules)
+      };
+    }
+
+
     static public FixedList<FinancialProjectDescriptor> Map(FixedList<FinancialProject> project) {
       return project.Select(x => MapToDescriptor(x))
                     .ToFixedList();
     }
 
+    #endregion Mappers
 
-    static public FinancialProjectDto Map(FinancialProject project) {
+    #region Helpers
+
+    static private BaseActions MapActions(FinancialProjectRules rules) {
+      return new BaseActions {
+        CanDelete = rules.CanDelete,
+        CanEditDocuments = rules.CanEditDocuments,
+        CanUpdate = rules.CanUpdate
+      };
+    }
+
+    static private FinancialProjectDto MapProject(FinancialProject project) {
       return new FinancialProjectDto {
         UID = project.UID,
         Category = project.Category.MapToNamedEntity(),
         Program = project.Program.MapToNamedEntity(),
         Subprogram = project.Subprogram.MapToNamedEntity(),
+        BaseOrgUnit = project.BaseOrgUnit.MapToNamedEntity(),
         ProjectNo = project.ProjectNo,
         Name = project.Name,
-        Party = project.Party.MapToNamedEntity(),
         Status = project.Status,
       };
     }
-
-    #endregion Mappers
-
-    #region Helpers
 
     static private FinancialProjectDescriptor MapToDescriptor(FinancialProject project) {
       return new FinancialProjectDescriptor {
@@ -46,9 +65,9 @@ namespace Empiria.Financial.Projects.Adapters {
         CategoryName = project.Category.Name,
         ProgramName = project.Program.Name,
         SubprogramName = project.Subprogram.Name,
+        BaseOrgUnitName = project.BaseOrgUnit.Name,
         ProjectNo = project.ProjectNo,
         Name = project.Name,
-        PartyName = project.Party.Name,
         StatusName = project.Status.GetName(),
       };
     }

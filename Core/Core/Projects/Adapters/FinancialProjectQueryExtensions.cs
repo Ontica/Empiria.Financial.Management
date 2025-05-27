@@ -33,7 +33,7 @@ namespace Empiria.Financial.Projects.Adapters {
 
 
     static internal string MapToFilterString(this FinancialProjectQuery query) {
-      string partyFilter = BuildPartyFilter(query.PartyUID);
+      string partyFilter = BuildPartyFilter(query.BaseOrgUnitUID);
       string categoryFilter =  BuildCategoryFilter(query.CategoryUID);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
       string statusFilter = BuildStatusFilter(query.Status);
