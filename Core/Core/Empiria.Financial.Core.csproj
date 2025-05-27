@@ -69,7 +69,5 @@
   <ItemGroup>
     <Folder Include="Credits\Adapters\" />
     <Folder Include="Credits\Data\" />
-    <Folder Include="Credits\Domain\" />
-    <Folder Include="Credits\UseCases\" />
   </ItemGroup>
 </Project>
