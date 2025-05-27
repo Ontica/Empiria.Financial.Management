@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using System.Collections.Generic;
 
 using Empiria.Data;
@@ -43,7 +44,6 @@ namespace Empiria.CashFlow.Projections.Data {
       }
     }
 
-
     static internal List<CashFlowProjection> GetProjections(CashFlowPlan cashFlowPlan) {
       Assertion.Require(cashFlowPlan, nameof(cashFlowPlan));
 
@@ -59,6 +59,20 @@ namespace Empiria.CashFlow.Projections.Data {
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetList<CashFlowProjection>(op);
+    }
+
+
+    static internal List<CashFlowProjectionEntry> GetProjectionEntries(CashFlowProjection projection) {
+      Assertion.Require(projection, nameof(projection));
+
+      var sql = "SELECT * FROM FMS_CASHFLOW_PJC_ENTRIES " +
+                $"WHERE CFW_PJC_ENTRY_PJC_ID = {projection.Id} AND " +
+                $"CFW_PJC_ENTRY_STATUS <> 'X' " +
+                $"ORDER BY CFW_PJC_ENTRY_ID";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetList<CashFlowProjectionEntry>(op);
     }
 
 
@@ -85,6 +99,19 @@ namespace Empiria.CashFlow.Projections.Data {
           o.ApplicationDate, o.AppliedBy.Id, o.RecordingTime, o.RecordedBy.Id,
           o.AuthorizationTime, o.AuthorizedBy.Id, o.RequestedTime, o.RequestedBy.Id,
           o.Keywords, o.AdjustmentOf.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+
+      DataWriter.Execute(op);
+    }
+
+
+    static internal void WriteProjectionEntry(CashFlowProjectionEntry o) {
+      var op = DataOperation.Parse("write_FMS_CashFlow_Pjc_Entry",
+          o.Id, o.UID, o.GetEmpiriaType().Id, o.Projection.Id, o.CashFlowAccount.Id, o.OperationTypeId,
+          o.FinancialProject.Id, o.Party.Id, o.Product.Id, o.ProductUnit.Id, o.ProductQty,
+          o.Year, o.Month, o.Day, o.ProjectionColumn.Id, o.Currency.Id, o.OriginalAmount,
+          o.InflowAmount, o.OutflowAmount, o.ExchangeRate, o.Description, o.Justification,
+          string.Join(" ", o.Tags), o.ExtensionData.ToString(), o.Keywords, o.LinkedProjectionEntryId,
+          o.Position, o.PostingTime, o.PostedBy.Id, (char) o.Status);
 
       DataWriter.Execute(op);
     }

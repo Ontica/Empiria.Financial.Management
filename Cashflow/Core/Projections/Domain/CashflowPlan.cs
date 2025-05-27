@@ -87,6 +87,13 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    public Currency BaseCurrency {
+      get {
+        return Currency.Default;
+      }
+    }
+
+
     public FixedList<CashFlowProjection> Projections {
       get {
         return _projections.Value.ToFixedList();
