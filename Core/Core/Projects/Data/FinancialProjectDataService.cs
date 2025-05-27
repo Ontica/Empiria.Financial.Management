@@ -32,7 +32,7 @@ namespace Empiria.Financial.Projects.Data {
 
     internal static FixedList<FinancialAccount> GetProjectAccounts(FinancialProject project) {
       var sql = "SELECT * FROM FMS_ACCOUNTS " +
-          $"WHERE ACCT_PROJECT_ID = {project.Id} " +
+          $"WHERE ACCT_PROJECT_ID = {project.Id} AND " +
           $"ACCT_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);

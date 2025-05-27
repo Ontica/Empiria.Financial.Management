@@ -24,7 +24,7 @@ namespace Empiria.Financial {
 
     #region Constructors and parsers
 
-    public StandardAccount() {
+    protected StandardAccount(StandardAccountType powertype) : base(powertype) {
       // Require by Empiria FrameWork
     }
 

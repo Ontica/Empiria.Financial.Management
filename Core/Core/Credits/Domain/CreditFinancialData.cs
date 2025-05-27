@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : FinancialAccounts                          Component : Domain Layer                            *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Information Holder                      *
-*  Type     : CreditExtData                              License   : Please read LICENSE.txt file            *
+*  Type     : CreditFinancialData                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Holds financial credit information.                                     *
+*  Summary  : Holds financial data for credit accounts.                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -13,14 +13,14 @@ using Empiria.Json;
 
 namespace Empiria.Financial {
 
-  /// <summary>Holds financial credit information.</summary>
-  public class CreditExtData {
+  /// <summary>Holds financial data for credit accounts.</summary>
+  public class CreditFinancialData {
 
     #region Constructors and Parsers
 
     private readonly JsonObject _extData = new JsonObject();
 
-    internal CreditExtData(JsonObject creditData) {
+    internal CreditFinancialData(JsonObject creditData) {
       Assertion.Require(creditData, nameof(creditData));
 
       _extData = creditData;
@@ -210,7 +210,6 @@ namespace Empiria.Financial {
 
     #endregion Helpers
 
-
-  } // class CreditExtData
+  } // class CreditFinancialData
 
 } // namespace Empiria.Financial

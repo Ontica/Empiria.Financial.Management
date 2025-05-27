@@ -18,7 +18,7 @@ namespace Empiria.Financial {
 
     #region Constructors and parsers
 
-    protected CreditAccount() : base(FinancialAccountType.Empty) {
+    protected CreditAccount(FinancialAccountType powertype) : base(powertype) {
       // Required by Empiria FrameWork
     }
 
@@ -41,9 +41,15 @@ namespace Empiria.Financial {
 
     #region Properties
 
-    public CreditExtData CreditData {
+    public CreditData CreditData {
       get {
-        return new CreditExtData(ExtData);
+        return new CreditData(base.ConfigExtData);
+      }
+    }
+
+    public CreditFinancialData FinancialData {
+      get {
+        return new CreditFinancialData(base.FinancialExtData);
       }
     }
 

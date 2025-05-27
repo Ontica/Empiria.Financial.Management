@@ -131,19 +131,19 @@ namespace Empiria.Financial {
 
     [DataField("ACCT_ATTRIBUTES")]
     public JsonObject Attributes {
-      get; protected set;
+      get; private set;
     }
 
 
     [DataField("ACCT_FINANCIAL_DATA")]
-    public JsonObject FinancialData {
-      get; protected set;
+    internal protected JsonObject FinancialExtData {
+      get; private set;
     }
 
 
     [DataField("ACCT_CONFIG_DATA")]
-    public JsonObject ConfigData {
-      get; protected set;
+    internal protected JsonObject ConfigExtData {
+      get; private set;
     }
 
 

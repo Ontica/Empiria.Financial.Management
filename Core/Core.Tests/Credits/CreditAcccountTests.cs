@@ -9,8 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Xunit;
-using System;
 
+using System;
 using Empiria.Financial;
 
 namespace Empiria.Tests.Financial.Credits {
@@ -46,6 +46,15 @@ namespace Empiria.Tests.Financial.Credits {
       Assert.Equal(fields.EtapaCredito, sut.CreditData.EtapaCredito);
     }
 
+
+    [Fact]
+    public void Should_Parse_All_Credit_Accounts() {
+      var sut = BaseObject.GetFullList<CreditAccount>();
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+
+    }
     #endregion Facts
 
   }  // class CreditAcccountTests
