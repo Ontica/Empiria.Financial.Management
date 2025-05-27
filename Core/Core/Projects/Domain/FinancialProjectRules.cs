@@ -17,6 +17,8 @@ namespace Empiria.Financial.Projects {
 
     #region Fields
 
+    static internal readonly string PROJECT_AUTHORIZER = "financial-project-authorizer";
+    static internal readonly string PROJECT_MANAGER = "financial-project-manager";
     static internal readonly string PROJECT_MANGER_ROLE = "cash-flow";
 
     private readonly FinancialProject _project;
@@ -35,13 +37,32 @@ namespace Empiria.Financial.Projects {
 
     #region Properties
 
-    public bool CanDelete {
+    public bool CanAuthorize {
       get {
-        if (_project.Status == EntityStatus.Pending) {
+        if (_project.Status != EntityStatus.OnReview) {
+          return false;
+        }
+        if (ExecutionServer.CurrentPrincipal.IsInRole(PROJECT_AUTHORIZER) ||
+            ExecutionServer.CurrentPrincipal.IsInRole(PROJECT_MANAGER)) {
           return true;
         }
-
         return false;
+      }
+    }
+
+
+    public bool CanDelete {
+      get {
+        if (_project.Status != EntityStatus.Pending) {
+          return false;
+        }
+
+        if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
+                                    new int[] { _project.PostedBy.Id, _project.RecordedBy.Id })) {
+          return false;
+        }
+
+        return true;
       }
     }
 
@@ -49,6 +70,11 @@ namespace Empiria.Financial.Projects {
     public bool CanEditDocuments {
       get {
         if (_project.Status == EntityStatus.Deleted || _project.Status == EntityStatus.Suspended) {
+          return false;
+        }
+
+        if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
+                    new int[] { _project.PostedBy.Id, _project.RecordedBy.Id })) {
           return false;
         }
 
@@ -62,12 +88,21 @@ namespace Empiria.Financial.Projects {
         if (_project.IsNew) {
           return true;
         }
-
-        if (_project.Status == EntityStatus.Pending || _project.Status == EntityStatus.Active) {
+        if (_project.Status != EntityStatus.Pending) {
+          return false;
+        }
+        if (_project.FinancialProjectType.IsProtected &&
+            (ExecutionServer.CurrentPrincipal.IsInRole(PROJECT_AUTHORIZER) ||
+             ExecutionServer.CurrentPrincipal.IsInRole(PROJECT_MANAGER))) {
           return true;
         }
+        if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
+                                    new int[] { _project.PostedBy.Id,
+                                                _project.RecordedBy.Id })) {
+          return false;
+        }
 
-        return false;
+        return true;
       }
     }
 

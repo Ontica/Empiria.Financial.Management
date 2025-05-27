@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Financial Projects                         Component : Domain Layer                            *
-*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Information holder                      *
+*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Partitioned type                        *
 *  Type     : FinancialProject                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a financial project.                                                                *
@@ -11,24 +11,26 @@
 using System;
 
 using Empiria.Json;
-using Empiria.StateEnums;
+using Empiria.Ontology;
 using Empiria.Parties;
+using Empiria.StateEnums;
 
 using Empiria.Financial.Projects.Data;
 
 namespace Empiria.Financial.Projects {
 
   /// <summary>Represents a financial project.</summary>
+  [PartitionedType(typeof(FinancialProjectType))]
   public class FinancialProject : BaseObject, INamedEntity {
 
     #region Constructors and parsers
 
-    private FinancialProject() {
+    protected FinancialProject(FinancialProjectType powertype) : base(powertype) {
       // Required by Empiria Framework
     }
 
     internal FinancialProject(FinancialProjectCategory category, OrganizationalUnit baseOrgUnit,
-                              INamedEntity subprogram, string name) {
+                              INamedEntity subprogram, string name) : base(FinancialProjectType.Empty) {
       Assertion.Require(category, nameof(category));
       Assertion.Require(!category.IsEmptyInstance, nameof(category));
       Assertion.Require(baseOrgUnit, nameof(baseOrgUnit));
@@ -63,6 +65,12 @@ namespace Empiria.Financial.Projects {
     #endregion Constructors and parsers
 
     #region Properties
+
+    public FinancialProjectType FinancialProjectType {
+      get {
+        return (FinancialProjectType) base.GetEmpiriaType();
+      }
+    }
 
 
     [DataField("PRJ_CATEGORY_ID")]
@@ -116,15 +124,47 @@ namespace Empiria.Financial.Projects {
     }
 
 
+    //[DataField("PRJ_DESCRIPTION")]
+    public string Description {
+      get; private set;
+    }
+
+
+    //[DataField("PRJ_JUSTIFICATION")]
+    public string Justification {
+      get; private set;
+    }
+
+
     [DataField("PRJ_IDENTIFIERS")]
-    public string Identifiers {
-      get; protected set;
+    private string _identifiers = string.Empty;
+
+    public FixedList<string> Identifiers {
+      get {
+        return _identifiers.Split(' ')
+                           .ToFixedList();
+      }
     }
 
 
     [DataField("PRJ_TAGS")]
-    public string Tags {
-      get; protected set;
+    private string _tags = string.Empty;
+
+    public FixedList<string> Tags {
+      get {
+        return _tags.Split(' ')
+                    .ToFixedList();
+      }
+    }
+
+
+    //[DataField("PRJ_GOALS_EXT_DATA")]
+    private JsonObject _projectGoals = new JsonObject();
+
+    public FinancialProjectGoals FinancialGoals {
+      get {
+        return new FinancialProjectGoals(_projectGoals);
+      }
     }
 
 
@@ -136,7 +176,7 @@ namespace Empiria.Financial.Projects {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(ProjectNo, Name, Identifiers, Tags, Program.Name,
+        return EmpiriaString.BuildKeywords(ProjectNo, Name, _identifiers, _tags, Program.Name,
                                            BaseOrgUnit.Keywords, Category.Keywords,
                                            _subprogram.Keywords);
       }
@@ -161,6 +201,30 @@ namespace Empiria.Financial.Projects {
 
     [DataField("PRJ_ASSIGNEE_ID")]
     public Person Assignee {
+      get; private set;
+    }
+
+
+    //[DataField("PRJ_RECORDING_TIME")]
+    public DateTime RecordingTime {
+      get; private set;
+    }
+
+
+    //[DataField("PRJ_RECORDED_BY_ID")]
+    public Party RecordedBy {
+      get; private set;
+    }
+
+
+    //[DataField("PRJ_AUTHORIZATION_TIME")]
+    public DateTime AuthorizationTime {
+      get; private set;
+    }
+
+
+    //[DataField("PRJ_AUTHORIZED_BY_ID")]
+    public Party AuthorizedBy {
       get; private set;
     }
 
@@ -204,8 +268,17 @@ namespace Empiria.Financial.Projects {
 
     #region Methods
 
+    internal void Authorize() {
+      Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this project.");
+
+      AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      AuthorizationTime = DateTime.Now;
+      Status = EntityStatus.OnReview;
+    }
+
+
     internal void Delete() {
-      Assertion.Require(Status == EntityStatus.Pending,
+      Assertion.Require(Rules.CanDelete,
                         $"Can not delete project. Its status is {Status.GetName()}.");
       this.Status = EntityStatus.Deleted;
     }
@@ -213,10 +286,14 @@ namespace Empiria.Financial.Projects {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        StartDate = ExecutionServer.DateMinValue;
+        StartDate = ExecutionServer.DateMaxValue;
         EndDate = ExecutionServer.DateMaxValue;
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
+      }
+      if (Status == EntityStatus.Pending) {
+        RecordingTime = DateTime.Now;
+        RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       }
 
       FinancialProjectDataService.WriteProject(this, _subprogram, this.ExtData.ToString());
@@ -227,13 +304,6 @@ namespace Empiria.Financial.Projects {
       Assertion.Require(parent, nameof(parent));
 
       Parent = parent;
-    }
-
-
-    internal void Suspend() {
-      Assertion.Require(Status == EntityStatus.Active,
-                        $"Can not suspend project. Its status is {Status.GetName()}.");
-      this.Status = EntityStatus.Suspended;
     }
 
 
