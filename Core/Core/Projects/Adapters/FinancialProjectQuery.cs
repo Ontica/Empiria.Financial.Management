@@ -31,7 +31,7 @@ namespace Empiria.Financial.Projects.Adapters {
 
 
     public string SubprogramUID {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
