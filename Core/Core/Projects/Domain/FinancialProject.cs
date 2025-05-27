@@ -264,6 +264,17 @@ namespace Empiria.Financial.Projects {
       }
     }
 
+
+    private FixedList<FinancialAccount> _accounts = null;
+    public FixedList<FinancialAccount> Accounts {
+      get {
+        if (_accounts == null) {
+          _accounts = FinancialProjectDataService.GetProjectAccounts(this);
+        }
+        return _accounts;
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -299,6 +310,10 @@ namespace Empiria.Financial.Projects {
       FinancialProjectDataService.WriteProject(this, _subprogram, this.ExtData.ToString());
     }
 
+
+    internal void Reload() {
+      _accounts = null;
+    }
 
     internal void SetParent(FinancialProject parent) {
       Assertion.Require(parent, nameof(parent));
