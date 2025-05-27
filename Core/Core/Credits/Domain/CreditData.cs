@@ -18,12 +18,12 @@ namespace Empiria.Financial {
 
     #region Constructors and Parsers
 
-    private readonly JsonObject _extData = new JsonObject();
+    private readonly JsonObject _attributes = new JsonObject();
 
     internal CreditData(JsonObject creditData) {
       Assertion.Require(creditData, nameof(creditData));
 
-      _extData = creditData;
+      _attributes = creditData;
     }
 
     #endregion Properties
@@ -32,40 +32,40 @@ namespace Empiria.Financial {
 
     public string CreditoNo {
       get {
-        return _extData.Get("creditoNo", string.Empty);
+        return _attributes.Get("creditoNo", string.Empty);
       }
       private set {
-        _extData.SetIfValue("creditoNo", value);
+        _attributes.SetIfValue("creditoNo", value);
       }
     }
 
 
     public int EtapaCredito {
       get {
-        return _extData.Get("etapaCredito", 0);
+        return _attributes.Get("etapaCredito", 0);
       }
       private set {
-        _extData.SetIfValue("etapaCredito", value);
+        _attributes.SetIfValue("etapaCredito", value);
       }
     }
 
 
     public string Acreditado {
       get {
-        return _extData.Get("acreditado", string.Empty);
+        return _attributes.Get("acreditado", string.Empty);
       }
       private set {
-        _extData.SetIfValue("acreditado", value);
+        _attributes.SetIfValue("acreditado", value);
       }
     }
 
 
     public string TipoCredito {
       get {
-        return _extData.Get("tipoCredito", string.Empty);
+        return _attributes.Get("tipoCredito", string.Empty);
       }
       private set {
-        _extData.SetIfValue("tipoCredito", value);
+        _attributes.SetIfValue("tipoCredito", value);
       }
     }    
 
@@ -74,7 +74,7 @@ namespace Empiria.Financial {
     #region Helpers
 
     internal string ToJsonString() {
-      return _extData.ToString();
+      return _attributes.ToString();
     }
 
 

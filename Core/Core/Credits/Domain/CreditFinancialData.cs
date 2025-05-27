@@ -18,12 +18,12 @@ namespace Empiria.Financial {
 
     #region Constructors and Parsers
 
-    private readonly JsonObject _extData = new JsonObject();
+    private readonly JsonObject _financialExtData = new JsonObject();
 
     internal CreditFinancialData(JsonObject creditData) {
       Assertion.Require(creditData, nameof(creditData));
 
-      _extData = creditData;
+      _financialExtData = creditData;
     }
 
     #endregion Properties
@@ -32,110 +32,110 @@ namespace Empiria.Financial {
         
     public decimal Interes {
       get {
-        return _extData.Get("interes", 0);
+        return _financialExtData.Get("interes", 0);
       }
       private set {
-        _extData.SetIfValue("interes", value);
+        _financialExtData.SetIfValue("interes", value);
       }
     }
 
 
     public int Comision {
       get {
-        return _extData.Get("comision", 0);
+        return _financialExtData.Get("comision", 0);
       }
       private set {
-        _extData.SetIfValue("comision", value);
+        _financialExtData.SetIfValue("comision", value);
       }
     }
 
 
     public decimal Saldo {
       get {
-        return _extData.Get("saldo", 0);
+        return _financialExtData.Get("saldo", 0);
       }
       private set {
-        _extData.SetIfValue("saldo", value);
+        _financialExtData.SetIfValue("saldo", value);
       }
     }
 
 
     public decimal PlazoInversion {
       get {
-        return _extData.Get("plazoInversion", 0);
+        return _financialExtData.Get("plazoInversion", 0);
       }
       private set {
-        _extData.SetIfValue("plazoInversion", value);
+        _financialExtData.SetIfValue("plazoInversion", value);
       }
     }
 
 
     public decimal PeriodoGracia {
       get {
-        return _extData.Get("periodoGracia", 0);
+        return _financialExtData.Get("periodoGracia", 0);
       }
       private set {
-        _extData.SetIfValue("periodoGracia", value);
+        _financialExtData.SetIfValue("periodoGracia", value);
       }
     }
 
 
     public decimal PlazoAmortizacion {
       get {
-        return _extData.Get("plazoAmortizacion", 0);
+        return _financialExtData.Get("plazoAmortizacion", 0);
       }
       private set {
-        _extData.SetIfValue("plazoAmortizacion", value);
+        _financialExtData.SetIfValue("plazoAmortizacion", value);
       }
     }
 
 
     public decimal Tasa {
       get {
-        return _extData.Get("tasa", 0);
+        return _financialExtData.Get("tasa", 0);
       }
       private set {
-        _extData.SetIfValue("tasa", value);
+        _financialExtData.SetIfValue("tasa", value);
       }
     }
 
 
     public int FactorTasa {
       get {
-        return _extData.Get("factorTasa", 0);
+        return _financialExtData.Get("factorTasa", 0);
       }
       private set {
-        _extData.SetIfValue("factorTasa", value);
+        _financialExtData.SetIfValue("factorTasa", value);
       }
     }
 
 
     public int TasaPiso {
       get {
-        return _extData.Get("tasaPiso", 0);
+        return _financialExtData.Get("tasaPiso", 0);
       }
       private set {
-        _extData.SetIfValue("tasaPiso", value);
+        _financialExtData.SetIfValue("tasaPiso", value);
       }
     }
 
 
     public int TasaTecho {
       get {
-        return _extData.Get("tasaTecho", 0);
+        return _financialExtData.Get("tasaTecho", 0);
       }
       private set {
-        _extData.SetIfValue("tasaTecho", value);
+        _financialExtData.SetIfValue("tasaTecho", value);
       }
     }
 
 
     public DateTime FechaAmortizacion {
       get {
-        return _extData.Get("fechaAmortizacion", DateTime.Now);
+        return _financialExtData.Get("fechaAmortizacion", DateTime.Now);
       }
       private set {
-        _extData.SetIfValue("fechaAmortizacion", value);
+        _financialExtData.SetIfValue("fechaAmortizacion", value);
       }
     }
 
@@ -144,7 +144,7 @@ namespace Empiria.Financial {
     #region Helpers
 
     internal string ToJsonString() {
-      return _extData.ToString();
+      return _financialExtData.ToString();
     }
 
 
