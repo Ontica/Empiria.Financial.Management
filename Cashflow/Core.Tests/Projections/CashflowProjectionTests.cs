@@ -29,10 +29,10 @@ namespace Empiria.Tests.CashFlow.Projections {
 
       var plan = TestsObjects.TryGetObject<CashFlowPlan>(x => x.Status == OpenCloseStatus.Opened);
       var category = TestsObjects.TryGetObject<CashFlowProjectionCategory>();
-      var baseAccount = TestsObjects.TryGetObject<FinancialAccount>(
-                            x => !x.Project.IsEmptyInstance &&
-                                  x.OrganizationalUnit.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE)
-                           );
+      var baseAccount = ExternalVariables.FinancialAccounts.Find(x =>
+                                 x.FinancialAccountType.PlaysRole(CashFlowProjection.BASE_ACCOUNT_ROLE) &&
+                                 x.OrganizationalUnit.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE)
+                               );
 
       var sut = new CashFlowProjection(plan, category, baseAccount);
 
@@ -147,9 +147,11 @@ namespace Empiria.Tests.CashFlow.Projections {
                                               x => x.Rules.CanUpdate
                                             );
 
-      var updatedAccount = TestsObjects.TryGetObject<CreditAccount>(
-                                          x => x.OrganizationalUnit.Distinct(sut.BaseParty) &&
-                                               x.Project.Distinct(sut.BaseProject));
+      var updatedAccount = ExternalVariables.FinancialAccounts.Find(x =>
+                                 x.Project.Distinct(sut.BaseProject) &&
+                                 x.FinancialAccountType.PlaysRole(CashFlowProjection.BASE_ACCOUNT_ROLE) &&
+                                 x.OrganizationalUnit.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE)
+                              );
 
       Assert.True(updatedAccount != null, nameof(updatedAccount));
 
