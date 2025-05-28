@@ -33,6 +33,19 @@ namespace Empiria.Financial.Projects.UseCases {
 
     #region Use cases
 
+    public FinancialProjectHolderDto AutorizeProject(string financialProjectUID) {
+      Assertion.Require(financialProjectUID, nameof(financialProjectUID));
+
+      var project = FinancialProject.Parse(financialProjectUID);
+
+      project.Authorize();
+
+      project.Save();
+
+      return FinancialProjectMapper.Map(project);
+    }
+
+
     public FinancialProjectHolderDto CreateProject(FinancialProjectFields fields) {
       Assertion.Require(fields, nameof(fields));
 
