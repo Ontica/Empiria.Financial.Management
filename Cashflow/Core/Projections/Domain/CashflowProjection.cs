@@ -31,6 +31,8 @@ namespace Empiria.CashFlow.Projections {
 
     #region Fields
 
+    static internal readonly string BASE_ACCOUNT_ROLE = "cash-flow-projection-base-account";
+
     static internal readonly string DELETED_PROJECTION_NO = "Eliminada";
     static internal readonly string TO_ASSIGN_PROJECTION_NO = "Por asignar";
 
@@ -54,6 +56,8 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(!category.IsEmptyInstance, nameof(baseAccount));
       Assertion.Require(baseAccount, nameof(category));
       Assertion.Require(!baseAccount.IsEmptyInstance, nameof(baseAccount));
+      Assertion.Require(baseAccount.FinancialAccountType.PlaysRole(BASE_ACCOUNT_ROLE),
+                $"{baseAccount.Name} is not enabled to be used as baseAccount for cash flow projections.");
 
       Plan = plan;
       Category = category;

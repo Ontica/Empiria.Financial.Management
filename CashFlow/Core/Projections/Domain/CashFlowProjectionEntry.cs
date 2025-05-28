@@ -25,6 +25,12 @@ namespace Empiria.CashFlow.Projections {
   /// <summary>An entry in a cash flow projection.</summary>
   public class CashFlowProjectionEntry : BaseObject {
 
+    #region Fields
+
+    static internal readonly string ENTRY_ACCOUNT_ROLE = "cash-flow-projection-entry-account";
+
+    #endregion Fields
+
     #region Constructors and parsers
 
     private CashFlowProjectionEntry() {
@@ -37,6 +43,8 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(!projection.IsEmptyInstance, nameof(projection));
       Assertion.Require(account, nameof(account));
       Assertion.Require(!account.IsEmptyInstance, nameof(account));
+      Assertion.Require(account.FinancialAccountType.PlaysRole(ENTRY_ACCOUNT_ROLE),
+                $"{account.Name} is not enabled to be used for cash flow projection entries.");
       Assertion.Require(amount > 0, nameof(amount));
 
       Projection = projection;

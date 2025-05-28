@@ -38,6 +38,26 @@ namespace Empiria.Financial {
 
     #endregion Constructors and parsers
 
+    #region Properties
+
+    public FixedList<string> Roles {
+      get {
+        return base.ExtensionData.GetFixedList<string>("roles", false);
+      }
+    }
+
+    #endregion Properties
+
+    #region Methods
+
+    public bool PlaysRole(string role) {
+      Assertion.Require(role, nameof(role));
+
+      return Roles.Contains(role);
+    }
+
+    #endregion Methods
+
   } // class FinancialAccountType
 
 }  // namespace Empiria.Financial
