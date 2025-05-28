@@ -80,7 +80,7 @@ namespace Empiria.Financial.Projects.Data {
          o.Id, o.UID, o.FinancialProjectType.Id, subprogram.Id, o.Category.Id, o.ProjectNo, o.Name,
          o.BaseOrgUnit.Id,string.Empty, string.Empty, extensionData, o.Keywords, o.Parent.Id,
          o.StartDate, o.EndDate, o.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status,
-         o.Assignee.Id, o.Description, o.FinancialGoals.ToString(), o.Justification, o.RecordingTime,
+         o.Assignee.Id, o.Description, string.Empty, o.Justification, o.RecordingTime,
          o.RecordedBy.Id, o.AuthorizationTime, o.AuthorizedBy.Id
          );
 
