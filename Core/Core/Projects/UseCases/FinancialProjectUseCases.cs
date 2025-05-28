@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Parties;
 using Empiria.Services;
 
@@ -102,6 +104,14 @@ namespace Empiria.Financial.Projects.UseCases {
       FixedList<INamedEntity> programs = FinancialProject.GetClassificationList(classificator);
 
       return programs.MapToNamedEntityList();
+    }
+
+
+    public FixedList<FinancialProjectOrgUnitsForEditionDto> GetProjectOrganizationalUnitsForEdition() {
+      FixedList<OrganizationalUnit> list = Party.GetList<OrganizationalUnit>(DateTime.Today)
+                                                .FindAll(x => x.PlaysRole(FinancialProjectRules.PROJECT_MANGER_ROLE));
+
+      return FinancialProjectOrgUnitsForEditionMapper.Map(list);
     }
 
 

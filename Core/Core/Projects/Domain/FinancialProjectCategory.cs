@@ -31,13 +31,11 @@ namespace Empiria.Financial.Projects {
 
     #endregion Constructors and parsers
 
-    #region Properties
-
-    #endregion Properties
-
-    #region Methods
-
-    #endregion Methods
+    public string StandardAccountCode {
+      get {
+        return base.Code;
+      }
+    }
 
   } // class FinancialProjectCategory
 

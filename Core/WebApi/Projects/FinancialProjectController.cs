@@ -10,6 +10,7 @@
 
 using System.Web.Http;
 
+using Empiria.Parties;
 using Empiria.WebApi;
 
 using Empiria.Financial.Projects.UseCases;
@@ -23,6 +24,17 @@ namespace Empiria.Financial.Projects.WebApi {
     #region Query web apis
 
     [HttpGet]
+    [Route("v1/financial-projects/organizational-units/{orgUnitUID:guid}/assignees")]
+    public CollectionModel GetProjectAssignees([FromUri] string orgUnitUID) {
+
+      FixedList<NamedEntityDto> assignees = BaseObject.GetFullList<Person>()
+                                                      .MapToNamedEntityList();
+
+      return new CollectionModel(base.Request, assignees);
+    }
+
+
+    [HttpGet]
     [Route("v1/financial-projects/categories")]
     public CollectionModel GetProjectCategories() {
 
@@ -30,6 +42,17 @@ namespace Empiria.Financial.Projects.WebApi {
         FixedList<NamedEntityDto> categories = usecases.GetProjectsCategories();
 
         return new CollectionModel(base.Request, categories);
+      }
+    }
+
+    [HttpGet]
+    [Route("v1/financial-projects/organizational-units-for-edition")]
+    public CollectionModel GetProjectOrganizationalUnitsForEdition() {
+
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FixedList<FinancialProjectOrgUnitsForEditionDto> orgUnits = usecases.GetProjectOrganizationalUnitsForEdition();
+
+        return new CollectionModel(base.Request, orgUnits);
       }
     }
 
