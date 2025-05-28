@@ -103,7 +103,7 @@ namespace Empiria.Financial.Projects {
 
     public INamedEntity Program {
       get {
-        return StandardAccount.Parse(_subprogram.ParentId);
+        return _subprogram.Parent;
       }
     }
 

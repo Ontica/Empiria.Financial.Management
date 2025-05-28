@@ -11,9 +11,12 @@
 using System;
 
 using Empiria.Contacts;
+
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.StateEnums;
+
+using Empiria.Financial.Data;
 
 namespace Empiria.Financial {
 
@@ -128,8 +131,21 @@ namespace Empiria.Financial {
 
 
     [DataField("STD_ACCT_PARENT_ID")]
-    public int ParentId {
-      get; set;
+    private int _parentId = -1;
+
+    public StandardAccount Parent {
+      get {
+        if (this.IsEmptyInstance) {
+          return this;
+        }
+        return Parse(_parentId);
+      }
+      private set {
+        if (this.IsEmptyInstance) {
+          return;
+        }
+        _parentId = value.Id;
+      }
     }
 
 
@@ -160,6 +176,14 @@ namespace Empiria.Financial {
     [DataField("STD_ACCT_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get; private set;
+    }
+
+    private FixedList<StandardAccount> _children = null;
+    internal FixedList<StandardAccount> GetChildren() {
+      if (_children == null) {
+        _children = StandardAccountDataService.GetStandardAccountChildren(this);
+      }
+      return _children;
     }
 
     #endregion Properties

@@ -30,10 +30,23 @@ namespace Empiria.Financial.Data {
       DataWriter.Execute(op);
     }
 
-    internal static FixedList<StandardAccount> GetStandardAccounts(StandardAccountsCatalogue catalogue) {
+    static internal FixedList<StandardAccount> GetStandardAccountChildren(StandardAccount stdAccount) {
+      var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
+                $"WHERE STD_ACCT_PARENT_ID = {stdAccount.Id} AND " +
+                $"STD_ACCT_STATUS <> 'X' " +
+                $"ORDER BY STD_ACCT_NUMBER";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<StandardAccount>(op);
+    }
+
+
+    static internal FixedList<StandardAccount> GetStandardAccounts(StandardAccountsCatalogue catalogue) {
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
          $"WHERE STD_ACCT_CATALOGUE_ID = {catalogue.Id} AND " +
-         $"STD_ACCT_STATUS <> 'X'";
+         $"STD_ACCT_STATUS <> 'X' " +
+         $"ORDER BY STD_ACCT_NUMBER";
 
       var op = DataOperation.Parse(sql);
 
@@ -44,7 +57,8 @@ namespace Empiria.Financial.Data {
 
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
                $"WHERE STD_ACCT_CATEGORY_ID = {category.Id} AND " +
-               $"STD_ACCT_STATUS <> 'X'";
+               $"STD_ACCT_STATUS <> 'X' " +
+               $"ORDER BY STD_ACCT_NUMBER";
 
       var op = DataOperation.Parse(sql);
 
@@ -60,7 +74,8 @@ namespace Empiria.Financial.Data {
       }
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
                $"WHERE {filter} " +
-               $"STD_ACCT_STATUS <> 'X'";
+               $"STD_ACCT_STATUS <> 'X' " +
+               $"ORDER BY STD_ACCT_NUMBER";
 
       var op = DataOperation.Parse(sql);
 
