@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Threading.Tasks;
 using Empiria.Json;
 
 namespace Empiria.Financial.Projects {
@@ -15,9 +16,10 @@ namespace Empiria.Financial.Projects {
   /// <summary>Contains demographic and financial goals data for a financial project.</summary>
   public class FinancialProjectGoals {
 
-    private readonly JsonObject _projectGoals;
+    private readonly JsonObject _projectGoals = new JsonObject();
 
     internal FinancialProjectGoals(JsonObject projectGoals) {
+      Assertion.Require(projectGoals, nameof(projectGoals));
 
       _projectGoals = projectGoals;
     }
@@ -71,17 +73,7 @@ namespace Empiria.Financial.Projects {
       private set {
         _projectGoals.SetIfValue("tipoObra", value);
       }
-    }
-
-
-    public string DescripcionProyecto {
-      get {
-        return _projectGoals.Get("descripcionProyecto", string.Empty);
-      }
-      private set {
-        _projectGoals.SetIfValue("descripcionProyecto", value);
-      }
-    }
+    }  
 
 
     public int Beneficiarios {
@@ -134,17 +126,17 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    public int TipoCambio {
+    public decimal TipoCambio {
       get {
-        return _projectGoals.Get("TipoCambio", 0);
+        return _projectGoals.Get("tipoCambio", 0);
       }
       private set {
-        _projectGoals.SetIfValue("TipoCambio", value);
+        _projectGoals.SetIfValue("tipoCambio", value);
       }
     }
 
 
-    public int Costo {
+    public decimal Costo {
       get {
         return _projectGoals.Get("costo", 0);
       }
@@ -154,7 +146,7 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    public int Total {
+    public decimal Total {
       get {
         return _projectGoals.Get("total", 0);
       }
@@ -164,6 +156,33 @@ namespace Empiria.Financial.Projects {
     }
 
     #endregion Properties
+
+    #region Helpers
+
+    internal string ToJsonString() {
+      return _projectGoals.ToString();
+    }
+
+
+    internal void Update(PojectGoalsFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      ClaveObra = fields.ClaveObra;
+      Acreditado = fields.Acreditado;
+      Municipio = fields.Municipio;
+      TipoCreedito = fields.TipoCreedito;
+      TipoObra = fields.TipoObra;
+      Beneficiarios = fields.Beneficiarios;
+      UnidadBeneficiaria = fields.UnidadBeneficiaria;
+      EmpleosDirectos = fields.EmpleosDirectos;
+      EmpleosIndirectos = fields.EmpleosIndirectos;
+      Moneda = fields.Moneda;
+      TipoCambio = fields.TipoCambio;
+      Costo = fields.Costo;
+      Total = fields.Total;
+    }
+
+    #endregion Helpers
 
   }  // class FinancialProjectGoals
 

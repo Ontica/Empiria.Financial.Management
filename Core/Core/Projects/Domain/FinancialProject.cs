@@ -337,6 +337,13 @@ namespace Empiria.Financial.Projects {
       Justification = PatchField(fields.Justification, this.Justification);
     }
 
+
+    internal void UpdateFinancialGoal(PojectGoalsFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      FinancialGoals.Update(fields);
+    }
+
     #endregion Methods
 
   } // class FinancialProject
