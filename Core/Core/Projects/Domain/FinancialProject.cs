@@ -216,7 +216,7 @@ namespace Empiria.Financial.Projects {
       get; private set;
     }
 
-    
+
     [DataField("PRJ_AUTHORIZATION_TIME")]
     public DateTime AuthorizationTime {
       get; private set;
@@ -257,6 +257,7 @@ namespace Empiria.Financial.Projects {
     public EntityStatus Status {
       get; private set;
     }
+
 
     internal FinancialProjectRules Rules {
       get {
@@ -333,12 +334,12 @@ namespace Empiria.Financial.Projects {
       ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
       BaseOrgUnit = PatchField(fields.BaseOrgUnitUID, this.BaseOrgUnit);
       Assignee = PatchField(fields.AssigneeUID, this.Assignee);
-      Description = PatchField(fields.Description, this.Description);
-      Justification = PatchField(fields.Justification, this.Justification);
+      Description = EmpiriaString.Clean(fields.Description);
+      Justification = EmpiriaString.Clean(fields.Justification);
     }
 
 
-    internal void UpdateFinancialGoal(PojectGoalsFields fields) {
+    internal void UpdateFinancialGoals(PojectGoalsFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       FinancialGoals.Update(fields);

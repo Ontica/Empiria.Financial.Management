@@ -20,16 +20,16 @@ namespace Empiria.Financial {
 
     private readonly JsonObject _financialExtData = new JsonObject();
 
-    internal CreditFinancialData(JsonObject creditData) {
-      Assertion.Require(creditData, nameof(creditData));
+    internal CreditFinancialData(JsonObject financialData) {
+      Assertion.Require(financialData, nameof(financialData));
 
-      _financialExtData = creditData;
+      _financialExtData = financialData;
     }
 
     #endregion Properties
 
     #region Properties
-        
+
     public decimal Interes {
       get {
         return _financialExtData.Get("interes", 0);

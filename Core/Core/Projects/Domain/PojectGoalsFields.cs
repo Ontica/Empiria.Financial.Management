@@ -19,7 +19,7 @@ namespace Empiria.Financial.Projects {
 
     public int ClaveObra {
       get; set;
-    } = 0;
+    }
 
 
     public string Acreditado {
@@ -32,19 +32,19 @@ namespace Empiria.Financial.Projects {
     } = string.Empty;
 
 
-    public int TipoCreedito {
+    public int TipoCredito {
       get; set;
-    } = 0;
+    }
 
 
     public string TipoObra {
       get; set;
     } = string.Empty;
 
-        
+
     public int Beneficiarios {
       get; set;
-    } = 0;
+    }
 
 
     public string UnidadBeneficiaria {
@@ -54,38 +54,34 @@ namespace Empiria.Financial.Projects {
 
     public int EmpleosDirectos {
       get; set;
-    } = 0;
+    }
 
 
     public int EmpleosIndirectos {
       get; set;
-    } = 0;
+    }
 
 
-    public int Moneda {
+    public DateTime FechaAmortizacion {
       get; set;
-    } = 0;
+    } = ExecutionServer.DateMaxValue;
 
 
     public decimal TipoCambio {
       get; set;
-    } = 0;
+    }
 
 
     public decimal Costo {
       get; set;
-    } = 0;
+    }
 
 
     public decimal Total {
       get; set;
-    } = 0;
+    }
 
     #endregion Properties
-
-    #region Methods
-
-    #endregion Methods
 
   }  // class PojectGoalsFields
 

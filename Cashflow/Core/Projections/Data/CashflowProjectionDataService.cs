@@ -51,7 +51,7 @@ namespace Empiria.CashFlow.Projections.Data {
         return new List<CashFlowProjection>() ;
       }
 
-      var sql = "SELECT * FROM FMS_CASHFLOW_PROJECTIONS " +
+      var sql = "SELECT * FROM VW_FMS_CASHFLOW_PROJECTIONS " +
                $"WHERE CFW_PJC_PLAN_ID = {cashFlowPlan.Id} AND " +
                $"CFW_PJC_STATUS <> 'X' " +
                $"ORDER BY CFW_PJC_NO";
@@ -80,7 +80,7 @@ namespace Empiria.CashFlow.Projections.Data {
       Assertion.Require(filter, nameof(filter));
       Assertion.Require(sort, nameof(sort));
 
-      var sql = "SELECT * FROM FMS_CASHFLOW_PROJECTIONS " +
+      var sql = "SELECT * FROM VW_FMS_CASHFLOW_PROJECTIONS " +
                $"WHERE {filter} " +
                $"ORDER BY {sort}";
 
@@ -105,7 +105,7 @@ namespace Empiria.CashFlow.Projections.Data {
 
 
     static internal void WriteProjectionEntry(CashFlowProjectionEntry o) {
-      var op = DataOperation.Parse("write_FMS_CashFlow_Pjc_Entry",
+      var op = DataOperation.Parse("write_FMS_CashFlow_PJC_Entry",
           o.Id, o.UID, o.GetEmpiriaType().Id, o.Projection.Id, o.CashFlowAccount.Id, o.OperationTypeId,
           o.FinancialProject.Id, o.Party.Id, o.Product.Id, o.ProductUnit.Id, o.ProductQty,
           o.Year, o.Month, o.Day, o.ProjectionColumn.Id, o.Currency.Id, o.OriginalAmount,

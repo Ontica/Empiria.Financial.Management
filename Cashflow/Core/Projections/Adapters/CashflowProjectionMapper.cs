@@ -71,7 +71,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
         AuthorizedByName = projection.AuthorizedBy.Name,
         RecordingTime = projection.RecordingTime,
         RecordedByName = projection.RecordedBy.Name,
-        // Total = projection.GetTotal(),
+        Total = projection.GetTotal(),
         StatusName = projection.Status.GetName(),
       };
     }
@@ -101,7 +101,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
         RequestedBy = projection.RequestedBy.MapToNamedEntity(),
         AdjustmentOf = projection.AdjustmentOf.IsEmptyInstance ?
                                   NamedEntityDto.Empty : projection.AdjustmentOf.MapToNamedEntity(),
-        // Total = projection.GetTotal(),
+        Total = projection.GetTotal(),
         Status = projection.Status.MapToNamedEntity(),
       };
     }

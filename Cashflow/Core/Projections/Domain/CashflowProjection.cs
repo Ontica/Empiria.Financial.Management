@@ -9,10 +9,13 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
+using Empiria.Products;
 using Empiria.StateEnums;
 
 using Empiria.Financial;
@@ -30,6 +33,9 @@ namespace Empiria.CashFlow.Projections {
 
     static internal readonly string DELETED_PROJECTION_NO = "Eliminada";
     static internal readonly string TO_ASSIGN_PROJECTION_NO = "Por asignar";
+
+    private Lazy<List<CashFlowProjectionEntry>> _entries = new Lazy<List<CashFlowProjectionEntry>>();
+    private List<CashFlowProjectionEntry> _deletedEntries = new List<CashFlowProjectionEntry>();
 
     #endregion Fields
 
@@ -65,6 +71,10 @@ namespace Empiria.CashFlow.Projections {
     static public CashFlowProjection Parse(string uid) => ParseKey<CashFlowProjection>(uid);
 
     static public CashFlowProjection Empty => ParseEmpty<CashFlowProjection>();
+
+    protected override void OnLoad() {
+      Reload();
+    }
 
     #endregion Constructors and parsers
 
@@ -245,6 +255,17 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    [DataField("CFW_PJC_TOTAL")]
+    private decimal _total = 0;
+
+    public decimal GetTotal() {
+      if (_entries.IsValueCreated) {
+        return Math.Abs(_entries.Value.Sum(x => x.InflowAmount - x.OutflowAmount));
+      } else {
+        return _total;
+      }
+    }
+
     public virtual string Name {
       get {
         return this.ProjectionNo;
@@ -257,6 +278,13 @@ namespace Empiria.CashFlow.Projections {
         return EmpiriaString.BuildKeywords(ProjectionNo, Description, Identificators, Tags,
                                            Category.Keywords, BaseProject.Keywords, BaseAccount.Keywords,
                                            BaseParty.Keywords, AdjustmentOf.ProjectionNo, Plan.Keywords);
+      }
+    }
+
+
+    public FixedList<CashFlowProjectionEntry> Entries {
+      get {
+        return _entries.Value.ToFixedList();
       }
     }
 
@@ -277,6 +305,30 @@ namespace Empiria.CashFlow.Projections {
     #endregion Properties
 
     #region Methods
+
+    internal CashFlowProjectionEntry AddEntry(CashFlowProjectionEntryFields fields) {
+      Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
+
+      Assertion.Require(fields, nameof(fields));
+
+      if (TryGetEntry(fields) != null) {
+        Assertion.RequireFail("Ya existe un movimiento con la misma información para el " +
+                              "mismo mes y año en esta transacción presupuestal.");
+      }
+
+      var projectionColumn = CashFlowProjectionColumn.Parse(fields.ProjectionColumnUID);
+      var cashflowAccount = FinancialAccount.Parse(fields.CashFlowAccountUID);
+
+      var entry = new CashFlowProjectionEntry(this, projectionColumn, cashflowAccount,
+                                             fields.Year, fields.Month, fields.Amount);
+
+      entry.Update(fields);
+
+      _entries.Value.Add(entry);
+
+      return entry;
+    }
+
 
     internal void Authorize() {
       Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this cash flow projection.");
@@ -317,6 +369,17 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    internal CashFlowProjectionEntry GetEntry(string projectionEntryUID) {
+      Assertion.Require(projectionEntryUID, nameof(projectionEntryUID));
+
+      CashFlowProjectionEntry entry = _entries.Value.Find(x => x.UID == projectionEntryUID);
+
+      Assertion.Require(entry, $"Cash flow projection entry with UID '{projectionEntryUID}' not found.");
+
+      return entry;
+    }
+
+
     protected override void OnSave() {
       if (IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
@@ -328,6 +391,14 @@ namespace Empiria.CashFlow.Projections {
       }
 
       CashFlowProjectionDataService.WriteProjection(this);
+
+      foreach (var entry in _entries.Value) {
+        entry.Save();
+      }
+      foreach (var deletedEntry in _deletedEntries) {
+        deletedEntry.Save();
+      }
+      _deletedEntries.Clear();
     }
 
 
@@ -358,6 +429,37 @@ namespace Empiria.CashFlow.Projections {
       Status = TransactionStatus.OnAuthorization;
     }
 
+
+    internal void RemoveEntry(CashFlowProjectionEntry entry) {
+      Assertion.Require(Rules.CanUpdate, "Current user can not update this cash flow projection.");
+      Assertion.Require(entry, nameof(entry));
+      Assertion.Require(_entries.Value.Contains(entry),
+                        "Entry to remove does not belong to this projection.");
+
+      entry.Delete();
+
+      _deletedEntries.Add(entry);
+      _entries.Value.Remove(entry);
+    }
+
+
+    internal CashFlowProjectionEntry TryGetEntry(CashFlowProjectionEntryFields fields) {
+      var column = FieldPatcher.PatchField(fields.ProjectionColumnUID, CashFlowProjectionColumn.Empty);
+      var account = FieldPatcher.PatchField(fields.CashFlowAccountUID, FinancialAccount.Empty);
+      var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
+      var productUnit = FieldPatcher.PatchField(fields.ProductUnitUID, ProductUnit.Empty);
+      var currency = FieldPatcher.PatchField(fields.CurrencyUID, Plan.BaseCurrency);
+
+      return _entries.Value.Find(x => x.ProjectionColumn.Equals(column) &&
+                                      x.CashFlowAccount.Equals(account) &&
+                                      x.Product.Equals(product) &&
+                                      x.ProductUnit.Equals(productUnit) &&
+                                      x.Currency.Equals(currency) &&
+                                      x.Year == fields.Year &&
+                                      x.Month == fields.Month);
+    }
+
+
     internal void Update(CashFlowProjectionFields fields) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this cash flow projection.");
       Assertion.Require(fields, nameof(fields));
@@ -377,7 +479,51 @@ namespace Empiria.CashFlow.Projections {
 
     }
 
+
+    internal void UpdateEntry(CashFlowProjectionEntry projectionEntry,
+                              CashFlowProjectionEntryFields fields) {
+      Assertion.Require(projectionEntry, nameof(projectionEntry));
+      Assertion.Require(fields, nameof(fields));
+
+      var currentEntry = TryGetEntry(fields);
+
+      if (currentEntry != null && !projectionEntry.Equals(currentEntry)) {
+        Assertion.RequireFail("Ya existe un movimiento con la misma información para el mismo " +
+                              "mes y año en esta proyección de flujo de efectivo.");
+      }
+
+      projectionEntry.Update(fields);
+    }
+
+
+    internal void UpdateEntries(FixedList<CashFlowProjectionEntry> entries) {
+      Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
+      Assertion.Require(entries, nameof(entries));
+
+      Assertion.Require(entries.CountAll(x => x.Projection.Equals(this)) == entries.Count,
+                        "All entries must belong to this cash flow projection.");
+
+      foreach (var entry in entries) {
+        if (entry.IsNew) {
+          _entries.Value.Add(entry);
+        } else if (entry.Status == TransactionStatus.Deleted) {
+          _deletedEntries.Add(entry);
+          _entries.Value.Remove(entry);
+        }
+      }
+    }
+
     #endregion Methods
+
+    #region Helpers
+
+    private void Reload() {
+      _entries = new Lazy<List<CashFlowProjectionEntry>>(() =>
+                        CashFlowProjectionDataService.GetProjectionEntries(this)
+                     );
+    }
+
+    #endregion Helpers
 
   }  // class CashFlowProjection
 

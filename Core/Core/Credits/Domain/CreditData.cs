@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using Empiria.Json;
 
 namespace Empiria.Financial {
@@ -20,10 +19,10 @@ namespace Empiria.Financial {
 
     private readonly JsonObject _attributes = new JsonObject();
 
-    internal CreditData(JsonObject creditData) {
-      Assertion.Require(creditData, nameof(creditData));
+    internal CreditData(JsonObject attributes) {
+      Assertion.Require(attributes, nameof(attributes));
 
-      _attributes = creditData;
+      _attributes = attributes;
     }
 
     #endregion Properties
@@ -67,7 +66,7 @@ namespace Empiria.Financial {
       private set {
         _attributes.SetIfValue("tipoCredito", value);
       }
-    }    
+    }
 
     #endregion Properties
 

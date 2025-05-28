@@ -8,7 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Threading.Tasks;
+using System;
+
 using Empiria.Json;
 
 namespace Empiria.Financial.Projects {
@@ -25,7 +26,7 @@ namespace Empiria.Financial.Projects {
     }
 
     #region Properties
-   
+
     public int ClaveObra {
       get {
         return _projectGoals.Get("claveObra", 0);
@@ -45,7 +46,7 @@ namespace Empiria.Financial.Projects {
       }
     }
 
-  
+
     public string Municipio {
       get {
         return _projectGoals.Get("municipio", string.Empty);
@@ -56,12 +57,12 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    public int TipoCreedito {
+    public int TipoCredito {
       get {
-        return _projectGoals.Get("tipoCreedito", 0);
+        return _projectGoals.Get("tipoCredito", 0);
       }
       private set {
-        _projectGoals.SetIfValue("tipoCreedito", value);
+        _projectGoals.SetIfValue("tipoCredito", value);
       }
     }
 
@@ -73,7 +74,7 @@ namespace Empiria.Financial.Projects {
       private set {
         _projectGoals.SetIfValue("tipoObra", value);
       }
-    }  
+    }
 
 
     public int Beneficiarios {
@@ -116,9 +117,9 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    public int Moneda {
+    public DateTime FechaAmortizacion {
       get {
-        return _projectGoals.Get("fechaAmortizacion", 0);
+        return _projectGoals.Get("fechaAmortizacion", ExecutionServer.DateMaxValue);
       }
       private set {
         _projectGoals.SetIfValue("fechaAmortizacion", value);
@@ -128,7 +129,7 @@ namespace Empiria.Financial.Projects {
 
     public decimal TipoCambio {
       get {
-        return _projectGoals.Get("tipoCambio", 0);
+        return _projectGoals.Get("tipoCambio", 0m);
       }
       private set {
         _projectGoals.SetIfValue("tipoCambio", value);
@@ -138,7 +139,7 @@ namespace Empiria.Financial.Projects {
 
     public decimal Costo {
       get {
-        return _projectGoals.Get("costo", 0);
+        return _projectGoals.Get("costo", 0m);
       }
       private set {
         _projectGoals.SetIfValue("costo", value);
@@ -148,7 +149,7 @@ namespace Empiria.Financial.Projects {
 
     public decimal Total {
       get {
-        return _projectGoals.Get("total", 0);
+        return _projectGoals.Get("total", 0m);
       }
       private set {
         _projectGoals.SetIfValue("total", value);
@@ -170,13 +171,13 @@ namespace Empiria.Financial.Projects {
       ClaveObra = fields.ClaveObra;
       Acreditado = fields.Acreditado;
       Municipio = fields.Municipio;
-      TipoCreedito = fields.TipoCreedito;
+      TipoCredito = fields.TipoCredito;
       TipoObra = fields.TipoObra;
       Beneficiarios = fields.Beneficiarios;
       UnidadBeneficiaria = fields.UnidadBeneficiaria;
       EmpleosDirectos = fields.EmpleosDirectos;
       EmpleosIndirectos = fields.EmpleosIndirectos;
-      Moneda = fields.Moneda;
+      FechaAmortizacion = fields.FechaAmortizacion;
       TipoCambio = fields.TipoCambio;
       Costo = fields.Costo;
       Total = fields.Total;

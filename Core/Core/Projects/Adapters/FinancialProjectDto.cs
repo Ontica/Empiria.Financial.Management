@@ -13,8 +13,6 @@ using System;
 using Empiria.Documents;
 using Empiria.History;
 
-using Empiria.StateEnums;
-
 using Empiria.Financial.Adapters;
 
 namespace Empiria.Financial.Projects.Adapters {
@@ -101,7 +99,7 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-    public EntityStatus Status {
+    public NamedEntityDto Status {
       get; internal set;
     }
 
