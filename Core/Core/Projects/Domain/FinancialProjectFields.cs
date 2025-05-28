@@ -43,7 +43,7 @@ namespace Empiria.Financial.Projects {
 
     public string AssigneeUID {
       get; set;
-    } = string.Empty;
+    } = "Empty";
 
 
     public string Description {
@@ -80,7 +80,12 @@ namespace Empiria.Financial.Projects {
       if (BaseOrgUnitUID.Length != 0) {
         _ = OrganizationalUnit.Parse(BaseOrgUnitUID);
       }
-    }
+
+      if (AssigneeUID.Length != 0) {
+        _ = Person.Parse(AssigneeUID);
+      }
+
+      }
 
     #endregion Methods
 
