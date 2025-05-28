@@ -37,6 +37,7 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(!projection.IsEmptyInstance, nameof(projection));
       Assertion.Require(account, nameof(account));
       Assertion.Require(!account.IsEmptyInstance, nameof(account));
+      Assertion.Require(amount > 0, nameof(amount));
 
       Projection = projection;
       CashFlowAccount = account;
