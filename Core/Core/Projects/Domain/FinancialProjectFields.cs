@@ -41,6 +41,22 @@ namespace Empiria.Financial.Projects {
     } = string.Empty;
 
 
+    public string AssigneeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string Description {
+      get; set;
+    } = string.Empty;
+
+
+    public string Justification {
+      get; set;
+    } = string.Empty;
+
+
+
     #endregion Properties
 
     #region Methods

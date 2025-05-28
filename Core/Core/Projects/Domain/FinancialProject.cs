@@ -124,16 +124,16 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    //[DataField("PRJ_DESCRIPTION")]
+    [DataField("PRJ_DESCRIPTION")]
     public string Description {
       get; private set;
-    } = string.Empty;
+    }
 
 
-    //[DataField("PRJ_JUSTIFICATION")]
+    [DataField("PRJ_JUSTIFICATION")]
     public string Justification {
       get; private set;
-    } = string.Empty;
+    }
 
 
     [DataField("PRJ_IDENTIFIERS")]
@@ -158,7 +158,7 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    //[DataField("PRJ_GOALS_EXT_DATA")]
+    [DataField("PRJ_GOALS_EXT_DATA")]
     private JsonObject _projectGoals = new JsonObject();
 
     public FinancialProjectGoals FinancialGoals {
@@ -205,28 +205,28 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    //[DataField("PRJ_RECORDING_TIME")]
+    [DataField("PRJ_RECORDING_TIME")]
     public DateTime RecordingTime {
       get; private set;
     }
 
 
-    //[DataField("PRJ_RECORDED_BY_ID")]
+    [DataField("PRJ_RECORDED_BY_ID")]
     public Party RecordedBy {
       get; private set;
-    } = Party.Empty;
+    }
 
 
-    //[DataField("PRJ_AUTHORIZATION_TIME")]
+    [DataField("PRJ_AUTHORIZATION_TIME")]
     public DateTime AuthorizationTime {
       get; private set;
     }
 
 
-    //[DataField("PRJ_AUTHORIZED_BY_ID")]
+    [DataField("PRJ_AUTHORIZED_BY_ID")]
     public Party AuthorizedBy {
       get; private set;
-    } = Party.Empty;
+    }
 
 
     [DataField("PRJ_START_DATE")]
@@ -257,6 +257,7 @@ namespace Empiria.Financial.Projects {
     public EntityStatus Status {
       get; private set;
     }
+
 
     internal FinancialProjectRules Rules {
       get {
@@ -332,6 +333,16 @@ namespace Empiria.Financial.Projects {
       Name = PatchField(fields.Name, this.Name);
       ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
       BaseOrgUnit = PatchField(fields.BaseOrgUnitUID, this.BaseOrgUnit);
+      Assignee = PatchField(fields.AssigneeUID, this.Assignee);
+      Description = EmpiriaString.Clean(fields.Description);
+      Justification = EmpiriaString.Clean(fields.Justification);
+    }
+
+
+    internal void UpdateFinancialGoals(PojectGoalsFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      FinancialGoals.Update(fields);
     }
 
     #endregion Methods

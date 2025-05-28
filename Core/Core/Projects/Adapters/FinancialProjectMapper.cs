@@ -61,6 +61,8 @@ namespace Empiria.Financial.Projects.Adapters {
         BaseOrgUnit = project.BaseOrgUnit.MapToNamedEntity(),
         ProjectNo = project.ProjectNo,
         Name = project.Name,
+        Description = project.Description,
+        Justification = project.Justification,
         Assignee = project.Assignee.MapToNamedEntity(),
         StartDate = project.StartDate,
         EndDate = project.EndDate,
@@ -68,6 +70,7 @@ namespace Empiria.Financial.Projects.Adapters {
         Status = project.Status.MapToDto(),
       };
     }
+
 
     static private FinancialProjectDescriptor MapToDescriptor(FinancialProject project) {
       return new FinancialProjectDescriptor {
