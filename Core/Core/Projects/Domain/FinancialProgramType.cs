@@ -2,21 +2,23 @@
 *                                                                                                            *
 *  Module   : Financial Projects                         Component : Domain Layer                            *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Enumeration                             *
-*  Type     : FinancialProjectClassificator              License   : Please read LICENSE.txt file            *
+*  Type     : FinancialProgramType                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Enumerates the classificators of financial projects.                                           *
+*  Summary  : Enumerates the types of financial programs.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Financial.Projects {
 
   /// <summary>Enumerates the classificators of financial projects.</summary>
-  internal enum FinancialProjectClassificator {
+  public enum FinancialProgramType {
 
-    Programa,
+    Empty = 0,
 
-    Subprograma
+    Programa = 1,
 
-  }  // enum FinancialProjectClassificator
+    Subprograma = 2,
+
+  }  // enum FinancialProgramType
 
 }  // namespace Empiria.Financial.Projects
