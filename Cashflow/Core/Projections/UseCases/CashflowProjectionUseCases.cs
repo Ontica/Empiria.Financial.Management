@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Parties;
 using Empiria.Services;
 using Empiria.StateEnums;
@@ -42,8 +44,9 @@ namespace Empiria.CashFlow.Projections.UseCases {
       fields.EnsureValid();
 
       var plan = CashFlowPlan.Parse(fields.PlanUID);
-      var category = CashFlowProjectionCategory.Parse(fields.CategoryUID);
-      var baseAccount = FinancialAccount.Parse(fields.BaseAccountUID);
+      var category = CashFlowProjectionCategory.Parse(fields.ProjectionCategoryTypeUID);
+
+      var baseAccount = FinancialAccount.Parse(fields.AccountUID);
 
       CashFlowProjection projection = plan.AddProjection(category, baseAccount);
 
@@ -83,6 +86,14 @@ namespace Empiria.CashFlow.Projections.UseCases {
       var projection = CashFlowProjection.Parse(projectionUID);
 
       return CashFlowProjectionMapper.Map(projection);
+    }
+
+
+    public FixedList<CashFlowProjectionsStructureForEdition> GetProjectionsStucturedDataForEdition() {
+      FixedList<OrganizationalUnit> list = Party.GetList<OrganizationalUnit>(DateTime.Today)
+                                                .FindAll(x => x.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE));
+
+      return CashFlowProjectionsStructureForEditionMapper.Map(list);
     }
 
 

@@ -12,8 +12,6 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.Financial.Projects;
-
 namespace Empiria.CashFlow.Projections.WebApi {
 
   /// <summary>Web API used to retrieve cash flow projection's categories.</summary>

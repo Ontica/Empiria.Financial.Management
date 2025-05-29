@@ -470,10 +470,10 @@ namespace Empiria.CashFlow.Projections {
 
       fields.EnsureValid();
 
-      BaseParty = PatchField(fields.BasePartyUID, BaseParty);
-      BaseProject = PatchField(fields.BaseProjectUID, BaseProject);
-      BaseAccount = PatchField(fields.BaseAccountUID, BaseAccount);
-      OperationSource = PatchField(fields.OperationSourceUID, OperationSource);
+      BaseParty = PatchField(fields.PartyUID, BaseParty);
+      BaseProject = PatchField(fields.ProjectUID, BaseProject);
+      BaseAccount = PatchField(fields.AccountUID, BaseAccount);
+      OperationSource = PatchField(fields.SourceUID, OperationSource);
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);

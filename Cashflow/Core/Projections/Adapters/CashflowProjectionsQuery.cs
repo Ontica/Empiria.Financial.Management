@@ -22,28 +22,29 @@ namespace Empiria.CashFlow.Projections.Adapters {
     } = string.Empty;
 
 
-    public string CategoryUID {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectionTypeUID")]
+    public string ProjectionCategoryTypeUID {
       get; set;
     } = string.Empty;
 
 
-    public string BasePartyUID {
+    public string PartyUID {
       get; set;
     } = string.Empty;
 
 
-    public string BaseProjectUID {
+    public string ProjectUID {
       get; set;
     } = string.Empty;
 
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "ClassificationUID")]
-    public string BaseProjectCategoryUID {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectTypeUID")]
+    public string ProjectTypeCategoryUID {
       get; set;
     } = string.Empty;
 
 
-    public string BaseAccountUID {
+    public string AccountUID {
       get; set;
     } = string.Empty;
 
@@ -88,12 +89,12 @@ namespace Empiria.CashFlow.Projections.Adapters {
     } = ExecutionServer.DateMinValue;
 
 
-    public TransactionPartyType PartyType {
+    public TransactionPartyRole SearchPartyRole {
       get; set;
-    } = TransactionPartyType.None;
+    } = TransactionPartyRole.None;
 
 
-    public string PartyUID {
+    public string SearchPartyUID {
       get; set;
     } = string.Empty;
 

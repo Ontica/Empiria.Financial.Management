@@ -156,18 +156,18 @@ namespace Empiria.Tests.CashFlow.Projections {
       Assert.True(updatedAccount != null, nameof(updatedAccount));
 
       var fields = new CashFlowProjectionFields {
-        BasePartyUID = updatedAccount.OrganizationalUnit.UID,
-        BaseProjectUID = updatedAccount.Project.UID,
-        BaseAccountUID = updatedAccount.UID,
+        PartyUID = updatedAccount.OrganizationalUnit.UID,
+        ProjectUID = updatedAccount.Project.UID,
+        AccountUID = updatedAccount.UID,
         Justification = "Updated justification",
         Description = "Updated description"
       };
 
       sut.Update(fields);
 
-      Assert.Equal(fields.BasePartyUID, sut.BaseParty.UID);
-      Assert.Equal(fields.BaseProjectUID, sut.BaseProject.UID);
-      Assert.Equal(fields.BaseAccountUID, sut.BaseAccount.UID);
+      Assert.Equal(fields.PartyUID, sut.BaseParty.UID);
+      Assert.Equal(fields.ProjectUID, sut.BaseProject.UID);
+      Assert.Equal(fields.AccountUID, sut.BaseAccount.UID);
       Assert.Equal(fields.Description, sut.Description);
       Assert.Equal(fields.Justification, sut.Justification);
     }

@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : CashFlow Management                        Component : Adapters Layer                          *
-*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Mapping class                           *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Mapper                                  *
 *  Type     : CashFlowProjectionMapper                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Maps CashFlowProjection instances to data transfer objects.                                    *
@@ -60,13 +60,13 @@ namespace Empiria.CashFlow.Projections.Adapters {
       return new CashFlowProjectionDescriptorDto {
         UID = projection.UID,
         PlanName = projection.Plan.Name,
-        CategoryName = projection.Category.Name,
+        ProjectionTypeCategoryName = projection.Category.Name,
         ProjectionNo = projection.ProjectionNo,
-        BasePartyName = projection.BaseParty.Name,
-        BaseProjectName = projection.BaseProject.Name,
-        BaseProjectCategoryName = projection.BaseProject.Category.Name,
-        BaseAccountName = projection.BaseAccount.Name,
-        OperationSourceName = projection.OperationSource.Name,
+        PartyName = projection.BaseParty.Name,
+        ProjectName = projection.BaseProject.Name,
+        ProjectTypeCategoryName = projection.BaseProject.Category.Name,
+        AccountName = projection.BaseAccount.Name,
+        SourceName = projection.OperationSource.Name,
         AuthorizationTime = projection.AuthorizationTime,
         AuthorizedByName = projection.AuthorizedBy.Name,
         RecordingTime = projection.RecordingTime,
@@ -81,13 +81,13 @@ namespace Empiria.CashFlow.Projections.Adapters {
       return new CashFlowProjectionDto {
         UID = projection.UID,
         Plan = projection.Plan.MapToNamedEntity(),
-        Category = projection.Category.MapToNamedEntity(),
+        ProjectionTypeCategory = projection.Category.MapToNamedEntity(),
         ProjectionNo = projection.ProjectionNo,
-        BaseParty = projection.BaseParty.MapToNamedEntity(),
-        BaseProject = projection.BaseProject.MapToNamedEntity(),
-        BaseProjectCategory = projection.BaseProject.Category.MapToNamedEntity(),
-        BaseAccount = projection.BaseAccount.MapToNamedEntity(),
-        OperationSource = projection.OperationSource.MapToNamedEntity(),
+        Party = projection.BaseParty.MapToNamedEntity(),
+        Project = projection.BaseProject.MapToNamedEntity(),
+        ProjectTypeCategory = projection.BaseProject.Category.MapToNamedEntity(),
+        Account = projection.BaseAccount.MapToNamedEntity(),
+        Source = projection.OperationSource.MapToNamedEntity(),
         Description = projection.Description,
         Justification = projection.Justification,
         Tags = projection.Tags.Split(' '),

@@ -90,7 +90,8 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto Category {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectionType")]
+    public NamedEntityDto ProjectionTypeCategory {
       get; internal set;
     }
 
@@ -98,24 +99,24 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto BaseParty {
+    public NamedEntityDto Party {
       get; internal set;
     }
 
-    public NamedEntityDto BaseProject {
+    public NamedEntityDto Project {
       get; internal set;
     }
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "Classification")]
-    public NamedEntityDto BaseProjectCategory {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectType")]
+    public NamedEntityDto ProjectTypeCategory {
       get; internal set;
     }
 
-    public NamedEntityDto BaseAccount {
+    public NamedEntityDto Account {
       get; internal set;
     }
 
-    public NamedEntityDto OperationSource {
+    public NamedEntityDto Source {
       get; internal set;
     }
 
@@ -190,7 +191,8 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
-    public string CategoryName {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectionTypeName")]
+    public string ProjectionTypeCategoryName {
       get; internal set;
     }
 
@@ -198,24 +200,24 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
-    public string BaseProjectName {
+    public string ProjectName {
       get; internal set;
     }
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "ClassificationName")]
-    public string BaseProjectCategoryName {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectTypeName")]
+    public string ProjectTypeCategoryName {
       get; internal set;
     }
 
-    public string BaseAccountName {
+    public string AccountName {
       get; internal set;
     }
 
-    public string BasePartyName {
+    public string PartyName {
       get; internal set;
     }
 
-    public string OperationSourceName {
+    public string SourceName {
       get; internal set;
     }
 

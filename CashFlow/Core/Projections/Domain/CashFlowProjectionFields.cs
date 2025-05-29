@@ -25,27 +25,28 @@ namespace Empiria.CashFlow.Projections {
     } = string.Empty;
 
 
-    public string CategoryUID {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectionTypeUID")]
+    public string ProjectionCategoryTypeUID {
       get; set;
     } = string.Empty;
 
 
-    public string BasePartyUID {
+    public string PartyUID {
       get; set;
     } = string.Empty;
 
 
-    public string BaseProjectUID {
+    public string ProjectUID {
       get; set;
     } = string.Empty;
 
 
-    public string BaseAccountUID {
+    public string AccountUID {
       get; set;
     } = string.Empty;
 
 
-    public string OperationSourceUID {
+    public string SourceUID {
       get; set;
     } = string.Empty;
 
@@ -84,24 +85,24 @@ namespace Empiria.CashFlow.Projections {
         _ = CashFlowPlan.Parse(fields.PlanUID);
       }
 
-      if (fields.CategoryUID.Length != 0) {
-        _ = CashFlowProjectionCategory.Parse(fields.CategoryUID);
+      if (fields.ProjectionCategoryTypeUID.Length != 0) {
+        _ = CashFlowProjectionCategory.Parse(fields.ProjectionCategoryTypeUID);
       }
 
-      if (fields.BasePartyUID.Length != 0) {
-        _ = Party.Parse(fields.BasePartyUID);
+      if (fields.PartyUID.Length != 0) {
+        _ = Party.Parse(fields.PartyUID);
       }
 
-      if (fields.BaseProjectUID.Length != 0) {
-        _ = FinancialProject.Parse(fields.BaseProjectUID);
+      if (fields.ProjectUID.Length != 0) {
+        _ = FinancialProject.Parse(fields.ProjectUID);
       }
 
-      if (fields.BaseAccountUID.Length != 0) {
-        _ = FinancialAccount.Parse(fields.BaseAccountUID);
+      if (fields.AccountUID.Length != 0) {
+        _ = FinancialAccount.Parse(fields.AccountUID);
       }
 
-      if (fields.OperationSourceUID.Length != 0) {
-        _ = OperationSource.Parse(fields.OperationSourceUID);
+      if (fields.SourceUID.Length != 0) {
+        _ = OperationSource.Parse(fields.SourceUID);
       }
 
     }

@@ -28,8 +28,8 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     static internal FixedList<CashFlowProjection> ApplyRemainingFilters(this CashFlowProjectionsQuery query,
                                                                         FixedList<CashFlowProjection> projections) {
-      if (query.BaseProjectCategoryUID.Length != 0) {
-        var projectCategory = FinancialProjectCategory.Parse(query.BaseProjectCategoryUID);
+      if (query.ProjectTypeCategoryUID.Length != 0) {
+        var projectCategory = FinancialProjectCategory.Parse(query.ProjectTypeCategoryUID);
 
         return projections.FindAll(x => x.BaseProject.Category.Equals(projectCategory));
       }
@@ -40,10 +40,10 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     static internal string MapToFilterString(this CashFlowProjectionsQuery query) {
       string planFilter = BuildPlanFilter(query.PlanUID);
-      string categoryFilter = BuildCategoryFilter(query.CategoryUID);
-      string basePartyFilter = BuildBasePartyFilter(query.BasePartyUID);
-      string baseProjectFilter = BuildBaseProjectFilter(query.BaseProjectUID);
-      string baseAccountFilter = BuildBaseAccountFilter(query.BaseAccountUID);
+      string categoryFilter = BuildCategoryFilter(query.ProjectionCategoryTypeUID);
+      string basePartyFilter = BuildBasePartyFilter(query.PartyUID);
+      string baseProjectFilter = BuildBaseProjectFilter(query.ProjectUID);
+      string baseAccountFilter = BuildBaseAccountFilter(query.AccountUID);
       string sourceFilter = BuildSourceFilter(query.SourceUID);
       string projectionsNoFilter = BuildProjectionsNoFilter(query.ProjectionsNo);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
