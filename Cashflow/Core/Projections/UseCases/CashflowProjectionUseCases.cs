@@ -89,11 +89,11 @@ namespace Empiria.CashFlow.Projections.UseCases {
     }
 
 
-    public FixedList<CashFlowProjectionsStructureForEdition> GetProjectionsStucturedDataForEdition() {
+    public FixedList<StructureForEditCashFlowProjections> GetStructureForEditCashFlowProjections() {
       FixedList<OrganizationalUnit> list = Party.GetList<OrganizationalUnit>(DateTime.Today)
                                                 .FindAll(x => x.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE));
 
-      return CashFlowProjectionsStructureForEditionMapper.Map(list);
+      return StructureForEditCashFlowProjectionsMapper.Map(list);
     }
 
 

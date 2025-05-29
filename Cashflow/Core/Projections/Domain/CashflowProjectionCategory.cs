@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Ontology;
+using Empiria.Parties;
 using Empiria.StateEnums;
 
 namespace Empiria.CashFlow.Projections {
@@ -55,6 +56,14 @@ namespace Empiria.CashFlow.Projections {
     public EntityStatus Status {
       get {
         return base.GetStatus<EntityStatus>();
+      }
+    }
+
+
+    public FixedList<OperationSource> OperationSources {
+      get {
+        return ExtData.GetList<OperationSource>("sources", false)
+                      .ToFixedList();
       }
     }
 

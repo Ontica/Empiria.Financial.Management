@@ -49,6 +49,18 @@ namespace Empiria.CashFlow.Projections.WebApi {
 
 
     [HttpGet]
+    [Route("v1/cash-flow/projections/structured-data-for-edition")]
+    public CollectionModel GetProjectionStucturedDataForEdition() {
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+        FixedList<StructureForEditCashFlowProjections> structure =
+                                                       usecases.GetStructureForEditCashFlowProjections();
+
+        return new CollectionModel(base.Request, structure);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/cash-flow/projections/operation-sources")]
     public SingleObjectModel GetOperationSources() {
 
