@@ -45,14 +45,16 @@ namespace Empiria.Financial.Projects.WebApi {
       }
     }
 
+
     [HttpGet]
+    [Route("v1/financial-projects/structured-data-for-edition")]
     [Route("v1/financial-projects/organizational-units-for-edition")]
-    public CollectionModel GetProjectOrganizationalUnitsForEdition() {
+    public CollectionModel GetProjectsStucturedDataForEdition() {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FixedList<FinancialProjectOrgUnitsForEditionDto> orgUnits = usecases.GetProjectOrganizationalUnitsForEdition();
+        FixedList<FinancialProjectsStructureForEdition> structure = usecases.GetProjectsStucturedDataForEdition();
 
-        return new CollectionModel(base.Request, orgUnits);
+        return new CollectionModel(base.Request, structure);
       }
     }
 

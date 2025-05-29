@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Financial Projects                           Component : Adapters Layer                        *
 *  Assembly : Empiria.Financial.Core.dll                   Pattern   : Mapper                                *
-*  Type     : FinancialProjectOrgUnitsForEditionMapper     License   : Please read LICENSE.txt file          *
+*  Type     : FinancialProjectDataForEditionMapper         License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Maps organizational units for use in financial projects edition.                               *
+*  Summary  : Maps structured data for use in financial projects edition.                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,18 +12,18 @@ using Empiria.Parties;
 
 namespace Empiria.Financial.Projects.Adapters {
 
-  /// <summary>Maps organizational units for use in financial projects edition.</summary>
-  static internal class FinancialProjectOrgUnitsForEditionMapper {
+  /// <summary>Maps structured data for use in financial projects edition.</summary>
+  static internal class FinancialProjectsStructureForEditionMapper {
 
-    static internal FixedList<FinancialProjectOrgUnitsForEditionDto> Map(FixedList<OrganizationalUnit> list) {
+    static internal FixedList<FinancialProjectsStructureForEdition> Map(FixedList<OrganizationalUnit> list) {
       return list.Select(x => Map(x))
                  .ToFixedList();
     }
 
     #region Helpers
 
-    private static FinancialProjectOrgUnitsForEditionDto Map(OrganizationalUnit orgUnit) {
-      return new FinancialProjectOrgUnitsForEditionDto {
+    private static FinancialProjectsStructureForEdition Map(OrganizationalUnit orgUnit) {
+      return new FinancialProjectsStructureForEdition {
         UID = orgUnit.UID,
         Name = orgUnit.Name,
         Categories = Map(FinancialProjectCategory.GetList())

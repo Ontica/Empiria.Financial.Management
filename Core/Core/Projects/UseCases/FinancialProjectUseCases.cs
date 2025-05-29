@@ -103,11 +103,11 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
-    public FixedList<FinancialProjectOrgUnitsForEditionDto> GetProjectOrganizationalUnitsForEdition() {
+    public FixedList<FinancialProjectsStructureForEdition> GetProjectsStucturedDataForEdition() {
       FixedList<OrganizationalUnit> list = Party.GetList<OrganizationalUnit>(DateTime.Today)
                                                 .FindAll(x => x.PlaysRole(FinancialProjectRules.PROJECT_MANGER_ROLE));
 
-      return FinancialProjectOrgUnitsForEditionMapper.Map(list);
+      return FinancialProjectsStructureForEditionMapper.Map(list);
     }
 
 
