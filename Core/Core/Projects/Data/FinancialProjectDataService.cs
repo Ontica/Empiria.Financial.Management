@@ -39,6 +39,7 @@ namespace Empiria.Financial.Projects.Data {
       return DataReader.GetFixedList<FinancialAccount>(op);
     }
 
+
     static internal FixedList<FinancialProject> SearchProjects(string keywords) {
 
       keywords = keywords ?? string.Empty;
@@ -74,14 +75,14 @@ namespace Empiria.Financial.Projects.Data {
     }
 
 
-    internal static void WriteProject(FinancialProject o, IIdentifiable subprogram, string extensionData) {
+    internal static void WriteProject(FinancialProject o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Project",
-         o.Id, o.UID, o.FinancialProjectType.Id, subprogram.Id, o.Category.Id, o.ProjectNo, o.Name,
-         o.BaseOrgUnit.Id,string.Empty, string.Empty, extensionData, o.Keywords, o.Parent.Id,
-         o.StartDate, o.EndDate, o.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status,
-         o.Assignee.Id, o.Description, string.Empty, o.Justification, o.RecordingTime,
-         o.RecordedBy.Id, o.AuthorizationTime, o.AuthorizedBy.Id
-         );
+         o.Id, o.UID, o.FinancialProjectType.Id, o.Subprogram.Id, o.Category.Id, o.ProjectNo, o.Name,
+         o.BaseOrgUnit.Id, o.Description, o.Justification, o.Assignee.Id,
+         string.Join(" ", o.Identifiers), string.Join(" ", o.Tags), extensionData,
+         o.FinancialGoals.ToJsonString(), o.RecordingTime,
+         o.RecordedBy.Id, o.AuthorizationTime, o.AuthorizedBy.Id, o.Keywords,
+         o.Parent.Id, o.HistoricId, o.StartDate, o.EndDate, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }

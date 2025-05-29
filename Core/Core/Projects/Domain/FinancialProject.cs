@@ -30,7 +30,7 @@ namespace Empiria.Financial.Projects {
     }
 
     internal FinancialProject(FinancialProjectCategory category, OrganizationalUnit baseOrgUnit,
-                              INamedEntity subprogram, string name) : base(FinancialProjectType.Empty) {
+                              FinancialProgram subprogram, string name) : base(FinancialProjectType.Empty) {
       Assertion.Require(category, nameof(category));
       Assertion.Require(!category.IsEmptyInstance, nameof(category));
       Assertion.Require(baseOrgUnit, nameof(baseOrgUnit));
@@ -40,7 +40,7 @@ namespace Empiria.Financial.Projects {
 
       Category = category;
       BaseOrgUnit = baseOrgUnit;
-      _subprogram = StandardAccount.Parse(subprogram.UID);
+      Subprogram = subprogram;
 
       Name = EmpiriaString.Clean(name);
       ProjectNo = "N/D";
@@ -52,15 +52,6 @@ namespace Empiria.Financial.Projects {
     static public FinancialProject Parse(string uid) => ParseKey<FinancialProject>(uid);
 
     static public FinancialProject Empty => ParseEmpty<FinancialProject>();
-
-
-    static internal FixedList<INamedEntity> GetClassificationList(FinancialProjectClassificator classificator) {
-      var category = CommonStorage.ParseNamedKey<StandardAccountCategory>(classificator.ToString());
-
-      return category.GetStandardAccounts()
-                     .Select(x => (INamedEntity) x)
-                     .ToFixedList();
-    }
 
     #endregion Constructors and parsers
 
@@ -101,20 +92,16 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    public INamedEntity Program {
+    public FinancialProgram Program {
       get {
-        return _subprogram.Parent;
+        return Subprogram.Parent;
       }
     }
 
 
-    [DataField("PRJ_STD_ACCT_ID")]
-    private StandardAccount _subprogram = StandardAccount.Empty;
-
-    public INamedEntity Subprogram {
-      get {
-        return _subprogram;
-      }
+    [DataField("PRJ_SUBPROGRAM_ID")]
+    public FinancialProgram Subprogram {
+      get; private set;
     }
 
 
@@ -178,7 +165,7 @@ namespace Empiria.Financial.Projects {
       get {
         return EmpiriaString.BuildKeywords(ProjectNo, Name, _identifiers, _tags, Program.Name,
                                            BaseOrgUnit.Keywords, Category.Keywords,
-                                           _subprogram.Keywords);
+                                           Subprogram.Keywords);
       }
     }
 
@@ -258,6 +245,11 @@ namespace Empiria.Financial.Projects {
       get; private set;
     }
 
+    internal int HistoricId {
+      get {
+        return this.Id;
+      }
+    }
 
     internal FinancialProjectRules Rules {
       get {
@@ -308,7 +300,7 @@ namespace Empiria.Financial.Projects {
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       }
 
-      FinancialProjectDataService.WriteProject(this, _subprogram, this.ExtData.ToString());
+      FinancialProjectDataService.WriteProject(this, this.ExtData.ToString());
     }
 
 
@@ -329,7 +321,7 @@ namespace Empiria.Financial.Projects {
       fields.EnsureValid();
 
       Category = PatchField(fields.CategoryUID, this.Category);
-      _subprogram = PatchField(fields.SubprogramUID, _subprogram);
+      Subprogram = PatchField(fields.SubprogramUID, Subprogram);
       Name = PatchField(fields.Name, this.Name);
       ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
       BaseOrgUnit = PatchField(fields.BaseOrgUnitUID, this.BaseOrgUnit);

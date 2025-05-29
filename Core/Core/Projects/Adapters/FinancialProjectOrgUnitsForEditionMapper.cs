@@ -53,7 +53,7 @@ namespace Empiria.Financial.Projects.Adapters {
       return new ProjectProgramForEditionDto {
         UID = program.UID,
         Name = program.Name,
-        Subprograms = program.Subprograms.MapToNamedEntityList()
+        Subprograms = program.Children.MapToNamedEntityList()
       };
     }
 

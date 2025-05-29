@@ -56,9 +56,7 @@ namespace Empiria.Financial.Projects.UseCases {
       var category = FinancialProjectCategory.Parse(fields.CategoryUID);
       var orgUnit = OrganizationalUnit.Parse(fields.BaseOrgUnitUID);
 
-      var subprograms = FinancialProject.GetClassificationList(FinancialProjectClassificator.Subprograma);
-
-      var subprogram = subprograms.Find(x => x.UID == fields.SubprogramUID);
+      var subprogram = FinancialProgram.Parse(fields.SubprogramUID);
 
       var project = new FinancialProject(category, orgUnit, subprogram, fields.Name);
 
@@ -100,10 +98,8 @@ namespace Empiria.Financial.Projects.UseCases {
 
 
     public FixedList<NamedEntityDto> GetProjectsPrograms() {
-      var classificator = FinancialProjectClassificator.Programa;
-      FixedList<INamedEntity> programs = FinancialProject.GetClassificationList(classificator);
-
-      return programs.MapToNamedEntityList();
+      return FinancialProgram.GetList(FinancialProgramType.Programa)
+                             .MapToNamedEntityList();
     }
 
 
@@ -116,11 +112,8 @@ namespace Empiria.Financial.Projects.UseCases {
 
 
     public FixedList<NamedEntityDto> GetProjectsSubprograms() {
-      var classificator = FinancialProjectClassificator.Subprograma;
-
-      FixedList<INamedEntity> programs = FinancialProject.GetClassificationList(classificator);
-
-      return programs.MapToNamedEntityList();
+      return FinancialProgram.GetList(FinancialProgramType.Subprograma)
+                             .MapToNamedEntityList();
     }
 
 

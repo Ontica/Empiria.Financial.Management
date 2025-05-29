@@ -29,15 +29,13 @@ namespace Empiria.Tests.Financial.Projects {
     [Fact]
     public void Should_Create_FinancialProject() {
 
-      string name = "Proyecto de Prueba";
+      string name = "Proyecto de prueba";
 
       var category = TestsObjects.TryGetObject<FinancialProjectCategory>();
 
       var baseOrgUnit = TestsObjects.TryGetObject<OrganizationalUnit>(x => x.PlaysRole(FinancialProjectRules.PROJECT_MANGER_ROLE));
 
-      var subprograms = FinancialProject.GetClassificationList(FinancialProjectClassificator.Subprograma);
-
-      var subprogram = TestsObjects.TryGetObject(subprograms);
+      var subprogram = TestsObjects.TryGetObject(FinancialProgram.GetList(FinancialProgramType.Subprograma));
 
       var sut = new FinancialProject(category, baseOrgUnit, subprogram, name);
 
