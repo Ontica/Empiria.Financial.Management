@@ -281,6 +281,7 @@ namespace Empiria.Budgeting.Transactions {
 
       Assertion.Require(entryFields, nameof(entryFields));
 
+
       if (TryGetEntry(entryFields) != null) {
         Assertion.RequireFail("Ya existe un movimiento con la misma información para el " +
                               "mismo mes y año en esta transacción presupuestal.");
@@ -444,7 +445,7 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
       Assertion.Require(fields, nameof(fields));
 
-      fields.EnsureIsValid();
+      fields.EnsureValid();
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);

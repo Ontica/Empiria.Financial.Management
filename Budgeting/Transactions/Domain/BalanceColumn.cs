@@ -4,12 +4,13 @@
 *  Assembly : Empiria.Budgeting.Transactions.dll         Pattern   : Information Holder                      *
 *  Type     : BalanceColumn                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a column balance that holds deposits or withdrawals in a budget entry.              *
+*  Summary  : Represents a column balance that holds deposits or withdrawals for a budget entry.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Budgeting.Transactions {
 
+  /// <summary>Represents a column balance that holds deposits or withdrawals for a budget entry.</summary>
   public class BalanceColumn : GeneralObject, INamedEntity {
 
     #region Constructors and parsers

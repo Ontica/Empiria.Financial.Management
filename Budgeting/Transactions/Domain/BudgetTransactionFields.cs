@@ -83,7 +83,7 @@ namespace Empiria.Budgeting.Transactions {
   /// <summary>Extension methods for BudgetTransactionFields class.</summary>
   static internal class BudgetTransactionFieldsExtension {
 
-    static internal void EnsureIsValid(this BudgetTransactionFields fields) {
+    static internal void EnsureValid(this BudgetTransactionFields fields) {
       fields.Description = EmpiriaString.Clean(fields.Description);
       fields.Justification = EmpiriaString.Clean(fields.Justification);
       fields.BaseEntityTypeUID = FieldPatcher.Clean(fields.BaseEntityTypeUID);

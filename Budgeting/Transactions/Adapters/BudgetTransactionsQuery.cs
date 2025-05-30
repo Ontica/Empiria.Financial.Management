@@ -77,9 +77,9 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = ExecutionServer.DateMinValue;
 
 
-    public TransactionPartyType PartyType {
+    public TransactionPartyRole PartyType {
       get; set;
-    } = TransactionPartyType.None;
+    } = TransactionPartyRole.None;
 
 
     public string PartyUID {
