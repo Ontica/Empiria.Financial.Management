@@ -43,7 +43,7 @@ namespace Empiria.Financial.Projects {
 
     public string AssigneeUID {
       get; set;
-    } = "Empty";
+    } = string.Empty;
 
 
     public string Description {
@@ -68,6 +68,7 @@ namespace Empiria.Financial.Projects {
       CategoryUID = FieldPatcher.Clean(CategoryUID);
       SubprogramUID = FieldPatcher.Clean(SubprogramUID);
       BaseOrgUnitUID = FieldPatcher.Clean(BaseOrgUnitUID);
+      AssigneeUID = FieldPatcher.Clean(AssigneeUID);
 
       if (CategoryUID.Length != 0) {
         _ = FinancialProjectCategory.Parse(CategoryUID);

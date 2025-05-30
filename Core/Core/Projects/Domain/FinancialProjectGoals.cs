@@ -37,12 +37,12 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    public string Acreditado {
+    public string Cliente {
       get {
-        return _projectGoals.Get("acreditado", string.Empty);
+        return _projectGoals.Get("cliente", string.Empty);
       }
       private set {
-        _projectGoals.SetIfValue("acreditado", value);
+        _projectGoals.SetIfValue("cliente", value);
       }
     }
 
@@ -53,16 +53,6 @@ namespace Empiria.Financial.Projects {
       }
       private set {
         _projectGoals.SetIfValue("municipio", value);
-      }
-    }
-
-
-    public int TipoCredito {
-      get {
-        return _projectGoals.Get("tipoCredito", 0);
-      }
-      private set {
-        _projectGoals.SetIfValue("tipoCredito", value);
       }
     }
 
@@ -117,26 +107,6 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    public DateTime FechaAmortizacion {
-      get {
-        return _projectGoals.Get("fechaAmortizacion", ExecutionServer.DateMaxValue);
-      }
-      private set {
-        _projectGoals.SetIfValue("fechaAmortizacion", value);
-      }
-    }
-
-
-    public decimal TipoCambio {
-      get {
-        return _projectGoals.Get("tipoCambio", 0m);
-      }
-      private set {
-        _projectGoals.SetIfValue("tipoCambio", value);
-      }
-    }
-
-
     public decimal Costo {
       get {
         return _projectGoals.Get("costo", 0m);
@@ -169,16 +139,13 @@ namespace Empiria.Financial.Projects {
       Assertion.Require(fields, nameof(fields));
 
       ClaveObra = fields.ClaveObra;
-      Acreditado = fields.Acreditado;
-      Municipio = fields.Municipio;
-      TipoCredito = fields.TipoCredito;
+      Cliente = fields.Cliente;
+      Municipio = fields.Municipio;     
       TipoObra = fields.TipoObra;
       Beneficiarios = fields.Beneficiarios;
       UnidadBeneficiaria = fields.UnidadBeneficiaria;
       EmpleosDirectos = fields.EmpleosDirectos;
       EmpleosIndirectos = fields.EmpleosIndirectos;
-      FechaAmortizacion = fields.FechaAmortizacion;
-      TipoCambio = fields.TipoCambio;
       Costo = fields.Costo;
       Total = fields.Total;
     }

@@ -87,6 +87,27 @@ namespace Empiria.Financial {
       private set {
         _financialExtData.SetIfValue("plazoAmortizacion", value);
       }
+
+    }
+
+
+    public DateTime FechaAmortizacion {
+      get {
+        return _financialExtData.Get("fechaAmortizacion", ExecutionServer.DateMaxValue);
+      }
+      private set {
+        _financialExtData.SetIfValue("fechaAmortizacion", value);
+      }
+    }
+
+
+    public decimal TipoCambio {
+      get {
+        return _financialExtData.Get("tipoCambio", 0m);
+      }
+      private set {
+        _financialExtData.SetIfValue("tipoCambio", value);
+      }
     }
 
 
@@ -128,16 +149,7 @@ namespace Empiria.Financial {
         _financialExtData.SetIfValue("tasaTecho", value);
       }
     }
-
-
-    public DateTime FechaAmortizacion {
-      get {
-        return _financialExtData.Get("fechaAmortizacion", DateTime.Now);
-      }
-      private set {
-        _financialExtData.SetIfValue("fechaAmortizacion", value);
-      }
-    }
+ 
 
     #endregion Properties
 
@@ -148,7 +160,7 @@ namespace Empiria.Financial {
     }
 
 
-    internal void Update(CreditExtDataFields fields) {
+    internal void Update(CreditFinancialDataFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       Interes = fields.Interes;

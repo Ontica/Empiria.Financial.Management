@@ -22,7 +22,7 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    public string Acreditado {
+    public string Cliente {
       get; set;
     } = string.Empty;
 
@@ -30,11 +30,6 @@ namespace Empiria.Financial.Projects {
     public string Municipio {
       get; set;
     } = string.Empty;
-
-
-    public int TipoCredito {
-      get; set;
-    }
 
 
     public string TipoObra {
@@ -60,17 +55,7 @@ namespace Empiria.Financial.Projects {
     public int EmpleosIndirectos {
       get; set;
     }
-
-
-    public DateTime FechaAmortizacion {
-      get; set;
-    } = ExecutionServer.DateMaxValue;
-
-
-    public decimal TipoCambio {
-      get; set;
-    }
-
+       
 
     public decimal Costo {
       get; set;

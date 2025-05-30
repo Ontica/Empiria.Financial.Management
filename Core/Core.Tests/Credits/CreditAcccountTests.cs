@@ -10,7 +10,6 @@
 
 using Xunit;
 
-using System;
 using Empiria.Financial;
 
 namespace Empiria.Tests.Financial.Credits {
@@ -26,17 +25,7 @@ namespace Empiria.Tests.Financial.Credits {
         EtapaCredito = 1,
         Acreditado = "Prueba",
         TipoCredito = "Linea directa",
-        Currency = 44,
-        Interes = 20.4m,
-        Comision = 3,
-        Saldo = 1000.78m,
-        PlazoInversion = 22,
-        PlazoGracia = 7,
-        PlazoAmortizacion = 1,
-        Tasa = 32,
-        FactorTasa = 2,
-        TasaTecho = 12,
-        FechaAmortizacion = DateTime.Now,
+       
       };
 
       CreditAccount sut = TestsObjects.TryGetObject<CreditAccount>();
