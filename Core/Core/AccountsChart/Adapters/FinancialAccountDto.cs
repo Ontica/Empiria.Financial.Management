@@ -22,6 +22,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto FinancialAccountType {
+      get; internal set;
+    }
+
     public string Description {
       get; internal set;
     }
@@ -30,13 +34,22 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto OrganizationalUnit {
+      get; internal set;
+    }
+
     public NamedEntityDto Project {
       get; internal set;
     }
 
-    public NamedEntityDto OrganizationalUnit {
+    public AccountAttributes Attributes {
       get; internal set;
     }
+
+    public FinancialData FinancialData {
+      get; internal set;
+    }
+
 
     public DateTime StartDate {
       get; internal set;
@@ -68,6 +81,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public string FinancialAccountTypeName {
+      get; internal set;
+    }
+
     public string Description {
       get; internal set;
     }
@@ -93,6 +110,14 @@ namespace Empiria.Financial.Adapters {
     }
 
     public string StatusName {
+      get; internal set;
+    }
+
+    public AccountAttributes Attributes {
+      get; internal set;
+    }
+
+    public FinancialData FinancialData {
       get; internal set;
     }
 

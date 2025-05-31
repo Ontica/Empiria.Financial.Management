@@ -1,51 +1,42 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Financial Account                            Component : Adapters Layer                        *
-*  Assembly : Empiria.Financial.Core.dll                   Pattern   : Output DTO                            *
-*  Type     : AccountFields                                License   : Please read LICENSE.txt file          *
+*  Assembly : Empiria.Financial.Core.dll                   Pattern   : Input fields DTO                      *
+*  Type     : FinancialAccountFields                       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Input field with financial account data.                                                       *
+*  Summary  : Input fields used to create or update financial accounts.                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Newtonsoft.Json;
+
+using Empiria.Json;
+using Empiria.Parties;
+
+using Empiria.Financial.Projects;
+
 namespace Empiria.Financial {
 
-  /// <summary>Input field with financial account data.</summary>
+  /// <summary>Input fields used to create or update financial accounts.</summary>
   public class FinancialAccountFields {
+
+    public FinancialAccountFields() {
+      JsonConvert.DefaultSettings = () => Json.JsonConverter.JsonSerializerDefaultSettings();
+    }
 
     #region Properties
 
-    public string StandardAccountUID {
+    public string UID {
+      get;  set;
+    } = string.Empty;
+
+
+    public string FinancialAccountTypeUID {
       get; set;
     } = string.Empty;
 
 
-    public string OrganizationUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string OrganizationalUnitUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string PartyUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string ProjectUID {
-      get; set;
-    } = string.Empty;
-
-
-    public int LedgerId {
-      get; set;
-    } = -1;
-
-
-    public string AcctNo {
+    public string AccountNo {
       get; set;
     } = string.Empty;
 
@@ -55,24 +46,44 @@ namespace Empiria.Financial {
     } = string.Empty;
 
 
-    public string Identifiers {
+    public string StandardAccountUID {
       get; set;
     } = string.Empty;
 
 
-    public string Tags {
+    public string OrganizationalUnitUID {
       get; set;
     } = string.Empty;
 
 
-    public string Attributes {
+    public string ProjectUID {
       get; set;
     } = string.Empty;
 
 
-    public string FinancialData {
+    public string[] Tags {
       get; set;
-    } = string.Empty;
+    } = new string[0];
+
+
+    public object Attributes {
+      get; set;
+    } = new object();
+
+
+    public object FinancialData {
+      get; set;
+    } = new object();
+
+
+    internal JsonObject GetAtttributesToJson() {
+      return JsonObject.Parse(Attributes);
+    }
+
+
+    internal JsonObject GetFinancialDataToJson() {
+      return JsonObject.Parse(FinancialData);
+    }
 
     #endregion Properties
 
@@ -80,23 +91,38 @@ namespace Empiria.Financial {
 
     internal void EnsureValid() {
 
-      AcctNo = FieldPatcher.Clean(AcctNo);
+      AccountNo = FieldPatcher.Clean(AccountNo);
       Description = FieldPatcher.Clean(Description);
 
+      UID = FieldPatcher.Clean(UID);
+      FinancialAccountTypeUID = FieldPatcher.Clean(FinancialAccountTypeUID);
       StandardAccountUID = FieldPatcher.Clean(StandardAccountUID);
       OrganizationalUnitUID = FieldPatcher.Clean(OrganizationalUnitUID);
+      ProjectUID = FieldPatcher.Clean(ProjectUID);
+
+      if (UID.Length != 0) {
+        _ = FinancialAccount.Parse(UID);
+      };
+
+      if (FinancialAccountTypeUID.Length != 0) {
+        _ = FinancialAccountType.Parse(FinancialAccountTypeUID);
+      }
 
       if (StandardAccountUID.Length != 0) {
         _ = StandardAccount.Parse(StandardAccountUID);
       }
 
       if (OrganizationalUnitUID.Length != 0) {
-        _ = StandardAccount.Parse(OrganizationalUnitUID);
+        _ = OrganizationalUnit.Parse(OrganizationalUnitUID);
+      }
+
+      if (ProjectUID.Length != 0) {
+        _ =  FinancialProject.Parse(ProjectUID);
       }
     }
 
     #endregion Methods
 
-  }  // class AccountFields
+  }  // class FinancialAccountFields
 
 }  // namespace Empiria.Financial

@@ -20,19 +20,18 @@ namespace Empiria.Financial.Adapters {
                       .ToFixedList();
     }
 
-    static public FixedList<FinancialAccountDescriptor> MapToDescriptor(FixedList<FinancialAccount> accounts) {
-      return accounts.Select(x => MapToDescriptor(x))
-                     .ToFixedList();
-    }
 
     static public FinancialAccountDto Map(FinancialAccount account) {
       return new FinancialAccountDto {
         UID = account.UID,
         AccountNo = account.AccountNo,
+        FinancialAccountType = account.FinancialAccountType.MapToNamedEntity(),
         Description = account.Name,
-        StandardAccount = account.StandardAccount.MapToNamedEntity(),
+        StandardAccount = MapStdAccountToDto(account.StandardAccount),
         Project = account.Project.MapToNamedEntity(),
         OrganizationalUnit = account.OrganizationalUnit.MapToNamedEntity(),
+        Attributes = account.Attributes,
+        FinancialData = account.FinancialData,
         StartDate = account.StartDate,
         EndDate = account.EndDate,
         Parent = account.Parent.MapToNamedEntity(),
@@ -40,23 +39,32 @@ namespace Empiria.Financial.Adapters {
       };
     }
 
-    #region Helpers
+    static public FixedList<FinancialAccountDescriptor> MapToDescriptor(FixedList<FinancialAccount> accounts) {
+      return accounts.Select(x => MapToDescriptor(x))
+                     .ToFixedList();
+    }
 
-    static private FinancialAccountDescriptor MapToDescriptor(FinancialAccount account) {
+
+    static internal FinancialAccountDescriptor MapToDescriptor(FinancialAccount account) {
       return new FinancialAccountDescriptor {
-         UID = account.UID,
-         AccountNo = account.AccountNo,
-         Description = account.Description,
-         StandardAccountName = account.StandardAccount.Name,
-         ProjectName = account.Project.Name,
-         OrganizationalUnitName = account.OrganizationalUnit.Name,
-         StartDate = account.StartDate,
-         EndDate = account.EndDate,
-         StatusName = account.Status.GetName()
+        UID = account.UID,
+        AccountNo = account.AccountNo,
+        FinancialAccountTypeName = account.FinancialAccountType.DisplayName,
+        Description = account.Description,
+        StandardAccountName = MapStdAccountToDto(account.StandardAccount).Name,
+        ProjectName = account.Project.Name,
+        OrganizationalUnitName = account.OrganizationalUnit.Name,
+        Attributes = account.Attributes,
+        FinancialData = account.FinancialData,
+        StartDate = account.StartDate,
+        EndDate = account.EndDate,
+        StatusName = account.Status.GetName(),
       };
     }
 
-    #endregion Helpers
+    static public NamedEntityDto MapStdAccountToDto(StandardAccount stdAccount) {
+      return new NamedEntityDto(stdAccount.UID, $"({stdAccount.StdAcctNo}) {stdAccount.FullName}");
+    }
 
   }  // class FinancialAccountMapper
 
