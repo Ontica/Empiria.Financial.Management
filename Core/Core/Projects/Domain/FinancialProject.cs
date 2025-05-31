@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Json;
 using Empiria.Ontology;
@@ -24,6 +25,12 @@ namespace Empiria.Financial.Projects {
   public class FinancialProject : BaseObject, INamedEntity {
 
     static internal readonly string STANDARD_ACCOUNTS_ROLE = "financial-project-std-account";
+
+    static internal readonly string TO_ASSIGN_PROJECT_NO = "Por asignar";
+    static internal readonly string DELETED_PROJECT_NO = "Eliminado";
+
+    private Lazy<List<FinancialAccount>> _accounts = new Lazy<List<FinancialAccount>>();
+    private List<FinancialAccount> _deletedAccounts = new List<FinancialAccount>();
 
     #region Constructors and parsers
 
@@ -54,6 +61,10 @@ namespace Empiria.Financial.Projects {
     static public FinancialProject Parse(string uid) => ParseKey<FinancialProject>(uid);
 
     static public FinancialProject Empty => ParseEmpty<FinancialProject>();
+
+    protected override void OnLoad() {
+      _accounts = new Lazy<List<FinancialAccount>>(() => FinancialProjectDataService.GetProjectAccounts(this));
+    }
 
     #endregion Constructors and parsers
 
@@ -260,13 +271,17 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    private FixedList<FinancialAccount> _accounts = null;
     public FixedList<FinancialAccount> Accounts {
       get {
-        if (_accounts == null) {
-          _accounts = FinancialProjectDataService.GetProjectAccounts(this);
-        }
-        return _accounts;
+        return _accounts.Value.ToFixedList();
+      }
+    }
+
+
+    public bool HasProjectNo {
+      get {
+        return this.ProjectNo.Length != 0 &&
+               this.ProjectNo != TO_ASSIGN_PROJECT_NO;
       }
     }
 
@@ -298,22 +313,30 @@ namespace Empiria.Financial.Projects {
         PostingTime = DateTime.Now;
       }
       if (Status == EntityStatus.Pending) {
-        RecordingTime = DateTime.Now;
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        RecordingTime = DateTime.Now;
       }
 
       FinancialProjectDataService.WriteProject(this, this.ExtData.ToString());
+
+      foreach (var account in _accounts.Value) {
+        if (account.IsDirty) {
+          account.Save();
+        }
+      }
+      foreach (var deletedAccount in _deletedAccounts) {
+        deletedAccount.Save();
+      }
+      _deletedAccounts.Clear();
     }
 
-
-    internal void Reload() {
-      _accounts = null;
-    }
 
     internal void SetParent(FinancialProject parent) {
       Assertion.Require(parent, nameof(parent));
 
       Parent = parent;
+
+      MarkAsDirty();
     }
 
 
@@ -330,6 +353,8 @@ namespace Empiria.Financial.Projects {
       Assignee = PatchField(fields.AssigneeUID, this.Assignee);
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
+
+      MarkAsDirty();
     }
 
 
@@ -344,19 +369,34 @@ namespace Empiria.Financial.Projects {
     #region Accounts aggregate methods
 
     internal FinancialAccount AddAccount(FinancialAccountFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
       var accountType = FinancialAccountType.Parse(fields.FinancialAccountTypeUID);
       var stdAccount = StandardAccount.Parse(fields.StandardAccountUID);
       var orgUnit = OrganizationalUnit.Parse(fields.OrganizationalUnitUID);
 
+      fields.EnsureValid();
+
+      Assertion.Require(stdAccount.Category.PlaysRole(STANDARD_ACCOUNTS_ROLE),
+                        $"stdAccount {stdAccount.Name} can not be added to projects.");
+
       var account = new FinancialAccount(accountType, stdAccount, orgUnit);
 
       account.Update(fields);
+
+      _accounts.Value.Add(account);
 
       return account;
     }
 
 
     internal FinancialAccount GetAccount(string accountUID) {
+      Assertion.Require(accountUID, nameof(accountUID));
+
+      FinancialAccount entry = _accounts.Value.Find(x => x.UID == accountUID);
+
+      Assertion.Require(entry, $"Financial project account with UID '{accountUID}' not found.");
+
       return FinancialAccount.Parse(accountUID);
     }
 
@@ -370,11 +410,26 @@ namespace Empiria.Financial.Projects {
 
 
     internal void RemoveAccount(FinancialAccount account) {
+      Assertion.Require(Rules.CanUpdate, "Current user can not update this project.");
+      Assertion.Require(account, nameof(account));
+      Assertion.Require(_accounts.Value.Contains(account),
+                        "Entry to remove does not belong to this project.");
+
       account.Delete();
+
+      _deletedAccounts.Add(account);
+      _accounts.Value.Remove(account);
     }
 
 
     internal void UpdateAccount(FinancialAccount account, FinancialAccountFields fields) {
+      Assertion.Require(account, nameof(account));
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      _ = GetAccount(account.UID);
+
       account.Update(fields);
     }
 

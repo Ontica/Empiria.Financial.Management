@@ -104,13 +104,13 @@ namespace Empiria.Financial {
 
     [DataField("ACCT_NUMBER")]
     public string AccountNo {
-      get; protected set;
+      get; private set;
     }
 
 
     [DataField("ACCT_DESCRIPTION")]
     public string Description {
-      get; protected set;
+      get; private set;
     }
 
 
@@ -159,7 +159,6 @@ namespace Empiria.Financial {
     [DataField("ACCT_FINANCIAL_DATA")]
     private JsonObject _financialData = new JsonObject();
 
-
     internal protected FinancialData FinancialData {
       get {
         return new CreditFinancialData(_financialData);
@@ -175,7 +174,7 @@ namespace Empiria.Financial {
 
     [DataField("ACCT_EXT_DATA")]
     protected JsonObject ExtData {
-      get; set;
+      get; private set;
     }
 
 
@@ -242,6 +241,8 @@ namespace Empiria.Financial {
 
     internal void Delete() {
       this.Status = EntityStatus.Deleted;
+
+      MarkAsDirty();
     }
 
 
@@ -268,9 +269,11 @@ namespace Empiria.Financial {
       StandardAccount = PatchField(fields.StandardAccountUID, StandardAccount);
       OrganizationalUnit = PatchField(fields.OrganizationalUnitUID, OrganizationalUnit);
       Project = PatchField(fields.ProjectUID, Project);
-      _attributes = fields.GetAtttributesToJson();
-      _financialData = fields.GetFinancialDataToJson();
+      _attributes = JsonObject.Parse(fields.Attributes);
+      _financialData = JsonObject.Parse(fields.FinancialData);
       _tags = string.Join(" ", fields.Tags);
+
+      MarkAsDirty();
     }
 
     #endregion Methods
