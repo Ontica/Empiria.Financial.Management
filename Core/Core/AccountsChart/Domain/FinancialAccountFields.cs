@@ -10,10 +10,8 @@
 
 using Newtonsoft.Json;
 
-using Empiria.Json;
-using Empiria.Parties;
-
 using Empiria.Financial.Projects;
+using Empiria.Parties;
 
 namespace Empiria.Financial {
 
@@ -75,15 +73,6 @@ namespace Empiria.Financial {
       get; set;
     } = new object();
 
-
-    internal JsonObject GetAtttributesToJson() {
-      return JsonObject.Parse(Attributes);
-    }
-
-
-    internal JsonObject GetFinancialDataToJson() {
-      return JsonObject.Parse(FinancialData);
-    }
 
     #endregion Properties
 
