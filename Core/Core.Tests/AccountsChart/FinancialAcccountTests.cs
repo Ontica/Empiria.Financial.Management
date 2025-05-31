@@ -31,7 +31,7 @@ namespace Empiria.Tests.Financial.Accounts {
       var stdAccount = TestsObjects.TryGetObject<StandardAccount>();
       var orgUnit = TestsObjects.TryGetObject<OrganizationalUnit>();
 
-      var sut = new FinancialAccount(stdAccount, orgUnit);
+      var sut = new FinancialAccount(FinancialAccountType.Empty, stdAccount, orgUnit);
 
       Assert.Equal(orgUnit, sut.OrganizationalUnit);
       Assert.Equal(stdAccount.StdAcctNo, sut.AccountNo);
@@ -97,7 +97,7 @@ namespace Empiria.Tests.Financial.Accounts {
       }
 
       var fields = new FinancialAccountFields {
-        AcctNo = "0920",
+        AccountNo = "0920",
         Description = "Nuevo nombre",
       };
 
@@ -109,7 +109,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
       sut.Update(fields);
 
-      Assert.Equal(fields.AcctNo, sut.AccountNo);
+      Assert.Equal(fields.AccountNo, sut.AccountNo);
       Assert.Equal(fields.Description, sut.Description);
       Assert.Equal(unchangedFields.StandardAccountUID, sut.StandardAccount.UID);
       Assert.Equal(unchangedFields.OrganizationalUnitUID, sut.OrganizationalUnit.UID);

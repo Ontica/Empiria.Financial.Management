@@ -25,6 +25,12 @@ namespace Empiria.Financial {
   [PartitionedType(typeof(FinancialAccountType))]
   public class FinancialAccount : BaseObject, INamedEntity {
 
+    #region Fields
+
+    static internal readonly string PROJECTED_ACCOUNT_NO = "Proyectada";
+
+    #endregion Fields
+
     #region Constructors and parsers
 
     protected FinancialAccount(FinancialAccountType powertype) : base(powertype) {
@@ -32,15 +38,16 @@ namespace Empiria.Financial {
     }
 
 
-    public FinancialAccount(StandardAccount stdAccount, OrganizationalUnit orgUnit) : base(FinancialAccountType.Empty) {
+    public FinancialAccount(FinancialAccountType accountType, StandardAccount stdAccount,
+                            OrganizationalUnit orgUnit) : base(accountType) {
+
       Assertion.Require(stdAccount, nameof(stdAccount));
       Assertion.Require(!stdAccount.IsEmptyInstance, nameof(stdAccount));
       Assertion.Require(orgUnit, nameof(orgUnit));
-      Assertion.Require(!orgUnit.IsEmptyInstance,
-                       "orgUnit can not be the empty instance.");
+      Assertion.Require(!orgUnit.IsEmptyInstance, nameof(orgUnit));
 
       this.StandardAccount = stdAccount;
-      this.AccountNo = stdAccount.StdAcctNo;
+      this.AccountNo = PROJECTED_ACCOUNT_NO;
       this.Description = stdAccount.Description;
 
       this.OrganizationalUnit = orgUnit;
@@ -118,31 +125,50 @@ namespace Empiria.Financial {
 
 
     [DataField("ACCT_IDENTIFIERS")]
-    public string Identifiers {
-      get; protected set;
+    private string _identifiers = string.Empty;
+
+    public FixedList<string> Identifiers {
+      get {
+        return _identifiers.Split(' ')
+                           .ToFixedList();
+      }
     }
 
 
     [DataField("ACCT_TAGS")]
-    public string Tags {
-      get; protected set;
+    private string _tags = string.Empty;
+
+    public FixedList<string> Tags {
+      get {
+        return _tags.Split(' ')
+                    .ToFixedList();
+      }
     }
 
 
     [DataField("ACCT_ATTRIBUTES")]
-    public JsonObject Attributes {
-      get; private set;
+    private JsonObject _attributes = new JsonObject();
+
+    public AccountAttributes Attributes {
+      get {
+        return new CreditAttributes(_attributes);
+      }
     }
 
 
     [DataField("ACCT_FINANCIAL_DATA")]
-    internal protected JsonObject FinancialExtData {
-      get; private set;
+    private JsonObject _financialData = new JsonObject();
+
+
+    internal protected FinancialData FinancialData {
+      get {
+        return new CreditFinancialData(_financialData);
+      }
     }
 
 
     [DataField("ACCT_CONFIG_DATA")]
-    internal protected JsonObject ConfigExtData {
+    internal protected JsonObject ConfigData {
       get; private set;
     }
 
@@ -155,7 +181,7 @@ namespace Empiria.Financial {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(AccountNo, Description, Identifiers, Tags, Project.Keywords,
+        return EmpiriaString.BuildKeywords(AccountNo, Description, _identifiers, _tags, Project.Keywords,
                                            OrganizationalUnit.Keywords, StandardAccount.Keywords);
       }
     }
@@ -172,6 +198,9 @@ namespace Empiria.Financial {
         return Parse(_parentId);
       }
       private set {
+        if (this.IsEmptyInstance) {
+          return;
+        }
         _parentId = value.Id;
       }
     }
@@ -206,6 +235,7 @@ namespace Empiria.Financial {
       get; private set;
     } = EntityStatus.Pending;
 
+
     #endregion Properties
 
     #region Methods
@@ -233,14 +263,14 @@ namespace Empiria.Financial {
 
       fields.EnsureValid();
 
-      this.Description = PatchField(fields.Description, this.Description);
-      this.AccountNo = PatchField(fields.AcctNo, this.AccountNo);
-      this.StandardAccount = PatchField(fields.StandardAccountUID, this.StandardAccount);
-      this.Organization = PatchField(fields.OrganizationUID, this.Organization);
-      this.Project = PatchField(fields.ProjectUID, this.Project);
-      this.LedgerId = -1;
-      this.Identifiers = fields.Identifiers;
-      this.Tags = fields.Tags;
+      AccountNo = PatchField(fields.AccountNo, AccountNo);
+      Description = PatchField(fields.Description, Description);
+      StandardAccount = PatchField(fields.StandardAccountUID, StandardAccount);
+      OrganizationalUnit = PatchField(fields.OrganizationalUnitUID, OrganizationalUnit);
+      Project = PatchField(fields.ProjectUID, Project);
+      _attributes = fields.GetAtttributesToJson();
+      _financialData = fields.GetFinancialDataToJson();
+      _tags = string.Join(" ", fields.Tags);
     }
 
     #endregion Methods
