@@ -40,10 +40,11 @@ namespace Empiria.Financial.UseCases {
 
       fields.EnsureValid();
 
+      var accountType = FinancialAccountType.Parse(fields.FinancialAccountTypeUID);
       var stdAccount = StandardAccount.Parse(fields.StandardAccountUID);
-      var orgUnit = OrganizationalUnit.Parse(fields.OrganizationUID);
+      var orgUnit = OrganizationalUnit.Parse(fields.OrganizationalUnitUID);
 
-      var account = new CreditAccount(stdAccount, orgUnit, fields.AcctNo, fields.Description);
+      var account = new FinancialAccount(accountType, stdAccount, orgUnit);
 
       account.Update(fields);
 

@@ -69,9 +69,6 @@
     <ProjectReference Include="..\Core\Empiria.Financial.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Credits\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="empiria.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
