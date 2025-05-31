@@ -114,8 +114,6 @@ namespace Empiria.Financial.Projects.WebApi {
     [Route("v1/financial-projects")]
     public SingleObjectModel CreateFinancialProject([FromBody] FinancialProjectFields fields) {
 
-      base.RequireBody(fields);
-
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
         FinancialProjectHolderDto projects = usecases.CreateProject(fields);
 
@@ -128,8 +126,6 @@ namespace Empiria.Financial.Projects.WebApi {
     [Route("v1/financial-projects/{financialProjectUID:guid}")]
     public NoDataModel DeleteFinancialProject([FromUri] string financialProjectUID) {
 
-      base.RequireResource(financialProjectUID, nameof(financialProjectUID));
-
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
 
         _ = usecases.DeleteProject(financialProjectUID);
@@ -140,18 +136,18 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpGet]
-    [Route("v1/financial-projects/{projectUID:guid}")]
-    public SingleObjectModel GetProject([FromUri] string projectUID) {
+    [Route("v1/financial-projects/{financialProjectUID:guid}")]
+    public SingleObjectModel GetProject([FromUri] string financialProjectUID) {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FinancialProjectHolderDto project = usecases.GetProject(projectUID);
+        FinancialProjectHolderDto project = usecases.GetProject(financialProjectUID);
 
         return new SingleObjectModel(base.Request, project);
       }
     }
 
 
-    [HttpPut]
+    [HttpPut, HttpPatch]
     [Route("v1/financial-projects/{financialProjectUID:guid}")]
     public SingleObjectModel UpdateFinancialProject([FromUri] string financialProjectUID,
                                                     [FromBody] FinancialProjectFields fields) {

@@ -113,6 +113,12 @@ namespace Empiria.Financial.Projects {
       }
     }
 
+    public StandardAccount StandardAccount {
+      get {
+        return StandardAccount.Parse(Id);
+      }
+    }
+
   } // class FinancialProgram
 
 } // namespace Empiria.Financial.Projects

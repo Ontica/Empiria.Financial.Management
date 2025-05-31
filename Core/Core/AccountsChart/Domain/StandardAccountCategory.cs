@@ -58,12 +58,25 @@ namespace Empiria.Financial {
       }
     }
 
+
+    public FixedList<string> Roles {
+      get {
+        return base.ExtData.GetFixedList<string>("roles", false);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
 
     public FixedList<StandardAccount> GetStandardAccounts() {
       return Catalogue.GetStandardAccounts(this);
+    }
+
+    public bool PlaysRole(string role) {
+      Assertion.Require(role, nameof(role));
+
+      return Roles.Contains(role);
     }
 
     #endregion Methods

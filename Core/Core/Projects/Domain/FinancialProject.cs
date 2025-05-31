@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Financial Projects                         Component : Domain Layer                            *
-*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Partitioned type                        *
+*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Aggregate type                          *
 *  Type     : FinancialProject                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a financial project.                                                                *
+*  Summary  : Represents a financial project that is an aggregate of financial accounts.                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -19,9 +19,11 @@ using Empiria.Financial.Projects.Data;
 
 namespace Empiria.Financial.Projects {
 
-  /// <summary>Represents a financial project.</summary>
+  /// <summary>Represents a financial project that is an aggregate of financial accounts.</summary>
   [PartitionedType(typeof(FinancialProjectType))]
   public class FinancialProject : BaseObject, INamedEntity {
+
+    static internal readonly string STANDARD_ACCOUNTS_ROLE = "financial-project-std-account";
 
     #region Constructors and parsers
 
@@ -338,6 +340,45 @@ namespace Empiria.Financial.Projects {
     }
 
     #endregion Methods
+
+    #region Accounts aggregate methods
+
+    internal FinancialAccount AddAccount(FinancialAccountFields fields) {
+      var accountType = FinancialAccountType.Parse(fields.FinancialAccountTypeUID);
+      var stdAccount = StandardAccount.Parse(fields.StandardAccountUID);
+      var orgUnit = OrganizationalUnit.Parse(fields.OrganizationalUnitUID);
+
+      var account = new FinancialAccount(accountType, stdAccount, orgUnit);
+
+      account.Update(fields);
+
+      return account;
+    }
+
+
+    internal FinancialAccount GetAccount(string accountUID) {
+      return FinancialAccount.Parse(accountUID);
+    }
+
+
+    internal FixedList<StandardAccount> GetStandardAccounts() {
+      return this.Subprogram.StandardAccount.GetAllChildren()
+                                            .FindAll(x =>
+                                              x.Category.PlaysRole(STANDARD_ACCOUNTS_ROLE)
+                                            );
+    }
+
+
+    internal void RemoveAccount(FinancialAccount account) {
+      account.Delete();
+    }
+
+
+    internal void UpdateAccount(FinancialAccount account, FinancialAccountFields fields) {
+      account.Update(fields);
+    }
+
+    #endregion Accounts aggregate methods
 
   } // class FinancialProject
 
