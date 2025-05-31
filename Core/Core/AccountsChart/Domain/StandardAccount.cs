@@ -87,6 +87,17 @@ namespace Empiria.Financial {
       }
     }
 
+
+    public string FullName {
+      get {
+        if (this.IsEmptyInstance) {
+          return string.Empty;
+        }
+        return $"{Parent.FullName} - {Description}";
+      }
+    }
+
+
     [DataField("STD_ACCT_IDENTIFICATORS")]
     public string Identifiers {
       get; protected set;
@@ -178,12 +189,23 @@ namespace Empiria.Financial {
       get; private set;
     }
 
-    private FixedList<StandardAccount> _children = null;
-    internal FixedList<StandardAccount> GetChildren() {
-      if (_children == null) {
-        _children = StandardAccountDataService.GetStandardAccountChildren(this);
+    private FixedList<StandardAccount> _allChildren = null;
+    internal FixedList<StandardAccount> GetAllChildren() {
+      if (_allChildren == null) {
+        _allChildren = BaseObject.GetFullList<StandardAccount>()
+                                 .ToFixedList()
+                                 .FindAll(x => x.StdAcctNo.StartsWith($"{this.StdAcctNo}.") &&
+                                          x.Catalogue.Equals(Catalogue) &&
+                                          !x.IsEmptyInstance)
+                                 .Sort((x, y) => x.StdAcctNo.CompareTo(y.StdAcctNo));
       }
-      return _children;
+      return _allChildren;
+    }
+
+
+    internal FixedList<StandardAccount> GetChildren() {
+      return GetChildren()
+            .FindAll(x => x.Parent.Equals(this));
     }
 
     #endregion Properties

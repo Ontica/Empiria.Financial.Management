@@ -38,18 +38,6 @@ namespace Empiria.Financial {
 
     #endregion Constructors and parsers
 
-    #region Properties
-
-    //public FinancialAccountType FinancialAccountType {
-    //  get {
-    //    int id = base.ExtensionData.Get<int>("financialAccountTypeId");
-
-    //    return FinancialAccountType.Parse(id);
-    //  }
-    //}
-
-    #endregion Properties
-
   } // class StandardAccountType
 
 }  // namespace Empiria.Financial
