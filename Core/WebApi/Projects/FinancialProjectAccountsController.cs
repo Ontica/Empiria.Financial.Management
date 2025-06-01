@@ -69,7 +69,7 @@ namespace Empiria.Financial.Projects.WebApi {
 
       using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
 
-        FinancialAccountDescriptor account = usecases.GetAccount(fields);
+        FinancialAccountDto account = usecases.GetAccount(fields);
 
         return new SingleObjectModel(base.Request, account);
       }

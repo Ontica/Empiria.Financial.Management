@@ -11,7 +11,6 @@
 using Empiria.Services;
 
 using Empiria.Financial.Adapters;
-using System;
 
 namespace Empiria.Financial.Projects.UseCases {
 
@@ -45,14 +44,14 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
-    public FinancialAccountDescriptor GetAccount(FinancialAccountFields fields) {
+    public FinancialAccountDto GetAccount(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       var project = FinancialProject.Parse(fields.ProjectUID);
 
       FinancialAccount account = project.GetAccount(fields.UID);
 
-      return FinancialAccountMapper.MapToDescriptor(account);
+      return FinancialAccountMapper.Map(account);
     }
 
 
