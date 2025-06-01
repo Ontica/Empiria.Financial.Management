@@ -317,6 +317,8 @@ namespace Empiria.CashFlow.Projections {
 
       Assertion.Require(fields, nameof(fields));
 
+      fields.EnsureValid();
+
       if (TryGetEntry(fields) != null) {
         Assertion.RequireFail("Ya existe un movimiento con la misma información para el " +
                               "mismo mes y año en esta proyección de flujo de efectivo.");
@@ -326,13 +328,22 @@ namespace Empiria.CashFlow.Projections {
       var cashflowAccount = FinancialAccount.Parse(fields.CashFlowAccountUID);
 
       var entry = new CashFlowProjectionEntry(this, projectionColumn, cashflowAccount,
-                                             fields.Year, fields.Month, fields.Amount);
+                                              fields.Year.Value, fields.Month.Value, fields.Amount.Value);
 
       entry.Update(fields);
 
       _entries.Value.Add(entry);
 
       return entry;
+    }
+
+
+    internal FixedList<FinancialAccount> AvailableCashFlowAccounts() {
+      return GetCashFlowAccounts()
+            .FindAll(x => !Entries.Select(y => y.CashFlowAccount)
+                                  .ToFixedList()
+                                  .Contains(x)
+            );
     }
 
 
@@ -372,6 +383,11 @@ namespace Empiria.CashFlow.Projections {
         ProjectionNo = DELETED_PROJECTION_NO;
         Status = TransactionStatus.Deleted;
       }
+    }
+
+
+    internal FixedList<FinancialAccount> GetCashFlowAccounts() {
+      return CashFlowProjectionDataService.GetCashFlowAccounts(this);
     }
 
 

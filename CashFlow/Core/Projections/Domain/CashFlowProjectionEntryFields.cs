@@ -52,11 +52,11 @@ namespace Empiria.CashFlow.Projections {
     } = 1;
 
 
-    public int Year {
+    public int? Year {
       get; set;
     }
 
-    public int Month {
+    public int? Month {
       get; set;
     }
 
@@ -65,13 +65,13 @@ namespace Empiria.CashFlow.Projections {
     } = string.Empty;
 
 
-    public decimal Amount {
+    public decimal? Amount {
       get; set;
-    }
+    } = null;
 
-    public decimal ExchangeRate {
+    public decimal? ExchangeRate {
       get; set;
-    } = 1;
+    } = null;
 
 
     public string Description {
@@ -134,6 +134,12 @@ namespace Empiria.CashFlow.Projections {
 
       if (fields.ExchangeRate == 0) {
         fields.ExchangeRate = 1;
+      }
+
+      if (fields.Month.HasValue) {
+        Assertion.Require(1 <= fields.Month.Value && fields.Month.Value <= 12,
+                          $"No reconozco el mes proprocionado ({fields.Month.Value}).");
+
       }
 
       Assertion.Require(fields.Amount != 0,

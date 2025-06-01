@@ -8,15 +8,31 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using System.Collections.Generic;
 
 using Empiria.Data;
+
+using Empiria.Financial;
 
 namespace Empiria.CashFlow.Projections.Data {
 
   /// <summary>Provides data access services for cash flow projections.</summary>
   static internal class CashFlowProjectionDataService {
+
+    static internal FixedList<FinancialAccount> GetCashFlowAccounts(CashFlowProjection projection) {
+      var sql = "SELECT * FROM FMS_ACCOUNTS " +
+                $"WHERE ACCT_PROJECT_ID = {projection.BaseProject.Id} AND " +
+                $"ACCT_STATUS <> 'X' " +
+                $"ORDER BY ACCT_NUMBER";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<FinancialAccount>(op)
+                       .FindAll(x =>
+                          x.FinancialAccountType.PlaysRole(CashFlowProjectionEntry.ENTRY_ACCOUNT_ROLE)
+                       );
+    }
+
 
     static internal string GetNextProjectionNo(CashFlowProjection projection) {
       Assertion.Require(projection, nameof(projection));

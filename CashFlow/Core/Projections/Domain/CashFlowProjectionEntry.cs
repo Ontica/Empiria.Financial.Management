@@ -45,6 +45,9 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(!account.IsEmptyInstance, nameof(account));
       Assertion.Require(account.FinancialAccountType.PlaysRole(ENTRY_ACCOUNT_ROLE),
                 $"{account.Name} is not enabled to be used for cash flow projection entries.");
+      Assertion.Require(projection.Plan.IncludesYear(year), nameof(year));
+      Assertion.Require(1 <= month && month <= 12, nameof(month));
+      Assertion.Require(projection.Plan.IncludesMonth(year, month), nameof(month));
       Assertion.Require(amount > 0, nameof(amount));
 
       Projection = projection;
@@ -289,24 +292,31 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
+      if (fields.Year.HasValue && !Projection.Plan.IncludesYear(fields.Year.Value)) {
+        Assertion.RequireFail($"Invalid year for this projection's plan ({fields.Year.Value}).");
+      }
+      if (fields.Month.HasValue && !Projection.Plan.IncludesMonth(PatchField(fields.Year, Year),
+                                                                             fields.Month.Value)) {
+        Assertion.RequireFail($"Invalid month for this projection's plan ({fields.Month.Value}).");
+      }
 
       CashFlowAccount = PatchField(fields.CashFlowAccountUID, CashFlowAccount);
       ProjectionColumn = PatchField(fields.ProjectionColumnUID, ProjectionColumn);
       Product = PatchField(fields.ProductUID, Product);
       ProductUnit = PatchField(fields.ProductUnitUID, ProductUnit);
       ProductQty = fields.ProductQty;
-      Year = fields.Year != 0 ? fields.Year : this.Year;
-      Month = fields.Month != 0 ? fields.Month : this.Month;
+      Year = PatchField(fields.Year, Year);
+      Month = PatchField(fields.Month, Month);
 
       Currency = PatchField(fields.CurrencyUID, Currency);
-      OriginalAmount = fields.Amount;
+      OriginalAmount = PatchField(fields.Amount, Amount);
 
       if (IsInflowAccount) {
-        InflowAmount = fields.Amount;
+        InflowAmount = OriginalAmount;
       } else {
-        OutflowAmount = fields.Amount;
+        OutflowAmount = OriginalAmount;
       }
-      ExchangeRate = fields.ExchangeRate;
+      ExchangeRate = PatchField(fields.ExchangeRate, ExchangeRate);
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
@@ -314,6 +324,7 @@ namespace Empiria.CashFlow.Projections {
 
       MarkAsDirty();
     }
+
 
     #endregion Methods
 
