@@ -107,7 +107,7 @@ namespace Empiria.CashFlow.Projections.Data {
     static internal void WriteProjectionEntry(CashFlowProjectionEntry o) {
       var op = DataOperation.Parse("write_FMS_CashFlow_PJC_Entry",
           o.Id, o.UID, o.GetEmpiriaType().Id, o.Projection.Id, o.CashFlowAccount.Id, o.OperationTypeId,
-          o.FinancialProject.Id, o.Party.Id, o.Product.Id, o.ProductUnit.Id, o.ProductQty,
+          o.FinancialProject.Id, -1, o.Product.Id, o.ProductUnit.Id, o.ProductQty,
           o.Year, o.Month, o.Day, o.ProjectionColumn.Id, o.Currency.Id, o.OriginalAmount,
           o.InflowAmount, o.OutflowAmount, o.ExchangeRate, o.Description, o.Justification,
           string.Join(" ", o.Tags), o.ExtensionData.ToString(), o.Keywords, o.LinkedProjectionEntryId,

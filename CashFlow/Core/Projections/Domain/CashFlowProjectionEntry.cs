@@ -50,7 +50,6 @@ namespace Empiria.CashFlow.Projections {
       Projection = projection;
       CashFlowAccount = account;
       FinancialProject = account.Project;
-      Party = account.OrganizationalUnit;
       Currency = projection.Plan.BaseCurrency;
 
       ProjectionColumn = projectionColumn;
@@ -111,12 +110,6 @@ namespace Empiria.CashFlow.Projections {
 
     [DataField("CFW_PJC_ENTRY_PROJECT_ID")]
     public FinancialProject FinancialProject {
-      get; private set;
-    }
-
-
-    [DataField("CFW_PJC_ENTRY_PARTY_ID")]
-    public Party Party {
       get; private set;
     }
 
@@ -269,7 +262,7 @@ namespace Empiria.CashFlow.Projections {
     public virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(_tags, Description, CashFlowAccount.Keywords, Projection.Keywords,
-                                           FinancialProject.Keywords, Party.Keywords, Product.Keywords);
+                                           FinancialProject.Keywords, Product.Keywords);
       }
     }
 
@@ -295,7 +288,7 @@ namespace Empiria.CashFlow.Projections {
     internal void Update(CashFlowProjectionEntryFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      fields.EnsureIsValid();
+      fields.EnsureValid();
 
       CashFlowAccount = PatchField(fields.CashFlowAccountUID, CashFlowAccount);
       ProjectionColumn = PatchField(fields.ProjectionColumnUID, ProjectionColumn);
