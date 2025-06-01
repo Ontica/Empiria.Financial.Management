@@ -17,6 +17,16 @@ namespace Empiria.CashFlow.Projections {
   /// <summary>Input fields DTO for cash flow projections entries.</summary>
   public class CashFlowProjectionEntryFields {
 
+    public string UID {
+      get; set;
+    } = string.Empty;
+
+
+    public string ProjectionUID {
+      get; set;
+    } = string.Empty;
+
+
     public string CashFlowAccountUID {
       get; set;
     } = string.Empty;
@@ -78,15 +88,16 @@ namespace Empiria.CashFlow.Projections {
       get; set;
     } = new string[0];
 
-
   }  // class ProjectionEntryFields
 
 
   /// <summary>Extension methods for CashFlowProjectionEntryFields type.</summary>
   static internal class CashFlowProjectionEntryFieldsExtensions {
 
-    static public void EnsureIsValid(this CashFlowProjectionEntryFields fields) {
+    static public void EnsureValid(this CashFlowProjectionEntryFields fields) {
 
+      fields.UID = FieldPatcher.Clean(fields.UID);
+      fields.ProjectionUID = FieldPatcher.Clean(fields.ProjectionUID);
       fields.CashFlowAccountUID = FieldPatcher.Clean(fields.CashFlowAccountUID);
       fields.ProjectionColumnUID = FieldPatcher.Clean(fields.ProjectionColumnUID);
       fields.ProductUID = FieldPatcher.Clean(fields.ProductUID);
@@ -96,6 +107,14 @@ namespace Empiria.CashFlow.Projections {
       fields.Description = EmpiriaString.Clean(fields.Description);
       fields.Justification = EmpiriaString.Clean(fields.Justification);
 
+
+      if (fields.UID.Length != 0) {
+        _ = CashFlowProjectionEntry.Parse(fields.UID);
+      }
+
+      if (fields.ProjectionUID.Length != 0) {
+        _ = CashFlowProjection.Parse(fields.ProjectionUID);
+      }
 
       if (fields.CashFlowAccountUID.Length != 0) {
         _ = FinancialAccount.Parse(fields.CashFlowAccountUID);
@@ -130,6 +149,6 @@ namespace Empiria.CashFlow.Projections {
       }
     }
 
-  }  // class ProjectionEntryFieldsExtensions
+  }  // class CashFlowProjectionEntryFieldsExtensions
 
 }  // namespace Empiria.CashFlow.Projections

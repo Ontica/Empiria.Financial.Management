@@ -25,8 +25,8 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       return new CashFlowProjectionHolderDto {
         Projection = MapProjection(projection),
-        //Entries = CashFlowProjectionEntryMapper.MapToDescriptor(projection.Entries),
-        //GroupedEntries = new CashFlowProjectionEntriesByYearTableDto(byYearTransaction.GetEntries()),
+        Entries = CashFlowProjectionEntryMapper.MapToDescriptor(projection.Entries),
+        // GroupedEntries = new CashFlowProjectionEntriesByYearTableDto(byYearProjection.GetEntries()),
         Documents = DocumentServices.GetAllEntityDocuments(projection),
         History = HistoryServices.GetEntityHistory(projection),
         Actions = MapActions(projection.Rules)

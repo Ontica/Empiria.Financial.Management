@@ -77,7 +77,9 @@ namespace Empiria.CashFlow.Projections {
     static public CashFlowProjection Empty => ParseEmpty<CashFlowProjection>();
 
     protected override void OnLoad() {
-      Reload();
+      _entries = new Lazy<List<CashFlowProjectionEntry>>(() =>
+                        CashFlowProjectionDataService.GetProjectionEntries(this)
+                     );
     }
 
     #endregion Constructors and parsers
@@ -317,7 +319,7 @@ namespace Empiria.CashFlow.Projections {
 
       if (TryGetEntry(fields) != null) {
         Assertion.RequireFail("Ya existe un movimiento con la misma información para el " +
-                              "mismo mes y año en esta transacción presupuestal.");
+                              "mismo mes y año en esta proyección de flujo de efectivo.");
       }
 
       var projectionColumn = CashFlowProjectionColumn.Parse(fields.ProjectionColumnUID);
@@ -397,7 +399,9 @@ namespace Empiria.CashFlow.Projections {
       CashFlowProjectionDataService.WriteProjection(this);
 
       foreach (var entry in _entries.Value) {
-        entry.Save();
+        if (entry.IsDirty) {
+          entry.Save();
+        }
       }
       foreach (var deletedEntry in _deletedEntries) {
         deletedEntry.Save();
@@ -518,16 +522,6 @@ namespace Empiria.CashFlow.Projections {
     }
 
     #endregion Methods
-
-    #region Helpers
-
-    private void Reload() {
-      _entries = new Lazy<List<CashFlowProjectionEntry>>(() =>
-                        CashFlowProjectionDataService.GetProjectionEntries(this)
-                     );
-    }
-
-    #endregion Helpers
 
   }  // class CashFlowProjection
 

@@ -119,9 +119,9 @@ namespace Empiria.CashFlow.Projections {
           return false;
         }
 
-        //if (_projection.Entries.Count == 0) {
-        //  return false;
-        //}
+        if (_projection.Entries.Count == 0) {
+          return false;
+        }
         if (_projection.ProjectionType.IsProtected &&
            (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_AUTHORIZER) ||
            ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER))) {

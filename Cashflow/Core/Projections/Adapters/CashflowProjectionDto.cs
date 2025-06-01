@@ -22,23 +22,13 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
-    //public FixedList<CashFlowProjectionEntryDescriptorDto> Entries {
-    //  get; internal set;
-    //}
+    public FixedList<CashFlowProjectionEntryDescriptor> Entries {
+      get; internal set;
+    }
 
     //public CashFlowProjectionEntriesByYearTableDto GroupedEntries {
     //  get; internal set;
     //}
-
-    public FixedList<object> Entries {
-      get;
-    } = new FixedList<object>();
-
-
-    public object GroupedEntries {
-      get; internal set;
-    } = new object();
-
 
     public FixedList<DocumentDto> Documents {
       get; internal set;
