@@ -74,9 +74,10 @@ namespace Empiria.CashFlow.Projections {
       }
     }
 
-    public int[] Years {
+    public FixedList<int> Years {
       get {
-        return EmpiriaMath.GetRange(StartDate.Year, EndDate.Year);
+        return EmpiriaMath.GetRange(StartDate.Year, EndDate.Year)
+                          .ToFixedList();
       }
     }
 
@@ -131,6 +132,20 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    internal bool IncludesYear(int year) {
+      return Years.Contains(year);
+    }
+
+
+    internal bool IncludesMonth(int year, int month) {
+      Assertion.Require(1 <= month && month <= 12, nameof(month));
+
+      var date = new DateTime(year, month, 1);
+
+      return StartDate <= date && date <= EndDate;
+    }
+
+
     internal void RemoveProjection(CashFlowProjection projection) {
       Assertion.Require(projection, nameof(projection));
       Assertion.Require(Status == OpenCloseStatus.Opened,
@@ -176,6 +191,7 @@ namespace Empiria.CashFlow.Projections {
     private void Reload() {
       _projections = new Lazy<List<CashFlowProjection>>(() => CashFlowProjectionDataService.GetProjections(this));
     }
+
 
     #endregion Helpers
 
