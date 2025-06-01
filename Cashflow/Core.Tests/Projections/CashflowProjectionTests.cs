@@ -13,8 +13,6 @@ using Xunit;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
-using Empiria.Financial;
-
 using Empiria.CashFlow.Projections;
 
 namespace Empiria.Tests.CashFlow.Projections {

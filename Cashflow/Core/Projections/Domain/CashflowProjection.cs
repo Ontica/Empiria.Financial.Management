@@ -36,9 +36,6 @@ namespace Empiria.CashFlow.Projections {
     static internal readonly string DELETED_PROJECTION_NO = "Eliminada";
     static internal readonly string TO_ASSIGN_PROJECTION_NO = "Por asignar";
 
-    private Lazy<List<CashFlowProjectionEntry>> _entries = new Lazy<List<CashFlowProjectionEntry>>();
-    private List<CashFlowProjectionEntry> _deletedEntries = new List<CashFlowProjectionEntry>();
-
     #endregion Fields
 
     #region Constructors and parsers
@@ -75,12 +72,6 @@ namespace Empiria.CashFlow.Projections {
     static public CashFlowProjection Parse(string uid) => ParseKey<CashFlowProjection>(uid);
 
     static public CashFlowProjection Empty => ParseEmpty<CashFlowProjection>();
-
-    protected override void OnLoad() {
-      _entries = new Lazy<List<CashFlowProjectionEntry>>(() =>
-                        CashFlowProjectionDataService.GetProjectionEntries(this)
-                     );
-    }
 
     #endregion Constructors and parsers
 
@@ -261,17 +252,6 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    [DataField("CFW_PJC_TOTAL")]
-    private decimal _total = 0;
-
-    public decimal GetTotal() {
-      if (_entries.IsValueCreated) {
-        return Math.Abs(_entries.Value.Sum(x => x.InflowAmount - x.OutflowAmount));
-      } else {
-        return _total;
-      }
-    }
-
     public virtual string Name {
       get {
         return this.ProjectionNo;
@@ -284,13 +264,6 @@ namespace Empiria.CashFlow.Projections {
         return EmpiriaString.BuildKeywords(ProjectionNo, Description, Identificators, Tags,
                                            Category.Keywords, BaseProject.Keywords, BaseAccount.Keywords,
                                            BaseParty.Keywords, AdjustmentOf.ProjectionNo, Plan.Keywords);
-      }
-    }
-
-
-    public FixedList<CashFlowProjectionEntry> Entries {
-      get {
-        return _entries.Value.ToFixedList();
       }
     }
 
@@ -311,41 +284,6 @@ namespace Empiria.CashFlow.Projections {
     #endregion Properties
 
     #region Methods
-
-    internal CashFlowProjectionEntry AddEntry(CashFlowProjectionEntryFields fields) {
-      Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
-
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureValid();
-
-      if (TryGetEntry(fields) != null) {
-        Assertion.RequireFail("Ya existe un movimiento con la misma información para el " +
-                              "mismo mes y año en esta proyección de flujo de efectivo.");
-      }
-
-      var projectionColumn = CashFlowProjectionColumn.Parse(fields.ProjectionColumnUID);
-      var cashflowAccount = FinancialAccount.Parse(fields.CashFlowAccountUID);
-
-      var entry = new CashFlowProjectionEntry(this, projectionColumn, cashflowAccount,
-                                              fields.Year.Value, fields.Month.Value, fields.Amount.Value);
-
-      entry.Update(fields);
-
-      _entries.Value.Add(entry);
-
-      return entry;
-    }
-
-
-    internal FixedList<FinancialAccount> AvailableCashFlowAccounts() {
-      return GetCashFlowAccounts()
-            .FindAll(x => !Entries.Select(y => y.CashFlowAccount)
-                                  .ToFixedList()
-                                  .Contains(x)
-            );
-    }
-
 
     internal void Authorize() {
       Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this cash flow projection.");
@@ -391,17 +329,6 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    internal CashFlowProjectionEntry GetEntry(string projectionEntryUID) {
-      Assertion.Require(projectionEntryUID, nameof(projectionEntryUID));
-
-      CashFlowProjectionEntry entry = _entries.Value.Find(x => x.UID == projectionEntryUID);
-
-      Assertion.Require(entry, $"Cash flow projection entry with UID '{projectionEntryUID}' not found.");
-
-      return entry;
-    }
-
-
     protected override void OnSave() {
       if (IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
@@ -414,15 +341,7 @@ namespace Empiria.CashFlow.Projections {
 
       CashFlowProjectionDataService.WriteProjection(this);
 
-      foreach (var entry in _entries.Value) {
-        if (entry.IsDirty) {
-          entry.Save();
-        }
-      }
-      foreach (var deletedEntry in _deletedEntries) {
-        deletedEntry.Save();
-      }
-      _deletedEntries.Clear();
+      SaveEntries();
     }
 
 
@@ -454,6 +373,101 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    internal void Update(CashFlowProjectionFields fields) {
+      Assertion.Require(Rules.CanUpdate, "Current user can not update this cash flow projection.");
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      BaseParty = PatchField(fields.PartyUID, BaseParty);
+      BaseProject = PatchField(fields.ProjectUID, BaseProject);
+      BaseAccount = PatchField(fields.AccountUID, BaseAccount);
+      OperationSource = PatchField(fields.SourceUID, OperationSource);
+
+      Description = EmpiriaString.Clean(fields.Description);
+      Justification = EmpiriaString.Clean(fields.Justification);
+      Tags = string.Join(" ", fields.Tags);
+
+      ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
+    }
+
+    #endregion Methods
+
+    #region Cash flow entries aggregate
+
+    private Lazy<List<CashFlowProjectionEntry>> _entries = new Lazy<List<CashFlowProjectionEntry>>();
+    private List<CashFlowProjectionEntry> _deletedEntries = new List<CashFlowProjectionEntry>();
+
+    protected override void OnLoad() {
+      _entries = new Lazy<List<CashFlowProjectionEntry>>(() =>
+                        CashFlowProjectionDataService.GetProjectionEntries(this)
+                     );
+    }
+
+    public FixedList<CashFlowProjectionEntry> Entries {
+      get {
+        return _entries.Value.ToFixedList();
+      }
+    }
+
+    [DataField("CFW_PJC_TOTAL")]
+    private decimal _total = 0;
+
+    public decimal GetTotal() {
+      if (_entries.IsValueCreated) {
+        return Math.Abs(_entries.Value.Sum(x => x.InflowAmount - x.OutflowAmount));
+      } else {
+        return _total;
+      }
+    }
+
+
+    internal CashFlowProjectionEntry AddEntry(CashFlowProjectionEntryFields fields) {
+      Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
+
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      if (TryGetEntry(fields) != null) {
+        Assertion.RequireFail("Ya existe un movimiento con la misma información para el " +
+                              "mismo mes y año en esta proyección de flujo de efectivo.");
+      }
+
+      var projectionColumn = CashFlowProjectionColumn.Parse(fields.ProjectionColumnUID);
+      var cashflowAccount = FinancialAccount.Parse(fields.CashFlowAccountUID);
+
+      var entry = new CashFlowProjectionEntry(this, projectionColumn, cashflowAccount,
+                                              fields.Year.Value, fields.Month.Value, fields.Amount.Value);
+
+      entry.Update(fields);
+
+      _entries.Value.Add(entry);
+
+      return entry;
+    }
+
+
+    internal FixedList<FinancialAccount> AvailableCashFlowAccounts() {
+      return GetCashFlowAccounts()
+            .FindAll(x => !Entries.Select(y => y.CashFlowAccount)
+                                  .ToFixedList()
+                                  .Contains(x)
+            );
+    }
+
+
+    internal CashFlowProjectionEntry GetEntry(string projectionEntryUID) {
+      Assertion.Require(projectionEntryUID, nameof(projectionEntryUID));
+
+      CashFlowProjectionEntry entry = _entries.Value.Find(x => x.UID == projectionEntryUID);
+
+      Assertion.Require(entry, $"Cash flow projection entry with UID '{projectionEntryUID}' not found.");
+
+      return entry;
+    }
+
+
     internal void RemoveEntry(CashFlowProjectionEntry entry) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this cash flow projection.");
       Assertion.Require(entry, nameof(entry));
@@ -464,6 +478,19 @@ namespace Empiria.CashFlow.Projections {
 
       _deletedEntries.Add(entry);
       _entries.Value.Remove(entry);
+    }
+
+
+    private void SaveEntries() {
+      foreach (var entry in _entries.Value) {
+        if (entry.IsDirty) {
+          entry.Save();
+        }
+      }
+      foreach (var deletedEntry in _deletedEntries) {
+        deletedEntry.Save();
+      }
+      _deletedEntries.Clear();
     }
 
 
@@ -481,25 +508,6 @@ namespace Empiria.CashFlow.Projections {
                                       x.Currency.Equals(currency) &&
                                       x.Year == fields.Year &&
                                       x.Month == fields.Month);
-    }
-
-
-    internal void Update(CashFlowProjectionFields fields) {
-      Assertion.Require(Rules.CanUpdate, "Current user can not update this cash flow projection.");
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureValid();
-
-      BaseParty = PatchField(fields.PartyUID, BaseParty);
-      BaseProject = PatchField(fields.ProjectUID, BaseProject);
-      BaseAccount = PatchField(fields.AccountUID, BaseAccount);
-      OperationSource = PatchField(fields.SourceUID, OperationSource);
-
-      Description = EmpiriaString.Clean(fields.Description);
-      Justification = EmpiriaString.Clean(fields.Justification);
-      Tags = string.Join(" ", fields.Tags);
-
-      ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
 
     }
 
@@ -537,7 +545,7 @@ namespace Empiria.CashFlow.Projections {
       }
     }
 
-    #endregion Methods
+    #endregion Cash flow entries aggregate
 
   }  // class CashFlowProjection
 
