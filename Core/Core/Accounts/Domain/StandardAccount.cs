@@ -93,6 +93,9 @@ namespace Empiria.Financial {
         if (this.IsEmptyInstance) {
           return string.Empty;
         }
+        if (Parent.FullName.Length == 0) {
+          return Description;
+        }
         return $"{Parent.FullName} - {Description}";
       }
     }

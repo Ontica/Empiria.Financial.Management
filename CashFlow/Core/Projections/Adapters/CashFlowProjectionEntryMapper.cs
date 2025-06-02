@@ -63,8 +63,8 @@ namespace Empiria.CashFlow.Projections.Adapters {
     static internal FixedList<CashFlowProjectionEntryDescriptor> MapToDescriptor(FixedList<CashFlowProjectionEntry> entries) {
       var list = new List<CashFlowProjectionEntryDescriptor>(entries.Count + 1);
 
-      entries.Sort((x, y) => $"{x.CashFlowAccount.AccountNo}.{x.Year}.{x.Month.ToString("00")}"
-                             .CompareTo($"{y.CashFlowAccount.AccountNo}.{y.Year}.{y.Month.ToString("00")}"));
+      entries.Sort((x, y) => $"{x.CashFlowAccount.Code}.{x.Year}.{x.Month.ToString("00")}"
+                             .CompareTo($"{y.CashFlowAccount.Code}.{y.Year}.{y.Month.ToString("00")}"));
 
       list.AddRange(entries.Select(x => MapToDescriptor(x)));
 
@@ -94,7 +94,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
     static private CashFlowProjectionEntryDescriptor MapToDescriptor(CashFlowProjectionEntry entry) {
       return new CashFlowProjectionEntryDescriptor {
         UID = entry.UID,
-        CashFlowAccountCode = entry.CashFlowAccount.AccountNo,
+        CashFlowAccountCode = entry.CashFlowAccount.Code,
         CashFlowAccountName = entry.CashFlowAccount.Name,
         Year = entry.Year,
         Month = entry.Month,

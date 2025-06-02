@@ -34,7 +34,7 @@ namespace Empiria.Tests.Financial.Accounts {
       var sut = new FinancialAccount(FinancialAccountType.Empty, stdAccount, orgUnit);
 
       Assert.Equal(orgUnit, sut.OrganizationalUnit);
-      Assert.Equal(stdAccount.StdAcctNo, sut.AccountNo);
+      Assert.Equal(stdAccount.StdAcctNo, sut.Code);
       Assert.Equal(stdAccount.Description, sut.Description);
       Assert.Equal(stdAccount, sut.StandardAccount);
       Assert.Equal(DateTime.Today, sut.StartDate);
@@ -110,6 +110,7 @@ namespace Empiria.Tests.Financial.Accounts {
       sut.Update(fields);
 
       Assert.Equal(fields.AccountNo, sut.AccountNo);
+      Assert.Equal(fields.AccountNo, sut.Code);
       Assert.Equal(fields.Description, sut.Description);
       Assert.Equal(unchangedFields.StandardAccountUID, sut.StandardAccount.UID);
       Assert.Equal(unchangedFields.OrganizationalUnitUID, sut.OrganizationalUnit.UID);

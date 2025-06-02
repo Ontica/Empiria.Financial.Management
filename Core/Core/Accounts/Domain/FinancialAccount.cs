@@ -25,12 +25,6 @@ namespace Empiria.Financial {
   [PartitionedType(typeof(FinancialAccountType))]
   public class FinancialAccount : BaseObject, INamedEntity {
 
-    #region Fields
-
-    static internal readonly string PROJECTED_ACCOUNT_NO = "Proyectada";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     protected FinancialAccount(FinancialAccountType powertype) : base(powertype) {
@@ -47,7 +41,6 @@ namespace Empiria.Financial {
       Assertion.Require(!orgUnit.IsEmptyInstance, nameof(orgUnit));
 
       this.StandardAccount = stdAccount;
-      this.AccountNo = PROJECTED_ACCOUNT_NO;
       this.Description = stdAccount.Description;
 
       this.OrganizationalUnit = orgUnit;
@@ -108,6 +101,16 @@ namespace Empiria.Financial {
     }
 
 
+    public string Code {
+      get {
+        if (AccountNo.Length == 0) {
+          return StandardAccount.StdAcctNo;
+        }
+        return AccountNo;
+      }
+    }
+
+
     [DataField("ACCT_DESCRIPTION")]
     public string Description {
       get; private set;
@@ -116,10 +119,26 @@ namespace Empiria.Financial {
 
     public string Name {
       get {
-        if (AccountNo.Length != 0) {
-          return $"({AccountNo}) {Description}";
+        string name = string.Empty;
+
+        if (Description.Length == 0) {
+          name = StandardAccount.Description;
+
+        } else {
+          name = Description;
         }
-        return Description;
+
+        if (Status == EntityStatus.Pending) {
+          name += " [Proyectada]";
+        }
+        return name;
+      }
+    }
+
+
+    string INamedEntity.Name {
+      get {
+        return $"({Code}) {Name}";
       }
     }
 
@@ -180,7 +199,7 @@ namespace Empiria.Financial {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(AccountNo, Description, _identifiers, _tags, Project.Keywords,
+        return EmpiriaString.BuildKeywords(Code, Name, _identifiers, _tags, Project.Keywords,
                                            OrganizationalUnit.Keywords, StandardAccount.Keywords);
       }
     }

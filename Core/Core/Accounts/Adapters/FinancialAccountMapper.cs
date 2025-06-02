@@ -24,7 +24,7 @@ namespace Empiria.Financial.Adapters {
     static public FinancialAccountDto Map(FinancialAccount account) {
       return new FinancialAccountDto {
         UID = account.UID,
-        AccountNo = account.AccountNo,
+        AccountNo = account.Code,
         FinancialAccountType = account.FinancialAccountType.MapToNamedEntity(),
         Description = account.Name,
         StandardAccount = MapStdAccountToDto(account.StandardAccount),
@@ -48,7 +48,7 @@ namespace Empiria.Financial.Adapters {
     static internal FinancialAccountDescriptor MapToDescriptor(FinancialAccount account) {
       return new FinancialAccountDescriptor {
         UID = account.UID,
-        AccountNo = account.AccountNo,
+        AccountNo = account.Code,
         FinancialAccountTypeName = account.FinancialAccountType.DisplayName,
         Description = account.Description,
         StandardAccountName = MapStdAccountToDto(account.StandardAccount).Name,
