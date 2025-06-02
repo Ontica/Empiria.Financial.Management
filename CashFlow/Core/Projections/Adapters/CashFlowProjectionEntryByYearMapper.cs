@@ -42,7 +42,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     static private CashFlowProjectionMonthEntryDto Map(CashFlowProjectionEntry entry) {
       return new CashFlowProjectionMonthEntryDto {
-        BudgetEntryUID = entry.UID,
+        EntryUID = entry.UID,
         Month = entry.Month,
         ProductQty = entry.ProductQty,
         Amount = entry.Amount,

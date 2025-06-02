@@ -26,9 +26,9 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
-    //public CashFlowProjectionEntriesByYearTableDto GroupedEntries {
-    //  get; internal set;
-    //}
+    public CashFlowProjectionEntriesByYearTableDto GroupedEntries {
+      get; internal set;
+    }
 
     public FixedList<DocumentDto> Documents {
       get; internal set;

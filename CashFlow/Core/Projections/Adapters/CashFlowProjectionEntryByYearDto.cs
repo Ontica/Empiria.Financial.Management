@@ -69,7 +69,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
   /// <summary>Output DTO used to return a cash flow projection month entry.</summary>
   public class CashFlowProjectionMonthEntryDto {
 
-    public string BudgetEntryUID {
+    public string EntryUID {
       get; internal set;
     }
 

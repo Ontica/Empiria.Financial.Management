@@ -4,7 +4,7 @@
 *  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Mapper                                  *
 *  Type     : CashFlowProjectionEntryMapper              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Maps BudgetEntry instances to data transfer objects.                                           *
+*  Summary  : Maps CashFlowProjectionEntry instances to data transfer objects.                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
