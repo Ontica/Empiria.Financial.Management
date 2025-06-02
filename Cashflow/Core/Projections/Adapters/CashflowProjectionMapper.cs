@@ -80,7 +80,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
     static private CashFlowProjectionDto MapProjection(CashFlowProjection projection) {
       return new CashFlowProjectionDto {
         UID = projection.UID,
-        Plan = projection.Plan.MapToNamedEntity(),
+        Plan = CashFlowPlanMapper.Map(projection.Plan),
         ProjectionTypeCategory = projection.Category.MapToNamedEntity(),
         ProjectionNo = projection.ProjectionNo,
         Party = projection.BaseParty.MapToNamedEntity(),

@@ -76,7 +76,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto Plan {
+    public CashFlowPlanDto Plan {
       get; internal set;
     }
 
