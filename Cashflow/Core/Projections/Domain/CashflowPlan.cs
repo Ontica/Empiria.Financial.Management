@@ -101,6 +101,13 @@ namespace Empiria.CashFlow.Projections {
       }
     }
 
+
+    public FixedList<CashFlowProjectionColumn> ProjectionsColumns {
+      get {
+        return ExtData.GetFixedList<CashFlowProjectionColumn>("projectionColumns", false);
+      }
+    }
+
     #endregion Properties
 
     #region Methods

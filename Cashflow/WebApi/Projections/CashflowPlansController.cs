@@ -12,6 +12,9 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
+using Empiria.CashFlow.Projections.Adapters;
+using Empiria.CashFlow.Projections.UseCases;
+
 namespace Empiria.CashFlow.Projections.WebApi {
 
   /// <summary>Web API used to retrieve cash flow plans.</summary>
@@ -23,10 +26,11 @@ namespace Empiria.CashFlow.Projections.WebApi {
     [Route("v1/cash-flow/projections/plans")]
     public CollectionModel GetPlans() {
 
-      FixedList<NamedEntityDto> plans = CashFlowPlan.GetList()
-                                                    .MapToNamedEntityList();
+      using (var usecases = CashFlowPlanUseCases.UseCaseInteractor()) {
+        FixedList<CashFlowPlanDto> plans = usecases.GetPlans();
 
-      return new CollectionModel(this.Request, plans);
+        return new CollectionModel(base.Request, plans);
+      }
     }
 
     #endregion Command web apis
