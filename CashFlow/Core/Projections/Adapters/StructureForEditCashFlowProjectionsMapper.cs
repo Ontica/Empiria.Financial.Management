@@ -64,7 +64,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
       private readonly FixedList<FinancialProject> _projects;
       private readonly FixedList<FinancialAccount> _accounts;
 
-      public Structurer(OrganizationalUnit orgUnit) {
+      internal Structurer(OrganizationalUnit orgUnit) {
         _orgUnit = orgUnit;
         _accounts = _allAccounts.FindAll(x => x.OrganizationalUnit.Equals(_orgUnit));
         _projects = _allProjects.FindAll(x => _accounts.Contains(y => y.OrganizationalUnit.Equals(_orgUnit) &&

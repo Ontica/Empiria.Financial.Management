@@ -85,6 +85,18 @@ namespace Empiria.CashFlow.Projections.WebApi {
 
 
     [HttpGet]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/accounts")]
+    public CollectionModel GetProjectionAccounts([FromUri] string projectionUID) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> accounts = usecases.GetProjectionAccounts(projectionUID);
+
+        return new CollectionModel(base.Request, accounts);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/cash-flow/projections/{projectionUID:guid}/print")]
     public SingleObjectModel PrintProjection([FromUri] string projectionUID) {
 

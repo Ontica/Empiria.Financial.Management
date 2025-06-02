@@ -9,9 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Xunit;
+using Empiria.Financial.Data;
 
 using Empiria.Financial;
-using Empiria.Financial.Data;
 
 using Empiria.Financial.Projects;
 using Empiria.Financial.Projects.Data;

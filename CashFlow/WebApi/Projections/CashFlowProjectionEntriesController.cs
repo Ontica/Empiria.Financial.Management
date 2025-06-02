@@ -39,8 +39,8 @@ namespace Empiria.CashFlow.Projections.WebApi {
 
     [HttpGet]
     [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/{projectionEntryUID:guid}")]
-    public SingleObjectModel GetBudgetEntry([FromUri] string projectionUID,
-                                            [FromUri] string projectionEntryUID) {
+    public SingleObjectModel GetProjectionEntry([FromUri] string projectionUID,
+                                                [FromUri] string projectionEntryUID) {
 
       var fields = new CashFlowProjectionEntryFields {
         UID = projectionEntryUID,
@@ -57,8 +57,8 @@ namespace Empiria.CashFlow.Projections.WebApi {
 
     [HttpDelete]
     [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/{projectionEntryUID:guid}")]
-    public NoDataModel RemoveBudgetEntry([FromUri] string projectionUID,
-                                         [FromUri] string projectionEntryUID) {
+    public NoDataModel RemoveProjectionEntry([FromUri] string projectionUID,
+                                             [FromUri] string projectionEntryUID) {
 
       var fields = new CashFlowProjectionEntryFields {
         UID = projectionEntryUID,
@@ -75,9 +75,9 @@ namespace Empiria.CashFlow.Projections.WebApi {
 
     [HttpPut, HttpPatch]
     [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/{projectionEntryUID:guid}")]
-    public SingleObjectModel UpdateBudgetEntry([FromUri] string projectionUID,
-                                               [FromUri] string projectionEntryUID,
-                                               [FromBody] CashFlowProjectionEntryFields fields) {
+    public SingleObjectModel UpdateProjectionEntry([FromUri] string projectionUID,
+                                                   [FromUri] string projectionEntryUID,
+                                                   [FromBody] CashFlowProjectionEntryFields fields) {
 
       fields.UID = projectionEntryUID;
       fields.ProjectionUID = projectionUID;

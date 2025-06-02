@@ -112,7 +112,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
       return new CashFlowProjectionEntryDescriptor {
         UID = $"{pivot.Year}|{pivot.ProjectionColumn.Name}",
         CashFlowAccountCode = string.Empty,
-        CashFlowAccountName = $"{pivot.ProjectionColumn.Name} {pivot.Projection.Plan.Name}",
+        CashFlowAccountName = $"{pivot.Projection.Plan.Name} {pivot.ProjectionColumn.Name}",
         Year = pivot.Year,
         ItemType = DataTableEntryType.Total.ToString(),
         ProjectionColumn = pivot.ProjectionColumn.Name,

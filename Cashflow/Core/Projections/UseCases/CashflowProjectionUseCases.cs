@@ -89,6 +89,16 @@ namespace Empiria.CashFlow.Projections.UseCases {
     }
 
 
+    public FixedList<NamedEntityDto> GetProjectionAccounts(string projectionUID) {
+      Assertion.Require(projectionUID, nameof(projectionUID));
+
+      var projection = CashFlowProjection.Parse(projectionUID);
+
+      return projection.GetCashFlowAccounts()
+                       .MapToNamedEntityList();
+    }
+
+
     public FixedList<StructureForEditCashFlowProjections> GetStructureForEditCashFlowProjections() {
       FixedList<OrganizationalUnit> list = Party.GetList<OrganizationalUnit>(DateTime.Today)
                                                 .FindAll(x => x.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE));
@@ -113,6 +123,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
 
     public FixedList<NamedEntityDto> SearchProjectionsParties(TransactionPartiesQuery query) {
+      Assertion.Require(query, nameof(query));
+
       var persons = BaseObject.GetList<Person>();
 
       return persons.MapToNamedEntityList();
