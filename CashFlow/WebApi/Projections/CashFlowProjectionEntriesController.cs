@@ -20,7 +20,7 @@ namespace Empiria.CashFlow.Projections.WebApi {
   /// <summary>Web API used to retrieve and update cash flow projection entries.</summary>
   public class CashFlowProjectionEntriesController : WebApiController {
 
-    #region Query web apis
+    #region Single entry web apis
 
     [HttpPost]
     [Route("v1/cash-flow/projections/{projectionUID:guid}/entries")]
@@ -89,7 +89,79 @@ namespace Empiria.CashFlow.Projections.WebApi {
       }
     }
 
-    #endregion Web Apis
+    #endregion Single entry web apis
+
+    #region By year entries web apis
+
+    [HttpPost]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/create-annually")]
+    public SingleObjectModel CreateProjectionEntriesByYear([FromUri] string projectionUID,
+                                                           [FromBody] CashFlowProjectionEntryByYearFields fields) {
+
+      fields.ProjectionUID = projectionUID;
+
+      using (var usecases = CashFlowProjectionEntriesUseCases.UseCaseInteractor()) {
+        CashFlowProjectionEntryByYearDto entryByYear = usecases.CreateProjectionEntryByYear(fields);
+
+        return new SingleObjectModel(base.Request, entryByYear);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/{entryByYearUID}/get-annually")]
+    public SingleObjectModel GetProjectionEntriesByYear([FromUri] string projectionUID,
+                                                        [FromUri] string entryByYearUID) {
+
+      var fields = new CashFlowProjectionEntryByYearFields {
+        UID = entryByYearUID,
+        ProjectionUID = projectionUID
+      };
+
+      using (var usecases = CashFlowProjectionEntriesUseCases.UseCaseInteractor()) {
+        CashFlowProjectionEntryByYearDto entryByYear = usecases.GetProjectionEntryByYear(fields);
+
+        return new SingleObjectModel(base.Request, entryByYear);
+      }
+    }
+
+
+    [HttpDelete]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/{entryByYearUID}/remove-annually")]
+    public NoDataModel RemoveProjectionEntriesByYear([FromUri] string projectionUID,
+                                                     [FromUri] string entryByYearUID) {
+
+      var fields = new CashFlowProjectionEntryByYearFields {
+        UID = entryByYearUID,
+        ProjectionUID = projectionUID
+      };
+
+      using (var usecases = CashFlowProjectionEntriesUseCases.UseCaseInteractor()) {
+
+        usecases.RemoveProjectionEntryByYear(fields);
+
+        return new NoDataModel(base.Request);
+      }
+    }
+
+
+    [HttpPut, HttpPatch]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/{entryByYearUID}/update-annually")]
+    public SingleObjectModel UpdateProjectionEntriesByYear([FromUri] string projectionUID,
+                                                           [FromUri] string entryByYearUID,
+                                                           [FromBody] CashFlowProjectionEntryByYearFields fields) {
+
+      fields.UID = entryByYearUID;
+      fields.ProjectionUID = projectionUID;
+
+      using (var usecases = CashFlowProjectionEntriesUseCases.UseCaseInteractor()) {
+        CashFlowProjectionEntryByYearDto entryByYear = usecases.UpdateProjectionEntryByYear(fields);
+
+        return new SingleObjectModel(base.Request, entryByYear);
+      }
+    }
+
+    #endregion By year entries web apis
 
   }  // class CashFlowProjectionEntriesController
 

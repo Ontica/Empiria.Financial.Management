@@ -11,7 +11,6 @@
 using Empiria.Services;
 
 using Empiria.CashFlow.Projections.Adapters;
-using System;
 
 namespace Empiria.CashFlow.Projections.UseCases {
 
@@ -30,7 +29,7 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
     #endregion Constructors and parsers
 
-    #region Use cases
+    #region Single entry use cases
 
     public CashFlowProjectionEntryDto CreateProjectionEntry(CashFlowProjectionEntryFields fields) {
       Assertion.Require(fields, nameof(fields));
@@ -72,7 +71,6 @@ namespace Empiria.CashFlow.Projections.UseCases {
       return CashFlowProjectionEntryMapper.Map(entry);
     }
 
-
     public CashFlowProjectionEntryDto UpdateProjectionEntry(CashFlowProjectionEntryFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -89,7 +87,84 @@ namespace Empiria.CashFlow.Projections.UseCases {
       return CashFlowProjectionEntryMapper.Map(entry);
     }
 
-    #endregion Use cases
+    #endregion Single entry use cases
+
+    #region By year entries use cases
+
+    public CashFlowProjectionEntryByYearDto CreateProjectionEntryByYear(CashFlowProjectionEntryByYearFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      var projection = CashFlowProjection.Parse(fields.ProjectionUID);
+
+      var byYearProjection = new CashFlowProjectionByYear(projection);
+
+      FixedList<CashFlowProjectionEntry> entries = byYearProjection.CreateProjectionEntries(fields);
+
+      projection.UpdateEntries(entries);
+
+      projection.Save();
+
+      var entryByYear = new CashFlowProjectionEntryByYear(byYearProjection.BuildUID(entries[0]), entries);
+
+      return CashFlowProjectionEntryByYearMapper.Map(entryByYear);
+    }
+
+
+    public CashFlowProjectionEntryByYearDto GetProjectionEntryByYear(CashFlowProjectionEntryByYearFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      var projection = CashFlowProjection.Parse(fields.ProjectionUID);
+
+      var byYearProjection = new CashFlowProjectionByYear(projection);
+
+      FixedList<CashFlowProjectionEntry> entries = byYearProjection.GetProjectionEntries(fields.UID);
+
+      var entryByYear = new CashFlowProjectionEntryByYear(fields.UID, entries);
+
+      return CashFlowProjectionEntryByYearMapper.Map(entryByYear);
+    }
+
+
+    public void RemoveProjectionEntryByYear(CashFlowProjectionEntryByYearFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      var projection = CashFlowProjection.Parse(fields.ProjectionUID);
+
+      var byYearProjection = new CashFlowProjectionByYear(projection);
+
+      FixedList<CashFlowProjectionEntry> entries = byYearProjection.GetProjectionEntries(fields.UID);
+
+      foreach (var entry in entries) {
+        projection.RemoveEntry(entry);
+      }
+
+      projection.Save();
+    }
+
+
+    public CashFlowProjectionEntryByYearDto UpdateProjectionEntryByYear(CashFlowProjectionEntryByYearFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      var projection = CashFlowProjection.Parse(fields.ProjectionUID);
+
+      var byYearProjection = new CashFlowProjectionByYear(projection);
+
+      FixedList<CashFlowProjectionEntry> updatedEntries = byYearProjection.GetUpdatedEntries(fields);
+
+      projection.UpdateEntries(updatedEntries);
+
+      projection.Save();
+
+      var entryByYear = new CashFlowProjectionEntryByYear(fields.UID, updatedEntries);
+
+      return CashFlowProjectionEntryByYearMapper.Map(entryByYear);
+    }
+
+    #endregion By year entries use cases
 
   }  // class CashFlowProjectionEntriesUseCases
 
