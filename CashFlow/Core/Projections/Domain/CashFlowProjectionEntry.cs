@@ -61,7 +61,7 @@ namespace Empiria.CashFlow.Projections {
 
       this.OriginalAmount = amount;
 
-      if (IsInflowAccount) {
+      if (account.IsInflowAccount) {
         this.InflowAmount = amount;
       } else {
         this.OutflowAmount = amount;
@@ -88,20 +88,6 @@ namespace Empiria.CashFlow.Projections {
     [DataField("CFW_PJC_ENTRY_ACCOUNT_ID")]
     public FinancialAccount CashFlowAccount {
       get; private set;
-    }
-
-
-    private bool IsInflowAccount {
-      get {
-        string[] segments = CashFlowAccount.StandardAccount.StdAcctSegments;
-
-        int lastSegmentAsInteger = int.Parse(segments[segments.Length - 1]);
-
-        if (1 <= lastSegmentAsInteger && 5 <= lastSegmentAsInteger) {
-          return true;
-        }
-        return false;
-      }
     }
 
 
@@ -311,7 +297,7 @@ namespace Empiria.CashFlow.Projections {
       Currency = PatchField(fields.CurrencyUID, Currency);
       OriginalAmount = PatchField(fields.Amount, Amount);
 
-      if (IsInflowAccount) {
+      if (CashFlowAccount.IsInflowAccount) {
         InflowAmount = OriginalAmount;
       } else {
         OutflowAmount = OriginalAmount;

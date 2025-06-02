@@ -254,6 +254,19 @@ namespace Empiria.Financial {
     } = EntityStatus.Pending;
 
 
+    public bool IsInflowAccount {
+      get {
+        string[] segments = StandardAccount.StdAcctSegments;
+
+        int lastSegmentAsInteger = int.Parse(segments[segments.Length - 1]);
+
+        if (1 <= lastSegmentAsInteger && lastSegmentAsInteger <= 5) {
+          return true;
+        }
+        return false;
+      }
+    }
+
     #endregion Properties
 
     #region Methods
