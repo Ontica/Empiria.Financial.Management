@@ -37,7 +37,7 @@ namespace Empiria.Financial.Data {
       }
       var sql = "SELECT * FROM FMS_ACCOUNTS " +
                $"WHERE {filter} " +
-               $"ACCT_STATUS <> 'X' AND ACCT_TYPE_ID = 3245";
+               $"ACCT_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
 

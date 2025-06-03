@@ -10,11 +10,13 @@
 
 using Empiria.Services;
 
-using Empiria.Financial.Data;
+using Empiria.Parties;
+
+using Empiria.Financial.Projects;
+using Empiria.Financial.Projects.Adapters;
 
 using Empiria.Financial.Adapters;
-using Empiria.Financial.Projects.Adapters;
-using Empiria.Parties;
+using Empiria.Financial.Data;
 
 namespace Empiria.Financial.UseCases {
 
@@ -82,7 +84,11 @@ namespace Empiria.Financial.UseCases {
     public FixedList<NamedEntityDto> SearchAccounts(string keywords) {
       keywords = keywords ?? string.Empty;
 
-      FixedList<FinancialAccount> acccounts = FinancialAccountDataService.SearchAccounts(keywords);
+      FixedList<FinancialAccount> acccounts =
+          FinancialAccountDataService.SearchAccounts(keywords)
+                                     .FindAll(x =>
+                                        x.FinancialAccountType.PlaysRole(FinancialProject.PROJECT_BASE_ACCOUNTS_ROLE)
+                                     );
 
       return acccounts.MapToNamedEntityList();
     }

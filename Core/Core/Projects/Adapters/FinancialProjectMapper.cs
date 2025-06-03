@@ -23,7 +23,9 @@ namespace Empiria.Financial.Projects.Adapters {
     #region Mappers
 
     static public FinancialProjectHolderDto Map(FinancialProject project) {
-      var accounts = project.Accounts.FindAll(x => x.FinancialAccountType.Id == 3245);
+      var accounts = project.Accounts.FindAll(
+                          x => x.FinancialAccountType.PlaysRole(FinancialProject.PROJECT_BASE_ACCOUNTS_ROLE)
+                        );
 
       return new FinancialProjectHolderDto {
         Project = MapProject(project),
