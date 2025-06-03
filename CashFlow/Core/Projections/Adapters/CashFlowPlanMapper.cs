@@ -22,11 +22,8 @@ namespace Empiria.CashFlow.Projections.Adapters {
                   .ToFixedList();
     }
 
-    #endregion Public mappers
 
-    #region Helpers
-
-    static private CashFlowPlanDto Map(CashFlowPlan plan) {
+    static internal CashFlowPlanDto Map(CashFlowPlan plan) {
       return new CashFlowPlanDto {
         UID = plan.UID,
         Name = plan.Name,
@@ -38,7 +35,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
       };
     }
 
-    #endregion Helpers
+    #endregion Public mappers
 
   }  // class CashFlowPlanMapper
 

@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Documents;
+using Empiria.Financial;
 using Empiria.History;
 
 using Empiria.StateEnums;
@@ -37,6 +38,12 @@ namespace Empiria.CashFlow.Projections.Adapters {
     static public FixedList<CashFlowProjectionDescriptorDto> MapToDescriptor(FixedList<CashFlowProjection> projections) {
       return projections.Select(x => MapToDescriptor(x))
                         .ToFixedList();
+    }
+
+
+    static internal FixedList<CashFlowProjectionAccountDto> Map(FixedList<FinancialAccount> accounts) {
+      return accounts.Select(x => Map(x))
+                     .ToFixedList();
     }
 
     #endregion Public mappers
@@ -103,6 +110,17 @@ namespace Empiria.CashFlow.Projections.Adapters {
                                   NamedEntityDto.Empty : projection.AdjustmentOf.MapToNamedEntity(),
         Total = projection.GetTotal(),
         Status = projection.Status.MapToNamedEntity(),
+      };
+    }
+
+
+    static private CashFlowProjectionAccountDto Map(FinancialAccount account) {
+      Currency[] currencies = { Currency.Default };
+
+      return new CashFlowProjectionAccountDto {
+        UID = account.UID,
+        Name = ((INamedEntity) account).Name,
+        Currencies = currencies.MapToNamedEntityList()
       };
     }
 

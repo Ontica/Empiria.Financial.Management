@@ -89,7 +89,7 @@ namespace Empiria.CashFlow.Projections.WebApi {
     public CollectionModel GetProjectionAccounts([FromUri] string projectionUID) {
 
       using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> accounts = usecases.GetProjectionAccounts(projectionUID);
+        FixedList<CashFlowProjectionAccountDto> accounts = usecases.GetProjectionAccounts(projectionUID);
 
         return new CollectionModel(base.Request, accounts);
       }

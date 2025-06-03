@@ -15,6 +15,7 @@ using Empiria.Services;
 using Empiria.StateEnums;
 
 using Empiria.Financial;
+using Empiria.Financial.Adapters;
 
 using Empiria.CashFlow.Projections.Adapters;
 using Empiria.CashFlow.Projections.Data;
@@ -89,13 +90,14 @@ namespace Empiria.CashFlow.Projections.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetProjectionAccounts(string projectionUID) {
+    public FixedList<CashFlowProjectionAccountDto> GetProjectionAccounts(string projectionUID) {
       Assertion.Require(projectionUID, nameof(projectionUID));
 
       var projection = CashFlowProjection.Parse(projectionUID);
 
-      return projection.GetCashFlowAccounts()
-                       .MapToNamedEntityList();
+      FixedList<FinancialAccount> accounts = projection.GetCashFlowAccounts();
+
+      return CashFlowProjectionMapper.Map(accounts);
     }
 
 
