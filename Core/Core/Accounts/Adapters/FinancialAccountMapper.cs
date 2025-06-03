@@ -40,13 +40,17 @@ namespace Empiria.Financial.Adapters {
     }
 
 
-    static internal FinancialAccountOperationsDto MapAccountOperations(FinancialAccount account,
-                                                                       FixedList<StandardAccount> available,
-                                                                       FixedList<FinancialAccount> current) {
+    static internal FinancialAccountOperationsDto MapAccountOperations(FinancialAccount account) {
+
       return new FinancialAccountOperationsDto {
+
         Account = MapToDescriptor(account),
-        AvailableOperations = available.MapToNamedEntityList(),
-        CurrentOperations = current.MapToNamedEntityList(),
+
+        AvailableOperations = account.GetAvailableOperations()
+                                     .MapToNamedEntityList(),
+
+        CurrentOperations = account.GetOperations()
+                                   .MapToNamedEntityList()
       };
     }
 

@@ -36,6 +36,8 @@ namespace Empiria.Financial {
 
     static public FinancialAccountType Empty => Parse("ObjectTypeInfo.FinancialAccount");
 
+    static public FinancialAccountType OperationAccount => Parse("ObjectTypeInfo.FinancialAccount.OperationAccount");
+
     #endregion Constructors and parsers
 
     #region Properties

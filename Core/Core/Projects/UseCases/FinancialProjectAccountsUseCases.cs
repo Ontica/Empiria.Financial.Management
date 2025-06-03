@@ -44,6 +44,25 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
+    public FinancialAccountOperationsDto AddAccountOperation(FinancialAccountFields fields,
+                                                             string stdAccountUID) {
+      Assertion.Require(fields, nameof(fields));
+      Assertion.Require(stdAccountUID, nameof(stdAccountUID));
+
+      var project = FinancialProject.Parse(fields.ProjectUID);
+
+      FinancialAccount account = project.GetAccount(fields.UID);
+
+      StandardAccount stdAccount = StandardAccount.Parse(stdAccountUID);
+
+      FinancialAccount operation = account.AddOperation(stdAccount);
+
+      operation.Save();
+
+      return FinancialAccountMapper.MapAccountOperations(account);
+    }
+
+
     public FinancialAccountDto GetAccount(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -62,14 +81,7 @@ namespace Empiria.Financial.Projects.UseCases {
 
       FinancialAccount account = project.GetAccount(fields.UID);
 
-      FixedList<FinancialAccount> current = account.GetChildren();
-
-      FixedList<StandardAccount> available = account.StandardAccount.GetChildren()
-                                                                    .FindAll(x =>
-                                                      !current.Contains(y => y.StandardAccount.Equals(x))
-                                                     );
-
-      return FinancialAccountMapper.MapAccountOperations(account, available, current);
+      return FinancialAccountMapper.MapAccountOperations(account);
     }
 
 
@@ -105,6 +117,23 @@ namespace Empiria.Financial.Projects.UseCases {
       project.Save();
 
       return FinancialAccountMapper.MapToDescriptor(account);
+    }
+
+
+    public FinancialAccountOperationsDto RemoveAccountOperation(FinancialAccountFields fields,
+                                                                string operationAccountUID) {
+      Assertion.Require(fields, nameof(fields));
+      Assertion.Require(operationAccountUID, nameof(operationAccountUID));
+
+      var project = FinancialProject.Parse(fields.ProjectUID);
+
+      FinancialAccount account = project.GetAccount(fields.UID);
+
+      FinancialAccount operation = account.RemoveOperation(operationAccountUID);
+
+      operation.Save();
+
+      return FinancialAccountMapper.MapAccountOperations(account);
     }
 
 

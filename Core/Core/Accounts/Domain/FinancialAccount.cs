@@ -271,6 +271,22 @@ namespace Empiria.Financial {
 
     #region Methods
 
+    internal FinancialAccount AddOperation(StandardAccount stdAccount) {
+      Assertion.Require(stdAccount, nameof(stdAccount));
+
+      Assertion.Require(!HasOperation(stdAccount),
+                        $"Esta cuenta ya contiene la operación {stdAccount.Name}.");
+
+      var child = new FinancialAccount(FinancialAccountType.OperationAccount,
+                                       stdAccount, this.OrganizationalUnit);
+
+      child.Project = this.Project;
+      child.Parent = this;
+
+      return child;
+    }
+
+
     internal void Delete() {
       this.Status = EntityStatus.Deleted;
 
@@ -278,8 +294,23 @@ namespace Empiria.Financial {
     }
 
 
-    internal FixedList<FinancialAccount> GetChildren() {
-      return FinancialAccountDataService.GetChildren(this);
+    internal FixedList<StandardAccount> GetAvailableOperations() {
+      return StandardAccount.GetChildren()
+                            .FindAll(x => !GetOperations().Contains(y => y.StandardAccount.Equals(x)));
+    }
+
+
+    internal FixedList<FinancialAccount> GetOperations() {
+      return FinancialAccountDataService.GetChildren(this)
+                                        .FindAll(x =>
+                                          x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount)
+                                        );
+    }
+
+
+    private bool HasOperation(StandardAccount stdAccount) {
+      return GetOperations()
+            .Contains(x => x.StandardAccount.Equals(stdAccount));
     }
 
 
@@ -293,6 +324,21 @@ namespace Empiria.Financial {
       }
 
       FinancialAccountDataService.WriteAccount(this, this.ExtData.ToString());
+    }
+
+
+    internal FinancialAccount RemoveOperation(string operationAccountUID) {
+      Assertion.Require(operationAccountUID, nameof(operationAccountUID));
+
+      FinancialAccount child = GetOperations().Find(x => x.UID == operationAccountUID);
+
+      Assertion.Require(child, "La operación que se intentó remover no existe.");
+
+      Assertion.Require(child.Status == EntityStatus.Pending,
+                        $"No se puede eliminar la operación {child.Name} debido a que ya está activa");
+      child.Delete();
+
+      return child;
     }
 
 
@@ -312,6 +358,7 @@ namespace Empiria.Financial {
 
       MarkAsDirty();
     }
+
 
     #endregion Methods
 
