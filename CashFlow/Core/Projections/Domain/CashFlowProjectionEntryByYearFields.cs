@@ -113,7 +113,7 @@ namespace Empiria.CashFlow.Projections {
   /// <summary>Input fields used to create and update a cash flow projection entry amount for a month.</summary>
   public class CashFlowProjectionMonthEntryFields {
 
-    public string CashFlowEntryUID {
+    public string EntryUID {
       get; set;
     }
 

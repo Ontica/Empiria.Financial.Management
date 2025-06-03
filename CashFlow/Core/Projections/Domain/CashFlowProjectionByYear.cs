@@ -150,14 +150,14 @@ namespace Empiria.CashFlow.Projections {
     internal FixedList<CashFlowProjectionEntry> GetUpdatedEntries(CashFlowProjectionEntryByYearFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      var updatedBudgetEntries = new List<CashFlowProjectionEntry>(12);
+      var updatedEntries = new List<CashFlowProjectionEntry>(12);
 
-      updatedBudgetEntries.AddRange(GetCurrentEntriesToDelete(fields));
-      updatedBudgetEntries.AddRange(GetNewEntries(fields));
-      updatedBudgetEntries.AddRange(GetChangedProjectionEntries(fields));
-      updatedBudgetEntries.AddRange(GetDeletedEntries(fields));
+      updatedEntries.AddRange(GetCurrentEntriesToDelete(fields));
+      updatedEntries.AddRange(GetNewEntries(fields));
+      updatedEntries.AddRange(GetChangedProjectionEntries(fields));
+      updatedEntries.AddRange(GetDeletedEntries(fields));
 
-      return updatedBudgetEntries.ToFixedList();
+      return updatedEntries.ToFixedList();
     }
 
     #endregion Methods
@@ -183,13 +183,13 @@ namespace Empiria.CashFlow.Projections {
 
       FixedList<CashFlowProjectionMonthEntryFields> amounts = fields.Amounts.ToFixedList();
 
-      var changedEntries = amounts.FindAll(x => x.Amount != 0 && x.CashFlowEntryUID.Length != 0 &&
-                                                currentEntries.Contains(y => y.UID == x.CashFlowEntryUID));
+      var changedEntries = amounts.FindAll(x => x.Amount != 0 && x.EntryUID.Length != 0 &&
+                                                currentEntries.Contains(y => y.UID == x.EntryUID));
 
       foreach (var amount in changedEntries) {
         CashFlowProjectionEntryFields entryFields = TransformToCashFlowProjectionEntryFields(fields, amount);
 
-        var entry = currentEntries.Find(x => x.UID == amount.CashFlowEntryUID);
+        var entry = currentEntries.Find(x => x.UID == amount.EntryUID);
 
         entry.Update(entryFields);
 
@@ -246,7 +246,7 @@ namespace Empiria.CashFlow.Projections {
       FixedList<CashFlowProjectionMonthEntryFields> amounts = fields.Amounts.ToFixedList();
 
       var newEntries = amounts.FindAll(x => x.Amount != 0 &&
-                                            !currentEntries.Contains(y => y.UID == x.CashFlowEntryUID));
+                                            !currentEntries.Contains(y => y.UID == x.EntryUID));
 
       var projectionColumn = CashFlowProjectionColumn.Parse(fields.ProjectionColumnUID);
       var cashFlowAccount = FinancialAccount.Parse(fields.CashFlowAccountUID);
