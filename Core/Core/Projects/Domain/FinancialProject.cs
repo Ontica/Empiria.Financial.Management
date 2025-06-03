@@ -24,6 +24,7 @@ namespace Empiria.Financial.Projects {
   [PartitionedType(typeof(FinancialProjectType))]
   public class FinancialProject : BaseObject, INamedEntity {
 
+    static internal readonly string PROJECT_BASE_ACCOUNTS_ROLE = "cash-flow-projection-base-account";
     static internal readonly string STANDARD_ACCOUNTS_ROLE = "financial-project-std-account";
 
     static internal readonly string TO_ASSIGN_PROJECT_NO = "Por asignar";
@@ -52,7 +53,7 @@ namespace Empiria.Financial.Projects {
       Subprogram = subprogram;
 
       Name = EmpiriaString.Clean(name);
-      ProjectNo = "N/D";
+      ProjectNo = TO_ASSIGN_PROJECT_NO;
       StartDate = DateTime.Today;
     }
 

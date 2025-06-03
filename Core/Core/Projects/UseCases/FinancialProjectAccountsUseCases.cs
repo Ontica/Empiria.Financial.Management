@@ -55,6 +55,14 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
+    public FixedList<NamedEntityDto> GetFinancialAccountTypes(string financialProjectUID) {
+      var accountTypes = FinancialAccountType.GetList()
+                                             .FindAll(x => x.PlaysRole(FinancialProject.PROJECT_BASE_ACCOUNTS_ROLE));
+
+      return accountTypes.MapToNamedEntityList();
+    }
+
+
     public FixedList<NamedEntityDto> GetStandardAccounts(string financialProjectUID) {
       Assertion.Require(financialProjectUID, nameof(financialProjectUID));
 
