@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Json;
 using Empiria.Ontology;
@@ -25,7 +26,20 @@ namespace Empiria.Financial {
   [PartitionedType(typeof(FinancialAccountType))]
   public class FinancialAccount : BaseObject, INamedEntity {
 
+    #region Fields
+
+    static readonly private List<FinancialAccount> _cache = null;
+
+    #endregion Fields
+
     #region Constructors and parsers
+
+    static FinancialAccount() {
+      var allAccounts = GetFullList<FinancialAccount>("ACCT_STATUS <> 'X'");
+
+      _cache = new List<FinancialAccount>(allAccounts);
+    }
+
 
     protected FinancialAccount(FinancialAccountType powertype) : base(powertype) {
       // Required by Empiria FrameWork
@@ -53,6 +67,11 @@ namespace Empiria.Financial {
     static public FinancialAccount Parse(string uid) => ParseKey<FinancialAccount>(uid);
 
     static public FinancialAccount Empty => ParseEmpty<FinancialAccount>();
+
+
+    static public FixedList<FinancialAccount> GetList() {
+      return _cache.ToFixedList();
+    }
 
     #endregion Constructors and parsers
 
@@ -301,10 +320,11 @@ namespace Empiria.Financial {
 
 
     internal FixedList<FinancialAccount> GetOperations() {
-      return FinancialAccountDataService.GetChildren(this)
-                                        .FindAll(x =>
-                                          x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount)
-                                        );
+      return _cache.FindAll(x => x._parentId == this.Id &&
+                                 x.Project.Equals(this.Project) &&
+                                 x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount)
+                                 )
+                   .ToFixedList();
     }
 
 
@@ -321,9 +341,19 @@ namespace Empiria.Financial {
 
         this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
+
+        _cache.Add(this);
       }
 
       FinancialAccountDataService.WriteAccount(this, this.ExtData.ToString());
+
+      if (this.Status == EntityStatus.Deleted) {
+        _cache.Remove(this);
+      }
+
+      if (!this.Project.IsEmptyInstance) {
+        Project.Refresh();
+      }
     }
 
 
@@ -358,7 +388,6 @@ namespace Empiria.Financial {
 
       MarkAsDirty();
     }
-
 
     #endregion Methods
 

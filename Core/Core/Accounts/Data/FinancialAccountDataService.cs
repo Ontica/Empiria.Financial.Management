@@ -30,19 +30,6 @@ namespace Empiria.Financial.Data {
     }
 
 
-    static internal FixedList<FinancialAccount> GetChildren(FinancialAccount account) {
-      var sql = "SELECT * FROM FMS_ACCOUNTS " +
-                $"WHERE ACCT_PROJECT_ID = {account.Project.Id} AND " +
-                $"ACCT_PARENT_ID = {account.Id} AND " +
-                $"ACCT_STATUS <> 'X' " +
-                $"ORDER BY ACCT_NUMBER";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<FinancialAccount>(op);
-    }
-
-
     static internal FixedList<FinancialAccount> SearchAccounts(string keywords) {
 
       var filter = SearchExpression.ParseOrLikeKeywords("ACCT_KEYWORDS", keywords);
@@ -76,7 +63,8 @@ namespace Empiria.Financial.Data {
       return DataReader.GetFixedList<FinancialAccount>(dataOperation);
     }
 
-    internal static void WriteAccount(FinancialAccount o, string extensionData) {
+
+    static internal void WriteAccount(FinancialAccount o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Account",
          o.Id, o.UID, o.FinancialAccountType.Id, o.StandardAccount.Id, o.Organization.Id,
          o.OrganizationalUnit.Id, o.Project.Id, o.LedgerId, o.AccountNo, o.Description,

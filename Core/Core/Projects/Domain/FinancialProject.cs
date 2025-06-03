@@ -64,7 +64,7 @@ namespace Empiria.Financial.Projects {
     static public FinancialProject Empty => ParseEmpty<FinancialProject>();
 
     protected override void OnLoad() {
-      _accounts = new Lazy<List<FinancialAccount>>(() => FinancialProjectDataService.GetProjectAccounts(this));
+      Refresh();
     }
 
     #endregion Constructors and parsers
@@ -303,6 +303,11 @@ namespace Empiria.Financial.Projects {
       Assertion.Require(Rules.CanDelete,
                         $"Can not delete project. Its status is {Status.GetName()}.");
       this.Status = EntityStatus.Deleted;
+    }
+
+
+    internal void Refresh() {
+      _accounts = new Lazy<List<FinancialAccount>>(() => FinancialProjectDataService.GetProjectAccounts(this));
     }
 
 

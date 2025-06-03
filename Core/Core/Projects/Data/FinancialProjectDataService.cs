@@ -32,6 +32,10 @@ namespace Empiria.Financial.Projects.Data {
     }
 
     internal static List<FinancialAccount> GetProjectAccounts(FinancialProject project) {
+      if (project.IsEmptyInstance) {
+        return new List<FinancialAccount>();
+      }
+
       var sql = "SELECT * FROM FMS_ACCOUNTS " +
           $"WHERE ACCT_PROJECT_ID = {project.Id} AND " +
           $"ACCT_STATUS <> 'X'";
