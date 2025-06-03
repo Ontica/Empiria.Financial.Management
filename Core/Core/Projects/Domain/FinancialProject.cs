@@ -98,6 +98,9 @@ namespace Empiria.Financial.Projects {
 
     string INamedEntity.Name {
       get {
+        if (Status == EntityStatus.Pending) {
+          return $"{Name} (Proyectado) [{Program.Name}]";
+        }
         if (ProjectNo.Length != 0) {
           return $"({ProjectNo}) {Name} [{Program.Name}]";
         }

@@ -26,7 +26,7 @@ namespace Empiria.Financial.Adapters {
         UID = account.UID,
         AccountNo = account.Code,
         FinancialAccountType = account.FinancialAccountType.MapToNamedEntity(),
-        Description = account.Name,
+        Description = account.Description,
         StandardAccount = MapStdAccountToDto(account.StandardAccount),
         Project = account.Project.MapToNamedEntity(),
         OrganizationalUnit = account.OrganizationalUnit.MapToNamedEntity(),

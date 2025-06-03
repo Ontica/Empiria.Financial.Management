@@ -16,8 +16,6 @@ using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.StateEnums;
 
-using Empiria.Financial.Data;
-
 namespace Empiria.Financial {
 
   /// <summary>Partitioned type that represents an standard account.</summary>
@@ -96,7 +94,7 @@ namespace Empiria.Financial {
         if (Parent.FullName.Length == 0) {
           return Description;
         }
-        return $"{Parent.FullName} - {Description}";
+        return $"{Description} - {Parent.FullName}";
       }
     }
 
@@ -195,12 +193,13 @@ namespace Empiria.Financial {
     private FixedList<StandardAccount> _allChildren = null;
     internal FixedList<StandardAccount> GetAllChildren() {
       if (_allChildren == null) {
-        _allChildren = BaseObject.GetFullList<StandardAccount>()
-                                 .ToFixedList()
-                                 .FindAll(x => x.StdAcctNo.StartsWith($"{this.StdAcctNo}.") &&
-                                          x.Catalogue.Equals(Catalogue) &&
-                                          !x.IsEmptyInstance)
-                                 .Sort((x, y) => x.StdAcctNo.CompareTo(y.StdAcctNo));
+        _allChildren = GetFullList<StandardAccount>()
+                      .ToFixedList()
+                      .FindAll(x => x.StdAcctNo.StartsWith($"{this.StdAcctNo}.") &&
+                                    x.Catalogue.Equals(Catalogue) &&
+                                   !x.IsEmptyInstance)
+                                   .Sort((x, y) => x.StdAcctNo.CompareTo(y.StdAcctNo)
+                      );
       }
       return _allChildren;
     }

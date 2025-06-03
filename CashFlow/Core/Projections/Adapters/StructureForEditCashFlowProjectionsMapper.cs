@@ -118,7 +118,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
       private ProjectionProjectForEdition MapFinancialProject(FinancialProject project) {
         return new ProjectionProjectForEdition {
           UID = project.UID,
-          Name = project.Name,
+          Name = ((INamedEntity) project).Name,
           Accounts = _accounts.FindAll(x => x.Project.Equals(project))
                               .Sort((x, y) => ((INamedEntity) x).Name.CompareTo(((INamedEntity) y).Name))
                               .MapToNamedEntityList()

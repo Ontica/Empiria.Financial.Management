@@ -148,7 +148,7 @@ namespace Empiria.Financial {
         }
 
         if (Status == EntityStatus.Pending) {
-          name += " [Proyectada]";
+          name += FinancialAccountType.FemaleGenre ? " [Proyectada]" : " [Proyectado]";
         }
         return name;
       }
