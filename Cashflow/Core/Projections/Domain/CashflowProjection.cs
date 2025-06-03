@@ -325,7 +325,10 @@ namespace Empiria.CashFlow.Projections {
 
 
     internal FixedList<FinancialAccount> GetCashFlowAccounts() {
-      return CashFlowProjectionDataService.GetCashFlowAccounts(this);
+      return BaseProject.Accounts.FindAll(x =>
+                          x.FinancialAccountType.PlaysRole(CashFlowProjectionEntry.ENTRY_ACCOUNT_ROLE) &&
+                          x.OrganizationalUnit.Equals(this.BaseAccount.OrganizationalUnit)
+                        );
     }
 
 
