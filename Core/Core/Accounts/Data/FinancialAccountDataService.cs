@@ -29,6 +29,20 @@ namespace Empiria.Financial.Data {
       DataWriter.Execute(op);
     }
 
+
+    static internal FixedList<FinancialAccount> GetChildren(FinancialAccount account) {
+      var sql = "SELECT * FROM FMS_ACCOUNTS " +
+                $"WHERE ACCT_PROJECT_ID = {account.Project.Id} AND " +
+                $"ACCT_PARENT_ID = {account.Id} AND " +
+                $"ACCT_STATUS <> 'X' " +
+                $"ORDER BY ACCT_NUMBER";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<FinancialAccount>(op);
+    }
+
+
     static internal FixedList<FinancialAccount> SearchAccounts(string keywords) {
 
       var filter = SearchExpression.ParseOrLikeKeywords("ACCT_KEYWORDS", keywords);

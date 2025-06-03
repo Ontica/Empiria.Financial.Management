@@ -207,7 +207,7 @@ namespace Empiria.Financial {
 
 
     internal FixedList<StandardAccount> GetChildren() {
-      return GetChildren()
+      return GetAllChildren()
             .FindAll(x => x.Parent.Equals(this));
     }
 

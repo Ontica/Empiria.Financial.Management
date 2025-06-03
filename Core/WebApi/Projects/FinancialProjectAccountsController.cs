@@ -77,6 +77,25 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpGet]
+    [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}/operations")]
+    public SingleObjectModel GetAccountOperations([FromUri] string financialProjectUID,
+                                                  [FromUri] string accountUID) {
+
+      var fields = new FinancialAccountFields {
+        UID = accountUID,
+        ProjectUID = financialProjectUID,
+      };
+
+      using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
+
+        FinancialAccountOperationsDto operations = usecases.GetAccountOperations(fields);
+
+        return new SingleObjectModel(base.Request, operations);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/financial-projects/{financialProjectUID:guid}/financial-accounts-types")]
     public CollectionModel GetFinancialAccountsTypes([FromUri] string financialProjectUID) {
 

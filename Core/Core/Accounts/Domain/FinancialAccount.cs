@@ -278,6 +278,11 @@ namespace Empiria.Financial {
     }
 
 
+    internal FixedList<FinancialAccount> GetChildren() {
+      return FinancialAccountDataService.GetChildren(this);
+    }
+
+
     protected override void OnSave() {
       if (base.IsNew) {
         this.StartDate = ExecutionServer.DateMinValue;

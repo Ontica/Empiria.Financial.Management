@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Financial Accounts                         Component : Adapters Layer                          *
-*  Assembly : Empiria.Financial.Management.Core.dll      Pattern   : Mapping class                           *
+*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Mapping class                           *
 *  Type     : FinancialAccountMapper                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Mapping methods for financial accounts.                                                        *
@@ -39,6 +39,18 @@ namespace Empiria.Financial.Adapters {
       };
     }
 
+
+    static internal FinancialAccountOperationsDto MapAccountOperations(FinancialAccount account,
+                                                                       FixedList<StandardAccount> available,
+                                                                       FixedList<FinancialAccount> current) {
+      return new FinancialAccountOperationsDto {
+        Account = MapToDescriptor(account),
+        AvailableOperations = available.MapToNamedEntityList(),
+        CurrentOperations = current.MapToNamedEntityList(),
+      };
+    }
+
+
     static public FixedList<FinancialAccountDescriptor> MapToDescriptor(FixedList<FinancialAccount> accounts) {
       return accounts.Select(x => MapToDescriptor(x))
                      .ToFixedList();
@@ -61,6 +73,7 @@ namespace Empiria.Financial.Adapters {
         StatusName = account.Status.GetName(),
       };
     }
+
 
     static public NamedEntityDto MapStdAccountToDto(StandardAccount stdAccount) {
       return new NamedEntityDto(stdAccount.UID, $"({stdAccount.StdAcctNo}) {stdAccount.FullName}");

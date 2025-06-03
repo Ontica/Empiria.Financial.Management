@@ -55,6 +55,24 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
+    public FinancialAccountOperationsDto GetAccountOperations(FinancialAccountFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      var project = FinancialProject.Parse(fields.ProjectUID);
+
+      FinancialAccount account = project.GetAccount(fields.UID);
+
+      FixedList<FinancialAccount> current = account.GetChildren();
+
+      FixedList<StandardAccount> available = account.StandardAccount.GetChildren()
+                                                                    .FindAll(x =>
+                                                      !current.Contains(y => y.StandardAccount.Equals(x))
+                                                     );
+
+      return FinancialAccountMapper.MapAccountOperations(account, available, current);
+    }
+
+
     public FixedList<NamedEntityDto> GetFinancialAccountTypes(string financialProjectUID) {
       var accountTypes = FinancialAccountType.GetList()
                                              .FindAll(x => x.PlaysRole(FinancialProject.PROJECT_BASE_ACCOUNTS_ROLE));
