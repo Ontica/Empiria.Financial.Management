@@ -67,6 +67,14 @@ namespace Empiria.CashFlow.Projections {
       }
     }
 
+
+    public EntityStatus AccountStatus {
+      get {
+        return ExtData.Get("accountsStatus", EntityStatus.All);
+      }
+    }
+
+
     #endregion Properties
 
   }  // class CashFlowProjectionCategory

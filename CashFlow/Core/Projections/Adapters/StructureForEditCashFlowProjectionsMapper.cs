@@ -89,7 +89,21 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       private FixedList<ProjectTypeForEditionDto> MapBaseProjectTypes(CashFlowProjectionCategory projectionCategory) {
 
-        var projectCategories = _projects.SelectDistinct(x => x.Category);
+        FixedList<FinancialProjectCategory> projectCategories = null;
+
+        if (projectionCategory.AccountStatus == StateEnums.EntityStatus.Active) {
+
+          projectCategories = _accounts.FindAll(x => x.Status == StateEnums.EntityStatus.Active)
+                                       .SelectDistinct(x => x.Project.Category);
+
+        } else if (projectionCategory.AccountStatus == StateEnums.EntityStatus.Pending) {
+
+          projectCategories = _accounts.FindAll(x => x.Status == StateEnums.EntityStatus.Pending)
+                                       .SelectDistinct(x => x.Project.Category);
+        } else {
+
+          projectCategories = _projects.SelectDistinct(x => x.Category);
+        }
 
         return projectCategories.Select(x => MapProjectType(x))
                                 .ToFixedList();
