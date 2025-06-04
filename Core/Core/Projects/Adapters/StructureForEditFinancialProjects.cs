@@ -21,30 +21,11 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-    public FixedList<ProjectCategoryForEditionDto> Categories {
-      get; internal set;
-    }
-
-  }  // class StructureForEditFinancialProjects
-
-
-  /// <summary>Output DTO used to return project categories for financial projects edition.</summary>
-  public class ProjectCategoryForEditionDto {
-
-    public string UID {
-      get; internal set;
-    }
-
-    public string Name {
-      get; internal set;
-    }
-
     public FixedList<ProjectProgramForEditionDto> Programs {
       get; internal set;
     }
 
-  }  // class FinancialProjectCategoryForEditionDto
-
+  }  // class StructureForEditFinancialProjects
 
 
   /// <summary>Output DTO used to return project programs for financial projects edition.</summary>
@@ -58,10 +39,29 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-    public FixedList<NamedEntityDto> Subprograms {
+    public FixedList<ProjectSubprogramForEditionDto> Subprograms {
       get; internal set;
     }
 
   }  // class ProjectProgramForEditionDto
+
+
+
+  /// <summary>Output DTO used to return project subprograms with its categories.</summary>
+  public class ProjectSubprogramForEditionDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string Name {
+      get; internal set;
+    }
+
+    public FixedList<NamedEntityDto> ProjectTypes {
+      get; internal set;
+    }
+
+  }  // class ProjectSubprogramForEditionDto
 
 }  // namespace Empiria.Financial.Projects.Adapters

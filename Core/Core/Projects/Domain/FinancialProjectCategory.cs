@@ -31,7 +31,7 @@ namespace Empiria.Financial.Projects {
 
     #endregion Constructors and parsers
 
-    public string StandardAccountCode {
+    public string SubprogramCode {
       get {
         return base.Code;
       }

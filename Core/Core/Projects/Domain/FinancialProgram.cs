@@ -15,45 +15,34 @@ namespace Empiria.Financial.Projects {
   /// <summary>Represents a financial program.</summary>
   public class FinancialProgram : BaseObject, INamedEntity {
 
-    // static private readonly FixedList<StandardAccount> _allSubprograms;
-
     #region Constructors and parsers
 
-    static public FinancialProgram Parse(int id) => ParseId<FinancialProgram>(id);
+    static internal FinancialProgram Parse(int id) => ParseId<FinancialProgram>(id);
 
-    static public FinancialProgram Parse(string uid) => ParseKey<FinancialProgram>(uid);
+    static internal FinancialProgram Parse(string uid) => ParseKey<FinancialProgram>(uid);
 
-    static public FinancialProgram Empty => ParseEmpty<FinancialProgram>();
+    static internal FinancialProgram Empty => ParseEmpty<FinancialProgram>();
 
 
-    static public FixedList<FinancialProgram> GetList() {
+    static internal FixedList<FinancialProgram> GetList() {
       return GetFullList<FinancialProgram>()
              .FindAll(x => !x.IsEmptyInstance);
-
     }
 
 
-    static public FixedList<FinancialProgram> GetList(FinancialProgramType type) {
-      return GetFullList<FinancialProgram>()
+    static internal FixedList<FinancialProgram> GetList(FinancialProgramType type) {
+      return GetList()
             .FindAll(x => x.FinancialProgramType == type);
     }
 
-
-    static public FixedList<FinancialProgram> GetList(FinancialProjectCategory category) {
-      return GetList(FinancialProgramType.Subprograma)
-             .FindAll(x => x.ProgramNo.Substring(3) == category.StandardAccountCode)
-             .ToFixedList()
-             .SelectDistinct(x => x.Parent);
-    }
-
     #endregion Constructors and parsers
-
 
     public FinancialProgramType FinancialProgramType {
       get {
         return (FinancialProgramType) Enum.Parse(typeof(FinancialProgramType), Level.ToString());
       }
     }
+
 
     [DataField("PROGRAM_NO")]
     public string ProgramNo {
@@ -66,8 +55,9 @@ namespace Empiria.Financial.Projects {
       get; private set;
     }
 
+
     [DataField("PROGRAM_PARENT_ID")]
-    private int _parentId = -1;
+    internal int _parentId = -1;
 
     public FinancialProgram Parent {
       get {
@@ -86,7 +76,7 @@ namespace Empiria.Financial.Projects {
           return new FixedList<FinancialProgram>();
         }
         if (_children == null) {
-          _children = GetFullList<FinancialProgram>()
+          _children = GetList()
                      .FindAll(x => x._parentId == this.Id);
         }
         return _children;
@@ -112,6 +102,7 @@ namespace Empiria.Financial.Projects {
         return EmpiriaString.CountOccurences(ProgramNo, '.') + 1;
       }
     }
+
 
     public StandardAccount StandardAccount {
       get {
