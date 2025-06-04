@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Financial Projects                           Component : Adapters Layer                        *
 *  Assembly : Empiria.Financial.Core.dll                   Pattern   : Mapper                                *
-*  Type     : FinancialProjectDataForEditionMapper         License   : Please read LICENSE.txt file          *
+*  Type     : StructureForEditFinancialProjectsMapper      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Maps structured data for use in financial projects edition.                                    *
 *                                                                                                            *
@@ -13,17 +13,17 @@ using Empiria.Parties;
 namespace Empiria.Financial.Projects.Adapters {
 
   /// <summary>Maps structured data for use in financial projects edition.</summary>
-  static internal class FinancialProjectsStructureForEditionMapper {
+  static internal class StructureForEditFinancialProjectsMapper {
 
-    static internal FixedList<FinancialProjectsStructureForEdition> Map(FixedList<OrganizationalUnit> list) {
+    static internal FixedList<StructureForEditFinancialProjects> Map(FixedList<OrganizationalUnit> list) {
       return list.Select(x => Map(x))
                  .ToFixedList();
     }
 
     #region Helpers
 
-    private static FinancialProjectsStructureForEdition Map(OrganizationalUnit orgUnit) {
-      return new FinancialProjectsStructureForEdition {
+    private static StructureForEditFinancialProjects Map(OrganizationalUnit orgUnit) {
+      return new StructureForEditFinancialProjects {
         UID = orgUnit.UID,
         Name = orgUnit.Name,
         Categories = Map(FinancialProjectCategory.GetList())
@@ -59,7 +59,7 @@ namespace Empiria.Financial.Projects.Adapters {
 
     #endregion Helpers
 
-  }  // class FinancialProjectOrgUnitsForEditionMapper
+  }  // class StructureForEditFinancialProjectsMapper
 
 }  // namespace Empiria.Financial.Projects.Adapters
 

@@ -89,8 +89,7 @@ namespace Empiria.Financial.Projects.UseCases {
       return FinancialProjectMapper.Map(project);
     }
 
-
-    public FixedList<NamedEntityDto> GetProjectsCategories() {
+    public FixedList<NamedEntityDto> GetProjectCategories() {
       return FinancialProjectCategory.GetList()
                                      .MapToNamedEntityList();
 
@@ -103,11 +102,11 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
-    public FixedList<FinancialProjectsStructureForEdition> GetProjectsStucturedDataForEdition() {
+    public FixedList<StructureForEditFinancialProjects> GetStructureForEditProjects() {
       FixedList<OrganizationalUnit> list = Party.GetList<OrganizationalUnit>(DateTime.Today)
                                                 .FindAll(x => x.PlaysRole(FinancialProjectRules.PROJECT_MANGER_ROLE));
 
-      return FinancialProjectsStructureForEditionMapper.Map(list);
+      return StructureForEditFinancialProjectsMapper.Map(list);
     }
 
 

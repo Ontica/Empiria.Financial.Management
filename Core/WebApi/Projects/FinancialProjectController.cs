@@ -39,22 +39,9 @@ namespace Empiria.Financial.Projects.WebApi {
     public CollectionModel GetProjectCategories() {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> categories = usecases.GetProjectsCategories();
+        FixedList<NamedEntityDto> categories = usecases.GetProjectCategories();
 
         return new CollectionModel(base.Request, categories);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v1/financial-projects/structured-data-for-edition")]
-    [Route("v1/financial-projects/organizational-units-for-edition")]
-    public CollectionModel GetProjectsStucturedDataForEdition() {
-
-      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FixedList<FinancialProjectsStructureForEdition> structure = usecases.GetProjectsStucturedDataForEdition();
-
-        return new CollectionModel(base.Request, structure);
       }
     }
 
@@ -84,7 +71,20 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpGet]
-    [Route("v1/financial-projects/{keywords}")]
+    [Route("v1/financial-projects/structured-data-for-edition")]
+    [Route("v1/financial-projects/organizational-units-for-edition")]
+    public CollectionModel GetStructureForEditProjects() {
+
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FixedList<StructureForEditFinancialProjects> structure = usecases.GetStructureForEditProjects();
+
+        return new CollectionModel(base.Request, structure);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/financial-projects/search")]
     public CollectionModel SearchProjects([FromUri] string keywords = "") {
 
       using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {

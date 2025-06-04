@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Financial Projects                           Component : Adapters Layer                        *
 *  Assembly : Empiria.Financial.Core.dll                   Pattern   : Output DTO                            *
-*  Type     : FinancialProjectsStructureForEdition         License   : Please read LICENSE.txt file          *
+*  Type     : StructureForEditFinancialProjects            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Output DTO used to return structured data for financial projects edition.                      *
 *                                                                                                            *
@@ -11,7 +11,7 @@
 namespace Empiria.Financial.Projects.Adapters {
 
   /// <summary>Output DTO used to return structured data for financial projects edition.</summary>
-  public class FinancialProjectsStructureForEdition {
+  public class StructureForEditFinancialProjects {
 
     public string UID {
       get; internal set;
@@ -25,7 +25,7 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-  }  // class FinancialProjectsStructureForEdition
+  }  // class StructureForEditFinancialProjects
 
 
   /// <summary>Output DTO used to return project categories for financial projects edition.</summary>
