@@ -51,7 +51,8 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto Category {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectType")]
+    public NamedEntityDto ProjectTypeCategory {
       get; internal set;
     }
 
@@ -114,7 +115,8 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-    public string CategoryName {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectTypeName")]
+    public string ProjectTypeCategoryName {
       get; internal set;
     }
 

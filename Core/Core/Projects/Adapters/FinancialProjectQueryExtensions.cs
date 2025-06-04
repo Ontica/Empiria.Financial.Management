@@ -34,13 +34,13 @@ namespace Empiria.Financial.Projects.Adapters {
 
     static internal string MapToFilterString(this FinancialProjectQuery query) {
       string baseOrgUnitFilter = BuildBaseOrgUnitFilter(query.BaseOrgUnitUID);
-      string categoryFilter =  BuildCategoryFilter(query.CategoryUID);
+      string projectTypeCategoryFilter =  BuildProjectTypeCategoryFilter(query.ProjectTypeCategoryUID);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
       string statusFilter = BuildStatusFilter(query.Status);
       string subprogramFilter = BuildSubprogramFilter(query.SubprogramUID);
 
       var filter = new Filter(baseOrgUnitFilter);
-      filter.AppendAnd(categoryFilter);
+      filter.AppendAnd(projectTypeCategoryFilter);
       filter.AppendAnd(keywordsFilter);
       filter.AppendAnd(statusFilter);
       filter.AppendAnd(subprogramFilter);
@@ -72,7 +72,15 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
 
-    static private string BuildCategoryFilter(string cateogoryUID) {
+    static private string BuildKeywordsFilter(string keywords) {
+      if (keywords.Length == 0) {
+        return string.Empty;
+      }
+      return SearchExpression.ParseAndLikeKeywords("PRJ_KEYWORDS", keywords);
+    }
+
+
+    static private string BuildProjectTypeCategoryFilter(string cateogoryUID) {
       if (cateogoryUID.Length == 0) {
         return string.Empty;
       }
@@ -80,14 +88,6 @@ namespace Empiria.Financial.Projects.Adapters {
       var category = FinancialProjectCategory.Parse(cateogoryUID);
 
       return $"PRJ_CATEGORY_ID = {category.Id}";
-    }
-
-
-    static private string BuildKeywordsFilter(string keywords) {
-      if (keywords.Length == 0) {
-        return string.Empty;
-      }
-      return SearchExpression.ParseAndLikeKeywords("PRJ_KEYWORDS", keywords);
     }
 
 
@@ -109,7 +109,6 @@ namespace Empiria.Financial.Projects.Adapters {
 
       return $"PRJ_STD_ACCT_ID = {subprogram.Id}";
     }
-
 
     #endregion Helpers
 

@@ -57,7 +57,7 @@ namespace Empiria.Financial.Projects.Adapters {
     static private FinancialProjectDto MapProject(FinancialProject project) {
       return new FinancialProjectDto {
         UID = project.UID,
-        Category = project.Category.MapToNamedEntity(),
+        ProjectTypeCategory = project.Category.MapToNamedEntity(),
         Program = project.Program.MapToNamedEntity(),
         Subprogram = project.Subprogram.MapToNamedEntity(),
         BaseOrgUnit = project.BaseOrgUnit.MapToNamedEntity(),
@@ -77,7 +77,7 @@ namespace Empiria.Financial.Projects.Adapters {
     static private FinancialProjectDescriptor MapToDescriptor(FinancialProject project) {
       return new FinancialProjectDescriptor {
         UID = project.UID,
-        CategoryName = project.Category.Name,
+        ProjectTypeCategoryName = project.Category.Name,
         ProgramName = project.Program.Name,
         SubprogramName = project.Subprogram.Name,
         BaseOrgUnitName = project.BaseOrgUnit.Name,
