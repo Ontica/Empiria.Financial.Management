@@ -127,7 +127,7 @@ namespace Empiria.Tests.Financial.Projects {
 
       var unchangedFields = new FinancialProjectFields {
         SubprogramUID = sut.Subprogram.UID,
-        CategoryUID = sut.Category.UID,
+        ProjectTypeCategoryUID = sut.Category.UID,
         BaseOrgUnitUID = sut.BaseOrgUnit.UID,
       };
 
@@ -136,7 +136,7 @@ namespace Empiria.Tests.Financial.Projects {
       Assert.Equal(fields.ProjectNo, sut.ProjectNo);
       Assert.Equal(fields.Name, sut.Name);
       Assert.Equal(unchangedFields.SubprogramUID, sut.Subprogram.UID);
-      Assert.Equal(unchangedFields.CategoryUID, sut.Category.UID);
+      Assert.Equal(unchangedFields.ProjectTypeCategoryUID, sut.Category.UID);
       Assert.Equal(unchangedFields.BaseOrgUnitUID, sut.BaseOrgUnit.UID);
     }
 

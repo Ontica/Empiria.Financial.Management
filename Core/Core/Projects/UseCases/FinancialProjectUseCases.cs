@@ -53,7 +53,7 @@ namespace Empiria.Financial.Projects.UseCases {
 
       fields.EnsureValid();
 
-      var category = FinancialProjectCategory.Parse(fields.CategoryUID);
+      var category = FinancialProjectCategory.Parse(fields.ProjectTypeCategoryUID);
       var orgUnit = OrganizationalUnit.Parse(fields.BaseOrgUnitUID);
 
       var subprogram = FinancialProgram.Parse(fields.SubprogramUID);

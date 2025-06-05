@@ -17,7 +17,8 @@ namespace Empiria.Financial.Projects {
 
     #region Properties
 
-    public string CategoryUID {
+    [Newtonsoft.Json.JsonProperty("ProjectTypeUID")]
+    public string ProjectTypeCategoryUID {
       get; set;
     } = string.Empty;
 
@@ -30,6 +31,7 @@ namespace Empiria.Financial.Projects {
     public string BaseOrgUnitUID {
       get; set;
     } = string.Empty;
+
 
     public string ProjectNo {
       get; set;
@@ -55,8 +57,6 @@ namespace Empiria.Financial.Projects {
       get; set;
     } = string.Empty;
 
-
-
     #endregion Properties
 
     #region Methods
@@ -65,13 +65,13 @@ namespace Empiria.Financial.Projects {
       ProjectNo = FieldPatcher.Clean(ProjectNo);
       Name = FieldPatcher.Clean(Name);
 
-      CategoryUID = FieldPatcher.Clean(CategoryUID);
+      ProjectTypeCategoryUID = FieldPatcher.Clean(ProjectTypeCategoryUID);
       SubprogramUID = FieldPatcher.Clean(SubprogramUID);
       BaseOrgUnitUID = FieldPatcher.Clean(BaseOrgUnitUID);
       AssigneeUID = FieldPatcher.Clean(AssigneeUID);
 
-      if (CategoryUID.Length != 0) {
-        _ = FinancialProjectCategory.Parse(CategoryUID);
+      if (ProjectTypeCategoryUID.Length != 0) {
+        _ = FinancialProjectCategory.Parse(ProjectTypeCategoryUID);
       }
 
       if (SubprogramUID.Length != 0) {

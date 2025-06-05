@@ -354,7 +354,7 @@ namespace Empiria.Financial.Projects {
 
       fields.EnsureValid();
 
-      Category = PatchField(fields.CategoryUID, this.Category);
+      Category = PatchField(fields.ProjectTypeCategoryUID, this.Category);
       Subprogram = PatchField(fields.SubprogramUID, Subprogram);
       Name = PatchField(fields.Name, this.Name);
       ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
