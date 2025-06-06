@@ -18,6 +18,35 @@ using Empiria.StateEnums;
 
 namespace Empiria.Financial {
 
+  /// <summary>Describes the posting or summary role of an account.</summary>
+  public enum AccountRoleType {
+
+    Undefined = 'U',
+
+    /// <summary>Summary account (cuenta sumaria).</summary>
+    Sumaria = 'S',
+
+    /// <summary>Posting account (cuenta de detalle).</summary>
+    Detalle = 'P',
+
+  }  // enum AccountRole
+
+
+  /// <summary>Enumerates an account debtor/creditor type (naturaleza deudora o acreedora).</summary>
+  public enum DebtorCreditorType {
+
+    Undefined = 'U',
+
+    /// <summary>Debtor account (naturaleza deudora).</summary>
+    Deudora = 'D',
+
+    /// <summary>Creditor account (naturaleza acreedora).</summary>
+    Acreedora = 'A'
+
+  }  // enum DebtorCreditorType
+
+
+
   /// <summary>Partitioned type that represents an standard account.</summary>
   [PartitionedType(typeof(StandardAccountType))]
   public class StandardAccount : BaseObject, INamedEntity {
@@ -101,37 +130,37 @@ namespace Empiria.Financial {
 
     [DataField("STD_ACCT_IDENTIFICATORS")]
     public string Identifiers {
-      get; protected set;
+      get; private set;
     }
 
 
     [DataField("STD_ACCT_TAGS")]
     public string Tags {
-      get; protected set;
+      get; private set;
     }
 
 
-    [DataField("STD_ACCT_ROLE")]
-    public string Role {
-      get; protected set;
+    [DataField("STD_ACCT_ROLE", Default = AccountRoleType.Undefined)]
+    public AccountRoleType RoleType {
+      get; private set;
     }
 
 
-    [DataField("STD_ACCT_DEBTOR")]
-    public string Debtor {
-      get; protected set;
+    [DataField("STD_ACCT_DEBTOR", Default = DebtorCreditorType.Undefined)]
+    public DebtorCreditorType DebtorCreditorType {
+      get; private set;
     }
 
 
     [DataField("STD_ACCT_RECORDING_RULE")]
     public string RecordingRule {
-      get; protected set;
+      get; private set;
     }
 
 
     [DataField("STD_ACCT_EXT_DATA")]
-    private JsonObject ExtData {
-      get; set;
+    public JsonObject ExtData {
+      get; private set;
     }
 
 
@@ -163,13 +192,13 @@ namespace Empiria.Financial {
 
     [DataField("STD_ACCT_START_DATE", Default = "ExecutionServer.DateMinValue")]
     public DateTime StartDate {
-      get; protected set;
+      get; private set;
     }
 
 
     [DataField("STD_ACCT_END_DATE")]
     public DateTime EndDate {
-      get; protected set;
+      get; private set;
     }
 
 
@@ -189,6 +218,22 @@ namespace Empiria.Financial {
     public EntityStatus Status {
       get; private set;
     }
+
+    public int Level {
+      get {
+        return EmpiriaString.CountOccurences(StdAcctNo, '.') - 1;
+      }
+    }
+
+    public bool IsLastLevel {
+      get {
+        return _allChildren.Count == 0;
+      }
+    }
+
+    #endregion Properties
+
+    #region Methods
 
     private FixedList<StandardAccount> _allChildren = null;
     internal FixedList<StandardAccount> GetAllChildren() {
@@ -210,7 +255,7 @@ namespace Empiria.Financial {
             .FindAll(x => x.Parent.Equals(this));
     }
 
-    #endregion Properties
+    #endregion Methods
 
   } // class StandardAccount
 
