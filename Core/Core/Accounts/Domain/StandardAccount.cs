@@ -21,13 +21,13 @@ namespace Empiria.Financial {
   /// <summary>Describes the posting or summary role of an account.</summary>
   public enum AccountRoleType {
 
-    Undefined = 'U',
-
     /// <summary>Summary account (cuenta sumaria).</summary>
     Sumaria = 'S',
 
     /// <summary>Posting account (cuenta de detalle).</summary>
     Detalle = 'P',
+
+    Undefined = 'U'
 
   }  // enum AccountRole
 
@@ -35,13 +35,16 @@ namespace Empiria.Financial {
   /// <summary>Enumerates an account debtor/creditor type (naturaleza deudora o acreedora).</summary>
   public enum DebtorCreditorType {
 
-    Undefined = 'U',
-
     /// <summary>Debtor account (naturaleza deudora).</summary>
     Deudora = 'D',
 
     /// <summary>Creditor account (naturaleza acreedora).</summary>
-    Acreedora = 'A'
+    Acreedora = 'A',
+
+    /// <summary>Debtor and Creditor account (naturaleza combinada).</summary>
+    Combinada = 'C',
+
+    Undefined = 'U',
 
   }  // enum DebtorCreditorType
 
@@ -219,15 +222,17 @@ namespace Empiria.Financial {
       get; private set;
     }
 
+
     public int Level {
       get {
-        return EmpiriaString.CountOccurences(StdAcctNo, '.') - 1;
+        return EmpiriaString.CountOccurences(StdAcctNo, '.') + 1;
       }
     }
 
+
     public bool IsLastLevel {
       get {
-        return _allChildren.Count == 0;
+        return RoleType != AccountRoleType.Sumaria;
       }
     }
 
