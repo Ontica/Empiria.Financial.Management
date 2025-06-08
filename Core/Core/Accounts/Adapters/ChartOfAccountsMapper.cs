@@ -8,30 +8,45 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.StateEnums;
+
 namespace Empiria.Financial.Adapters {
 
   /// <summary>Mapping methods for accounts charts and their contents.</summary>
   static public class ChartOfAccountsMapper {
 
-    static internal ChartOfAccountsDto Map(StandardAccountsCatalogue catalogue) {
+    static internal ChartOfAccountsDto Map(StandardAccountsCatalogue chartOfAccounts) {
       return new ChartOfAccountsDto {
-        UID = catalogue.UID,
-        Name = catalogue.Name,
-        Accounts = MapToStdAccountDescriptor(catalogue.GetStandardAccounts())
+        UID = chartOfAccounts.UID,
+        Name = chartOfAccounts.Name,
+        Accounts = MapToStdAccountDescriptor(chartOfAccounts.GetStandardAccounts())
       };
     }
+
+
+    static internal ChartOfAccountsDto Map(StandardAccountsCatalogue chartOfAccounts,
+                                           FixedList<StandardAccount> stdAccounts) {
+      return new ChartOfAccountsDto {
+        UID = chartOfAccounts.UID,
+        Name = chartOfAccounts.Name,
+        Accounts = MapToStdAccountDescriptor(stdAccounts)
+      };
+    }
+
+    #region Helpers
 
     static private StandardAccountDescriptor MapToStdAccountDescriptor(StandardAccount account) {
       return new StandardAccountDescriptor {
         UID = account.UID,
-        Name = account.Name,
+        Description = account.Description,
         FullName = account.FullName,
         Number = account.StdAcctNo,
         TypeName = account.Category.Name,
         RoleType = account.RoleType,
         DebtorCreditorType = account.DebtorCreditorType,
         Level = account.Level,
-        IsLastLevel = false, // account.IsLastLevel,
+        IsLastLevel = account.IsLastLevel,
+        StatusName = account.Status.GetName(),
         StartDate = account.StartDate,
         EndDate = account.EndDate,
         Obsolete = false,
@@ -43,6 +58,7 @@ namespace Empiria.Financial.Adapters {
                  .ToFixedList();
     }
 
+    #endregion Helpers
 
   }  // class AccountsChartMapper
 

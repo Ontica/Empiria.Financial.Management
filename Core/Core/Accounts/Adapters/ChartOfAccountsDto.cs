@@ -46,7 +46,8 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
-    public string Name {
+    [Newtonsoft.Json.JsonProperty("Name")]
+    public string Description {
       get; internal set;
     }
 
@@ -74,6 +75,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public string StatusName {
+      get; internal set;
+    }
+
     public DateTime StartDate {
       get; internal set;
     }
@@ -86,6 +91,6 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
-  }  // class AccountDescriptorDto
+  }  // class StandardAccountDescriptor
 
-}  // namespace namespace Empiria.Financial.Adapters
+}  // namespace Empiria.Financial.Adapters

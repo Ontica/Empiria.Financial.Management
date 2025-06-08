@@ -62,7 +62,7 @@ namespace Empiria.Financial.Data {
 
     static internal FixedList<StandardAccount> SearchStandardAccounts(string filter, string sortBy) {
 
-      var sql = "SELECT * FROM FMS_STD_ACCOUNTS ";
+      var sql = "SELECT * FROM FMS_STD_ACCOUNTS";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql += $" WHERE {filter}";
@@ -72,9 +72,9 @@ namespace Empiria.Financial.Data {
         sql += $" ORDER BY {sortBy}";
       }
 
-      var dataOperation = DataOperation.Parse(sql);
+      var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<StandardAccount>(dataOperation);
+      return DataReader.GetFixedList<StandardAccount>(op);
     }
 
   }  // class StandardAccountDataService

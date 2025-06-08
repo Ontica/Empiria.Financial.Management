@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.StateEnums;
+
 namespace Empiria.Financial.Adapters {
 
   /// <summary>Query DTO used to search accounts chart of accounts.</summary>
@@ -40,12 +42,17 @@ namespace Empiria.Financial.Adapters {
 
     public int Level {
       get; set;
-    } = -1;
+    } = 0;
 
 
     public string Keywords {
       get; set;
     } = string.Empty;
+
+
+    public EntityStatus Status {
+      get; set;
+    } = EntityStatus.All;
 
 
     public string OrderBy {
