@@ -1,16 +1,16 @@
 ﻿/* Empiria Financial  ******************************************************************************************
 *                                                                                                            *
-*  Module   : AccountsChart                              Component : Domain Layer                            *
+*  Module   : Financial Accounts                         Component : Domain Layer                            *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Information Holder                      *
 *  Type     : StandardAccountCategory                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a standard account category.                                                        *
+*  Summary  : Represents an standard account category.                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria.Financial {
 
-  /// <summary>Represents a standard account category.</summary>
+  /// <summary>Represents an standard account category.</summary>
   public class StandardAccountCategory : CommonStorage {
 
     #region Constructors and parsers
@@ -33,18 +33,18 @@ namespace Empiria.Financial {
 
     #region Properties
 
-    public StandardAccountsCatalogue Catalogue {
+    public ChartOfAccounts ChartOfAccounts {
       get {
         if (this.IsEmptyInstance) {
-          return StandardAccountsCatalogue.Empty;
+          return ChartOfAccounts.Empty;
         }
-        return base.ExtData.Get<StandardAccountsCatalogue>("standardAccountsCatalogueId");
+        return base.ExtData.Get<ChartOfAccounts>("chartOfAccountsId");
       }
       private set {
         if (this.IsEmptyInstance) {
           return;
         }
-        base.ExtData.Set("standardAccountsCatalogueId", value.Id);
+        base.ExtData.Set("chartOfAccountsId", value.Id);
       }
     }
 
@@ -70,7 +70,7 @@ namespace Empiria.Financial {
     #region Methods
 
     public FixedList<StandardAccount> GetStandardAccounts() {
-      return Catalogue.GetStandardAccounts(this);
+      return ChartOfAccounts.GetStandardAccounts(this);
     }
 
     public bool PlaysRole(string role) {

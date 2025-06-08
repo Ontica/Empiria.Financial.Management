@@ -10,15 +10,14 @@
 
 using System;
 
-using Empiria.Contacts;
-
 using Empiria.Json;
 using Empiria.Ontology;
+using Empiria.Parties;
 using Empiria.StateEnums;
 
 namespace Empiria.Financial {
 
-  /// <summary>Describes the posting or summary role of an account.</summary>
+  /// <summary>Describes the posting or summary role of an standard account.</summary>
   public enum AccountRoleType {
 
     /// <summary>Summary account (cuenta sumaria).</summary>
@@ -32,7 +31,7 @@ namespace Empiria.Financial {
   }  // enum AccountRole
 
 
-  /// <summary>Enumerates an account debtor/creditor type (naturaleza deudora o acreedora).</summary>
+  /// <summary>Enumerates an account debtor/creditor type of an standard  account (naturaleza).</summary>
   public enum DebtorCreditorType {
 
     /// <summary>Debtor account (naturaleza deudora).</summary>
@@ -84,8 +83,8 @@ namespace Empiria.Financial {
     }
 
 
-    [DataField("STD_ACCT_CATALOGUE_ID")]
-    public StandardAccountsCatalogue Catalogue {
+    [DataField("STD_ACCT_CHART_OF_ACCOUNTS_ID")]
+    public ChartOfAccounts ChartOfAccounts {
       get; private set;
     }
 
@@ -143,13 +142,13 @@ namespace Empiria.Financial {
     }
 
 
-    [DataField("STD_ACCT_ROLE", Default = AccountRoleType.Undefined)]
+    [DataField("STD_ACCT_ROLE_TYPE", Default = AccountRoleType.Undefined)]
     public AccountRoleType RoleType {
       get; private set;
     }
 
 
-    [DataField("STD_ACCT_DEBTOR", Default = DebtorCreditorType.Undefined)]
+    [DataField("STD_ACCT_DEBTOR_CREDITOR_TYPE", Default = DebtorCreditorType.Undefined)]
     public DebtorCreditorType DebtorCreditorType {
       get; private set;
     }
@@ -206,7 +205,7 @@ namespace Empiria.Financial {
 
 
     [DataField("STD_ACCT_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -246,7 +245,7 @@ namespace Empiria.Financial {
         _allChildren = GetFullList<StandardAccount>()
                       .ToFixedList()
                       .FindAll(x => x.StdAcctNo.StartsWith($"{this.StdAcctNo}.") &&
-                                    x.Catalogue.Equals(Catalogue) &&
+                                    x.ChartOfAccounts.Equals(ChartOfAccounts) &&
                                    !x.IsEmptyInstance)
                                    .Sort((x, y) => x.StdAcctNo.CompareTo(y.StdAcctNo)
                       );

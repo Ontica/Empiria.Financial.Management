@@ -31,9 +31,9 @@ namespace Empiria.Financial.Data {
     }
 
 
-    static internal FixedList<StandardAccount> GetStandardAccounts(StandardAccountsCatalogue catalogue) {
+    static internal FixedList<StandardAccount> GetStandardAccounts(ChartOfAccounts chartOfAccounts) {
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
-         $"WHERE STD_ACCT_CATALOGUE_ID = {catalogue.Id} AND " +
+         $"WHERE STD_ACCT_CHART_OF_ACCOUNTS_ID = {chartOfAccounts.Id} AND " +
          $"STD_ACCT_STATUS <> 'X' " +
          $"ORDER BY STD_ACCT_NUMBER";
 

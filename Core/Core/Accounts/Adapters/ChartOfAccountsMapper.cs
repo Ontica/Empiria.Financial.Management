@@ -15,7 +15,7 @@ namespace Empiria.Financial.Adapters {
   /// <summary>Mapping methods for accounts charts and their contents.</summary>
   static public class ChartOfAccountsMapper {
 
-    static internal ChartOfAccountsDto Map(StandardAccountsCatalogue chartOfAccounts) {
+    static internal ChartOfAccountsDto Map(ChartOfAccounts chartOfAccounts) {
       return new ChartOfAccountsDto {
         UID = chartOfAccounts.UID,
         Name = chartOfAccounts.Name,
@@ -24,7 +24,7 @@ namespace Empiria.Financial.Adapters {
     }
 
 
-    static internal ChartOfAccountsDto Map(StandardAccountsCatalogue chartOfAccounts,
+    static internal ChartOfAccountsDto Map(ChartOfAccounts chartOfAccounts,
                                            FixedList<StandardAccount> stdAccounts) {
       return new ChartOfAccountsDto {
         UID = chartOfAccounts.UID,

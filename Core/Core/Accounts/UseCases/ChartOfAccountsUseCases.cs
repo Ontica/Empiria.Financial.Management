@@ -35,14 +35,14 @@ namespace Empiria.Financial.UseCases {
     public ChartOfAccountsDto GetChartOfAcounts(string chartOfAccountsUID) {
       Assertion.Require(chartOfAccountsUID, nameof(chartOfAccountsUID));
 
-      var chartOfAccounts = StandardAccountsCatalogue.Parse(chartOfAccountsUID);
+      var chartOfAccounts = ChartOfAccounts.Parse(chartOfAccountsUID);
 
       return ChartOfAccountsMapper.Map(chartOfAccounts);
     }
 
 
     public FixedList<NamedEntityDto> GetChartsOfAcountsList() {
-      var chartOfAccounts = StandardAccountsCatalogue.GetList();
+      var chartOfAccounts = ChartOfAccounts.GetList();
 
       return chartOfAccounts.MapToNamedEntityList();
     }
@@ -51,7 +51,7 @@ namespace Empiria.Financial.UseCases {
     public ChartOfAccountsDto SearchChartOfAccounts(ChartOfAccountsQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var chartOfAccounts = StandardAccountsCatalogue.Parse(query.ChartOfAccountsUID);
+      var chartOfAccounts = ChartOfAccounts.Parse(query.ChartOfAccountsUID);
 
       string filter = query.MapToFilterString();
       string sort = query.MapToSortString();

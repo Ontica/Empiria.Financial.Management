@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial  ******************************************************************************************
 *                                                                                                            *
-*  Module   : AccountsChart                              Component : Domain Layer                            *
+*  Module   : Financial Accounts                         Component : Domain Layer                            *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Information Holder                      *
-*  Type     : StandardAccountsCatalogue                  License   : Please read LICENSE.txt file            *
+*  Type     : ChartOfAccounts                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Defines an standard accounts catalogue.                                                        *
+*  Summary  : Defines a chart of accounts that is an aggregate of standard accounts.                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -14,8 +14,8 @@ using Empiria.Financial.Data;
 
 namespace Empiria.Financial {
 
-  /// <summary>Defines an standard accounts catalogue.</summary>
-  public class StandardAccountsCatalogue : CommonStorage {
+  /// <summary>Defines a chart of accounts that is an aggregate of standard accounts.</summary>
+  public class ChartOfAccounts : CommonStorage {
 
     #region Fields
 
@@ -25,18 +25,18 @@ namespace Empiria.Financial {
 
     #region Constructors and parsers
 
-    protected StandardAccountsCatalogue() {
+    protected ChartOfAccounts() {
       // Required by Empiria Framework
     }
 
-    static public StandardAccountsCatalogue Parse(int id) => ParseId<StandardAccountsCatalogue>(id);
+    static public ChartOfAccounts Parse(int id) => ParseId<ChartOfAccounts>(id);
 
-    static public StandardAccountsCatalogue Parse(string uid) => ParseKey<StandardAccountsCatalogue>(uid);
+    static public ChartOfAccounts Parse(string uid) => ParseKey<ChartOfAccounts>(uid);
 
-    static public StandardAccountsCatalogue Empty => ParseEmpty<StandardAccountsCatalogue>();
+    static public ChartOfAccounts Empty => ParseEmpty<ChartOfAccounts>();
 
-    static public FixedList<StandardAccountsCatalogue> GetList() {
-      return GetStorageObjects<StandardAccountsCatalogue>();
+    static public FixedList<ChartOfAccounts> GetList() {
+      return GetStorageObjects<ChartOfAccounts>();
     }
 
     protected override void OnLoad() {
@@ -56,6 +56,6 @@ namespace Empiria.Financial {
       return _standardAccounts.Value.FindAll(x => x.Category.Equals(category));
     }
 
-  } // class StandardAccountsCatalogue
+  } // class ChartOfAccounts
 
 } // namespace Empiria.Financial

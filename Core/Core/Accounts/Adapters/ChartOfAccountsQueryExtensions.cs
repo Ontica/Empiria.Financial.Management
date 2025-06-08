@@ -67,9 +67,9 @@ namespace Empiria.Financial.Adapters {
     #region Helpers
 
     static private string BuildChartOfAccountsFilter(string chartOfAccountsUID) {
-      var chartOfAccounts = StandardAccountsCatalogue.Parse(chartOfAccountsUID);
+      var chartOfAccounts = ChartOfAccounts.Parse(chartOfAccountsUID);
 
-      return $"STD_ACCT_CATALOGUE_ID = {chartOfAccounts.Id}";
+      return $"STD_ACCT_CHART_OF_ACCOUNTS_ID = {chartOfAccounts.Id}";
     }
 
 
@@ -78,7 +78,7 @@ namespace Empiria.Financial.Adapters {
         return string.Empty;
       }
 
-      return $"STD_ACCT_DEBTOR = '{(char) debtorCreditorType}'";
+      return $"STD_ACCT_DEBTOR_CREDITOR_TYPE = '{(char) debtorCreditorType}'";
     }
 
 
@@ -112,7 +112,7 @@ namespace Empiria.Financial.Adapters {
         return string.Empty;
       }
 
-      return $"STD_ACCT_ROLE = '{(char) roleType}'";
+      return $"STD_ACCT_ROLE_TYPE = '{(char) roleType}'";
     }
 
 
