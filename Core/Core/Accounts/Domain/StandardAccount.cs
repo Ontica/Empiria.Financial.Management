@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : AccountsChart                              Component : Domain Layer                            *
+*  Module   : Financial Accounts                         Component : Domain Layer                            *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Partitioned Type                        *
 *  Type     : StandardAccount                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -16,38 +16,6 @@ using Empiria.Parties;
 using Empiria.StateEnums;
 
 namespace Empiria.Financial {
-
-  /// <summary>Describes the posting or summary role of an standard account.</summary>
-  public enum AccountRoleType {
-
-    /// <summary>Summary account (cuenta sumaria).</summary>
-    Sumaria = 'S',
-
-    /// <summary>Posting account (cuenta de detalle).</summary>
-    Detalle = 'P',
-
-    Undefined = 'U'
-
-  }  // enum AccountRole
-
-
-  /// <summary>Enumerates an account debtor/creditor type of an standard  account (naturaleza).</summary>
-  public enum DebtorCreditorType {
-
-    /// <summary>Debtor account (naturaleza deudora).</summary>
-    Deudora = 'D',
-
-    /// <summary>Creditor account (naturaleza acreedora).</summary>
-    Acreedora = 'A',
-
-    /// <summary>Debtor and Creditor account (naturaleza combinada).</summary>
-    Combinada = 'C',
-
-    Undefined = 'U',
-
-  }  // enum DebtorCreditorType
-
-
 
   /// <summary>Partitioned type that represents an standard account.</summary>
   [PartitionedType(typeof(StandardAccountType))]
