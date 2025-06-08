@@ -45,6 +45,20 @@ namespace Empiria.Financial {
 
     #endregion Constructors and parsers
 
+    #region Methods
+
+    internal StandardAccount GetStandardAccount(string stdAccountUID) {
+      Assertion.Require(stdAccountUID, nameof(stdAccountUID));
+
+      StandardAccount stdAccount = _standardAccounts.Value.Find(x => x.UID == stdAccountUID);
+
+      Assertion.Require(stdAccount,
+        $"An standard account with uid {stdAccountUID} does not exists in this chart of accounts.");
+
+      return stdAccount;
+    }
+
+
     public FixedList<StandardAccount> GetStandardAccounts() {
       return _standardAccounts.Value;
     }
@@ -55,6 +69,8 @@ namespace Empiria.Financial {
 
       return _standardAccounts.Value.FindAll(x => x.Category.Equals(category));
     }
+
+    #endregion Methods
 
   } // class ChartOfAccounts
 

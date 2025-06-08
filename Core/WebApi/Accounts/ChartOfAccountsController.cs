@@ -27,7 +27,7 @@ namespace Empiria.Financial.WebApi {
 
       using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
 
-        ChartOfAccountsDto chartOfAccounts = usecases.GetChartOfAcounts(chartOfAccountsUID);
+        ChartOfAccountsDto chartOfAccounts = usecases.GetChartOfAccounts(chartOfAccountsUID);
 
         return new SingleObjectModel(base.Request, chartOfAccounts);
       }
@@ -40,9 +40,23 @@ namespace Empiria.Financial.WebApi {
 
       using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
 
-        FixedList<NamedEntityDto> chartsOfAccounts = usecases.GetChartsOfAcountsList();
+        FixedList<NamedEntityDto> chartsOfAccounts = usecases.GetChartsOfAccountsList();
 
         return new CollectionModel(base.Request, chartsOfAccounts);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v3/charts-of-accounts/{chartOfAccountsUID:guid}/standard-accounts/{stdAccountUID:guid}")]
+    public SingleObjectModel GetStandardAccount([FromUri] string chartOfAccountsUID,
+                                                [FromUri] string stdAccountUID) {
+
+      using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
+
+        StandardAccountHolder stdAccount = usecases.GetStandardAccount(chartOfAccountsUID, stdAccountUID);
+
+        return new SingleObjectModel(base.Request, stdAccount);
       }
     }
 

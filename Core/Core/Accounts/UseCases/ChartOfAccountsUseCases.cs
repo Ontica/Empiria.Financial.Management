@@ -32,7 +32,7 @@ namespace Empiria.Financial.UseCases {
 
     #region Use cases
 
-    public ChartOfAccountsDto GetChartOfAcounts(string chartOfAccountsUID) {
+    public ChartOfAccountsDto GetChartOfAccounts(string chartOfAccountsUID) {
       Assertion.Require(chartOfAccountsUID, nameof(chartOfAccountsUID));
 
       var chartOfAccounts = ChartOfAccounts.Parse(chartOfAccountsUID);
@@ -41,10 +41,22 @@ namespace Empiria.Financial.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetChartsOfAcountsList() {
+    public FixedList<NamedEntityDto> GetChartsOfAccountsList() {
       var chartOfAccounts = ChartOfAccounts.GetList();
 
       return chartOfAccounts.MapToNamedEntityList();
+    }
+
+
+    public StandardAccountHolder GetStandardAccount(string chartOfAccountsUID, string stdAccountUID) {
+      Assertion.Require(chartOfAccountsUID, nameof(chartOfAccountsUID));
+      Assertion.Require(stdAccountUID, nameof(stdAccountUID));
+
+      var chartOfAccounts = ChartOfAccounts.Parse(chartOfAccountsUID);
+
+      StandardAccount stdAccount = chartOfAccounts.GetStandardAccount(stdAccountUID);
+
+      return StandardAccountMapper.Map(stdAccount);
     }
 
 
