@@ -16,8 +16,11 @@ namespace Empiria.Financial.Adapters {
   static public class StandardAccountMapper {
 
     static internal StandardAccountHolder Map(StandardAccount stdAccount) {
+      FixedList<FinancialAccount> accounts = stdAccount.GetNonOperationAccounts();
+
       return new StandardAccountHolder {
         StandardAccount = MapStdAccount(stdAccount),
+        Accounts = FinancialAccountMapper.MapToDescriptor(accounts)
       };
     }
 

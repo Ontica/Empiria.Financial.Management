@@ -227,6 +227,13 @@ namespace Empiria.Financial {
             .FindAll(x => x.Parent.Equals(this));
     }
 
+
+    internal FixedList<FinancialAccount> GetNonOperationAccounts() {
+      return FinancialAccount.GetList()
+                             .FindAll(x => x.StandardAccount.StdAcctNo.StartsWith(StdAcctNo) &&
+                                          !x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
+    }
+
     #endregion Methods
 
   } // class StandardAccount

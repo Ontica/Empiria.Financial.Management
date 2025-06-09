@@ -18,8 +18,11 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
-  }  // class StandardAccountHolder
+    public FixedList<FinancialAccountDescriptor> Accounts {
+      get; internal set;
+    }
 
+  }  // class StandardAccountHolder
 
 
   /// <summary>Output DTO with an standard account data.</summary>
