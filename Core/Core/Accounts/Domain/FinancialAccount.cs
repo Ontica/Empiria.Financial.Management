@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : FinancialAccounts                          Component : Domain Layer                            *
-*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Partitioned Type                        *
+*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Aggregate Partitioned Type              *
 *  Type     : FinancialAccount                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Partitioned type that represents a financial account.                                          *
+*  Summary  : Partitioned type that represents a financial account as an aggregate of account operations.    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -16,17 +16,20 @@ using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
-using Empiria.Financial.Projects;
-
 using Empiria.Financial.Data;
+using Empiria.Financial.Projects;
 
 namespace Empiria.Financial {
 
-  /// <summary>Partitioned type that represents a financial account.</summary>
+  /// <summary>Partitioned type that represents a financial account as
+  /// an aggregate of account operations.</summary>
   [PartitionedType(typeof(FinancialAccountType))]
   public class FinancialAccount : BaseObject, INamedEntity {
 
     #region Fields
+
+    private Lazy<List<FinancialAccount>> _operations = new Lazy<List<FinancialAccount>>();
+    private List<FinancialAccount> _deletedOperations = new List<FinancialAccount>();
 
     static readonly private List<FinancialAccount> _cache = null;
 
@@ -42,7 +45,7 @@ namespace Empiria.Financial {
 
 
     protected FinancialAccount(FinancialAccountType powertype) : base(powertype) {
-      // Required by Empiria FrameWork
+      // Required by Empiria Framework
     }
 
 
@@ -68,9 +71,17 @@ namespace Empiria.Financial {
 
     static public FinancialAccount Empty => ParseEmpty<FinancialAccount>();
 
-
     static public FixedList<FinancialAccount> GetList() {
       return _cache.ToFixedList();
+    }
+
+
+    protected override void OnLoad() {
+      _operations = new Lazy<List<FinancialAccount>>(() =>
+                      _cache.FindAll(x => x._parentId == this.Id &&
+                                          x.Project.Equals(this.Project) &&
+                                          x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount)
+                      ));
     }
 
     #endregion Constructors and parsers
@@ -296,13 +307,18 @@ namespace Empiria.Financial {
       Assertion.Require(!HasOperation(stdAccount),
                         $"Esta cuenta ya contiene la operación {stdAccount.Name}.");
 
-      var child = new FinancialAccount(FinancialAccountType.OperationAccount,
-                                       stdAccount, this.OrganizationalUnit);
+      var operation = new FinancialAccount(FinancialAccountType.OperationAccount,
+                                           stdAccount, this.OrganizationalUnit);
 
-      child.Project = this.Project;
-      child.Parent = this;
+      operation.AccountNo =
+               $"{stdAccount.StdAcctSegments[stdAccount.StdAcctSegments.Length - 1]}{this.AccountNo}";
 
-      return child;
+      operation.Project = this.Project;
+      operation.Parent = this;
+
+      _operations.Value.Add(operation);
+
+      return operation;
     }
 
 
@@ -320,11 +336,7 @@ namespace Empiria.Financial {
 
 
     internal FixedList<FinancialAccount> GetOperations() {
-      return _cache.FindAll(x => x._parentId == this.Id &&
-                                 x.Project.Equals(this.Project) &&
-                                 x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount)
-                                 )
-                   .ToFixedList();
+      return _operations.Value.ToFixedList();
     }
 
 
@@ -351,6 +363,16 @@ namespace Empiria.Financial {
         _cache.Remove(this);
       }
 
+      foreach (var operation in _operations.Value) {
+        if (operation.IsDirty) {
+          operation.Save();
+        }
+      }
+      foreach (var deletedOperation in _deletedOperations) {
+        deletedOperation.Save();
+      }
+      _deletedOperations.Clear();
+
       if (!this.Project.IsEmptyInstance) {
         Project.Refresh();
       }
@@ -360,15 +382,17 @@ namespace Empiria.Financial {
     internal FinancialAccount RemoveOperation(string operationAccountUID) {
       Assertion.Require(operationAccountUID, nameof(operationAccountUID));
 
-      FinancialAccount child = GetOperations().Find(x => x.UID == operationAccountUID);
+      FinancialAccount operation = GetOperations().Find(x => x.UID == operationAccountUID);
 
-      Assertion.Require(child, "La operación que se intentó remover no existe.");
+      Assertion.Require(operation, "La operación que se intentó remover no existe.");
 
-      Assertion.Require(child.Status == EntityStatus.Pending,
-                        $"No se puede eliminar la operación {child.Name} debido a que ya está activa");
-      child.Delete();
+      Assertion.Require(operation.Status == EntityStatus.Pending,
+                        $"No se puede eliminar la operación {operation.Name} debido a que ya está activa");
+      operation.Delete();
 
-      return child;
+      _deletedOperations.Add(operation);
+
+      return operation;
     }
 
 
