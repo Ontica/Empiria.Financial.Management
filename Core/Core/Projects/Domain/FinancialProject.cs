@@ -24,6 +24,8 @@ namespace Empiria.Financial.Projects {
   [PartitionedType(typeof(FinancialProjectType))]
   public class FinancialProject : BaseObject, INamedEntity {
 
+    #region Fields
+
     static internal readonly string PROJECT_BASE_ACCOUNTS_ROLE = "cash-flow-projection-base-account";
     static internal readonly string STANDARD_ACCOUNTS_ROLE = "financial-project-std-account";
 
@@ -32,6 +34,8 @@ namespace Empiria.Financial.Projects {
 
     private Lazy<List<FinancialAccount>> _accounts = new Lazy<List<FinancialAccount>>();
     private List<FinancialAccount> _deletedAccounts = new List<FinancialAccount>();
+
+    #endregion Fields
 
     #region Constructors and parsers
 
@@ -393,6 +397,12 @@ namespace Empiria.Financial.Projects {
 
       account.Update(fields);
 
+      var operations = account.GetAvailableOperations();
+
+      foreach (var operation in operations) {
+        account.AddOperation(operation);
+      }
+
       _accounts.Value.Add(account);
 
       return account;
@@ -425,6 +435,12 @@ namespace Empiria.Financial.Projects {
                         "Entry to remove does not belong to this project.");
 
       account.Delete();
+
+      var operations = account.GetOperations();
+
+      foreach (var operation in operations) {
+        account.RemoveOperation(operation.UID);
+      }
 
       _deletedAccounts.Add(account);
       _accounts.Value.Remove(account);
