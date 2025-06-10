@@ -68,6 +68,8 @@ namespace Empiria.Financial.Adapters {
         FinancialAccountTypeName = account.FinancialAccountType.DisplayName,
         Description = account.Description,
         StandardAccountName = MapStdAccountToDto(account.StandardAccount).Name,
+        ProjectUID = account.Project.UID,
+        ProjectNo = account.Project.ProjectNo,
         ProjectName = account.Project.Name,
         OrganizationalUnitName = account.OrganizationalUnit.Name,
         Attributes = account.Attributes,

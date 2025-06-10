@@ -42,19 +42,8 @@ namespace Empiria.Financial.Projects.Adapters {
                     .ToFixedList();
     }
 
-    #endregion Mappers
 
-    #region Helpers
-
-    static private BaseActions MapActions(FinancialProjectRules rules) {
-      return new BaseActions {
-        CanDelete = rules.CanDelete,
-        CanEditDocuments = rules.CanEditDocuments,
-        CanUpdate = rules.CanUpdate
-      };
-    }
-
-    static private FinancialProjectDto MapProject(FinancialProject project) {
+    static internal FinancialProjectDto MapProject(FinancialProject project) {
       return new FinancialProjectDto {
         UID = project.UID,
         ProjectTypeCategory = project.Category.MapToNamedEntity(),
@@ -70,6 +59,18 @@ namespace Empiria.Financial.Projects.Adapters {
         EndDate = project.EndDate,
         ParentProject = project.Parent.MapToNamedEntity(),
         Status = project.Status.MapToDto(),
+      };
+    }
+
+    #endregion Mappers
+
+    #region Helpers
+
+    static private BaseActions MapActions(FinancialProjectRules rules) {
+      return new BaseActions {
+        CanDelete = rules.CanDelete,
+        CanEditDocuments = rules.CanEditDocuments,
+        CanUpdate = rules.CanUpdate
       };
     }
 

@@ -50,7 +50,6 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
-
     public DateTime StartDate {
       get; internal set;
     }
@@ -90,6 +89,14 @@ namespace Empiria.Financial.Adapters {
     }
 
     public string StandardAccountName {
+      get; internal set;
+    }
+
+    public string ProjectUID {
+      get; internal set;
+    }
+
+    public string ProjectNo {
       get; internal set;
     }
 

@@ -81,6 +81,15 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
+    public FinancialProjectDto GetPlainProject(string financialProjectUID) {
+      Assertion.Require(financialProjectUID, nameof(financialProjectUID));
+
+      var project = FinancialProject.Parse(financialProjectUID);
+
+      return FinancialProjectMapper.MapProject(project);
+    }
+
+
     public FinancialProjectHolderDto GetProject(string financialProjectUID) {
       Assertion.Require(financialProjectUID, nameof(financialProjectUID));
 
@@ -88,6 +97,7 @@ namespace Empiria.Financial.Projects.UseCases {
 
       return FinancialProjectMapper.Map(project);
     }
+
 
     public FixedList<NamedEntityDto> GetProjectCategories() {
       return FinancialProjectCategory.GetList()
@@ -157,6 +167,7 @@ namespace Empiria.Financial.Projects.UseCases {
 
       return FinancialProjectMapper.Map(project);
     }
+
 
     #endregion Use cases
 
