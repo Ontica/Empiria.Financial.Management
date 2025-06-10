@@ -31,6 +31,27 @@ namespace Empiria.Financial.Projects.Data {
       DataWriter.Execute(op);
     }
 
+
+    static internal string GetNextProjectNo() {
+      string sql = "SELECT MAX(PRJ_NO) " +
+                   "FROM FMS_PROJECTS " +
+                   $"WHERE LENGTH(PRJ_NO) = 5 AND " +
+                   $"PRJ_STATUS <> 'X'";
+
+      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), string.Empty);
+
+      if (lastUniqueID.Length != 0) {
+
+        int consecutive = int.Parse(lastUniqueID) + 1;
+
+        return $"{consecutive:00000}";
+
+      } else {
+        return "00001";
+      }
+    }
+
+
     internal static List<FinancialAccount> GetProjectAccounts(FinancialProject project) {
       if (project.IsEmptyInstance) {
         return new List<FinancialAccount>();
@@ -38,7 +59,9 @@ namespace Empiria.Financial.Projects.Data {
 
       var sql = "SELECT * FROM FMS_ACCOUNTS " +
           $"WHERE ACCT_PROJECT_ID = {project.Id} AND " +
-          $"ACCT_STATUS <> 'X'";
+          $"ACCT_STATUS <> 'X' " +
+          $"ORDER BY ACCT_NUMBER";
+
 
       var op = DataOperation.Parse(sql);
 
@@ -56,7 +79,8 @@ namespace Empiria.Financial.Projects.Data {
       }
       var sql = "SELECT * FROM FMS_PROJECTS " +
                 $"WHERE {filter} " +
-                $"PRJ_STATUS <> 'X'";
+                $"PRJ_STATUS <> 'X' " +
+                $"ORDER BY PRJ_NO";
 
       var op = DataOperation.Parse(sql);
 

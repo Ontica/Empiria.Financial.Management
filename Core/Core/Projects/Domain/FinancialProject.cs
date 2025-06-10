@@ -102,13 +102,15 @@ namespace Empiria.Financial.Projects {
 
     string INamedEntity.Name {
       get {
-        if (Status == EntityStatus.Pending) {
-          return $"{Name} (Proyectado) [{Program.Name}]";
-        }
-        if (ProjectNo.Length != 0) {
+        if (ProjectNo.Length != 0 && Status == EntityStatus.Pending) {
+          return $"({ProjectNo}) {Name} (Proyectado) [{Program.Name}]";
+        } else if (ProjectNo.Length == 0 && Status == EntityStatus.Pending) {
+          return $"(S/N) {Name} (Proyectado) [{Program.Name}]";
+        } else if (ProjectNo.Length != 0) {
           return $"({ProjectNo}) {Name} [{Program.Name}]";
+        } else {
+          return $"(S/N) {Name} [{Program.Name}]";
         }
-        return $"{Name} [{Program.Name}]";
       }
     }
 
@@ -285,6 +287,13 @@ namespace Empiria.Financial.Projects {
       }
     }
 
+    public FixedList<FinancialAccount> BaseAccounts {
+      get {
+        return _accounts.Value.ToFixedList()
+                        .FindAll(x => x.FinancialAccountType.PlaysRole(FinancialProject.PROJECT_BASE_ACCOUNTS_ROLE));
+      }
+    }
+
 
     public bool HasProjectNo {
       get {
@@ -324,6 +333,7 @@ namespace Empiria.Financial.Projects {
         EndDate = ExecutionServer.DateMaxValue;
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
+        ProjectNo = FinancialProjectDataService.GetNextProjectNo();
       }
       if (Status == EntityStatus.Pending) {
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
