@@ -20,7 +20,8 @@ namespace Empiria.Financial.Adapters {
 
       return new StandardAccountHolder {
         StandardAccount = MapStdAccount(stdAccount),
-        Accounts = FinancialAccountMapper.MapToDescriptor(accounts)
+        Accounts = FinancialAccountMapper.MapToDescriptor(accounts),
+        Actions = MapActions(stdAccount)
       };
     }
 
@@ -50,6 +51,15 @@ namespace Empiria.Financial.Adapters {
     }
 
     #region Helpers
+
+    static private StandardAccountActions MapActions(StandardAccount stdAccount) {
+      return new StandardAccountActions {
+        CanActivate = stdAccount.Status == EntityStatus.Suspended,
+        CanSuspend = stdAccount.Status == EntityStatus.Active,
+        CanUpdate = true,
+      };
+    }
+
 
     static private StandardAccountDto MapStdAccount(StandardAccount account) {
       return new StandardAccountDto {

@@ -22,7 +22,30 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public StandardAccountActions Actions {
+      get; internal set;
+    }
+
   }  // class StandardAccountHolder
+
+
+
+  /// <summary>Actions DTO for standard accounts.</summary>
+  public class StandardAccountActions {
+
+    public bool CanActivate {
+      get; internal set;
+    }
+
+    public bool CanSuspend {
+      get; internal set;
+    }
+
+    public bool CanUpdate {
+      get; internal set;
+    }
+
+  }  // class StandardAccountActions
 
 
   /// <summary>Output DTO with an standard account data.</summary>
