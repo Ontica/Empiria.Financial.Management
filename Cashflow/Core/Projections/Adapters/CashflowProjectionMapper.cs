@@ -91,7 +91,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
         ProjectionTypeCategory = projection.Category.MapToNamedEntity(),
         ProjectionNo = projection.ProjectionNo,
         Party = projection.BaseParty.MapToNamedEntity(),
-        Project = projection.BaseProject.MapToNamedEntity(),
+        Project = ((INamedEntity)projection.BaseProject).MapToNamedEntity(),
         ProjectTypeCategory = projection.BaseProject.Category.MapToNamedEntity(),
         Account = projection.BaseAccount.MapToNamedEntity(),
         Source = projection.OperationSource.MapToNamedEntity(),

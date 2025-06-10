@@ -65,6 +65,18 @@ namespace Empiria.Financial {
       this.StartDate = DateTime.Today;
     }
 
+
+    public FinancialAccount(FinancialAccountType accountType, StandardAccount stdAccount,
+                            OrganizationalUnit orgUnit, FinancialProject project)
+                    : this(accountType, stdAccount, orgUnit) {
+
+      Assertion.Require(project, nameof(project));
+      Assertion.Require(!project.IsEmptyInstance, nameof(project));
+
+      Project = project;
+      AccountNo = (Project.BaseAccounts.Count + 1).ToString("000");
+    }
+
     static public FinancialAccount Parse(int id) => ParseId<FinancialAccount>(id);
 
     static public FinancialAccount Parse(string uid) => ParseKey<FinancialAccount>(uid);
@@ -229,8 +241,9 @@ namespace Empiria.Financial {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Code, Name, _identifiers, _tags, Project.Keywords,
-                                           OrganizationalUnit.Keywords, StandardAccount.Keywords);
+        return EmpiriaString.BuildKeywords(Code, Name, _identifiers, _tags,
+                                           Project.Keywords, OrganizationalUnit.Keywords,
+                                           StandardAccount.Keywords);
       }
     }
 
@@ -308,12 +321,13 @@ namespace Empiria.Financial {
                         $"Esta cuenta ya contiene la operación {stdAccount.Name}.");
 
       var operation = new FinancialAccount(FinancialAccountType.OperationAccount,
-                                           stdAccount, this.OrganizationalUnit);
+                                           stdAccount, this.OrganizationalUnit, this.Project);
 
       operation.AccountNo =
-               $"{stdAccount.StdAcctSegments[stdAccount.StdAcctSegments.Length - 1]}{this.AccountNo}";
+                 $"{stdAccount.StdAcctSegments[stdAccount.StdAcctSegments.Length - 1]}-" +
+                 $"{this.Project.ProjectNo}-" +
+                 $"{this.AccountNo}";
 
-      operation.Project = this.Project;
       operation.Parent = this;
 
       _operations.Value.Add(operation);
@@ -401,11 +415,12 @@ namespace Empiria.Financial {
 
       fields.EnsureValid();
 
-      AccountNo = PatchField(fields.AccountNo, AccountNo);
+      if (AccountNo.Length == 0) {
+        AccountNo = PatchField(fields.AccountNo, AccountNo);
+      }
       Description = PatchField(fields.Description, Description);
       StandardAccount = PatchField(fields.StandardAccountUID, StandardAccount);
       OrganizationalUnit = PatchField(fields.OrganizationalUnitUID, OrganizationalUnit);
-      Project = PatchField(fields.ProjectUID, Project);
       _attributes = JsonObject.Parse(fields.Attributes);
       _financialData = JsonObject.Parse(fields.FinancialData);
       _tags = string.Join(" ", fields.Tags);

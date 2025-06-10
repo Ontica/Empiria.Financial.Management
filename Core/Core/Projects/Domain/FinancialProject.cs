@@ -403,7 +403,7 @@ namespace Empiria.Financial.Projects {
       Assertion.Require(stdAccount.Category.PlaysRole(STANDARD_ACCOUNTS_ROLE),
                         $"stdAccount {stdAccount.Name} can not be added to projects.");
 
-      var account = new FinancialAccount(accountType, stdAccount, orgUnit);
+      var account = new FinancialAccount(accountType, stdAccount, orgUnit, this);
 
       account.Update(fields);
 
