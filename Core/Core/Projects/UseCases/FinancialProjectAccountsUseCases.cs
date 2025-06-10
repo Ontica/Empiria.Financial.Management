@@ -44,25 +44,6 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
-    public FinancialAccountOperationsDto AddAccountOperation(FinancialAccountFields fields,
-                                                             string stdAccountUID) {
-      Assertion.Require(fields, nameof(fields));
-      Assertion.Require(stdAccountUID, nameof(stdAccountUID));
-
-      var project = FinancialProject.Parse(fields.ProjectUID);
-
-      FinancialAccount account = project.GetAccount(fields.UID);
-
-      StandardAccount stdAccount = StandardAccount.Parse(stdAccountUID);
-
-      FinancialAccount operation = account.AddOperation(stdAccount);
-
-      operation.Save();
-
-      return FinancialAccountMapper.MapAccountOperations(account);
-    }
-
-
     public FinancialAccountDto GetAccount(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -118,24 +99,6 @@ namespace Empiria.Financial.Projects.UseCases {
 
       return FinancialAccountMapper.MapToDescriptor(account);
     }
-
-
-    public FinancialAccountOperationsDto RemoveAccountOperation(FinancialAccountFields fields,
-                                                                string operationAccountUID) {
-      Assertion.Require(fields, nameof(fields));
-      Assertion.Require(operationAccountUID, nameof(operationAccountUID));
-
-      var project = FinancialProject.Parse(fields.ProjectUID);
-
-      FinancialAccount account = project.GetAccount(fields.UID);
-
-      FinancialAccount operation = account.RemoveOperation(operationAccountUID);
-
-      operation.Save();
-
-      return FinancialAccountMapper.MapAccountOperations(account);
-    }
-
 
     public FinancialAccountDescriptor UpdateAccount(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));

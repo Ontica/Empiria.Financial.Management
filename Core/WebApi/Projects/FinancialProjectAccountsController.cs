@@ -38,26 +38,6 @@ namespace Empiria.Financial.Projects.WebApi {
     }
 
 
-    [HttpPost]
-    [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}/operations/{stdAccountUID:guid}")]
-    public SingleObjectModel AddAccountOperation([FromUri] string financialProjectUID,
-                                                 [FromUri] string accountUID,
-                                                 [FromUri] string stdAccountUID) {
-
-      var fields = new FinancialAccountFields {
-        UID = accountUID,
-        ProjectUID = financialProjectUID,
-      };
-
-      using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
-
-        FinancialAccountOperationsDto operations = usecases.AddAccountOperation(fields, stdAccountUID);
-
-        return new SingleObjectModel(base.Request, operations);
-      }
-    }
-
-
     [HttpDelete]
     [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}")]
     public NoDataModel RemoveAccount([FromUri] string financialProjectUID,
@@ -73,26 +53,6 @@ namespace Empiria.Financial.Projects.WebApi {
         _ = usecases.RemoveAccount(fields);
 
         return new NoDataModel(this.Request);
-      }
-    }
-
-
-    [HttpDelete]
-    [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}/operations/{operationAccountUID:guid}")]
-    public SingleObjectModel RemoveAccountOperation([FromUri] string financialProjectUID,
-                                                    [FromUri] string accountUID,
-                                                    [FromUri] string operationAccountUID) {
-
-      var fields = new FinancialAccountFields {
-        UID = accountUID,
-        ProjectUID = financialProjectUID,
-      };
-
-      using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
-
-        FinancialAccountOperationsDto operations = usecases.RemoveAccountOperation(fields, operationAccountUID);
-
-        return new SingleObjectModel(base.Request, operations);
       }
     }
 
