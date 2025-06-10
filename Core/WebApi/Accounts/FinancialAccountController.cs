@@ -36,6 +36,19 @@ namespace Empiria.Financial.Accounts.WebApi {
     }
 
 
+    [HttpGet]
+    [Route("v2/financial-accounts/{accountUID:guid}/operations")]
+    public SingleObjectModel GetAccountOperations([FromUri] string accountUID) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+
+        FinancialAccountOperationsDto operations = usecases.GetAccountOperations(accountUID);
+
+        return new SingleObjectModel(base.Request, operations);
+      }
+    }
+
+
     [HttpDelete]
     [Route("v2/financial-accounts/{accountUID:guid}/operations/{operationAccountUID:guid}")]
     public SingleObjectModel RemoveAccountOperation([FromUri] string accountUID,

@@ -52,10 +52,18 @@ namespace Empiria.Financial.UseCases {
     }
 
 
+    public FinancialAccountOperationsDto GetAccountOperations(string accountUID) {
+      Assertion.Require(accountUID, nameof(accountUID));
+
+      FinancialAccount account = FinancialAccount.Parse(accountUID);
+
+      return FinancialAccountMapper.MapAccountOperations(account);
+    }
+
+
     public FinancialAccountOperationsDto RemoveAccountOperation(string accountUID, string operationAccountUID) {
       Assertion.Require(accountUID, nameof(accountUID));
       Assertion.Require(operationAccountUID, nameof(operationAccountUID));
-
 
       FinancialAccount account = FinancialAccount.Parse(accountUID);
 
