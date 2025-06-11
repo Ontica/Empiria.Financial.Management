@@ -176,8 +176,16 @@ namespace Empiria.CashFlow.Projections.Adapters {
                $"CFW_PJC_AUTHORIZED_BY_ID = {userId} OR " +
                $"CFW_PJC_APPLIED_BY_ID = {userId})";
       }
-
-      return string.Empty;
+      if (stage == TransactionStage.ControlDesk) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CashFlowProjectionRules.CASH_FLOW_AUTHORIZER) ||
+            ExecutionServer.CurrentPrincipal.IsInRole(CashFlowProjectionRules.CASH_FLOW_MANAGER)) {
+          return string.Empty;
+        }
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CashFlowProjectionRules.CASH_FLOW_PROJECTOR)) {
+          return $"CFW_PJC_BASE_PARTY_ID = {ExecutionServer.CurrentContact.Organization.Id}";
+        }
+      }
+      return SearchExpression.NoRecordsFilter;
     }
 
 

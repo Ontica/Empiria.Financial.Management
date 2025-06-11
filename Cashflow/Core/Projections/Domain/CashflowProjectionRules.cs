@@ -71,6 +71,10 @@ namespace Empiria.CashFlow.Projections {
           return false;
         }
 
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PROJECTOR) &&
+            _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+          return true;
+        }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _projection.PostedBy.Id, _projection.RecordedBy.Id })) {
           return false;
@@ -87,6 +91,10 @@ namespace Empiria.CashFlow.Projections {
           return false;
         }
 
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PROJECTOR) &&
+          _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+          return true;
+        }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _projection.PostedBy.Id, _projection.RecordedBy.Id,
                                                 _projection.AppliedBy.Id, _projection.AuthorizedBy.Id })) {
@@ -127,6 +135,10 @@ namespace Empiria.CashFlow.Projections {
            ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER))) {
           return true;
         }
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PROJECTOR) &&
+            _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+          return true;
+        }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _projection.PostedBy.Id,
                                                 _projection.RecordedBy.Id })) {
@@ -149,6 +161,10 @@ namespace Empiria.CashFlow.Projections {
         if (_projection.ProjectionType.IsProtected &&
             (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_AUTHORIZER) ||
              ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER))) {
+          return true;
+        }
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PROJECTOR) &&
+          _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
           return true;
         }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
