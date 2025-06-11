@@ -8,12 +8,18 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Newtonsoft.Json;
+
 using Empiria.Parties;
 
 namespace Empiria.Financial.Projects {
 
   /// <summary>Input fields with financial projects data.</summary>
   public class FinancialProjectFields {
+
+    public FinancialProjectFields() {
+      JsonConvert.DefaultSettings = () => Json.JsonConverter.JsonSerializerDefaultSettings();
+    }
 
     #region Properties
 
@@ -57,6 +63,11 @@ namespace Empiria.Financial.Projects {
       get; set;
     } = string.Empty;
 
+
+    public object ProjectGoals {
+      get; set;
+    } = new object();
+
     #endregion Properties
 
     #region Methods
@@ -86,7 +97,7 @@ namespace Empiria.Financial.Projects {
         _ = Person.Parse(AssigneeUID);
       }
 
-      }
+    }
 
     #endregion Methods
 

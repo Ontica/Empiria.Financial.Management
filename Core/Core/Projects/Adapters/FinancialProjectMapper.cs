@@ -54,6 +54,7 @@ namespace Empiria.Financial.Projects.Adapters {
         Name = project.Name,
         Description = project.Description,
         Justification = project.Justification,
+        ProjectGoals = project.ProjectGoals,
         Assignee = project.Assignee.MapToNamedEntity(),
         StartDate = project.StartDate,
         EndDate = project.EndDate,

@@ -88,6 +88,10 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
+    public FinancialProjectGoals ProjectGoals {
+      get; internal set;
+    }
+
     public NamedEntityDto ParentProject {
       get; internal set;
     }

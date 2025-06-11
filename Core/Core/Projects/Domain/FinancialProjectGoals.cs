@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Json;
 
 namespace Empiria.Financial.Projects {
@@ -27,62 +25,32 @@ namespace Empiria.Financial.Projects {
 
     #region Properties
 
-    public int ClaveObra {
+    public string Beneficiario {
       get {
-        return _projectGoals.Get("claveObra", 0);
+        return _projectGoals.Get("beneficiario", string.Empty);
       }
       private set {
-        _projectGoals.SetIfValue("claveObra", value);
+        _projectGoals.SetIfValue("beneficiario", value);
       }
     }
 
 
-    public string Cliente {
+    public string Localizacion {
       get {
-        return _projectGoals.Get("cliente", string.Empty);
+        return _projectGoals.Get("localizacion", string.Empty);
       }
       private set {
-        _projectGoals.SetIfValue("cliente", value);
+        _projectGoals.SetIfValue("localizacion", value);
       }
     }
 
 
-    public string Municipio {
+    public int PoblacionBeneficiada {
       get {
-        return _projectGoals.Get("municipio", string.Empty);
+        return _projectGoals.Get("poblacionBeneficiada", 0);
       }
       private set {
-        _projectGoals.SetIfValue("municipio", value);
-      }
-    }
-
-
-    public string TipoObra {
-      get {
-        return _projectGoals.Get("tipoObra", string.Empty);
-      }
-      private set {
-        _projectGoals.SetIfValue("tipoObra", value);
-      }
-    }
-
-
-    public int Beneficiarios {
-      get {
-        return _projectGoals.Get("beneficiarios", 0);
-      }
-      private set {
-        _projectGoals.SetIfValue("beneficiarios", value);
-      }
-    }
-
-
-    public string UnidadBeneficiaria {
-      get {
-        return _projectGoals.Get("unidadBeneficiaria", string.Empty);
-      }
-      private set {
-        _projectGoals.SetIfValue("unidadBeneficiaria", value);
+        _projectGoals.SetIfValue("poblacionBeneficiada", value);
       }
     }
 
@@ -116,38 +84,12 @@ namespace Empiria.Financial.Projects {
       }
     }
 
-
-    public decimal Total {
-      get {
-        return _projectGoals.Get("total", 0m);
-      }
-      private set {
-        _projectGoals.SetIfValue("total", value);
-      }
-    }
-
     #endregion Properties
 
     #region Helpers
 
     internal string ToJsonString() {
       return _projectGoals.ToString();
-    }
-
-
-    internal void Update(PojectGoalsFields fields) {
-      Assertion.Require(fields, nameof(fields));
-
-      ClaveObra = fields.ClaveObra;
-      Cliente = fields.Cliente;
-      Municipio = fields.Municipio;     
-      TipoObra = fields.TipoObra;
-      Beneficiarios = fields.Beneficiarios;
-      UnidadBeneficiaria = fields.UnidadBeneficiaria;
-      EmpleosDirectos = fields.EmpleosDirectos;
-      EmpleosIndirectos = fields.EmpleosIndirectos;
-      Costo = fields.Costo;
-      Total = fields.Total;
     }
 
     #endregion Helpers

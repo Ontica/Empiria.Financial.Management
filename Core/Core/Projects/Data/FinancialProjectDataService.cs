@@ -110,9 +110,9 @@ namespace Empiria.Financial.Projects.Data {
          o.Id, o.UID, o.FinancialProjectType.Id, o.Subprogram.Id, o.Category.Id, o.ProjectNo, o.Name,
          o.BaseOrgUnit.Id, o.Description, o.Justification, o.Assignee.Id,
          string.Join(" ", o.Identifiers), string.Join(" ", o.Tags), extensionData,
-         o.FinancialGoals.ToJsonString(), o.RecordingTime,
-         o.RecordedBy.Id, o.AuthorizationTime, o.AuthorizedBy.Id, o.Keywords,
-         o.Parent.Id, o.HistoricId, o.StartDate, o.EndDate, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+         o.ProjectGoals.ToJsonString(), o.RecordingTime, o.RecordedBy.Id,
+         o.AuthorizationTime, o.AuthorizedBy.Id, o.Keywords, o.Parent.Id, o.HistoricId,
+         o.StartDate, o.EndDate, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }

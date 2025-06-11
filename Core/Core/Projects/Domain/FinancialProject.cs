@@ -171,7 +171,7 @@ namespace Empiria.Financial.Projects {
     [DataField("PRJ_GOALS_EXT_DATA")]
     private JsonObject _projectGoals = new JsonObject();
 
-    public FinancialProjectGoals FinancialGoals {
+    internal protected FinancialProjectGoals ProjectGoals {
       get {
         return new FinancialProjectGoals(_projectGoals);
       }
@@ -187,8 +187,8 @@ namespace Empiria.Financial.Projects {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(ProjectNo, Name, _identifiers, _tags, Program.Name,
-                                           BaseOrgUnit.Keywords, Category.Keywords,
-                                           Subprogram.Keywords);
+                                           BaseOrgUnit.Keywords, Category.Keywords, Subprogram.Keywords,
+                                           ProjectGoals.Beneficiario, ProjectGoals.Localizacion);
       }
     }
 
@@ -377,14 +377,9 @@ namespace Empiria.Financial.Projects {
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
 
+      _projectGoals = JsonObject.Parse(fields.ProjectGoals);
+
       MarkAsDirty();
-    }
-
-
-    internal void UpdateFinancialGoals(PojectGoalsFields fields) {
-      Assertion.Require(fields, nameof(fields));
-
-      FinancialGoals.Update(fields);
     }
 
     #endregion Methods
