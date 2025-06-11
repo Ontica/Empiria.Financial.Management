@@ -10,8 +10,9 @@
 
 using Newtonsoft.Json;
 
-using Empiria.Financial.Projects;
 using Empiria.Parties;
+
+using Empiria.Financial.Projects;
 
 namespace Empiria.Financial {
 
@@ -54,6 +55,11 @@ namespace Empiria.Financial {
     } = string.Empty;
 
 
+    public int CurrencyId {
+      get; set;
+    }
+
+
     public string ProjectUID {
       get; set;
     } = string.Empty;
@@ -72,7 +78,6 @@ namespace Empiria.Financial {
     public object FinancialData {
       get; set;
     } = new object();
-
 
     #endregion Properties
 

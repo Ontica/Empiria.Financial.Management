@@ -58,6 +58,8 @@ namespace Empiria.Financial {
       Assertion.Require(!orgUnit.IsEmptyInstance, nameof(orgUnit));
 
       this.StandardAccount = stdAccount;
+      this.Currency = Currency.Default;
+
       this.Description = stdAccount.Description;
 
       this.OrganizationalUnit = orgUnit;
@@ -133,6 +135,12 @@ namespace Empiria.Financial {
 
     [DataField("ACCT_LEDGER_ID")]
     internal int LedgerId {
+      get; private set;
+    } = -1;
+
+
+    [DataField("ACCT_CURRENCY_ID")]
+    public Currency Currency {
       get; private set;
     }
 
@@ -420,6 +428,7 @@ namespace Empiria.Financial {
       }
       Description = PatchField(fields.Description, Description);
       StandardAccount = PatchField(fields.StandardAccountUID, StandardAccount);
+      Currency = PatchField(fields.CurrencyId, Currency);
       OrganizationalUnit = PatchField(fields.OrganizationalUnitUID, OrganizationalUnit);
       _attributes = JsonObject.Parse(fields.Attributes);
       _financialData = JsonObject.Parse(fields.FinancialData);

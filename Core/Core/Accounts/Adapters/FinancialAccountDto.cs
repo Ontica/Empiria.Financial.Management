@@ -38,6 +38,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto Currency {
+      get; internal set;
+    }
+
     public NamedEntityDto Project {
       get; internal set;
     }
@@ -105,6 +109,10 @@ namespace Empiria.Financial.Adapters {
     }
 
     public string OrganizationalUnitName {
+      get; internal set;
+    }
+
+    public string CurrencyName {
       get; internal set;
     }
 
