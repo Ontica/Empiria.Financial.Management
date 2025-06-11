@@ -64,8 +64,13 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     #region Helpers
 
     static private string BuildBasePartyFilter(string basePartyUID) {
-      if (basePartyUID.Length == 0) {
+      if (basePartyUID.Length == 0 && (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
+                                      ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer"))) {
         return string.Empty;
+      }
+
+      if (basePartyUID.Length == 0 && ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager")) {
+        return $"BDG_TXN_BASE_PARTY_ID = {ExecutionServer.CurrentContact.Organization.Id}";
       }
 
       var baseParty = Party.Parse(basePartyUID);
@@ -119,8 +124,16 @@ namespace Empiria.Budgeting.Transactions.Adapters {
                $"BDG_TXN_AUTHORIZED_BY_ID = {userId} OR " +
                $"BDG_TXN_APPLIED_BY_ID = {userId})";
       }
-
-      return string.Empty;
+      if (stage == TransactionStage.ControlDesk) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
+            ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer")) {
+          return string.Empty;
+        }
+        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager")) {
+          return $"BDG_TXN_BASE_PARTY_ID = {ExecutionServer.CurrentContact.Organization.Id}";
+        }
+      }
+      return SearchExpression.NoRecordsFilter;
     }
 
 

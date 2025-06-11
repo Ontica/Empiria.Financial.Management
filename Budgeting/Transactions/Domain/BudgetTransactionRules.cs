@@ -58,6 +58,10 @@ namespace Empiria.Budgeting.Transactions {
           return false;
         }
 
+        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager") &&
+            _transaction.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+          return true;
+        }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id })) {
           return false;
@@ -73,7 +77,10 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Status != TransactionStatus.Authorized) {
           return false;
         }
-
+        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager") &&
+            _transaction.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+          return true;
+        }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id,
                                                 _transaction.AppliedBy.Id, _transaction.AuthorizedBy.Id })) {
@@ -114,6 +121,10 @@ namespace Empiria.Budgeting.Transactions {
            ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer"))) {
           return true;
         }
+        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager") &&
+            _transaction.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+          return true;
+        }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id })) {
           return false;
@@ -135,6 +146,10 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.BudgetTransactionType.IsProtected &&
             (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
              ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer"))) {
+          return true;
+        }
+        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager") &&
+            _transaction.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
           return true;
         }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
