@@ -40,7 +40,7 @@ namespace Empiria.Budgeting {
       this.BudgetType = baseSegment.BudgetSegmentType.BudgetType;
       this.BaseSegment = baseSegment;
       this.Code = baseSegment.Code;
-      this.Organization = (Organization) Organization.Primary;
+      this.Organization = Organization.Primary;
       this.OrganizationalUnit = orgUnit;
       this.StartDate = DateTime.Today.Date;
     }

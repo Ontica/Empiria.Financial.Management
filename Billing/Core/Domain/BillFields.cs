@@ -514,11 +514,11 @@ namespace Empiria.Billing {
                         "El documento que intenta guardar ya está registrado.");
 
       var issuedTo = Party.Parse(fields.IssuedToUID);
-      
-      var banobras = Party.Primary;
 
-      Assertion.Require(Party.Primary.Equals(issuedTo),
-                        $"El receptor del CFDI no es {Party.Primary.Name}");
+      var banobras = Organization.Primary;
+
+      Assertion.Require(Organization.Primary.Equals(issuedTo),
+                        $"El receptor del CFDI no es {Organization.Primary.Name}");
 
       Assertion.Require(fields.SchemaData.Fecha <= DateTime.Now,
                         "La fecha del documento no debe de ser mayor a la fecha actual.");
@@ -604,7 +604,7 @@ namespace Empiria.Billing {
       }
 
       var billsByPayable = BillData.GetBillsForPayable(payableId, billCategory);
-      
+
       Assertion.Require((billsByPayable.Sum(x=>x.Total) + fieldsTotal) <= payableTotal,
                           "El monto total de las facturas registradas y/o " +
                           "la factura que intenta guardar es mayor al monto total del contrato.");
