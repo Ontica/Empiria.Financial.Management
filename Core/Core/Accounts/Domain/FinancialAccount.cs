@@ -428,7 +428,7 @@ namespace Empiria.Financial {
       }
       Description = PatchField(fields.Description, Description);
       StandardAccount = PatchField(fields.StandardAccountUID, StandardAccount);
-      Currency = PatchField(fields.CurrencyId, Currency);
+      Currency = PatchField(fields.CurrencyUID, Currency);
       OrganizationalUnit = PatchField(fields.OrganizationalUnitUID, OrganizationalUnit);
       _attributes = JsonObject.Parse(fields.Attributes);
       _financialData = JsonObject.Parse(fields.FinancialData);

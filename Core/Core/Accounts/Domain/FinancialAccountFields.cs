@@ -55,9 +55,9 @@ namespace Empiria.Financial {
     } = string.Empty;
 
 
-    public int CurrencyId {
+    public string CurrencyUID {
       get; set;
-    }
+    } = string.Empty;
 
 
     public string ProjectUID {
@@ -92,6 +92,7 @@ namespace Empiria.Financial {
       FinancialAccountTypeUID = FieldPatcher.Clean(FinancialAccountTypeUID);
       StandardAccountUID = FieldPatcher.Clean(StandardAccountUID);
       OrganizationalUnitUID = FieldPatcher.Clean(OrganizationalUnitUID);
+      CurrencyUID = FieldPatcher.Clean(CurrencyUID);
       ProjectUID = FieldPatcher.Clean(ProjectUID);
 
       if (UID.Length != 0) {
@@ -108,6 +109,10 @@ namespace Empiria.Financial {
 
       if (OrganizationalUnitUID.Length != 0) {
         _ = OrganizationalUnit.Parse(OrganizationalUnitUID);
+      }
+
+      if (CurrencyUID.Length != 0) {
+        _ = Currency.Parse(CurrencyUID);
       }
 
       if (ProjectUID.Length != 0) {
