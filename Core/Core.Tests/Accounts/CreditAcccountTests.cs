@@ -21,10 +21,10 @@ namespace Empiria.Tests.Financial.Accounts {
     [Fact]
     public void Should_Update_CreditData() {
       var attributes = new CreditAttributes {
-        NoCredito = "002000",
-        EtapaCredito = 1,
-        Acreditado = "La Vía Óntica SC",
-        TipoCredito = "Linea directa",
+        Borrower = "La Vía Óntica SC",
+        CreditStage = TestsObjects.TryGetObject<CreditStage>(),
+        CreditType = TestsObjects.TryGetObject<CreditType>(),
+        ExternalCreditNo = EmpiriaString.BuildRandomString(32)
       };
 
       var fields = new FinancialAccountFields {
@@ -35,8 +35,10 @@ namespace Empiria.Tests.Financial.Accounts {
 
       sut.Update(fields);
 
-      Assert.Equal(((CreditAttributes) fields.Attributes).Acreditado, ((CreditAttributes) sut.Attributes).Acreditado);
-      Assert.Equal(((CreditAttributes) fields.Attributes).EtapaCredito, ((CreditAttributes) sut.Attributes).EtapaCredito);
+      Assert.Equal(((CreditAttributes) fields.Attributes).Borrower, ((CreditAttributes) sut.Attributes).Borrower);
+      Assert.Equal(((CreditAttributes) fields.Attributes).CreditStage, ((CreditAttributes) sut.Attributes).CreditStage);
+      Assert.Equal(((CreditAttributes) fields.Attributes).CreditType, ((CreditAttributes) sut.Attributes).CreditType);
+      Assert.Equal(((CreditAttributes) fields.Attributes).ExternalCreditNo, ((CreditAttributes) sut.Attributes).ExternalCreditNo);
     }
 
 

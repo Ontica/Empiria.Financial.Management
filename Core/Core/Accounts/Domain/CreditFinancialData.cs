@@ -31,123 +31,121 @@ namespace Empiria.Financial {
 
     #region Properties
 
-    public decimal Interes {
+    public decimal Fees {
       get {
-        return _financialExtData.Get("interes", 0m);
+        return _financialExtData.Get("fees", 0m);
       }
       private set {
-        _financialExtData.SetIfValue("interes", value);
+        _financialExtData.SetIfValue("fees", value);
       }
     }
 
 
-    public decimal Comision {
+    public decimal CurrentBalance {
       get {
-        return _financialExtData.Get("comision", 0m);
+        return _financialExtData.Get("currentBalance", 0m);
       }
       private set {
-        _financialExtData.SetIfValue("comision", value);
+        _financialExtData.SetIfValue("currentBalance", value);
       }
     }
 
 
-    public decimal Saldo {
+    public int InvestmentTerm {
       get {
-        return _financialExtData.Get("saldo", 0m);
+        return _financialExtData.Get("investmentTerm", 0);
       }
       private set {
-        _financialExtData.SetIfValue("saldo", value);
+        _financialExtData.SetIfValue("investmentTerm", value);
       }
     }
 
 
-    public int PlazoInversion {
+    public int GracePeriod {
       get {
-        return _financialExtData.Get("plazoInversion", 0);
+        return _financialExtData.Get("gracePeriod", 0);
       }
       private set {
-        _financialExtData.SetIfValue("plazoInversion", value);
+        _financialExtData.SetIfValue("gracePeriod", value);
       }
     }
 
 
-    public int PeriodoGracia {
+    public int RepaymentTerm {
       get {
-        return _financialExtData.Get("periodoGracia", 0);
+        return _financialExtData.Get("repaymentTerm", 0);
       }
       private set {
-        _financialExtData.SetIfValue("periodoGracia", value);
+        _financialExtData.SetIfValue("repaymentTerm", value);
       }
     }
 
 
-    public int PlazoAmortizacion {
+    public DateTime RepaymentDate {
       get {
-        return _financialExtData.Get("plazoAmortizacion", 0);
+        return _financialExtData.Get("repaymentDate", ExecutionServer.DateMaxValue);
       }
       private set {
-        _financialExtData.SetIfValue("plazoAmortizacion", value);
-      }
-
-    }
-
-
-    public DateTime FechaAmortizacion {
-      get {
-        return _financialExtData.Get("fechaAmortizacion", ExecutionServer.DateMaxValue);
-      }
-      private set {
-        _financialExtData.SetIfValue("fechaAmortizacion", value);
+        _financialExtData.SetIfValue("repaymentDate", value);
       }
     }
 
 
-    public decimal TipoCambio {
+    public decimal ExchangeRate {
       get {
-        return _financialExtData.Get("tipoCambio", 0m);
+        return _financialExtData.Get("exchangeRate", 0m);
       }
       private set {
-        _financialExtData.SetIfValue("tipoCambio", value);
+        _financialExtData.SetIfValue("exchangeRate", value);
+      }
+    }
+
+    public decimal InterestRate {
+      get {
+        return _financialExtData.Get("interestRate", 0m);
+      }
+      private set {
+        _financialExtData.SetIfValue("interestRate", value);
       }
     }
 
 
-    public decimal Tasa {
+    public InterestRateType InterestRateType {
       get {
-        return _financialExtData.Get("tasa", 0m);
+        return _financialExtData.Get("interestRateTypeId", InterestRateType.Empty);
       }
       private set {
-        _financialExtData.SetIfValue("tasa", value);
+        _financialExtData.SetIfValue("interestRateTypeId", value.Id);
       }
     }
 
 
-    public decimal FactorTasa {
+    public decimal InterestRateFactor {
       get {
-        return _financialExtData.Get("factorTasa", 0m);
+        return _financialExtData.Get("interestRateFactor", 0m);
       }
       private set {
-        _financialExtData.SetIfValue("factorTasa", value);
+        _financialExtData.SetIfValue("interestRateFactor", value);
       }
     }
 
 
-    public decimal TasaPiso {
+    public decimal InterestRateFloor {
       get {
-        return _financialExtData.Get("tasaPiso", 0m);
+        return _financialExtData.Get("interestRateFloor", 0m);
       }
       private set {
-        _financialExtData.SetIfValue("tasaPiso", value);
+        _financialExtData.SetIfValue("interestRateFloor", value);
       }
     }
 
 
-    public decimal TasaTecho {
+    public decimal InterestRateCeiling {
       get {
-        return _financialExtData.Get("tasaTecho", 0m);
+        return _financialExtData.Get("interestRateCeiling", 0m);
       }
       private set {
-        _financialExtData.SetIfValue("tasaTecho", value);
+        _financialExtData.SetIfValue("interestRateCeiling", value);
       }
     }
 

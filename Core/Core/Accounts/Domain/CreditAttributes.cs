@@ -33,45 +33,54 @@ namespace Empiria.Financial {
 
     #region Properties
 
-    public string NoCredito {
+    public string Borrower {
       get {
-        return _attributes.Get("noCredito", string.Empty);
+        return _attributes.Get("borrower", string.Empty);
       }
-      set {
-        _attributes.SetIfValue("noCredito", value);
+      internal set {
+        _attributes.SetIfValue("borrower", value);
       }
     }
 
 
-    public string Acreditado {
+    public string AccountingAccount {
       get {
-        return _attributes.Get("acreditado", string.Empty);
+        return _attributes.Get("creditAccountingAccount", string.Empty);
       }
-      set {
-        _attributes.SetIfValue("acreditado", value);
+      internal set {
+        _attributes.SetIfValue("creditAccountingAccount", value);
       }
     }
 
 
-    public string TipoCredito {
+    public CreditStage CreditStage {
       get {
-        return _attributes.Get("tipoCredito", string.Empty);
+        return _attributes.Get("creditStageId", CreditStage.Empty);
       }
-      set {
-        _attributes.SetIfValue("tipoCredito", value);
+      internal set {
+        _attributes.SetIfValue("creditStageId", value.Id);
       }
     }
 
 
-    public int EtapaCredito {
+    public CreditType CreditType {
       get {
-        return _attributes.Get("etapaCredito", 0);
+        return _attributes.Get("creditTypeId", CreditType.Empty);
       }
-      set {
-        _attributes.SetIfValue("etapaCredito", value);
+      internal set {
+        _attributes.SetIfValue("creditTypeId", value.Id);
       }
     }
 
+
+    public string ExternalCreditNo {
+      get {
+        return _attributes.Get("externalCreditNo", string.Empty);
+      }
+      internal set {
+        _attributes.SetIfValue("externalCreditNo", value);
+      }
+    }
 
     #endregion Properties
 
