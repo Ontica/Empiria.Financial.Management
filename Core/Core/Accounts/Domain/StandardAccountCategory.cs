@@ -59,9 +59,9 @@ namespace Empiria.Financial {
     }
 
 
-    public FixedList<string> Roles {
+    public new FixedList<string> Roles {
       get {
-        return base.ExtData.GetFixedList<string>("roles", false);
+        return base.Roles;
       }
     }
 
@@ -72,6 +72,7 @@ namespace Empiria.Financial {
     public FixedList<StandardAccount> GetStandardAccounts() {
       return ChartOfAccounts.GetStandardAccounts(this);
     }
+
 
     public bool PlaysRole(string role) {
       Assertion.Require(role, nameof(role));
