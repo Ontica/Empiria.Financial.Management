@@ -174,10 +174,9 @@ namespace Empiria.Billing {
     [DataField("BILL_IDENTIFICATORS")]
     private string _identificators = string.Empty;
 
-
     public FixedList<string> Identificators {
       get {
-        return _identificators.Split(' ').ToFixedList();
+        return EmpiriaString.Tagging(_identificators);
       }
     }
 
@@ -187,10 +186,9 @@ namespace Empiria.Billing {
 
     public FixedList<string> Tags {
       get {
-        return _tags.Split(' ').ToFixedList();
+        return EmpiriaString.Tagging(_tags);
       }
     }
-
 
 
     [DataField("BILL_SCHEMA_EXT_DATA")]
@@ -321,8 +319,7 @@ namespace Empiria.Billing {
       IssueDate = PatchField(fields.SchemaData.Fecha, IssueDate);
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
-      _identificators = PatchField(fields.Identificators, _identificators);
-      _tags = PatchField(fields.Tags, _tags);
+      _tags = EmpiriaString.Tagging(fields.Tags);
       Currency = PatchField(fields.CurrencyUID, Currency);
       Subtotal = fields.Subtotal;
       Discount = fields.Discount;
@@ -344,8 +341,7 @@ namespace Empiria.Billing {
       IssueDate = PatchField(fields.SchemaData.Fecha, IssueDate);
       IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
       IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
-      _identificators = PatchField(fields.Identificators, _identificators);
-      _tags = PatchField(fields.Tags, _tags);
+      _tags = EmpiriaString.Tagging(fields.Tags);
       Currency = PatchField(fields.CurrencyUID, Currency);
       GetTotals(fields.ComplementRelatedPayoutData);
       Discount = fields.Discount;
@@ -360,7 +356,6 @@ namespace Empiria.Billing {
       Subtotal = payoutData.Select(x => x.Taxes.Sum(y => y.BaseAmount)).Sum();
       Total = payoutData.Sum(x => x.Monto);
     }
-
 
     #endregion Methods
 

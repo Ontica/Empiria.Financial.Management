@@ -151,8 +151,7 @@ namespace Empiria.Financial.Projects {
 
     public FixedList<string> Identifiers {
       get {
-        return _identifiers.Split(' ')
-                           .ToFixedList();
+        return EmpiriaString.Tagging(_identifiers);
       }
     }
 
@@ -162,8 +161,7 @@ namespace Empiria.Financial.Projects {
 
     public FixedList<string> Tags {
       get {
-        return _tags.Split(' ')
-                    .ToFixedList();
+        return EmpiriaString.Tagging(_tags);
       }
     }
 
@@ -376,7 +374,6 @@ namespace Empiria.Financial.Projects {
       Assignee = PatchField(fields.AssigneeUID, this.Assignee);
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
-
       _projectGoals = JsonObject.Parse(fields.ProjectGoals);
 
       MarkAsDirty();

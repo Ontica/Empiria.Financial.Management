@@ -68,7 +68,7 @@ namespace Empiria.Financial.Data {
       var op = DataOperation.Parse("write_FMS_Account",
          o.Id, o.UID, o.FinancialAccountType.Id, o.StandardAccount.Id, o.Organization.Id,
          o.OrganizationalUnit.Id, o.Project.Id, o.LedgerId, o.Currency.Id, o.AccountNo, o.Description,
-         string.Join(" ", o.Identifiers), string.Join(" ", o.Tags), o.Attributes.ToJsonString(),
+         EmpiriaString.Tagging(o.Identifiers), EmpiriaString.Tagging(o.Tags), o.Attributes.ToJsonString(),
          o.FinancialData.ToJsonString(), o.ConfigData.ToString(), extensionData, o.Keywords,
          o.Parent.Id, o.StartDate, o.EndDate, o.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 

@@ -198,8 +198,7 @@ namespace Empiria.Financial {
 
     public FixedList<string> Identifiers {
       get {
-        return _identifiers.Split(' ')
-                           .ToFixedList();
+        return EmpiriaString.Tagging(_identifiers);
       }
     }
 
@@ -209,8 +208,7 @@ namespace Empiria.Financial {
 
     public FixedList<string> Tags {
       get {
-        return _tags.Split(' ')
-                    .ToFixedList();
+        return EmpiriaString.Tagging(_tags);
       }
     }
 
@@ -432,7 +430,7 @@ namespace Empiria.Financial {
       OrganizationalUnit = PatchField(fields.OrganizationalUnitUID, OrganizationalUnit);
       _attributes = JsonObject.Parse(fields.Attributes);
       _financialData = JsonObject.Parse(fields.FinancialData);
-      _tags = string.Join(" ", fields.Tags);
+      _tags = EmpiriaString.Tagging(fields.Tags);
 
       MarkAsDirty();
     }

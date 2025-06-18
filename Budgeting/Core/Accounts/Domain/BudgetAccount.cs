@@ -120,7 +120,7 @@ namespace Empiria.Budgeting {
 
     public FixedList<string> Identificators {
       get {
-        return _identificators.Split(' ').ToFixedList();
+        return EmpiriaString.Tagging(_identificators);
       }
     }
 
@@ -130,7 +130,7 @@ namespace Empiria.Budgeting {
 
     public FixedList<string> Tags {
       get {
-        return _tags.Split(' ').ToFixedList();
+        return EmpiriaString.Tagging(_tags);
       }
     }
 

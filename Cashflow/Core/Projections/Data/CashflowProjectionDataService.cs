@@ -109,7 +109,7 @@ namespace Empiria.CashFlow.Projections.Data {
           o.FinancialProject.Id, -1, o.Product.Id, o.ProductUnit.Id, o.ProductQty,
           o.Year, o.Month, o.Day, o.ProjectionColumn.Id, o.Currency.Id, o.OriginalAmount,
           o.InflowAmount, o.OutflowAmount, o.ExchangeRate, o.Description, o.Justification,
-          string.Join(" ", o.Tags), o.ExtensionData.ToString(), o.Keywords, o.LinkedProjectionEntryId,
+          EmpiriaString.Tagging(o.Tags), o.ExtensionData.ToString(), o.Keywords, o.LinkedProjectionEntryId,
           o.Position, o.PostingTime, o.PostedBy.Id, (char) o.Status);
 
       DataWriter.Execute(op);

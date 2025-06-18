@@ -134,7 +134,7 @@ namespace Empiria.Billing.Data {
           o.BillNo, o.RelatedBillNo, o.IssueDate, o.IssuedBy.Id, o.IssuedTo.Id,
           o.ManagedBy.Id, o.PayableEntityTypeId, o.PayableEntityId, o.PayableId,
           o.Currency.Id, o.Subtotal, o.Discount, o.Total, o.PaymentMethod,
-          string.Join(" ", o.Identificators), string.Join(" ", o.Tags),
+          EmpiriaString.Tagging(o.Identificators), EmpiriaString.Tagging(o.Tags),
           o.SchemaData.ToJsonString(), o.SecurityData.ToJsonString(), string.Empty,
           extData, o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
@@ -145,12 +145,12 @@ namespace Empiria.Billing.Data {
     static internal void WriteBillConcept(BillConcept o, string extensionData) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Concept",
-        o.Id, o.UID, o.GetEmpiriaType().Id, o.Bill.Id, o.Product.Id,
-        o.SATProduct.Id, o.SATProductCode, o.Description,
-        string.Join(" ", o.Identificators), string.Join(" ", o.Tags),
-        o.Quantity, o.QuantityUnit.Id, o.UnitPrice, o.Subtotal, o.Discount,
-        o.SchemaData.ToJsonString(), extensionData, o.Keywords,
-        o.PostedBy.Id, o.PostingTime, (char) o.Status);
+          o.Id, o.UID, o.GetEmpiriaType().Id, o.Bill.Id, o.Product.Id,
+          o.SATProduct.Id, o.SATProductCode, o.Description,
+          EmpiriaString.Tagging(o.Identificators), EmpiriaString.Tagging(o.Tags),
+          o.Quantity, o.QuantityUnit.Id, o.UnitPrice, o.Subtotal, o.Discount,
+          o.SchemaData.ToJsonString(), extensionData, o.Keywords,
+          o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }

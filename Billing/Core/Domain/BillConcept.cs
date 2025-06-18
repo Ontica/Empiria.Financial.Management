@@ -96,10 +96,7 @@ namespace Empiria.Billing {
 
     public FixedList<string> Identificators {
       get {
-        return _identificators.Split(' ').ToFixedList();
-      }
-      private set {
-        _identificators = string.Join(" ", value);
+        return EmpiriaString.Tagging(_identificators);
       }
     }
 
@@ -109,10 +106,7 @@ namespace Empiria.Billing {
 
     public FixedList<string> Tags {
       get {
-        return _tags.Split(' ').ToFixedList();
-      }
-      private set {
-        _tags = string.Join(" ", value);
+        return EmpiriaString.Tagging(_tags);
       }
     }
 
@@ -207,8 +201,7 @@ namespace Empiria.Billing {
       this.SATProductCode = fields.SATProductCode;
       this.Product = PatchField(fields.ProductUID, Product);
       this.Description = PatchField(fields.Description, Description);
-      this.Identificators = fields.Identificators.ToFixedList();
-      this.Tags = fields.Tags.ToFixedList();
+      _tags = EmpiriaString.Tagging(fields.Tags);
       this.Quantity = fields.Quantity;
       this.QuantityUnit = Product.BaseUnit;
       this.UnitPrice = fields.UnitPrice;

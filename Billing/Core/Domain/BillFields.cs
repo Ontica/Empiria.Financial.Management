@@ -61,14 +61,9 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public string Identificators {
+    public string[] Tags {
       get; set;
-    } = string.Empty;
-
-
-    public string Tags {
-      get; set;
-    } = string.Empty;
+    } = new string[0];
 
 
     public string CurrencyUID {
@@ -188,11 +183,6 @@ namespace Empiria.Billing {
     public string Description {
       get; set;
     } = string.Empty;
-
-
-    public string[] Identificators {
-      get; set;
-    } = new string[0];
 
 
     public string[] Tags {

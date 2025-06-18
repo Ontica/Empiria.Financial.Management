@@ -153,7 +153,7 @@ namespace Empiria.Budgeting.Transactions.Data {
       var op = DataOperation.Parse("write_FMS_Budget_Transaction",
           o.Id, o.UID, o.BudgetTransactionType.Id, o.OperationSource.Id, o.BaseBudget.Id,
           o.BaseParty.Id, o.TransactionNo, o.Description, o.Justification,
-          o.Identificators, o.Tags, o.ContractId,
+          EmpiriaString.Tagging(o.Identificators), EmpiriaString.Tagging(o.Tags), o.ContractId,
           o.HasEntity ? o.GetEntity().GetEmpiriaType().Id : -1,
           o.HasEntity ? o.GetEntity().Id : -1,
           o.PayableId, o.ApplicationDate, o.AppliedBy.Id, o.RecordingDate, o.RecordedBy.Id,

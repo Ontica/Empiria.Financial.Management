@@ -118,14 +118,22 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_TXN_IDENTIFICATORS")]
-    public string Identificators {
-      get; private set;
+    private string _identificators = string.Empty;
+
+    public FixedList<string> Identificators {
+      get {
+        return EmpiriaString.Tagging(_identificators);
+      }
     }
 
 
     [DataField("BDG_TXN_TAGS")]
-    public string Tags {
-      get; private set;
+    private string _tags = string.Empty;
+
+    public FixedList<string> Tags {
+      get {
+        return EmpiriaString.Tagging(_tags);
+      }
     }
 
 
@@ -245,7 +253,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(TransactionNo, Description, Identificators, Tags,
+        return EmpiriaString.BuildKeywords(TransactionNo, Description, _identificators, _tags,
                                            BudgetTransactionType.DisplayName,
                                            BaseBudget.Keywords, BaseParty.Keywords);
       }
