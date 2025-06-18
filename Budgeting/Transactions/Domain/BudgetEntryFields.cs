@@ -114,13 +114,13 @@ namespace Empiria.Budgeting.Transactions {
 
     static public void EnsureIsValid(this BudgetEntryFields fields) {
 
-      fields.BudgetAccountUID = FieldPatcher.Clean(fields.BudgetAccountUID);
-      fields.BalanceColumnUID = FieldPatcher.Clean(fields.BalanceColumnUID);
-      fields.ProductUID = FieldPatcher.Clean(fields.ProductUID);
-      fields.ProductUnitUID = FieldPatcher.Clean(fields.ProductUnitUID);
-      fields.PartyUID = FieldPatcher.Clean(fields.PartyUID);
-      fields.ProjectUID = FieldPatcher.Clean(fields.ProjectUID);
-      fields.CurrencyUID = FieldPatcher.Clean(fields.CurrencyUID);
+      fields.BudgetAccountUID = Patcher.CleanUID(fields.BudgetAccountUID);
+      fields.BalanceColumnUID = Patcher.CleanUID(fields.BalanceColumnUID);
+      fields.ProductUID = Patcher.CleanUID(fields.ProductUID);
+      fields.ProductUnitUID = Patcher.CleanUID(fields.ProductUnitUID);
+      fields.PartyUID = Patcher.CleanUID(fields.PartyUID);
+      fields.ProjectUID = Patcher.CleanUID(fields.ProjectUID);
+      fields.CurrencyUID = Patcher.CleanUID(fields.CurrencyUID);
 
       fields.Description = EmpiriaString.Clean(fields.Description);
       fields.Justification = EmpiriaString.Clean(fields.Justification);

@@ -280,28 +280,28 @@ namespace Empiria.CashFlow.Projections {
       if (fields.Year.HasValue && !Projection.Plan.IncludesYear(fields.Year.Value)) {
         Assertion.RequireFail($"Invalid year for this projection's plan ({fields.Year.Value}).");
       }
-      if (fields.Month.HasValue && !Projection.Plan.IncludesMonth(PatchField(fields.Year, Year),
-                                                                             fields.Month.Value)) {
+      if (fields.Month.HasValue && !Projection.Plan.IncludesMonth(Patcher.Patch(fields.Year, Year),
+                                                                  fields.Month.Value)) {
         Assertion.RequireFail($"Invalid month for this projection's plan ({fields.Month.Value}).");
       }
 
-      CashFlowAccount = PatchField(fields.CashFlowAccountUID, CashFlowAccount);
-      ProjectionColumn = PatchField(fields.ProjectionColumnUID, ProjectionColumn);
-      Product = PatchField(fields.ProductUID, Product);
-      ProductUnit = PatchField(fields.ProductUnitUID, ProductUnit);
+      CashFlowAccount = Patcher.Patch(fields.CashFlowAccountUID, CashFlowAccount);
+      ProjectionColumn = Patcher.Patch(fields.ProjectionColumnUID, ProjectionColumn);
+      Product = Patcher.Patch(fields.ProductUID, Product);
+      ProductUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit);
       ProductQty = fields.ProductQty;
-      Year = PatchField(fields.Year, Year);
-      Month = PatchField(fields.Month, Month);
+      Year = Patcher.Patch(fields.Year, Year);
+      Month = Patcher.Patch(fields.Month, Month);
 
-      Currency = PatchField(fields.CurrencyUID, Currency);
-      OriginalAmount = PatchField(fields.Amount, Amount);
+      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
+      OriginalAmount = Patcher.Patch(fields.Amount, Amount);
 
       if (CashFlowAccount.IsInflowAccount) {
         InflowAmount = OriginalAmount;
       } else {
         OutflowAmount = OriginalAmount;
       }
-      ExchangeRate = PatchField(fields.ExchangeRate, ExchangeRate);
+      ExchangeRate = Patcher.Patch(fields.ExchangeRate, ExchangeRate);
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);

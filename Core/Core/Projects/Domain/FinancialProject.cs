@@ -366,12 +366,12 @@ namespace Empiria.Financial.Projects {
 
       fields.EnsureValid();
 
-      Category = PatchField(fields.ProjectTypeCategoryUID, this.Category);
-      Subprogram = PatchField(fields.SubprogramUID, Subprogram);
-      Name = PatchField(fields.Name, this.Name);
-      ProjectNo = PatchField(fields.ProjectNo, this.ProjectNo);
-      BaseOrgUnit = PatchField(fields.BaseOrgUnitUID, this.BaseOrgUnit);
-      Assignee = PatchField(fields.AssigneeUID, this.Assignee);
+      Category = Patcher.Patch(fields.ProjectTypeCategoryUID, this.Category);
+      Subprogram = Patcher.Patch(fields.SubprogramUID, Subprogram);
+      Name = Patcher.Patch(fields.Name, this.Name);
+      ProjectNo = Patcher.Patch(fields.ProjectNo, this.ProjectNo);
+      BaseOrgUnit = Patcher.Patch(fields.BaseOrgUnitUID, this.BaseOrgUnit);
+      Assignee = Patcher.Patch(fields.AssigneeUID, this.Assignee);
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
       _projectGoals = JsonObject.Parse(fields.ProjectGoals);

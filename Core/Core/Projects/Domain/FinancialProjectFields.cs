@@ -73,13 +73,13 @@ namespace Empiria.Financial.Projects {
     #region Methods
 
     internal void EnsureValid() {
-      ProjectNo = FieldPatcher.Clean(ProjectNo);
-      Name = FieldPatcher.Clean(Name);
+      ProjectNo = EmpiriaString.Clean(ProjectNo);
+      Name = EmpiriaString.Clean(Name);
 
-      ProjectTypeCategoryUID = FieldPatcher.Clean(ProjectTypeCategoryUID);
-      SubprogramUID = FieldPatcher.Clean(SubprogramUID);
-      BaseOrgUnitUID = FieldPatcher.Clean(BaseOrgUnitUID);
-      AssigneeUID = FieldPatcher.Clean(AssigneeUID);
+      ProjectTypeCategoryUID = Patcher.CleanUID(ProjectTypeCategoryUID);
+      SubprogramUID = Patcher.CleanUID(SubprogramUID);
+      BaseOrgUnitUID = Patcher.CleanUID(BaseOrgUnitUID);
+      AssigneeUID = Patcher.CleanUID(AssigneeUID);
 
       if (ProjectTypeCategoryUID.Length != 0) {
         _ = FinancialProjectCategory.Parse(ProjectTypeCategoryUID);

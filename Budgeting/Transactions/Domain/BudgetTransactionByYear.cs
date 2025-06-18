@@ -111,12 +111,12 @@ namespace Empiria.Budgeting.Transactions {
     internal FixedList<BudgetEntry> GetBudgetEntries(BudgetEntryByYearFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      var column = FieldPatcher.PatchField(fields.BalanceColumnUID, BalanceColumn.Empty);
-      var account = FieldPatcher.PatchField(fields.BudgetAccountUID, BudgetAccount.Empty);
-      var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
-      var productUnit = FieldPatcher.PatchField(fields.ProductUnitUID, ProductUnit.Empty);
-      var project = FieldPatcher.PatchField(fields.ProjectUID, Project.Empty);
-      var currency = FieldPatcher.PatchField(fields.CurrencyUID, Transaction.BaseBudget.BudgetType.Currency);
+      var column = Patcher.Patch(fields.BalanceColumnUID, BalanceColumn.Empty);
+      var account = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount.Empty);
+      var product = Patcher.Patch(fields.ProductUID, Product.Empty);
+      var productUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
+      var project = Patcher.Patch(fields.ProjectUID, Project.Empty);
+      var currency = Patcher.Patch(fields.CurrencyUID, Transaction.BaseBudget.BudgetType.Currency);
       var year = fields.Year;
 
       FixedList<BudgetEntry> entries = Transaction.Entries.FindAll(x => x.BalanceColumn.Equals(column) &&

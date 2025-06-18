@@ -245,7 +245,7 @@ namespace Empiria.Payments.Payables {
 
       fields.EnsureValid();
 
-      Description = PatchCleanField(fields.Description, PayableEntity.Description);
+      Description = Patcher.PatchClean(fields.Description, PayableEntity.Description);
       ExchangeRate = fields.ExchangeRate;
 
       DueTime = fields.DueTime;

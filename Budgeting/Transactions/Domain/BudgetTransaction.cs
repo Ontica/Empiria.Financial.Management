@@ -431,12 +431,12 @@ namespace Empiria.Budgeting.Transactions {
 
 
     internal BudgetEntry TryGetEntry(BudgetEntryFields fields) {
-      var column = FieldPatcher.PatchField(fields.BalanceColumnUID, BalanceColumn.Empty);
-      var account = FieldPatcher.PatchField(fields.BudgetAccountUID, BudgetAccount.Empty);
-      var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
-      var productUnit = FieldPatcher.PatchField(fields.ProductUnitUID, ProductUnit.Empty);
-      var project = FieldPatcher.PatchField(fields.ProjectUID, Project.Empty);
-      var currency = FieldPatcher.PatchField(fields.CurrencyUID, BaseBudget.BudgetType.Currency);
+      var column = Patcher.Patch(fields.BalanceColumnUID, BalanceColumn.Empty);
+      var account = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount.Empty);
+      var product = Patcher.Patch(fields.ProductUID, Product.Empty);
+      var productUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
+      var project = Patcher.Patch(fields.ProjectUID, Project.Empty);
+      var currency = Patcher.Patch(fields.CurrencyUID, BaseBudget.BudgetType.Currency);
 
       return _entries.Value.Find(x => x.BalanceColumn.Equals(column) &&
                                       x.BudgetAccount.Equals(account) &&
@@ -457,12 +457,12 @@ namespace Empiria.Budgeting.Transactions {
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
-      BaseParty = PatchField(fields.BasePartyUID, BaseParty);
-      RequestedBy = PatchField(fields.RequestedByUID, RequestedBy);
+      BaseParty = Patcher.Patch(fields.BasePartyUID, BaseParty);
+      RequestedBy = Patcher.Patch(fields.RequestedByUID, RequestedBy);
       ContractId = fields.ContractId;
       PayableId = fields.PayableId;
-      OperationSource = PatchField(fields.OperationSourceUID, OperationSource);
-      ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
+      OperationSource = Patcher.Patch(fields.OperationSourceUID, OperationSource);
+      ApplicationDate = Patcher.Patch(fields.ApplicationDate, ApplicationDate);
     }
 
 

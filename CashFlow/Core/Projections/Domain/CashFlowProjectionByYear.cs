@@ -111,11 +111,11 @@ namespace Empiria.CashFlow.Projections {
     internal FixedList<CashFlowProjectionEntry> GetProjectionEntries(CashFlowProjectionEntryByYearFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      var column = FieldPatcher.PatchField(fields.ProjectionColumnUID, CashFlowProjectionColumn.Empty);
-      var account = FieldPatcher.PatchField(fields.CashFlowAccountUID, FinancialAccount.Empty);
-      var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
-      var productUnit = FieldPatcher.PatchField(fields.ProductUnitUID, ProductUnit.Empty);
-      var currency = FieldPatcher.PatchField(fields.CurrencyUID, Projection.Plan.BaseCurrency);
+      var column = Patcher.Patch(fields.ProjectionColumnUID, CashFlowProjectionColumn.Empty);
+      var account = Patcher.Patch(fields.CashFlowAccountUID, FinancialAccount.Empty);
+      var product = Patcher.Patch(fields.ProductUID, Product.Empty);
+      var productUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
+      var currency = Patcher.Patch(fields.CurrencyUID, Projection.Plan.BaseCurrency);
       var year = fields.Year;
 
       FixedList<CashFlowProjectionEntry> entries = Projection.Entries.FindAll(x =>
@@ -144,6 +144,24 @@ namespace Empiria.CashFlow.Projections {
 
       return list.ToFixedList()
                  .Sort((x, y) => x.CashFlowAccount.Name.CompareTo(y.CashFlowAccount.Name));
+    }
+
+
+    public FixedList<CashFlowProjectionTotalByYear> GetTotals() {
+      var groups = Projection.Entries.GroupBy(x => $"{x.Year}|{Projection.Id}|{x.ProjectionColumn.Id}");
+
+      var list = new List<CashFlowProjectionTotalByYear>(groups.Count());
+
+      foreach (var group in groups) {
+        int year = int.Parse(group.Key.Split('|')[0]);
+        var projectionColumn = CashFlowProjectionColumn.Parse(int.Parse(group.Key.Split('|')[2]));
+
+        var item = new CashFlowProjectionTotalByYear(Projection, year, projectionColumn, group.ToFixedList());
+
+        list.Add(item);
+      }
+
+      return list.ToFixedList();
     }
 
 

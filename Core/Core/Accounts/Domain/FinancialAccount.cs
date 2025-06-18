@@ -422,12 +422,12 @@ namespace Empiria.Financial {
       fields.EnsureValid();
 
       if (AccountNo.Length == 0) {
-        AccountNo = PatchField(fields.AccountNo, AccountNo);
+        AccountNo = Patcher.PatchClean(fields.AccountNo, AccountNo);
       }
-      Description = PatchField(fields.Description, Description);
-      StandardAccount = PatchField(fields.StandardAccountUID, StandardAccount);
-      Currency = PatchField(fields.CurrencyUID, Currency);
-      OrganizationalUnit = PatchField(fields.OrganizationalUnitUID, OrganizationalUnit);
+      Description = Patcher.PatchClean(fields.Description, Description);
+      StandardAccount = Patcher.Patch(fields.StandardAccountUID, StandardAccount);
+      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
+      OrganizationalUnit = Patcher.Patch(fields.OrganizationalUnitUID, OrganizationalUnit);
       _attributes = JsonObject.Parse(fields.Attributes);
       _financialData = JsonObject.Parse(fields.FinancialData);
       _tags = EmpiriaString.Tagging(fields.Tags);

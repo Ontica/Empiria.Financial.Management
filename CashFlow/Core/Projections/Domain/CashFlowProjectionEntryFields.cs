@@ -96,13 +96,13 @@ namespace Empiria.CashFlow.Projections {
 
     static public void EnsureValid(this CashFlowProjectionEntryFields fields) {
 
-      fields.UID = FieldPatcher.Clean(fields.UID);
-      fields.ProjectionUID = FieldPatcher.Clean(fields.ProjectionUID);
-      fields.CashFlowAccountUID = FieldPatcher.Clean(fields.CashFlowAccountUID);
-      fields.ProjectionColumnUID = FieldPatcher.Clean(fields.ProjectionColumnUID);
-      fields.ProductUID = FieldPatcher.Clean(fields.ProductUID);
-      fields.ProductUnitUID = FieldPatcher.Clean(fields.ProductUnitUID);
-      fields.CurrencyUID = FieldPatcher.Clean(fields.CurrencyUID);
+      fields.UID = Patcher.CleanUID(fields.UID);
+      fields.ProjectionUID = Patcher.CleanUID(fields.ProjectionUID);
+      fields.CashFlowAccountUID = Patcher.CleanUID(fields.CashFlowAccountUID);
+      fields.ProjectionColumnUID = Patcher.CleanUID(fields.ProjectionColumnUID);
+      fields.ProductUID = Patcher.CleanUID(fields.ProductUID);
+      fields.ProductUnitUID = Patcher.CleanUID(fields.ProductUnitUID);
+      fields.CurrencyUID = Patcher.CleanUID(fields.CurrencyUID);
 
       fields.Description = EmpiriaString.Clean(fields.Description);
       fields.Justification = EmpiriaString.Clean(fields.Justification);

@@ -281,21 +281,21 @@ namespace Empiria.Budgeting.Transactions {
 
       fields.EnsureIsValid();
 
-      this.BudgetAccount = PatchField(fields.BudgetAccountUID, BudgetAccount);
-      this.Product = PatchField(fields.ProductUID, Product.Empty);
-      this.ProductUnit = PatchField(fields.ProductUnitUID, ProductUnit.Empty);
+      this.BudgetAccount = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount);
+      this.Product = Patcher.Patch(fields.ProductUID, Product.Empty);
+      this.ProductUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
       this.ProductQty = fields.ProductQty;
-      this.Project = PatchField(fields.ProjectUID, Project.Empty);
-      this.Party = PatchField(fields.PartyUID, Party.Empty);
+      this.Project = Patcher.Patch(fields.ProjectUID, Project.Empty);
+      this.Party = Patcher.Patch(fields.PartyUID, Party.Empty);
       this.OperationTypeId = fields.OperationTypeId;
       this.OperationId = fields.OperationId;
       this.BaseEntityItemId = fields.BaseEntityItemId;
-      this.BalanceColumn = PatchField(fields.BalanceColumnUID, BalanceColumn);
+      this.BalanceColumn = Patcher.Patch(fields.BalanceColumnUID, BalanceColumn);
       this.Description = EmpiriaString.Clean(fields.Description);
       this.Justification = EmpiriaString.Clean(fields.Justification);
       this.Year = fields.Year != 0 ? fields.Year : this.Year;
       this.Month = fields.Month != 0 ? fields.Month : this.Month;
-      this.Currency = PatchField(fields.CurrencyUID, Budget.BudgetType.Currency);
+      this.Currency = Patcher.Patch(fields.CurrencyUID, Budget.BudgetType.Currency);
       this.OriginalAmount = fields.OriginalAmount != 0 ? fields.OriginalAmount : Math.Abs(fields.Amount);
       this.Deposit = fields.Amount > 0 ? fields.Amount : 0m;
       this.Withdrawal = fields.Amount < 0 ? Math.Abs(fields.Amount) : 0m;

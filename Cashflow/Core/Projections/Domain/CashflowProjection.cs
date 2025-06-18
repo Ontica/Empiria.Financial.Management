@@ -382,16 +382,16 @@ namespace Empiria.CashFlow.Projections {
 
       fields.EnsureValid();
 
-      BaseParty = PatchField(fields.PartyUID, BaseParty);
-      BaseProject = PatchField(fields.ProjectUID, BaseProject);
-      BaseAccount = PatchField(fields.AccountUID, BaseAccount);
-      OperationSource = PatchField(fields.SourceUID, OperationSource);
+      BaseParty = Patcher.Patch(fields.PartyUID, BaseParty);
+      BaseProject = Patcher.Patch(fields.ProjectUID, BaseProject);
+      BaseAccount = Patcher.Patch(fields.AccountUID, BaseAccount);
+      OperationSource = Patcher.Patch(fields.SourceUID, OperationSource);
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
       Tags = string.Join(" ", fields.Tags);
 
-      ApplicationDate = PatchField(fields.ApplicationDate, ApplicationDate);
+      ApplicationDate = Patcher.Patch(fields.ApplicationDate, ApplicationDate);
     }
 
     #endregion Methods
@@ -498,11 +498,11 @@ namespace Empiria.CashFlow.Projections {
 
 
     internal CashFlowProjectionEntry TryGetEntry(CashFlowProjectionEntryFields fields) {
-      var column = FieldPatcher.PatchField(fields.ProjectionColumnUID, CashFlowProjectionColumn.Empty);
-      var account = FieldPatcher.PatchField(fields.CashFlowAccountUID, FinancialAccount.Empty);
-      var product = FieldPatcher.PatchField(fields.ProductUID, Product.Empty);
-      var productUnit = FieldPatcher.PatchField(fields.ProductUnitUID, ProductUnit.Empty);
-      var currency = FieldPatcher.PatchField(fields.CurrencyUID, Plan.BaseCurrency);
+      var column = Patcher.Patch(fields.ProjectionColumnUID, CashFlowProjectionColumn.Empty);
+      var account = Patcher.Patch(fields.CashFlowAccountUID, FinancialAccount.Empty);
+      var product = Patcher.Patch(fields.ProductUID, Product.Empty);
+      var productUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
+      var currency = Patcher.Patch(fields.CurrencyUID, Plan.BaseCurrency);
 
       return _entries.Value.Find(x => x.ProjectionColumn.Equals(column) &&
                                       x.CashFlowAccount.Equals(account) &&

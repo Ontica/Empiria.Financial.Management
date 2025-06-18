@@ -213,7 +213,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
 
     private string GetAttribute(XmlNode concept, string attributeName) {
-      return FieldPatcher.PatchField(concept.Attributes[attributeName]?.Value, string.Empty);
+      return Patcher.Patch(concept.Attributes[attributeName]?.Value, string.Empty);
     }
 
 

@@ -85,15 +85,15 @@ namespace Empiria.Financial {
 
     internal void EnsureValid() {
 
-      AccountNo = FieldPatcher.Clean(AccountNo);
-      Description = FieldPatcher.Clean(Description);
+      AccountNo = EmpiriaString.Clean(AccountNo);
+      Description = EmpiriaString.Clean(Description);
 
-      UID = FieldPatcher.Clean(UID);
-      FinancialAccountTypeUID = FieldPatcher.Clean(FinancialAccountTypeUID);
-      StandardAccountUID = FieldPatcher.Clean(StandardAccountUID);
-      OrganizationalUnitUID = FieldPatcher.Clean(OrganizationalUnitUID);
-      CurrencyUID = FieldPatcher.Clean(CurrencyUID);
-      ProjectUID = FieldPatcher.Clean(ProjectUID);
+      UID = Patcher.CleanUID(UID);
+      FinancialAccountTypeUID = Patcher.CleanUID(FinancialAccountTypeUID);
+      StandardAccountUID = Patcher.CleanUID(StandardAccountUID);
+      OrganizationalUnitUID = Patcher.CleanUID(OrganizationalUnitUID);
+      CurrencyUID = Patcher.CleanUID(CurrencyUID);
+      ProjectUID = Patcher.CleanUID(ProjectUID);
 
       if (UID.Length != 0) {
         _ = FinancialAccount.Parse(UID);

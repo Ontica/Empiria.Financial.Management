@@ -197,10 +197,10 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
-      this.SATProduct = PatchField(fields.SATProductUID, SATProducto.Empty);
+      this.SATProduct = Patcher.Patch(fields.SATProductUID, SATProducto.Empty);
       this.SATProductCode = fields.SATProductCode;
-      this.Product = PatchField(fields.ProductUID, Product);
-      this.Description = PatchField(fields.Description, Description);
+      this.Product = Patcher.Patch(fields.ProductUID, Product);
+      this.Description = Patcher.Patch(fields.Description, Description);
       _tags = EmpiriaString.Tagging(fields.Tags);
       this.Quantity = fields.Quantity;
       this.QuantityUnit = Product.BaseUnit;

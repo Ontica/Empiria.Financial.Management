@@ -316,11 +316,11 @@ namespace Empiria.Billing {
       fields.EnsureIsValidCreditNote(BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;
-      IssueDate = PatchField(fields.SchemaData.Fecha, IssueDate);
-      IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
-      IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
+      IssueDate = Patcher.Patch(fields.SchemaData.Fecha, IssueDate);
+      IssuedBy = Patcher.Patch(fields.IssuedByUID, IssuedBy);
+      IssuedTo = Patcher.Patch(fields.IssuedToUID, IssuedTo);
       _tags = EmpiriaString.Tagging(fields.Tags);
-      Currency = PatchField(fields.CurrencyUID, Currency);
+      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       Subtotal = fields.Subtotal;
       Discount = fields.Discount;
       Total = fields.Total;
@@ -338,11 +338,11 @@ namespace Empiria.Billing {
       fields.EnsureIsValidPaymentComplement(BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;
-      IssueDate = PatchField(fields.SchemaData.Fecha, IssueDate);
-      IssuedBy = PatchField(fields.IssuedByUID, IssuedBy);
-      IssuedTo = PatchField(fields.IssuedToUID, IssuedTo);
+      IssueDate = Patcher.Patch(fields.SchemaData.Fecha, IssueDate);
+      IssuedBy = Patcher.Patch(fields.IssuedByUID, IssuedBy);
+      IssuedTo = Patcher.Patch(fields.IssuedToUID, IssuedTo);
       _tags = EmpiriaString.Tagging(fields.Tags);
-      Currency = PatchField(fields.CurrencyUID, Currency);
+      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       GetTotals(fields.ComplementRelatedPayoutData);
       Discount = fields.Discount;
 
