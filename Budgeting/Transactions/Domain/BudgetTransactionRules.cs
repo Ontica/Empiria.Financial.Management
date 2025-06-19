@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.HumanResources;
+using Empiria.Parties;
 using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions {
@@ -15,13 +17,44 @@ namespace Empiria.Budgeting.Transactions {
   /// <summary>Provides services to control budget transaction's rules.</summary>
   internal class BudgetTransactionRules {
 
+    #region Fields
+
+    static internal readonly string ACQUISITION_MANAGER = "acquisition-manager";
+    static internal readonly string BUDGET_AUTHORIZER = "budget-authorizer";
+    static internal readonly string BUDGET_MANAGER = "budget-manager";
+
     private readonly BudgetTransaction _transaction;
+    private readonly Party _currentUser;
+    private readonly FixedList<string> _userRoles;
+    private readonly FixedList<OrganizationalUnit> _acquisitionOrgUnits;
+
+    #endregion Fields
+
+    #region Constructors and parsers
 
     internal BudgetTransactionRules(BudgetTransaction transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
       _transaction = transaction;
+
+      _currentUser = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      _userRoles = Accountability.GetListForResponsible(_currentUser)
+                                 .SelectDistinctFlat(x => x.Role.AppliesTo);
+
+      _acquisitionOrgUnits = GetUserAcquisitionOrgUnits();
     }
+
+
+    static internal FixedList<OrganizationalUnit> GetUserAcquisitionOrgUnits() {
+
+      var currentUser = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      return Accountability.GetCommissionersFor<OrganizationalUnit>(currentUser, "budgeting", ACQUISITION_MANAGER);
+    }
+
+
+    #endregion Constructors and parsers
 
     #region Properties
 
@@ -30,8 +63,8 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Status != TransactionStatus.OnAuthorization) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer")) {
+        if (_userRoles.Contains(BUDGET_MANAGER) ||
+            _userRoles.Contains(BUDGET_AUTHORIZER)) {
           return true;
         }
         return false;
@@ -44,7 +77,7 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Status != TransactionStatus.Authorized) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer")) {
+        if (_userRoles.Contains(BUDGET_AUTHORIZER)) {
           return true;
         }
         return false;
@@ -58,16 +91,14 @@ namespace Empiria.Budgeting.Transactions {
           return false;
         }
 
-        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager") &&
-            _transaction.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+        if (_userRoles.Contains(ACQUISITION_MANAGER) &&
+            _acquisitionOrgUnits.Contains(x => x.Equals(_transaction.BaseParty))) {
           return true;
         }
-        if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
-                                    new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id })) {
-          return false;
+        if (_currentUser.Equals(_transaction.PostedBy) || _currentUser.Equals(_transaction.RecordedBy)) {
+          return true;
         }
-
-        return true;
+        return false;
       }
     }
 
@@ -77,17 +108,14 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Status != TransactionStatus.Authorized) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager") &&
-            _transaction.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+        if (_userRoles.Contains(ACQUISITION_MANAGER) &&
+            _acquisitionOrgUnits.Contains(x => x.Equals(_transaction.BaseParty))) {
           return true;
         }
-        if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
-                                    new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id,
-                                                _transaction.AppliedBy.Id, _transaction.AuthorizedBy.Id })) {
-          return false;
+        if (_currentUser.Equals(_transaction.PostedBy) || _currentUser.Equals(_transaction.RecordedBy)) {
+          return true;
         }
-
-        return true;
+        return false;
       }
     }
 
@@ -98,8 +126,8 @@ namespace Empiria.Budgeting.Transactions {
             _transaction.Status != TransactionStatus.Authorized) {
           return false;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer")) {
+        if (_userRoles.Contains(BUDGET_MANAGER) ||
+            _userRoles.Contains(BUDGET_AUTHORIZER)) {
           return true;
         }
         return false;
@@ -117,20 +145,19 @@ namespace Empiria.Budgeting.Transactions {
           return false;
         }
         if (_transaction.BudgetTransactionType.IsProtected &&
-           (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
-           ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer"))) {
+           (_userRoles.Contains(BUDGET_MANAGER) ||
+            _userRoles.Contains(BUDGET_AUTHORIZER))) {
           return true;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager") &&
-            _transaction.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+        if (_userRoles.Contains(ACQUISITION_MANAGER) &&
+            _acquisitionOrgUnits.Contains(x => x.Equals(_transaction.BaseParty))) {
           return true;
         }
-        if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
-                                    new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id })) {
-          return false;
+        if (_currentUser.Equals(_transaction.PostedBy) || _currentUser.Equals(_transaction.RecordedBy)) {
+          return true;
         }
 
-        return true;
+        return false;
       }
     }
 
@@ -144,20 +171,19 @@ namespace Empiria.Budgeting.Transactions {
           return false;
         }
         if (_transaction.BudgetTransactionType.IsProtected &&
-            (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
-             ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer"))) {
+            (_userRoles.Contains(BUDGET_MANAGER) ||
+             _userRoles.Contains(BUDGET_AUTHORIZER))) {
           return true;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager") &&
-            _transaction.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+        if (_userRoles.Contains(ACQUISITION_MANAGER) &&
+            _acquisitionOrgUnits.Contains(x => x.Equals(_transaction.BaseParty))) {
           return true;
         }
-        if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
-                                    new int[] { _transaction.PostedBy.Id, _transaction.RecordedBy.Id })) {
-          return false;
+        if (_currentUser.Equals(_transaction.PostedBy) || _currentUser.Equals(_transaction.RecordedBy)) {
+          return true;
         }
 
-        return true;
+        return false;
       }
     }
 

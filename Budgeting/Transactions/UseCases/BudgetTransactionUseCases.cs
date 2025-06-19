@@ -8,11 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
-using Empiria.Services;
-
+using Empiria.HumanResources;
 using Empiria.Parties;
+using Empiria.Services;
 using Empiria.StateEnums;
 
 using Empiria.Budgeting.Adapters;
@@ -64,13 +62,20 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetOrgUnitsForTransactionEdition(string budgetUID, string transactionTypeUID) {
+    public FixedList<NamedEntityDto> GetOrgUnitsForTransactionEdition(string budgetUID,
+                                                                      string transactionTypeUID) {
+
       Assertion.Require(budgetUID, nameof(budgetUID));
       Assertion.Require(transactionTypeUID, nameof(transactionTypeUID));
 
-      var orgUnits = Party.GetList<OrganizationalUnit>(DateTime.Today);
+      var party = Party.ParseWithContact(ExecutionServer.CurrentContact);
 
-      return orgUnits.MapToNamedEntityList();
+      var orgUnits =
+        Accountability.GetCommissionersFor<OrganizationalUnit>(party, "budgeting",
+                                                               BudgetTransactionRules.ACQUISITION_MANAGER);
+
+      return orgUnits.Select(x => new NamedEntityDto(x.UID, x.FullName))
+                     .ToFixedList();
     }
 
 

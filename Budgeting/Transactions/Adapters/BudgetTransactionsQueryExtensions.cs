@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.HumanResources;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
@@ -24,12 +25,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static internal string MapToFilterString(this BudgetTransactionsQuery query) {
+      FixedList<string> userRoles = GetCurrentUserRoles();
+
       string budgetTypeFilter = BuildBudgetTypeFilter(query.BudgetTypeUID);
       string baseBudgetFilter = BuildBaseBudgetFilter(query.BaseBudgetUID);
       string transactionTypeFilter = BuildTransactionTypeFilter(query.TransactionTypeUID);
-      string basePartyFilter = BuildBasePartyFilter(query.BasePartyUID);
+      string basePartyFilter = BuildBasePartyFilter(query.BasePartyUID, userRoles);
       string operationSourceFilter = BuildOperationSourceFilter(query.OperationSourceUID);
-      string transactionStageFilter = BuildTransactionStageFilter(query.Stage);
+      string transactionStageFilter = BuildTransactionStageFilter(query.Stage, userRoles);
 
       string tagsFilter = BuildTagsFilter(query.Tags);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
@@ -50,7 +53,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return filter.ToString();
     }
 
-
     static internal string MapToSortString(this BudgetTransactionsQuery query) {
       if (query.OrderBy.Length != 0) {
         return query.OrderBy;
@@ -63,14 +65,17 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     #region Helpers
 
-    static private string BuildBasePartyFilter(string basePartyUID) {
-      if (basePartyUID.Length == 0 && (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
-                                      ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer"))) {
+    static private string BuildBasePartyFilter(string basePartyUID, FixedList<string> userRoles) {
+
+      if (basePartyUID.Length == 0 && (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
+                                       userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER))) {
         return string.Empty;
       }
 
-      if (basePartyUID.Length == 0 && ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager")) {
-        return $"BDG_TXN_BASE_PARTY_ID = {ExecutionServer.CurrentContact.Organization.Id}";
+      if (basePartyUID.Length == 0 && userRoles.Contains(BudgetTransactionRules.ACQUISITION_MANAGER)) {
+        var orgUnits = BudgetTransactionRules.GetUserAcquisitionOrgUnits();
+
+        return SearchExpression.ParseInSet("BDG_TXN_BASE_PARTY_ID", orgUnits.Select(x => x.Id));
       }
 
       var baseParty = Party.Parse(basePartyUID);
@@ -114,7 +119,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
-    static private string BuildTransactionStageFilter(TransactionStage stage) {
+    static private string BuildTransactionStageFilter(TransactionStage stage, FixedList<string> userRoles) {
       int userId = ExecutionServer.CurrentUserId;
 
       if (stage == TransactionStage.MyInbox) {
@@ -123,16 +128,21 @@ namespace Empiria.Budgeting.Transactions.Adapters {
                $"BDG_TXN_REQUESTED_BY_ID = {userId} OR " +
                $"BDG_TXN_AUTHORIZED_BY_ID = {userId} OR " +
                $"BDG_TXN_APPLIED_BY_ID = {userId})";
-      }
-      if (stage == TransactionStage.ControlDesk) {
-        if (ExecutionServer.CurrentPrincipal.IsInRole("budget-manager") ||
-            ExecutionServer.CurrentPrincipal.IsInRole("budget-authorizer")) {
+
+      } else if (stage == TransactionStage.ControlDesk) {
+
+        if (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
+            userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER)) {
           return string.Empty;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole("acquisition-manager")) {
-          return $"BDG_TXN_BASE_PARTY_ID = {ExecutionServer.CurrentContact.Organization.Id}";
+
+        if (userRoles.Contains(BudgetTransactionRules.ACQUISITION_MANAGER)) {
+          var orgUnits = BudgetTransactionRules.GetUserAcquisitionOrgUnits();
+
+          return SearchExpression.ParseInSet("BDG_TXN_BASE_PARTY_ID", orgUnits.Select(x => x.Id));
         }
       }
+
       return SearchExpression.NoRecordsFilter;
     }
 
@@ -175,6 +185,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       //var filter = SearchExpression.ParseOrLikeKeywords("PRODUCT_TAGS", string.Join(" ", tags));
 
       //return $"({filter})";
+    }
+
+
+    static private FixedList<string> GetCurrentUserRoles() {
+      var currentUser = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      return Accountability.GetListForResponsible(currentUser)
+                           .SelectDistinctFlat(x => x.Role.AppliesTo);
     }
 
     #endregion Helpers
