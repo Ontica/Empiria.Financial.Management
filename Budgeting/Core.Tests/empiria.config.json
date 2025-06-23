@@ -2,22 +2,17 @@
   "appName": "Empiria Budgeting Management System Core Tests",
   "description": "Domain types, classes and services tests environment settings",
   "version": "1.0",
-  "date": "2024-03-08",
+  "date": "2025-06-25",
   "settings": [
-    {
-      "type": "",
-      "key": "ApplicationKey",
-      "value": "{{APPLICATION-KEY}}"
-    },
     {
       "type": "",
       "key": "GlobalConfigurationFile",
       "value": "{{GLOBAL-CONFIGURATION-FILE}}"
     },
     {
-      "type": "Tests",
-      "key": "SessionToken",
-      "value": "{{TESTING-SESSION-TOKEN}}"
+      "type": "",
+      "key": "IsTestingModule",
+      "value": true
     }
   ]
 }
