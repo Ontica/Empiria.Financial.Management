@@ -30,7 +30,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       string budgetTypeFilter = BuildBudgetTypeFilter(query.BudgetTypeUID);
       string baseBudgetFilter = BuildBaseBudgetFilter(query.BaseBudgetUID);
       string transactionTypeFilter = BuildTransactionTypeFilter(query.TransactionTypeUID);
-      string basePartyFilter = BuildBasePartyFilter(query.BasePartyUID, userRoles);
+      string basePartyFilter = BuildBasePartyFilter(query.BasePartyUID);
       string operationSourceFilter = BuildOperationSourceFilter(query.OperationSourceUID);
       string transactionStageFilter = BuildTransactionStageFilter(query.Stage, userRoles);
 
@@ -65,17 +65,9 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     #region Helpers
 
-    static private string BuildBasePartyFilter(string basePartyUID, FixedList<string> userRoles) {
-
-      if (basePartyUID.Length == 0 && (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
-                                       userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER))) {
+    static private string BuildBasePartyFilter(string basePartyUID) {
+      if (basePartyUID.Length == 0) {
         return string.Empty;
-      }
-
-      if (basePartyUID.Length == 0 && userRoles.Contains(BudgetTransactionRules.ACQUISITION_MANAGER)) {
-        var orgUnits = BudgetTransactionRules.GetUserAcquisitionOrgUnits();
-
-        return SearchExpression.ParseInSet("BDG_TXN_BASE_PARTY_ID", orgUnits.Select(x => x.Id));
       }
 
       var baseParty = Party.Parse(basePartyUID);
@@ -139,6 +131,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         if (userRoles.Contains(BudgetTransactionRules.ACQUISITION_MANAGER)) {
           var orgUnits = BudgetTransactionRules.GetUserAcquisitionOrgUnits();
 
+          if (orgUnits.Count == 0) {
+            return SearchExpression.NoRecordsFilter;
+          }
+
           return SearchExpression.ParseInSet("BDG_TXN_BASE_PARTY_ID", orgUnits.Select(x => x.Id));
         }
       }
@@ -191,8 +187,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static private FixedList<string> GetCurrentUserRoles() {
       var currentUser = Party.ParseWithContact(ExecutionServer.CurrentContact);
 
-      return Accountability.GetListForResponsible(currentUser)
-                           .SelectDistinctFlat(x => x.Role.AppliesTo);
+      return Accountability.GetResponsibleRoles(currentUser);
     }
 
     #endregion Helpers
