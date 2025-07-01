@@ -98,7 +98,7 @@ namespace Empiria.Financial.Reporting {
 
       html.Replace("{{SYSTEM.DATETIME}}", $"Impresión: {DateTime.Now.ToString("dd/MMM/yyyy HH:mm")}");
       html.Replace("{{REPORT.TITLE}}",
-                    txn.AuthorizedBy.IsEmptyInstance ? NO_VALID : "Cédula de control presupuestal");
+                    txn.AuthorizedBy.IsEmptyInstance ? NO_VALID : _templateConfig.Title);
       html.Replace("{{TRANSACTION_NUMBER}}", txn.TransactionNo);
       html.Replace("{{TRANSACTION_TYPE.NAME}}", txn.BudgetTransactionType.DisplayName);
       html.Replace("{{BASE_PARTY.NAME}}", txn.BaseParty.Name);
