@@ -39,8 +39,7 @@ namespace Empiria.Budgeting.Transactions {
 
       _currentUser = Party.ParseWithContact(ExecutionServer.CurrentContact);
 
-      _userRoles = Accountability.GetListForResponsible(_currentUser)
-                                 .SelectDistinctFlat(x => x.Role.AppliesTo);
+      _userRoles = Accountability.GetResponsibleRoles(_currentUser);
 
       _acquisitionOrgUnits = GetUserAcquisitionOrgUnits();
     }
