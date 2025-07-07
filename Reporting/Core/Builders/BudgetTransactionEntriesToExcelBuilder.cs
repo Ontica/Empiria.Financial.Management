@@ -15,6 +15,7 @@ using Empiria.StateEnums;
 using Empiria.Storage;
 
 using Empiria.Budgeting.Transactions;
+using Empiria.Parties;
 
 namespace Empiria.Financial.Reporting {
 
@@ -68,25 +69,27 @@ namespace Empiria.Financial.Reporting {
           _excelFile.SetCell($"B{i}", txn.Transaction.TransactionNo);
           _excelFile.SetCell($"C{i}", txn.Transaction.BudgetTransactionType.DisplayName);
           _excelFile.SetCell($"D{i}", txn.Transaction.Status.GetName());
-          _excelFile.SetCell($"E{i}", entry.BudgetAccount.Code);
-          _excelFile.SetCell($"F{i}", entry.BudgetAccount.BaseSegment.Name);
-          _excelFile.SetCell($"G{i}", entry.BudgetAccount.BudgetProgram);
-          _excelFile.SetCell($"H{i}", entry.Year);
-          _excelFile.SetCell($"I{i}", entry.BalanceColumn.Name);
-          _excelFile.SetCell($"J{i}", entry.Total);
-          _excelFile.SetCell($"K{i}", entry.GetAmountForMonth(1));
-          _excelFile.SetCell($"L{i}", entry.GetAmountForMonth(2));
-          _excelFile.SetCell($"M{i}", entry.GetAmountForMonth(3));
-          _excelFile.SetCell($"N{i}", entry.GetAmountForMonth(4));
-          _excelFile.SetCell($"O{i}", entry.GetAmountForMonth(5));
-          _excelFile.SetCell($"P{i}", entry.GetAmountForMonth(6));
-          _excelFile.SetCell($"Q{i}", entry.GetAmountForMonth(7));
-          _excelFile.SetCell($"R{i}", entry.GetAmountForMonth(8));
-          _excelFile.SetCell($"S{i}", entry.GetAmountForMonth(9));
-          _excelFile.SetCell($"T{i}", entry.GetAmountForMonth(10));
-          _excelFile.SetCell($"U{i}", entry.GetAmountForMonth(11));
-          _excelFile.SetCell($"V{i}", entry.GetAmountForMonth(12));
-          _excelFile.SetCell($"W{i}", entry.Justification);
+          _excelFile.SetCell($"E{i}", ((OrganizationalUnit) txn.Transaction.BaseParty).Code);
+          _excelFile.SetCell($"F{i}", txn.Transaction.BaseParty.Name);
+          _excelFile.SetCell($"G{i}", entry.BudgetAccount.Code);
+          _excelFile.SetCell($"H{i}", entry.BudgetAccount.BaseSegment.Name);
+          _excelFile.SetCell($"I{i}", entry.BudgetAccount.BudgetProgram);
+          _excelFile.SetCell($"J{i}", entry.Year);
+          _excelFile.SetCell($"K{i}", entry.BalanceColumn.Name);
+          _excelFile.SetCell($"L{i}", entry.Total);
+          _excelFile.SetCell($"M{i}", entry.GetAmountForMonth(1));
+          _excelFile.SetCell($"N{i}", entry.GetAmountForMonth(2));
+          _excelFile.SetCell($"O{i}", entry.GetAmountForMonth(3));
+          _excelFile.SetCell($"P{i}", entry.GetAmountForMonth(4));
+          _excelFile.SetCell($"Q{i}", entry.GetAmountForMonth(5));
+          _excelFile.SetCell($"R{i}", entry.GetAmountForMonth(6));
+          _excelFile.SetCell($"S{i}", entry.GetAmountForMonth(7));
+          _excelFile.SetCell($"T{i}", entry.GetAmountForMonth(8));
+          _excelFile.SetCell($"U{i}", entry.GetAmountForMonth(9));
+          _excelFile.SetCell($"V{i}", entry.GetAmountForMonth(10));
+          _excelFile.SetCell($"W{i}", entry.GetAmountForMonth(11));
+          _excelFile.SetCell($"X{i}", entry.GetAmountForMonth(12));
+          _excelFile.SetCell($"Y{i}", entry.Justification);
           i++;
         }  //  foreach entry
       } // foreach txn
