@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Financial;
+
 using Empiria.Parties;
 using Empiria.Services;
 using Empiria.StateEnums;
@@ -55,6 +56,22 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       return BudgetTransactionMapper.Map(transaction);
     }
 
+
+    public int AutoCloseTransactions(Budget budget) {
+      var txns = BudgetTransaction.GetFullList<BudgetTransaction>()
+                                  .FindAll(x => x.BaseBudget.Equals(budget) && x.Status == TransactionStatus.Authorized);
+
+      int counter = 0;
+      foreach(var txn in txns) {
+        FixedList<DocumentDto> documents = DocumentServices.GetEntityDocuments(txn);
+
+        if (documents.Count == 2) {
+          CloseTransaction(txn.UID);
+          counter++;
+        }
+      }
+      return counter;
+    }
 
     public BudgetTransactionHolderDto CloseTransaction(string budgetTransactionUID) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));

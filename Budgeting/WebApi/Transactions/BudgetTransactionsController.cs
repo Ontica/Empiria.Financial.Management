@@ -108,14 +108,27 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
         Budget budget = BaseObject.GetFullList<Budget>().Find(x => x.PlanningAutoGenerationTransactionTypes.Count != 0);
 
-        FixedList<BudgetTransactionDescriptorDto> generated = usecases.GeneratePlanningTransactions(budget.UID);
+        int closed = usecases.AutoCloseTransactions(budget);
 
         var result = new BulkOperationResult {
-          Message = $"Se generaron {generated.Count} transacciones presupuestales para el presupuesto {budget.Name}."
+          Message = $"Se cerraron automáticamente {closed} transacciones presupuestales para el presupuesto {budget.Name}."
         };
 
         return new SingleObjectModel(base.Request, result);
       }
+
+      //using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+
+      //  Budget budget = BaseObject.GetFullList<Budget>().Find(x => x.PlanningAutoGenerationTransactionTypes.Count != 0);
+
+      //  FixedList<BudgetTransactionDescriptorDto> generated = usecases.GeneratePlanningTransactions(budget.UID);
+
+      //  var result = new BulkOperationResult {
+      //    Message = $"Se generaron {generated.Count} transacciones presupuestales para el presupuesto {budget.Name}."
+      //  };
+
+      //  return new SingleObjectModel(base.Request, result);
+      //}
     }
 
 
