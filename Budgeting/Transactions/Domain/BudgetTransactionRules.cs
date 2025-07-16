@@ -76,7 +76,8 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Status != TransactionStatus.Authorized) {
           return false;
         }
-        if (_userRoles.Contains(BUDGET_AUTHORIZER)) {
+        if (_userRoles.Contains(BUDGET_MANAGER) ||
+            _userRoles.Contains(BUDGET_AUTHORIZER)) {
           return true;
         }
         return false;
