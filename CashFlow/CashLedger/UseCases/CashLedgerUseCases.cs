@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Threading.Tasks;
+
 using Empiria.Services;
 
 using Empiria.CashFlow.CashLedger.Adapters;
@@ -32,7 +34,31 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
 
     #region Use cases
 
-    public FixedList<CashTransactionDescriptor> SearchTransactions(CashLedgerQuery query) {
+    public Task<FixedList<NamedEntityDto>> GetAccountingLedgers() {
+
+      return CashLedgerData.GetAccountingLedgers();
+    }
+
+
+    public Task<FixedList<NamedEntityDto>> GetTransactionSources() {
+
+      return CashLedgerData.GetTransactionSources();
+    }
+
+
+    public Task<FixedList<NamedEntityDto>> GetTransactionTypes() {
+
+      return CashLedgerData.GetTransactionTypes();
+    }
+
+
+    public Task<FixedList<NamedEntityDto>> GetVoucherTypes() {
+
+      return CashLedgerData.GetVoucherTypes();
+    }
+
+
+    public Task<FixedList<CashTransactionDescriptor>> SearchTransactions(CashLedgerQuery query) {
       Assertion.Require(query, nameof(query));
 
       return CashLedgerData.GetTransactions(query);

@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Threading.Tasks;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -22,13 +23,60 @@ namespace Empiria.CashFlow.WebApi {
 
     #region Web Apis
 
-    [HttpPost]
-    [Route("v1/cash-flow/cash-ledger")]
-    public CollectionModel SearchCashLedgerTransactions([FromBody] CashLedgerQuery query) {
-      base.RequireBody(query);
+    [HttpGet]
+    [Route("v1/cash-flow/cash-ledger/accounting-ledgers")]
+    public async Task<CollectionModel> GetAccountingLedgers() {
 
       using (var usecases = CashLedgerUseCases.UseCaseInteractor()) {
-        FixedList<CashTransactionDescriptor> transactions = usecases.SearchTransactions(query);
+        FixedList<NamedEntityDto> accountingLedgers = await usecases.GetAccountingLedgers();
+
+        return new CollectionModel(base.Request, accountingLedgers);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/cash-flow/cash-ledger/transaction-sources")]
+    public async Task<CollectionModel> GetTransactionSources() {
+
+      using (var usecases = CashLedgerUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> transactionTypes = await usecases.GetTransactionSources();
+
+        return new CollectionModel(base.Request, transactionTypes);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/cash-flow/cash-ledger/transaction-types")]
+    public async Task<CollectionModel> GetTransactionTypes() {
+
+      using (var usecases = CashLedgerUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> transactionTypes = await usecases.GetTransactionTypes();
+
+        return new CollectionModel(base.Request, transactionTypes);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/cash-flow/cash-ledger/voucher-types")]
+    public async Task<CollectionModel> GetVoucherTypes() {
+
+      using (var usecases = CashLedgerUseCases.UseCaseInteractor()) {
+        FixedList<NamedEntityDto> voucherTypes = await usecases.GetVoucherTypes();
+
+        return new CollectionModel(base.Request, voucherTypes);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/cash-flow/cash-ledger/transactions/search")]
+    public async Task<CollectionModel> SearchCashLedgerTransactions([FromBody] CashLedgerQuery query) {
+
+      using (var usecases = CashLedgerUseCases.UseCaseInteractor()) {
+        FixedList<CashTransactionDescriptor> transactions = await usecases.SearchTransactions(query);
 
         return new CollectionModel(base.Request, transactions);
       }
