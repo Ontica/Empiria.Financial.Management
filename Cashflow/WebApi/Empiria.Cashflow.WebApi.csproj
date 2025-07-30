@@ -64,10 +64,12 @@
     <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
     <PackageReference Include="Empiria.Central" Version="8.0.0" />
     <PackageReference Include="Empiria.CashFlow.Core" Version="1.0.0" />
+    <PackageReference Include="Empiria.CashFlow.CashLedger" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\extensions\WebApi\Empiria.WebApi.csproj" />
     <ProjectReference Include="..\..\..\central\Central\Empiria.Central.csproj" />
     <ProjectReference Include="..\Core\Empiria.CashFlow.Core.csproj" />
+    <ProjectReference Include="..\CashLedger\Empiria.CashFlow.CashLedger.csproj" />
   </ItemGroup>
 </Project>

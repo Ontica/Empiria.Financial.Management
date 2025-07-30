@@ -16,47 +16,47 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   public class CashTransactionDescriptor {
 
     public long Id {
-      get; internal set;
+      get; set;
     }
 
     public string Number {
-      get; internal set;
+      get; set;
     }
 
     public string LedgerName {
-      get; internal set;
+      get; set;
     }
 
     public string Concept {
-      get; internal set;
+      get; set;
     }
 
     public string TransactionTypeName {
-      get; internal set;
+      get; set;
     }
 
     public string VoucherTypeName {
-      get; internal set;
+      get; set;
     }
 
     public string SourceName {
-      get; internal set;
+      get; set;
     }
 
     public DateTime AccountingDate {
-      get; internal set;
+      get; set;
     }
 
     public DateTime RecordingDate {
-      get; internal set;
+      get; set;
     }
 
     public string ElaboratedBy {
-      get; internal set;
+      get; set;
     }
 
     public string StatusName {
-      get; internal set;
+      get; set;
     }
 
   }  // class CashTransactionDescriptor
