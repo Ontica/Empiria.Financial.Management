@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : CashFlow Management                        Component : Adapters Layer                          *
-*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Query DTO                               *
+*  Assembly : Empiria.CashFlow.CashLedger.dll            Pattern   : Query DTO                               *
 *  Type     : CashLedgerQuery                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Input query DTO used to retrieve cash ledger transactions.                                     *
@@ -17,16 +17,6 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   /// <summary>Input query DTO used to retrieve cash ledger transactions.</summary>
   public class CashLedgerQuery {
 
-    public TransactionStage Stage {
-      get; set;
-    } = TransactionStage.All;
-
-
-    public TransactionStatus Status {
-      get; set;
-    } = TransactionStatus.All;
-
-
     public DateTime FromAccountingDate {
       get; set;
     } = ExecutionServer.DateMinValue;
@@ -35,6 +25,21 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     public DateTime ToAccountingDate {
       get; set;
     } = ExecutionServer.DateMaxValue;
+
+
+    public TransactionStage Stage {
+      get; set;
+    } = TransactionStage.All;
+
+
+    public string Concept {
+      get; set;
+    } = string.Empty;
+
+
+    public string AccountingLedgerUID {
+      get; set;
+    } = string.Empty;
 
 
     public string Keywords {
