@@ -18,54 +18,30 @@ using Empiria.CashFlow.CashLedger.Data;
 namespace Empiria.CashFlow.CashLedger.UseCases {
 
   /// <summary>Use cases used to retrive and manage cash ledger transactions.</summary>
-  public class CashLedgerUseCases : UseCase {
+  public class CashTransactionUseCases : UseCase {
 
     #region Constructors and parsers
 
-    protected CashLedgerUseCases() {
+    protected CashTransactionUseCases() {
       // no-op
     }
 
-    static public CashLedgerUseCases UseCaseInteractor() {
-      return UseCase.CreateInstance<CashLedgerUseCases>();
+    static public CashTransactionUseCases UseCaseInteractor() {
+      return UseCase.CreateInstance<CashTransactionUseCases>();
     }
 
     #endregion Constructors and parsers
 
     #region Use cases
 
-    public Task<FixedList<NamedEntityDto>> GetAccountingLedgers() {
-
-      return CashLedgerData.GetAccountingLedgers();
-    }
-
-
-    public Task<FixedList<NamedEntityDto>> GetTransactionSources() {
-
-      return CashLedgerData.GetTransactionSources();
-    }
-
-
-    public Task<FixedList<NamedEntityDto>> GetTransactionTypes() {
-
-      return CashLedgerData.GetTransactionTypes();
-    }
-
-
-    public Task<FixedList<NamedEntityDto>> GetVoucherTypes() {
-
-      return CashLedgerData.GetVoucherTypes();
-    }
-
-
     public Task<FixedList<CashTransactionDescriptor>> SearchTransactions(CashLedgerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      return CashLedgerData.GetTransactions(query);
+      return CashTransactionData.SearchTransactions(query);
     }
 
     #endregion Use cases
 
-  }  // class CashLedgerUseCases
+  }  // class CashTransactionUseCases
 
 }  // namespace Empiria.CashFlow.CashLedger.UseCases

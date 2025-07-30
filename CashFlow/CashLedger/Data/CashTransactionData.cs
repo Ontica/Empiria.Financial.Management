@@ -18,15 +18,9 @@ using Empiria.CashFlow.CashLedger.Adapters;
 namespace Empiria.CashFlow.CashLedger.Data {
 
   /// <summary>Provides cash ledger transactions data services using a web proxy.</summary>
-  static public class CashLedgerData {
+  static internal class CashTransactionData {
 
-    static public Task<FixedList<NamedEntityDto>> GetAccountingLedgers() {
-
-      return GetFixedList<NamedEntityDto>("v2/financial-accounting/ledgers/ifrs");
-    }
-
-
-    static internal async Task<FixedList<CashTransactionDescriptor>> GetTransactions(CashLedgerQuery query) {
+    static internal async Task<FixedList<CashTransactionDescriptor>> SearchTransactions(CashLedgerQuery query) {
       WebApiClient webApiClient = GetWebApiClient();
 
       string path = "v2/financial-accounting/cash-ledger/transactions/search";
@@ -36,34 +30,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
       return json.GetFixedList<CashTransactionDescriptor>("data");
     }
 
-
-    static public Task<FixedList<NamedEntityDto>> GetTransactionSources() {
-
-      return GetFixedList<NamedEntityDto>("v2/financial-accounting/vouchers/functional-areas");
-    }
-
-
-    static public Task<FixedList<NamedEntityDto>> GetTransactionTypes() {
-
-      return GetFixedList<NamedEntityDto>("v2/financial-accounting/vouchers/transaction-types");
-    }
-
-
-    static public Task<FixedList<NamedEntityDto>> GetVoucherTypes() {
-
-      return GetFixedList<NamedEntityDto>("v2/financial-accounting/vouchers/voucher-types");
-    }
-
     #region Helpers
-
-    private static async Task<FixedList<T>> GetFixedList<T>(string path) {
-      WebApiClient webApiClient = GetWebApiClient();
-
-      JsonObject json = await webApiClient.GetAsync<JsonObject>(path);
-
-      return json.GetFixedList<T>("data");
-    }
-
 
     static private WebApiClient GetWebApiClient() {
       return WebApiClient.GetInstance("SICOFIN");

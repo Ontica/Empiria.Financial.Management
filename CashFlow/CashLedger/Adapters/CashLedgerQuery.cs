@@ -88,6 +88,11 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     } = string.Empty;
 
 
+    public string SourceUID {
+      get; set;
+    } = string.Empty;
+
+
     public string OrderBy {
       get; set;
     } = string.Empty;
