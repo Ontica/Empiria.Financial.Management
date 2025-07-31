@@ -27,29 +27,19 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     } = ExecutionServer.DateMaxValue;
 
 
-    public TransactionStage Stage {
-      get; set;
-    } = TransactionStage.All;
-
-
-    public string Concept {
-      get; set;
-    } = string.Empty;
-
-
-    public string AccountingLedgerUID {
-      get; set;
-    } = string.Empty;
-
-
     public string Keywords {
       get; set;
     } = string.Empty;
 
 
-    public string[] CashAccounts {
+    public TransactionStatus Status {
       get; set;
-    } = new string[0];
+    } = TransactionStatus.All;
+
+
+    public string AccountingLedgerUID {
+      get; set;
+    } = string.Empty;
 
 
     public DateTime FromRecordingDate {
@@ -61,6 +51,10 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     } = ExecutionServer.DateMaxValue;
 
+    public string Concept {
+      get; set;
+    } = string.Empty;
+
 
     public string[] VoucherAccounts {
       get; set;
@@ -70,6 +64,11 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     public string[] SubledgerAccounts {
       get;
       set;
+    } = new string[0];
+
+
+    public string[] CashAccounts {
+      get; set;
     } = new string[0];
 
 

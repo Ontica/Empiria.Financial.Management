@@ -30,9 +30,17 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       return UseCase.CreateInstance<CashTransactionUseCases>();
     }
 
+
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public Task<CashTransactionHolderDto> GetTransaction(long id) {
+      Assertion.Require(id > 0, nameof(id));
+
+      return CashTransactionData.GetTransaction(id);
+    }
+
 
     public Task<FixedList<CashTransactionDescriptor>> SearchTransactions(CashLedgerQuery query) {
       Assertion.Require(query, nameof(query));

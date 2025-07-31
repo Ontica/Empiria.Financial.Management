@@ -23,10 +23,21 @@ namespace Empiria.CashFlow.WebApi {
 
     #region Web Apis
 
+    [HttpGet]
+    [Route("v1/cash-flow/cash-ledger/transactions/{id:long}")]
+    public async Task<SingleObjectModel> GetCashTransaction([FromUri] long id) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        CashTransactionHolderDto transaction = await usecases.GetTransaction(id);
+
+        return new SingleObjectModel(base.Request, transaction);
+      }
+    }
+
 
     [HttpPost]
     [Route("v1/cash-flow/cash-ledger/transactions/search")]
-    public async Task<CollectionModel> SearchCashLedgerTransactions([FromBody] CashLedgerQuery query) {
+    public async Task<CollectionModel> SearchCashTransactions([FromBody] CashLedgerQuery query) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
         FixedList<CashTransactionDescriptor> transactions = await usecases.SearchTransactions(query);

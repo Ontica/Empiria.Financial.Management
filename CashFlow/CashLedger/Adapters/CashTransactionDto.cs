@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using Empiria.Documents;
 using Empiria.History;
 
@@ -18,24 +17,26 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   public class CashTransactionHolderDto {
 
     public CashTransactionDescriptor Transaction {
-      get; internal set;
+      get; set;
     }
 
     public FixedList<CashTransactionEntryDto> Entries {
-      get; internal set;
+      get; set;
     }
 
     public FixedList<DocumentDto> Documents {
-      get; internal set;
-    }
+      get; set;
+    } = new FixedList<DocumentDto>();
+
 
     public FixedList<HistoryEntryDto> History {
-      get; internal set;
-    }
+      get; set;
+    } = new FixedList<HistoryEntryDto>();
+
 
     public CashTransactionActions Actions {
-      get; internal set;
-    }
+      get; set;
+    } = new CashTransactionActions { CanUpdate = true };
 
   }  // class CashTransactionHolderDto
 
@@ -45,7 +46,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   public class CashTransactionActions {
 
     public bool CanUpdate {
-      get; internal set;
+      get; set;
     }
 
   }  // class CashTransactionActions
@@ -56,63 +57,67 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   public class CashTransactionEntryDto {
 
     public long Id {
-      get; internal set;
+      get; set;
     }
 
     public string AccountNumber {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
     public string AccountName {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
     public string SectorCode {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
     public string SubledgerAccountNumber {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
     public string SubledgerAccountName {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
     public string VerificationNumber {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
     public string ResponsibilityAreaName {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
     public string CurrencyName {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
     public decimal ExchangeRate {
-      get; internal set;
+      get; set;
     }
 
     public decimal Debit {
-      get; internal set;
+      get; set;
     }
 
     public decimal Credit {
-      get; internal set;
+      get; set;
+    }
+
+    public int CashAccountId {
+      get; set;
     }
 
     public NamedEntityDto CashAccount {
-      get; internal set;
+      get; set;
     }
 
   }  // class CashTransactionEntryDto
