@@ -31,15 +31,28 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       return UseCase.CreateInstance<CashTransactionUseCases>();
     }
 
-
     #endregion Constructors and parsers
 
     #region Use cases
 
-    public Task<CashTransactionHolderDto> GetTransaction(long id) {
+    public async Task<CashTransactionHolderDto> ExecuteCommand(long id, CashEntriesCommand command) {
+      Assertion.Require(id > 0, nameof(id));
+      Assertion.Require(command, nameof(command));
+
+      command.SetCashAccountId();
+
+      CashTransactionHolderDto transaction = await CashTransactionData.ExecuteCommand(id, command);
+
+      return CashTransactionMapper.Map(transaction);
+    }
+
+
+    public async Task<CashTransactionHolderDto> GetTransaction(long id) {
       Assertion.Require(id > 0, nameof(id));
 
-      return CashTransactionData.GetTransaction(id);
+      CashTransactionHolderDto transaction = await CashTransactionData.GetTransaction(id);
+
+      return CashTransactionMapper.Map(transaction);
     }
 
 

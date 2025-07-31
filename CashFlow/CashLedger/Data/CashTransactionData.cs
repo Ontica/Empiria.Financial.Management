@@ -21,6 +21,17 @@ namespace Empiria.CashFlow.CashLedger.Data {
   /// <summary>Provides cash ledger transactions data services using a web proxy.</summary>
   static internal class CashTransactionData {
 
+    static internal async Task<CashTransactionHolderDto> ExecuteCommand(long id, CashEntriesCommand command) {
+      WebApiClient webApiClient = GetWebApiClient();
+
+      string path = $"v2/financial-accounting/cash-ledger/transactions/{id}/execute-command";
+
+      JsonObject json = await webApiClient.PostAsync<JsonObject>(command, path);
+
+      return json.Get<CashTransactionHolderDto>("data");
+    }
+
+
     static internal async Task<CashTransactionHolderDto> GetTransaction(long id) {
       WebApiClient webApiClient = GetWebApiClient();
 

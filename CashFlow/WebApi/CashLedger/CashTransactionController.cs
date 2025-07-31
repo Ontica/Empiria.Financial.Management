@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Cash Ledger                                  Component : Web Api                               *
-*  Assembly : Empiria.CashFlow.WebApi.dll                  Pattern   : Query Controller                      *
+*  Assembly : Empiria.CashFlow.WebApi.dll                  Pattern   : Web Api Controller                    *
 *  Type     : CashTransactionController                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Query web API used to retrive cash ledger transactions.                                        *
+*  Summary  : Web API used to retrive and update transactions.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -19,10 +19,10 @@ using Empiria.CashFlow.CashLedger.UseCases;
 
 namespace Empiria.CashFlow.WebApi {
 
-  /// <summary>Query web API used to retrive cash ledger transactions.</summary>
+  /// <summary>Web API used to retrive and update cash ledger transactions.</summary>
   public class CashTransactionController : WebApiController {
 
-    #region Web Apis
+    #region Query web apis
 
     [HttpGet]
     [Route("v1/cash-flow/cash-ledger/transactions/{id:long}")]
@@ -59,7 +59,22 @@ namespace Empiria.CashFlow.WebApi {
       }
     }
 
-    #endregion Web Apis
+    #endregion Query web apis
+
+    #region Command web apis
+
+    [HttpPost]
+    [Route("v1/cash-flow/cash-ledger/transactions/{id:long}/execute-command")]
+    public async Task<SingleObjectModel> ExecuteCommand([FromUri] long id, [FromBody] CashEntriesCommand command) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        CashTransactionHolderDto transaction = await usecases.ExecuteCommand(id, command);
+
+        return new SingleObjectModel(base.Request, transaction);
+      }
+    }
+
+    #endregion Command web apis
 
   }  // class CashTransactionController
 
