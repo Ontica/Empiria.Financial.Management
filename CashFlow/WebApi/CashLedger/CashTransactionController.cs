@@ -11,6 +11,7 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 
+using Empiria.Storage;
 using Empiria.WebApi;
 
 using Empiria.CashFlow.CashLedger.Adapters;
@@ -31,6 +32,18 @@ namespace Empiria.CashFlow.WebApi {
         CashTransactionHolderDto transaction = await usecases.GetTransaction(id);
 
         return new SingleObjectModel(base.Request, transaction);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/cash-flow/cash-ledger/transactions/{id:long}/print")]
+    public async Task<SingleObjectModel> GetCashTransactionAsPdfFile([FromUri] long id) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        FileDto pdfFile = await usecases.GetTransactionAsPdfFile(id);
+
+        return new SingleObjectModel(base.Request, pdfFile);
       }
     }
 

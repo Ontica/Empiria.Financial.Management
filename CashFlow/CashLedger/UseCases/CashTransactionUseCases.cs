@@ -11,6 +11,7 @@
 using System.Threading.Tasks;
 
 using Empiria.Services;
+using Empiria.Storage;
 
 using Empiria.CashFlow.CashLedger.Adapters;
 using Empiria.CashFlow.CashLedger.Data;
@@ -39,6 +40,13 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       Assertion.Require(id > 0, nameof(id));
 
       return CashTransactionData.GetTransaction(id);
+    }
+
+
+    public Task<FileDto> GetTransactionAsPdfFile(long id) {
+      Assertion.Require(id > 0, nameof(id));
+
+      return CashTransactionData.GetTransactionAsPdfFile(id);
     }
 
 

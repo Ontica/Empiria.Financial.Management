@@ -11,6 +11,7 @@
 using System.Threading.Tasks;
 
 using Empiria.Json;
+using Empiria.Storage;
 using Empiria.WebApi.Client;
 
 using Empiria.CashFlow.CashLedger.Adapters;
@@ -28,6 +29,17 @@ namespace Empiria.CashFlow.CashLedger.Data {
       JsonObject json = await webApiClient.GetAsync<JsonObject>(path);
 
       return json.Get<CashTransactionHolderDto>("data");
+    }
+
+
+    static internal async Task<FileDto> GetTransactionAsPdfFile(long id) {
+      WebApiClient webApiClient = GetWebApiClient();
+
+      string path = $"v2/financial-accounting/vouchers/{id}/print";
+
+      JsonObject json = await webApiClient.GetAsync<JsonObject>(path);
+
+      return json.Get<FileDto>("data");
     }
 
 
