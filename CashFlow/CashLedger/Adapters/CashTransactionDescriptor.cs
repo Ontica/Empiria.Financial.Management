@@ -55,6 +55,10 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
+    public string Status {
+      get; set;
+    }
+
     public string StatusName {
       get; set;
     }

@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Documents;
 using Empiria.History;
 
@@ -70,6 +72,11 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     } = string.Empty;
 
 
+    public string ParentAccountFullName {
+      get; set;
+    } = string.Empty;
+
+
     public string SectorCode {
       get; set;
     } = string.Empty;
@@ -90,9 +97,29 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     } = string.Empty;
 
 
+    public string ResponsibilityAreaCode {
+      get; set;
+    } = string.Empty;
+
+
     public string ResponsibilityAreaName {
       get; set;
     } = string.Empty;
+
+
+    public string BudgetCode {
+      get; set;
+    } = string.Empty;
+
+
+    public string Description {
+      get; set;
+    } = string.Empty;
+
+
+    public DateTime Date {
+      get; set;
+    } = ExecutionServer.DateMinValue;
 
 
     public string CurrencyName {
