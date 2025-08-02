@@ -231,7 +231,8 @@ namespace Empiria.Financial {
     internal FixedList<FinancialAccount> GetNonOperationAccounts() {
       return FinancialAccount.GetList()
                              .FindAll(x => x.StandardAccount.StdAcctNo.StartsWith(StdAcctNo) &&
-                                          !x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
+                                          !x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount))
+                             .Sort((x, y) => $"{x.Project.ProjectNo}|{x.AccountNo}".CompareTo($"{y.Project.ProjectNo}|{y.AccountNo}"));
     }
 
     #endregion Methods

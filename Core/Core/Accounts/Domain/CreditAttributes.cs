@@ -58,7 +58,7 @@ namespace Empiria.Financial {
         return _attributes.Get("creditStageId", CreditStage.Empty);
       }
       internal set {
-        _attributes.SetIfValue("creditStageId", value.Id);
+        _attributes.SetIf("creditStageId", value.Id, !value.IsEmptyInstance);
       }
     }
 
@@ -68,7 +68,7 @@ namespace Empiria.Financial {
         return _attributes.Get("creditTypeId", CreditType.Empty);
       }
       internal set {
-        _attributes.SetIfValue("creditTypeId", value.Id);
+        _attributes.SetIf("creditTypeId", value.Id, !value.IsEmptyInstance);
       }
     }
 

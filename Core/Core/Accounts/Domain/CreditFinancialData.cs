@@ -115,7 +115,7 @@ namespace Empiria.Financial {
         return _financialExtData.Get("interestRateTypeId", InterestRateType.Empty);
       }
       private set {
-        _financialExtData.SetIfValue("interestRateTypeId", value.Id);
+        _financialExtData.SetIf("interestRateTypeId", value.Id, !value.IsEmptyInstance);
       }
     }
 

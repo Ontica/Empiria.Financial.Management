@@ -23,11 +23,6 @@ namespace Empiria.Budgeting {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    protected Budget() {
-      // Required by Empiria Framework.
-    }
-
-
     static public Budget Parse(int id) => ParseId<Budget>(id);
 
     static public Budget Parse(string uid) => ParseKey<Budget>(uid);

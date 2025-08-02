@@ -44,7 +44,7 @@ namespace Empiria.Financial.Projects.Adapters {
       private ProjectProgramForEditionDto MapProgram(FinancialProgram program) {
         return new ProjectProgramForEditionDto {
           UID = program.UID,
-          Name = program.Name,
+          Name = $"({program.ProgramNo}) {program.Name}",
           Subprograms = MapSubprograms(program.Children)
         };
       }
@@ -71,7 +71,7 @@ namespace Empiria.Financial.Projects.Adapters {
       private ProjectSubprogramForEditionDto MapSubprogram(FinancialProgram subprogram) {
         return new ProjectSubprogramForEditionDto {
            UID = subprogram.UID,
-           Name = subprogram.Name,
+           Name = $"({subprogram.ProgramNo}) {subprogram.Name}",
            ProjectTypes = MapProjectTypes(subprogram)
         };
       }

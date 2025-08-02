@@ -176,11 +176,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         return string.Empty;
       }
 
-      return string.Empty;
-
-      //var filter = SearchExpression.ParseOrLikeKeywords("PRODUCT_TAGS", string.Join(" ", tags));
-
-      //return $"({filter})";
+      return SearchExpression.ParseAndLikeKeywords("BDG_TXN_TAGS", string.Join(" ", tags));
     }
 
 
