@@ -11,6 +11,7 @@
 using Xunit;
 
 using Empiria.Financial.Rules;
+using Empiria.Financial.Rules.Data;
 
 namespace Empiria.Tests.Financial.Rules {
 
@@ -20,11 +21,12 @@ namespace Empiria.Tests.Financial.Rules {
     #region Facts
 
     [Fact]
-    public void Should_Get_All_Financial_Rules() {
-      var sut = BaseObject.GetFullList<FinancialRule>();
+    public void Clean_Financial_Rules() {
+      var rules = BaseObject.GetFullList<FinancialRule>();
 
-      Assert.NotNull(sut);
-      Assert.NotEmpty(sut);
+      foreach (var rule in rules) {
+        FinancialRulesData.CleanFinancialRule(rule);
+      }
     }
 
 
@@ -41,6 +43,25 @@ namespace Empiria.Tests.Financial.Rules {
         Assert.NotNull(sut.Exceptions);
         Assert.NotNull(sut.ExtData);
       }
+    }
+
+
+    [Fact]
+    public void Should_Read_All_Financial_Rules() {
+      var sut = BaseObject.GetFullList<FinancialRule>();
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+
+    [Fact]
+    public void Should_Read_Empty_FinancialRule() {
+      var sut = FinancialRule.Empty;
+
+      Assert.NotNull(sut);
+      Assert.Equal("Empty", sut.UID);
+      Assert.Equal(FinancialRule.Parse("Empty"), sut);
     }
 
     #endregion Facts

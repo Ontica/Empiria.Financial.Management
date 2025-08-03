@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Financial Projects                         Component : Domain Layer                            *
+*  Module   : Financial Rules                            Component : Domain Layer                            *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Information Holder                      *
 *  Type     : FinancialRule                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -34,6 +34,8 @@ namespace Empiria.Financial.Rules {
     static public FinancialRule Parse(int id) => ParseId<FinancialRule>(id);
 
     static public FinancialRule Parse(string uid) => ParseKey<FinancialRule>(uid);
+
+    static public FinancialRule Empty => ParseEmpty<FinancialRule>();
 
     #endregion Constructors and parsers
 
