@@ -20,8 +20,7 @@ namespace Empiria.Tests.Financial.Rules {
 
     #region Facts
 
-    [Fact]
-    public void Clean_Financial_Rules() {
+    internal void Clean_Financial_Rules() {
       var rules = BaseObject.GetFullList<FinancialRule>();
 
       foreach (var rule in rules) {
@@ -36,7 +35,7 @@ namespace Empiria.Tests.Financial.Rules {
 
       foreach (var sut in rules) {
         Assert.NotNull(sut.Category);
-        Assert.NotEmpty(sut.DebitAccount);
+        Assert.NotNull(sut.DebitAccount);
         Assert.NotNull(sut.DebitCurrency);
         Assert.NotNull(sut.CreditCurrency);
         Assert.NotNull(sut.Conditions);

@@ -15,6 +15,8 @@ namespace Empiria.Financial.Rules.Data {
   /// <summary>Provides data access services for financial rules.</summary>
   static internal class FinancialRulesData {
 
+    #region Methods
+
     static internal void CleanFinancialRule(FinancialRule rule) {
       if (rule.IsEmptyInstance) {
         return;
@@ -35,6 +37,19 @@ namespace Empiria.Financial.Rules.Data {
       DataWriter.Execute(op);
     }
 
+
+    static internal FixedList<FinancialRule> GetFinancialRules(FinancialRuleCategory category) {
+      var sql = "SELECT * FROM FMS_RULES " +
+                $"WHERE RULE_CATEGORY_ID = {category.Id} AND RULE_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<FinancialRule>(op);
+    }
+
+    #endregion Methods
+
+    #region Helpers
 
     static private string FormatAccountNumber(string accountNumber) {
       string temp = EmpiriaString.TrimSpacesAndControl(accountNumber);
@@ -83,6 +98,8 @@ namespace Empiria.Financial.Rules.Data {
 
       return temp;
     }
+
+    #endregion Helpers
 
   }  // class FinancialRulesData
 

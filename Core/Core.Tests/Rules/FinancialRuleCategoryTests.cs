@@ -10,6 +10,10 @@
 
 using Xunit;
 
+using System;
+
+using Empiria.StateEnums;
+
 using Empiria.Financial.Rules;
 
 namespace Empiria.Tests.Financial.Rules {
@@ -20,12 +24,47 @@ namespace Empiria.Tests.Financial.Rules {
     #region Facts
 
     [Fact]
+    public void Should_Get_FinancialRuleCategory_Financial_Rules() {
+      FinancialRuleCategory category = TestsObjects.TryGetObject<FinancialRuleCategory>();
+
+      var sut = category.GetFinancialRules();
+
+      Assert.NotEmpty(sut);
+      Assert.All(sut, x => Assert.True(x.Status != EntityStatus.Deleted));
+    }
+
+
+    [Fact]
+    public void Should_Get_FinancialRuleCategory_Financial_Rules_In_Date() {
+      FinancialRuleCategory category = TestsObjects.TryGetObject<FinancialRuleCategory>();
+
+      var date = DateTime.Today;
+
+      var sut = category.GetFinancialRules(date);
+
+      Assert.NotEmpty(sut);
+      Assert.All(sut, x => Assert.True(x.StartDate <= date && date <= x.EndDate));
+      Assert.All(sut, x => Assert.True(x.Status != EntityStatus.Deleted));
+    }
+
+
+    [Fact]
     public void Should_Parse_All_Financial_Rules_Categories() {
       var categories = FinancialRuleCategory.GetList();
 
       foreach (var sut in categories) {
         Assert.NotEmpty(sut.NamedKey);
       }
+    }
+
+
+    [Fact]
+    public void Should_Parse_FinancialRuleCategory_With_NamedKey() {
+      var category = TestsObjects.TryGetObject<FinancialRuleCategory>();
+
+      var sut = FinancialRuleCategory.ParseNamedKey(category.NamedKey);
+
+      Assert.Equal(category, sut);
     }
 
 
