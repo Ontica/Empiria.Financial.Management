@@ -71,7 +71,4 @@
     <ProjectReference Include="..\..\..\extensions\WebApi.Client\Empiria.WebApi.Client.csproj" />
     <ProjectReference Include="..\..\Core\Core\Empiria.Financial.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\" />
-  </ItemGroup>
 </Project>
