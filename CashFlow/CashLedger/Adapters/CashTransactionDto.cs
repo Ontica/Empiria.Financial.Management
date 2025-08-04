@@ -122,6 +122,10 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     } = ExecutionServer.DateMinValue;
 
 
+    public int CurrencyId {
+      get; set;
+    }
+
     public string CurrencyName {
       get; set;
     } = string.Empty;
