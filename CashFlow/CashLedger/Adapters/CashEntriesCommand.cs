@@ -14,9 +14,11 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
     MarkAsCashEntries = 1,
 
+    MarkAsCashEntriesPending = 0,
+
     MarkAsNoCashEntries = 2,
 
-    RemoveCashEntries = 3
+    RemoveCashEntries = 3,
 
   };
 
@@ -57,6 +59,11 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
             Assertion.RequireFail($"No tengo registrado el concepto presupuestal {CashAccount}.");
           }
 
+          return;
+
+
+        case CashEntryOperation.MarkAsCashEntriesPending:
+          CashAccountId = -2;
           return;
 
         case CashEntryOperation.MarkAsNoCashEntries:
