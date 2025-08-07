@@ -213,6 +213,13 @@ namespace Empiria.Financial {
     }
 
 
+    [DataField("ACCT_SUBLEDGER_ACCT_NO")]
+    public string SubledgerAccountNo {
+      get;
+      private set;
+    }
+
+
     [DataField("ACCT_ATTRIBUTES")]
     private JsonObject _attributes = new JsonObject();
 
