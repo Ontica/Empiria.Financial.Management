@@ -16,6 +16,7 @@ using Empiria.WebApi.Client;
 
 using Empiria.CashFlow.CashLedger.Adapters;
 
+
 namespace Empiria.CashFlow.CashLedger.Data {
 
   /// <summary>Provides cash ledger transactions data services using a web proxy.</summary>
@@ -62,6 +63,17 @@ namespace Empiria.CashFlow.CashLedger.Data {
       JsonObject json = await webApiClient.PostAsync<JsonObject>(query, path);
 
       return json.GetFixedList<CashTransactionDescriptor>("data");
+    }
+
+
+    static internal async Task<CashTransactionHolderDto> UpdateEntries(CashTransactionHolderDto transaction) {
+      WebApiClient webApiClient = GetWebApiClient();
+
+      string path = $"v2/financial-accounting/cash-ledger/transactions/{transaction.Transaction.Id}/update-entries";
+
+      JsonObject json = await webApiClient.PostAsync<JsonObject>(transaction, path);
+
+      return json.Get<CashTransactionHolderDto>("data");
     }
 
     #region Helpers

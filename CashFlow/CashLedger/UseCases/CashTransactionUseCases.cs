@@ -35,6 +35,46 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
 
     #region Use cases
 
+    public async Task<CashTransactionHolderDto> AutoCodifyTransaction(long id) {
+      Assertion.Require(id > 0, nameof(id));
+
+      CashTransactionHolderDto transaction = await GetTransaction(id);
+
+      var processor = new CashTransactionProcessor(transaction.Transaction, transaction.Entries);
+
+      FixedList<CashTransactionEntryDto> updatedEntries = processor.Execute();
+
+      if (updatedEntries.Count > 0) {
+        transaction.Entries = updatedEntries;
+        transaction = await CashTransactionData.UpdateEntries(transaction);
+      }
+
+      return CashTransactionMapper.Map(transaction);
+    }
+
+
+    public async Task<int> AutoCodifyTransactions(string[] transactionIds) {
+      Assertion.Require(transactionIds, nameof(transactionIds));
+
+      int counter = 0;
+      foreach (var transactionId in transactionIds) {
+        CashTransactionHolderDto transaction = await GetTransaction(int.Parse(transactionId));
+
+        var processor = new CashTransactionProcessor(transaction.Transaction, transaction.Entries);
+
+        FixedList<CashTransactionEntryDto> updatedEntries = processor.Execute();
+
+        if (updatedEntries.Count > 0) {
+          transaction.Entries = updatedEntries;
+          _ = await CashTransactionData.UpdateEntries(transaction);
+          counter++;
+        }
+      }
+
+      return counter;
+    }
+
+
     public async Task<CashTransactionHolderDto> ExecuteCommand(long id, CashEntriesCommand command) {
       Assertion.Require(id > 0, nameof(id));
       Assertion.Require(command, nameof(command));

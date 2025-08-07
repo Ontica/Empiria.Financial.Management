@@ -63,6 +63,35 @@ namespace Empiria.CashFlow.WebApi {
 
     #region Command web apis
 
+
+    [HttpPost]
+    [Route("v1/cash-flow/cash-ledger/transactions/{id:long}/auto-codify")]
+    public async Task<SingleObjectModel> AutoCodifyTransaction([FromUri] long id) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        CashTransactionHolderDto transaction = await usecases.AutoCodifyTransaction(id);
+
+        return new SingleObjectModel(base.Request, transaction);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/cash-flow/cash-ledger/transactions/bulk-operation/auto-codify")]
+    public async Task<SingleObjectModel> AutoCodifyTransactions([FromBody] BulkOperationCommand command) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        int count = await usecases.AutoCodifyTransactions(command.Items);
+
+        var result = new {
+          Message = $"Se auto codificaron {count} pólizas, de un total de {command.Items.Length} seleccionadas."
+        };
+
+        return new SingleObjectModel(base.Request, result);
+      }
+    }
+
+
     [HttpPost]
     [Route("v1/cash-flow/cash-ledger/transactions/{id:long}/execute-command")]
     public async Task<SingleObjectModel> ExecuteCommand([FromUri] long id, [FromBody] CashEntriesCommand command) {
@@ -77,5 +106,13 @@ namespace Empiria.CashFlow.WebApi {
     #endregion Command web apis
 
   }  // class CashTransactionController
+
+  public class BulkOperationCommand {
+
+    public string[] Items {
+      get; set;
+    }
+
+  }  // class BulkOperationCommand
 
 }  // namespace Empiria.CashFlow.WebApi
