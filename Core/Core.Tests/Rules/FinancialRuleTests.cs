@@ -20,12 +20,35 @@ namespace Empiria.Tests.Financial.Rules {
 
     #region Facts
 
+    [Fact]
     internal void Clean_Financial_Rules() {
       var rules = BaseObject.GetFullList<FinancialRule>();
 
       foreach (var rule in rules) {
         FinancialRulesData.CleanFinancialRule(rule);
       }
+    }
+
+
+    [Fact]
+    public void CleanTempRules() {
+      FixedList<TempRule> rules = TempRulesData.GetTempRules();
+
+      foreach (var rule in rules) {
+        TempRulesData.CleanTempRule(rule);
+      }
+    }
+
+
+    [Fact]
+    public void ShouldParseTempRule() {
+      FixedList<TempRule> rules = TempRule.GetList();
+
+      var sut = rules.FindAll(x => "6.05.01.02.05.03.12" == x.CuentaContable &&
+                                   "" == x.Auxiliar);
+
+      Assert.Single(sut);
+
     }
 
 

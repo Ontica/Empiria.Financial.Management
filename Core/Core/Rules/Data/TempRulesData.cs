@@ -13,24 +13,17 @@ using Empiria.Data;
 namespace Empiria.Financial.Rules.Data {
 
   /// <summary>Provides data access services for financial rules.</summary>
-  static internal class FinancialRulesData {
+  static internal class TempRulesData {
 
     #region Methods
 
-    static internal void CleanFinancialRule(FinancialRule rule) {
-      if (rule.IsEmptyInstance) {
-        return;
-      }
+    static internal void CleanTempRule(TempRule rule) {
 
-      string debitAccount = FormatAccountNumber(rule.DebitAccount);
-      string creditAccount = FormatAccountNumber(rule.CreditAccount);
+      string account = FormatAccountNumber(rule.CuentaContable);
 
-      var sql = "UPDATE FMS_RULES " +
-                $"SET RULE_UID = '{System.Guid.NewGuid().ToString()}', " +
-                $"RULE_DEBIT_ACCOUNT = '{debitAccount}', " +
-                $"RULE_CREDIT_ACCOUNT = '{creditAccount}', " +
-                $"RULE_KEYWORDS = '{rule.Keywords}' " +
-                $"WHERE RULE_ID = {rule.Id}";
+      var sql = "UPDATE FMS_RULES_2 " +
+                $"SET CUENTA_CONTABLE = '{account}' " +
+                $"WHERE ID_RULE = {rule.Id}";
 
       var op = DataOperation.Parse(sql);
 
@@ -38,14 +31,14 @@ namespace Empiria.Financial.Rules.Data {
     }
 
 
-    static internal FixedList<FinancialRule> GetFinancialRules(FinancialRuleCategory category) {
-      var sql = "SELECT * FROM FMS_RULES " +
-                $"WHERE RULE_CATEGORY_ID = {category.Id} AND RULE_STATUS <> 'X'";
+    static internal FixedList<TempRule> GetTempRules() {
+      var sql = "SELECT * FROM FMS_RULES_2";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<FinancialRule>(op);
+      return DataReader.GetPlainObjectFixedList<TempRule>(op);
     }
+
 
     #endregion Methods
 
@@ -55,10 +48,6 @@ namespace Empiria.Financial.Rules.Data {
       string temp = EmpiriaString.TrimSpacesAndControl(accountNumber);
 
       if (temp.Length == 0) {
-        return temp;
-      }
-
-      if (temp.Contains("*") || temp.Contains("]") || temp.Contains("^") || temp.Contains("~")) {
         return temp;
       }
 

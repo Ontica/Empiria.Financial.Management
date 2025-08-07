@@ -48,6 +48,12 @@ namespace Empiria.Financial.Rules {
     }
 
 
+    [DataField("RULE_DESCRIPTION")]
+    public string Description {
+      get; private set;
+    }
+
+
     [DataField("RULE_CATEGORY_ID")]
     public FinancialRuleCategory Category {
       get; private set;
@@ -104,7 +110,7 @@ namespace Empiria.Financial.Rules {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(DebitAccount, CreditAccount, FinancialRuleType.DisplayName, Category.Keywords);
+        return EmpiriaString.BuildKeywords(Description, DebitAccount, CreditAccount, FinancialRuleType.DisplayName, Category.Keywords);
       }
     }
 
