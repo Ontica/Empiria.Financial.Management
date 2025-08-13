@@ -49,6 +49,18 @@ namespace Empiria.CashFlow.WebApi {
 
 
     [HttpPost]
+    [Route("v1/cash-flow/cash-ledger/entries/search")]
+    public async Task<CollectionModel> SearchCashEntries([FromBody] CashLedgerQuery query) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        FixedList<CashEntryDescriptor> entries = await usecases.SearchEntries(query);
+
+        return new CollectionModel(base.Request, entries);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v1/cash-flow/cash-ledger/transactions/search")]
     public async Task<CollectionModel> SearchCashTransactions([FromBody] CashLedgerQuery query) {
 

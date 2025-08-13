@@ -55,6 +55,20 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
 
 
+  /// <summary>Output DTO used to retrieve cash ledger entries and its transaction.</summary>
+  public class CashEntryDescriptor {
+
+    public CashTransactionDescriptor Transaction {
+      get; set;
+    }
+
+    public CashTransactionEntryDto Entry {
+      get; set;
+    }
+
+  }  // class CashEntryDescriptor
+
+
   /// <summary>Output DTO used to retrieve cash ledger transaction entries.</summary>
   public class CashTransactionEntryDto {
 

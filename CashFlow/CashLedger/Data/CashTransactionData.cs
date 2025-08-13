@@ -55,6 +55,17 @@ namespace Empiria.CashFlow.CashLedger.Data {
     }
 
 
+    static internal async Task<FixedList<CashEntryDescriptor>> SearchEntries(CashLedgerQuery query) {
+      WebApiClient webApiClient = GetWebApiClient();
+
+      string path = "v2/financial-accounting/cash-ledger/entries/search";
+
+      JsonObject json = await webApiClient.PostAsync<JsonObject>(query, path);
+
+      return json.GetFixedList<CashEntryDescriptor>("data");
+    }
+
+
     static internal async Task<FixedList<CashTransactionDescriptor>> SearchTransactions(CashLedgerQuery query) {
       WebApiClient webApiClient = GetWebApiClient();
 
