@@ -20,6 +20,28 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     }
 
 
+    static internal void SetCashAccounts(FixedList<CashEntryDescriptor> entries) {
+
+      foreach (var entry in entries) {
+
+        if (entry.CashAccountId > 0) {
+          entry.CashAccountName = entry.CashAccountId.ToString();
+
+        } else if (entry.CashAccountId == -2) {
+          entry.CashAccountName = "Con flujo";
+
+        } else if (entry.CashAccountId == -1) {
+          entry.CashAccountName = "Sin flujo";
+
+        } else if (entry.CashAccountId == 0) {
+          entry.CashAccountName = "Pendiente";
+
+        }
+
+      }  // foreach
+
+    }
+
     static private void SetCashAccounts(FixedList<CashTransactionEntryDto> entries) {
 
       foreach (var entry in entries) {
@@ -42,6 +64,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       }  // foreach
 
     }
+
 
   }  // class CashTransactionMapper
 

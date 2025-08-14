@@ -103,10 +103,14 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     }
 
 
-    public Task<FixedList<CashEntryDescriptor>> SearchEntries(CashLedgerQuery query) {
+    public async Task<FixedList<CashEntryDescriptor>> SearchEntries(CashLedgerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      return CashTransactionData.SearchEntries(query);
+      var entries = await CashTransactionData.SearchEntries(query);
+
+      CashTransactionMapper.SetCashAccounts(entries);
+
+      return entries;
     }
 
 
