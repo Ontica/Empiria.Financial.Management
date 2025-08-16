@@ -83,12 +83,16 @@ namespace Empiria.Financial {
 
     static public FinancialAccount Parse(string uid) => ParseKey<FinancialAccount>(uid);
 
+
     static public FinancialAccount Empty => ParseEmpty<FinancialAccount>();
 
     static public FixedList<FinancialAccount> GetList() {
       return _cache.ToFixedList();
     }
 
+    static public FinancialAccount TryParseWithSubledgerAccount(string subledgerAccountNo) {
+      return GetList().Find(x => x.SubledgerAccountNo == subledgerAccountNo);
+    }
 
     protected override void OnLoad() {
       _operations = new Lazy<List<FinancialAccount>>(() =>
@@ -362,7 +366,7 @@ namespace Empiria.Financial {
     }
 
 
-    internal FixedList<FinancialAccount> GetOperations() {
+    public FixedList<FinancialAccount> GetOperations() {
       return _operations.Value.ToFixedList();
     }
 

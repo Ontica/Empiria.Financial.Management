@@ -8,12 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Empiria.Collections;
-
+using Empiria.Financial;
 using Empiria.Financial.Rules;
 
 using Empiria.CashFlow.CashLedger.Adapters;
@@ -48,19 +46,23 @@ namespace Empiria.CashFlow.CashLedger {
     internal FixedList<CashTransactionEntryDto> Execute() {
       var updated = new List<CashTransactionEntryDto>(_entries.Count);
 
-      FixedList<CashTransactionEntryDto> temp = ProcessNoCashFlowEntries(true);
+      foreach (var entry in _entries) {
+        entry.CashAccountId = 0;
+      }
+
+      FixedList<CashTransactionEntryDto> temp = ProcessNoCashFlowGroupedEntries(true);
       updated.AddRange(temp);
 
-      temp = ProcessNoCashFlowGroupedEntries(true);
+      temp = ProcessNoCashFlowGroupedEntries(false);
       updated.AddRange(temp);
 
-      temp = ProcessCashFlowEntries();
+      temp = ProcessNoCashFlowEntries(true);
       updated.AddRange(temp);
 
       temp = ProcessNoCashFlowEntries(false);
       updated.AddRange(temp);
 
-      temp = ProcessNoCashFlowGroupedEntries(false);
+      temp = ProcessCashFlowEntries();
       updated.AddRange(temp);
 
       return updated.ToFixedList();
@@ -75,16 +77,43 @@ namespace Empiria.CashFlow.CashLedger {
       var rules = TempRule.GetList();
 
       foreach (var entry in entries) {
-        FixedList<TempRule> applicableRules = rules.FindAll(x => entry.AccountNumber == x.CuentaContable &&
-                                                                 (x.Auxiliar.Length == 0 || entry.SubledgerAccountNumber == x.Auxiliar));
 
-        if (applicableRules.Count == 1 || (applicableRules.Count > 1 && applicableRules.SelectDistinct(x => x.Concepto).Count == 1)) {
-          entry.CashAccountId = applicableRules[0].Concepto;
-          updated.Add(entry);
+        FixedList<string> concepts = rules.FindAll(x => entry.AccountNumber == x.CuentaContable)
+                                           .SelectDistinct(x => x.Concepto.ToString());
+
+        if (concepts.Count == 0) {
+          continue;
         }
 
-        if (applicableRules.Count > 1) {
-          entry.CashAccountId = -1;
+        if (concepts.Count == 1) {
+          entry.CashAccountId = int.Parse(concepts[0]);
+          updated.Add(entry);
+          continue;
+        }
+
+        if (concepts.Count > 1 && entry.SubledgerAccountNumber.Length == 0) {
+          entry.CashAccountId = -2;
+          updated.Add(entry);
+          continue;
+        }
+
+        var account = FinancialAccount.TryParseWithSubledgerAccount(entry.SubledgerAccountNumber);
+
+        if (account == null) {
+          entry.CashAccountId = -2;
+          updated.Add(entry);
+          continue;
+        }
+
+        FixedList<string> accountConcepts = account.GetOperations()
+                                                   .SelectDistinct(x => x.AccountNo)
+                                                   .Intersect(concepts);
+
+        if (accountConcepts.Count == 1) {
+          entry.CashAccountId = int.Parse(accountConcepts[0]);
+          updated.Add(entry);
+        } else {
+          entry.CashAccountId = -2;
           updated.Add(entry);
         }
 
