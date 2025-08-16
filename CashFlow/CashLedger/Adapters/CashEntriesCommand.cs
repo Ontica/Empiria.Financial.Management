@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial.Integration.CashLedger;
+
 namespace Empiria.CashFlow.CashLedger.Adapters {
 
   public enum CashEntryOperation {
@@ -24,26 +26,16 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
 
   /// <summary>Input command used to update cash transaction entries.</summary>
-  public class CashEntriesCommand {
+  public class CashEntriesCommand : SharedCashEntriesCommand {
 
     public CashEntryOperation Operation {
       get; set;
     }
 
 
-    public long[] Entries {
-      get; set;
-    } = new long[0];
-
-
     public string CashAccount {
       get; set;
     } = string.Empty;
-
-
-    public int CashAccountId {
-      get; set;
-    }
 
 
     internal void SetCashAccountId() {
