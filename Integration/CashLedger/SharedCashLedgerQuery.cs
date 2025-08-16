@@ -58,11 +58,6 @@ namespace Empiria.Financial.Integration.CashLedger {
     } = SharedCashAccountStatus.All;
 
 
-    public string Concept {
-      get; set;
-    } = string.Empty;
-
-
     public string AccountingLedgerUID {
       get; set;
     } = string.Empty;
