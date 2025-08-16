@@ -63,6 +63,7 @@
     <PackageReference Include="Empiria.Services" Version="1.0.0" />
     <PackageReference Include="Empiria.WebApi.Client" Version="2.0.0" />
     <PackageReference Include="Empiria.Financial.Core" Version="2.0.0" />
+    <PackageReference Include="Empiria.Financial.Integration" Version="2.0.0" />
     <PackageReference Include="Empiria.FinancialAccounting.WebApi.Client" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
@@ -70,5 +71,6 @@
     <ProjectReference Include="..\..\..\extensions\Services\Empiria.Services.csproj" />
     <ProjectReference Include="..\..\..\extensions\WebApi.Client\Empiria.WebApi.Client.csproj" />
     <ProjectReference Include="..\..\Core\Core\Empiria.Financial.Core.csproj" />
+    <ProjectReference Include="..\..\Integration\Empiria.Financial.Integration.csproj" />
   </ItemGroup>
 </Project>
