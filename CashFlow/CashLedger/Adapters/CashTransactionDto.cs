@@ -8,10 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Documents;
 using Empiria.History;
+
+using Empiria.Financial.Integration.CashLedger;
 
 namespace Empiria.CashFlow.CashLedger.Adapters {
 
@@ -54,97 +54,16 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   }  // class CashTransactionActions
 
 
+
+  /// <summary>Output DTO used to retrieve cash ledger transactions for use in lists.</summary>
+  public class CashTransactionDescriptor : SharedCashTransactionDescriptor {
+
+  }  // class CashTransactionDescriptor
+
+
+
   /// <summary>Output DTO used to retrieve cash ledger transaction entries.</summary>
-  public class CashTransactionEntryDto {
-
-    public long Id {
-      get; set;
-    }
-
-    public string AccountNumber {
-      get; set;
-    } = string.Empty;
-
-
-    public string AccountName {
-      get; set;
-    } = string.Empty;
-
-
-    public string ParentAccountFullName {
-      get; set;
-    } = string.Empty;
-
-
-    public string SectorCode {
-      get; set;
-    } = string.Empty;
-
-
-    public string SubledgerAccountNumber {
-      get; set;
-    } = string.Empty;
-
-
-    public string SubledgerAccountName {
-      get; set;
-    } = string.Empty;
-
-
-    public string VerificationNumber {
-      get; set;
-    } = string.Empty;
-
-
-    public string ResponsibilityAreaCode {
-      get; set;
-    } = string.Empty;
-
-
-    public string ResponsibilityAreaName {
-      get; set;
-    } = string.Empty;
-
-
-    public string BudgetCode {
-      get; set;
-    } = string.Empty;
-
-
-    public string Description {
-      get; set;
-    } = string.Empty;
-
-
-    public DateTime Date {
-      get; set;
-    } = ExecutionServer.DateMinValue;
-
-
-    public int CurrencyId {
-      get; set;
-    }
-
-    public string CurrencyName {
-      get; set;
-    } = string.Empty;
-
-
-    public decimal ExchangeRate {
-      get; set;
-    }
-
-    public decimal Debit {
-      get; set;
-    }
-
-    public decimal Credit {
-      get; set;
-    }
-
-    public int CashAccountId {
-      get; set;
-    }
+  public class CashTransactionEntryDto : SharedCashTransactionEntryDto {
 
     public NamedEntityDto CashAccount {
       get; set;

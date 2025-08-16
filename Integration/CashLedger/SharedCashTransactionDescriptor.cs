@@ -1,19 +1,19 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : CashFlow Management                        Component : Adapters Layer                          *
-*  Assembly : Empiria.CashFlow.CashLedger.dll            Pattern   : Output DTO                              *
-*  Type     : CashTransactionDescriptor                  License   : Please read LICENSE.txt file            *
+*  Module   : Cash Ledger                                   Component : Integration Adapters Layer           *
+*  Assembly : Empiria.Financial.Integration.dll             Pattern   : Output DTO                           *
+*  Type     : SharedCashTransactionDescriptor               License   : Please read LICENSE.txt file         *
 *                                                                                                            *
-*  Summary  : Output DTO used to retrieve cash ledger transactions for use in lists.                         *
+*  Summary  : Output DTO used to retrieve cash ledger transactions.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 
-namespace Empiria.CashFlow.CashLedger.Adapters {
+namespace Empiria.Financial.Integration.CashLedger {
 
   /// <summary>Output DTO used to retrieve cash ledger transactions for use in lists.</summary>
-  public class CashTransactionDescriptor {
+  public class SharedCashTransactionDescriptor {
 
     public long Id {
       get; set;
@@ -63,6 +63,6 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-  }  // class CashTransactionDescriptor
+  }  // class SharedCashTransactionDescriptor
 
-}  // namespace Empiria.CashFlow.CashLedger.Adapters
+}  // namespace Empiria.Financial.Integration.CashLedger
