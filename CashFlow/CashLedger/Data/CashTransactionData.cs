@@ -77,12 +77,12 @@ namespace Empiria.CashFlow.CashLedger.Data {
     }
 
 
-    static internal async Task<CashTransactionHolderDto> UpdateEntries(CashTransactionHolderDto transaction) {
+    static internal async Task<CashTransactionHolderDto> UpdateEntries(FixedList<CashEntryFields> entries) {
       WebApiClient webApiClient = GetWebApiClient();
 
-      string path = $"v2/financial-accounting/cash-ledger/transactions/{transaction.Transaction.Id}/update-entries";
+      string path = $"v2/financial-accounting/cash-ledger/transactions/{entries[0].TransactionId}/update-entries";
 
-      JsonObject json = await webApiClient.PostAsync<JsonObject>(transaction, path);
+      JsonObject json = await webApiClient.PostAsync<JsonObject>(entries, path);
 
       return json.Get<CashTransactionHolderDto>("data");
     }

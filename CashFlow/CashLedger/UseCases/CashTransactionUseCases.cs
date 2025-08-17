@@ -35,18 +35,17 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
 
     #region Use cases
 
-    public async Task<CashTransactionHolderDto> AutoCodifyTransaction(long id) {
-      Assertion.Require(id > 0, nameof(id));
+    public async Task<CashTransactionHolderDto> AutoCodifyTransaction(long transactionId) {
+      Assertion.Require(transactionId > 0, nameof(transactionId));
 
-      CashTransactionHolderDto transaction = await GetTransaction(id);
+      CashTransactionHolderDto transaction = await GetTransaction(transactionId);
 
       var processor = new CashTransactionProcessor(transaction.Transaction, transaction.Entries);
 
-      FixedList<CashTransactionEntryDto> updatedEntries = processor.Execute();
+      FixedList<CashEntryFields> updatedEntries = processor.Execute();
 
       if (updatedEntries.Count > 0) {
-        transaction.Entries = updatedEntries;
-        transaction = await CashTransactionData.UpdateEntries(transaction);
+        transaction = await CashTransactionData.UpdateEntries(updatedEntries);
       }
 
       return CashTransactionMapper.Map(transaction);
@@ -57,16 +56,16 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       Assertion.Require(transactionIds, nameof(transactionIds));
 
       int counter = 0;
+
       foreach (var transactionId in transactionIds) {
-        CashTransactionHolderDto transaction = await GetTransaction(int.Parse(transactionId));
+        CashTransactionHolderDto transaction = await GetTransaction(long.Parse(transactionId));
 
         var processor = new CashTransactionProcessor(transaction.Transaction, transaction.Entries);
 
-        FixedList<CashTransactionEntryDto> updatedEntries = processor.Execute();
+        FixedList<CashEntryFields> updatedEntries = processor.Execute();
 
         if (updatedEntries.Count > 0) {
-          transaction.Entries = updatedEntries;
-          _ = await CashTransactionData.UpdateEntries(transaction);
+          _ = await CashTransactionData.UpdateEntries(updatedEntries);
           counter++;
         }
       }

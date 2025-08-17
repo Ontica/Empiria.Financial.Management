@@ -69,6 +69,10 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
+    internal bool Processed {
+      get; set;
+    }
+
   }  // class CashTransactionEntryDto
 
 }  // namespace Empiria.CashFlow.CashLedger.Adapters

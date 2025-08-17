@@ -43,14 +43,10 @@ namespace Empiria.CashFlow.CashLedger {
 
     #region Methods
 
-    internal FixedList<CashTransactionEntryDto> Execute() {
-      var updated = new List<CashTransactionEntryDto>(_entries.Count);
+    internal FixedList<CashEntryFields> Execute() {
+      var updated = new List<CashEntryFields>(_entries.Count);
 
-      foreach (var entry in _entries) {
-        entry.CashAccountId = 0;
-      }
-
-      FixedList<CashTransactionEntryDto> temp = ProcessNoCashFlowGroupedEntries(true);
+      FixedList<CashEntryFields> temp = ProcessNoCashFlowGroupedEntries(true);
       updated.AddRange(temp);
 
       temp = ProcessNoCashFlowGroupedEntries(false);
@@ -69,39 +65,37 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    private FixedList<CashTransactionEntryDto> ProcessCashFlowEntries() {
-      FixedList<CashTransactionEntryDto> entries = GetPendingEntries();
+    private FixedList<CashEntryFields> ProcessCashFlowEntries() {
+      FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
 
-      var updated = new List<CashTransactionEntryDto>(_entries.Count);
+      var updated = new List<CashEntryFields>(_entries.Count);
 
       var rules = TempRule.GetList();
 
       foreach (var entry in entries) {
 
         FixedList<string> concepts = rules.FindAll(x => entry.AccountNumber == x.CuentaContable)
-                                           .SelectDistinct(x => x.Concepto.ToString());
+                                          .SelectDistinct(x => x.Concepto.ToString());
 
         if (concepts.Count == 0) {
+          AddCashEntryFields(updated, entry, 0);
           continue;
         }
 
         if (concepts.Count == 1) {
-          entry.CashAccountId = int.Parse(concepts[0]);
-          updated.Add(entry);
+          AddCashEntryFields(updated, entry, int.Parse(concepts[0]));
           continue;
         }
 
         if (concepts.Count > 1 && entry.SubledgerAccountNumber.Length == 0) {
-          entry.CashAccountId = -2;
-          updated.Add(entry);
+          AddCashEntryFields(updated, entry, -2);
           continue;
         }
 
         var account = FinancialAccount.TryParseWithSubledgerAccount(entry.SubledgerAccountNumber);
 
         if (account == null) {
-          entry.CashAccountId = -2;
-          updated.Add(entry);
+          AddCashEntryFields(updated, entry, -2);
           continue;
         }
 
@@ -110,23 +104,20 @@ namespace Empiria.CashFlow.CashLedger {
                                                    .Intersect(concepts);
 
         if (accountConcepts.Count == 1) {
-          entry.CashAccountId = int.Parse(accountConcepts[0]);
-          updated.Add(entry);
+          AddCashEntryFields(updated, entry, int.Parse(accountConcepts[0]));
         } else {
-          entry.CashAccountId = -2;
-          updated.Add(entry);
+          AddCashEntryFields(updated, entry, -2);
         }
-
       }
 
       return updated.ToFixedList();
     }
 
 
-    private FixedList<CashTransactionEntryDto> ProcessNoCashFlowEntries(bool matchSubledgerAccounts) {
-      FixedList<CashTransactionEntryDto> entries = GetPendingEntries();
+    private FixedList<CashEntryFields> ProcessNoCashFlowEntries(bool matchSubledgerAccounts) {
+      FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
 
-      var updated = new List<CashTransactionEntryDto>(_entries.Count);
+      var updated = new List<CashEntryFields>(_entries.Count);
 
       FixedList<FinancialRule> rules = FinancialRuleCategory.ParseNamedKey("NO_CASH_FLOW_UNGROUPED")
                                                             .GetFinancialRules(_transaction.AccountingDate);
@@ -138,11 +129,8 @@ namespace Empiria.CashFlow.CashLedger {
           CashTransactionEntryDto matchingEntry = TryGetMatchingEntry(rule, entry, matchSubledgerAccounts);
 
           if (matchingEntry != null) {
-            entry.CashAccountId = -1;
-            matchingEntry.CashAccountId = -1;
-
-            updated.Add(entry);
-            updated.Add(matchingEntry);
+            AddCashEntryFields(updated, entry, -1);
+            AddCashEntryFields(updated, matchingEntry, -1);
           }
         }
       }
@@ -151,10 +139,10 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    private FixedList<CashTransactionEntryDto> ProcessNoCashFlowGroupedEntries(bool matchSubledgerAccounts) {
-      FixedList<CashTransactionEntryDto> entries = GetPendingEntries();
+    private FixedList<CashEntryFields> ProcessNoCashFlowGroupedEntries(bool matchSubledgerAccounts) {
+      FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
 
-      var updated = new List<CashTransactionEntryDto>(_entries.Count);
+      var updated = new List<CashEntryFields>(_entries.Count);
 
       FixedList<FinancialRule> rules = FinancialRuleCategory.ParseNamedKey("NO_CASH_FLOW_GROUPED")
                                                             .GetFinancialRules(_transaction.AccountingDate);
@@ -170,11 +158,8 @@ namespace Empiria.CashFlow.CashLedger {
           CashTransactionEntryDto matchingEntry = TryGetMatchingEntry(groupedRule.First(), entry, matchSubledgerAccounts);
 
           if (matchingEntry != null) {
-            entry.CashAccountId = -1;
-            matchingEntry.CashAccountId = -1;
-
-            updated.Add(entry);
-            updated.Add(matchingEntry);
+            AddCashEntryFields(updated, entry, -1);
+            AddCashEntryFields(updated, matchingEntry, -1);
           }
         }
       }
@@ -186,6 +171,24 @@ namespace Empiria.CashFlow.CashLedger {
 
     #region Helpers
 
+    private void AddCashEntryFields(List<CashEntryFields> list, CashTransactionEntryDto entry, int cashAccountId) {
+      entry.Processed = true;
+
+      if (entry.CashAccountId == cashAccountId) {
+        return;
+      }
+
+      entry.CashAccountId = cashAccountId;
+
+      var fields = new CashEntryFields {
+        EntryId = entry.Id,
+        CashAccountId = cashAccountId,
+        TransactionId = _transaction.Id,
+      };
+
+      list.Add(fields);
+    }
+
     private FixedList<FinancialRule> GetApplicableRules(FixedList<FinancialRule> rules, CashTransactionEntryDto entry) {
       if (entry.Debit != 0) {
         return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.DebitAccount) &&
@@ -194,6 +197,11 @@ namespace Empiria.CashFlow.CashLedger {
         return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.CreditAccount) &&
                                   (x.CreditCurrency.IsEmptyInstance || x.CreditCurrency.Id == entry.CurrencyId));
       }
+    }
+
+
+    private FixedList<CashTransactionEntryDto> GetUnprocessedEntries() {
+      return _entries.FindAll(x => !x.Processed);
     }
 
 
@@ -216,15 +224,10 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    private FixedList<CashTransactionEntryDto> GetPendingEntries() {
-      return _entries.FindAll(x => x.CashAccountId == 0);
-    }
-
-
     private CashTransactionEntryDto TryGetMatchingEntry(FinancialRule rule, CashTransactionEntryDto entry,
                                                         bool matchSubledgerAccounts) {
       if (entry.Debit != 0) {
-        return _entries.Find(x => x.CashAccountId == 0 &&
+        return _entries.Find(x => !x.Processed &&
                                   x.Credit == entry.Debit &&
                                   MatchesAccountNumber(x.AccountNumber, rule.CreditAccount) &&
                                   (rule.CreditCurrency.IsEmptyInstance || entry.CurrencyId == rule.CreditCurrency.Id) &&
@@ -232,7 +235,7 @@ namespace Empiria.CashFlow.CashLedger {
                                   (x.SectorCode == entry.SectorCode || x.SectorCode == "00" || entry.SectorCode == "00"));
 
       } else {
-        return _entries.Find(x => x.CashAccountId == 0 &&
+        return _entries.Find(x => !x.Processed &&
                                   x.Debit == entry.Credit &&
                                   MatchesAccountNumber(x.AccountNumber, rule.DebitAccount) &&
                                   (rule.DebitCurrency.IsEmptyInstance || entry.CurrencyId == rule.DebitCurrency.Id) &&
