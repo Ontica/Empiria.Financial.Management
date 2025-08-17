@@ -16,7 +16,6 @@ using Empiria.WebApi.Client;
 
 using Empiria.CashFlow.CashLedger.Adapters;
 
-
 namespace Empiria.CashFlow.CashLedger.Data {
 
   /// <summary>Provides cash ledger transactions data services using a web proxy.</summary>
@@ -44,6 +43,17 @@ namespace Empiria.CashFlow.CashLedger.Data {
     }
 
 
+    static internal async Task<FixedList<CashTransactionHolderDto>> GetTransactions(FixedList<long> transactionIds) {
+      WebApiClient webApiClient = GetWebApiClient();
+
+      string path = $"v2/financial-accounting/cash-ledger/transactions/bulk-operation/get-transactions";
+
+      JsonObject json = await webApiClient.PostAsync<JsonObject>(transactionIds, path);
+
+      return json.GetFixedList<CashTransactionHolderDto>("data");
+    }
+
+
     static internal async Task<FixedList<CashEntryDescriptor>> SearchEntries(CashLedgerQuery query) {
       WebApiClient webApiClient = GetWebApiClient();
 
@@ -63,6 +73,15 @@ namespace Empiria.CashFlow.CashLedger.Data {
       JsonObject json = await webApiClient.PostAsync<JsonObject>(query, path);
 
       return json.GetFixedList<CashTransactionDescriptor>("data");
+    }
+
+
+    static internal async Task UpdateBulkEntries(FixedList<CashEntryFields> bulkEntries) {
+      WebApiClient webApiClient = GetWebApiClient();
+
+      string path = $"v2/financial-accounting/cash-ledger/transactions/bulk-operation/update-entries";
+
+      await webApiClient.PostAsync<JsonObject>(bulkEntries, path);
     }
 
 

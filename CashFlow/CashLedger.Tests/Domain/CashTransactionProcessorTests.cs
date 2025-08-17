@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : CashFlow Management                        Component : Test cases                              *
-*  Assembly : Empiria.CashFlow.Core.Tests.dll            Pattern   : Unit tests                              *
+*  Module   : Cash Ledger                                Component : Test cases                              *
+*  Assembly : Empiria.CashFlow.CashLedger.Tests.dll      Pattern   : Unit tests                              *
 *  Type     : CashTransactionProcessorTests              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Unit tests for CashTransactionProcessor services.                                              *
@@ -25,7 +25,7 @@ namespace Empiria.Tests.CashFlow.CashLedger {
       var processor = new CashTransactionProcessor(new CashTransactionDescriptor(),
                                                    new FixedList<CashTransactionEntryDto>());
 
-      FixedList<CashTransactionEntryDto> sut = processor.Execute();
+      FixedList<CashEntryFields> sut = processor.Execute();
 
       Assert.NotNull(sut);
     }

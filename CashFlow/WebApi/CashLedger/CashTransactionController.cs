@@ -92,8 +92,12 @@ namespace Empiria.CashFlow.WebApi {
     [Route("v1/cash-flow/cash-ledger/transactions/bulk-operation/auto-codify")]
     public async Task<SingleObjectModel> AutoCodifyTransactions([FromBody] BulkOperationCommand command) {
 
+      FixedList<long> transactionIds = command.Items.ToFixedList()
+                                                    .Select(x => long.Parse(x))
+                                                    .ToFixedList();
+
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        int count = await usecases.AutoCodifyTransactions(command.Items);
+        int count = await usecases.AutoCodifyTransactions(transactionIds);
 
         var result = new {
           Message = $"Se auto codificaron {count} pólizas, de un total de {command.Items.Length} seleccionadas."

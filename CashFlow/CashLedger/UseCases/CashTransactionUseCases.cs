@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Empiria.Services;
@@ -52,21 +53,33 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     }
 
 
-    public async Task<int> AutoCodifyTransactions(string[] transactionIds) {
+    public async Task<int> AutoCodifyTransactions(FixedList<long> transactionIds) {
       Assertion.Require(transactionIds, nameof(transactionIds));
 
       int counter = 0;
+      int CHUNK_SIZE = 100;
 
-      foreach (var transactionId in transactionIds) {
-        CashTransactionHolderDto transaction = await GetTransaction(long.Parse(transactionId));
+      FixedList<long>[] chunks = transactionIds.Split(CHUNK_SIZE);
 
-        var processor = new CashTransactionProcessor(transaction.Transaction, transaction.Entries);
+      foreach (FixedList<long> chunk in chunks) {
 
-        FixedList<CashEntryFields> updatedEntries = processor.Execute();
+        FixedList<CashTransactionHolderDto> transactions = await CashTransactionData.GetTransactions(chunk);
 
-        if (updatedEntries.Count > 0) {
-          _ = await CashTransactionData.UpdateEntries(updatedEntries);
-          counter++;
+        var chunkEntries = new List<CashEntryFields>(chunk.Count * 8);
+
+        foreach (var transaction in transactions) {
+          var processor = new CashTransactionProcessor(transaction.Transaction, transaction.Entries);
+
+          FixedList<CashEntryFields> updatedTransactionEntries = processor.Execute();
+
+          if (updatedTransactionEntries.Count > 0) {
+            chunkEntries.AddRange(updatedTransactionEntries);
+            counter++;
+          }
+        }
+
+        if (chunkEntries.Count > 0) {
+          await CashTransactionData.UpdateBulkEntries(chunkEntries.ToFixedList());
         }
       }
 
