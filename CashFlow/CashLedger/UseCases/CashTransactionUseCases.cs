@@ -74,13 +74,14 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     }
 
 
-    public async Task<CashTransactionHolderDto> ExecuteCommand(long id, CashEntriesCommand command) {
-      Assertion.Require(id > 0, nameof(id));
+    public async Task<CashTransactionHolderDto> ExecuteCommand(CashEntriesCommand command) {
       Assertion.Require(command, nameof(command));
 
-      command.SetCashAccountId();
+      CashTransactionHolderDto transaction = await CashTransactionData.GetTransaction(command.TransactionId);
 
-      CashTransactionHolderDto transaction = await CashTransactionData.ExecuteCommand(id, command);
+      FixedList<CashEntryFields> updatedEntries = command.GetCashEntriesFields();
+
+      transaction = await CashTransactionData.UpdateEntries(updatedEntries);
 
       return CashTransactionMapper.Map(transaction);
     }

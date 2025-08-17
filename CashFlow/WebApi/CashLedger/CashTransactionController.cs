@@ -108,8 +108,10 @@ namespace Empiria.CashFlow.WebApi {
     [Route("v1/cash-flow/cash-ledger/transactions/{id:long}/execute-command")]
     public async Task<SingleObjectModel> ExecuteCommand([FromUri] long id, [FromBody] CashEntriesCommand command) {
 
+      command.TransactionId = id;
+
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        CashTransactionHolderDto transaction = await usecases.ExecuteCommand(id, command);
+        CashTransactionHolderDto transaction = await usecases.ExecuteCommand(command);
 
         return new SingleObjectModel(base.Request, transaction);
       }
