@@ -46,16 +46,10 @@ namespace Empiria.CashFlow.CashLedger {
     internal FixedList<CashEntryFields> Execute() {
       var updated = new List<CashEntryFields>(_entries.Count);
 
-      FixedList<CashEntryFields> temp = ProcessNoCashFlowGroupedEntries(true);
+      FixedList<CashEntryFields> temp = ProcessNoCashFlowGroupedEntries();
       updated.AddRange(temp);
 
-      temp = ProcessNoCashFlowGroupedEntries(false);
-      updated.AddRange(temp);
-
-      temp = ProcessNoCashFlowEntries(true);
-      updated.AddRange(temp);
-
-      temp = ProcessNoCashFlowEntries(false);
+      FixedList<CashEntryFields> temp = ProcessNoCashFlowEntries();
       updated.AddRange(temp);
 
       temp = ProcessCashFlowEntries();
@@ -67,6 +61,10 @@ namespace Empiria.CashFlow.CashLedger {
 
     private FixedList<CashEntryFields> ProcessCashFlowEntries() {
       FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return new FixedList<CashEntryFields>();
+      }
 
       var updated = new List<CashEntryFields>(_entries.Count);
 
@@ -114,8 +112,12 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    private FixedList<CashEntryFields> ProcessNoCashFlowEntries(bool matchSubledgerAccounts) {
-      FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
+    private FixedList<CashEntryFields> ProcessNoCashFlowEntries() {
+      FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries(x => x.Debit != 0);
+
+      if (entries.Count == 0) {
+        return new FixedList<CashEntryFields>();
+      }
 
       var updated = new List<CashEntryFields>(_entries.Count);
 
@@ -126,7 +128,7 @@ namespace Empiria.CashFlow.CashLedger {
         FixedList<FinancialRule> applicableRules = GetApplicableRules(rules, entry);
 
         foreach (var rule in applicableRules) {
-          CashTransactionEntryDto matchingEntry = TryGetMatchingEntry(rule, entry, matchSubledgerAccounts);
+          CashTransactionEntryDto matchingEntry = TryGetMatchingEntry(rule, entry);
 
           if (matchingEntry != null) {
             AddCashEntryFields(updated, entry, -1);
@@ -139,7 +141,7 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    private FixedList<CashEntryFields> ProcessNoCashFlowGroupedEntries(bool matchSubledgerAccounts) {
+    private FixedList<CashEntryFields> ProcessNoCashFlowGroupedEntries() {
       FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
 
       var updated = new List<CashEntryFields>(_entries.Count);
@@ -155,7 +157,7 @@ namespace Empiria.CashFlow.CashLedger {
             continue;
           }
 
-          CashTransactionEntryDto matchingEntry = TryGetMatchingEntry(groupedRule.First(), entry, matchSubledgerAccounts);
+          CashTransactionEntryDto matchingEntry = TryGetMatchingEntry(groupedRule.First(), entry);
 
           if (matchingEntry != null) {
             AddCashEntryFields(updated, entry, -1);
@@ -205,6 +207,11 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
+    private FixedList<CashTransactionEntryDto> GetUnprocessedEntries(System.Func<CashTransactionEntryDto, bool> predicate) {
+      return _entries.FindAll(x => !x.Processed && predicate.Invoke(x));
+    }
+
+
     private bool MatchesAccountNumber(string accountNumber, string accountRuleNumber) {
 
       if (string.IsNullOrWhiteSpace(accountRuleNumber)) {
@@ -224,34 +231,28 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    private CashTransactionEntryDto TryGetMatchingEntry(FinancialRule rule, CashTransactionEntryDto entry,
-                                                        bool matchSubledgerAccounts) {
+    private CashTransactionEntryDto TryGetMatchingEntry(FinancialRule rule, CashTransactionEntryDto entry) {
       if (entry.Debit != 0) {
         return _entries.Find(x => !x.Processed &&
                                   x.Credit == entry.Debit &&
                                   MatchesAccountNumber(x.AccountNumber, rule.CreditAccount) &&
-                                  (rule.CreditCurrency.IsEmptyInstance || entry.CurrencyId == rule.CreditCurrency.Id) &&
-                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, matchSubledgerAccounts) &&
+                                  (entry.CurrencyId == x.CurrencyId) &&
+                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber) &&
                                   (x.SectorCode == entry.SectorCode || x.SectorCode == "00" || entry.SectorCode == "00"));
 
       } else {
         return _entries.Find(x => !x.Processed &&
                                   x.Debit == entry.Credit &&
                                   MatchesAccountNumber(x.AccountNumber, rule.DebitAccount) &&
-                                  (rule.DebitCurrency.IsEmptyInstance || entry.CurrencyId == rule.DebitCurrency.Id) &&
-                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, matchSubledgerAccounts) &&
+                                  (entry.CurrencyId == x.CurrencyId) &&
+                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber) &&
                                   (x.SectorCode == entry.SectorCode || x.SectorCode == "00" || entry.SectorCode == "00"));
       }
     }
 
 
     private bool MatchesSubLedgerAccountNumber(string subledgerAccountNumber1,
-                                               string subledgerAccountNumber2,
-                                               bool matchSubledgerAccounts) {
-      if (matchSubledgerAccounts) {
-        return subledgerAccountNumber1 == subledgerAccountNumber2;
-      }
-
+                                               string subledgerAccountNumber2) {
       return subledgerAccountNumber1 == subledgerAccountNumber2 ||
             (string.IsNullOrWhiteSpace(subledgerAccountNumber1) && !string.IsNullOrWhiteSpace(subledgerAccountNumber2)) ||
             (!string.IsNullOrWhiteSpace(subledgerAccountNumber1) && string.IsNullOrWhiteSpace(subledgerAccountNumber2));

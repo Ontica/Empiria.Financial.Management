@@ -57,7 +57,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       Assertion.Require(transactionIds, nameof(transactionIds));
 
       int counter = 0;
-      int CHUNK_SIZE = 100;
+      int CHUNK_SIZE = 150;
 
       FixedList<long>[] chunks = transactionIds.Split(CHUNK_SIZE);
 
