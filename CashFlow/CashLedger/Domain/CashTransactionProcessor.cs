@@ -46,11 +46,15 @@ namespace Empiria.CashFlow.CashLedger {
     internal FixedList<CashEntryFields> Execute() {
       var updated = new List<CashEntryFields>(_entries.Count);
 
-      FixedList<CashEntryFields> temp = ProcessNoCashFlowGroupedEntries();
-      updated.AddRange(temp);
+      //FixedList<CashEntryFields> temp = ProcessNoCashFlowGroupedEntries();
+      //updated.AddRange(temp);
 
       FixedList<CashEntryFields> temp = ProcessNoCashFlowEntries();
       updated.AddRange(temp);
+
+      temp = ProcessNoCashFlowEntriesAdded();
+      updated.AddRange(temp);
+
 
       temp = ProcessCashFlowEntries();
       updated.AddRange(temp);
@@ -141,6 +145,85 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
+    private FixedList<CashEntryFields> ProcessNoCashFlowEntriesAdded() {
+
+      FixedList<FinancialRule> rules = FinancialRuleCategory.ParseNamedKey("NO_CASH_FLOW_UNGROUPED")
+                                                            .GetFinancialRules(_transaction.AccountingDate);
+
+      FixedList<FinancialRule> applicableRules = GetApplicableRules(rules, GetUnprocessedEntries(x => x.Debit != 0));
+
+      var updated = new List<CashEntryFields>();
+
+      foreach (var rule in applicableRules) {
+        FixedList<CashTransactionEntryDto> debitEntries = GetEntriesSatisfyingRule(rule, GetUnprocessedEntries(x => x.Debit != 0));
+        FixedList<CashTransactionEntryDto> creditEntries = GetEntriesSatisfyingRule(rule, GetUnprocessedEntries(x => x.Credit != 0));
+
+        var debitEntriesByCurrency = debitEntries.GroupBy(x => x.CurrencyId);
+
+        foreach (var debitCurrencyGroup in debitEntriesByCurrency) {
+          var creditEntriesByCurrency = creditEntries.FindAll(x => x.CurrencyId == debitCurrencyGroup.Key);
+
+          decimal debitSum = debitCurrencyGroup.Sum(x => x.Debit);
+          decimal creditSum = creditEntriesByCurrency.Sum(x => x.Credit);
+
+          if (debitSum != creditSum) {
+            continue;
+          }
+
+          foreach (var debitEntry in debitCurrencyGroup) {
+            AddCashEntryFields(updated, debitEntry, -1);
+          }
+
+          foreach (var creditEntry in creditEntriesByCurrency) {
+            AddCashEntryFields(updated, creditEntry, -1);
+          }
+        }
+      }
+
+      return updated.ToFixedList();
+    }
+
+
+    private FixedList<FinancialRule> GetApplicableRules(FixedList<FinancialRule> rules,
+                                                        FixedList<CashTransactionEntryDto> entries) {
+      if (rules.Count == 0 || entries.Count == 0) {
+        return new FixedList<FinancialRule>();
+      }
+
+      var applicableRules = new List<FinancialRule>(rules.Count);
+
+      foreach (var rule in rules) {
+        if (entries.Exists(x => SatisfiesRule(rule, x))) {
+          applicableRules.Add(rule);
+        }
+      }
+
+      return applicableRules.ToFixedList();
+    }
+
+
+    private FixedList<CashTransactionEntryDto> GetEntriesSatisfyingRule(FinancialRule rule,
+                                                                        FixedList<CashTransactionEntryDto> entries) {
+      if (entries.Count == 0) {
+        return new FixedList<CashTransactionEntryDto>();
+      }
+
+      return entries.FindAll(x => SatisfiesRule(rule, x));
+    }
+
+
+    private bool SatisfiesRule(FinancialRule rule, CashTransactionEntryDto entry) {
+      if (entry.Debit != 0) {
+        return MatchesAccountNumber(entry.AccountNumber, rule.DebitAccount) &&
+                                    (rule.DebitCurrency.IsEmptyInstance || rule.DebitCurrency.Id == entry.CurrencyId);
+
+      } else {
+        return MatchesAccountNumber(entry.AccountNumber, rule.CreditAccount) &&
+                                   (rule.CreditCurrency.IsEmptyInstance || rule.CreditCurrency.Id == entry.CurrencyId);
+      }
+    }
+
+
     private FixedList<CashEntryFields> ProcessNoCashFlowGroupedEntries() {
       FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
 
@@ -194,10 +277,14 @@ namespace Empiria.CashFlow.CashLedger {
     private FixedList<FinancialRule> GetApplicableRules(FixedList<FinancialRule> rules, CashTransactionEntryDto entry) {
       if (entry.Debit != 0) {
         return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.DebitAccount) &&
-                                  (x.DebitCurrency.IsEmptyInstance || x.DebitCurrency.Id == entry.CurrencyId));
+                                  (x.DebitCurrency.IsEmptyInstance || x.DebitCurrency.Id == entry.CurrencyId))
+                    .Sort((x, y) => x.DebitAccount.CompareTo(y.DebitAccount))
+                    .Reverse();
       } else {
         return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.CreditAccount) &&
-                                  (x.CreditCurrency.IsEmptyInstance || x.CreditCurrency.Id == entry.CurrencyId));
+                                  (x.CreditCurrency.IsEmptyInstance || x.CreditCurrency.Id == entry.CurrencyId))
+                    .Sort((x, y) => x.CreditAccount.CompareTo(y.CreditAccount))
+                    .Reverse();
       }
     }
 
@@ -247,6 +334,26 @@ namespace Empiria.CashFlow.CashLedger {
                                   (entry.CurrencyId == x.CurrencyId) &&
                                   MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber) &&
                                   (x.SectorCode == entry.SectorCode || x.SectorCode == "00" || entry.SectorCode == "00"));
+      }
+    }
+
+
+    private FixedList<CashTransactionEntryDto> TryGetMatchingEntries(FinancialRule rule, CashTransactionEntryDto entry) {
+      if (entry.Debit != 0) {
+        return _entries.FindAll(x => !x.Processed &&
+                                      x.Credit > 0 &&
+                                      MatchesAccountNumber(x.AccountNumber, rule.CreditAccount) &&
+                                      (entry.CurrencyId == x.CurrencyId) &&
+                                      MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber) &&
+                                      (x.SectorCode == entry.SectorCode || x.SectorCode == "00" || entry.SectorCode == "00"));
+
+      } else {
+        return _entries.FindAll(x => !x.Processed &&
+                                      x.Debit > 0 &&
+                                      MatchesAccountNumber(x.AccountNumber, rule.DebitAccount) &&
+                                      (entry.CurrencyId == x.CurrencyId) &&
+                                      MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber) &&
+                                      (x.SectorCode == entry.SectorCode || x.SectorCode == "00" || entry.SectorCode == "00"));
       }
     }
 
