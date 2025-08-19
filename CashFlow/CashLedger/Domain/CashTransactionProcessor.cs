@@ -55,6 +55,8 @@ namespace Empiria.CashFlow.CashLedger {
       temp = ProcessNoCashFlowEntriesAdded();
       updated.AddRange(temp);
 
+      temp = ProcessEqualEntries();
+      updated.AddRange(temp);
 
       temp = ProcessCashFlowEntries();
       updated.AddRange(temp);
@@ -109,6 +111,41 @@ namespace Empiria.CashFlow.CashLedger {
           AddCashEntryFields(updated, entry, int.Parse(accountConcepts[0]));
         } else {
           AddCashEntryFields(updated, entry, -2);
+        }
+      }
+
+      return updated.ToFixedList();
+    }
+
+
+    private FixedList<CashEntryFields> ProcessEqualEntries() {
+      FixedList<CashTransactionEntryDto> debitEntries = GetUnprocessedEntries(x => x.Debit != 0);
+
+      if (debitEntries.Count == 0) {
+        return new FixedList<CashEntryFields>();
+      }
+
+      var updated = new List<CashEntryFields>(_entries.Count);
+
+      foreach (var debitGroup in debitEntries.GroupBy(x => $"{x.AccountNumber}|{x.CurrencyId}|{x.SectorCode}|{x.SubledgerAccountNumber}")) {
+
+        CashTransactionEntryDto pivotEntry = debitGroup.First();
+
+        FixedList<CashTransactionEntryDto> creditEntries = GetUnprocessedEntries(x => x.Credit != 0 &&
+                                                                                      x.CurrencyId == pivotEntry.CurrencyId &&
+                                                                                      x.AccountNumber == pivotEntry.AccountNumber &&
+                                                                                      x.SectorCode == pivotEntry.SectorCode &&
+                                                                                      x.SubledgerAccountNumber == pivotEntry.SubledgerAccountNumber);
+        if (debitGroup.Sum(x => x.Debit) != creditEntries.Sum(x => x.Credit)) {
+          continue;
+        }
+
+        foreach (var debitEntry in debitGroup) {
+          AddCashEntryFields(updated, debitEntry, -1);
+        }
+
+        foreach (var creditEntry in creditEntries) {
+          AddCashEntryFields(updated, creditEntry, -1);
         }
       }
 
