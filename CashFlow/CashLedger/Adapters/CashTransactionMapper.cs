@@ -15,6 +15,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
     static internal CashTransactionHolderDto Map(CashTransactionHolderDto transaction) {
       SetCashAccounts(transaction.Entries);
+      transaction.Actions = MapActions(transaction);
 
       return transaction;
     }
@@ -42,6 +43,16 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
     }
 
+
+    static private CashTransactionActions MapActions(CashTransactionHolderDto transaction) {
+      return new CashTransactionActions {
+        CanAnalize = true,
+        CanReview = true,
+        CanUpdate = true,
+      };
+    }
+
+
     static private void SetCashAccounts(FixedList<CashTransactionEntryDto> entries) {
 
       foreach (var entry in entries) {
@@ -64,7 +75,6 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       }  // foreach
 
     }
-
 
   }  // class CashTransactionMapper
 

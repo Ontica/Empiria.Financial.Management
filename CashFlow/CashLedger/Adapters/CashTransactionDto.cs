@@ -38,7 +38,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
     public CashTransactionActions Actions {
       get; set;
-    } = new CashTransactionActions { CanUpdate = true };
+    }
 
   }  // class CashTransactionHolderDto
 
@@ -46,6 +46,14 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
   /// <summary>Action flags for cash transactions.</summary>
   public class CashTransactionActions {
+
+    public bool CanAnalize {
+      get; set;
+    }
+
+    public bool CanReview {
+      get; set;
+    }
 
     public bool CanUpdate {
       get; set;
