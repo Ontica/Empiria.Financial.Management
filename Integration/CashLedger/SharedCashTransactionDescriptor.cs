@@ -55,6 +55,10 @@ namespace Empiria.Financial.Integration.CashLedger {
       get; set;
     }
 
+    public string AuthorizedBy {
+      get; set;
+    }
+
     public string Status {
       get; set;
     }

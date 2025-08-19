@@ -68,4 +68,7 @@
     <ProjectReference Include="..\..\..\extensions\Office\Empiria.Office.csproj" />
     <ProjectReference Include="..\..\Budgeting\Transactions\Empiria.Budgeting.Transactions.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Cashflow\CashLedger\Empiria.CashFlow.CashLedger.csproj" />
+  </ItemGroup>
 </Project>

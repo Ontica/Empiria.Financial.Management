@@ -17,6 +17,8 @@ using Empiria.WebApi;
 using Empiria.CashFlow.CashLedger.Adapters;
 using Empiria.CashFlow.CashLedger.UseCases;
 
+using Empiria.Financial.Reporting;
+
 namespace Empiria.CashFlow.WebApi {
 
   /// <summary>Web API used to retrive and update cash ledger transactions.</summary>
@@ -41,7 +43,11 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> GetCashTransactionAsPdfFile([FromUri] long id) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        FileDto pdfFile = await usecases.GetTransactionAsPdfFile(id);
+        CashTransactionHolderDto transaction = await usecases.GetTransaction(id);
+
+        var reportingService = CashTransactionReportingService.ServiceInteractor();
+
+        FileDto pdfFile = reportingService.ExportTransactionToPdf(transaction);
 
         return new SingleObjectModel(base.Request, pdfFile);
       }
