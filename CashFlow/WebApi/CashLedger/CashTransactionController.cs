@@ -27,6 +27,18 @@ namespace Empiria.CashFlow.WebApi {
     #region Query web apis
 
     [HttpGet]
+    [Route("v1/cash-flow/cash-ledger/transactions/{id:long}/analyze")]
+    public async Task<CollectionModel> AnalyzeCashTransaction([FromUri] long id) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        FixedList<CashTransactionAnalysisEntry> analysisEntries = await usecases.AnalyzeTransaction(id);
+
+        return new CollectionModel(base.Request, analysisEntries);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/cash-flow/cash-ledger/transactions/{id:long}")]
     public async Task<SingleObjectModel> GetCashTransaction([FromUri] long id) {
 

@@ -32,9 +32,23 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       return UseCase.CreateInstance<CashTransactionUseCases>();
     }
 
+
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public async Task<FixedList<CashTransactionAnalysisEntry>> AnalyzeTransaction(long transactionId) {
+      Assertion.Require(transactionId > 0, nameof(transactionId));
+
+      CashTransactionHolderDto transaction = await GetTransaction(transactionId);
+
+      var analyzer = new CashTransactionAnalyzer(transaction.Entries);
+
+      FixedList<CashTransactionAnalysisEntry> entries = analyzer.Execute();
+
+      return entries;
+    }
+
 
     public async Task<CashTransactionHolderDto> AutoCodifyTransaction(long transactionId) {
       Assertion.Require(transactionId > 0, nameof(transactionId));
