@@ -33,16 +33,19 @@ namespace Empiria.CashFlow.CashLedger {
     internal FixedList<CashTransactionAnalysisEntry> Execute() {
       var entries = new List<CashTransactionAnalysisEntry>(32);
 
-      FixedList<CashTransactionAnalysisEntry> temp = AnalyzeEntries(x => x.CashAccountId == 0, "Pendientes");
-      entries.AddRange(temp);
-
-      temp = AnalyzeEntries(x => x.CashAccountId == -1, "Sin flujo");
+      FixedList<CashTransactionAnalysisEntry> temp = AnalyzeEntries(x => x.CashAccountId == -1, "Sin flujo");
       entries.AddRange(temp);
 
       temp = AnalyzeEntries(x => x.CashAccountId > 0, "Con flujo");
       entries.AddRange(temp);
 
-      temp = AnalyzeEntries(x => x.CashAccountId == 2, "Con flujo pendiente");
+      temp = AnalyzeEntries(x => x.CashAccountId == -2, "Con flujo pendiente");
+      entries.AddRange(temp);
+
+      temp = AnalyzeEntries(x => x.CashAccountId == 0, "Pendientes");
+      entries.AddRange(temp);
+
+      temp = AnalyzeEntries(x => x.Id != 0, "Totales");
       entries.AddRange(temp);
 
       return entries.ToFixedList();
@@ -56,15 +59,13 @@ namespace Empiria.CashFlow.CashLedger {
                                                                    string label) {
       var selectedEntries = _entries.FindAll(x => predicate.Invoke(x));
 
+      if (selectedEntries.Count == 0) {
+        return new FixedList<CashTransactionAnalysisEntry>();
+      }
+
       var analyzed = new List<CashTransactionAnalysisEntry>(8);
 
-      AddTotalsEntry(analyzed, label, selectedEntries);
-
-      var currencyGroups = selectedEntries.GroupBy(x => x.CurrencyId);
-
-      if (currencyGroups.Count() == 1) {
-        return analyzed.ToFixedList();
-      }
+      var currencyGroups = selectedEntries.GroupBy(x => x.CurrencyId).OrderBy(x => x.Key);
 
       foreach (var currencyGroup in currencyGroups) {
         AddTotalsEntry(analyzed, label, currencyGroup.ToFixedList());
@@ -77,15 +78,15 @@ namespace Empiria.CashFlow.CashLedger {
     private void AddTotalsEntry(List<CashTransactionAnalysisEntry> list, string label,
                                 FixedList<CashTransactionEntryDto> entries) {
 
-      var currencies = entries.SelectDistinct(x => x.CurrencyName);
-
       var totalsEntry = new CashTransactionAnalysisEntry {
         EntryLabel = label,
-        Currency = currencies.Count == 1 ? currencies[0] : "Todas",
+        Currency = entries[0].CurrencyName,
         TotalEntries = entries.Count(),
         Debits = entries.Sum(x => x.Debit),
         Credits = entries.Sum(x => x.Credit),
       };
+
+      list.Add(totalsEntry);
     }
 
     #endregion Helpers
