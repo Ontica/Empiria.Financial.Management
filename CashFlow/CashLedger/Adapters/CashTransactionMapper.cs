@@ -21,6 +21,11 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     }
 
 
+    static internal FixedList<CashTransactionHolderDto> Map(FixedList<CashTransactionHolderDto> transactions) {
+      return transactions.Select(x => Map(x)).ToFixedList();
+    }
+
+
     static internal void SetCashAccounts(FixedList<CashEntryDescriptor> entries) {
 
       foreach (var entry in entries) {

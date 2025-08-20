@@ -12,6 +12,7 @@ using Empiria.Services;
 using Empiria.Storage;
 
 using Empiria.CashFlow.CashLedger.Adapters;
+using System;
 
 namespace Empiria.Financial.Reporting {
 
@@ -42,6 +43,14 @@ namespace Empiria.Financial.Reporting {
       var exporter = new CashTransactionVoucherBuilder(templateConfig);
 
       return exporter.CreateVoucher(transaction);
+    }
+
+    public FileDto ExportTransactionsToExcel(FixedList<CashTransactionHolderDto> transactions) {
+      throw new NotImplementedException();
+    }
+
+    public FileDto ExportTransactionsEntriesToExcel(FixedList<CashEntryDescriptor> entries) {
+      throw new NotImplementedException();
     }
 
     #endregion Services

@@ -8,16 +8,17 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+
 using System.Threading.Tasks;
 using System.Web.Http;
 
 using Empiria.Storage;
 using Empiria.WebApi;
 
+using Empiria.Financial.Reporting;
+
 using Empiria.CashFlow.CashLedger.Adapters;
 using Empiria.CashFlow.CashLedger.UseCases;
-
-using Empiria.Financial.Reporting;
 
 namespace Empiria.CashFlow.WebApi {
 
@@ -93,7 +94,6 @@ namespace Empiria.CashFlow.WebApi {
 
     #region Command web apis
 
-
     [HttpPost]
     [Route("v1/cash-flow/cash-ledger/transactions/{id:long}/auto-codify")]
     public async Task<SingleObjectModel> AutoCodifyTransaction([FromUri] long id) {
@@ -110,12 +110,8 @@ namespace Empiria.CashFlow.WebApi {
     [Route("v1/cash-flow/cash-ledger/transactions/bulk-operation/auto-codify")]
     public async Task<SingleObjectModel> AutoCodifyTransactions([FromBody] BulkOperationCommand command) {
 
-      FixedList<long> transactionIds = command.Items.ToFixedList()
-                                                    .Select(x => long.Parse(x))
-                                                    .ToFixedList();
-
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        int count = await usecases.AutoCodifyTransactions(transactionIds);
+        int count = await usecases.AutoCodifyTransactions(command.GetConvertedIds());
 
         var result = new {
           Message = $"Se auto codificaron {count} pólizas, de un total de {command.Items.Length} seleccionadas."
@@ -139,6 +135,47 @@ namespace Empiria.CashFlow.WebApi {
       }
     }
 
+
+    [HttpPost]
+    [Route("v1/cash-flow/cash-ledger/transactions/bulk-operation/export")]
+    public async Task<SingleObjectModel> ExportCashTransactionsToExcel([FromBody] BulkOperationCommand command) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds());
+
+        var reportingService = CashTransactionReportingService.ServiceInteractor();
+
+        var result = new BulkOperationResult {
+          File = reportingService.ExportTransactionsToExcel(transactions),
+          Message = $"Se exportaron {transactions.Count} pólizas a Excel.",
+        };
+
+        base.SetOperation(result.Message);
+
+        return new SingleObjectModel(base.Request, result);
+      }
+    }
+
+    [HttpPost]
+    [Route("v1/cash-flow/cash-ledger/entries/bulk-operation/export")]
+    public async Task<SingleObjectModel> ExportCashEntriesToExcel([FromBody] BulkOperationCommand command) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        FixedList<CashEntryDescriptor> entries = await usecases.GetTransactionEntries(command.GetConvertedIds());
+
+        var reportingService = CashTransactionReportingService.ServiceInteractor();
+
+        var result = new BulkOperationResult {
+          File = reportingService.ExportTransactionsEntriesToExcel(entries),
+          Message = $"Se exportaron {entries.Count} movimientos a Excel.",
+        };
+
+        base.SetOperation(result.Message);
+
+        return new SingleObjectModel(base.Request, result);
+      }
+    }
+
     #endregion Command web apis
 
   }  // class CashTransactionController
@@ -149,6 +186,30 @@ namespace Empiria.CashFlow.WebApi {
       get; set;
     }
 
+
+    internal FixedList<long> GetConvertedIds() {
+      return Items.ToFixedList()
+                  .Select(x => long.Parse(x))
+                  .ToFixedList();
+    }
+
   }  // class BulkOperationCommand
+
+
+  public class BulkOperationResult {
+
+    internal BulkOperationResult() {
+      // no-op
+    }
+
+    public string Message {
+      get; internal set;
+    }
+
+    public FileDto File {
+      get; internal set;
+    }
+
+  }  // class BulkOperationResult
 
 }  // namespace Empiria.CashFlow.WebApi

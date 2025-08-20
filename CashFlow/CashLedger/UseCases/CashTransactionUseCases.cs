@@ -10,12 +10,10 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Empiria.Services;
-using Empiria.Storage;
-
 using Empiria.CashFlow.CashLedger.Adapters;
 using Empiria.CashFlow.CashLedger.Data;
+using Empiria.Services;
+using Empiria.Storage;
 
 namespace Empiria.CashFlow.CashLedger.UseCases {
 
@@ -127,6 +125,26 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       Assertion.Require(id > 0, nameof(id));
 
       return CashTransactionData.GetTransactionAsPdfFile(id);
+    }
+
+
+    public async Task<FixedList<CashTransactionHolderDto>> GetTransactions(FixedList<long> transactionIds) {
+      Assertion.Require(transactionIds, nameof(transactionIds));
+
+      FixedList<CashTransactionHolderDto> transactions = await CashTransactionData.GetTransactions(transactionIds);
+
+      return CashTransactionMapper.Map(transactions);
+    }
+
+
+    public async Task<FixedList<CashEntryDescriptor>> GetTransactionsEntries(FixedList<long> entriesIds) {
+      Assertion.Require(entriesIds, nameof(entriesIds));
+
+      FixedList<CashEntryDescriptor> entries = await CashTransactionData.GetTransactionsEntries(entriesIds);
+
+      CashTransactionMapper.SetCashAccounts(entries);
+
+      return entries;
     }
 
 
