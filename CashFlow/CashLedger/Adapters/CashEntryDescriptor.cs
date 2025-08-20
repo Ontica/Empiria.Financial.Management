@@ -19,6 +19,10 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
+    public string CuentaSistemaLegado {
+      get; set;
+    }
+
   }  // class CashEntryDescriptor
 
 }  // namespace Empiria.FinancialAccounting.CashLedger.Adapters

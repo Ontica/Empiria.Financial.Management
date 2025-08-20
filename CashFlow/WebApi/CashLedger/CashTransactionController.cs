@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -57,6 +56,8 @@ namespace Empiria.CashFlow.WebApi {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
         CashTransactionHolderDto transaction = await usecases.GetTransaction(id);
+
+        await usecases.SetCuentasSistemaLegado(transaction);
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
@@ -143,6 +144,8 @@ namespace Empiria.CashFlow.WebApi {
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
         FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds());
 
+        await usecases.SetCuentasSistemaLegado(transactions);
+
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
         var result = new BulkOperationResult {
@@ -161,7 +164,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> ExportCashEntriesToExcel([FromBody] BulkOperationCommand command) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        FixedList<CashEntryDescriptor> entries = await usecases.GetTransactionEntries(command.GetConvertedIds());
+        FixedList<CashEntryDescriptor> entries = await usecases.GetTransactionsEntries(command.GetConvertedIds());
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 

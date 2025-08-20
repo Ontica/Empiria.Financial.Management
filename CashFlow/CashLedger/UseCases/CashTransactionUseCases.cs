@@ -167,6 +167,23 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
 
     #endregion Use cases
 
+    #region Use cases Sistema Legado
+
+    public async Task SetCuentasSistemaLegado(CashTransactionHolderDto transaction) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      await Task.CompletedTask;
+    }
+
+
+    public async Task SetCuentasSistemaLegado(FixedList<CashTransactionHolderDto> transactions) {
+      Assertion.Require(transactions, nameof(transactions));
+
+      await Task.CompletedTask;
+    }
+
+    #endregion Use cases Sistema Legado
+
   }  // class CashTransactionUseCases
 
 }  // namespace Empiria.CashFlow.CashLedger.UseCases
