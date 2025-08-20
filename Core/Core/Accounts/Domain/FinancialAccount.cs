@@ -229,7 +229,7 @@ namespace Empiria.Financial {
 
     public AccountAttributes Attributes {
       get {
-        return new CreditAttributes(_attributes);
+        return new CreditAttributes(this, _attributes);
       }
     }
 

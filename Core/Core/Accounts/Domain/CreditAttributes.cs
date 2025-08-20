@@ -18,14 +18,17 @@ namespace Empiria.Financial {
     #region Constructors and Parsers
 
     private readonly JsonObject _attributes = new JsonObject();
+    private readonly FinancialAccount _account;
 
     public CreditAttributes() {
-
+      // no-op
     }
 
-    internal CreditAttributes(JsonObject attributes) {
+    internal CreditAttributes(FinancialAccount account, JsonObject attributes) {
+      Assertion.Require(account, nameof(account));
       Assertion.Require(attributes, nameof(attributes));
 
+      _account = account;
       _attributes = attributes;
     }
 
@@ -75,7 +78,8 @@ namespace Empiria.Financial {
 
     public string ExternalCreditNo {
       get {
-        return _attributes.Get("externalCreditNo", string.Empty);
+        return _account.SubledgerAccountNo;
+        //_attributes.Get("externalCreditNo", string.Empty);
       }
       internal set {
         _attributes.SetIfValue("externalCreditNo", value);
