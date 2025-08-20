@@ -86,7 +86,7 @@ namespace Empiria.CashFlow.CashLedger {
           continue;
         }
 
-        if (concepts.Count == 1) {
+        if (concepts.Count == 1 && entry.SubledgerAccountNumber.Length == 0) {
           AddCashEntryFields(updated, entry, int.Parse(concepts[0]));
           continue;
         }
@@ -98,17 +98,27 @@ namespace Empiria.CashFlow.CashLedger {
 
         var account = FinancialAccount.TryParseWithSubledgerAccount(entry.SubledgerAccountNumber);
 
-        if (account == null) {
+        if (account == null && concepts.Count == 1) {
+          AddCashEntryFields(updated, entry, int.Parse(concepts[0]));
+          continue;
+        }
+
+        if (account == null && concepts.Count > 1) {
           AddCashEntryFields(updated, entry, -2);
           continue;
         }
 
         FixedList<string> accountConcepts = account.GetOperations()
+                                                   .FindAll(x => x.Currency.Id == entry.CurrencyId)
                                                    .SelectDistinct(x => x.AccountNo)
                                                    .Intersect(concepts);
 
-        if (accountConcepts.Count == 1) {
+        if (accountConcepts.Count == 0 && concepts.Count == 1) {
+          AddCashEntryFields(updated, entry, int.Parse(concepts[0]));
+
+        } else if (accountConcepts.Count == 1) {
           AddCashEntryFields(updated, entry, int.Parse(accountConcepts[0]));
+
         } else {
           AddCashEntryFields(updated, entry, -2);
         }
