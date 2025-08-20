@@ -55,7 +55,7 @@ namespace Empiria.CashFlow.CashLedger {
       temp = ProcessNoCashFlowEntriesAdded();
       updated.AddRange(temp);
 
-      temp = ProcessEqualEntries();
+      temp = ProcessSameEntries();
       updated.AddRange(temp);
 
       temp = ProcessCashFlowEntries();
@@ -128,14 +128,23 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    private FixedList<CashEntryFields> ProcessEqualEntries() {
-      FixedList<CashTransactionEntryDto> debitEntries = GetUnprocessedEntries(x => x.Debit != 0);
+    private FixedList<CashEntryFields> ProcessSameEntries() {
+      FixedList<CashTransactionEntryDto> debitEntries = GetUnprocessedEntries();
+
+      var updated = new List<CashEntryFields>(_entries.Count);
+
+      if (debitEntries.SelectDistinct(x => x.AccountNumber).Count == 1) {
+        foreach (var entry in debitEntries) {
+          AddCashEntryFields(updated, entry, -1);
+        }
+        return updated.ToFixedList();
+      }
+
+      debitEntries = GetUnprocessedEntries(x => x.Debit != 0 && !x.AccountNumber.StartsWith("9"));
 
       if (debitEntries.Count == 0) {
         return new FixedList<CashEntryFields>();
       }
-
-      var updated = new List<CashEntryFields>(_entries.Count);
 
       foreach (var debitGroup in debitEntries.GroupBy(x => $"{x.AccountNumber}|{x.CurrencyId}|{x.SectorCode}|{x.SubledgerAccountNumber}")) {
 
