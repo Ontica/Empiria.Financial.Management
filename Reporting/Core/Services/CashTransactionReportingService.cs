@@ -70,7 +70,7 @@ namespace Empiria.Financial.Reporting {
 
       var templateConfig = FileTemplateConfig.Parse(templateUID);
 
-      var exporter = new CashTransactionToExcelBuilder(templateConfig);
+      var exporter = new CashTransactionTotalsToExcelBuilder(templateConfig);
 
       ExcelFile excelFile = exporter.CreateExcelFile(transactions);
 
