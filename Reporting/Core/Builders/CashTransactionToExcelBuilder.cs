@@ -59,12 +59,15 @@ namespace Empiria.Financial.Reporting {
 
 
     private void FillOut(FixedList<CashTransactionHolderDto> holders) {
+      int DEFAULT_CURRENCY_ID = Currency.Default.Id;
+
       int i = _templateConfig.FirstRowIndex;
 
       foreach (var holder in holders) {
         var txn = holder.Transaction;
 
         foreach (var entry in holder.Entries) {
+
           _excelFile.SetCell($"A{i}", txn.LedgerName);
           _excelFile.SetCell($"B{i}", txn.Number);
           _excelFile.SetCell($"C{i}", txn.AccountingDate);
@@ -73,22 +76,29 @@ namespace Empiria.Financial.Reporting {
           _excelFile.SetCell($"F{i}", txn.VoucherTypeName);
           _excelFile.SetCell($"G{i}", txn.SourceName);
           _excelFile.SetCell($"H{i}", txn.ElaboratedBy);
-          _excelFile.SetCell($"I{i}", txn.Concept);
-          _excelFile.SetCell($"J{i}", entry.AccountNumber);
-          _excelFile.SetCell($"K{i}", entry.AccountName);
-          _excelFile.SetCell($"L{i}", entry.SubledgerAccountNumber);
-          _excelFile.SetCell($"M{i}", entry.SubledgerAccountName);
-          _excelFile.SetCell($"N{i}", entry.SectorCode);
-          _excelFile.SetCell($"O{i}", entry.VerificationNumber);
-          _excelFile.SetCell($"P{i}", entry.BudgetCode);
+          _excelFile.SetCell($"I{i}", txn.Id);
+          _excelFile.SetCell($"J{i}", txn.Concept);
+          _excelFile.SetCell($"K{i}", entry.AccountNumber);
+          _excelFile.SetCell($"L{i}", entry.AccountName);
+          _excelFile.SetCell($"M{i}", entry.SubledgerAccountNumber);
+          _excelFile.SetCell($"N{i}", entry.SubledgerAccountName);
+          _excelFile.SetCell($"O{i}", entry.SectorCode);
+          _excelFile.SetCell($"P{i}", entry.VerificationNumber);
           _excelFile.SetCell($"Q{i}", entry.ResponsibilityAreaCode);
           _excelFile.SetCell($"R{i}", entry.CurrencyName);
-          _excelFile.SetCell($"S{i}", entry.ExchangeRate);
-          _excelFile.SetCell($"T{i}", entry.Debit);
-          _excelFile.SetCell($"U{i}", entry.Credit);
+
+          if (entry.CurrencyId != DEFAULT_CURRENCY_ID) {
+            _excelFile.SetCell($"S{i}", entry.ExchangeRate);
+          }
+
+          _excelFile.SetCellIfValue($"T{i}", entry.Debit);
+          _excelFile.SetCellIfValue($"U{i}", entry.Credit);
+
           _excelFile.SetCell($"V{i}", entry.CashAccount.Name);
           _excelFile.SetCell($"W{i}", entry.CuentaSistemaLegado);
+
           i++;
+
         }  //  foreach entry
 
       } // foreach holder
