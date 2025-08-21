@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Office;
 using Empiria.Services;
 using Empiria.Storage;
@@ -86,13 +84,11 @@ namespace Empiria.Financial.Reporting {
 
       var templateConfig = FileTemplateConfig.Parse(templateUID);
 
-      throw new NotImplementedException();
+      var exporter = new CashEntriesToExcelBuilder(templateConfig);
 
-      //var exporter = new CashEntriesToExcelBuilder(templateConfig);
+      ExcelFile excelFile = exporter.CreateExcelFile(entries);
 
-      //ExcelFile excelFile = exporter.CreateExcelFile(entries);
-
-      //return excelFile.ToFileDto();
+      return excelFile.ToFileDto();
     }
 
     #endregion Services

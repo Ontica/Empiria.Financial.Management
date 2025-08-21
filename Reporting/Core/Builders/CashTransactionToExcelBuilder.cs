@@ -106,4 +106,4 @@ namespace Empiria.Financial.Reporting {
 
   } // class CashTransactionToExcelBuilder
 
-} // namespace Empiria.FinancialAccounting.Reporting.Balances
+} // namespace Empiria.Financial.Reporting

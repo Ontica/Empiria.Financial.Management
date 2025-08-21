@@ -97,4 +97,4 @@ namespace Empiria.Financial.Reporting {
 
   } // class BudgetTransactionEntriesToExcelBuilder
 
-} // namespace Empiria.FinancialAccounting.Reporting.Balances
+} // namespace Empiria.Financial.Reporting
