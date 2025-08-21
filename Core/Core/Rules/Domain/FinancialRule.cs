@@ -90,6 +90,12 @@ namespace Empiria.Financial.Rules {
     }
 
 
+    [DataField("RULE_CONCEPT_ACCOUNT")]
+    public string ConceptAccount {
+      get; private set;
+    }
+
+
     [DataField("RULE_CONDITIONS")]
     protected internal JsonObject Conditions {
       get; private set;

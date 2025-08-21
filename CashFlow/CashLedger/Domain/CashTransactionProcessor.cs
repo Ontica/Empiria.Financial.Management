@@ -61,11 +61,73 @@ namespace Empiria.CashFlow.CashLedger {
       temp = ProcessCashFlowEntries();
       updated.AddRange(temp);
 
+      //temp = ProcessCashFlowEntriesFormer();
+      //updated.AddRange(temp);
+
       return updated.ToFixedList();
     }
 
 
     private FixedList<CashEntryFields> ProcessCashFlowEntries() {
+      FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return new FixedList<CashEntryFields>();
+      }
+
+      var updated = new List<CashEntryFields>(_entries.Count);
+
+      FixedList<FinancialRule> rules = FinancialRuleCategory.ParseNamedKey("CASH_FLOW_UNGROUPED")
+                                                            .GetFinancialRules(_transaction.AccountingDate);
+
+      foreach (var entry in entries) {
+
+        FixedList<string> concepts = rules.FindAll(x => entry.AccountNumber == x.DebitAccount &&
+                                                        x.ConceptAccount.Length != 0)
+                                          .SelectDistinct(x => x.ConceptAccount.ToString());
+
+        if (concepts.Count == 0) {
+          AddCashEntryFields(updated, entry, 0);
+          continue;
+        }
+
+        if (concepts.Count == 1 && concepts[0].Length >= 4) {
+          AddCashEntryFields(updated, entry, int.Parse(concepts[0]));
+          continue;
+        }
+
+        if (concepts.Count > 1 && entry.SubledgerAccountNumber.Length == 0) {
+          AddCashEntryFields(updated, entry, -2);
+          continue;
+        }
+
+        var account = FinancialAccount.TryParseWithSubledgerAccount(entry.SubledgerAccountNumber);
+
+        if (account == null) {
+          AddCashEntryFields(updated, entry, -2);
+          continue;
+        }
+
+        FixedList<FinancialAccount> operations = account.GetOperations()
+                                                        .FindAll(x => x.Currency.Id == entry.CurrencyId &&
+                                                                      EmpiriaString.StartsWith(x.AccountNo, concepts[0]));
+
+        if (operations.Count == 0) {
+          AddCashEntryFields(updated, entry, -2);
+
+        } else if (operations.Count == 1) {
+          AddCashEntryFields(updated, entry, int.Parse(operations[0].AccountNo));
+
+        } else {
+          AddCashEntryFields(updated, entry, -2);
+        }
+      }
+
+      return updated.ToFixedList();
+    }
+
+
+    private FixedList<CashEntryFields> ProcessCashFlowEntriesFormer() {
       FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
 
       if (entries.Count == 0) {
