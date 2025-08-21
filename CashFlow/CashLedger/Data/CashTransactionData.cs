@@ -48,7 +48,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
     static internal async Task<FixedList<CashTransactionHolderDto>> GetTransactions(FixedList<long> transactionIds) {
       WebApiClient webApiClient = GetWebApiClient();
 
-      string path = $"v2/financial-accounting/cash-ledger/entries/bulk-operation/get-transactions";
+      string path = $"v2/financial-accounting/cash-ledger/transactions/bulk-operation/get-transactions";
 
       JsonObject json = await webApiClient.PostAsync<JsonObject>(transactionIds, path);
 

@@ -8,11 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
+using Empiria.Office;
 using Empiria.Services;
 using Empiria.Storage;
 
 using Empiria.CashFlow.CashLedger.Adapters;
-using System;
 
 namespace Empiria.Financial.Reporting {
 
@@ -45,12 +47,52 @@ namespace Empiria.Financial.Reporting {
       return exporter.CreateVoucher(transaction);
     }
 
+
     public FileDto ExportTransactionsToExcel(FixedList<CashTransactionHolderDto> transactions) {
-      throw new NotImplementedException();
+      Assertion.Require(transactions, nameof(transactions));
+
+      var templateUID = $"{this.GetType().Name}.ExportTransactionsToExcel";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new CashTransactionToExcelBuilder(templateConfig);
+
+      ExcelFile excelFile = exporter.CreateExcelFile(transactions);
+
+      return excelFile.ToFileDto();
     }
 
+
+    public FileDto ExportTransactionsTotalsToExcel(FixedList<CashTransactionHolderDto> transactions) {
+      Assertion.Require(transactions, nameof(transactions));
+
+      var templateUID = $"{this.GetType().Name}.ExportTransactionsTotalsToExcel";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new CashTransactionToExcelBuilder(templateConfig);
+
+      ExcelFile excelFile = exporter.CreateExcelFile(transactions);
+
+      return excelFile.ToFileDto();
+    }
+
+
+
     public FileDto ExportTransactionsEntriesToExcel(FixedList<CashEntryDescriptor> entries) {
+      Assertion.Require(entries, nameof(entries));
+
+      var templateUID = $"{this.GetType().Name}.ExportEntriesToExcel";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
       throw new NotImplementedException();
+
+      //var exporter = new CashEntriesToExcelBuilder(templateConfig);
+
+      //ExcelFile excelFile = exporter.CreateExcelFile(entries);
+
+      //return excelFile.ToFileDto();
     }
 
     #endregion Services

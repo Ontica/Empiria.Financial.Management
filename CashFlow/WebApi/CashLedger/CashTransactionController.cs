@@ -138,7 +138,7 @@ namespace Empiria.CashFlow.WebApi {
 
 
     [HttpPost]
-    [Route("v1/cash-flow/cash-ledger/transactions/bulk-operation/export")]
+    [Route("v1/cash-flow/cash-ledger/transactions/bulk-operation/export-entries")]
     public async Task<SingleObjectModel> ExportCashTransactionsToExcel([FromBody] BulkOperationCommand command) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
@@ -158,6 +158,30 @@ namespace Empiria.CashFlow.WebApi {
         return new SingleObjectModel(base.Request, result);
       }
     }
+
+
+    [HttpPost]
+    [Route("v1/cash-flow/cash-ledger/transactions/bulk-operation/export-totals")]
+    public async Task<SingleObjectModel> ExportCashTransactionsTotalsToExcel([FromBody] BulkOperationCommand command) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds());
+
+        await usecases.SetCuentasSistemaLegado(transactions);
+
+        var reportingService = CashTransactionReportingService.ServiceInteractor();
+
+        var result = new BulkOperationResult {
+          File = reportingService.ExportTransactionsTotalsToExcel(transactions),
+          Message = $"Se exportaron {transactions.Count} pólizas a Excel.",
+        };
+
+        base.SetOperation(result.Message);
+
+        return new SingleObjectModel(base.Request, result);
+      }
+    }
+
 
     [HttpPost]
     [Route("v1/cash-flow/cash-ledger/entries/bulk-operation/export")]
