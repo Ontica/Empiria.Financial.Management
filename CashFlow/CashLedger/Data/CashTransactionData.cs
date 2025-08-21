@@ -14,6 +14,8 @@ using Empiria.Json;
 using Empiria.Storage;
 using Empiria.WebApi.Client;
 
+using Empiria.Financial.Integration.CashLedger;
+
 using Empiria.CashFlow.CashLedger.Adapters;
 
 namespace Empiria.CashFlow.CashLedger.Data {
@@ -105,6 +107,20 @@ namespace Empiria.CashFlow.CashLedger.Data {
 
       return json.Get<CashTransactionHolderDto>("data");
     }
+
+    #region Methods Sistema Legado
+
+    static internal async Task<FixedList<MovimientoSistemaLegado>> GetMovimientosSistemaLegado(long id) {
+      WebApiClient webApiClient = GetWebApiClient();
+
+      string path = $"v2/financial-accounting/cash-ledger/sistema-legado/transacciones/{id}";
+
+      JsonObject json = await webApiClient.GetAsync<JsonObject>(path);
+
+      return json.GetFixedList<MovimientoSistemaLegado>("data");
+    }
+
+    #endregion Methods Sistema Legado
 
     #region Helpers
 

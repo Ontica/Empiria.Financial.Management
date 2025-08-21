@@ -10,10 +10,14 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Empiria.CashFlow.CashLedger.Adapters;
-using Empiria.CashFlow.CashLedger.Data;
+
 using Empiria.Services;
 using Empiria.Storage;
+
+using Empiria.Financial.Integration.CashLedger;
+
+using Empiria.CashFlow.CashLedger.Adapters;
+using Empiria.CashFlow.CashLedger.Data;
 
 namespace Empiria.CashFlow.CashLedger.UseCases {
 
@@ -117,6 +121,12 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
 
       CashTransactionHolderDto transaction = await CashTransactionData.GetTransaction(id);
 
+      FixedList<MovimientoSistemaLegado> movs = await CashTransactionData.GetMovimientosSistemaLegado(transaction.Transaction.Id);
+
+      var merger = new SistemaLegadoMerger(transaction.Entries, movs);
+
+      merger.Merge();
+
       return CashTransactionMapper.Map(transaction);
     }
 
@@ -172,14 +182,20 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     public async Task SetCuentasSistemaLegado(CashTransactionHolderDto transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
-      await Task.CompletedTask;
+      FixedList<MovimientoSistemaLegado> movs = await CashTransactionData.GetMovimientosSistemaLegado(transaction.Transaction.Id);
+
+      var merger = new SistemaLegadoMerger(transaction.Entries, movs);
+
+      merger.Merge();
     }
 
 
     public async Task SetCuentasSistemaLegado(FixedList<CashTransactionHolderDto> transactions) {
       Assertion.Require(transactions, nameof(transactions));
 
-      await Task.CompletedTask;
+      foreach (var transaction in transactions) {
+        await SetCuentasSistemaLegado(transaction);
+      }
     }
 
     #endregion Use cases Sistema Legado
