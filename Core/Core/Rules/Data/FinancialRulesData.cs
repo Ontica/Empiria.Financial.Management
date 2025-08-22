@@ -10,6 +10,8 @@
 
 using Empiria.Data;
 
+using Empiria.Financial.Integration;
+
 namespace Empiria.Financial.Rules.Data {
 
   /// <summary>Provides data access services for financial rules.</summary>
@@ -22,8 +24,8 @@ namespace Empiria.Financial.Rules.Data {
         return;
       }
 
-      string debitAccount = FormatAccountNumber(rule.DebitAccount);
-      string creditAccount = FormatAccountNumber(rule.CreditAccount);
+      string debitAccount = IntegrationLibrary.FormatAccountNumber(rule.DebitAccount);
+      string creditAccount = IntegrationLibrary.FormatAccountNumber(rule.CreditAccount);
 
       var sql = "UPDATE FMS_RULES " +
                 $"SET RULE_UID = '{System.Guid.NewGuid().ToString()}', " +
@@ -48,62 +50,6 @@ namespace Empiria.Financial.Rules.Data {
     }
 
     #endregion Methods
-
-    #region Helpers
-
-    static private string FormatAccountNumber(string accountNumber) {
-      string temp = EmpiriaString.TrimSpacesAndControl(accountNumber);
-
-      if (temp.Length == 0) {
-        return temp;
-      }
-
-      if (temp.Contains("*") || temp.Contains("]") || temp.Contains("^") || temp.Contains("~")) {
-        return temp;
-      }
-
-      char separator = '.';
-      string pattern = "0.00.00.00.00.00.00.00.00.00.00";
-
-      temp = temp.Replace(separator.ToString(), string.Empty);
-
-      temp = temp.TrimEnd('0');
-
-      if (temp.Length > EmpiriaString.CountOccurences(pattern, '0')) {
-        Assertion.RequireFail($"Number of placeholders in pattern ({pattern}) is less than the " +
-                              $"number of characters in the input string ({accountNumber}).");
-      } else {
-        temp = temp.PadRight(EmpiriaString.CountOccurences(pattern, '0'), '0');
-      }
-
-      for (int i = 0; i < pattern.Length; i++) {
-        if (pattern[i] == separator) {
-          temp = temp.Insert(i, separator.ToString());
-        }
-      }
-
-      while (true) {
-        if (temp.EndsWith($"{separator}0000")) {
-          temp = temp.Remove(temp.Length - 5);
-
-        } else if (temp.EndsWith($"{separator}000")) {
-          temp = temp.Remove(temp.Length - 4);
-
-        } else if (temp.EndsWith($"{separator}00")) {
-          temp = temp.Remove(temp.Length - 3);
-
-        } else if (temp.EndsWith($"{separator}0")) {
-          temp = temp.Remove(temp.Length - 2);
-
-        } else {
-          break;
-        }
-      }
-
-      return temp;
-    }
-
-    #endregion Helpers
 
   }  // class FinancialRulesData
 
