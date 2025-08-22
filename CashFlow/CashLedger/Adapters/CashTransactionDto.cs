@@ -77,10 +77,6 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-    public string CuentaSistemaLegado {
-      get; set;
-    }
-
     internal bool Processed {
       get; set;
     }

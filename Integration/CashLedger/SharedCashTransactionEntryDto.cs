@@ -91,6 +91,10 @@ namespace Empiria.Financial.Integration.CashLedger {
       get; set;
     }
 
+    public string CuentaSistemaLegado {
+      get; set;
+    }
+
   }  // class SharedCashTransactionEntryDto
 
 }  // namespace Empiria.Financial.Integration.CashLedger
