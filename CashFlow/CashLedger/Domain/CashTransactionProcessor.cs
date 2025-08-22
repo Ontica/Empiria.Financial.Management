@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.Financial;
@@ -42,11 +41,13 @@ namespace Empiria.CashFlow.CashLedger {
 
       //ProcessNoCashFlowGroupedEntries();
 
+      ProcessEqualEntriesAsNoCashFlowEntries();
+
+      ProcessEqualEntriesAsNoCashFlowEntriesAdded();
+
       ProcessNoCashFlowEntriesOneToOne();
 
       ProcessNoCashFlowEntriesWithCreditsOrDebitsAdded();
-
-      ProcessSameEntries();
 
       ProcessCashFlowDirectEntries();
 
@@ -148,6 +149,60 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
+    private void ProcessEqualEntriesAsNoCashFlowEntries() {
+      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return;
+      }
+
+      foreach (var debitEntry in entries.FindAll(x => x.Debit > 0)) {
+
+        CashTransactionEntryDto matchingEntry = entries.Find(x => x.Credit == debitEntry.Debit &&
+                                                                  x.CurrencyId == debitEntry.CurrencyId &&
+                                                                  x.AccountNumber == debitEntry.AccountNumber &&
+                                                                  x.SectorCode == debitEntry.SectorCode &&
+                                                                  x.SubledgerAccountNumber == debitEntry.SubledgerAccountNumber);
+
+        if (matchingEntry != null) {
+          _helper.AddProcessedEntry(debitEntry, -1);
+          _helper.AddProcessedEntry(matchingEntry, -1);
+        }
+      }
+    }
+
+
+    private void ProcessEqualEntriesAsNoCashFlowEntriesAdded() {
+      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
+
+      if (debitEntries.Count == 0) {
+        return;
+      }
+
+      foreach (var debitGroup in debitEntries.GroupBy(x => $"{x.AccountNumber}|{x.CurrencyId}|{x.SectorCode}|{x.SubledgerAccountNumber}")) {
+
+        CashTransactionEntryDto pivotEntry = debitGroup.First();
+
+        FixedList<CashTransactionEntryDto> creditEntries = _helper.GetUnprocessedEntries(x => x.Credit != 0 &&
+                                                                                              x.CurrencyId == pivotEntry.CurrencyId &&
+                                                                                              x.AccountNumber == pivotEntry.AccountNumber &&
+                                                                                              x.SectorCode == pivotEntry.SectorCode &&
+                                                                                              x.SubledgerAccountNumber == pivotEntry.SubledgerAccountNumber);
+        if (debitGroup.Sum(x => x.Debit) != creditEntries.Sum(x => x.Credit)) {
+          continue;
+        }
+
+        foreach (var debitEntry in debitGroup) {
+          _helper.AddProcessedEntry(debitEntry, -1);
+        }
+
+        foreach (var creditEntry in creditEntries) {
+          _helper.AddProcessedEntry(creditEntry, -1);
+        }
+      }
+    }
+
+
     private void ProcessNoCashFlowEntriesOneToOne() {
       FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
 
@@ -243,48 +298,6 @@ namespace Empiria.CashFlow.CashLedger {
         }
         if (entry.CashAccountId != 0) {
           _helper.AddProcessedEntry(entry, 0);
-        }
-      }
-    }
-
-
-    private void ProcessSameEntries() {
-      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries();
-
-      var updated = new List<CashEntryFields>(debitEntries.Count);
-
-      if (debitEntries.SelectDistinct(x => x.AccountNumber).Count == 1) {
-        foreach (var entry in debitEntries) {
-          _helper.AddProcessedEntry(entry, -1);
-        }
-        return;
-      }
-
-      debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0 && !x.AccountNumber.StartsWith("9"));
-
-      if (debitEntries.Count == 0) {
-        return;
-      }
-
-      foreach (var debitGroup in debitEntries.GroupBy(x => $"{x.AccountNumber}|{x.CurrencyId}|{x.SectorCode}|{x.SubledgerAccountNumber}")) {
-
-        CashTransactionEntryDto pivotEntry = debitGroup.First();
-
-        FixedList<CashTransactionEntryDto> creditEntries = _helper.GetUnprocessedEntries(x => x.Credit != 0 &&
-                                                                                              x.CurrencyId == pivotEntry.CurrencyId &&
-                                                                                              x.AccountNumber == pivotEntry.AccountNumber &&
-                                                                                              x.SectorCode == pivotEntry.SectorCode &&
-                                                                                              x.SubledgerAccountNumber == pivotEntry.SubledgerAccountNumber);
-        if (debitGroup.Sum(x => x.Debit) != creditEntries.Sum(x => x.Credit)) {
-          continue;
-        }
-
-        foreach (var debitEntry in debitGroup) {
-          _helper.AddProcessedEntry(debitEntry, -1);
-        }
-
-        foreach (var creditEntry in creditEntries) {
-          _helper.AddProcessedEntry(creditEntry, -1);
         }
       }
     }
