@@ -58,17 +58,41 @@ namespace Empiria.CashFlow.CashLedger {
       temp = ProcessSameEntries();
       updated.AddRange(temp);
 
-      temp = ProcessCashFlowEntries();
+      temp = ProcessCashFlowDirectEntries();
+      updated.AddRange(temp);
+
+      temp = ProcessCashFlowCreditOrDirectEntries();
       updated.AddRange(temp);
 
       //temp = ProcessCashFlowEntriesFormer();
       //updated.AddRange(temp);
 
+      temp = ProcessPendingEntries(updated);
+      updated.AddRange(temp);
+
       return updated.ToFixedList();
     }
 
 
-    private FixedList<CashEntryFields> ProcessCashFlowEntries() {
+    private FixedList<CashEntryFields> ProcessPendingEntries(List<CashEntryFields> processed) {
+      FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
+
+      var updated = new List<CashEntryFields>(_entries.Count);
+
+      foreach (var entry in entries) {
+        if (processed.Exists(x => x.EntryId == entry.Id)) {
+          continue;
+        }
+        if (entry.CashAccountId != 0) {
+          AddCashEntryFields(updated, entry, 0);
+        }
+      }
+
+      return updated.ToFixedList();
+    }
+
+
+    private FixedList<CashEntryFields> ProcessCashFlowDirectEntries() {
       FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
 
       if (entries.Count == 0) {
@@ -77,17 +101,54 @@ namespace Empiria.CashFlow.CashLedger {
 
       var updated = new List<CashEntryFields>(_entries.Count);
 
-      FixedList<FinancialRule> rules = FinancialRuleCategory.ParseNamedKey("CASH_FLOW_UNGROUPED")
+      FixedList<FinancialRule> rules = FinancialRuleCategory.ParseNamedKey("CASH_FLOW_DIRECT")
                                                             .GetFinancialRules(_transaction.AccountingDate);
 
       foreach (var entry in entries) {
 
-        FixedList<string> concepts = rules.FindAll(x => entry.AccountNumber == x.DebitAccount &&
+        FixedList<string> concepts = rules.FindAll(x => x.DebitAccount == entry.AccountNumber &&
                                                         x.ConceptAccount.Length != 0)
                                           .SelectDistinct(x => x.ConceptAccount.ToString());
 
         if (concepts.Count == 0) {
-          AddCashEntryFields(updated, entry, 0);
+          continue;
+        }
+
+        if (concepts.Count == 1) {
+          AddCashEntryFields(updated, entry, int.Parse(concepts[0]));
+          continue;
+        }
+
+        if (concepts.Count > 1) {
+          AddCashEntryFields(updated, entry, -2);
+          continue;
+        }
+      }
+
+      return updated.ToFixedList();
+    }
+
+
+    private FixedList<CashEntryFields> ProcessCashFlowCreditOrDirectEntries() {
+      FixedList<CashTransactionEntryDto> entries = GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return new FixedList<CashEntryFields>();
+      }
+
+      var updated = new List<CashEntryFields>(_entries.Count);
+
+      FixedList<FinancialRule> rules = FinancialRuleCategory.ParseNamedKey("CASH_FLOW_CREDIT_OR_DEBIT")
+                                                            .GetFinancialRules(_transaction.AccountingDate);
+
+      foreach (var entry in entries) {
+
+        FixedList<string> concepts = rules.FindAll(x => ((entry.Debit > 0 && x.DebitAccount == entry.AccountNumber) ||
+                                                         ((entry.Credit > 0 && x.CreditAccount == entry.AccountNumber)) &&
+                                                         x.ConceptAccount.Length != 0))
+                                          .SelectDistinct(x => x.ConceptAccount.ToString());
+
+        if (concepts.Count == 0) {
           continue;
         }
 
