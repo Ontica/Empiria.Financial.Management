@@ -31,28 +31,6 @@ namespace Empiria.Tests.Financial.Rules {
 
 
     [Fact]
-    public void CleanTempRules() {
-      FixedList<TempRule> rules = TempRulesData.GetTempRules();
-
-      foreach (var rule in rules) {
-        TempRulesData.CleanTempRule(rule);
-      }
-    }
-
-
-    [Fact]
-    public void ShouldParseTempRule() {
-      FixedList<TempRule> rules = TempRule.GetList();
-
-      var sut = rules.FindAll(x => "6.05.01.02.05.03.12" == x.CuentaContable &&
-                                   "" == x.Auxiliar);
-
-      Assert.Single(sut);
-
-    }
-
-
-    [Fact]
     public void Should_Parse_All_Financial_Rules() {
       var rules = BaseObject.GetFullList<FinancialRule>();
 
