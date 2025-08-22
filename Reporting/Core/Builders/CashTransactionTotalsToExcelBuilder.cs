@@ -128,6 +128,17 @@ namespace Empiria.Financial.Reporting {
           _excelFile.SetCellIfValue($"AH{i}", entries.Sum(x => x.Debit) - sinFlujo.Sum(x => x.Debit));
           _excelFile.SetCellIfValue($"AI{i}", entries.Sum(x => x.Credit) - sinFlujo.Sum(x => x.Credit));
 
+          entries = groupByCurrency.ToFixedList();
+
+          _excelFile.SetCellIfValue($"AJ{i}", entries.Count);
+          _excelFile.SetCellIfValue($"AK{i}", entries.Count(x => x.CashAccountId == 0));
+          _excelFile.SetCellIfValue($"AL{i}", entries.Count(x => x.CashAccount.Name == x.CuentaSistemaLegado));
+          _excelFile.SetCellIfValue($"AM{i}", entries.Count(x => x.CashAccountId == 0 ||
+                                                                (x.CashAccountId == -2 && x.CuentaSistemaLegado != "Sin flujo")));
+          _excelFile.SetCellIfValue($"AN{i}", entries.Count(x => (x.CashAccountId == -1 && x.CuentaSistemaLegado != "Sin flujo") ||
+                                                                 (x.CashAccountId == -2 && x.CuentaSistemaLegado == "Sin flujo") ||
+                                                                 (x.CashAccountId > 0 && x.CashAccount.Name != x.CuentaSistemaLegado)));
+
           i++;
 
         }  //  foreach entry
