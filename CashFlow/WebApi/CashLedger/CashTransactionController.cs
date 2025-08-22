@@ -43,7 +43,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> GetCashTransaction([FromUri] long id) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        CashTransactionHolderDto transaction = await usecases.GetTransaction(id);
+        CashTransactionHolderDto transaction = await usecases.GetTransaction(id, false);
 
         return new SingleObjectModel(base.Request, transaction);
       }
@@ -55,9 +55,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> GetCashTransactionAsPdfFile([FromUri] long id) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        CashTransactionHolderDto transaction = await usecases.GetTransaction(id);
-
-        await usecases.SetCuentasSistemaLegado(transaction);
+        CashTransactionHolderDto transaction = await usecases.GetTransaction(id, true);
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
@@ -142,9 +140,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> ExportCashTransactionsToExcel([FromBody] BulkOperationCommand command) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds());
-
-        await usecases.SetCuentasSistemaLegado(transactions);
+        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds(), true);
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
@@ -165,9 +161,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> ExportCashTransactionsTotalsToExcel([FromBody] BulkOperationCommand command) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds());
-
-        await usecases.SetCuentasSistemaLegado(transactions);
+        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds(), true);
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
