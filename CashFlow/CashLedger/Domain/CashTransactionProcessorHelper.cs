@@ -36,7 +36,7 @@ namespace Empiria.CashFlow.CashLedger {
 
     #region Methods
 
-    internal void AddProcessedEntry(CashTransactionEntryDto entry, int cashAccountId) {
+    internal void AddProcessedEntry(CashTransactionEntryDto entry, int cashAccountId, string appliedRule) {
       entry.Processed = true;
 
       if (entry.CashAccountId == cashAccountId) {
@@ -49,6 +49,7 @@ namespace Empiria.CashFlow.CashLedger {
         EntryId = entry.Id,
         CashAccountId = cashAccountId,
         TransactionId = _transaction.Id,
+        AppliedRule = appliedRule
       };
 
       _processedEntries.Add(fields);

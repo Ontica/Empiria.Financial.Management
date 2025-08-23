@@ -39,8 +39,6 @@ namespace Empiria.CashFlow.CashLedger {
 
     internal FixedList<CashEntryFields> Execute() {
 
-      //ProcessNoCashFlowGroupedEntries();
-
       ProcessNoCashFlowEntriesOneToOne();
 
       ProcessNoCashFlowEntriesWithCreditsOrDebitsAdded();
@@ -84,19 +82,20 @@ namespace Empiria.CashFlow.CashLedger {
         }
 
         if (concepts.Count == 1 && concepts[0].Length >= 4) {
-          _helper.AddProcessedEntry(entry, int.Parse(concepts[0]));
+          _helper.AddProcessedEntry(entry, int.Parse(concepts[0]), "Regla con flujo en pares con concepto directo");
           continue;
         }
 
         if (concepts.Count > 1 && entry.SubledgerAccountNumber.Length == 0) {
-          _helper.AddProcessedEntry(entry, -2);
+          _helper.AddProcessedEntry(entry, -2, "Regla con flujo en pares con concepto (la cuenta no maneja auxiliares)");
           continue;
         }
 
         var account = FinancialAccount.TryParseWithSubledgerAccount(entry.SubledgerAccountNumber);
 
         if (account == null) {
-          _helper.AddProcessedEntry(entry, -2);
+          _helper.AddProcessedEntry(entry, -2,
+            $"Regla con flujo en pares con concepto (cuenta {entry.SubledgerAccountNumber} no registrada en PYC)");
           continue;
         }
 
@@ -105,13 +104,17 @@ namespace Empiria.CashFlow.CashLedger {
                                                                       EmpiriaString.StartsWith(x.AccountNo, concepts[0]));
 
         if (operations.Count == 0) {
-          _helper.AddProcessedEntry(entry, -2);
+          _helper.AddProcessedEntry(entry, -2,
+              $"Regla con flujo en pares con concepto (la cuenta {entry.SubledgerAccountNumber}, no tiene concepto {concepts[0]})");
 
         } else if (operations.Count == 1) {
-          _helper.AddProcessedEntry(entry, int.Parse(operations[0].AccountNo));
+          _helper.AddProcessedEntry(entry, int.Parse(operations[0].AccountNo),
+             "Regla con flujo en pares con concepto determinado automáticamente");
 
         } else {
-          _helper.AddProcessedEntry(entry, -2);
+          _helper.AddProcessedEntry(entry, -2,
+             $"Regla con flujo en pares con concepto (la cuenta {entry.SubledgerAccountNumber} " +
+             $"tiene más de un concepto de tipo {concepts[0]})");
         }
       }
     }
@@ -137,12 +140,12 @@ namespace Empiria.CashFlow.CashLedger {
         }
 
         if (concepts.Count == 1) {
-          _helper.AddProcessedEntry(entry, int.Parse(concepts[0]));
+          _helper.AddProcessedEntry(entry, int.Parse(concepts[0]), "Regla con flujo directo");
           continue;
         }
 
         if (concepts.Count > 1) {
-          _helper.AddProcessedEntry(entry, -2);
+          _helper.AddProcessedEntry(entry, -2, "Regla con flujo directo (existen múltiples conceptos)");
           continue;
         }
       }
@@ -165,8 +168,8 @@ namespace Empiria.CashFlow.CashLedger {
                                                                   x.SubledgerAccountNumber == debitEntry.SubledgerAccountNumber);
 
         if (matchingEntry != null) {
-          _helper.AddProcessedEntry(debitEntry, -1);
-          _helper.AddProcessedEntry(matchingEntry, -1);
+          _helper.AddProcessedEntry(debitEntry, -1, "Regla anulación cargo/abono uno a uno");
+          _helper.AddProcessedEntry(matchingEntry, -1, "Regla anulación cargo/abono uno o uno");
         }
       }
     }
@@ -193,11 +196,11 @@ namespace Empiria.CashFlow.CashLedger {
         }
 
         foreach (var debitEntry in debitGroup) {
-          _helper.AddProcessedEntry(debitEntry, -1);
+          _helper.AddProcessedEntry(debitEntry, -1, "Regla anulación cargo/abono sumadas");
         }
 
         foreach (var creditEntry in creditEntries) {
-          _helper.AddProcessedEntry(creditEntry, -1);
+          _helper.AddProcessedEntry(creditEntry, -1, "Regla anulación cargo/abono sumadas");
         }
       }
     }
@@ -219,8 +222,8 @@ namespace Empiria.CashFlow.CashLedger {
           CashTransactionEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, entry);
 
           if (matchingEntry != null) {
-            _helper.AddProcessedEntry(entry, -1);
-            _helper.AddProcessedEntry(matchingEntry, -1);
+            _helper.AddProcessedEntry(entry, -1, $"Regla sin flujo uno a uno [{rule.Id}]");
+            _helper.AddProcessedEntry(matchingEntry, -1, $"Regla sin flujo uno a uno [{rule.Id}]");
           }
         }
       }
@@ -253,35 +256,11 @@ namespace Empiria.CashFlow.CashLedger {
           }
 
           foreach (var debitEntry in debitCurrencyGroup) {
-            _helper.AddProcessedEntry(debitEntry, -1);
+            _helper.AddProcessedEntry(debitEntry, -1, $"Regla sin flujo sumadas [{rule.Id}]");
           }
 
           foreach (var creditEntry in creditEntriesByCurrency) {
-            _helper.AddProcessedEntry(creditEntry, -1);
-          }
-        }
-      }
-    }
-
-
-    private void ProcessNoCashFlowGroupedEntries() {
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
-
-      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_GROUPED");
-
-      foreach (var entry in entries) {
-        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
-
-        foreach (var groupedRule in applicableRules.GroupBy(x => x.GroupId)) {
-          if (groupedRule.Count() > 1) {
-            continue;
-          }
-
-          CashTransactionEntryDto matchingEntry = _helper.TryGetMatchingEntry(groupedRule.First(), entry);
-
-          if (matchingEntry != null) {
-            _helper.AddProcessedEntry(entry, -1);
-            _helper.AddProcessedEntry(matchingEntry, -1);
+            _helper.AddProcessedEntry(creditEntry, -1, $"Regla sin flujo sumadas [{rule.Id}]");
           }
         }
       }
@@ -297,7 +276,7 @@ namespace Empiria.CashFlow.CashLedger {
           continue;
         }
         if (entry.CashAccountId != 0) {
-          _helper.AddProcessedEntry(entry, 0);
+          _helper.AddProcessedEntry(entry, 0, "Regla dejar pendientes las sobrantes");
         }
       }
     }
