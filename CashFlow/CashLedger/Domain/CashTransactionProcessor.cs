@@ -41,13 +41,13 @@ namespace Empiria.CashFlow.CashLedger {
 
       //ProcessNoCashFlowGroupedEntries();
 
-      ProcessEqualEntriesAsNoCashFlowEntries();
-
-      ProcessEqualEntriesAsNoCashFlowEntriesAdded();
-
       ProcessNoCashFlowEntriesOneToOne();
 
       ProcessNoCashFlowEntriesWithCreditsOrDebitsAdded();
+
+      ProcessEqualEntriesAsNoCashFlowEntries();
+
+      ProcessEqualEntriesAsNoCashFlowEntriesAdded();
 
       ProcessCashFlowDirectEntries();
 
