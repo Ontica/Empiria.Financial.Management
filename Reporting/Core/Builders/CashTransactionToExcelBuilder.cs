@@ -97,6 +97,22 @@ namespace Empiria.Financial.Reporting {
           _excelFile.SetCell($"V{i}", entry.CashAccount.Name);
           _excelFile.SetCell($"W{i}", entry.CuentaSistemaLegado);
 
+
+          _excelFile.SetCell($"X{i}", 1);
+          _excelFile.SetCellIfValue($"Y{i}", entry.CashAccountId == 0 ? 1 : 0);
+          _excelFile.SetCellIfValue($"Z{i}", entry.CashAccount.Name == entry.CuentaSistemaLegado ? 1 : 0);
+
+          if (entry.CashAccountId == 0 || (entry.CashAccountId == -2 && entry.CuentaSistemaLegado != "Sin flujo")) {
+            _excelFile.SetCell($"AA{i}", 1);
+          }
+
+          if ((entry.CashAccountId == -1 && entry.CuentaSistemaLegado != "Sin flujo") ||
+              (entry.CashAccountId == -2 && entry.CuentaSistemaLegado == "Sin flujo") ||
+              (entry.CashAccountId > 0 && entry.CashAccount.Name != entry.CuentaSistemaLegado)) {
+            _excelFile.SetCell($"AB{i}", 1);
+          }
+
+
           i++;
 
         }  //  foreach entry
