@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Cash Ledger                                Component : Data Layer                              *
-*  Assembly : Empiria.CashFlow.CashLedger.dll            Pattern   : Data Services web api proxy             *
+*  Assembly : Empiria.CashFlow.CashLedger.dll            Pattern   : Web api client data services            *
 *  Type     : CashLedgerData                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides cash ledger transactions data services using a web proxy.                             *
@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Threading.Tasks;
+
 using Empiria.WebApi.Client;
 
 using Empiria.CashFlow.CashLedger.Adapters;
@@ -16,54 +17,53 @@ using Empiria.CashFlow.CashLedger.Adapters;
 namespace Empiria.CashFlow.CashLedger.Data {
 
   /// <summary>Provides cash ledger transactions data services using a web proxy.</summary>
-  static public class CashLedgerData {
+  public class CashLedgerData {
 
-    static public Task<FixedList<NamedEntityDto>> GetAccountingLedgers() {
+    private readonly WebApiClient _webApiClient;
 
-      return GetFixedList<NamedEntityDto>("v2/financial-accounting/ledgers/ifrs");
+    public CashLedgerData() {
+      _webApiClient = WebApiClient.GetInstance("SICOFIN");
     }
 
 
-    static internal async Task<FixedList<CashTransactionDescriptor>> GetTransactions(CashLedgerQuery query) {
-      WebApiClient webApiClient = GetWebApiClient();
+    public async Task<FixedList<NamedEntityDto>> GetAccountingLedgers() {
+
+      string path = "v2/financial-accounting/ledgers/ifrs";
+
+      return await _webApiClient.GetAsync<FixedList<NamedEntityDto>>(path);
+    }
+
+
+    internal async Task<FixedList<CashTransactionDescriptor>> GetTransactions(CashLedgerQuery query) {
 
       string path = "v2/financial-accounting/cash-ledger/transactions/search";
 
-      return await webApiClient.PostAsync<FixedList<CashTransactionDescriptor>>(query, path);
+      return await _webApiClient.PostAsync<FixedList<CashTransactionDescriptor>>(query, path);
     }
 
 
-    static public Task<FixedList<NamedEntityDto>> GetTransactionSources() {
+    public async Task<FixedList<NamedEntityDto>> GetTransactionSources() {
 
-      return GetFixedList<NamedEntityDto>("v2/financial-accounting/vouchers/functional-areas");
+      string path = "v2/financial-accounting/vouchers/functional-areas";
+
+      return await _webApiClient.GetAsync<FixedList<NamedEntityDto>>(path);
     }
 
 
-    static public Task<FixedList<NamedEntityDto>> GetTransactionTypes() {
+    public async Task<FixedList<NamedEntityDto>> GetTransactionTypes() {
 
-      return GetFixedList<NamedEntityDto>("v2/financial-accounting/vouchers/transaction-types");
+      string path = "v2/financial-accounting/vouchers/transaction-types";
+
+      return await _webApiClient.GetAsync<FixedList<NamedEntityDto>>(path);
     }
 
 
-    static public Task<FixedList<NamedEntityDto>> GetVoucherTypes() {
+    public async Task<FixedList<NamedEntityDto>> GetVoucherTypes() {
 
-      return GetFixedList<NamedEntityDto>("v2/financial-accounting/vouchers/voucher-types");
+      string path = "v2/financial-accounting/vouchers/voucher-types";
+
+      return await _webApiClient.GetAsync<FixedList<NamedEntityDto>>(path);
     }
-
-    #region Helpers
-
-    private static async Task<FixedList<T>> GetFixedList<T>(string path) {
-      WebApiClient webApiClient = GetWebApiClient();
-
-      return await webApiClient.GetAsync<FixedList<T>>(path);
-    }
-
-
-    static private WebApiClient GetWebApiClient() {
-      return WebApiClient.GetInstance("SICOFIN");
-    }
-
-    #endregion Helpers
 
   }  // class CashLedgerData
 

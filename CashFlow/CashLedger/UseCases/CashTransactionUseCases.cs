@@ -22,16 +22,17 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
   /// <summary>Use cases used to retrive and manage cash ledger transactions.</summary>
   public class CashTransactionUseCases : UseCase {
 
+    private readonly CashTransactionData _cashTransactionData;
+
     #region Constructors and parsers
 
     protected CashTransactionUseCases() {
-      // no-op
+      _cashTransactionData = new CashTransactionData();
     }
 
     static public CashTransactionUseCases UseCaseInteractor() {
       return UseCase.CreateInstance<CashTransactionUseCases>();
     }
-
 
     #endregion Constructors and parsers
 
@@ -60,7 +61,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       FixedList<CashEntryFields> updatedEntries = processor.Execute();
 
       if (updatedEntries.Count > 0) {
-        transaction = await CashTransactionData.UpdateEntries(updatedEntries);
+        transaction = await _cashTransactionData.UpdateEntries(updatedEntries);
       }
 
       return CashTransactionMapper.Map(transaction);
@@ -78,7 +79,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       foreach (FixedList<long> chunk in chunks) {
 
         FixedList<CashTransactionHolderDto> transactions =
-                    await CashTransactionData.GetTransactions(chunk, false);
+                    await _cashTransactionData.GetTransactions(chunk, false);
 
         var chunkEntries = new List<CashEntryFields>(chunk.Count * 8);
 
@@ -94,7 +95,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
         }
 
         if (chunkEntries.Count > 0) {
-          await CashTransactionData.UpdateBulkEntries(chunkEntries.ToFixedList());
+          await _cashTransactionData.UpdateBulkEntries(chunkEntries.ToFixedList());
         }
       }
 
@@ -106,11 +107,11 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       Assertion.Require(command, nameof(command));
 
       CashTransactionHolderDto transaction =
-                    await CashTransactionData.GetTransaction(command.TransactionId, false);
+                    await _cashTransactionData.GetTransaction(command.TransactionId, false);
 
       FixedList<CashEntryFields> updatedEntries = command.GetCashEntriesFields();
 
-      transaction = await CashTransactionData.UpdateEntries(updatedEntries);
+      transaction = await _cashTransactionData.UpdateEntries(updatedEntries);
 
       return CashTransactionMapper.Map(transaction);
     }
@@ -119,7 +120,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     public async Task<CashTransactionHolderDto> GetTransaction(long id, bool returnLegacySystemData) {
       Assertion.Require(id > 0, nameof(id));
 
-      CashTransactionHolderDto transaction = await CashTransactionData.GetTransaction(id, returnLegacySystemData);
+      CashTransactionHolderDto transaction = await _cashTransactionData.GetTransaction(id, returnLegacySystemData);
 
       return CashTransactionMapper.Map(transaction);
     }
@@ -128,7 +129,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     public Task<FileDto> GetTransactionAsPdfFile(long id) {
       Assertion.Require(id > 0, nameof(id));
 
-      return CashTransactionData.GetTransactionAsPdfFile(id);
+      return _cashTransactionData.GetTransactionAsPdfFile(id);
     }
 
 
@@ -137,7 +138,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       Assertion.Require(transactionIds, nameof(transactionIds));
 
       FixedList<CashTransactionHolderDto> transactions =
-                          await CashTransactionData.GetTransactions(transactionIds, returnLegacySystemData);
+                          await _cashTransactionData.GetTransactions(transactionIds, returnLegacySystemData);
 
       return CashTransactionMapper.Map(transactions);
     }
@@ -146,7 +147,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     public async Task<FixedList<CashEntryDescriptor>> GetTransactionsEntries(FixedList<long> entriesIds) {
       Assertion.Require(entriesIds, nameof(entriesIds));
 
-      FixedList<CashEntryDescriptor> entries = await CashTransactionData.GetTransactionsEntries(entriesIds);
+      FixedList<CashEntryDescriptor> entries = await _cashTransactionData.GetTransactionsEntries(entriesIds);
 
       CashTransactionMapper.SetCashAccounts(entries);
 
@@ -157,7 +158,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     public async Task<FixedList<CashEntryDescriptor>> SearchEntries(CashLedgerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var entries = await CashTransactionData.SearchEntries(query);
+      var entries = await _cashTransactionData.SearchEntries(query);
 
       CashTransactionMapper.SetCashAccounts(entries);
 
@@ -168,7 +169,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     public Task<FixedList<CashTransactionDescriptor>> SearchTransactions(CashLedgerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      return CashTransactionData.SearchTransactions(query);
+      return _cashTransactionData.SearchTransactions(query);
     }
 
     #endregion Use cases
