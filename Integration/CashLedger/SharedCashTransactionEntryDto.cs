@@ -91,6 +91,22 @@ namespace Empiria.Financial.Integration.CashLedger {
       get; set;
     }
 
+    public string CashAccountNo {
+      get; set;
+    }
+
+    public string CashAccountAppliedRule {
+      get; set;
+    }
+
+    public int CashAccountRecordedById {
+      get; set;
+    }
+
+    public DateTime CashAccountRecordingTime {
+      get; set;
+    }
+
     public string CuentaSistemaLegado {
       get; set;
     }

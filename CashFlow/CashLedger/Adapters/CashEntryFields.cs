@@ -15,11 +15,6 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   /// <summary>Input fields used to update cash ledger transaction entries.</summary>
   public class CashEntryFields : SharedCashEntryFields {
 
-    public string AppliedRule {
-      get;
-      internal set;
-    }
-
   }  // class CashEntryFields
 
 }  // namespace Empiria.CashFlow.CashLedger.Adapters

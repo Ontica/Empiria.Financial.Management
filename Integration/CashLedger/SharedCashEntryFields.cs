@@ -13,6 +13,10 @@ namespace Empiria.FinancialAccounting.CashLedger.Adapters {
   /// <summary>Input fields used to update cash ledger transaction entries.</summary>
   public class SharedCashEntryFields {
 
+    public long TransactionId {
+      get; set;
+    }
+
     public long EntryId {
       get; set;
     }
@@ -21,7 +25,11 @@ namespace Empiria.FinancialAccounting.CashLedger.Adapters {
       get; set;
     }
 
-    public long TransactionId {
+    public string AppliedRule {
+      get; set;
+    }
+
+    public int UserId {
       get; set;
     }
 
