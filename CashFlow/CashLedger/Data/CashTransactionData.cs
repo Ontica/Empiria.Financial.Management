@@ -26,9 +26,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
 
       string path = $"v2/financial-accounting/cash-ledger/transactions/{id}/{returnLegacySystemData}";
 
-      JsonObject json = await webApiClient.GetAsync<JsonObject>(path);
-
-      return json.Get<CashTransactionHolderDto>("data");
+      return await webApiClient.GetAsync<CashTransactionHolderDto>(path);
     }
 
 
@@ -37,9 +35,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
 
       string path = $"v2/financial-accounting/vouchers/{id}/print";
 
-      JsonObject json = await webApiClient.GetAsync<JsonObject>(path);
-
-      return json.Get<FileDto>("data");
+      return await webApiClient.GetAsync<FileDto>(path);
     }
 
 
@@ -49,9 +45,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
 
       string path = $"v2/financial-accounting/cash-ledger/transactions/bulk-operation/get-transactions/{returnLegacySystemData}";
 
-      JsonObject json = await webApiClient.PostAsync<JsonObject>(transactionIds, path);
-
-      return json.GetFixedList<CashTransactionHolderDto>("data");
+      return await webApiClient.PostAsync<FixedList<CashTransactionHolderDto>>(transactionIds, path);
     }
 
 
@@ -60,9 +54,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
 
       string path = $"v2/financial-accounting/cash-ledger/entries/bulk-operation/get-entries";
 
-      JsonObject json = await webApiClient.PostAsync<JsonObject>(entriesIds, path);
-
-      return json.GetFixedList<CashEntryDescriptor>("data");
+      return await webApiClient.PostAsync<FixedList<CashEntryDescriptor>>(entriesIds, path);
     }
 
 
@@ -71,9 +63,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
 
       string path = "v2/financial-accounting/cash-ledger/entries/search";
 
-      JsonObject json = await webApiClient.PostAsync<JsonObject>(query, path);
-
-      return json.GetFixedList<CashEntryDescriptor>("data");
+      return await webApiClient.PostAsync<FixedList<CashEntryDescriptor>>(query, path);
     }
 
 
@@ -82,9 +72,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
 
       string path = "v2/financial-accounting/cash-ledger/transactions/search";
 
-      JsonObject json = await webApiClient.PostAsync<JsonObject>(query, path);
-
-      return json.GetFixedList<CashTransactionDescriptor>("data");
+      return await webApiClient.PostAsync<FixedList<CashTransactionDescriptor>>(query, path);
     }
 
 
@@ -102,9 +90,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
 
       string path = $"v2/financial-accounting/cash-ledger/transactions/{entries[0].TransactionId}/update-entries";
 
-      JsonObject json = await webApiClient.PostAsync<JsonObject>(entries, path);
-
-      return json.Get<CashTransactionHolderDto>("data");
+      return await webApiClient.PostAsync<CashTransactionHolderDto>(entries, path);
     }
 
     #region Helpers

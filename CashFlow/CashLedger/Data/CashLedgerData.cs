@@ -9,8 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Threading.Tasks;
-
-using Empiria.Json;
 using Empiria.WebApi.Client;
 
 using Empiria.CashFlow.CashLedger.Adapters;
@@ -31,9 +29,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
 
       string path = "v2/financial-accounting/cash-ledger/transactions/search";
 
-      JsonObject json = await webApiClient.PostAsync<JsonObject>(query, path);
-
-      return json.GetFixedList<CashTransactionDescriptor>("data");
+      return await webApiClient.PostAsync<FixedList<CashTransactionDescriptor>>(query, path);
     }
 
 
@@ -59,9 +55,7 @@ namespace Empiria.CashFlow.CashLedger.Data {
     private static async Task<FixedList<T>> GetFixedList<T>(string path) {
       WebApiClient webApiClient = GetWebApiClient();
 
-      JsonObject json = await webApiClient.GetAsync<JsonObject>(path);
-
-      return json.GetFixedList<T>("data");
+      return await webApiClient.GetAsync<FixedList<T>>(path);
     }
 
 
