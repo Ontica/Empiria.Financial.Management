@@ -27,9 +27,9 @@ namespace Empiria.CashFlow.CashLedger.Data {
     }
 
 
-    internal async Task<CashTransactionHolderDto> GetTransaction(long id, bool returnLegacySystemData) {
+    internal async Task<CashTransactionHolderDto> GetTransaction(long id) {
 
-      string path = $"v2/financial-accounting/cash-ledger/transactions/{id}/{returnLegacySystemData}";
+      string path = $"v2/financial-accounting/cash-ledger/transactions/{id}";
 
       return await _webApiClient.GetAsync<CashTransactionHolderDto>(path);
     }
@@ -43,10 +43,9 @@ namespace Empiria.CashFlow.CashLedger.Data {
     }
 
 
-    internal async Task<FixedList<CashTransactionHolderDto>> GetTransactions(FixedList<long> transactionIds,
-                                                                             bool returnLegacySystemData) {
+    internal async Task<FixedList<CashTransactionHolderDto>> GetTransactions(FixedList<long> transactionIds) {
 
-      string path = $"v2/financial-accounting/cash-ledger/transactions/bulk-operation/get-transactions/{returnLegacySystemData}";
+      string path = $"v2/financial-accounting/cash-ledger/transactions/bulk-operation/get-transactions";
 
       return await _webApiClient.PostAsync<FixedList<CashTransactionHolderDto>>(transactionIds, path);
     }

@@ -43,7 +43,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> GetCashTransaction([FromUri] long id) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        CashTransactionHolderDto transaction = await usecases.GetTransaction(id, false);
+        CashTransactionHolderDto transaction = await usecases.GetTransaction(id);
 
         return new SingleObjectModel(base.Request, transaction);
       }
@@ -55,7 +55,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> GetCashTransactionAsPdfFile([FromUri] long id) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        CashTransactionHolderDto transaction = await usecases.GetTransaction(id, true);
+        CashTransactionHolderDto transaction = await usecases.GetTransaction(id);
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
@@ -140,7 +140,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> ExportCashTransactionsToExcel([FromBody] BulkOperationCommand command) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds(), true);
+        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds());
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
@@ -161,7 +161,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> ExportCashTransactionsTotalsToExcel([FromBody] BulkOperationCommand command) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds(), true);
+        FixedList<CashTransactionHolderDto> transactions = await usecases.GetTransactions(command.GetConvertedIds());
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 

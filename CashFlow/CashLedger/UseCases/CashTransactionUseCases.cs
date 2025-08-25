@@ -41,7 +41,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     public async Task<FixedList<CashTransactionAnalysisEntry>> AnalyzeTransaction(long transactionId) {
       Assertion.Require(transactionId > 0, nameof(transactionId));
 
-      CashTransactionHolderDto transaction = await GetTransaction(transactionId, false);
+      CashTransactionHolderDto transaction = await GetTransaction(transactionId);
 
       var analyzer = new CashTransactionAnalyzer(transaction.Entries);
 
@@ -54,7 +54,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     public async Task<CashTransactionHolderDto> AutoCodifyTransaction(long transactionId) {
       Assertion.Require(transactionId > 0, nameof(transactionId));
 
-      CashTransactionHolderDto transaction = await GetTransaction(transactionId, false);
+      CashTransactionHolderDto transaction = await GetTransaction(transactionId);
 
       var processor = new CashTransactionProcessor(transaction.Transaction, transaction.Entries);
 
@@ -79,7 +79,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       foreach (FixedList<long> chunk in chunks) {
 
         FixedList<CashTransactionHolderDto> transactions =
-                    await _cashTransactionData.GetTransactions(chunk, false);
+                    await _cashTransactionData.GetTransactions(chunk);
 
         var chunkEntries = new List<CashEntryFields>(chunk.Count * 8);
 
@@ -107,7 +107,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       Assertion.Require(command, nameof(command));
 
       CashTransactionHolderDto transaction =
-                    await _cashTransactionData.GetTransaction(command.TransactionId, false);
+                    await _cashTransactionData.GetTransaction(command.TransactionId);
 
       FixedList<CashEntryFields> updatedEntries = command.GetCashEntriesFields();
 
@@ -117,10 +117,10 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     }
 
 
-    public async Task<CashTransactionHolderDto> GetTransaction(long id, bool returnLegacySystemData) {
+    public async Task<CashTransactionHolderDto> GetTransaction(long id) {
       Assertion.Require(id > 0, nameof(id));
 
-      CashTransactionHolderDto transaction = await _cashTransactionData.GetTransaction(id, returnLegacySystemData);
+      CashTransactionHolderDto transaction = await _cashTransactionData.GetTransaction(id);
 
       return CashTransactionMapper.Map(transaction);
     }
@@ -133,12 +133,11 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     }
 
 
-    public async Task<FixedList<CashTransactionHolderDto>> GetTransactions(FixedList<long> transactionIds,
-                                                                           bool returnLegacySystemData) {
+    public async Task<FixedList<CashTransactionHolderDto>> GetTransactions(FixedList<long> transactionIds) {
       Assertion.Require(transactionIds, nameof(transactionIds));
 
       FixedList<CashTransactionHolderDto> transactions =
-                          await _cashTransactionData.GetTransactions(transactionIds, returnLegacySystemData);
+                          await _cashTransactionData.GetTransactions(transactionIds);
 
       return CashTransactionMapper.Map(transactions);
     }
