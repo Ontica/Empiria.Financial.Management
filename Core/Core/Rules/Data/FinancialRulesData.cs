@@ -42,7 +42,8 @@ namespace Empiria.Financial.Rules.Data {
 
     static internal FixedList<FinancialRule> GetFinancialRules(FinancialRuleCategory category) {
       var sql = "SELECT * FROM FMS_RULES " +
-                $"WHERE RULE_CATEGORY_ID = {category.Id} AND RULE_STATUS <> 'X'";
+                $"WHERE RULE_CATEGORY_ID = {category.Id} AND RULE_STATUS <> 'X' " +
+                $"ORDER BY RULE_GROUP_ID, RULE_DEBIT_ACCOUNT DESC, RULE_CREDIT_ACCOUNT DESC";
 
       var op = DataOperation.Parse(sql);
 

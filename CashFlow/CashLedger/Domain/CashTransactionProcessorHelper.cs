@@ -39,7 +39,8 @@ namespace Empiria.CashFlow.CashLedger {
     internal void AddProcessedEntry(CashTransactionEntryDto entry, int cashAccountId, string appliedRule) {
       entry.Processed = true;
 
-      if (entry.CashAccountId == cashAccountId) {
+      if (entry.CashAccountId == cashAccountId &&
+          entry.CashAccountAppliedRule == appliedRule) {
         return;
       }
 
@@ -78,14 +79,10 @@ namespace Empiria.CashFlow.CashLedger {
     internal FixedList<FinancialRule> GetApplicableRules(FixedList<FinancialRule> rules, CashTransactionEntryDto entry) {
       if (entry.Debit != 0) {
         return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.DebitAccount) &&
-                                  (x.DebitCurrency.IsEmptyInstance || x.DebitCurrency.Id == entry.CurrencyId))
-                    .Sort((x, y) => x.DebitAccount.CompareTo(y.DebitAccount))
-                    .Reverse();
+                                  (x.DebitCurrency.IsEmptyInstance || x.DebitCurrency.Id == entry.CurrencyId));
       } else {
         return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.CreditAccount) &&
-                                  (x.CreditCurrency.IsEmptyInstance || x.CreditCurrency.Id == entry.CurrencyId))
-                    .Sort((x, y) => x.CreditAccount.CompareTo(y.CreditAccount))
-                    .Reverse();
+                                  (x.CreditCurrency.IsEmptyInstance || x.CreditCurrency.Id == entry.CurrencyId));
       }
     }
 
