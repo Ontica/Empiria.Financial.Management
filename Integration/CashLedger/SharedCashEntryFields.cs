@@ -25,6 +25,10 @@ namespace Empiria.FinancialAccounting.CashLedger.Adapters {
       get; set;
     }
 
+    public string CashAccountNo {
+      get; set;
+    }
+
     public string AppliedRule {
       get; set;
     }

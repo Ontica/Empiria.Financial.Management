@@ -88,10 +88,13 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     }
 
     private CashEntryFields ToCashEntryFields(long entryId) {
+      int cashAccountId = GetCashAccountId();
+
       return new CashEntryFields {
         EntryId = entryId,
         TransactionId = this.TransactionId,
-        CashAccountId = GetCashAccountId(),
+        CashAccountId = cashAccountId,
+        CashAccountNo = CashAccountHelper.GetCashAccountNo(cashAccountId),
       };
     }
 

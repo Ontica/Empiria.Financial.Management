@@ -48,6 +48,7 @@ namespace Empiria.CashFlow.CashLedger {
       var fields = new CashEntryFields {
         EntryId = entry.Id,
         CashAccountId = cashAccountId,
+        CashAccountNo = CashAccountHelper.GetCashAccountNo(cashAccountId),
         TransactionId = _transaction.Id,
         AppliedRule = appliedRule
       };
