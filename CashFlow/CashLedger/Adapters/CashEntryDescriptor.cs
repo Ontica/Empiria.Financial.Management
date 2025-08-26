@@ -15,14 +15,6 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   /// <summary>Output DTO used to retrieve cash ledger transaction entries for use in lists.</summary>
   public class CashEntryDescriptor : SharedCashEntryDescriptor {
 
-    public string CashAccountName {
-      get; set;
-    }
-
-    public string CuentaSistemaLegado {
-      get; set;
-    }
-
   }  // class CashEntryDescriptor
 
 }  // namespace Empiria.FinancialAccounting.CashLedger.Adapters

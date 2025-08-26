@@ -74,7 +74,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   public class CashTransactionEntryDto : SharedCashTransactionEntryDto {
 
     public NamedEntityDto CashAccount {
-      get; set;
+      get; internal set;
     }
 
     internal bool Processed {

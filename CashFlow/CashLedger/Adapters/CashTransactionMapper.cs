@@ -25,29 +25,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       return transactions.Select(x => Map(x)).ToFixedList();
     }
 
-
-    static internal void SetCashAccounts(FixedList<CashEntryDescriptor> entries) {
-
-      foreach (var entry in entries) {
-
-        if (entry.CashAccountId > 0) {
-          entry.CashAccountName = entry.CashAccountId.ToString();
-
-        } else if (entry.CashAccountId == -2) {
-          entry.CashAccountName = "Con flujo";
-
-        } else if (entry.CashAccountId == -1) {
-          entry.CashAccountName = "Sin flujo";
-
-        } else if (entry.CashAccountId == 0) {
-          entry.CashAccountName = "Pendiente";
-
-        }
-
-      }  // foreach
-
-    }
-
+    #region Helpers
 
     static private CashTransactionActions MapActions(CashTransactionHolderDto transaction) {
       return new CashTransactionActions {
@@ -62,24 +40,14 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
       foreach (var entry in entries) {
 
-        if (entry.CashAccountId > 0) {
-          entry.CashAccount = new NamedEntityDto(entry.CashAccountId.ToString(),
-                                                 entry.CashAccountId.ToString());
-
-        } else if (entry.CashAccountId == -2) {
-          entry.CashAccount = new NamedEntityDto("-2", "Con flujo");
-
-        } else if (entry.CashAccountId == -1) {
-          entry.CashAccount = new NamedEntityDto("-1", "Sin flujo");
-
-        } else if (entry.CashAccountId == 0) {
-          entry.CashAccount = new NamedEntityDto("0", "Pendiente");
-
-        }
+        entry.CashAccount = new NamedEntityDto(entry.CashAccountId.ToString(),
+                                               entry.CashAccountNo);
 
       }  // foreach
 
     }
+
+    #endregion Helpers
 
   }  // class CashTransactionMapper
 

@@ -92,12 +92,14 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
             chunkEntries.AddRange(updatedTransactionEntries);
             counter++;
           }
-        }
+
+        }  // foreach transaction
 
         if (chunkEntries.Count > 0) {
           await _cashTransactionData.UpdateBulkEntries(chunkEntries.ToFixedList());
         }
-      }
+
+      }  // foreach chunk
 
       return counter;
     }
@@ -146,22 +148,14 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     public async Task<FixedList<CashEntryDescriptor>> GetTransactionsEntries(FixedList<long> entriesIds) {
       Assertion.Require(entriesIds, nameof(entriesIds));
 
-      FixedList<CashEntryDescriptor> entries = await _cashTransactionData.GetTransactionsEntries(entriesIds);
-
-      CashTransactionMapper.SetCashAccounts(entries);
-
-      return entries;
+      return await _cashTransactionData.GetTransactionsEntries(entriesIds);
     }
 
 
     public async Task<FixedList<CashEntryDescriptor>> SearchEntries(CashLedgerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var entries = await _cashTransactionData.SearchEntries(query);
-
-      CashTransactionMapper.SetCashAccounts(entries);
-
-      return entries;
+      return await _cashTransactionData.SearchEntries(query);
     }
 
 

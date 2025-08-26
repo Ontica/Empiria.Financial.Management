@@ -91,6 +91,29 @@ namespace Empiria.Financial.Integration.CashLedger {
       get; set;
     }
 
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "CashAccountName")]
+    public string CashAccountNo {
+      get; set;
+    }
+
+
+    public string CuentaSistemaLegado {
+      get; set;
+    }
+
+    public string CashAccountAppliedRule {
+      get; set;
+    }
+
+    public int CashAccountRecordedById {
+      get; set;
+    }
+
+    public DateTime CashAccountRecordingTime {
+      get; set;
+    }
+
     public long TransactionId {
       get; set;
     }

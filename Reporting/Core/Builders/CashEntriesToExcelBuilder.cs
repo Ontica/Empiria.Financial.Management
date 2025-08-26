@@ -87,7 +87,7 @@ namespace Empiria.Financial.Reporting {
         _excelFile.SetCellIfValue($"P{i}", entry.Debit);
         _excelFile.SetCellIfValue($"Q{i}", entry.Credit);
 
-        _excelFile.SetCell($"R{i}", entry.CashAccountName);
+        _excelFile.SetCell($"R{i}", entry.CashAccountNo);
 
         i++;
 
