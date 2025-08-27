@@ -1,0 +1,18 @@
+﻿{
+  "appName": "Empiria CashFlow Explorer Core Tests",
+  "description": "Domain types, classes and services tests environment settings",
+  "version": "1.0",
+  "date": "2025-08-27",
+  "settings": [
+    {
+      "type": "",
+      "key": "GlobalConfigurationFile",
+      "value": "{{GLOBAL-CONFIGURATION-FILE}}"
+    },
+    {
+      "type": "",
+      "key": "IsTestingModule",
+      "value": true
+    }
+  ]
+}
