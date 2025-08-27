@@ -43,9 +43,11 @@ namespace Empiria.CashFlow.CashLedger {
 
       ProcessNoCashFlowEntriesWithCreditsOrDebitsAdded();
 
+      ProcessNoCashFlowEntriesOneToOneTwoWay();
+
       ProcessEqualEntriesAsNoCashFlowEntries();
 
-      ProcessEqualEntriesAsNoCashFlowEntriesAdded();
+      // ProcessEqualEntriesAsNoCashFlowEntriesAdded();
 
       ProcessCashFlowDirectEntries();
 
@@ -61,6 +63,7 @@ namespace Empiria.CashFlow.CashLedger {
     #region Processors
 
     private void ProcessCashFlowCreditOrDirectEntries() {
+
       FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
 
       if (entries.Count == 0) {
@@ -105,7 +108,7 @@ namespace Empiria.CashFlow.CashLedger {
 
         if (operations.Count == 0) {
           _helper.AddProcessedEntry(entry, -2,
-              $"Regla con flujo en pares con concepto (la cuenta {entry.SubledgerAccountNumber}, no tiene concepto {concepts[0]})");
+              $"Regla con flujo en pares con concepto (la cuenta {entry.SubledgerAccountNumber} no tiene concepto {concepts[0]})");
 
         } else if (operations.Count == 1) {
           _helper.AddProcessedEntry(entry, int.Parse(operations[0].AccountNo),
@@ -224,6 +227,30 @@ namespace Empiria.CashFlow.CashLedger {
           if (matchingEntry != null) {
             _helper.AddProcessedEntry(entry, -1, $"Regla sin flujo uno a uno [{rule.Id}]");
             _helper.AddProcessedEntry(matchingEntry, -1, $"Regla sin flujo uno a uno [{rule.Id}]");
+          }
+        }
+      }
+    }
+
+
+    private void ProcessNoCashFlowEntriesOneToOneTwoWay() {
+      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return;
+      }
+
+      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_TWO_WAY");
+
+      foreach (var entry in entries) {
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
+
+        foreach (var rule in applicableRules) {
+          CashTransactionEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, entry);
+
+          if (matchingEntry != null) {
+            _helper.AddProcessedEntry(entry, -1, $"Regla sin flujo de ida y vuelta [{rule.Id}]");
+            _helper.AddProcessedEntry(matchingEntry, -1, $"Regla sin flujo de ida y vuelta [{rule.Id}]");
           }
         }
       }
