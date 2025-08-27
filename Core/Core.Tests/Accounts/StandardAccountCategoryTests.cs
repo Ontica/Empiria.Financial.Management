@@ -25,6 +25,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
       foreach (var sut in categories) {
         Assert.NotEmpty(sut.Name);
+        Assert.NotEmpty(sut.NamedKey);
         Assert.NotNull(sut.ChartOfAccounts);
         Assert.NotEqual(ChartOfAccounts.Empty, sut.ChartOfAccounts);
         Assert.NotNull(sut.Parent);
@@ -50,6 +51,7 @@ namespace Empiria.Tests.Financial.Accounts {
       Assert.Equal("Empty", sut.UID);
       Assert.Equal(StandardAccountCategory.Parse("Empty"), sut);
       Assert.Equal(StandardAccountCategory.Empty, sut.Parent);
+      Assert.Empty(sut.NamedKey);
       Assert.Equal(ChartOfAccounts.Empty, sut.ChartOfAccounts);
       Assert.Empty(sut.GetStandardAccounts());
     }

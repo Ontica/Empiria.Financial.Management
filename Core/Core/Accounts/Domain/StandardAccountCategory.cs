@@ -1,4 +1,4 @@
-﻿/* Empiria Financial  ******************************************************************************************
+﻿/* Empiria Financial  ****************************************************************************************
 *                                                                                                            *
 *  Module   : Financial Accounts                         Component : Domain Layer                            *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Information Holder                      *
@@ -45,6 +45,16 @@ namespace Empiria.Financial {
           return;
         }
         base.ExtData.Set("chartOfAccountsId", value.Id);
+      }
+    }
+
+
+    public new string NamedKey {
+      get {
+        return base.NamedKey;
+      }
+      private set {
+        base.NamedKey = value;
       }
     }
 
