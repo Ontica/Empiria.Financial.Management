@@ -25,6 +25,8 @@ namespace Empiria.Financial.Integration.CashLedger {
 
     WithCashAccount = 1,
 
+    FalsePositives = -3,
+
     All = 255
 
   }  // enum SharedCashAccountStatus
