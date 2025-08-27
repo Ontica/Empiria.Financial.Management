@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Cash Ledger                                   Component : Integration Adapters Layer           *
 *  Assembly : Empiria.Financial.Integration.dll             Pattern   : Output DTO                           *
-*  Type     : SharedCashTransactionDescriptor               License   : Please read LICENSE.txt file         *
+*  Type     : CashTransactionDescriptor                     License   : Please read LICENSE.txt file         *
 *                                                                                                            *
 *  Summary  : Output DTO used to retrieve cash ledger transactions.                                          *
 *                                                                                                            *
@@ -10,10 +10,10 @@
 
 using System;
 
-namespace Empiria.Financial.Integration.CashLedger {
+namespace Empiria.CashFlow.CashLedger.Adapters {
 
   /// <summary>Output DTO used to retrieve cash ledger transactions for use in lists.</summary>
-  public class SharedCashTransactionDescriptor {
+  public class CashTransactionDescriptor {
 
     public long Id {
       get; set;
@@ -67,6 +67,6 @@ namespace Empiria.Financial.Integration.CashLedger {
       get; set;
     }
 
-  }  // class SharedCashTransactionDescriptor
+  }  // class CashTransactionDescriptor
 
-}  // namespace Empiria.Financial.Integration.CashLedger
+}  // namespace Empiria.CashFlow.CashLedger.Adapters

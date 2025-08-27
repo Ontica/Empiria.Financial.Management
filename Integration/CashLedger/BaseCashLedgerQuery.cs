@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Cash Ledger                                   Component : Integration Adapters Layer           *
 *  Assembly : Empiria.Financial.Integration.dll             Pattern   : Query DTO                            *
-*  Type     : SharedCashLedgerQuery                         License   : Please read LICENSE.txt file         *
+*  Type     : BaseCashLedgerQuery                           License   : Please read LICENSE.txt file         *
 *                                                                                                            *
 *  Summary  : Input query DTO used to retrieve cash ledger transactions.                                     *
 *                                                                                                            *
@@ -12,10 +12,10 @@ using System;
 
 using Empiria.StateEnums;
 
-namespace Empiria.Financial.Integration.CashLedger {
+namespace Empiria.CashFlow.CashLedger.Adapters {
 
   /// <summary>Enumerates the cash account status in a cash ledger transaction entry.</summary>
-  public enum SharedCashAccountStatus {
+  public enum CashAccountStatus {
 
     CashAccountWaiting = -2,
 
@@ -29,11 +29,11 @@ namespace Empiria.Financial.Integration.CashLedger {
 
     All = 255
 
-  }  // enum SharedCashAccountStatus
+  }  // enum CashAccountStatus
 
 
   /// <summary>Input query DTO used to retrieve cash ledger transactions.</summary>
-  public class SharedCashLedgerQuery {
+  public class BaseCashLedgerQuery {
 
     public DateTime FromAccountingDate {
       get; set;
@@ -55,9 +55,9 @@ namespace Empiria.Financial.Integration.CashLedger {
     } = TransactionStatus.All;
 
 
-    public SharedCashAccountStatus CashAccountStatus {
+    public CashAccountStatus CashAccountStatus {
       get; set;
-    } = SharedCashAccountStatus.All;
+    } = CashAccountStatus.All;
 
 
     public string AccountingLedgerUID {
@@ -119,6 +119,6 @@ namespace Empiria.Financial.Integration.CashLedger {
       get; set;
     } = 10000;
 
-  }  // class SharedCashLedgerQuery
+  }  // class BaseCashLedgerQuery
 
-}  // namespace Empiria.Financial.Integration.CashLedger
+}  // namespace Empiria.CashFlow.CashLedger.Adapters

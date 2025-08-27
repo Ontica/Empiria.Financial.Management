@@ -1,17 +1,17 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cash Ledger                                Component : Adpaters Layer                          *
+*  Module   : Cash Ledger                                Component : Adapters Layer                          *
 *  Assembly : Empiria.Financial.Integration.dll          Pattern   : Input fields                            *
-*  Type     : SharedCashEntryFields                      License   : Please read LICENSE.txt file            *
+*  Type     : CashEntryFields                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Input fields used to update cash ledger transaction entries.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.FinancialAccounting.CashLedger.Adapters {
+namespace Empiria.CashFlow.CashLedger.Adapters {
 
   /// <summary>Input fields used to update cash ledger transaction entries.</summary>
-  public class SharedCashEntryFields {
+  public class CashEntryFields {
 
     public long TransactionId {
       get; set;
@@ -37,6 +37,6 @@ namespace Empiria.FinancialAccounting.CashLedger.Adapters {
       get; set;
     }
 
-  }  // class SharedCashEntryFields
+  }  // class CashEntryFields
 
-}  // namespace Empiria.FinancialAccounting.CashLedger.Adapters
+}  // namespace Empiria.CashFlow.CashLedger.Adapters

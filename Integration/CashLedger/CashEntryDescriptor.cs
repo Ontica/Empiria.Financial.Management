@@ -2,18 +2,18 @@
 *                                                                                                            *
 *  Module   : Cash Ledger                                   Component : Integration Adapters Layer           *
 *  Assembly : Empiria.Financial.Integration.dll             Pattern   : Output DTO                           *
-*  Type     : SharedCashTransactionEntryDto                 License   : Please read LICENSE.txt file         *
+*  Type     : CashEntryDescriptor                           License   : Please read LICENSE.txt file         *
 *                                                                                                            *
-*  Summary  : Output DTO used to retrieve cash ledger transaction entries.                                   *
+*  Summary  : Output DTO used to retrieve cash ledger transaction entries for use in lists.                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 
-namespace Empiria.Financial.Integration.CashLedger {
+namespace Empiria.CashFlow.CashLedger.Adapters {
 
-  /// <summary>Output DTO used to retrieve cash ledger transaction entries.</summary>
-  public class SharedCashTransactionEntryDto {
+  /// <summary>Output DTO used to retrieve cash ledger transaction entries for use in lists.</summary>
+  public class CashEntryDescriptor {
 
     public long Id {
       get; set;
@@ -91,7 +91,13 @@ namespace Empiria.Financial.Integration.CashLedger {
       get; set;
     }
 
+
     public string CashAccountNo {
+      get; set;
+    }
+
+
+    public string CuentaSistemaLegado {
       get; set;
     }
 
@@ -107,10 +113,30 @@ namespace Empiria.Financial.Integration.CashLedger {
       get; set;
     }
 
-    public string CuentaSistemaLegado {
+    public long TransactionId {
       get; set;
     }
 
-  }  // class SharedCashTransactionEntryDto
+    public string TransactionNumber {
+      get; set;
+    }
 
-}  // namespace Empiria.Financial.Integration.CashLedger
+    public string TransactionLedgerName {
+      get; set;
+    }
+
+    public string TransactionConcept {
+      get; set;
+    }
+
+    public DateTime TransactionAccountingDate {
+      get; set;
+    }
+
+    public DateTime TransactionRecordingDate {
+      get; set;
+    }
+
+  }  // class CashEntryDescriptor
+
+}  // namespace Empiria.CashFlow.CashLedger.Adapters
