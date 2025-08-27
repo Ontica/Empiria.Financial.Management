@@ -92,7 +92,6 @@ namespace Empiria.Financial.Integration.CashLedger {
     }
 
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "CashAccountName")]
     public string CashAccountNo {
       get; set;
     }
