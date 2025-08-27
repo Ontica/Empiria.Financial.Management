@@ -131,13 +131,13 @@ namespace Empiria.Financial.Reporting {
           entries = groupByCurrency.ToFixedList();
 
           _excelFile.SetCellIfValue($"AJ{i}", entries.Count);
-          _excelFile.SetCellIfValue($"AK{i}", entries.Count(x => x.CashAccountId == 0));
-          _excelFile.SetCellIfValue($"AL{i}", entries.Count(x => x.CashAccount.Name == x.CuentaSistemaLegado));
-          _excelFile.SetCellIfValue($"AM{i}", entries.Count(x => x.CashAccountId == 0 ||
-                                                                (x.CashAccountId == -2 && x.CuentaSistemaLegado != "Sin flujo")));
-          _excelFile.SetCellIfValue($"AN{i}", entries.Count(x => (x.CashAccountId == -1 && x.CuentaSistemaLegado != "Sin flujo") ||
-                                                                 (x.CashAccountId == -2 && x.CuentaSistemaLegado == "Sin flujo") ||
-                                                                 (x.CashAccountId > 0 && x.CashAccount.Name != x.CuentaSistemaLegado)));
+          _excelFile.SetCellIfValue($"AK{i}", entries.Count(x => x.CashAccountNo == "Pendiente"));
+          _excelFile.SetCellIfValue($"AL{i}", entries.Count(x => x.CashAccountNo == x.CuentaSistemaLegado));
+          _excelFile.SetCellIfValue($"AM{i}", entries.Count(x => x.CashAccountNo == "Pendiente" ||
+                                                                (x.CashAccountNo == "Con flujo" && x.CuentaSistemaLegado != "Sin flujo")));
+          _excelFile.SetCellIfValue($"AN{i}", entries.Count(x => (x.CashAccountNo == "Con flujo" && x.CuentaSistemaLegado == "Sin flujo") ||
+                                                                 (x.CashAccountNo == "Sin flujo" && x.CuentaSistemaLegado != "Sin flujo") ||
+                                                                 (x.CashAccountId > 0 && x.CashAccountNo != x.CuentaSistemaLegado)));
 
           i++;
 

@@ -99,19 +99,20 @@ namespace Empiria.Financial.Reporting {
 
 
           _excelFile.SetCell($"X{i}", 1);
-          _excelFile.SetCellIfValue($"Y{i}", entry.CashAccountId == 0 ? 1 : 0);
-          _excelFile.SetCellIfValue($"Z{i}", entry.CashAccount.Name == entry.CuentaSistemaLegado ? 1 : 0);
+          _excelFile.SetCellIfValue($"Y{i}", entry.CashAccountNo == "Pendiente" ? 1 : 0);
+          _excelFile.SetCellIfValue($"Z{i}", entry.CashAccountNo == entry.CuentaSistemaLegado ? 1 : 0);
 
-          if (entry.CashAccountId == 0 || (entry.CashAccountId == -2 && entry.CuentaSistemaLegado != "Sin flujo")) {
+          if (entry.CashAccountNo == "Pendiente" ||
+              (entry.CashAccountNo == "Con flujo" && entry.CuentaSistemaLegado != "Sin flujo")) {
             _excelFile.SetCell($"AA{i}", 1);
           }
 
-          if ((entry.CashAccountId == -1 && entry.CuentaSistemaLegado != "Sin flujo") ||
-              (entry.CashAccountId == -2 && entry.CuentaSistemaLegado == "Sin flujo") ||
-              (entry.CashAccountId > 0 && entry.CashAccount.Name != entry.CuentaSistemaLegado)) {
+          if ((entry.CashAccountNo == "Con flujo" && entry.CuentaSistemaLegado == "Sin flujo") ||
+              (entry.CashAccountNo == "Sin flujo" && entry.CuentaSistemaLegado != "Sin flujo") ||
+              (entry.CashAccountId > 0 && entry.CashAccountNo != entry.CuentaSistemaLegado)) {
             _excelFile.SetCell($"AB{i}", 1);
           }
-
+          _excelFile.SetCell($"AC{i}", entry.CashAccountAppliedRule);
 
           i++;
 
