@@ -40,24 +40,35 @@ namespace Empiria.Financial.Accounts.UseCases {
 
     public FixedList<NamedEntityDto> GetStandardAccountCategories() {
       return StandardAccountCategory.GetList()
+                                    .Select(x => new NamedEntity(x.NamedKey, x.Name))
                                     .MapToNamedEntityList();
     }
 
 
-    public FixedList<NamedEntityDto> GetStandardAccountsInCategory(string stdAccountCategoryUID) {
-      Assertion.Require(stdAccountCategoryUID, nameof(stdAccountCategoryUID));
+    public FixedList<NamedEntityDto> GetStandardAccountsInCategory(string stdAccountCategoryNamedKey) {
+      Assertion.Require(stdAccountCategoryNamedKey, nameof(stdAccountCategoryNamedKey));
 
-      var category = StandardAccountCategory.Parse(stdAccountCategoryUID);
+      var category = GetStandardAccountCategory(stdAccountCategoryNamedKey);
 
       return category.GetStandardAccounts()
                      .MapToNamedEntityList();
     }
 
 
-    public StandardAccountCategory GetStandardAccountCategory(string stdAccountCategoryUID) {
-      Assertion.Require(stdAccountCategoryUID, nameof(stdAccountCategoryUID));
+    public StandardAccountCategory GetStandardAccountCategory(string stdAccountCategoryNamedKey) {
+      Assertion.Require(stdAccountCategoryNamedKey, nameof(stdAccountCategoryNamedKey));
 
-      return StandardAccountCategory.Parse(stdAccountCategoryUID);
+      return CommonStorage.ParseNamedKey<StandardAccountCategory>(stdAccountCategoryNamedKey);
+    }
+
+
+    public FixedList<NamedEntityDto> GetStandardAccountsSegments(string stdAccountCategoryNamedKey) {
+      Assertion.Require(stdAccountCategoryNamedKey, nameof(stdAccountCategoryNamedKey));
+
+      var category = GetStandardAccountCategory(stdAccountCategoryNamedKey);
+
+      return StandardAccountSegment.GetList(category)
+                                   .MapToNamedEntityList();
     }
 
 

@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Web.Http;
+
 using Empiria.WebApi;
 
 using Empiria.Financial.Accounts.UseCases;
@@ -21,21 +22,31 @@ namespace Empiria.Financial.Accounts.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v2/standard-accounts/categories/{categoryUID:guid}")]
-    public CollectionModel GetStandardAccountByCategory([FromUri] string categoryUID) {
+    [Route("v3/standard-accounts/categories/{stdAccountCategoryNamedKey}")]
+    public CollectionModel GetStandardAccountByCategory([FromUri] string stdAccountCategoryNamedKey) {
 
       using (var usecases = StandardAccountUseCases.UseCaseInteractor()) {
 
-        FixedList<NamedEntityDto> stdAccounts = usecases.GetStandardAccountsInCategory(categoryUID);
+        FixedList<NamedEntityDto> stdAccounts = usecases.GetStandardAccountsInCategory(stdAccountCategoryNamedKey);
 
         return new CollectionModel(base.Request, stdAccounts);
       }
     }
 
-    #endregion Query web apis
 
-    #region Web Apis
-    #endregion Web Apis
+    [HttpGet]
+    [Route("v3/standard-accounts/segments/{stdAccountCategoryNamedKey}")]
+    public CollectionModel GetStandardAccountSegments([FromUri] string stdAccountCategoryNamedKey) {
+
+      using (var usecases = StandardAccountUseCases.UseCaseInteractor()) {
+
+        FixedList<NamedEntityDto> segments = usecases.GetStandardAccountsSegments(stdAccountCategoryNamedKey);
+
+        return new CollectionModel(base.Request, segments);
+      }
+    }
+
+    #endregion Query web apis
 
   }  // class StandardAccountController
 
