@@ -14,24 +14,6 @@ using Empiria.StateEnums;
 
 namespace Empiria.CashFlow.CashLedger.Adapters {
 
-  /// <summary>Enumerates the cash account status in a cash ledger transaction entry.</summary>
-  public enum CashAccountStatus {
-
-    CashAccountWaiting = -2,
-
-    NoCashAccount = -1,
-
-    CashAccountPending = 0,
-
-    WithCashAccount = 1,
-
-    FalsePositives = -3,
-
-    All = 255
-
-  }  // enum CashAccountStatus
-
-
   /// <summary>Input query DTO used to retrieve cash ledger transactions.</summary>
   public class BaseCashLedgerQuery {
 

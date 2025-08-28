@@ -21,7 +21,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-    public long CashAccountId {
+    public int CashAccountId {
       get; set;
     }
 
