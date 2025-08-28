@@ -23,6 +23,9 @@ namespace Empiria.Financial {
 
     static public StandardAccountCategory Parse(string uid) => ParseKey<StandardAccountCategory>(uid);
 
+    static public StandardAccountCategory ParseWithNamedKey(string namedKey) =>
+                                                        ParseNamedKey<StandardAccountCategory>(namedKey);
+
     static public StandardAccountCategory Empty => ParseEmpty<StandardAccountCategory>();
 
     static public FixedList<StandardAccountCategory> GetList() {

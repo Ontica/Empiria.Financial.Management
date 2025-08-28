@@ -90,6 +90,13 @@ namespace Empiria.Financial {
       return _cache.ToFixedList();
     }
 
+
+    static public FixedList<FinancialAccount> GetList(Predicate<FinancialAccount> predicate) {
+      return _cache.FindAll(x => predicate.Invoke(x))
+                   .ToFixedList();
+    }
+
+
     static public FinancialAccount TryParseWithSubledgerAccount(string subledgerAccountNo) {
       return GetList().Find(x => x.SubledgerAccountNo == subledgerAccountNo);
     }

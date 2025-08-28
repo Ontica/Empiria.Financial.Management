@@ -23,6 +23,10 @@ namespace Empiria.Financial {
 
     static public StandardAccountSegment Parse(string uid) => ParseKey<StandardAccountSegment>(uid);
 
+    static public StandardAccountSegment Parse(StandardAccountCategory category, string segmentCode) {
+      return GetList().Find(x => x.Category.Equals(category) && x.Code == segmentCode);
+    }
+
     static public StandardAccountSegment Empty => ParseEmpty<StandardAccountSegment>();
 
     static public FixedList<StandardAccountSegment> GetList() {
