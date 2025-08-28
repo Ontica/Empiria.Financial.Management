@@ -46,6 +46,11 @@ namespace Empiria.CashFlow.Explorer {
     private FixedList<DataTableColumn> GetDynamicColumns() {
       var columns = new List<DataTableColumn> {
         new DataTableColumn("cashAccountNo", "Concepto presupuestal", "text"),
+        new DataTableColumn("conceptDescription", "Descripción", "text"),
+        new DataTableColumn("program", "Programa", "text"),
+        new DataTableColumn("subprogram", "Subprograma", "text"),
+        new DataTableColumn("financingSource", "Fuente", "text"),
+        new DataTableColumn("operationType", "Operación", "text"),
         new DataTableColumn("currencyCode", "Moneda", "text"),
         new DataTableColumn("inflows", "Entradas", "decimal"),
         new DataTableColumn("outflows", "Salidas", "decimal"),
@@ -68,6 +73,7 @@ namespace Empiria.CashFlow.Explorer {
 
     private CashFlowExplorerEntry ProcessTotal(CashLedgerTotalEntryDto total) {
       var entry = new CashFlowExplorerEntry {
+        CashAccountId = total.CashAccountId,
         CashAccountNo = total.CashAccountNo,
         CurrencyCode = Currency.Parse(total.CurrencyId).ISOCode,
       };
