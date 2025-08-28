@@ -81,17 +81,40 @@ namespace Empiria.CashFlow.CashLedger {
                                           .SelectDistinct(x => x.ConceptAccount.ToString());
 
         if (concepts.Count == 0) {
-          continue;
+          goto CONTINUE;
         }
 
-        if (concepts.Count == 1 && concepts[0].Length >= 4) {
-          _helper.AddProcessedEntry(entry, int.Parse(concepts[0]), "Regla con flujo en pares con concepto directo");
-          continue;
-        }
+        foreach (var concept in concepts.FindAll(x => x.Length >= 4)) {
 
-        if (concepts.Count > 1 && entry.SubledgerAccountNumber.Length == 0) {
-          _helper.AddProcessedEntry(entry, -2, "Regla con flujo en pares con concepto (la cuenta no maneja auxiliares)");
-          continue;
+          var accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
+                                                       x.Currency.Id == entry.CurrencyId);
+
+          if (accounts.Count == 1) {
+            _helper.AddProcessedEntry(entry, accounts[0], "Regla con flujo en pares con concepto determinado automáticamente");
+            goto CONTINUE;
+          }
+          if (accounts.Count > 1 && entry.SubledgerAccountNumber.Length == 0) {
+            _helper.AddProcessedEntry(entry, -2,
+             $"Regla con flujo en pares con concepto (Se encontraron varias cuentas con el concepto {concepts[0]}. Faltan reglas StdAccount sin auxiliar)");
+            goto CONTINUE;
+          }
+          if (accounts.Count > 1 && entry.SubledgerAccountNumber.Length != 0) {
+            foreach (var acct in accounts) {
+              if (acct.Parent.SubledgerAccountNo == entry.SubledgerAccountNumber) {
+                _helper.AddProcessedEntry(entry, acct, "Regla con flujo en pares con concepto determinado automáticamente");
+                goto CONTINUE;
+              } else {
+                _helper.AddProcessedEntry(entry, -2,
+                $"Regla con flujo en pares con concepto (cuenta {entry.SubledgerAccountNumber} no registrada en PYC)");
+                goto CONTINUE;
+              }
+            }
+          }
+        }  // foreach concept
+
+        if (entry.SubledgerAccountNumber.Length == 0) {
+          _helper.AddProcessedEntry(entry, -2, $"Regla con flujo en pares con concepto (Faltan reglas StdAccount sin auxiliar)");
+          goto CONTINUE;
         }
 
         var account = FinancialAccount.TryParseWithSubledgerAccount(entry.SubledgerAccountNumber);
@@ -99,7 +122,7 @@ namespace Empiria.CashFlow.CashLedger {
         if (account == null) {
           _helper.AddProcessedEntry(entry, -2,
             $"Regla con flujo en pares con concepto (cuenta {entry.SubledgerAccountNumber} no registrada en PYC)");
-          continue;
+          goto CONTINUE;
         }
 
         FixedList<FinancialAccount> operations = account.GetOperations()
@@ -111,7 +134,7 @@ namespace Empiria.CashFlow.CashLedger {
               $"Regla con flujo en pares con concepto (la cuenta {entry.SubledgerAccountNumber} no tiene concepto {concepts[0]})");
 
         } else if (operations.Count == 1) {
-          _helper.AddProcessedEntry(entry, int.Parse(operations[0].AccountNo),
+          _helper.AddProcessedEntry(entry, operations[0],
              "Regla con flujo en pares con concepto determinado automáticamente");
 
         } else {
@@ -119,7 +142,11 @@ namespace Empiria.CashFlow.CashLedger {
              $"Regla con flujo en pares con concepto (la cuenta {entry.SubledgerAccountNumber} " +
              $"tiene más de un concepto de tipo {concepts[0]})");
         }
-      }
+
+CONTINUE:
+        continue;
+
+      }  // foreach entry
     }
 
 
@@ -142,14 +169,20 @@ namespace Empiria.CashFlow.CashLedger {
           continue;
         }
 
-        if (concepts.Count == 1) {
-          _helper.AddProcessedEntry(entry, int.Parse(concepts[0]), "Regla con flujo directo");
-          continue;
-        }
+        foreach (var concept in concepts) {
+          FixedList<FinancialAccount> accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
+                                                                               x.Currency.Id == entry.CurrencyId);
 
-        if (concepts.Count > 1) {
-          _helper.AddProcessedEntry(entry, -2, "Regla con flujo directo (existen múltiples conceptos)");
-          continue;
+
+          if (accounts.Count == 1) {
+            _helper.AddProcessedEntry(entry, accounts[0], "Regla con flujo directo");
+            continue;
+          }
+
+          if (concepts.Count > 1) {
+            _helper.AddProcessedEntry(entry, -2, "Regla con flujo directo (existen múltiples conceptos)");
+            continue;
+          }
         }
       }
     }

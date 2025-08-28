@@ -21,9 +21,6 @@ namespace Empiria.CashFlow.CashLedger {
       } else if (cashAccountId == 0) {
         return "Pendiente";
 
-      } else if (cashAccountId > 0) {
-        return cashAccountId.ToString();
-
       } else if (cashAccountId == -2) {
         return "Con flujo";
       }

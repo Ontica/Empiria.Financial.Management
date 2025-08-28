@@ -10,6 +10,7 @@
 
 using System.Collections.Generic;
 
+using Empiria.Financial;
 using Empiria.Financial.Rules;
 
 using Empiria.CashFlow.CashLedger.Adapters;
@@ -56,6 +57,30 @@ namespace Empiria.CashFlow.CashLedger {
 
       _processedEntries.Add(fields);
     }
+
+
+    internal void AddProcessedEntry(CashTransactionEntryDto entry,
+                                    FinancialAccount cashAccount, string appliedRule) {
+      entry.Processed = true;
+
+      if (entry.CashAccountId == cashAccount.Id &&
+          entry.CashAccountAppliedRule == appliedRule) {
+        return;
+      }
+
+      entry.CashAccountId = cashAccount.Id;
+
+      var fields = new CashEntryFields {
+        EntryId = entry.Id,
+        CashAccountId = cashAccount.Id,
+        CashAccountNo = cashAccount.AccountNo,
+        TransactionId = _transaction.Id,
+        AppliedRule = appliedRule
+      };
+
+      _processedEntries.Add(fields);
+    }
+
 
 
     internal FixedList<FinancialRule> GetApplicableRules(FixedList<FinancialRule> rules,
