@@ -134,6 +134,28 @@ namespace Empiria.CashFlow.WebApi {
       }
     }
 
+    [HttpPost]
+    [Route("v1/cash-flow/cash-ledger/transactions/bulk-operation/export-analysis")]
+    public async Task<SingleObjectModel> ExportAccountsAnalysisToExcel([FromBody] BulkOperationCommand command) {
+
+      using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
+        FixedList<CashTransactionHolderDto> txns = await usecases.GetTransactions(command.GetConvertedIds());
+
+        FixedList<CashTransactionEntryDto> entries = txns.SelectFlat(x => x.Entries);
+
+        var reportingService = CashTransactionReportingService.ServiceInteractor();
+
+        var result = new BulkOperationResult {
+          File = reportingService.ExportAccountsAnalysisToExcel(entries),
+          Message = $"Se exportó el análisis de {txns.Count} pólizas a Excel.",
+        };
+
+        base.SetOperation(result.Message);
+
+        return new SingleObjectModel(base.Request, result);
+      }
+    }
+
 
     [HttpPost]
     [Route("v1/cash-flow/cash-ledger/transactions/bulk-operation/export-entries")]

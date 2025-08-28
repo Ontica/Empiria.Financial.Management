@@ -33,6 +33,21 @@ namespace Empiria.Financial.Reporting {
 
     #region Services
 
+    public FileDto ExportAccountsAnalysisToExcel(FixedList<CashTransactionEntryDto> entries) {
+      Assertion.Require(entries, nameof(entries));
+
+      var templateUID = $"{this.GetType().Name}.ExportAccountsAnalysisToExcel";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new CashAccountsAnalysisToExcelBuilder(templateConfig);
+
+      ExcelFile excelFile = exporter.CreateExcelFile(entries);
+
+      return excelFile.ToFileDto();
+    }
+
+
     public FileDto ExportTransactionToPdf(CashTransactionHolderDto transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
