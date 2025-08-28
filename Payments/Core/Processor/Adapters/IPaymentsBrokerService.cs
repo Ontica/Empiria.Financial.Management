@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Payments Management                        Component : Adpaters Layer                          *
+*  Module   : Payments Management                        Component : Adapters Layer                          *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Integration interface                   *
 *  Type     : IPaymentsBrokerService                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *

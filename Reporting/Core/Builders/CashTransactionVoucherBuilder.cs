@@ -77,7 +77,7 @@ namespace Empiria.Financial.Reporting {
         entryHtml.Replace("{{CREDIT.AMOUNT}}", entry.Credit.ToString("C2"));
         entryHtml.Replace("{{CASH_ACCOUNT.NAME}}", entry.CashAccount.Name);
         entryHtml.Replace("{{CUENTA_SISTEMA_LEGADO}}", entry.CuentaSistemaLegado);
-        
+
         entriesHtml.Append(entryHtml);
       }
 

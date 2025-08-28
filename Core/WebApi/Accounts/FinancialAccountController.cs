@@ -22,20 +22,6 @@ namespace Empiria.Financial.Accounts.WebApi {
 
     #region Query web apis
 
-    [HttpPost]
-    [Route("v2/financial-accounts/{accountUID:guid}/operations/{stdAccountUID:guid}")]
-    public SingleObjectModel AddAccountOperation([FromUri] string accountUID,
-                                                 [FromUri] string stdAccountUID) {
-
-      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
-
-        FinancialAccountOperationsDto operations = usecases.AddAccountOperation(accountUID, stdAccountUID);
-
-        return new SingleObjectModel(base.Request, operations);
-      }
-    }
-
-
     [HttpGet]
     [Route("v2/financial-accounts/{accountUID:guid}/operations")]
     public SingleObjectModel GetAccountOperations([FromUri] string accountUID) {
@@ -47,21 +33,6 @@ namespace Empiria.Financial.Accounts.WebApi {
         return new SingleObjectModel(base.Request, operations);
       }
     }
-
-
-    [HttpDelete]
-    [Route("v2/financial-accounts/{accountUID:guid}/operations/{operationAccountUID:guid}")]
-    public SingleObjectModel RemoveAccountOperation([FromUri] string accountUID,
-                                                    [FromUri] string operationAccountUID) {
-
-      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
-
-        FinancialAccountOperationsDto operations = usecases.RemoveAccountOperation(accountUID, operationAccountUID);
-
-        return new SingleObjectModel(base.Request, operations);
-      }
-    }
-
 
     [HttpGet]
     [Route("v2/financial-accounts/{keywords}")]
@@ -88,7 +59,7 @@ namespace Empiria.Financial.Accounts.WebApi {
 
     #endregion Query web apis
 
-    #region Web Apis
+    #region Command web apis
 
     [HttpPost]
     [Route("v2/financial-accounts")]
@@ -128,7 +99,34 @@ namespace Empiria.Financial.Accounts.WebApi {
       }
     }
 
-    #endregion Web Apis
+    [HttpPost]
+    [Route("v2/financial-accounts/{accountUID:guid}/operations/{stdAccountUID:guid}")]
+    public SingleObjectModel AddAccountOperation([FromUri] string accountUID,
+                                                 [FromUri] string stdAccountUID) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+
+        FinancialAccountOperationsDto operations = usecases.AddAccountOperation(accountUID, stdAccountUID);
+
+        return new SingleObjectModel(base.Request, operations);
+      }
+    }
+
+
+    [HttpDelete]
+    [Route("v2/financial-accounts/{accountUID:guid}/operations/{operationAccountUID:guid}")]
+    public SingleObjectModel RemoveAccountOperation([FromUri] string accountUID,
+                                                    [FromUri] string operationAccountUID) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+
+        FinancialAccountOperationsDto operations = usecases.RemoveAccountOperation(accountUID, operationAccountUID);
+
+        return new SingleObjectModel(base.Request, operations);
+      }
+    }
+
+    #endregion Command web apis
 
   }  // class FinancialAccountController
 
