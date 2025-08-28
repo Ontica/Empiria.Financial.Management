@@ -13,26 +13,26 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
-using Empiria.CashFlow.CashLedger.Data;
+using Empiria.FinancialAccounting.ClientServices;
 
 namespace Empiria.CashFlow.WebApi {
 
   /// <summary>Query web API used to retrive cash ledger associated data.</summary>
   public class CashLedgerDataController : WebApiController {
 
-    private readonly CashLedgerData _cashLedgerData;
+    private readonly CashLedgerServices _financialAccountingServices;
 
     #region Web Apis
 
     public CashLedgerDataController() {
-      _cashLedgerData = new CashLedgerData();
+      _financialAccountingServices = new CashLedgerServices();
     }
 
     [HttpGet]
     [Route("v1/cash-flow/cash-ledger/accounting-ledgers")]
     public async Task<CollectionModel> GetAccountingLedgers() {
 
-      FixedList<NamedEntityDto> accountingLedgers = await _cashLedgerData.GetAccountingLedgers();
+      FixedList<NamedEntityDto> accountingLedgers = await _financialAccountingServices.GetAccountingLedgers();
 
       return new CollectionModel(base.Request, accountingLedgers);
     }
@@ -42,7 +42,7 @@ namespace Empiria.CashFlow.WebApi {
     [Route("v1/cash-flow/cash-ledger/transaction-sources")]
     public async Task<CollectionModel> GetTransactionSources() {
 
-      FixedList<NamedEntityDto> transactionTypes = await _cashLedgerData.GetTransactionSources();
+      FixedList<NamedEntityDto> transactionTypes = await _financialAccountingServices.GetTransactionSources();
 
       return new CollectionModel(base.Request, transactionTypes);
     }
@@ -52,7 +52,7 @@ namespace Empiria.CashFlow.WebApi {
     [Route("v1/cash-flow/cash-ledger/transaction-types")]
     public async Task<CollectionModel> GetTransactionTypes() {
 
-      FixedList<NamedEntityDto> transactionTypes = await _cashLedgerData.GetTransactionTypes();
+      FixedList<NamedEntityDto> transactionTypes = await _financialAccountingServices.GetTransactionTypes();
 
       return new CollectionModel(base.Request, transactionTypes);
     }
@@ -62,7 +62,7 @@ namespace Empiria.CashFlow.WebApi {
     [Route("v1/cash-flow/cash-ledger/voucher-types")]
     public async Task<CollectionModel> GetVoucherTypes() {
 
-      FixedList<NamedEntityDto> voucherTypes = await _cashLedgerData.GetVoucherTypes();
+      FixedList<NamedEntityDto> voucherTypes = await _financialAccountingServices.GetVoucherTypes();
 
       return new CollectionModel(base.Request, voucherTypes);
     }

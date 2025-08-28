@@ -66,6 +66,7 @@
     <PackageReference Include="Empiria.CashFlow.Core" Version="1.0.0" />
     <PackageReference Include="Empiria.CashFlow.CashLedger" Version="1.0.0" />
     <PackageReference Include="Empiria.Financial.Reporting.Core" Version="2.0.0" />
+    <PackageReference Include="Empiria.FinancialAccounting.WebApiClient" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\extensions\WebApi\Empiria.WebApi.csproj" />
@@ -73,5 +74,6 @@
     <ProjectReference Include="..\Core\Empiria.CashFlow.Core.csproj" />
     <ProjectReference Include="..\CashLedger\Empiria.CashFlow.CashLedger.csproj" />
     <ProjectReference Include="..\..\Reporting\Core\Empiria.Financial.Reporting.Core.csproj" />
+    <ProjectReference Include="..\..\..\financial.accounting\WebApiClient\Empiria.FinancialAccounting.WebApiClient.csproj" />
   </ItemGroup>
 </Project>
