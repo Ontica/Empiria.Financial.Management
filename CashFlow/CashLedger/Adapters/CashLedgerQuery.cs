@@ -8,12 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial.Integration.CashLedger;
-
 namespace Empiria.CashFlow.CashLedger.Adapters {
 
   /// <summary>Input query DTO used to retrieve cash ledger transactions.</summary>
-  public class CashLedgerQuery : SharedCashLedgerQuery {
+  public class CashLedgerQuery : BaseCashLedgerQuery {
 
     public string PartyUID {
       get; set;

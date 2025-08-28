@@ -11,8 +11,6 @@
 using Empiria.Documents;
 using Empiria.History;
 
-using Empiria.Financial.Integration.CashLedger;
-
 namespace Empiria.CashFlow.CashLedger.Adapters {
 
   /// <summary>Output holder DTO used for a cash transaction.</summary>
@@ -43,7 +41,6 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   }  // class CashTransactionHolderDto
 
 
-
   /// <summary>Action flags for cash transactions.</summary>
   public class CashTransactionActions {
 
@@ -62,16 +59,8 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   }  // class CashTransactionActions
 
 
-
-  /// <summary>Output DTO used to retrieve cash ledger transactions for use in lists.</summary>
-  public class CashTransactionDescriptor : SharedCashTransactionDescriptor {
-
-  }  // class CashTransactionDescriptor
-
-
-
   /// <summary>Output DTO used to retrieve cash ledger transaction entries.</summary>
-  public class CashTransactionEntryDto : SharedCashTransactionEntryDto {
+  public class CashTransactionEntryDto : BaseCashTransactionEntryDto {
 
     public NamedEntityDto CashAccount {
       get; internal set;
