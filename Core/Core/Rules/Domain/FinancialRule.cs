@@ -90,8 +90,14 @@ namespace Empiria.Financial.Rules {
     }
 
 
-    [DataField("RULE_CONCEPT_ACCOUNT")]
-    public string ConceptAccount {
+    [DataField("RULE_DEBIT_CONCEPT")]
+    public string DebitConcept {
+      get; private set;
+    }
+
+
+    [DataField("RULE_CREDIT_CONCEPT")]
+    public string CreditConcept {
       get; private set;
     }
 
@@ -116,7 +122,8 @@ namespace Empiria.Financial.Rules {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Description, DebitAccount, CreditAccount, FinancialRuleType.DisplayName, Category.Keywords);
+        return EmpiriaString.BuildKeywords(Description, DebitAccount, CreditAccount,
+                                           FinancialRuleType.DisplayName, Category.Keywords);
       }
     }
 

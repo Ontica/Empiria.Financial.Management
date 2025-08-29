@@ -31,6 +31,8 @@ namespace Empiria.Financial.Rules.Data {
                 $"SET RULE_UID = '{System.Guid.NewGuid().ToString()}', " +
                 $"RULE_DEBIT_ACCOUNT = '{debitAccount}', " +
                 $"RULE_CREDIT_ACCOUNT = '{creditAccount}', " +
+                $"RULE_DEBIT_CONCEPT = '{EmpiriaString.Clean(rule.DebitConcept)}', " +
+                $"RULE_CREDIT_CONCEPT = '{EmpiriaString.Clean(rule.CreditConcept)}', " +
                 $"RULE_KEYWORDS = '{rule.Keywords}' " +
                 $"WHERE RULE_ID = {rule.Id}";
 

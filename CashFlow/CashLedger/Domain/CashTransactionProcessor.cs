@@ -41,7 +41,7 @@ namespace Empiria.CashFlow.CashLedger {
 
       ProcessNoCashFlowEntriesOneToOne();
 
-      ProcessNoCashFlowEntriesWithCreditsOrDebitsAdded();
+      ProcessNoCashFlowEntriesWithCreditsAndDebitsAdded();
 
       ProcessNoCashFlowEntriesOneToOneTwoWay();
 
@@ -51,7 +51,7 @@ namespace Empiria.CashFlow.CashLedger {
 
       ProcessCashFlowDirectEntries();
 
-      ProcessCashFlowCreditOrDirectEntries();
+      ProcessCashFlowDebitCreditEntries();
 
       ProcessRemainingEntries();
 
@@ -62,7 +62,7 @@ namespace Empiria.CashFlow.CashLedger {
 
     #region Processors
 
-    private void ProcessCashFlowCreditOrDirectEntries() {
+    private void ProcessCashFlowDebitCreditEntries() {
 
       FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
 
@@ -70,15 +70,15 @@ namespace Empiria.CashFlow.CashLedger {
         return;
       }
 
-      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_CREDIT_OR_DEBIT");
+      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_CREDIT_DEBIT");
 
 
       foreach (var entry in entries) {
 
         FixedList<string> concepts = rules.FindAll(x => ((entry.Debit > 0 && x.DebitAccount == entry.AccountNumber) ||
                                                          ((entry.Credit > 0 && x.CreditAccount == entry.AccountNumber)) &&
-                                                         x.ConceptAccount.Length != 0))
-                                          .SelectDistinct(x => x.ConceptAccount.ToString());
+                                                         x.DebitConcept.Length != 0))
+                                          .SelectDistinct(x => entry.Debit > 0 ? x.DebitConcept : x.CreditConcept);
 
         if (concepts.Count == 0) {
           goto CONTINUE;
@@ -90,22 +90,25 @@ namespace Empiria.CashFlow.CashLedger {
                                                        x.Currency.Id == entry.CurrencyId);
 
           if (accounts.Count == 1) {
-            _helper.AddProcessedEntry(entry, accounts[0], "Regla con flujo en pares con concepto determinado automáticamente");
+            _helper.AddProcessedEntry(entry, accounts[0],
+              "Regla con flujo en pares con concepto determinado automáticamente");
             goto CONTINUE;
           }
           if (accounts.Count > 1 && entry.SubledgerAccountNumber.Length == 0) {
             _helper.AddProcessedEntry(entry, -2,
-             $"Regla con flujo en pares con concepto (Se encontraron varias cuentas con el concepto {concepts[0]}. Faltan reglas StdAccount sin auxiliar)");
+              $"Regla con flujo en pares con concepto (Se encontraron varias cuentas con el concepto {concepts[0]}. " +
+              $"Faltan reglas StdAccount sin auxiliar)");
             goto CONTINUE;
           }
           if (accounts.Count > 1 && entry.SubledgerAccountNumber.Length != 0) {
             foreach (var acct in accounts) {
               if (acct.Parent.SubledgerAccountNo == entry.SubledgerAccountNumber) {
-                _helper.AddProcessedEntry(entry, acct, "Regla con flujo en pares con concepto determinado automáticamente");
+                _helper.AddProcessedEntry(entry, acct,
+                  "Regla con flujo en pares con concepto determinado automáticamente");
                 goto CONTINUE;
               } else {
                 _helper.AddProcessedEntry(entry, -2,
-                $"Regla con flujo en pares con concepto (cuenta {entry.SubledgerAccountNumber} no registrada en PYC)");
+                  $"Regla con flujo en pares con concepto (cuenta {entry.SubledgerAccountNumber} no registrada en PYC)");
                 goto CONTINUE;
               }
             }
@@ -113,7 +116,8 @@ namespace Empiria.CashFlow.CashLedger {
         }  // foreach concept
 
         if (entry.SubledgerAccountNumber.Length == 0) {
-          _helper.AddProcessedEntry(entry, -2, $"Regla con flujo en pares con concepto (Faltan reglas StdAccount sin auxiliar)");
+          _helper.AddProcessedEntry(entry, -2,
+            $"Regla con flujo en pares con concepto (Faltan reglas StdAccount sin auxiliar)");
           goto CONTINUE;
         }
 
@@ -127,11 +131,12 @@ namespace Empiria.CashFlow.CashLedger {
 
         FixedList<FinancialAccount> operations = account.GetOperations()
                                                         .FindAll(x => x.Currency.Id == entry.CurrencyId &&
-                                                                      EmpiriaString.StartsWith(x.AccountNo, concepts[0]));
+                                                                      x.StandardAccount.StdAcctNo.EndsWith(concepts[0]));
 
         if (operations.Count == 0) {
           _helper.AddProcessedEntry(entry, -2,
-              $"Regla con flujo en pares con concepto (la cuenta {entry.SubledgerAccountNumber} no tiene concepto {concepts[0]})");
+              $"Regla con flujo en pares con concepto " +
+              $"(la cuenta {entry.SubledgerAccountNumber} no tiene concepto {concepts[0]})");
 
         } else if (operations.Count == 1) {
           _helper.AddProcessedEntry(entry, operations[0],
@@ -162,8 +167,8 @@ CONTINUE:
       foreach (var entry in entries) {
 
         FixedList<string> concepts = rules.FindAll(x => x.DebitAccount == entry.AccountNumber &&
-                                                        x.ConceptAccount.Length != 0)
-                                          .SelectDistinct(x => x.ConceptAccount.ToString());
+                                                        x.DebitConcept.Length != 0)
+                                          .SelectDistinct(x => x.DebitConcept.ToString());
 
         if (concepts.Count == 0) {
           continue;
@@ -249,7 +254,7 @@ CONTINUE:
         return;
       }
 
-      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_UNGROUPED");
+      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_CREDIT_DEBIT");
 
       foreach (var entry in entries) {
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
@@ -290,9 +295,9 @@ CONTINUE:
     }
 
 
-    private void ProcessNoCashFlowEntriesWithCreditsOrDebitsAdded() {
+    private void ProcessNoCashFlowEntriesWithCreditsAndDebitsAdded() {
 
-      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_UNGROUPED");
+      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_CREDIT_DEBIT");
 
       FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules,
                                                                             _helper.GetUnprocessedEntries(x => x.Debit != 0));
