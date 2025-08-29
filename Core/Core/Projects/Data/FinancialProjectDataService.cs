@@ -22,7 +22,8 @@ namespace Empiria.Financial.Projects.Data {
         return;
       }
       var sql = "UPDATE FMS_PROJECTS " +
-                $"SET PRJ_NAME = '{EmpiriaString.Clean(project.Name).Replace("'", "''")}', " +
+                $"SET PRJ_UID = '{System.Guid.NewGuid().ToString()}', " +
+                $"PRJ_NAME = '{EmpiriaString.Clean(project.Name).Replace("'", "''")}', " +
                 $"PRJ_KEYWORDS = '{project.Keywords}' " +
                 $"WHERE PRJ_ID = {project.Id}";
 

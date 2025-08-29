@@ -11,7 +11,6 @@
 using Xunit;
 
 using Empiria.Financial.Rules;
-using Empiria.Financial.Rules.Data;
 
 namespace Empiria.Tests.Financial.Rules {
 
@@ -19,16 +18,6 @@ namespace Empiria.Tests.Financial.Rules {
   public class FinancialRuleTests {
 
     #region Facts
-
-    [Fact]
-    internal void Clean_Financial_Rules() {
-      var rules = BaseObject.GetFullList<FinancialRule>();
-
-      foreach (var rule in rules) {
-        FinancialRulesData.CleanFinancialRule(rule);
-      }
-    }
-
 
     [Fact]
     public void Should_Parse_All_Financial_Rules() {

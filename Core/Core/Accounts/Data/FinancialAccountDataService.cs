@@ -20,7 +20,8 @@ namespace Empiria.Financial.Data {
         return;
       }
       var sql = "UPDATE FMS_ACCOUNTS " +
-                $"SET ACCT_DESCRIPTION = '{EmpiriaString.Clean(account.Description).Replace("'", "''")}', " +
+                $"SET ACCT_UID = '{System.Guid.NewGuid().ToString()}', " +
+                $"ACCT_DESCRIPTION = '{EmpiriaString.Clean(account.Description).Replace("'", "''")}', " +
                 $"ACCT_KEYWORDS = '{account.Keywords}' " +
                 $"WHERE ACCT_ID = {account.Id}";
 

@@ -9,12 +9,15 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Xunit;
-using Empiria.Financial.Data;
 
 using Empiria.Financial;
+using Empiria.Financial.Data;
 
 using Empiria.Financial.Projects;
 using Empiria.Financial.Projects.Data;
+
+using Empiria.Financial.Rules;
+using Empiria.Financial.Rules.Data;
 
 namespace Empiria.Tests.Financial {
 
@@ -39,6 +42,16 @@ namespace Empiria.Tests.Financial {
 
       foreach (var project in projects) {
         FinancialProjectDataService.CleanProject(project);
+      }
+    }
+
+
+    [Fact]
+    internal void Clean_Financial_Rules() {
+      var rules = BaseObject.GetFullList<FinancialRule>();
+
+      foreach (var rule in rules) {
+        FinancialRulesData.CleanFinancialRule(rule);
       }
     }
 
