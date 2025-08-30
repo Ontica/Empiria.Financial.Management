@@ -34,7 +34,7 @@ namespace Empiria.Financial.Projects.Adapters {
 
     static internal string MapToFilterString(this FinancialProjectQuery query) {
       string baseOrgUnitFilter = BuildBaseOrgUnitFilter(query.BaseOrgUnitUID);
-      string projectTypeCategoryFilter =  BuildProjectTypeCategoryFilter(query.ProjectTypeCategoryUID);
+      string projectTypeCategoryFilter = BuildProjectTypeCategoryFilter(query.ProjectTypeCategoryUID);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
       string statusFilter = BuildStatusFilter(query.Status);
       string subprogramFilter = BuildSubprogramFilter(query.SubprogramUID);
@@ -107,7 +107,7 @@ namespace Empiria.Financial.Projects.Adapters {
 
       var subprogram = StandardAccount.Parse(subprogramUID);
 
-      return $"PRJ_STD_ACCT_ID = {subprogram.Id}";
+      return $"PRJ_SUBPROGRAM_ID = {subprogram.Id}";
     }
 
     #endregion Helpers

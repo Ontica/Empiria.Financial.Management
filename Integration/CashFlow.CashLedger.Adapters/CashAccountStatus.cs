@@ -21,7 +21,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
     WithCashAccount = 1,
 
-    FalsePositives = -3,
+    FalsePositive = -3,
 
     All = 255
 

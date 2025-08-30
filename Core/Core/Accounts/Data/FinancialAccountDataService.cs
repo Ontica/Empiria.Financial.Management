@@ -21,8 +21,10 @@ namespace Empiria.Financial.Data {
       }
       var sql = "UPDATE FMS_ACCOUNTS " +
                 $"SET ACCT_UID = '{System.Guid.NewGuid().ToString()}', " +
+                $"ACCT_NUMBER = '{EmpiriaString.Clean(account.AccountNo)}', " +
                 $"ACCT_DESCRIPTION = '{EmpiriaString.Clean(account.Description).Replace("'", "''")}', " +
                 $"ACCT_KEYWORDS = '{account.Keywords}' " +
+                $"ACCT_SUBLEDGER_ACCT_NO = '{EmpiriaString.Clean(account.SubledgerAccountNo)}', " +
                 $"WHERE ACCT_ID = {account.Id}";
 
       var op = DataOperation.Parse(sql);

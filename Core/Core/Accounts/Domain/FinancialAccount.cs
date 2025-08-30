@@ -266,6 +266,7 @@ namespace Empiria.Financial {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(Code, Name, _identifiers, _tags,
+                                           SubledgerAccountNo,
                                            Project.Keywords, OrganizationalUnit.Keywords,
                                            StandardAccount.Keywords);
       }
