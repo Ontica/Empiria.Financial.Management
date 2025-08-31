@@ -47,6 +47,8 @@ namespace Empiria.CashFlow.CashLedger {
 
       ProcessEqualEntriesAsNoCashFlowEntries();
 
+      ProcessNoCashFlowLonelyEntries();
+
       // ProcessEqualEntriesAsNoCashFlowEntriesAdded();
 
       ProcessCashFlowDirectEntries();
@@ -64,7 +66,7 @@ namespace Empiria.CashFlow.CashLedger {
 
     private void ProcessCashFlowDebitCreditEntries() {
 
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
 
       if (entries.Count == 0) {
         return;
@@ -75,10 +77,17 @@ namespace Empiria.CashFlow.CashLedger {
 
       foreach (var entry in entries) {
 
-        FixedList<string> concepts = rules.FindAll(x => ((entry.Debit > 0 && x.DebitAccount == entry.AccountNumber) ||
-                                                         ((entry.Credit > 0 && x.CreditAccount == entry.AccountNumber)) &&
-                                                         x.DebitConcept.Length != 0))
-                                          .SelectDistinct(x => entry.Debit > 0 ? x.DebitConcept : x.CreditConcept);
+        FixedList<string> concepts;
+
+        if (entry.Debit > 0) {
+          concepts = rules.FindAll(x => x.DebitAccount == entry.AccountNumber &&
+                                        x.DebitConcept.Length != 0)
+                          .SelectDistinct(x => x.DebitConcept);
+        } else {
+          concepts = rules.FindAll(x => x.CreditAccount == entry.AccountNumber &&
+                                        x.CreditConcept.Length != 0)
+                          .SelectDistinct(x => x.CreditConcept);
+        }
 
         if (concepts.Count == 0) {
           goto CONTINUE;
@@ -87,7 +96,8 @@ namespace Empiria.CashFlow.CashLedger {
         foreach (var concept in concepts.FindAll(x => x.Length >= 4)) {
 
           var accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
-                                                       x.Currency.Id == entry.CurrencyId);
+                                                       x.Currency.Id == entry.CurrencyId &&
+                                                       x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
 
           if (accounts.Count == 1) {
             _helper.AddProcessedEntry(entry, accounts[0],
@@ -96,7 +106,8 @@ namespace Empiria.CashFlow.CashLedger {
           }
           if (accounts.Count > 1 && entry.SubledgerAccountNumber.Length == 0) {
             _helper.AddProcessedEntry(entry, -2,
-              $"Regla con flujo en pares con concepto (Se encontraron varias cuentas con el concepto {concepts[0]}. " +
+              $"Regla con flujo en pares con concepto determinado automáticamente " +
+              $"(Se encontraron varias cuentas con el concepto {concepts[0]}. " +
               $"Faltan reglas StdAccount sin auxiliar)");
             goto CONTINUE;
           }
@@ -108,7 +119,8 @@ namespace Empiria.CashFlow.CashLedger {
                 goto CONTINUE;
               } else {
                 _helper.AddProcessedEntry(entry, -2,
-                  $"Regla con flujo en pares con concepto (cuenta {entry.SubledgerAccountNumber} no registrada en PYC)");
+                  $"Regla con flujo en pares con concepto determinado automáticamente " +
+                  $"(cuenta {entry.SubledgerAccountNumber} no registrada en PYC)");
                 goto CONTINUE;
               }
             }
@@ -166,18 +178,27 @@ CONTINUE:
 
       foreach (var entry in entries) {
 
-        FixedList<string> concepts = rules.FindAll(x => x.DebitAccount == entry.AccountNumber &&
-                                                        x.DebitConcept.Length != 0)
-                                          .SelectDistinct(x => x.DebitConcept.ToString());
+        FixedList<string> concepts;
+
+        if (entry.Debit > 0) {
+          concepts = rules.FindAll(x => x.DebitAccount == entry.AccountNumber &&
+                                        x.DebitConcept.Length != 0)
+                          .SelectDistinct(x => x.DebitConcept);
+        } else {
+          concepts = rules.FindAll(x => x.CreditAccount == entry.AccountNumber &&
+                                        x.CreditConcept.Length != 0)
+                          .SelectDistinct(x => x.CreditConcept);
+        }
+
 
         if (concepts.Count == 0) {
           continue;
         }
 
         foreach (var concept in concepts) {
-          FixedList<FinancialAccount> accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
-                                                                               x.Currency.Id == entry.CurrencyId);
-
+          var accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
+                                                       x.Currency.Id == entry.CurrencyId &&
+                                                       x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
 
           if (accounts.Count == 1) {
             _helper.AddProcessedEntry(entry, accounts[0], "Regla con flujo directo");
@@ -263,8 +284,8 @@ CONTINUE:
           CashTransactionEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, entry);
 
           if (matchingEntry != null) {
-            _helper.AddProcessedEntry(entry, -1, $"Regla sin flujo uno a uno [{rule.Id}]");
-            _helper.AddProcessedEntry(matchingEntry, -1, $"Regla sin flujo uno a uno [{rule.Id}]");
+            _helper.AddProcessedEntry(entry, -1, $"Regla sin flujo uno a uno");
+            _helper.AddProcessedEntry(matchingEntry, -1, $"Regla sin flujo uno a uno");
           }
         }
       }
@@ -287,8 +308,8 @@ CONTINUE:
           CashTransactionEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, entry);
 
           if (matchingEntry != null) {
-            _helper.AddProcessedEntry(entry, -1, $"Regla sin flujo de ida y vuelta [{rule.Id}]");
-            _helper.AddProcessedEntry(matchingEntry, -1, $"Regla sin flujo de ida y vuelta [{rule.Id}]");
+            _helper.AddProcessedEntry(entry, -1, $"Regla sin flujo de ida y vuelta");
+            _helper.AddProcessedEntry(matchingEntry, -1, $"Regla sin flujo de ida y vuelta");
           }
         }
       }
@@ -321,13 +342,33 @@ CONTINUE:
           }
 
           foreach (var debitEntry in debitCurrencyGroup) {
-            _helper.AddProcessedEntry(debitEntry, -1, $"Regla sin flujo sumadas [{rule.Id}]");
+            _helper.AddProcessedEntry(debitEntry, -1, $"Regla sin flujo sumadas");
           }
 
           foreach (var creditEntry in creditEntriesByCurrency) {
-            _helper.AddProcessedEntry(creditEntry, -1, $"Regla sin flujo sumadas [{rule.Id}]");
+            _helper.AddProcessedEntry(creditEntry, -1, $"Regla sin flujo sumadas");
           }
         }
+      }
+    }
+
+
+    private void ProcessNoCashFlowLonelyEntries() {
+      FixedList<CashTransactionEntryDto> unprocessed = _helper.GetUnprocessedEntries();
+
+      if (unprocessed.Count == 0) {
+        return;
+      }
+
+      decimal debits = unprocessed.Sum(x => x.Debit);
+      decimal credits = unprocessed.Sum(x => x.Credit);
+
+      if (debits != 0 && credits != 0) {
+        return;
+      }
+
+      foreach (var entry in unprocessed) {
+        _helper.AddProcessedEntry(entry, -1, $"Regla sin flujo (solo cargos o abonos restantes");
       }
     }
 
