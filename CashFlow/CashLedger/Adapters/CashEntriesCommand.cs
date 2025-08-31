@@ -60,41 +60,50 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
 
     #region Helpers
 
-    private int GetCashAccountId() {
+    private CashAccountStatus GetCashAccountStatus() {
       switch (Operation) {
 
         case CashEntryOperation.MarkAsCashEntries:
 
           if (string.IsNullOrWhiteSpace(CashAccount)) {
-            return -2;
+            return CashAccountStatus.CashFlowUnassigned;
+
           } else if (EmpiriaString.IsInteger(CashAccount)) {
-            return int.Parse(CashAccount);
+            return CashAccountStatus.CashFlowAssigned;
+
           } else {
             throw Assertion.EnsureNoReachThisCode($"No tengo registrado el concepto presupuestal {CashAccount}.");
           }
 
         case CashEntryOperation.MarkAsCashEntriesPending:
-          return -2;
+          return CashAccountStatus.CashFlowUnassigned;
 
         case CashEntryOperation.MarkAsNoCashEntries:
-          return -1;
+          return CashAccountStatus.NoCashFlow;
 
         case CashEntryOperation.RemoveCashEntries:
-          return 0;
+          return CashAccountStatus.Pending;
 
         default:
           throw Assertion.EnsureNoReachThisCode($"Unrecognized cash entry operation '{Operation.ToString()}'");
       }
     }
 
+
     private CashEntryFields ToCashEntryFields(long entryId) {
-      int cashAccountId = GetCashAccountId();
+      CashAccountStatus status = GetCashAccountStatus();
+
+      int accountId = status == CashAccountStatus.CashFlowAssigned ?
+                                        int.Parse(CashAccount) : status.ControlValue();
+
+      string accountNo = status == CashAccountStatus.CashFlowAssigned ?
+                                        CashAccount : status.Name();
 
       return new CashEntryFields {
         EntryId = entryId,
         TransactionId = this.TransactionId,
-        CashAccountId = cashAccountId,
-        CashAccountNo = CashAccountHelper.GetCashAccountNo(cashAccountId),
+        CashAccountId = accountId,
+        CashAccountNo = accountNo,
       };
     }
 
