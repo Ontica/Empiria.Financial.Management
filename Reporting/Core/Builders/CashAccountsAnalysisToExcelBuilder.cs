@@ -75,16 +75,10 @@ namespace Empiria.Financial.Reporting {
 
         _excelFile.SetCell($"C{i}", group.Count());
 
-        _excelFile.SetCellIfValue($"D{i}", group.Count(x => x.CashAccountNo == "Pendiente"));
-
-        _excelFile.SetCellIfValue($"E{i}", group.Count(x => x.CashAccountNo == x.CuentaSistemaLegado));
-
-        _excelFile.SetCellIfValue($"F{i}", group.Count(x => x.CashAccountNo == "Pendiente" ||
-                                                            (x.CashAccountNo == "Con flujo" && x.CuentaSistemaLegado != "Sin flujo")));
-
-        _excelFile.SetCellIfValue($"G{i}", group.Count(x => (x.CashAccountNo == "Con flujo" && x.CuentaSistemaLegado == "Sin flujo") ||
-                                                            (x.CashAccountNo == "Sin flujo" && x.CuentaSistemaLegado != "Sin flujo") ||
-                                                            (x.CashAccountId > 0 && x.CashAccountNo != x.CuentaSistemaLegado)));
+        _excelFile.SetCellIfValue($"D{i}", group.Count(x => x.Pending));
+        _excelFile.SetCellIfValue($"E{i}", group.Count(x => x.Exact));
+        _excelFile.SetCellIfValue($"F{i}", group.Count(x => x.Correct));
+        _excelFile.SetCellIfValue($"G{i}", group.Count(x => x.FalsePositive));
 
         _excelFile.SetCell($"H{i}", pivot.CurrencyName);
         _excelFile.SetCellIfValue($"I{i}", group.Sum(x => x.Debit));
@@ -94,9 +88,7 @@ namespace Empiria.Financial.Reporting {
         _excelFile.SetCell($"M{i}", pivot.ParentAccountFullName);
 
         var rules = group.ToFixedList()
-                          .FindAll(x => (x.CashAccountNo == "Con flujo" && x.CuentaSistemaLegado == "Sin flujo") ||
-                                        (x.CashAccountNo == "Sin flujo" && x.CuentaSistemaLegado != "Sin flujo") ||
-                                        (x.CashAccountId > 0 && x.CashAccountNo != x.CuentaSistemaLegado))
+                          .FindAll(x => x.FalsePositive)
                           .SelectDistinct(x => x.CashAccountAppliedRule)
                           .ToArray();
 
@@ -104,7 +96,8 @@ namespace Empiria.Financial.Reporting {
         _excelFile.SetCell($"N{i}", string.Join("; ", rules));
 
         i++;
-      }
+
+      }  // foreach
 
     }
 

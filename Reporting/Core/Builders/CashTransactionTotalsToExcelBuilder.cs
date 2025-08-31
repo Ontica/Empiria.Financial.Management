@@ -83,61 +83,58 @@ namespace Empiria.Financial.Reporting {
 
           _excelFile.SetCell($"K{i}", groupByCurrency.ElementAt(0).CurrencyName);
 
-          var entries = groupByCurrency.ToFixedList().FindAll(x => x.CashAccountId > 0);
+          var entries = groupByCurrency.ToFixedList().FindAll(x => x.CashFlowAssigned);
 
           _excelFile.SetCellIfValue($"L{i}", entries.Count);
           _excelFile.SetCellIfValue($"M{i}", entries.Sum(x => x.Debit));
           _excelFile.SetCellIfValue($"N{i}", entries.Sum(x => x.Credit));
           _excelFile.SetCellIfValue($"O{i}", entries.Sum(x => x.Debit - x.Credit));
 
-          entries = groupByCurrency.ToFixedList().FindAll(x => x.CashAccountId == -1);
+          entries = groupByCurrency.ToFixedList().FindAll(x => x.NoCashFlow);
 
           _excelFile.SetCellIfValue($"P{i}", entries.Count);
           _excelFile.SetCellIfValue($"Q{i}", entries.Sum(x => x.Debit));
           _excelFile.SetCellIfValue($"R{i}", entries.Sum(x => x.Credit));
           _excelFile.SetCellIfValue($"S{i}", entries.Sum(x => x.Debit - x.Credit));
 
-          entries = groupByCurrency.ToFixedList().FindAll(x => x.CashAccountId == 0 || x.CashAccountId == -2);
+          entries = groupByCurrency.ToFixedList().FindAll(x => x.Pending || x.CashFlowUnassigned);
 
           _excelFile.SetCellIfValue($"T{i}", entries.Count);
           _excelFile.SetCellIfValue($"U{i}", entries.Sum(x => x.Debit));
           _excelFile.SetCellIfValue($"V{i}", entries.Sum(x => x.Credit));
           _excelFile.SetCellIfValue($"W{i}", entries.Sum(x => x.Debit - x.Credit));
 
-          var conFlujo = groupByCurrency.ToFixedList().FindAll(x => x.CuentaSistemaLegado != "Sin flujo");
+          var legadoConFlujo = groupByCurrency.ToFixedList().FindAll(x => x.LegadoConFlujo);
 
-          _excelFile.SetCellIfValue($"X{i}", conFlujo.Count);
-          _excelFile.SetCellIfValue($"Y{i}", conFlujo.Sum(x => x.Debit));
-          _excelFile.SetCellIfValue($"Z{i}", conFlujo.Sum(x => x.Credit));
+          _excelFile.SetCellIfValue($"X{i}", legadoConFlujo.Count);
+          _excelFile.SetCellIfValue($"Y{i}", legadoConFlujo.Sum(x => x.Debit));
+          _excelFile.SetCellIfValue($"Z{i}", legadoConFlujo.Sum(x => x.Credit));
 
-          var sinFlujo = groupByCurrency.ToFixedList().FindAll(x => x.CuentaSistemaLegado == "Sin flujo");
+          var legadoSinFlujo = groupByCurrency.ToFixedList().FindAll(x => x.LegadoSinFlujo);
 
-          _excelFile.SetCellIfValue($"AA{i}", sinFlujo.Count);
-          _excelFile.SetCellIfValue($"AB{i}", sinFlujo.Sum(x => x.Debit));
-          _excelFile.SetCellIfValue($"AC{i}", sinFlujo.Sum(x => x.Credit));
+          _excelFile.SetCellIfValue($"AA{i}", legadoSinFlujo.Count);
+          _excelFile.SetCellIfValue($"AB{i}", legadoSinFlujo.Sum(x => x.Debit));
+          _excelFile.SetCellIfValue($"AC{i}", legadoSinFlujo.Sum(x => x.Credit));
 
-          entries = groupByCurrency.ToFixedList().FindAll(x => x.CashAccountId > 0);
+          entries = groupByCurrency.ToFixedList().FindAll(x => x.CashFlowAssigned);
 
-          _excelFile.SetCellIfValue($"AD{i}", entries.Count - conFlujo.Count);
-          _excelFile.SetCellIfValue($"AE{i}", entries.Sum(x => x.Debit) - conFlujo.Sum(x => x.Debit));
-          _excelFile.SetCellIfValue($"AF{i}", entries.Sum(x => x.Credit) - conFlujo.Sum(x => x.Credit));
+          _excelFile.SetCellIfValue($"AD{i}", entries.Count - legadoConFlujo.Count);
+          _excelFile.SetCellIfValue($"AE{i}", entries.Sum(x => x.Debit) - legadoConFlujo.Sum(x => x.Debit));
+          _excelFile.SetCellIfValue($"AF{i}", entries.Sum(x => x.Credit) - legadoConFlujo.Sum(x => x.Credit));
 
-          entries = groupByCurrency.ToFixedList().FindAll(x => x.CashAccountId == -1);
+          entries = groupByCurrency.ToFixedList().FindAll(x => x.NoCashFlow);
 
-          _excelFile.SetCellIfValue($"AG{i}", entries.Count - sinFlujo.Count());
-          _excelFile.SetCellIfValue($"AH{i}", entries.Sum(x => x.Debit) - sinFlujo.Sum(x => x.Debit));
-          _excelFile.SetCellIfValue($"AI{i}", entries.Sum(x => x.Credit) - sinFlujo.Sum(x => x.Credit));
+          _excelFile.SetCellIfValue($"AG{i}", entries.Count - legadoSinFlujo.Count());
+          _excelFile.SetCellIfValue($"AH{i}", entries.Sum(x => x.Debit) - legadoSinFlujo.Sum(x => x.Debit));
+          _excelFile.SetCellIfValue($"AI{i}", entries.Sum(x => x.Credit) - legadoSinFlujo.Sum(x => x.Credit));
 
           entries = groupByCurrency.ToFixedList();
 
           _excelFile.SetCellIfValue($"AJ{i}", entries.Count);
-          _excelFile.SetCellIfValue($"AK{i}", entries.Count(x => x.CashAccountNo == "Pendiente"));
-          _excelFile.SetCellIfValue($"AL{i}", entries.Count(x => x.CashAccountNo == x.CuentaSistemaLegado));
-          _excelFile.SetCellIfValue($"AM{i}", entries.Count(x => x.CashAccountNo == "Pendiente" ||
-                                                                (x.CashAccountNo == "Con flujo" && x.CuentaSistemaLegado != "Sin flujo")));
-          _excelFile.SetCellIfValue($"AN{i}", entries.Count(x => (x.CashAccountNo == "Con flujo" && x.CuentaSistemaLegado == "Sin flujo") ||
-                                                                 (x.CashAccountNo == "Sin flujo" && x.CuentaSistemaLegado != "Sin flujo") ||
-                                                                 (x.CashAccountId > 0 && x.CashAccountNo != x.CuentaSistemaLegado)));
+          _excelFile.SetCellIfValue($"AK{i}", entries.Count(x => x.Pending));
+          _excelFile.SetCellIfValue($"AL{i}", entries.Count(x => x.Exact));
+          _excelFile.SetCellIfValue($"AM{i}", entries.Count(x => x.Correct));
+          _excelFile.SetCellIfValue($"AN{i}", entries.Count(x => x.FalsePositive));
 
           i++;
 

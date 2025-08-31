@@ -33,16 +33,20 @@ namespace Empiria.CashFlow.CashLedger {
     internal FixedList<CashTransactionAnalysisEntry> Execute() {
       var entries = new List<CashTransactionAnalysisEntry>(32);
 
-      FixedList<CashTransactionAnalysisEntry> temp = AnalyzeEntries(x => x.CashAccountId == -1, "Sin flujo");
+      FixedList<CashTransactionAnalysisEntry> temp =
+            AnalyzeEntries(x => x.NoCashFlow,
+                           CashAccountStatus.NoCashFlow.Name());
       entries.AddRange(temp);
 
-      temp = AnalyzeEntries(x => x.CashAccountId > 0, "Con flujo");
+      temp = AnalyzeEntries(x => x.CashFlowAssigned,
+                            "Con flujo asignado");
       entries.AddRange(temp);
 
-      temp = AnalyzeEntries(x => x.CashAccountId == -2, "Con flujo pendiente");
+      temp = AnalyzeEntries(x => x.CashFlowUnassigned,
+                           CashAccountStatus.CashFlowUnassigned.Name());
       entries.AddRange(temp);
 
-      temp = AnalyzeEntries(x => x.CashAccountId == 0, "Pendientes");
+      temp = AnalyzeEntries(x => x.Pending, "Pendientes");
       entries.AddRange(temp);
 
       temp = AnalyzeEntries(x => x.Id != 0, "Totales");

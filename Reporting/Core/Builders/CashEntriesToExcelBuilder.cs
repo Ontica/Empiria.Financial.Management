@@ -91,20 +91,11 @@ namespace Empiria.Financial.Reporting {
         _excelFile.SetCell($"S{i}", entry.CuentaSistemaLegado);
 
         _excelFile.SetCell($"T{i}", 1);
-        _excelFile.SetCellIfValue($"U{i}", entry.CashAccountNo == "Pendiente" ? 1 : 0);
 
-        _excelFile.SetCellIfValue($"V{i}", entry.CashAccountNo == entry.CuentaSistemaLegado ? 1 : 0);
-
-        if (entry.CashAccountNo == "Pendiente" ||
-            (entry.CashAccountNo == "Con flujo" && entry.CuentaSistemaLegado != "Sin flujo")) {
-          _excelFile.SetCell($"W{i}", 1);
-        }
-
-        if ((entry.CashAccountNo == "Con flujo" && entry.CuentaSistemaLegado == "Sin flujo") ||
-            (entry.CashAccountNo == "Sin flujo" && entry.CuentaSistemaLegado != "Sin flujo") ||
-            (entry.CashAccountId > 0 && entry.CashAccountNo != entry.CuentaSistemaLegado)) {
-          _excelFile.SetCell($"X{i}", 1);
-        }
+        _excelFile.SetCellIfValue($"U{i}", entry.Pending ? 1 : 0);
+        _excelFile.SetCellIfValue($"V{i}", entry.Exact ? 1 : 0);
+        _excelFile.SetCellIfValue($"W{i}", entry.Correct ? 1 : 0);
+        _excelFile.SetCellIfValue($"W{i}", entry.FalsePositive ? 1 : 0);
 
         _excelFile.SetCell($"Y{i}", entry.CashAccountAppliedRule);
 
