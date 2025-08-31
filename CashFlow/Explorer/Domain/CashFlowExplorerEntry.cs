@@ -77,8 +77,10 @@ namespace Empiria.CashFlow.Explorer {
         if (CashAccountId <= 0) {
           return "N/D";
         }
+        var segment = StandardAccountSegment.Parse(StandardAccountCategory.ParseWithNamedKey("operationType"),
+                                                   Account.StandardAccount.StdAcctNo.Substring(15, 2));
 
-        return Account.StandardAccount.Description;
+        return ((INamedEntity) segment).Name;
       }
     }
 
