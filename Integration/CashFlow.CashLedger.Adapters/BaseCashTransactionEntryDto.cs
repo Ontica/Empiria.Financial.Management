@@ -95,6 +95,10 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
+    public string CuentaSistemaLegado {
+      get; set;
+    }
+
     public string CashAccountAppliedRule {
       get; set;
     }
@@ -107,9 +111,79 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-    public string CuentaSistemaLegado {
-      get; set;
+
+    public bool CashFlowAssigned {
+      get {
+        return CashAccountId > 0;
+      }
     }
+
+
+    public bool CashFlowUnassigned {
+      get {
+        return CashAccountId == CashAccountStatus.CashFlowUnassigned.ControlValue();
+      }
+    }
+
+    public bool NoCashFlow {
+      get {
+        return CashAccountId == CashAccountStatus.NoCashFlow.ControlValue();
+      }
+    }
+
+
+    public bool Pending {
+      get {
+        return CashAccountId == CashAccountStatus.Pending.ControlValue();
+      }
+    }
+
+    #region Temporal Legacy System related properties
+
+    public bool Correct {
+      get {
+        if (Exact) {
+          return false;
+        }
+        if (Pending) {
+          return true;
+        }
+        if (CashFlowUnassigned && LegadoConFlujo) {
+          return true;
+        }
+        return false;
+      }
+    }
+
+
+    public bool Exact {
+      get {
+        return CashAccountNo == CuentaSistemaLegado;
+      }
+    }
+
+
+    public bool FalsePositive {
+      get {
+        return !Exact && !Correct;
+      }
+    }
+
+
+    public bool LegadoConFlujo {
+      get {
+        return !LegadoSinFlujo;
+      }
+    }
+
+
+    public bool LegadoSinFlujo {
+      get {
+        return CuentaSistemaLegado == CashAccountStatus.NoCashFlow.Name();
+      }
+    }
+
+    #endregion Temporal Legacy System related properties
 
   }  // class BaseCashTransactionEntryDto
 
