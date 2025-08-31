@@ -16,11 +16,11 @@ using Empiria.Storage;
 
 using Empiria.WebApi;
 
-using Empiria.Financial.Reporting;
-
 using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.UseCases;
+
+using Empiria.Budgeting.Reporting;
 
 namespace Empiria.Budgeting.Transactions.WebApi {
 

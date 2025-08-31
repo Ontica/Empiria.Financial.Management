@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Reporting Services                            Component : Service Layer                        *
+*  Module   : Budget Management                             Component : Reporting Services                   *
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Report builder                       *
 *  Type     : BudgetTransactionEntriesToExcelBuilder        License   : Please read LICENSE.txt file         *
 *                                                                                                            *
@@ -11,13 +11,13 @@
 using System;
 
 using Empiria.Office;
+using Empiria.Parties;
 using Empiria.StateEnums;
 using Empiria.Storage;
 
 using Empiria.Budgeting.Transactions;
-using Empiria.Parties;
 
-namespace Empiria.Financial.Reporting {
+namespace Empiria.Budgeting.Reporting {
 
   /// <summary>Builds an Excel file with all budget transaction entries.</summary>
   internal class BudgetTransactionEntriesToExcelBuilder {
@@ -97,4 +97,4 @@ namespace Empiria.Financial.Reporting {
 
   } // class BudgetTransactionEntriesToExcelBuilder
 
-} // namespace Empiria.Financial.Reporting
+} // namespace Empiria.Budgeting.Reporting

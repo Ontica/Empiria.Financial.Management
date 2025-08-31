@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Reporting Services                            Component : Service Layer                        *
+*  Module   : Cash Flow Management                          Component : Reporting Services                   *
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Service provider                     *
 *  Type     : CashTransactionReportingService               License   : Please read LICENSE.txt file         *
 *                                                                                                            *
@@ -14,7 +14,7 @@ using Empiria.Storage;
 
 using Empiria.CashFlow.CashLedger.Adapters;
 
-namespace Empiria.Financial.Reporting {
+namespace Empiria.CashFlow.Reporting {
 
   /// <summary>Provides services used to generate cash transactions reports.</summary>
   public class CashTransactionReportingService : Service {
@@ -110,4 +110,4 @@ namespace Empiria.Financial.Reporting {
 
   } // class CashTransactionReportingService
 
-} // namespace Empiria.Financial.Reporting
+} // namespace Empiria.CashFlow.Reporting

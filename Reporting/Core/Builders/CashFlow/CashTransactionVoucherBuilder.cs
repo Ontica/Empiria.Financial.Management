@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Reporting Services                            Component : Service Layer                        *
+*  Module   : Cash Flow Management                          Component : Reporting Services                   *
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Report builder                       *
 *  Type     : CashTransactionVoucherBuilder                 License   : Please read LICENSE.txt file         *
 *                                                                                                            *
@@ -17,7 +17,7 @@ using Empiria.Storage;
 
 using Empiria.CashFlow.CashLedger.Adapters;
 
-namespace Empiria.Financial.Reporting {
+namespace Empiria.CashFlow.Reporting {
 
   /// <summary>Builds a Pdf file with a voucher for a cash transaction.</summary>
   internal class CashTransactionVoucherBuilder {
@@ -162,4 +162,4 @@ namespace Empiria.Financial.Reporting {
 
   } // class CashTransactionVoucherBuilder
 
-} // namespace Empiria.Financial.Reporting
+} // namespace Empiria.CashFlow.Reporting

@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Reporting Services                            Component : Service Layer                        *
+*  Module   : Budget Management                             Component : Reporting Services                   *
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Service provider                     *
 *  Type     : BudgetTransactionReportingService             License   : Please read LICENSE.txt file         *
 *                                                                                                            *
@@ -14,7 +14,7 @@ using Empiria.Office;
 
 using Empiria.Budgeting.Transactions;
 
-namespace Empiria.Financial.Reporting {
+namespace Empiria.Budgeting.Reporting {
 
   /// <summary>Provides services used to generate budget transactions reports.</summary>
   public class BudgetTransactionReportingService : Service {
@@ -64,4 +64,4 @@ namespace Empiria.Financial.Reporting {
 
   } // class BudgetTransactionReportingService
 
-} // namespace Empiria.Financial.Reporting
+} // namespace Empiria.Budgeting.Reporting

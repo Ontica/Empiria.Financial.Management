@@ -14,10 +14,10 @@ using System.Web.Http;
 using Empiria.Storage;
 using Empiria.WebApi;
 
-using Empiria.Financial.Reporting;
-
 using Empiria.CashFlow.CashLedger.Adapters;
 using Empiria.CashFlow.CashLedger.UseCases;
+
+using Empiria.CashFlow.Reporting;
 
 namespace Empiria.CashFlow.WebApi {
 

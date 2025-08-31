@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Reporting Services                            Component : Service Layer                        *
+*  Module   : Cash Flow Management                          Component : Reporting Services                   *
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Report builder                       *
 *  Type     : CashTransactionToExcelBuilder                 License   : Please read LICENSE.txt file         *
 *                                                                                                            *
@@ -13,9 +13,11 @@ using System;
 using Empiria.Office;
 using Empiria.Storage;
 
+using Empiria.Financial;
+
 using Empiria.CashFlow.CashLedger.Adapters;
 
-namespace Empiria.Financial.Reporting {
+namespace Empiria.CashFlow.Reporting {
 
   /// <summary>Builds an Excel file with cash ledger transactions and their entries.</summary>
   internal class CashTransactionToExcelBuilder {
@@ -114,4 +116,4 @@ namespace Empiria.Financial.Reporting {
 
   } // class CashTransactionToExcelBuilder
 
-} // namespace Empiria.Financial.Reporting
+} // namespace Empiria.CashFlow.Reporting

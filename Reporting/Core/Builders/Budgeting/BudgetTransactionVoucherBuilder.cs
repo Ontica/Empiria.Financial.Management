@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Reporting Services                            Component : Service Layer                        *
+*  Module   : Budget Management                             Component : Reporting Services                   *
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Report builder                       *
 *  Type     : BudgetTransactionVoucherBuilder               License   : Please read LICENSE.txt file         *
 *                                                                                                            *
@@ -17,7 +17,7 @@ using Empiria.Storage;
 
 using Empiria.Budgeting.Transactions;
 
-namespace Empiria.Financial.Reporting {
+namespace Empiria.Budgeting.Reporting {
 
   /// <summary>Builds a Pdf file with a voucher for a budget transaction.</summary>
   internal class BudgetTransactionVoucherBuilder {
@@ -222,4 +222,4 @@ namespace Empiria.Financial.Reporting {
 
   } // class BudgetTransactionVoucherBuilder
 
-} // namespace Empiria.Financial.Reporting
+} // namespace Empiria.Budgeting.Reporting
