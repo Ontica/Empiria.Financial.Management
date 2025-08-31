@@ -13,18 +13,55 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   /// <summary>Enumerates the cash account status in a cash ledger transaction entry.</summary>
   public enum CashAccountStatus {
 
-    CashAccountWaiting = -2,
+    Pending = 0,
 
-    NoCashAccount = -1,
+    NoCashFlow = -1,
 
-    CashAccountPending = 0,
+    CashFlowUnassigned = -2,
 
-    WithCashAccount = 1,
+    CashFlowAssigned = 1,
+
+    All = 255,
 
     FalsePositive = -3,
 
-    All = 255
-
   }  // enum CashAccountStatus
+
+
+
+  /// <summary>Extension methods for CashAccountStatus type.</summary>
+  static public class CashAccountStatusExtensionMethods {
+
+    static public int ControlValue(this CashAccountStatus status) {
+      Assertion.Require(status.IsForControl(), nameof(status));
+
+      return (int) status;
+    }
+
+    static public bool IsForControl(this CashAccountStatus status) {
+      return status == CashAccountStatus.Pending ||
+             status == CashAccountStatus.NoCashFlow ||
+             status == CashAccountStatus.CashFlowUnassigned;
+    }
+
+
+    static public string Name(this CashAccountStatus status) {
+
+      switch (status) {
+        case CashAccountStatus.Pending:
+          return "Pendiente";
+
+        case CashAccountStatus.NoCashFlow:
+          return "Sin flujo";
+
+        case CashAccountStatus.CashFlowUnassigned:
+          return "Con flujo";
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unhandled status {status}");
+      }
+    }
+
+  }  // class CashAccountStatusExtensionMethods
 
 }  // namespace Empiria.CashFlow.CashLedger.Adapters
