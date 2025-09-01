@@ -81,7 +81,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
       string keywords = "eva";
 
-      FixedList<FinancialAccount> sut = FinancialAccountDataService.SearchAccounts(keywords);
+      FixedList<FinancialAccount> sut = FinancialAccountDataService.SearchAccountByKeywords(keywords);
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);

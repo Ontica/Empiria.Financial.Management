@@ -39,7 +39,7 @@ namespace Empiria.Financial.Accounts.WebApi {
     public CollectionModel SearchAccounts([FromBody] FinancialAccountQuery query) {
 
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
-        FixedList<FinancialAccountDto> accounts = usecases.SearchAccount(query);
+        FixedList<FinancialAccountDto> accounts = usecases.SearchAccounts(query);
 
         return new CollectionModel(base.Request, accounts);
       }

@@ -20,6 +20,21 @@ namespace Empiria.Financial.Adapters {
     } = string.Empty;
 
 
+    public string AccountTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string StandardAccountUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string CurrencyUID {
+      get; set;
+    } = string.Empty;
+
+
     public string ProjectUID {
       get; set;
     } = string.Empty;
@@ -30,15 +45,14 @@ namespace Empiria.Financial.Adapters {
     } = string.Empty;
 
 
-    public EntityStatus Status {
-      get; set;
-    } = EntityStatus.All;
-
-
-    public string OrderBy {
+    public string SubledgerAcccountNo {
       get; set;
     } = string.Empty;
 
+
+    public EntityStatus Status {
+      get; set;
+    } = EntityStatus.All;
 
   }  // class FinancialAccountQuery
 

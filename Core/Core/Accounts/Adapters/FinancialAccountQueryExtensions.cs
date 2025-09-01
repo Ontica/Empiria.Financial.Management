@@ -20,37 +20,64 @@ namespace Empiria.Financial.Adapters {
 
     #region Extension methods
 
-    static internal void EnsureIsValid(this FinancialAccountQuery query) {
-      // no-op
-    }
-
     static internal string MapToFilterString(this FinancialAccountQuery query) {
-      string statusFilter = BuildStatusFilter(query.Status);
-      string keywordsFilter = BuildKeywordsFilter(query.Keywords);
-      string requesterOrgUnitFilter = BuildOrgUnitFilter(query.OrganizationUnitUID);
+      string orgUnitFilter = BuildOrgUnitFilter(query.OrganizationUnitUID);
+      string accountTypeFilter = BuildAccountTypeFilter(query.AccountTypeUID);
+      string standardAccountFilter = BuildStandardAccountFilter(query.StandardAccountUID);
+      string currencyFilter = BuildCurrencyFilter(query.CurrencyUID);
       string projectFilter = BuildProjectFilter(query.ProjectUID);
+      string subledgerAccountFilter = BuildSubledgerAccountFilter(query.SubledgerAcccountNo);
+      string statusFilter = BuildStatusFilter(query.Status);
 
-      var filter = new Filter(statusFilter);
-      filter.AppendAnd(requesterOrgUnitFilter);
-      filter.AppendAnd(keywordsFilter);
+      string keywordsFilter = BuildKeywordsFilter(query.Keywords);
+
+      var filter = new Filter(orgUnitFilter);
+
+      filter.AppendAnd(accountTypeFilter);
+      filter.AppendAnd(standardAccountFilter);
+      filter.AppendAnd(currencyFilter);
       filter.AppendAnd(projectFilter);
+      filter.AppendAnd(subledgerAccountFilter);
+      filter.AppendAnd(statusFilter);
+
+      filter.AppendAnd(keywordsFilter);
 
       return filter.ToString();
-    }
-
-    static internal string MapToSortString(this FinancialAccountQuery query) {
-      if (query.OrderBy.Length != 0) {
-        return query.OrderBy;
-      }
-
-      return "ACCT_NUMBER";
     }
 
     #endregion Extension methods
 
     #region Helpers
 
+    static private string BuildAccountTypeFilter(string accountTypeUID) {
+      accountTypeUID = EmpiriaString.Clean(accountTypeUID);
+
+      if (accountTypeUID.Length == 0) {
+        return string.Empty;
+      }
+
+      var accountType = FinancialAccountType.Parse(accountTypeUID);
+
+      return $"ACCT_TYPE_ID = {accountType.Id}";
+    }
+
+
+    static private string BuildCurrencyFilter(string currencyUID) {
+      currencyUID = EmpiriaString.Clean(currencyUID);
+
+      if (currencyUID.Length == 0) {
+        return string.Empty;
+      }
+
+      var currency = Currency.Parse(currencyUID);
+
+      return $"ACCT_CURRENCY_ID = {currency.Id}";
+    }
+
+
     static private string BuildKeywordsFilter(string keywords) {
+      keywords = EmpiriaString.Clean(keywords);
+
       if (keywords.Length == 0) {
         return string.Empty;
       }
@@ -59,6 +86,8 @@ namespace Empiria.Financial.Adapters {
 
 
     static private string BuildOrgUnitFilter(string orgUnitUID) {
+      orgUnitUID = EmpiriaString.Clean(orgUnitUID);
+
       if (orgUnitUID.Length == 0) {
         return string.Empty;
       }
@@ -70,6 +99,8 @@ namespace Empiria.Financial.Adapters {
 
 
     static private string BuildProjectFilter(string projectUID) {
+      projectUID = EmpiriaString.Clean(projectUID);
+
       if (projectUID.Length == 0) {
         return string.Empty;
       }
@@ -80,12 +111,36 @@ namespace Empiria.Financial.Adapters {
     }
 
 
+    static private string BuildStandardAccountFilter(string standardAccountUID) {
+      standardAccountUID = EmpiriaString.Clean(standardAccountUID);
+
+      if (standardAccountUID.Length == 0) {
+        return string.Empty;
+      }
+
+      var stdAccount = StandardAccount.Parse(standardAccountUID);
+
+      return $"ACCT_STD_ACCT_ID = {stdAccount.Id}";
+    }
+
+
     static private string BuildStatusFilter(EntityStatus status) {
       if (status == EntityStatus.All) {
         return $"ACCT_STATUS <> 'X'";
       }
 
       return $"ACCT_STATUS = '{(char) status}'";
+    }
+
+
+    static private string BuildSubledgerAccountFilter(string subledgerAccountNo) {
+      subledgerAccountNo = EmpiriaString.Clean(subledgerAccountNo);
+
+      if (subledgerAccountNo.Length == 0) {
+        return string.Empty;
+      }
+
+      return $"ACCT_SUBLEDGER_ACCT_NO LIKE '%{subledgerAccountNo}%'";
     }
 
     #endregion Helpers

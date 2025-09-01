@@ -33,12 +33,29 @@ namespace Empiria.Financial.Data {
     }
 
 
-    static internal FixedList<FinancialAccount> SearchAccounts(string keywords) {
+    static internal FixedList<FinancialAccount> SearchAccounts(string filter) {
 
-      var filter = SearchExpression.ParseOrLikeKeywords("ACCT_KEYWORDS", keywords);
-      if (filter.Length != 0) {
-        filter += " AND";
+      var sql = "SELECT * FROM FMS_ACCOUNTS ";
+
+      if (!string.IsNullOrWhiteSpace(filter)) {
+        sql += $" WHERE {filter}";
       }
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<FinancialAccount>(op)
+                       .Sort(x => $"{x.OrganizationalUnit.Name.PadRight(384)}|{x.AccountNo.PadRight(64)}");
+    }
+
+
+    static internal FixedList<FinancialAccount> SearchAccountByKeywords(string keywords) {
+
+      var filter = SearchExpression.ParseAndLikeKeywords("ACCT_KEYWORDS", keywords);
+
+      if (filter.Length == 0) {
+        filter = SearchExpression.AllRecordsFilter;
+      }
+
       var sql = "SELECT * FROM FMS_ACCOUNTS " +
                $"WHERE {filter} " +
                $"ACCT_STATUS <> 'X'";
@@ -47,25 +64,6 @@ namespace Empiria.Financial.Data {
 
       return DataReader.GetFixedList<FinancialAccount>(op);
     }
-
-
-    static internal FixedList<FinancialAccount> SearchAccounts(string filter, string sortBy) {
-
-      var sql = "SELECT * FROM FMS_ACCOUNTS ";
-
-      if (!string.IsNullOrWhiteSpace(filter)) {
-        sql += $" WHERE {filter}";
-      }
-
-      if (!string.IsNullOrWhiteSpace(sortBy)) {
-        sql += $" ORDER BY {sortBy}";
-      }
-
-      var dataOperation = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<FinancialAccount>(dataOperation);
-    }
-
 
     static internal void WriteAccount(FinancialAccount o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Account",
