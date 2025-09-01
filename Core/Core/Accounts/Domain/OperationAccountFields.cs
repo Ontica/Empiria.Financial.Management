@@ -1,0 +1,67 @@
+﻿/* Empiria Financial *****************************************************************************************
+*                                                                                                            *
+*  Module   : Financial Account                            Component : Adapters Layer                        *
+*  Assembly : Empiria.Financial.Core.dll                   Pattern   : Input fields DTO                      *
+*  Type     : OperationAccountFields                       License   : Please read LICENSE.txt file          *
+*                                                                                                            *
+*  Summary  : Input fields used to create or update operation accounts.                                      *
+*                                                                                                            *
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
+namespace Empiria.Financial {
+
+  /// <summary>Input fields used to create or update operation accounts.</summary>
+  public class OperationAccountFields {
+
+    #region Properties
+
+    public string BaseAccountUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string OperationAccountTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string CurrencyUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string AccountNo {
+      get; set;
+    } = string.Empty;
+
+    #endregion Properties
+
+    #region Methods
+
+    internal void EnsureValid() {
+
+      BaseAccountUID = Patcher.CleanUID(BaseAccountUID);
+      OperationAccountTypeUID = Patcher.CleanUID(OperationAccountTypeUID);
+      CurrencyUID = Patcher.CleanUID(CurrencyUID);
+
+      AccountNo = EmpiriaString.Clean(AccountNo);
+
+
+      if (BaseAccountUID.Length != 0) {
+        _ = FinancialAccount.Parse(BaseAccountUID);
+      }
+
+      if (OperationAccountTypeUID.Length != 0) {
+        _ = FinancialAccountType.Parse(OperationAccountTypeUID);
+      }
+
+      if (CurrencyUID.Length != 0) {
+        _ = Currency.Parse(CurrencyUID);
+      }
+    }
+
+    #endregion Methods
+
+  }  // class OperationAccountFields
+
+}  // namespace Empiria.Financial

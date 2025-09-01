@@ -399,14 +399,6 @@ namespace Empiria.Financial.Projects {
 
       account.Update(fields);
 
-      var operations = account.GetAvailableOperations();
-
-      foreach (var operation in operations) {
-        account.AddOperation(operation);
-      }
-
-      _accounts.Value.Add(account);
-
       return account;
     }
 

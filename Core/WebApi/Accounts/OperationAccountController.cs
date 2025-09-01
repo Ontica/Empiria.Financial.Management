@@ -58,13 +58,15 @@ namespace Empiria.Financial.Accounts.WebApi {
     #region Command web apis
 
     [HttpPost]
-    [Route("v2/financial-accounts/{accountUID:guid}/operations/{stdAccountUID:guid}")]
+    [Route("v2/financial-accounts/{accountUID:guid}/operations")]
     public SingleObjectModel AddAccountOperation([FromUri] string accountUID,
-                                                 [FromUri] string stdAccountUID) {
+                                                 [FromUri] OperationAccountFields fields) {
+
+      fields.BaseAccountUID = accountUID;
 
       using (var usecases = OperationAccountUseCases.UseCaseInteractor()) {
 
-        FinancialAccountOperationsDto operations = usecases.AddAccountOperation(accountUID, stdAccountUID);
+        FinancialAccountOperationsDto operations = usecases.AddAccountOperation(fields);
 
         return new SingleObjectModel(base.Request, operations);
       }

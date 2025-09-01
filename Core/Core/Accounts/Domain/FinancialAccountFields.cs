@@ -26,7 +26,7 @@ namespace Empiria.Financial {
     #region Properties
 
     public string UID {
-      get;  set;
+      get; set;
     } = string.Empty;
 
 
@@ -97,7 +97,7 @@ namespace Empiria.Financial {
 
       if (UID.Length != 0) {
         _ = FinancialAccount.Parse(UID);
-      };
+      }
 
       if (FinancialAccountTypeUID.Length != 0) {
         _ = FinancialAccountType.Parse(FinancialAccountTypeUID);
@@ -116,7 +116,7 @@ namespace Empiria.Financial {
       }
 
       if (ProjectUID.Length != 0) {
-        _ =  FinancialProject.Parse(ProjectUID);
+        _ = FinancialProject.Parse(ProjectUID);
       }
     }
 

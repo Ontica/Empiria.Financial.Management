@@ -339,19 +339,24 @@ namespace Empiria.Financial {
 
     #region Methods
 
-    internal FinancialAccount AddOperation(StandardAccount stdAccount) {
-      Assertion.Require(stdAccount, nameof(stdAccount));
+    internal FinancialAccount AddOperation(OperationAccountFields fields) {
+      Assertion.Require(fields, nameof(fields));
 
-      Assertion.Require(!HasOperation(stdAccount),
-                        $"Esta cuenta ya contiene la operación {stdAccount.Name}.");
+      fields.EnsureValid();
+
+      Assertion.Require(fields.AccountNo, nameof(fields.AccountNo));
+
+      var stdAccount = StandardAccount.Parse(fields.OperationAccountTypeUID);
+      var currency = Currency.Parse(fields.CurrencyUID);
+
+      Assertion.Require(!HasOperation(stdAccount, currency),
+                       $"Esta cuenta ya contiene la operación {stdAccount.Name} para la moneda {currency.Name}.");
 
       var operation = new FinancialAccount(FinancialAccountType.OperationAccount,
                                            stdAccount, this.OrganizationalUnit, this.Project);
 
-      operation.AccountNo =
-                 $"{stdAccount.StdAcctSegments[stdAccount.StdAcctSegments.Length - 1]}-" +
-                 $"{this.Project.ProjectNo}-" +
-                 $"{this.AccountNo}";
+      operation.AccountNo = fields.AccountNo;
+      operation.Currency = currency;
 
       operation.Parent = this;
 
@@ -379,9 +384,9 @@ namespace Empiria.Financial {
     }
 
 
-    private bool HasOperation(StandardAccount stdAccount) {
+    private bool HasOperation(StandardAccount stdAccount, Currency currency) {
       return GetOperations()
-            .Contains(x => x.StandardAccount.Equals(stdAccount));
+            .Contains(x => x.StandardAccount.Equals(stdAccount) && x.Currency.Equals(currency));
     }
 
 

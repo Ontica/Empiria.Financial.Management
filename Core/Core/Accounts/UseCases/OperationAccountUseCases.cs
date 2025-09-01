@@ -33,19 +33,18 @@ namespace Empiria.Financial.UseCases {
 
     #region Use cases
 
-    public FinancialAccountOperationsDto AddAccountOperation(string accountUID, string stdAccountUID) {
-      Assertion.Require(accountUID, nameof(accountUID));
-      Assertion.Require(stdAccountUID, nameof(stdAccountUID));
+    public FinancialAccountOperationsDto AddAccountOperation(OperationAccountFields fields) {
+      Assertion.Require(fields, nameof(fields));
 
-      FinancialAccount account = FinancialAccount.Parse(accountUID);
-      StandardAccount stdAccount = StandardAccount.Parse(stdAccountUID);
+      fields.EnsureValid();
 
-      FinancialAccount operation = account.AddOperation(stdAccount);
+      FinancialAccount account = FinancialAccount.Parse(fields.BaseAccountUID);
+
+      FinancialAccount operation = account.AddOperation(fields);
 
       operation.Save();
 
       return FinancialAccountMapper.MapAccountOperations(account);
-
     }
 
 
