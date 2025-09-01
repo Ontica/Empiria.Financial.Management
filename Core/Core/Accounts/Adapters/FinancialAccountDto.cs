@@ -42,6 +42,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public string SubledgerAccountNo {
+      get; internal set;
+    }
+
     public NamedEntityDto Project {
       get; internal set;
     }
@@ -113,6 +117,10 @@ namespace Empiria.Financial.Adapters {
     }
 
     public string CurrencyName {
+      get; internal set;
+    }
+
+    public string SubledgerAccountNo {
       get; internal set;
     }
 
