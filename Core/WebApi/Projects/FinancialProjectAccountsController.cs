@@ -20,42 +20,7 @@ namespace Empiria.Financial.Projects.WebApi {
   /// <summary>Web API used to retrive and update financial accounts for financial projects.</summary>
   public class FinancialProjectAccountsController : WebApiController {
 
-    #region Command Web Apis
-
-    [HttpPost]
-    [Route("v1/financial-projects/{financialProjectUID:guid}/accounts")]
-    public SingleObjectModel AddAccount([FromUri] string financialProjectUID,
-                                        [FromBody] FinancialAccountFields fields) {
-
-      fields.ProjectUID = financialProjectUID;
-
-      using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
-
-        FinancialAccountDescriptor account = usecases.AddAccount(fields);
-
-        return new SingleObjectModel(base.Request, account);
-      }
-    }
-
-
-    [HttpDelete]
-    [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}")]
-    public NoDataModel RemoveAccount([FromUri] string financialProjectUID,
-                                     [FromUri] string accountUID) {
-
-      var fields = new FinancialAccountFields {
-         UID = accountUID,
-         ProjectUID = financialProjectUID,
-      };
-
-      using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
-
-        _ = usecases.RemoveAccount(fields);
-
-        return new NoDataModel(this.Request);
-      }
-    }
-
+    #region Query web apis
 
     [HttpGet]
     [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}")]
@@ -72,25 +37,6 @@ namespace Empiria.Financial.Projects.WebApi {
         FinancialAccountDto account = usecases.GetAccount(fields);
 
         return new SingleObjectModel(base.Request, account);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}/operations")]
-    public SingleObjectModel GetAccountOperations([FromUri] string financialProjectUID,
-                                                  [FromUri] string accountUID) {
-
-      var fields = new FinancialAccountFields {
-        UID = accountUID,
-        ProjectUID = financialProjectUID,
-      };
-
-      using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
-
-        FinancialAccountOperationsDto operations = usecases.GetAccountOperations(fields);
-
-        return new SingleObjectModel(base.Request, operations);
       }
     }
 
@@ -120,6 +66,44 @@ namespace Empiria.Financial.Projects.WebApi {
       }
     }
 
+    #endregion Query web apis
+
+    #region Command web apis
+
+    [HttpPost]
+    [Route("v1/financial-projects/{financialProjectUID:guid}/accounts")]
+    public SingleObjectModel AddAccount([FromUri] string financialProjectUID,
+                                        [FromBody] FinancialAccountFields fields) {
+
+      fields.ProjectUID = financialProjectUID;
+
+      using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
+
+        FinancialAccountDescriptor account = usecases.AddAccount(fields);
+
+        return new SingleObjectModel(base.Request, account);
+      }
+    }
+
+
+    [HttpDelete]
+    [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}")]
+    public NoDataModel RemoveAccount([FromUri] string financialProjectUID,
+                                     [FromUri] string accountUID) {
+
+      var fields = new FinancialAccountFields {
+        UID = accountUID,
+        ProjectUID = financialProjectUID,
+      };
+
+      using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
+
+        _ = usecases.RemoveAccount(fields);
+
+        return new NoDataModel(this.Request);
+      }
+    }
+
 
     [HttpPut, HttpPatch]
     [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}")]
@@ -138,7 +122,7 @@ namespace Empiria.Financial.Projects.WebApi {
       }
     }
 
-    #endregion Command Web Apis
+    #endregion Command web apis
 
   }  // class FinancialProjectAccountsController
 

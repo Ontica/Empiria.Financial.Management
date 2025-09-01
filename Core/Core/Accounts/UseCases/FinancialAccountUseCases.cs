@@ -36,45 +36,6 @@ namespace Empiria.Financial.UseCases {
 
     #region Use cases
 
-    public FinancialAccountOperationsDto AddAccountOperation(string accountUID, string stdAccountUID) {
-      Assertion.Require(accountUID, nameof(accountUID));
-      Assertion.Require(stdAccountUID, nameof(stdAccountUID));
-
-      FinancialAccount account = FinancialAccount.Parse(accountUID);
-      StandardAccount stdAccount = StandardAccount.Parse(stdAccountUID);
-
-      FinancialAccount operation = account.AddOperation(stdAccount);
-
-      operation.Save();
-
-      return FinancialAccountMapper.MapAccountOperations(account);
-
-    }
-
-
-    public FinancialAccountOperationsDto GetAccountOperations(string accountUID) {
-      Assertion.Require(accountUID, nameof(accountUID));
-
-      FinancialAccount account = FinancialAccount.Parse(accountUID);
-
-      return FinancialAccountMapper.MapAccountOperations(account);
-    }
-
-
-    public FinancialAccountOperationsDto RemoveAccountOperation(string accountUID, string operationAccountUID) {
-      Assertion.Require(accountUID, nameof(accountUID));
-      Assertion.Require(operationAccountUID, nameof(operationAccountUID));
-
-      FinancialAccount account = FinancialAccount.Parse(accountUID);
-
-      FinancialAccount operation = account.RemoveOperation(operationAccountUID);
-
-      operation.Save();
-
-      return FinancialAccountMapper.MapAccountOperations(account);
-    }
-
-
     public FinancialAccountDto CreateAccount(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
