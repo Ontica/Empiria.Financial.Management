@@ -46,7 +46,6 @@ namespace Empiria.Financial {
 
       AccountNo = EmpiriaString.Clean(AccountNo);
 
-
       if (BaseAccountUID.Length != 0) {
         _ = FinancialAccount.Parse(BaseAccountUID);
       }

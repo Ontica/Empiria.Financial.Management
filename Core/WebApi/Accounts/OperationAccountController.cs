@@ -28,9 +28,9 @@ namespace Empiria.Financial.Accounts.WebApi {
 
       using (var usecases = OperationAccountUseCases.UseCaseInteractor()) {
 
-        FinancialAccountOperationsDto operations = usecases.GetAccountOperations(accountUID);
+        OperationAccountsHolderDto holder = usecases.GetAccountOperations(accountUID);
 
-        return new SingleObjectModel(base.Request, operations);
+        return new SingleObjectModel(base.Request, holder);
       }
     }
 
@@ -47,9 +47,9 @@ namespace Empiria.Financial.Accounts.WebApi {
 
       using (var usecases = OperationAccountUseCases.UseCaseInteractor()) {
 
-        FinancialAccountOperationsDto operations = usecases.GetFinancialProjectAccountOperations(fields);
+        OperationAccountsHolderDto holder = usecases.GetFinancialProjectAccountOperations(fields);
 
-        return new SingleObjectModel(base.Request, operations);
+        return new SingleObjectModel(base.Request, holder);
       }
     }
 
@@ -66,9 +66,9 @@ namespace Empiria.Financial.Accounts.WebApi {
 
       using (var usecases = OperationAccountUseCases.UseCaseInteractor()) {
 
-        FinancialAccountOperationsDto operations = usecases.AddAccountOperation(fields);
+        OperationAccountsHolderDto holder = usecases.AddAccountOperation(fields);
 
-        return new SingleObjectModel(base.Request, operations);
+        return new SingleObjectModel(base.Request, holder);
       }
     }
 
@@ -80,10 +80,10 @@ namespace Empiria.Financial.Accounts.WebApi {
 
       using (var usecases = OperationAccountUseCases.UseCaseInteractor()) {
 
-        FinancialAccountOperationsDto operations = usecases.RemoveAccountOperation(accountUID,
-                                                                                   operationAccountUID);
+        OperationAccountsHolderDto holder = usecases.RemoveAccountOperation(accountUID,
+                                                                            operationAccountUID);
 
-        return new SingleObjectModel(base.Request, operations);
+        return new SingleObjectModel(base.Request, holder);
       }
     }
 

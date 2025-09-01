@@ -33,7 +33,7 @@ namespace Empiria.Financial.UseCases {
 
     #region Use cases
 
-    public FinancialAccountOperationsDto AddAccountOperation(OperationAccountFields fields) {
+    public OperationAccountsHolderDto AddAccountOperation(OperationAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
@@ -44,31 +44,31 @@ namespace Empiria.Financial.UseCases {
 
       operation.Save();
 
-      return FinancialAccountMapper.MapAccountOperations(account);
+      return OperationAccountMapper.MapAccountOperations(account);
     }
 
 
-    public FinancialAccountOperationsDto GetAccountOperations(string accountUID) {
+    public OperationAccountsHolderDto GetAccountOperations(string accountUID) {
       Assertion.Require(accountUID, nameof(accountUID));
 
       FinancialAccount account = FinancialAccount.Parse(accountUID);
 
-      return FinancialAccountMapper.MapAccountOperations(account);
+      return OperationAccountMapper.MapAccountOperations(account);
     }
 
 
-    public FinancialAccountOperationsDto GetFinancialProjectAccountOperations(FinancialAccountFields fields) {
+    public OperationAccountsHolderDto GetFinancialProjectAccountOperations(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       var project = FinancialProject.Parse(fields.ProjectUID);
 
       FinancialAccount account = project.GetAccount(fields.UID);
 
-      return FinancialAccountMapper.MapAccountOperations(account);
+      return OperationAccountMapper.MapAccountOperations(account);
     }
 
 
-    public FinancialAccountOperationsDto RemoveAccountOperation(string accountUID,
+    public OperationAccountsHolderDto RemoveAccountOperation(string accountUID,
                                                                 string operationAccountUID) {
       Assertion.Require(accountUID, nameof(accountUID));
       Assertion.Require(operationAccountUID, nameof(operationAccountUID));
@@ -79,7 +79,7 @@ namespace Empiria.Financial.UseCases {
 
       operation.Save();
 
-      return FinancialAccountMapper.MapAccountOperations(account);
+      return OperationAccountMapper.MapAccountOperations(account);
     }
 
     #endregion Use cases
