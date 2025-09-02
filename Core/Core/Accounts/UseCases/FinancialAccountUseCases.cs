@@ -79,14 +79,16 @@ namespace Empiria.Financial.UseCases {
     }
 
 
-    public FixedList<FinancialAccountDto> SearchAccounts(FinancialAccountQuery query) {
+    public FixedList<FinancialAccountDescriptor> SearchAccounts(FinancialAccountQuery query) {
       Assertion.Require(query, nameof(query));
 
       string filter = query.MapToFilterString();
 
       FixedList<FinancialAccount> accounts = FinancialAccountDataService.SearchAccounts(filter);
 
-      return FinancialAccountMapper.Map(accounts);
+      accounts = query.ApplyRemainingFilters(accounts);
+
+      return FinancialAccountMapper.MapToDescriptor(accounts);
     }
 
 

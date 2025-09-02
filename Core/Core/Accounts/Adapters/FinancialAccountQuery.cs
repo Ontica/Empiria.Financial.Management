@@ -40,6 +40,12 @@ namespace Empiria.Financial.Adapters {
     } = string.Empty;
 
 
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectTypeUID")]
+    public string ProjectCategoryUID {
+      get; set;
+    } = string.Empty;
+
+
     public string Keywords {
       get; set;
     } = string.Empty;

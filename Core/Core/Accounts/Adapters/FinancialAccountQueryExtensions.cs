@@ -20,7 +20,19 @@ namespace Empiria.Financial.Adapters {
 
     #region Extension methods
 
+    static internal FixedList<FinancialAccount> ApplyRemainingFilters(this FinancialAccountQuery query,
+                                                                      FixedList<FinancialAccount> accounts) {
+      if (query.ProjectCategoryUID.Length != 0) {
+        var category = FinancialProjectCategory.Parse(query.ProjectCategoryUID);
+        return accounts.FindAll(x => x.Project.Category.Equals(category));
+      }
+
+      return accounts;
+    }
+
+
     static internal string MapToFilterString(this FinancialAccountQuery query) {
+
       string orgUnitFilter = BuildOrgUnitFilter(query.OrganizationUnitUID);
       string accountTypeFilter = BuildAccountTypeFilter(query.AccountTypeUID);
       string standardAccountFilter = BuildStandardAccountFilter(query.StandardAccountUID);
@@ -36,6 +48,7 @@ namespace Empiria.Financial.Adapters {
       filter.AppendAnd(accountTypeFilter);
       filter.AppendAnd(standardAccountFilter);
       filter.AppendAnd(currencyFilter);
+
       filter.AppendAnd(projectFilter);
       filter.AppendAnd(subledgerAccountFilter);
       filter.AppendAnd(statusFilter);
