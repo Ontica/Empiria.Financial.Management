@@ -34,6 +34,15 @@ namespace Empiria.CashFlow.Explorer {
       }
     }
 
+    public string StandardAccountNo {
+      get {
+        if (CashAccountId <= 0) {
+          return CashAccountNo;
+        }
+        return Account.StandardAccount.StdAcctNo;
+      }
+    }
+
     public string Program {
       get {
         if (CashAccountId <= 0) {

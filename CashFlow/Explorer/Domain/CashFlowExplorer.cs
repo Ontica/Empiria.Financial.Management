@@ -67,7 +67,8 @@ namespace Empiria.CashFlow.Explorer {
         entries.Add(ProcessTotal(entry));
       }
 
-      return entries.ToFixedList();
+      return entries.ToFixedList()
+                    .Sort(x => $"{x.StandardAccountNo.PadRight(64)}|{x.CashAccountNo.PadRight(16)}|{x.CurrencyCode}");
     }
 
 
