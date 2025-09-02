@@ -88,10 +88,10 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
       using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
 
-        var result = new BulkOperationResult {
-          File = reportingService.ExportTransactionEntriesToExcel(transactions),
-          Message = $"Se exportaron {transactions.Count} transacciones presupuestales a Excel.",
-        };
+        var result = new FileResultDto(
+            reportingService.ExportTransactionEntriesToExcel(transactions),
+            $"Se exportaron {transactions.Count} transacciones presupuestales a Excel."
+        );
 
         base.SetOperation(result.Message);
 
@@ -110,7 +110,7 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
         int closed = usecases.AutoCloseTransactions(budget);
 
-        var result = new BulkOperationResult {
+        var result = new {
           Message = $"Se cerraron automáticamente {closed} transacciones presupuestales para el presupuesto {budget.Name}."
         };
 
@@ -284,22 +284,5 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
   }  // class BulkOperationCommand
-
-
-  public class BulkOperationResult {
-
-    internal BulkOperationResult() {
-      // no-op
-    }
-
-    public string Message {
-      get; internal set;
-    }
-
-    public FileDto File {
-      get; internal set;
-    }
-
-  }  // class BulkOperationResult
 
 }  // namespace Empiria.Budgeting.Transactions.WebApi

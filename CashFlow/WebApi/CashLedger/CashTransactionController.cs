@@ -145,10 +145,10 @@ namespace Empiria.CashFlow.WebApi {
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
-        var result = new BulkOperationResult {
-          File = reportingService.ExportAccountsAnalysisToExcel(entries),
-          Message = $"Se exportó el análisis de {txns.Count} pólizas a Excel.",
-        };
+        var result = new FileResultDto(
+            reportingService.ExportAccountsAnalysisToExcel(entries),
+            $"Se exportó el análisis de {txns.Count} pólizas a Excel."
+        );
 
         base.SetOperation(result.Message);
 
@@ -166,10 +166,10 @@ namespace Empiria.CashFlow.WebApi {
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
-        var result = new BulkOperationResult {
-          File = reportingService.ExportTransactionsToExcel(transactions),
-          Message = $"Se exportaron {transactions.Count} pólizas a Excel.",
-        };
+        var result = new FileResultDto(
+            reportingService.ExportTransactionsToExcel(transactions),
+            $"Se exportaron {transactions.Count} pólizas a Excel."
+        );
 
         base.SetOperation(result.Message);
 
@@ -187,10 +187,10 @@ namespace Empiria.CashFlow.WebApi {
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
-        var result = new BulkOperationResult {
-          File = reportingService.ExportTransactionsTotalsToExcel(transactions),
-          Message = $"Se exportaron {transactions.Count} pólizas a Excel.",
-        };
+        var result = new FileResultDto(
+            reportingService.ExportTransactionsTotalsToExcel(transactions),
+            $"Se exportaron {transactions.Count} pólizas a Excel."
+        );
 
         base.SetOperation(result.Message);
 
@@ -208,10 +208,10 @@ namespace Empiria.CashFlow.WebApi {
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
-        var result = new BulkOperationResult {
-          File = reportingService.ExportTransactionsEntriesToExcel(entries),
-          Message = $"Se exportaron {entries.Count} movimientos a Excel.",
-        };
+        var result = new FileResultDto(
+            reportingService.ExportTransactionsEntriesToExcel(entries),
+            $"Se exportaron {entries.Count} movimientos a Excel."
+        );
 
         base.SetOperation(result.Message);
 
@@ -237,22 +237,5 @@ namespace Empiria.CashFlow.WebApi {
     }
 
   }  // class BulkOperationCommand
-
-
-  public class BulkOperationResult {
-
-    internal BulkOperationResult() {
-      // no-op
-    }
-
-    public string Message {
-      get; internal set;
-    }
-
-    public FileDto File {
-      get; internal set;
-    }
-
-  }  // class BulkOperationResult
 
 }  // namespace Empiria.CashFlow.WebApi
