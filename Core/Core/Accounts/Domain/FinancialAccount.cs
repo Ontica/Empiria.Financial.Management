@@ -346,7 +346,7 @@ namespace Empiria.Financial {
 
       Assertion.Require(fields.AccountNo, nameof(fields.AccountNo));
 
-      var stdAccount = StandardAccount.Parse(fields.OperationAccountTypeUID);
+      var stdAccount = StandardAccount.Parse(fields.StandardAccountUID);
       var currency = Currency.Parse(fields.CurrencyUID);
 
       Assertion.Require(!HasOperation(stdAccount, currency),

@@ -66,17 +66,6 @@ namespace Empiria.Financial.UseCases {
     }
 
 
-    public FixedList<FinancialAccountDto> SearchAccounts(FinancialAccountQuery query) {
-      Assertion.Require(query, nameof(query));
-
-      string filter = query.MapToFilterString();
-
-      FixedList<FinancialAccount> accounts = FinancialAccountDataService.SearchAccounts(filter);
-
-      return FinancialAccountMapper.Map(accounts);
-    }
-
-
     public FixedList<NamedEntityDto> SearchAccounts(string keywords) {
       keywords = keywords ?? string.Empty;
 
@@ -87,6 +76,17 @@ namespace Empiria.Financial.UseCases {
                                      );
 
       return acccounts.MapToNamedEntityList();
+    }
+
+
+    public FixedList<FinancialAccountDto> SearchAccounts(FinancialAccountQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      string filter = query.MapToFilterString();
+
+      FixedList<FinancialAccount> accounts = FinancialAccountDataService.SearchAccounts(filter);
+
+      return FinancialAccountMapper.Map(accounts);
     }
 
 

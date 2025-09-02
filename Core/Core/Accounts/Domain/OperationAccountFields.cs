@@ -20,7 +20,8 @@ namespace Empiria.Financial {
     } = string.Empty;
 
 
-    public string OperationAccountTypeUID {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "OperationAccountTypeUID")]
+    public string StandardAccountUID {
       get; set;
     } = string.Empty;
 
@@ -41,7 +42,7 @@ namespace Empiria.Financial {
     internal void EnsureValid() {
 
       BaseAccountUID = Patcher.CleanUID(BaseAccountUID);
-      OperationAccountTypeUID = Patcher.CleanUID(OperationAccountTypeUID);
+      StandardAccountUID = Patcher.CleanUID(StandardAccountUID);
       CurrencyUID = Patcher.CleanUID(CurrencyUID);
 
       AccountNo = EmpiriaString.Clean(AccountNo);
@@ -50,8 +51,8 @@ namespace Empiria.Financial {
         _ = FinancialAccount.Parse(BaseAccountUID);
       }
 
-      if (OperationAccountTypeUID.Length != 0) {
-        _ = FinancialAccountType.Parse(OperationAccountTypeUID);
+      if (StandardAccountUID.Length != 0) {
+        _ = StandardAccount.Parse(StandardAccountUID);
       }
 
       if (CurrencyUID.Length != 0) {

@@ -60,7 +60,7 @@ namespace Empiria.Financial.Accounts.WebApi {
     [HttpPost]
     [Route("v2/financial-accounts/{accountUID:guid}/operations")]
     public SingleObjectModel AddAccountOperation([FromUri] string accountUID,
-                                                 [FromUri] OperationAccountFields fields) {
+                                                 [FromBody] OperationAccountFields fields) {
 
       fields.BaseAccountUID = accountUID;
 
