@@ -15,7 +15,6 @@ using Empiria.StateEnums;
 
 using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
-using Empiria.Budgeting.Transactions.Data;
 
 namespace Empiria.Budgeting.Transactions.UseCases {
 
@@ -119,11 +118,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     public FixedList<BudgetTransactionDescriptorDto> SearchTransactions(BudgetTransactionsQuery query) {
       Assertion.Require(query, nameof(query));
 
-      string filter = query.MapToFilterString();
-
-      string sort = query.MapToSortString();
-
-      FixedList<BudgetTransaction> transactions = BudgetTransactionDataService.SearchTransactions(filter, sort);
+      FixedList<BudgetTransaction> transactions = query.Execute();
 
       return BudgetTransactionMapper.MapToDescriptor(transactions);
     }

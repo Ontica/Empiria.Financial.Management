@@ -12,6 +12,8 @@ using Empiria.HumanResources;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Budgeting.Transactions.Data;
+
 namespace Empiria.Budgeting.Transactions.Adapters {
 
   /// <summary>Extension methods for BudgetTransactionsQuery interface adapter.</summary>
@@ -19,12 +21,22 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     #region Extension methods
 
-    static internal void EnsureIsValid(this BudgetTransactionsQuery query) {
-      // no-op
+    static internal FixedList<BudgetTransaction> Execute(this BudgetTransactionsQuery query) {
+
+      string filter = GetFilterString(query);
+      string sort = GetSortString(query);
+
+      FixedList<BudgetTransaction> transactions =
+                                      BudgetTransactionDataService.SearchTransactions(filter, sort);
+
+      return transactions;
     }
 
+    #endregion Extension methods
 
-    static internal string MapToFilterString(this BudgetTransactionsQuery query) {
+    #region Methods
+
+    static private string GetFilterString(BudgetTransactionsQuery query) {
       FixedList<string> userRoles = GetCurrentUserRoles();
 
       string budgetTypeFilter = BuildBudgetTypeFilter(query.BudgetTypeUID);
@@ -53,7 +65,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return filter.ToString();
     }
 
-    static internal string MapToSortString(this BudgetTransactionsQuery query) {
+
+    static private string GetSortString(BudgetTransactionsQuery query) {
       if (query.OrderBy.Length != 0) {
         return query.OrderBy;
       } else {
@@ -61,7 +74,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       }
     }
 
-    #endregion Extension methods
+    #endregion Methods
 
     #region Helpers
 
