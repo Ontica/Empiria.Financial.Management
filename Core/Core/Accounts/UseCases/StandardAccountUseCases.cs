@@ -72,10 +72,13 @@ namespace Empiria.Financial.Accounts.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> SearchStandardAccounts(string keywords) {
+    public FixedList<NamedEntityDto> GetStandardAccounts(string keywords, int maxLevel = 2) {
+      Assertion.Require(maxLevel >= 1, nameof(maxLevel));
+
       keywords = keywords ?? string.Empty;
 
-      return StandardAccountDataService.SearchStandardAccounts(keywords)
+      return StandardAccountDataService.GetStandardAccounts(keywords)
+                                       .FindAll(x => x.Level <= maxLevel)
                                        .MapToNamedEntityList();
     }
 

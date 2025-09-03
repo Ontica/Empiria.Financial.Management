@@ -46,6 +46,22 @@ namespace Empiria.Financial.Accounts.WebApi {
       }
     }
 
+
+    [HttpGet]
+    [Route("v3/standard-accounts")]
+    public CollectionModel GetStandardAccounts([FromUri] string keywords = "",
+                                               [FromUri] int maxLevel = 2) {
+
+      keywords = keywords ?? string.Empty;
+
+      using (var usecases = StandardAccountUseCases.UseCaseInteractor()) {
+
+        FixedList<NamedEntityDto> stdAccounts = usecases.GetStandardAccounts(keywords, maxLevel);
+
+        return new CollectionModel(base.Request, stdAccounts);
+      }
+    }
+
     #endregion Query web apis
 
   }  // class StandardAccountController

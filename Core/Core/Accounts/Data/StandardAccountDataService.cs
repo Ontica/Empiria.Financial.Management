@@ -43,12 +43,14 @@ namespace Empiria.Financial.Data {
     }
 
 
-    static internal FixedList<StandardAccount> SearchStandardAccounts(string keywords) {
+    static internal FixedList<StandardAccount> GetStandardAccounts(string keywords) {
 
       var filter = SearchExpression.ParseOrLikeKeywords("STD_ACCT_KEYWORDS", keywords);
+
       if (filter.Length != 0) {
-        filter += " AND";
+        filter = SearchExpression.AllRecordsFilter;
       }
+
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
                $"WHERE {filter} " +
                $"STD_ACCT_STATUS <> 'X' " +
