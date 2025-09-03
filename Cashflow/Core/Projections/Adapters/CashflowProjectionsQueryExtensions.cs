@@ -8,11 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
-using Empiria.Financial;
 using Empiria.Financial.Projects;
+
+using Empiria.CashFlow.Projections.Data;
 
 namespace Empiria.CashFlow.Projections.Adapters {
 
@@ -21,13 +23,24 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     #region Extension methods
 
-    static internal void EnsureIsValid(this CashFlowProjectionsQuery query) {
-      // no-op
+    static internal FixedList<CashFlowProjection> Execute(this CashFlowProjectionsQuery query) {
+
+      string filter = GetFilterString(query);
+      string sort = GetSortString(query);
+
+      FixedList<CashFlowProjection> projections = CashFlowProjectionDataService.SearchProjections(filter, sort);
+
+      projections = ApplyRemainingFilters(query, projections);
+
+      return projections;
     }
 
+    #endregion Extension methods
 
-    static internal FixedList<CashFlowProjection> ApplyRemainingFilters(this CashFlowProjectionsQuery query,
-                                                                        FixedList<CashFlowProjection> projections) {
+    #region Methods
+
+    static private FixedList<CashFlowProjection> ApplyRemainingFilters(CashFlowProjectionsQuery query,
+                                                                       FixedList<CashFlowProjection> projections) {
       if (query.ProjectTypeCategoryUID.Length != 0) {
         var projectCategory = FinancialProjectCategory.Parse(query.ProjectTypeCategoryUID);
 
@@ -38,7 +51,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
     }
 
 
-    static internal string MapToFilterString(this CashFlowProjectionsQuery query) {
+    static private string GetFilterString(CashFlowProjectionsQuery query) {
       string planFilter = BuildPlanFilter(query.PlanUID);
       string categoryFilter = BuildCategoryFilter(query.ProjectionCategoryTypeUID);
       string basePartyFilter = BuildBasePartyFilter(query.PartyUID);
@@ -70,7 +83,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
     }
 
 
-    static internal string MapToSortString(this CashFlowProjectionsQuery query) {
+    static private string GetSortString(CashFlowProjectionsQuery query) {
       if (query.OrderBy.Length != 0) {
         return query.OrderBy;
       } else {
@@ -78,7 +91,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
       }
     }
 
-    #endregion Extension methods
+    #endregion Methods
 
     #region Helpers
 

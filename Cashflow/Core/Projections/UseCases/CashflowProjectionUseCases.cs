@@ -18,7 +18,6 @@ using Empiria.Financial;
 using Empiria.Financial.Adapters;
 
 using Empiria.CashFlow.Projections.Adapters;
-using Empiria.CashFlow.Projections.Data;
 
 namespace Empiria.CashFlow.Projections.UseCases {
 
@@ -112,13 +111,7 @@ namespace Empiria.CashFlow.Projections.UseCases {
     public FixedList<CashFlowProjectionDescriptorDto> SearchProjections(CashFlowProjectionsQuery query) {
       Assertion.Require(query, nameof(query));
 
-      string filter = query.MapToFilterString();
-
-      string sort = query.MapToSortString();
-
-      FixedList<CashFlowProjection> projections = CashFlowProjectionDataService.SearchProjections(filter, sort);
-
-      projections = query.ApplyRemainingFilters(projections);
+      FixedList<CashFlowProjection> projections = query.Execute();
 
       return CashFlowProjectionMapper.MapToDescriptor(projections);
     }
