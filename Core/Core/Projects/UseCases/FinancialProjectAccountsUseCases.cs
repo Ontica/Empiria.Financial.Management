@@ -55,7 +55,7 @@ namespace Empiria.Financial.Projects.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetFinancialAccountTypes(string financialProjectUID) {
+    public FixedList<NamedEntityDto> GetFinancialProjectsAccountTypes() {
 
       var accountTypes = FinancialAccountType.GetList()
                                              .FindAll(x => x.PlaysRole(FinancialProject.PROJECT_BASE_ACCOUNTS_ROLE));

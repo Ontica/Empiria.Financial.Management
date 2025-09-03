@@ -42,12 +42,12 @@ namespace Empiria.Financial.Projects.WebApi {
 
 
     [HttpGet]
-    [Route("v1/financial-projects/{financialProjectUID:guid}/financial-accounts-types")]
-    public CollectionModel GetFinancialAccountsTypes([FromUri] string financialProjectUID) {
+    [Route("v1/financial-projects/financial-accounts-types")]
+    public CollectionModel GetFinancialAccountsTypes() {
 
       using (var usecases = FinancialProjectAccountsUseCases.UseCaseInteractor()) {
 
-        FixedList<NamedEntityDto> accountTypes = usecases.GetFinancialAccountTypes(financialProjectUID);
+        FixedList<NamedEntityDto> accountTypes = usecases.GetFinancialProjectsAccountTypes();
 
         return new CollectionModel(base.Request, accountTypes);
       }
