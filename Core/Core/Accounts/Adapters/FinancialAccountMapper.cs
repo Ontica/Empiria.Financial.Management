@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Documents;
+using Empiria.History;
 using Empiria.StateEnums;
 
 namespace Empiria.Financial.Adapters {
@@ -73,6 +75,30 @@ namespace Empiria.Financial.Adapters {
     static public NamedEntityDto MapStdAccountToDto(StandardAccount stdAccount) {
       return new NamedEntityDto(stdAccount.UID, $"({stdAccount.StdAcctNo}) {stdAccount.FullName}");
     }
+
+
+    static internal FinancialAccountHolderDto MapToHolderDto(FinancialAccount account) {
+      return new FinancialAccountHolderDto {
+        FinancialAccount = Map(account),
+        OperationAccounts = OperationAccountMapper.MapToOperationAccounts(account.GetOperations()),
+        Documents = DocumentServices.GetAllEntityDocuments(account),
+        History = HistoryServices.GetEntityHistory(account),
+        Actions = MapActions(account)
+      };
+    }
+
+
+    #region Helpers
+
+    static private BaseActions MapActions(FinancialAccount account) {
+      return new BaseActions {
+        CanDelete = account.Status == EntityStatus.Pending,
+        CanEditDocuments = true,
+        CanUpdate = true
+      };
+    }
+
+    #endregion Helpers
 
   }  // class FinancialAccountMapper
 

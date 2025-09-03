@@ -28,6 +28,12 @@ namespace Empiria.Financial.Adapters {
       };
     }
 
+
+    static internal FixedList<OperationAccountDto> MapToOperationAccounts(FixedList<FinancialAccount> operationAccounts) {
+      return operationAccounts.Select(x => MapToOperationAccount(x))
+                              .ToFixedList();
+    }
+
     #endregion Methods
 
     #region Helpers
@@ -39,12 +45,6 @@ namespace Empiria.Financial.Adapters {
         OperationTypeName = operationAccount.StandardAccount.Name,
         CurrencyName = operationAccount.Currency.Name
       };
-    }
-
-
-    static private FixedList<OperationAccountDto> MapToOperationAccounts(FixedList<FinancialAccount> operationAccounts) {
-      return operationAccounts.Select(x => MapToOperationAccount(x))
-                              .ToFixedList();
     }
 
     #endregion Helpers

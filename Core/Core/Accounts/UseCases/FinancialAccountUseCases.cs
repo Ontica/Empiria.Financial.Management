@@ -54,14 +54,23 @@ namespace Empiria.Financial.UseCases {
     }
 
 
-    public void DeleteAccount(string UID) {
-      Assertion.Require(UID, nameof(UID));
+    public void DeleteAccount(string accountUID) {
+      Assertion.Require(accountUID, nameof(accountUID));
 
-      var account = FinancialAccount.Parse(UID);
+      var account = FinancialAccount.Parse(accountUID);
 
       account.Delete();
 
       account.Save();
+    }
+
+
+    public FinancialAccountHolderDto GetAccount(string accountUID) {
+      Assertion.Require(accountUID, nameof(accountUID));
+
+      var account = FinancialAccount.Parse(accountUID);
+
+      return FinancialAccountMapper.MapToHolderDto(account);
     }
 
 

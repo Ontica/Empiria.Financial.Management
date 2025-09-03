@@ -23,6 +23,19 @@ namespace Empiria.Financial.Accounts.WebApi {
     #region Query web apis
 
     [HttpGet]
+    [Route("v2/financial-accounts/{accountUID:guid}")]
+    public SingleObjectModel GetAccount([FromUri] string accountUID) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+
+        FinancialAccountHolderDto accountDto = usecases.GetAccount(accountUID);
+
+        return new SingleObjectModel(this.Request, accountDto);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v2/financial-accounts/{keywords}")]
     public CollectionModel SearchAccounts([FromUri] string keywords = "") {
 
@@ -62,12 +75,12 @@ namespace Empiria.Financial.Accounts.WebApi {
 
 
     [HttpDelete]
-    [Route("v2/financial-accounts/{financialAccountUID:guid}")]
-    public NoDataModel DeleteAccount([FromUri] string financialAccountUID) {
+    [Route("v2/financial-accounts/{accountUID:guid}")]
+    public NoDataModel DeleteAccount([FromUri] string accountUID) {
 
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
 
-        usecases.DeleteAccount(financialAccountUID);
+        usecases.DeleteAccount(accountUID);
 
         return new NoDataModel(this.Request);
       }
@@ -75,13 +88,13 @@ namespace Empiria.Financial.Accounts.WebApi {
 
 
     [HttpPut]
-    [Route("v2/financial-accounts/{financialAccountUID:guid}")]
-    public SingleObjectModel UpdateAccount([FromUri] string financialAccountUID,
+    [Route("v2/financial-accounts/{accountUID:guid}")]
+    public SingleObjectModel UpdateAccount([FromUri] string accountUID,
                                            [FromBody] FinancialAccountFields fields) {
 
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
 
-        FinancialAccountDto paymentOrder = usecases.UpdateAccount(financialAccountUID, fields);
+        FinancialAccountDto paymentOrder = usecases.UpdateAccount(accountUID, fields);
 
         return new SingleObjectModel(this.Request, paymentOrder);
       }

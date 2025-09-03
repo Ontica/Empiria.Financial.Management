@@ -10,7 +10,36 @@
 
 using System;
 
+using Empiria.Documents;
+using Empiria.History;
+
 namespace Empiria.Financial.Adapters {
+
+  /// <summary>Holder output DTO used to return a financial account</summary>
+  public class FinancialAccountHolderDto {
+
+    public FinancialAccountDto FinancialAccount {
+      get; internal set;
+    }
+
+    public FixedList<OperationAccountDto> OperationAccounts {
+      get; internal set;
+    }
+
+    public FixedList<DocumentDto> Documents {
+      get; internal set;
+    }
+
+    public FixedList<HistoryEntryDto> History {
+      get; internal set;
+    }
+
+    public BaseActions Actions {
+      get; internal set;
+    }
+
+  }  // class FinancialAccountHolderDto
+
 
   public class FinancialAccountDto {
 
