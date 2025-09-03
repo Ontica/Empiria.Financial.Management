@@ -8,10 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.StateEnums;
 using Empiria.Parties;
+using Empiria.StateEnums;
 
 using Empiria.Financial.Projects;
+
+using Empiria.Financial.Data;
 
 namespace Empiria.Financial.Adapters {
 
@@ -20,18 +22,32 @@ namespace Empiria.Financial.Adapters {
 
     #region Extension methods
 
-    static internal FixedList<FinancialAccount> ApplyRemainingFilters(this FinancialAccountQuery query,
-                                                                      FixedList<FinancialAccount> accounts) {
+    static internal FixedList<FinancialAccount> Execute(this FinancialAccountQuery query) {
+      string filter = GetFilterString(query);
+
+      FixedList<FinancialAccount> accounts = FinancialAccountDataService.SearchAccounts(filter);
+
+      accounts = ApplyRemainingFilters(query, accounts);
+
+      return accounts;
+    }
+
+    #endregion Extension methods
+
+    #region Methods
+
+    static private FixedList<FinancialAccount> ApplyRemainingFilters(FinancialAccountQuery query,
+                                                                     FixedList<FinancialAccount> accounts) {
       if (query.ProjectCategoryUID.Length != 0) {
         var category = FinancialProjectCategory.Parse(query.ProjectCategoryUID);
+
         return accounts.FindAll(x => x.Project.Category.Equals(category));
       }
 
       return accounts;
     }
 
-
-    static internal string MapToFilterString(this FinancialAccountQuery query) {
+    static private string GetFilterString(FinancialAccountQuery query) {
 
       string orgUnitFilter = BuildOrgUnitFilter(query.OrganizationUnitUID);
       string accountTypeFilter = BuildAccountTypeFilter(query.AccountTypeUID);
@@ -58,7 +74,7 @@ namespace Empiria.Financial.Adapters {
       return filter.ToString();
     }
 
-    #endregion Extension methods
+    #endregion Methods
 
     #region Helpers
 

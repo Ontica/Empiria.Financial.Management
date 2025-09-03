@@ -12,7 +12,6 @@ using Empiria.Parties;
 using Empiria.Services;
 
 using Empiria.Financial.Projects;
-using Empiria.Financial.Projects.Adapters;
 
 using Empiria.Financial.Adapters;
 using Empiria.Financial.Data;
@@ -82,11 +81,7 @@ namespace Empiria.Financial.UseCases {
     public FixedList<FinancialAccountDescriptor> SearchAccounts(FinancialAccountQuery query) {
       Assertion.Require(query, nameof(query));
 
-      string filter = query.MapToFilterString();
-
-      FixedList<FinancialAccount> accounts = FinancialAccountDataService.SearchAccounts(filter);
-
-      accounts = query.ApplyRemainingFilters(accounts);
+      FixedList<FinancialAccount> accounts = query.Execute();
 
       return FinancialAccountMapper.MapToDescriptor(accounts);
     }

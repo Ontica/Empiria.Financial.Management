@@ -12,6 +12,8 @@ using System;
 
 using Empiria.StateEnums;
 
+using Empiria.Financial.Data;
+
 namespace Empiria.Financial.Adapters {
 
   /// <summary>Query DTO used to extend financial accounts extensions.</summary>
@@ -19,8 +21,23 @@ namespace Empiria.Financial.Adapters {
 
     #region Extension methods
 
-    static internal FixedList<StandardAccount> ApplyRemainingFilters(this ChartOfAccountsQuery query,
-                                                                     FixedList<StandardAccount> stdAccounts) {
+    static internal FixedList<StandardAccount> Execute(this ChartOfAccountsQuery query) {
+      string filter = GetFilterString(query);
+      string sort = GetSortString(query);
+
+      FixedList<StandardAccount> stdAccounts = StandardAccountDataService.SearchStandardAccounts(filter, sort);
+
+      stdAccounts = ApplyRemainingFilters(query, stdAccounts);
+
+      return stdAccounts;
+    }
+
+    #endregion Extension methods
+
+    #region Methods
+
+    static private FixedList<StandardAccount> ApplyRemainingFilters(ChartOfAccountsQuery query,
+                                                                    FixedList<StandardAccount> stdAccounts) {
       if (query.Level > 0) {
         return stdAccounts.FindAll(x => x.Level <= query.Level);
       }
@@ -29,12 +46,7 @@ namespace Empiria.Financial.Adapters {
     }
 
 
-    static internal void EnsureIsValid(this ChartOfAccountsQuery query) {
-      // no-op
-    }
-
-
-    static internal string MapToFilterString(this ChartOfAccountsQuery query) {
+    static private string GetFilterString(ChartOfAccountsQuery query) {
       string chartOfAccountsFilter = BuildChartOfAccountsFilter(query.ChartOfAccountsUID);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
       string roleTypeFilter = BuildRoleTypeFilter(query.RoleType);
@@ -54,7 +66,7 @@ namespace Empiria.Financial.Adapters {
     }
 
 
-    static internal string MapToSortString(this ChartOfAccountsQuery query) {
+    static private string GetSortString(ChartOfAccountsQuery query) {
       if (query.OrderBy.Length != 0) {
         return query.OrderBy;
       }
@@ -62,7 +74,7 @@ namespace Empiria.Financial.Adapters {
       return "STD_ACCT_NUMBER";
     }
 
-    #endregion Extension methods
+    #endregion Methods
 
     #region Helpers
 

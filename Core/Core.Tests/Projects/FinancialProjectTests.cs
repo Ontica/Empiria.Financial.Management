@@ -102,10 +102,7 @@ namespace Empiria.Tests.Financial.Projects {
         Status = EntityStatus.Active
       };
 
-      string filter = query.MapToFilterString();
-      string sort = query.MapToSortString();
-
-      FixedList<FinancialProject> sut = FinancialProjectDataService.SearchProjects(filter, sort);
+      FixedList<FinancialProject> sut = query.Execute();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);

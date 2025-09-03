@@ -11,7 +11,6 @@
 using Empiria.Services;
 
 using Empiria.Financial.Adapters;
-using Empiria.Financial.Data;
 
 namespace Empiria.Financial.UseCases {
 
@@ -65,12 +64,7 @@ namespace Empiria.Financial.UseCases {
 
       var chartOfAccounts = ChartOfAccounts.Parse(query.ChartOfAccountsUID);
 
-      string filter = query.MapToFilterString();
-      string sort = query.MapToSortString();
-
-      FixedList<StandardAccount> stdAccounts = StandardAccountDataService.SearchStandardAccounts(filter, sort);
-
-      stdAccounts = query.ApplyRemainingFilters(stdAccounts);
+      FixedList<StandardAccount> stdAccounts = query.Execute();
 
       return ChartOfAccountsMapper.Map(chartOfAccounts, stdAccounts);
     }

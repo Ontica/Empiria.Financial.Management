@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Parties;
 using Empiria.Services;
 
@@ -139,14 +137,7 @@ namespace Empiria.Financial.Projects.UseCases {
     public FixedList<FinancialProjectDescriptor> SearchProjects(FinancialProjectQuery query) {
       Assertion.Require(query, nameof(query));
 
-      query.EnsureIsValid();
-
-      string filter = query.MapToFilterString();
-      string sort = query.MapToSortString();
-
-      FixedList<FinancialProject> projects = FinancialProjectDataService.SearchProjects(filter, sort);
-
-      projects = query.ApplyRemainingFilters(projects);
+      FixedList<FinancialProject> projects = query.Execute();
 
       return FinancialProjectMapper.Map(projects);
     }

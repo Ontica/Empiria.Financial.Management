@@ -11,6 +11,8 @@
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Financial.Projects.Data;
+
 namespace Empiria.Financial.Projects.Adapters {
 
   /// <summary>Query DTO used to extend financial projects extensions.</summary>
@@ -18,8 +20,23 @@ namespace Empiria.Financial.Projects.Adapters {
 
     #region Extension methods
 
-    static internal FixedList<FinancialProject> ApplyRemainingFilters(this FinancialProjectQuery query,
-                                                                      FixedList<FinancialProject> projects) {
+    static internal FixedList<FinancialProject> Execute(this FinancialProjectQuery query) {
+      string filter = GetFilterString(query);
+      string sort = GetSortString(query);
+
+      FixedList<FinancialProject> projects = FinancialProjectDataService.SearchProjects(filter, sort);
+
+      projects = ApplyRemainingFilters(query, projects);
+
+      return projects;
+    }
+
+    #endregion Extension methods
+
+    #region Methods
+
+    static private FixedList<FinancialProject> ApplyRemainingFilters(FinancialProjectQuery query,
+                                                                     FixedList<FinancialProject> projects) {
       if (query.ProgramUID.Length != 0) {
         return projects.FindAll(x => x.Program.UID == query.ProgramUID);
       }
@@ -27,12 +44,8 @@ namespace Empiria.Financial.Projects.Adapters {
       return projects;
     }
 
-    static internal void EnsureIsValid(this FinancialProjectQuery query) {
-      // no-op
-    }
 
-
-    static internal string MapToFilterString(this FinancialProjectQuery query) {
+    static private string GetFilterString(FinancialProjectQuery query) {
       string baseOrgUnitFilter = BuildBaseOrgUnitFilter(query.BaseOrgUnitUID);
       string projectTypeCategoryFilter = BuildProjectTypeCategoryFilter(query.ProjectTypeCategoryUID);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
@@ -49,7 +62,7 @@ namespace Empiria.Financial.Projects.Adapters {
     }
 
 
-    static internal string MapToSortString(this FinancialProjectQuery query) {
+    static private string GetSortString(FinancialProjectQuery query) {
       if (query.OrderBy.Length != 0) {
         return query.OrderBy;
       }
@@ -57,7 +70,7 @@ namespace Empiria.Financial.Projects.Adapters {
       return "PRJ_NO";
     }
 
-    #endregion Extension methods
+    #endregion Methods
 
     #region Helpers
 
