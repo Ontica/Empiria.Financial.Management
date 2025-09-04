@@ -13,12 +13,18 @@ using System;
 using Empiria.Documents;
 using Empiria.History;
 
+using Empiria.Financial.Projects.Adapters;
+
 namespace Empiria.Financial.Adapters {
 
   /// <summary>Holder output DTO used to return a financial account</summary>
   public class FinancialAccountHolderDto {
 
     public FinancialAccountDto FinancialAccount {
+      get; internal set;
+    }
+
+    public FinancialProjectDto FinancialProject {
       get; internal set;
     }
 

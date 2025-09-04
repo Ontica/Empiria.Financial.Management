@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Documents;
+using Empiria.Financial.Projects.Adapters;
 using Empiria.History;
 using Empiria.StateEnums;
 
@@ -80,6 +81,7 @@ namespace Empiria.Financial.Adapters {
     static internal FinancialAccountHolderDto MapToHolderDto(FinancialAccount account) {
       return new FinancialAccountHolderDto {
         FinancialAccount = Map(account),
+        FinancialProject = FinancialProjectMapper.MapProject(account.Project),
         OperationAccounts = OperationAccountMapper.MapToOperationAccounts(account.GetOperations()),
         Documents = DocumentServices.GetAllEntityDocuments(account),
         History = HistoryServices.GetEntityHistory(account),
