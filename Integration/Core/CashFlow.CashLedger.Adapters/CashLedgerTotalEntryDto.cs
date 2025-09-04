@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Cash Ledger                                Component : Adapters Layer                          *
-*  Assembly : Empiria.Financial.Integration.dll          Pattern   : Output DTO                              *
+*  Assembly : Empiria.Financial.Integration.Core.dll     Pattern   : Output DTO                              *
 *  Type     : CashLedgerTotalEntryDto                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output DTO used to retrieve cash ledger totals.                                                *

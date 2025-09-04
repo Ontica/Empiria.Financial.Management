@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Integration services                       Component : Adapters Layer                          *
-*  Assembly : Empiria.Financial.Integration.dll          Pattern   : Adaptation Interface                    *
+*  Assembly : Empiria.Financial.Integration.Core.dll     Pattern   : Adaptation Interface                    *
 *  Type     : ICreditAccountService                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Interface used to retrieve credit accounts data from external systems.                         *

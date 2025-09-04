@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Integration services                       Component : Domain Layer                            *
-*  Assembly : Empiria.Financial.Integration.dll          Pattern   : Service provider                        *
+*  Assembly : Empiria.Financial.Integration.Core.dll     Pattern   : Service provider                        *
 *  Type     : ExternalCreditSystemServices               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides services from external credit systems.                                                *

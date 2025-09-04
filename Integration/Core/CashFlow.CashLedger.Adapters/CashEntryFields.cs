@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Cash Ledger                                Component : Adapters Layer                          *
-*  Assembly : Empiria.Financial.Integration.dll          Pattern   : Input fields                            *
+*  Assembly : Empiria.Financial.Integration.Core.dll     Pattern   : Input fields                            *
 *  Type     : CashEntryFields                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Input fields used to update cash ledger transaction entries.                                   *

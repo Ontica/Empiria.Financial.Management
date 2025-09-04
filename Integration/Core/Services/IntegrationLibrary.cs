@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Integration services                          Component : Domain Layer                         *
-*  Assembly : Empiria.Financial.Integration.dll             Pattern   : Static service library               *
+*  Assembly : Empiria.Financial.Integration.Core.dll        Pattern   : Static service library               *
 *  Type     : IntegrationLibrary                            License   : Please read LICENSE.txt file         *
 *                                                                                                            *
 *  Summary  : Static library with general purpose methods.                                                   *

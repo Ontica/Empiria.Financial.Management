@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Cash Ledger                                   Component : Integration Adapters Layer           *
-*  Assembly : Empiria.Financial.Integration.dll             Pattern   : Enumeration                          *
+*  Assembly : Empiria.Financial.Integration.Core.dll        Pattern   : Enumeration                          *
 *  Type     : CashAccountStatus                             License   : Please read LICENSE.txt file         *
 *                                                                                                            *
 *  Summary  : Enumerates the cash account status in a cash ledger transaction entry.                         *

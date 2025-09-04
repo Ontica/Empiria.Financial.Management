@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Cash Ledger                                   Component : Integration Adapters Layer           *
-*  Assembly : Empiria.Financial.Integration.dll             Pattern   : Query DTO                            *
+*  Assembly : Empiria.Financial.Integration.Core.dll        Pattern   : Query DTO                            *
 *  Type     : BaseCashLedgerQuery                           License   : Please read LICENSE.txt file         *
 *                                                                                                            *
 *  Summary  : Input query DTO used to retrieve cash ledger transactions.                                     *

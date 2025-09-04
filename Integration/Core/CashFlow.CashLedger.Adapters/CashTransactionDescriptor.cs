@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Cash Ledger                                   Component : Integration Adapters Layer           *
-*  Assembly : Empiria.Financial.Integration.dll             Pattern   : Output DTO                           *
+*  Assembly : Empiria.Financial.Integration.Core.dll        Pattern   : Output DTO                           *
 *  Type     : CashTransactionDescriptor                     License   : Please read LICENSE.txt file         *
 *                                                                                                            *
 *  Summary  : Output DTO used to retrieve cash ledger transactions.                                          *

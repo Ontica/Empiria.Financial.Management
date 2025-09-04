@@ -24,6 +24,30 @@ namespace Empiria.Financial.Projects.WebApi {
     #region Query web apis
 
     [HttpGet]
+    [Route("v1/financial-projects/{financialProjectUID:guid}")]
+    public SingleObjectModel GetProject([FromUri] string financialProjectUID) {
+
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FinancialProjectHolderDto project = usecases.GetProject(financialProjectUID);
+
+        return new SingleObjectModel(base.Request, project);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v1/financial-projects/{financialProjectUID:guid}/plain")]
+    public SingleObjectModel GetPlainProject([FromUri] string financialProjectUID) {
+
+      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
+        FinancialProjectDto project = usecases.GetPlainProject(financialProjectUID);
+
+        return new SingleObjectModel(base.Request, project);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v1/financial-projects/organizational-units/{orgUnitUID:guid}/assignees")]
     public CollectionModel GetProjectAssignees([FromUri] string orgUnitUID) {
 
@@ -130,30 +154,6 @@ namespace Empiria.Financial.Projects.WebApi {
         _ = usecases.DeleteProject(financialProjectUID);
 
         return new NoDataModel(this.Request);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v1/financial-projects/{financialProjectUID:guid}")]
-    public SingleObjectModel GetProject([FromUri] string financialProjectUID) {
-
-      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FinancialProjectHolderDto project = usecases.GetProject(financialProjectUID);
-
-        return new SingleObjectModel(base.Request, project);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v1/financial-projects/{financialProjectUID:guid}/plain")]
-    public SingleObjectModel GetPlainProject([FromUri] string financialProjectUID) {
-
-      using (var usecases = FinancialProjectUseCases.UseCaseInteractor()) {
-        FinancialProjectDto project = usecases.GetPlainProject(financialProjectUID);
-
-        return new SingleObjectModel(base.Request, project);
       }
     }
 
