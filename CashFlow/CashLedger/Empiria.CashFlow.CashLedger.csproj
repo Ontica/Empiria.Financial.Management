@@ -69,7 +69,7 @@
     <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\..\..\extensions\Services\Empiria.Services.csproj" />
     <ProjectReference Include="..\..\Core\Core\Empiria.Financial.Core.csproj" />
-    <ProjectReference Include="..\..\Integration\Empiria.Financial.Integration.csproj" />
+    <ProjectReference Include="..\..\Integration\Core\Empiria.Financial.Integration.Core.csproj" />
     <ProjectReference Include="..\..\..\financial.accounting\WebApiClient\Empiria.FinancialAccounting.WebApiClient.csproj" />
   </ItemGroup>
 </Project>

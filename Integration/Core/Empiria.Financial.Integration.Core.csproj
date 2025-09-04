@@ -61,7 +61,7 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Core" Version="8.0.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
-    <ProjectReference Include="..\..\core\Core\Empiria.Core.csproj" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
   </ItemGroup>
 </Project>
