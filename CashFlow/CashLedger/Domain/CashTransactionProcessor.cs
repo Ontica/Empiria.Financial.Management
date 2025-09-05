@@ -39,21 +39,23 @@ namespace Empiria.CashFlow.CashLedger {
 
     internal FixedList<CashEntryFields> Execute() {
 
+      ProcessNoCashFlowEntriesOneToOneTwoWay();
+
       ProcessNoCashFlowEntriesOneToOne();
 
-      ProcessNoCashFlowEntriesWithCreditsAndDebitsAdded();
-
-      ProcessNoCashFlowEntriesOneToOneTwoWay();
+      // ProcessNoCashFlowEntriesWithCreditsAndDebitsAdded();
 
       ProcessEqualEntriesAsNoCashFlowEntries();
 
-      ProcessNoCashFlowLonelyEntries();
+      // ProcessNoCashFlowLonelyEntries();
 
       // ProcessEqualEntriesAsNoCashFlowEntriesAdded();
 
-      ProcessCashFlowDirectEntries();
+      ProcessCashFlowEntriesOneToOneTwoWay();
 
-      ProcessCashFlowDebitCreditEntries();
+      ProcessCashFlowDebitOrCreditEntries();
+
+      ProcessCashFlowDirectEntries();
 
       ProcessRemainingEntries();
 
@@ -64,7 +66,7 @@ namespace Empiria.CashFlow.CashLedger {
 
     #region Processors
 
-    private void ProcessCashFlowDebitCreditEntries() {
+    private void ProcessCashFlowDebitOrCreditEntries() {
 
       FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
 
@@ -72,7 +74,7 @@ namespace Empiria.CashFlow.CashLedger {
         return;
       }
 
-      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_CREDIT_DEBIT");
+      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_CREDIT_OR_DEBIT");
 
 
       foreach (var entry in entries) {
@@ -161,7 +163,7 @@ namespace Empiria.CashFlow.CashLedger {
         }
 
 CONTINUE:
-        continue;
+        ;  // no-op
 
       }  // foreach entry
     }
@@ -213,6 +215,34 @@ CONTINUE:
           }
         }
       }
+    }
+
+
+    private void ProcessCashFlowEntriesOneToOneTwoWay() {
+      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
+
+      if (debitEntries.Count == 0) {
+        return;
+      }
+
+      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_TWO_WAY");
+
+      foreach (var debitEntry in debitEntries) {
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
+
+        foreach (var rule in applicableRules) {
+          CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
+
+          if (creditEntry == null) {
+            continue;
+          }
+
+          _helper.AddCashFlowEntry(rule, debitEntry, "Regla con flujo uno a uno");
+          _helper.AddCashFlowEntry(rule, creditEntry, "Regla con flujo uno a uno");
+
+        }  // foreach rule
+
+      }  // foreach entry
     }
 
 
