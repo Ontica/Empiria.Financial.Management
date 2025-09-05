@@ -247,25 +247,21 @@ CONTINUE:
 
 
     private void ProcessEqualEntriesAsNoCashFlowEntries() {
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
 
-      if (entries.Count == 0) {
+      if (debitEntries.Count == 0) {
         return;
       }
 
-      foreach (var debitEntry in entries.FindAll(x => x.Debit > 0)) {
+      foreach (var debitEntry in debitEntries) {
 
-        CashTransactionEntryDto matchingEntry = entries.Find(x => x.Credit == debitEntry.Debit &&
-                                                                  x.CurrencyId == debitEntry.CurrencyId &&
-                                                                  x.AccountNumber == debitEntry.AccountNumber &&
-                                                                  x.SectorCode == debitEntry.SectorCode &&
-                                                                  x.SubledgerAccountNumber == debitEntry.SubledgerAccountNumber);
+        CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(debitEntry);
 
-        if (matchingEntry != null) {
+        if (creditEntry != null) {
           _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
-            "Regla anulación cargo/abono uno a uno");
-          _helper.AddProcessedEntry(matchingEntry, CashAccountStatus.NoCashFlow,
-            "Regla anulación cargo/abono uno o uno");
+            "Regla anulación cargo y abono iguales");
+          _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
+            "Regla anulación cargo y abono iguales");
         }
       }
     }

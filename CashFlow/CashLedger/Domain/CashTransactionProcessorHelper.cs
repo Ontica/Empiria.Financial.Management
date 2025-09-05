@@ -204,6 +204,25 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
+    internal CashTransactionEntryDto TryGetMatchingEntry(CashTransactionEntryDto entry) {
+      if (entry.Debit > 0) {
+        return _entries.Find(x => !x.Processed &&
+                                  x.Credit == entry.Debit &&
+                                  MatchesAccountNumber(x.AccountNumber, entry.AccountNumber) &&
+                                  (entry.CurrencyId == x.CurrencyId) &&
+                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber) &&
+                                  (x.SectorCode == entry.SectorCode || x.SectorCode == "00" || entry.SectorCode == "00"));
+      } else {
+        return _entries.Find(x => !x.Processed &&
+                                  x.Debit == entry.Credit &&
+                                  MatchesAccountNumber(x.AccountNumber, entry.AccountNumber) &&
+                                  (entry.CurrencyId == x.CurrencyId) &&
+                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber) &&
+                                  (x.SectorCode == entry.SectorCode || x.SectorCode == "00" || entry.SectorCode == "00"));
+      }
+    }
+
+
     internal CashTransactionEntryDto TryGetMatchingEntry(FinancialRule rule, CashTransactionEntryDto entry) {
 
       if (entry.Debit != 0) {
@@ -269,7 +288,8 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    private FixedList<FinancialAccount> TryGetCashAccounts(FinancialRule rule, CashTransactionEntryDto entry) {
+    static private FixedList<FinancialAccount> TryGetCashAccounts(FinancialRule rule, CashTransactionEntryDto entry) {
+
       FixedList<FinancialAccount> directAccounts = TryGetDirectCashAccounts(rule, entry);
 
       if (directAccounts.Count > 0) {
@@ -299,7 +319,7 @@ namespace Empiria.CashFlow.CashLedger {
       }
     }
 
-    private FixedList<FinancialAccount> TryGetDirectCashAccounts(FinancialRule rule, CashTransactionEntryDto entry) {
+    static private FixedList<FinancialAccount> TryGetDirectCashAccounts(FinancialRule rule, CashTransactionEntryDto entry) {
       if (entry.Debit > 0) {
         return FinancialAccount.GetList(x => x.AccountNo == rule.DebitConcept && rule.DebitConcept.Length >= 4 &&
                                              x.Currency.Id == entry.CurrencyId &&
