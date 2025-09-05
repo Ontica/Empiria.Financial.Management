@@ -20,15 +20,15 @@ namespace Empiria.Financial.Adapters {
   /// <summary>Holder output DTO used to return a financial account</summary>
   public class FinancialAccountHolderDto {
 
-    public FinancialAccountDto FinancialAccount {
+    public FinancialAccountDto Account {
       get; internal set;
     }
 
-    public FinancialProjectDto FinancialProject {
+    public FinancialProjectDto Project {
       get; internal set;
     }
 
-    public FixedList<OperationAccountDto> OperationAccounts {
+    public OperationAccountsStructure OperationAccounts {
       get; internal set;
     }
 
@@ -144,6 +144,11 @@ namespace Empiria.Financial.Adapters {
     }
 
     public string ProjectName {
+      get; internal set;
+    }
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectTypeName")]
+    public string ProjectCategoryName {
       get; internal set;
     }
 

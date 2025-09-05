@@ -9,14 +9,17 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Documents;
-using Empiria.Financial.Projects.Adapters;
 using Empiria.History;
 using Empiria.StateEnums;
+
+using Empiria.Financial.Projects.Adapters;
 
 namespace Empiria.Financial.Adapters {
 
   /// <summary> Mapping methods for financial accounts.</summary>
   static public class FinancialAccountMapper {
+
+    #region Methods
 
     static public FixedList<FinancialAccountDto> Map(FixedList<FinancialAccount> accounts) {
       return accounts.Select(x => Map(x))
@@ -61,6 +64,7 @@ namespace Empiria.Financial.Adapters {
         ProjectUID = account.Project.UID,
         ProjectNo = account.Project.ProjectNo,
         ProjectName = account.Project.Name,
+        ProjectCategoryName = account.Project.Category.Name,
         OrganizationalUnitName = account.OrganizationalUnit.Name,
         CurrencyName = account.Currency.ISOCode,
         SubledgerAccountNo = account.SubledgerAccountNo,
@@ -80,15 +84,16 @@ namespace Empiria.Financial.Adapters {
 
     static internal FinancialAccountHolderDto MapToHolderDto(FinancialAccount account) {
       return new FinancialAccountHolderDto {
-        FinancialAccount = Map(account),
-        FinancialProject = FinancialProjectMapper.MapProject(account.Project),
-        OperationAccounts = OperationAccountMapper.MapToOperationAccounts(account.GetOperations()),
+        Account = Map(account),
+        Project = FinancialProjectMapper.MapProject(account.Project),
+        OperationAccounts = OperationAccountMapper.MapOperationsAccounts(account),
         Documents = DocumentServices.GetAllEntityDocuments(account),
         History = HistoryServices.GetEntityHistory(account),
         Actions = MapActions(account)
       };
     }
 
+    #endregion Methods
 
     #region Helpers
 
