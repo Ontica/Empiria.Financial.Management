@@ -16,7 +16,6 @@ using Empiria.Financial.Rules;
 
 using Empiria.CashFlow.CashLedger.Adapters;
 
-
 namespace Empiria.CashFlow.CashLedger {
 
   /// <summary>Helping methods used by CashTransactionProcessor.</summary>
@@ -39,6 +38,41 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     #region Methods
+
+    internal void AddCashFlowEntry(FinancialRule rule, CashTransactionEntryDto entry, string appliedRule) {
+      FixedList<FinancialAccount> cashAccounts = TryGetCashAccounts(rule, entry);
+
+      if (cashAccounts == null) {
+
+        AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+          $"{appliedRule} (regla aplicada sobre cuenta sin auxiliar ni concepto directo)");
+
+      } else if (cashAccounts.Count == 0) {
+
+        AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+          $"{appliedRule} (cuenta {entry.SubledgerAccountNumber} no registrada en PYC)");
+
+      } else if (cashAccounts.Count == 1 && cashAccounts[0].FinancialAccountType.Equals(FinancialAccountType.OperationAccount)) {
+
+        AddProcessedEntry(entry, cashAccounts[0], appliedRule);
+
+      } else if (cashAccounts.Count == 1 && !cashAccounts[0].FinancialAccountType.Equals(FinancialAccountType.OperationAccount)) {
+
+        AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+          $"{appliedRule} (la cuenta {entry.SubledgerAccountNumber}) " +
+          $"no tiene un concepto relacionado con el tipo de operación {rule.CreditConcept})");
+
+      } else if (cashAccounts.Count > 1) {
+
+        AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+          $"{appliedRule} (la cuenta {entry.SubledgerAccountNumber} " +
+          $"tiene más de un concepto relacionado con el tipo {rule.CreditConcept}.)");
+
+      } else {
+        throw Assertion.EnsureNoReachThisCode();
+      }
+    }
+
 
     internal void AddProcessedEntry(CashTransactionEntryDto entry,
                                     CashAccountStatus status, string appliedRule) {
@@ -86,7 +120,6 @@ namespace Empiria.CashFlow.CashLedger {
 
       _processedEntries.Add(fields);
     }
-
 
 
     internal FixedList<FinancialRule> GetApplicableRules(FixedList<FinancialRule> rules,
@@ -172,6 +205,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     internal CashTransactionEntryDto TryGetMatchingEntry(FinancialRule rule, CashTransactionEntryDto entry) {
+
       if (entry.Debit != 0) {
         return _entries.Find(x => !x.Processed &&
                                   x.Credit == entry.Debit &&
@@ -231,6 +265,49 @@ namespace Empiria.CashFlow.CashLedger {
       } else {
         return MatchesAccountNumber(entry.AccountNumber, rule.CreditAccount) &&
                                    (rule.CreditCurrency.IsEmptyInstance || rule.CreditCurrency.Id == entry.CurrencyId);
+      }
+    }
+
+
+    private FixedList<FinancialAccount> TryGetCashAccounts(FinancialRule rule, CashTransactionEntryDto entry) {
+      FixedList<FinancialAccount> directAccounts = TryGetDirectCashAccounts(rule, entry);
+
+      if (directAccounts.Count > 0) {
+        return directAccounts;
+      }
+
+      if (entry.SubledgerAccountNumber.Length == 0) {
+        return null;
+      }
+
+      FinancialAccount account = FinancialAccount.TryParseWithSubledgerAccount(entry.SubledgerAccountNumber);
+
+      if (account == null) {
+        return new FixedList<FinancialAccount>();
+      }
+
+      if (entry.Debit > 0) {
+
+        return account.GetOperations()
+                      .FindAll(x => x.Currency.Id == entry.CurrencyId &&
+                                    x.StandardAccount.StdAcctNo.EndsWith(rule.DebitConcept));
+      } else {
+
+        return account.GetOperations()
+              .FindAll(x => x.Currency.Id == entry.CurrencyId &&
+                            x.StandardAccount.StdAcctNo.EndsWith(rule.CreditConcept));
+      }
+    }
+
+    private FixedList<FinancialAccount> TryGetDirectCashAccounts(FinancialRule rule, CashTransactionEntryDto entry) {
+      if (entry.Debit > 0) {
+        return FinancialAccount.GetList(x => x.AccountNo == rule.DebitConcept && rule.DebitConcept.Length >= 4 &&
+                                             x.Currency.Id == entry.CurrencyId &&
+                                             x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
+      } else {
+        return FinancialAccount.GetList(x => x.AccountNo == rule.CreditConcept && rule.DebitConcept.Length >= 4 &&
+                                             x.Currency.Id == entry.CurrencyId &&
+                                             x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
       }
     }
 
