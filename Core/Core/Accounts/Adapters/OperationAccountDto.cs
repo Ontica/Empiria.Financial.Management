@@ -11,8 +11,8 @@
 namespace Empiria.Financial.Adapters {
 
 
-  /// <summary>Output DTO with information for an account and its available and current operations.</summary>
-  public class OperationAccountsHolderDto {
+  /// <summary>Output DTO with am an account and its available and current operations for edition.</summary>
+  public class OperationAccountsStructure {
 
     public FinancialAccountDescriptor BaseAccount {
       get; internal set;
@@ -26,7 +26,7 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
-  }  // class OperationAccountsHolderDto
+  }  // class OperationAccountsStructure
 
 
 

@@ -28,28 +28,28 @@ namespace Empiria.Financial.Accounts.WebApi {
 
       using (var usecases = OperationAccountUseCases.UseCaseInteractor()) {
 
-        OperationAccountsHolderDto holder = usecases.GetAccountOperations(accountUID);
+        OperationAccountsStructure operations = usecases.GetOperationAccounts(accountUID);
 
-        return new SingleObjectModel(base.Request, holder);
+        return new SingleObjectModel(base.Request, operations);
       }
     }
 
 
     [HttpGet]
-    [Route("v1/financial-projects/{financialProjectUID:guid}/accounts/{accountUID:guid}/operations")]
-    public SingleObjectModel GetProjectAccountOperations([FromUri] string financialProjectUID,
+    [Route("v1/financial-projects/{projectUID:guid}/accounts/{accountUID:guid}/operations")]
+    public SingleObjectModel GetProjectAccountOperations([FromUri] string projectUID,
                                                          [FromUri] string accountUID) {
 
       var fields = new FinancialAccountFields {
         UID = accountUID,
-        ProjectUID = financialProjectUID,
+        ProjectUID = projectUID,
       };
 
       using (var usecases = OperationAccountUseCases.UseCaseInteractor()) {
 
-        OperationAccountsHolderDto holder = usecases.GetFinancialProjectAccountOperations(fields);
+        OperationAccountsStructure operations = usecases.GetProjectOperationAccounts(fields);
 
-        return new SingleObjectModel(base.Request, holder);
+        return new SingleObjectModel(base.Request, operations);
       }
     }
 
@@ -66,9 +66,9 @@ namespace Empiria.Financial.Accounts.WebApi {
 
       using (var usecases = OperationAccountUseCases.UseCaseInteractor()) {
 
-        OperationAccountsHolderDto holder = usecases.AddAccountOperation(fields);
+        OperationAccountsStructure operations = usecases.AddOperationAccount(fields);
 
-        return new SingleObjectModel(base.Request, holder);
+        return new SingleObjectModel(base.Request, operations);
       }
     }
 
@@ -80,10 +80,10 @@ namespace Empiria.Financial.Accounts.WebApi {
 
       using (var usecases = OperationAccountUseCases.UseCaseInteractor()) {
 
-        OperationAccountsHolderDto holder = usecases.RemoveAccountOperation(accountUID,
-                                                                            operationAccountUID);
+        OperationAccountsStructure operations = usecases.RemoveOperationAccount(accountUID,
+                                                                                operationAccountUID);
 
-        return new SingleObjectModel(base.Request, holder);
+        return new SingleObjectModel(base.Request, operations);
       }
     }
 

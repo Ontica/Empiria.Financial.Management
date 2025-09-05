@@ -15,9 +15,9 @@ namespace Empiria.Financial.Adapters {
 
     #region Methods
 
-    static internal OperationAccountsHolderDto MapAccountOperations(FinancialAccount baseAccount) {
+    static internal OperationAccountsStructure MapOperationsAccounts(FinancialAccount baseAccount) {
 
-      return new OperationAccountsHolderDto {
+      return new OperationAccountsStructure {
 
         BaseAccount = FinancialAccountMapper.MapToDescriptor(baseAccount),
 
@@ -28,11 +28,6 @@ namespace Empiria.Financial.Adapters {
       };
     }
 
-
-    static internal FixedList<OperationAccountDto> MapToOperationAccounts(FixedList<FinancialAccount> operationAccounts) {
-      return operationAccounts.Select(x => MapToOperationAccount(x))
-                              .ToFixedList();
-    }
 
     #endregion Methods
 
@@ -45,6 +40,11 @@ namespace Empiria.Financial.Adapters {
         OperationTypeName = operationAccount.StandardAccount.Name,
         CurrencyName = operationAccount.Currency.Name
       };
+    }
+
+    static private FixedList<OperationAccountDto> MapToOperationAccounts(FixedList<FinancialAccount> operationAccounts) {
+      return operationAccounts.Select(x => MapToOperationAccount(x))
+                              .ToFixedList();
     }
 
     #endregion Helpers

@@ -33,7 +33,7 @@ namespace Empiria.Financial.UseCases {
 
     #region Use cases
 
-    public OperationAccountsHolderDto AddAccountOperation(OperationAccountFields fields) {
+    public OperationAccountsStructure AddOperationAccount(OperationAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
@@ -44,32 +44,32 @@ namespace Empiria.Financial.UseCases {
 
       operation.Save();
 
-      return OperationAccountMapper.MapAccountOperations(account);
+      return OperationAccountMapper.MapOperationsAccounts(account);
     }
 
 
-    public OperationAccountsHolderDto GetAccountOperations(string accountUID) {
+    public OperationAccountsStructure GetOperationAccounts(string accountUID) {
       Assertion.Require(accountUID, nameof(accountUID));
 
       FinancialAccount account = FinancialAccount.Parse(accountUID);
 
-      return OperationAccountMapper.MapAccountOperations(account);
+      return OperationAccountMapper.MapOperationsAccounts(account);
     }
 
 
-    public OperationAccountsHolderDto GetFinancialProjectAccountOperations(FinancialAccountFields fields) {
+    public OperationAccountsStructure GetProjectOperationAccounts(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       var project = FinancialProject.Parse(fields.ProjectUID);
 
       FinancialAccount account = project.GetAccount(fields.UID);
 
-      return OperationAccountMapper.MapAccountOperations(account);
+      return OperationAccountMapper.MapOperationsAccounts(account);
     }
 
 
-    public OperationAccountsHolderDto RemoveAccountOperation(string accountUID,
-                                                                string operationAccountUID) {
+    public OperationAccountsStructure RemoveOperationAccount(string accountUID,
+                                                             string operationAccountUID) {
       Assertion.Require(accountUID, nameof(accountUID));
       Assertion.Require(operationAccountUID, nameof(operationAccountUID));
 
@@ -79,7 +79,7 @@ namespace Empiria.Financial.UseCases {
 
       operation.Save();
 
-      return OperationAccountMapper.MapAccountOperations(account);
+      return OperationAccountMapper.MapOperationsAccounts(account);
     }
 
     #endregion Use cases
