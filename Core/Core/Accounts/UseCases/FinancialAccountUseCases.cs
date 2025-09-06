@@ -90,7 +90,10 @@ namespace Empiria.Financial.UseCases {
     public FixedList<FinancialAccountDescriptor> SearchAccounts(FinancialAccountQuery query) {
       Assertion.Require(query, nameof(query));
 
-      FixedList<FinancialAccount> accounts = query.Execute();
+      FixedList<FinancialAccount> accounts = query.Execute()
+                                                  .FindAll(x =>
+                                                    x.FinancialAccountType.PlaysRole(FinancialProject.PROJECT_BASE_ACCOUNTS_ROLE)
+                                                  );
 
       return FinancialAccountMapper.MapToDescriptor(accounts);
     }
