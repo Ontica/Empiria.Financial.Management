@@ -55,6 +55,12 @@ namespace Empiria.Financial.Rules {
       }
     }
 
+    public bool IsSingleEntry {
+      get {
+        return base.ExtData.Get("isSingleEntry", false);
+      }
+    }
+
     #endregion Properties
 
     #region Methods

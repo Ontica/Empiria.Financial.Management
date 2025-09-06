@@ -143,10 +143,10 @@ namespace Empiria.CashFlow.CashLedger {
     internal FixedList<FinancialRule> GetApplicableRules(FixedList<FinancialRule> rules,
                                                          CashTransactionEntryDto entry) {
       if (entry.Debit != 0) {
-        return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.DebitAccount) &&
+        return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.DebitAccount, x) &&
                                   (x.DebitCurrency.IsEmptyInstance || x.DebitCurrency.Id == entry.CurrencyId));
       } else {
-        return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.CreditAccount) &&
+        return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.CreditAccount, x) &&
                                   (x.CreditCurrency.IsEmptyInstance || x.CreditCurrency.Id == entry.CurrencyId));
       }
     }
@@ -189,7 +189,7 @@ namespace Empiria.CashFlow.CashLedger {
         return _entries.FindAll(x => !x.Processed &&
                                       x.Credit > 0 &&
                                       x.CurrencyId == entry.CurrencyId &&
-                                      MatchesAccountNumber(x.AccountNumber, rule.CreditAccount) &&
+                                      MatchesAccountNumber(x.AccountNumber, rule.CreditAccount, rule) &&
                                       MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, rule) &&
                                       MatchesSector(x.SectorCode, entry.SectorCode, rule));
 
@@ -197,7 +197,7 @@ namespace Empiria.CashFlow.CashLedger {
         return _entries.FindAll(x => !x.Processed &&
                                       x.Debit > 0 &&
                                       x.CurrencyId == entry.CurrencyId &&
-                                      MatchesAccountNumber(x.AccountNumber, rule.DebitAccount) &&
+                                      MatchesAccountNumber(x.AccountNumber, rule.DebitAccount, rule) &&
                                       MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, rule) &&
                                       MatchesSector(x.SectorCode, entry.SectorCode, rule));
       }
@@ -231,7 +231,7 @@ namespace Empiria.CashFlow.CashLedger {
         return _entries.Find(x => !x.Processed &&
                                   x.Credit == entry.Debit &&
                                   x.CurrencyId == entry.CurrencyId &&
-                                  MatchesAccountNumber(x.AccountNumber, swapRule ? rule.DebitAccount : rule.CreditAccount) &&
+                                  MatchesAccountNumber(x.AccountNumber, swapRule ? rule.DebitAccount : rule.CreditAccount, rule) &&
                                   MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, rule) &&
                                   MatchesSector(x.SectorCode, entry.SectorCode, rule));
 
@@ -239,7 +239,7 @@ namespace Empiria.CashFlow.CashLedger {
         return _entries.Find(x => !x.Processed &&
                                   x.Debit == entry.Credit &&
                                   x.CurrencyId == entry.CurrencyId &&
-                                  MatchesAccountNumber(x.AccountNumber, swapRule ? rule.CreditAccount : rule.DebitAccount) &&
+                                  MatchesAccountNumber(x.AccountNumber, swapRule ? rule.CreditAccount : rule.DebitAccount, rule) &&
                                   MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, rule) &&
                                   MatchesSector(x.SectorCode, entry.SectorCode, rule));
       }
@@ -250,10 +250,12 @@ namespace Empiria.CashFlow.CashLedger {
 
     #region Helpers
 
-    static private bool MatchesAccountNumber(string accountNumber, string ruleAccountNumber) {
+    static private bool MatchesAccountNumber(string accountNumber, string ruleAccountNumber, FinancialRule rule = null) {
+
+      rule = rule ?? FinancialRule.Empty;
 
       if (string.IsNullOrWhiteSpace(ruleAccountNumber)) {
-        return true;
+        return rule.Category.IsSingleEntry;
       }
 
       bool isPatternRule = ruleAccountNumber.Contains("*") && ruleAccountNumber.EndsWith("]");
@@ -300,11 +302,11 @@ namespace Empiria.CashFlow.CashLedger {
 
     static private bool SatisfiesRule(FinancialRule rule, CashTransactionEntryDto entry) {
       if (entry.Debit != 0) {
-        return MatchesAccountNumber(entry.AccountNumber, rule.DebitAccount) &&
+        return MatchesAccountNumber(entry.AccountNumber, rule.DebitAccount, rule) &&
                                     (rule.DebitCurrency.IsEmptyInstance || rule.DebitCurrency.Id == entry.CurrencyId);
 
       } else {
-        return MatchesAccountNumber(entry.AccountNumber, rule.CreditAccount) &&
+        return MatchesAccountNumber(entry.AccountNumber, rule.CreditAccount, rule) &&
                                    (rule.CreditCurrency.IsEmptyInstance || rule.CreditCurrency.Id == entry.CurrencyId);
       }
     }
