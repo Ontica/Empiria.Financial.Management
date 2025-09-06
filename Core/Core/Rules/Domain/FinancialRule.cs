@@ -103,19 +103,19 @@ namespace Empiria.Financial.Rules {
 
 
     [DataField("RULE_CONDITIONS")]
-    protected internal JsonObject Conditions {
+    public JsonObject Conditions {
       get; private set;
     }
 
 
     [DataField("RULE_EXCEPTIONS")]
-    protected internal JsonObject Exceptions {
+    public JsonObject Exceptions {
       get; private set;
     }
 
 
     [DataField("RULE_EXT_DATA")]
-    protected internal JsonObject ExtData {
+    public JsonObject ExtData {
       get; private set;
     }
 
