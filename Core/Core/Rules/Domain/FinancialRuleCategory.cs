@@ -49,15 +49,16 @@ namespace Empiria.Financial.Rules {
 
     #region Properties
 
-    public new string NamedKey {
-      get {
-        return base.NamedKey;
-      }
-    }
-
     public bool IsSingleEntry {
       get {
         return base.ExtData.Get("isSingleEntry", false);
+      }
+    }
+
+
+    public new string NamedKey {
+      get {
+        return base.NamedKey;
       }
     }
 

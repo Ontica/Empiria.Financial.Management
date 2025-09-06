@@ -53,7 +53,7 @@ namespace Empiria.CashFlow.CashLedger {
 
       ProcessCashFlowEntriesOneToOne();
 
-      ProcessCashFlowDebitOrCreditEntries();
+      // ProcessCashFlowDebitOrCreditEntries();
 
       ProcessCashFlowDirectEntries();
 
@@ -67,6 +67,36 @@ namespace Empiria.CashFlow.CashLedger {
     #region Processors
 
     private void ProcessCashFlowDebitOrCreditEntries() {
+      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return;
+      }
+
+      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_DEBIT_OR_CREDIT");
+
+      foreach (var entry in entries) {
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
+
+        if (applicableRules.Count == 0) {
+          // no-op
+
+        } else if (applicableRules.Count == 1) {
+
+          _helper.AddCashFlowEntry(applicableRules[0], entry,
+            "Regla con flujo cargo o abono");
+
+        } else if (applicableRules.Count > 0) {
+          _helper.AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+            $"Regla con flujo cargo o abono (existen {applicableRules.Count} reglas " +
+            $"para la cuenta {entry.AccountNumber})");
+        }
+
+      }  // foreach entry
+    }
+
+
+    private void ProcessCashFlowDebitOrCreditEntriesOld() {
 
       FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
 
@@ -225,7 +255,7 @@ CONTINUE:
         return;
       }
 
-      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_TWO_WAY");
+      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_ONE_TO_ONE");
 
       foreach (var debitEntry in debitEntries) {
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
@@ -305,7 +335,7 @@ CONTINUE:
         return;
       }
 
-      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_CREDIT_DEBIT");
+      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_ONE_TO_ONE");
 
       foreach (var entry in entries) {
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
