@@ -74,19 +74,6 @@ namespace Empiria.Financial.UseCases {
     }
 
 
-    public FinancialAccountDto TryGetAccountFromExternalCreditSystem(string accountNo) {
-      var service = new ExternalCreditSystemServices();
-
-      ICreditAccountData account = service.TryGetCreditWithAccountNo(accountNo);
-
-      if (account == null) {
-        return null;
-      }
-
-      return FinancialAccountMapper.Map(account);
-    }
-
-
     public FixedList<NamedEntityDto> SearchAccounts(string keywords) {
       keywords = keywords ?? string.Empty;
 
