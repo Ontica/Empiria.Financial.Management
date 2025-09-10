@@ -24,7 +24,7 @@ namespace Empiria.Financial.Accounts.WebApi {
     #region Credit system web apis
 
     [HttpPost]
-    [Route("v2/financial-accounts/external-systems/credit/{accountNo}/search")]
+    [Route("v2/financial-accounts/external-systems/credit/{accountNo}/create")]
     public SingleObjectModel CreateAccountFromCreditSystem([FromUri] string accountNo,
                                                            [FromBody] ExternalAccountFields fields) {
 
@@ -55,7 +55,7 @@ namespace Empiria.Financial.Accounts.WebApi {
     }
 
 
-    [HttpPost]
+    [HttpPut, HttpPatch]
     [Route("v2/financial-accounts/external-systems/credit/{accountUID:guid}/refresh")]
     public SingleObjectModel RefreshAccountFromCreditSystem([FromUri] string accountUID) {
 
