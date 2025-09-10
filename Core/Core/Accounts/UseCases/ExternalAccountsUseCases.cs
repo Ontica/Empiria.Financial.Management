@@ -67,13 +67,28 @@ namespace Empiria.Financial.UseCases {
         return externalAccount;
       }
 
-      var current = FinancialAccount.GetList(x => x.FinancialAccountType.Equals(FinancialAccountType.CreditAccount) &&
-                                                  x.AccountNo == externalAccount.AccountNo);
+      var current = FinancialAccount.TryParseWithAccountNo(FinancialAccountType.CreditAccount,
+                                                           externalAccount.AccountNo);
 
-      Assertion.Require(current.Count == 0,
+      Assertion.Require(current == null,
                         $"La cuenta de crédito '{externalAccount}' ya está registrada en el sistema.");
 
       return externalAccount;
+    }
+
+
+    public FinancialAccountDto RefreshAccountFromCreditSystem(string accountUID) {
+      Assertion.Require(accountUID, nameof(accountUID));
+
+      var account = FinancialAccount.Parse(accountUID);
+
+      ICreditAccountData externalAccount = GetAccountFromCreditSystem(account.AccountNo);
+
+      account.Update(externalAccount);
+
+      account.Save();
+
+      return FinancialAccountMapper.Map(account);
     }
 
 

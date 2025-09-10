@@ -54,6 +54,19 @@ namespace Empiria.Financial.Accounts.WebApi {
       }
     }
 
+
+    [HttpPost]
+    [Route("v2/financial-accounts/external-systems/credit/{accountUID:guid}/refresh")]
+    public SingleObjectModel RefreshAccountFromCreditSystem([FromUri] string accountUID) {
+
+      using (var usecases = ExternalAccountsUseCases.UseCaseInteractor()) {
+
+        FinancialAccountDto accountDto = usecases.RefreshAccountFromCreditSystem(accountUID);
+
+        return new SingleObjectModel(this.Request, accountDto);
+      }
+    }
+
     #endregion Credit system web apis
 
   }  // class ExternalAccountsController

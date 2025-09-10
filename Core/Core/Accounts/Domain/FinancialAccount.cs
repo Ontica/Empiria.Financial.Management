@@ -85,8 +85,8 @@ namespace Empiria.Financial {
 
     static public FinancialAccount Parse(string uid) => ParseKey<FinancialAccount>(uid);
 
-
     static public FinancialAccount Empty => ParseEmpty<FinancialAccount>();
+
 
     static public FixedList<FinancialAccount> GetList() {
       return _cache.ToFixedList();
@@ -94,14 +94,29 @@ namespace Empiria.Financial {
 
 
     static public FixedList<FinancialAccount> GetList(Predicate<FinancialAccount> predicate) {
+      Assertion.Require(predicate, nameof(predicate));
+
       return _cache.FindAll(x => predicate.Invoke(x))
                    .ToFixedList();
     }
 
 
+    static public FinancialAccount TryParseWithAccountNo(FinancialAccountType accountType,
+                                                 string accountNo) {
+      Assertion.Require(accountType, nameof(accountType));
+      Assertion.Require(accountNo, nameof(accountNo));
+
+      return GetList().Find(x => x.FinancialAccountType.Equals(accountType) &&
+                                 x.AccountNo == accountNo);
+    }
+
+
     static public FinancialAccount TryParseWithSubledgerAccount(string subledgerAccountNo) {
+      Assertion.Require(subledgerAccountNo, nameof(subledgerAccountNo));
+
       return GetList().Find(x => x.SubledgerAccountNo == subledgerAccountNo);
     }
+
 
     protected override void OnLoad() {
       _operations = new Lazy<List<FinancialAccount>>(() =>
