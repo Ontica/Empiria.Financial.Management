@@ -48,6 +48,15 @@ namespace Empiria.Financial.Adapters {
     }
 
 
+    static internal FinancialAccountDto Map(ICreditAccountData account) {
+      return new FinancialAccountDto {
+        AccountNo = account.AccountNo,
+        SubledgerAccountNo = account.SubledgerAccountNo,
+        Description = account.CustomerName
+      };
+    }
+
+
     static internal FixedList<FinancialAccountDescriptor> MapToDescriptor(FixedList<FinancialAccount> accounts) {
       return accounts.Select(x => MapToDescriptor(x))
                      .ToFixedList();

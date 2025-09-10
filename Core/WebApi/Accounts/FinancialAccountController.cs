@@ -36,6 +36,24 @@ namespace Empiria.Financial.Accounts.WebApi {
 
 
     [HttpGet]
+    [Route("v2/financial-accounts/external-systems/credit/{accountNo}/search")]
+    public SingleObjectModel GetAccountFromExternalCreditSystem([FromUri] string accountNo) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+
+        FinancialAccountDto accountDto = usecases.TryGetAccountFromExternalCreditSystem(accountNo);
+
+        if (accountDto == null) {
+          throw new ResourceNotFoundException("ExternalCreditsSystem.CreditAccountNo.NotFound",
+              $"No se encontró la cuenta '{accountNo}' en el sistema de créditos.");
+        }
+
+        return new SingleObjectModel(this.Request, accountDto);
+      }
+    }
+
+
+    [HttpGet]
     [Route("v2/financial-accounts/{keywords}")]
     public CollectionModel SearchAccounts([FromUri] string keywords = "") {
 
