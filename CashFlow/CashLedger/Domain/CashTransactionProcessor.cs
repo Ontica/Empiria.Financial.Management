@@ -39,6 +39,8 @@ namespace Empiria.CashFlow.CashLedger {
 
     internal FixedList<CashEntryFields> Execute() {
 
+      ProcessNoCashFlowCreditOrDebitEntries();
+
       ProcessNoCashFlowEntriesOneToOneTwoWay();
 
       ProcessNoCashFlowEntriesOneToOne();
@@ -65,6 +67,210 @@ namespace Empiria.CashFlow.CashLedger {
     #endregion Methods
 
     #region Processors
+
+    private void ProcessCashFlowDirectEntries() {
+      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return;
+      }
+
+      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_DIRECT");
+
+      foreach (var entry in entries) {
+
+        FixedList<string> concepts;
+
+        if (entry.Debit > 0) {
+          concepts = rules.FindAll(x => x.DebitAccount == entry.AccountNumber &&
+                                        x.DebitConcept.Length != 0)
+                          .SelectDistinct(x => x.DebitConcept);
+        } else {
+          concepts = rules.FindAll(x => x.CreditAccount == entry.AccountNumber &&
+                                        x.CreditConcept.Length != 0)
+                          .SelectDistinct(x => x.CreditConcept);
+        }
+
+
+        if (concepts.Count == 0) {
+          continue;
+        }
+
+        foreach (var concept in concepts) {
+          var accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
+                                                       x.Currency.Id == entry.CurrencyId &&
+                                                       x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
+
+          if (accounts.Count == 1) {
+            _helper.AddProcessedEntry(entry, accounts[0],
+              "Regla con flujo directo");
+            continue;
+          }
+
+          if (concepts.Count > 1) {
+            _helper.AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+              "Regla con flujo directo (existen múltiples conceptos)");
+            continue;
+          }
+        }
+      }
+    }
+
+
+    private void ProcessCashFlowEntriesOneToOne() {
+      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
+
+      if (debitEntries.Count == 0) {
+        return;
+      }
+
+      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_ONE_TO_ONE");
+
+      foreach (var debitEntry in debitEntries) {
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
+
+        foreach (var rule in applicableRules) {
+          CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
+
+          if (creditEntry != null) {
+            _helper.AddCashFlowEntry(rule, debitEntry, "Regla con flujo uno a uno");
+            _helper.AddCashFlowEntry(rule, creditEntry, "Regla con flujo uno a uno");
+          }
+
+        }  // foreach rule
+
+      }  // foreach entry
+    }
+
+
+    private void ProcessEqualEntriesAsNoCashFlowEntries() {
+      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
+
+      if (debitEntries.Count == 0) {
+        return;
+      }
+
+      foreach (var debitEntry in debitEntries) {
+
+        CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(debitEntry);
+
+        if (creditEntry != null) {
+          _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
+            "Regla anulación cargo y abono iguales");
+          _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
+            "Regla anulación cargo y abono iguales");
+        }
+      }
+    }
+
+
+    private void ProcessNoCashFlowCreditOrDebitEntries() {
+      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return;
+      }
+
+      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_DEBIT_OR_CREDIT");
+
+      foreach (var entry in entries) {
+
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
+
+        if (applicableRules.Count != 0) {
+          _helper.AddProcessedEntry(entry, CashAccountStatus.NoCashFlow, $"Regla sin flujo directa cargo o abono");
+        }
+      }
+    }
+
+
+    private void ProcessNoCashFlowEntriesOneToOne() {
+      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
+
+      if (entries.Count == 0) {
+        return;
+      }
+
+      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_ONE_TO_ONE");
+
+      foreach (var entry in entries) {
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
+
+        foreach (var rule in applicableRules) {
+          CashTransactionEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, entry);
+
+          if (matchingEntry != null) {
+            _helper.AddProcessedEntry(entry, CashAccountStatus.NoCashFlow,
+              $"Regla sin flujo uno a uno");
+            _helper.AddProcessedEntry(matchingEntry, CashAccountStatus.NoCashFlow,
+              $"Regla sin flujo uno a uno");
+          }
+        }
+      }
+    }
+
+
+    private void ProcessNoCashFlowEntriesOneToOneTwoWay() {
+      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
+
+      if (debitEntries.Count == 0) {
+        return;
+      }
+
+      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_TWO_WAY");
+
+      foreach (var debitEntry in debitEntries) {
+
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
+
+        foreach (var rule in applicableRules) {
+          CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
+
+          if (creditEntry != null) {
+            _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
+              $"Regla sin flujo de ida y vuelta");
+            _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
+              $"Regla sin flujo de ida y vuelta");
+          }
+        }
+      }
+
+
+      foreach (var creditEntry in _helper.GetUnprocessedEntries(x => x.Credit > 0)) {
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, creditEntry);
+
+        foreach (var rule in applicableRules) {
+          CashTransactionEntryDto debitEntry = _helper.TryGetMatchingEntry(rule, creditEntry, true);
+
+          if (debitEntry != null) {
+            _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
+              $"Regla sin flujo de ida y vuelta");
+            _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
+              $"Regla sin flujo de ida y vuelta");
+          }
+        }
+      }
+    }
+
+
+    private void ProcessRemainingEntries() {
+      FixedList<CashEntryFields> processed = _helper.GetProcessedEntries();
+      FixedList<CashTransactionEntryDto> unprocessed = _helper.GetUnprocessedEntries();
+
+      foreach (var entry in unprocessed) {
+        if (processed.Exists(x => x.EntryId == entry.Id)) {
+          continue;
+        }
+        if (entry.CashAccountId != 0) {
+          _helper.AddProcessedEntry(entry, CashAccountStatus.Pending,
+            "Regla dejar pendientes las sobrantes");
+        }
+      }
+    }
+
+    #endregion Processors
+
+    #region Unused processors
 
     private void ProcessCashFlowDebitOrCreditEntries() {
       FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
@@ -199,102 +405,6 @@ CONTINUE:
     }
 
 
-    private void ProcessCashFlowDirectEntries() {
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
-
-      if (entries.Count == 0) {
-        return;
-      }
-
-      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_DIRECT");
-
-      foreach (var entry in entries) {
-
-        FixedList<string> concepts;
-
-        if (entry.Debit > 0) {
-          concepts = rules.FindAll(x => x.DebitAccount == entry.AccountNumber &&
-                                        x.DebitConcept.Length != 0)
-                          .SelectDistinct(x => x.DebitConcept);
-        } else {
-          concepts = rules.FindAll(x => x.CreditAccount == entry.AccountNumber &&
-                                        x.CreditConcept.Length != 0)
-                          .SelectDistinct(x => x.CreditConcept);
-        }
-
-
-        if (concepts.Count == 0) {
-          continue;
-        }
-
-        foreach (var concept in concepts) {
-          var accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
-                                                       x.Currency.Id == entry.CurrencyId &&
-                                                       x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
-
-          if (accounts.Count == 1) {
-            _helper.AddProcessedEntry(entry, accounts[0],
-              "Regla con flujo directo");
-            continue;
-          }
-
-          if (concepts.Count > 1) {
-            _helper.AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
-              "Regla con flujo directo (existen múltiples conceptos)");
-            continue;
-          }
-        }
-      }
-    }
-
-
-    private void ProcessCashFlowEntriesOneToOne() {
-      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
-
-      if (debitEntries.Count == 0) {
-        return;
-      }
-
-      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_ONE_TO_ONE");
-
-      foreach (var debitEntry in debitEntries) {
-        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
-
-        foreach (var rule in applicableRules) {
-          CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
-
-          if (creditEntry != null) {
-            _helper.AddCashFlowEntry(rule, debitEntry, "Regla con flujo uno a uno");
-            _helper.AddCashFlowEntry(rule, creditEntry, "Regla con flujo uno a uno");
-          }
-
-        }  // foreach rule
-
-      }  // foreach entry
-    }
-
-
-    private void ProcessEqualEntriesAsNoCashFlowEntries() {
-      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
-
-      if (debitEntries.Count == 0) {
-        return;
-      }
-
-      foreach (var debitEntry in debitEntries) {
-
-        CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(debitEntry);
-
-        if (creditEntry != null) {
-          _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
-            "Regla anulación cargo y abono iguales");
-          _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
-            "Regla anulación cargo y abono iguales");
-        }
-      }
-    }
-
-
     private void ProcessEqualEntriesAsNoCashFlowEntriesAdded() {
       FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
 
@@ -323,75 +433,6 @@ CONTINUE:
         foreach (var creditEntry in creditEntries) {
           _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
             "Regla anulación cargo/abono sumadas");
-        }
-      }
-    }
-
-
-    private void ProcessNoCashFlowEntriesOneToOne() {
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
-
-      if (entries.Count == 0) {
-        return;
-      }
-
-      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_ONE_TO_ONE");
-
-      foreach (var entry in entries) {
-        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
-
-        foreach (var rule in applicableRules) {
-          CashTransactionEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, entry);
-
-          if (matchingEntry != null) {
-            _helper.AddProcessedEntry(entry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo uno a uno");
-            _helper.AddProcessedEntry(matchingEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo uno a uno");
-          }
-        }
-      }
-    }
-
-
-    private void ProcessNoCashFlowEntriesOneToOneTwoWay() {
-      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
-
-      if (debitEntries.Count == 0) {
-        return;
-      }
-
-      FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_TWO_WAY");
-
-      foreach (var debitEntry in debitEntries) {
-
-        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
-
-        foreach (var rule in applicableRules) {
-          CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
-
-          if (creditEntry != null) {
-            _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo de ida y vuelta");
-            _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo de ida y vuelta");
-          }
-        }
-      }
-
-
-      foreach (var creditEntry in _helper.GetUnprocessedEntries(x => x.Credit > 0)) {
-        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, creditEntry);
-
-        foreach (var rule in applicableRules) {
-          CashTransactionEntryDto debitEntry = _helper.TryGetMatchingEntry(rule, creditEntry, true);
-
-          if (debitEntry != null) {
-            _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo de ida y vuelta");
-            _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo de ida y vuelta");
-          }
         }
       }
     }
@@ -456,23 +497,7 @@ CONTINUE:
       }
     }
 
-
-    private void ProcessRemainingEntries() {
-      FixedList<CashEntryFields> processed = _helper.GetProcessedEntries();
-      FixedList<CashTransactionEntryDto> unprocessed = _helper.GetUnprocessedEntries();
-
-      foreach (var entry in unprocessed) {
-        if (processed.Exists(x => x.EntryId == entry.Id)) {
-          continue;
-        }
-        if (entry.CashAccountId != 0) {
-          _helper.AddProcessedEntry(entry, CashAccountStatus.Pending,
-            "Regla dejar pendientes las sobrantes");
-        }
-      }
-    }
-
-    #endregion Processors
+    #endregion Unused processors
 
   } // class CashTransactionProcessor
 
