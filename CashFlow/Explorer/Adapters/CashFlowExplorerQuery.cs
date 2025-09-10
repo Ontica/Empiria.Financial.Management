@@ -12,12 +12,32 @@ using Empiria.CashFlow.CashLedger.Adapters;
 
 namespace Empiria.CashFlow.Explorer.Adapters {
 
+  public enum CashFlowReportType {
+
+    AccountTotals,
+
+    CashFlow,
+
+    ConceptAnalytic,
+
+    ConceptDetail,
+
+    ConceptTotals,
+
+    ProjectTotals,
+
+    None
+
+  }  // CashFlowReportType
+
+
+
   /// <summary>Input query DTO used to retrieve cash flow explorer information.</summary>
   public class CashFlowExplorerQuery : BaseCashLedgerTotalsQuery {
 
-    public string ReportType {
+    public CashFlowReportType ReportType {
       get; set;
-    } = string.Empty;
+    } = CashFlowReportType.None;
 
 
     public string ProgramUID {

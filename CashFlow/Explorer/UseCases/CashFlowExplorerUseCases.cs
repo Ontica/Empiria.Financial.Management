@@ -17,6 +17,7 @@ using Empiria.FinancialAccounting.ClientServices;
 using Empiria.CashFlow.CashLedger.Adapters;
 
 using Empiria.CashFlow.Explorer.Adapters;
+using System;
 
 namespace Empiria.CashFlow.Explorer.UseCases {
 
@@ -39,9 +40,26 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     #region Use cases
 
-    public async Task<CashFlowExplorerResultDto> ExploreCashFlow(CashFlowExplorerQuery query) {
+    public Task<CashFlowExplorerResultDto> ExploreCashFlow(CashFlowExplorerQuery query) {
       Assertion.Require(query, nameof(query));
 
+      switch (query.ReportType) {
+        case CashFlowReportType.CashFlow:
+          return GetCashFlowReport(query);
+
+        case CashFlowReportType.ConceptAnalytic:
+          return GetConceptAnalyticReport(query);
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"El reporte {query.ReportType} no está disponible.");
+      }
+    }
+
+    #endregion Use cases
+
+    #region Helpers
+
+    private async Task<CashFlowExplorerResultDto> GetCashFlowReport(CashFlowExplorerQuery query) {
       FixedList<CashLedgerTotalEntryDto> totals = await _financialAccountingServices.GetCashLedgerTotals(query);
 
       var explorer = new CashFlowExplorer(query, totals);
@@ -51,7 +69,12 @@ namespace Empiria.CashFlow.Explorer.UseCases {
       return CashFlowExplorerResultMapper.Map(result);
     }
 
-    #endregion Use cases
+
+    private async Task<CashFlowExplorerResultDto> GetConceptAnalyticReport(CashFlowExplorerQuery query) {
+      return await Task.FromException<CashFlowExplorerResultDto>(new NotImplementedException());
+    }
+
+    #endregion Helpers
 
   }  // class CashFlowExplorerUseCases
 
