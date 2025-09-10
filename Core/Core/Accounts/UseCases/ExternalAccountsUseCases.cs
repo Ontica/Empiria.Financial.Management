@@ -38,11 +38,7 @@ namespace Empiria.Financial.UseCases {
       Assertion.Require(accountNo, nameof(accountNo));
       Assertion.Require(projectUID, nameof(projectUID));
 
-      var service = new ExternalCreditSystemServices();
-
-      ICreditAccountData externalAccount = service.TryGetCreditWithAccountNo(accountNo);
-
-      Assertion.Require(externalAccount, $"Unrecognized external credit system's account: '{accountNo}'");
+      ICreditAccountData externalAccount = GetAccountFromCreditSystem(accountNo, true);
 
       var accountType = FinancialAccountType.CreditAccount;
       var project = FinancialProject.Parse(projectUID);
@@ -56,6 +52,28 @@ namespace Empiria.Financial.UseCases {
       account.Save();
 
       return FinancialAccountMapper.Map(account);
+    }
+
+
+    private ICreditAccountData GetAccountFromCreditSystem(string accountNo, bool forCreation = false) {
+
+      var service = new ExternalCreditSystemServices();
+
+      ICreditAccountData externalAccount = service.TryGetCreditWithAccountNo(accountNo);
+
+      Assertion.Require(externalAccount, $"Unrecognized external credit system's account: '{accountNo}'");
+
+      if (!forCreation) {
+        return externalAccount;
+      }
+
+      var current = FinancialAccount.GetList(x => x.FinancialAccountType.Equals(FinancialAccountType.CreditAccount) &&
+                                                  x.AccountNo == externalAccount.AccountNo);
+
+      Assertion.Require(current.Count == 0,
+                        $"La cuenta de crédito '{externalAccount}' ya está registrada en el sistema.");
+
+      return externalAccount;
     }
 
 
