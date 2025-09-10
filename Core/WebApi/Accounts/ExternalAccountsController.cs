@@ -21,7 +21,21 @@ namespace Empiria.Financial.Accounts.WebApi {
   /// and update them as financial accounts.</summary>
   public class ExternalAccountsController : WebApiController {
 
-    #region Credit System Web Apis
+    #region Credit system web apis
+
+    [HttpPost]
+    [Route("v2/financial-accounts/external-systems/credit/{accountNo}/search")]
+    public SingleObjectModel CreateAccountFromCreditSystem([FromUri] string accountNo,
+                                                           [FromBody] ExternalAccountFields fields) {
+
+      using (var usecases = ExternalAccountsUseCases.UseCaseInteractor()) {
+
+        FinancialAccountDto accountDto = usecases.CreateAccountFromCreditSystem(accountNo, fields.ProjectUID);
+
+        return new SingleObjectModel(this.Request, accountDto);
+      }
+    }
+
 
     [HttpGet]
     [Route("v2/financial-accounts/external-systems/credit/{accountNo}/search")]
@@ -40,8 +54,18 @@ namespace Empiria.Financial.Accounts.WebApi {
       }
     }
 
-    #endregion Credit System Web Apis
+    #endregion Credit system web apis
 
   }  // class ExternalAccountsController
 
-}  // namespace Empiria.Financial.Projects.WebApi
+
+
+  public class ExternalAccountFields {
+
+    public string ProjectUID {
+      get; set;
+    }
+
+  }  // class ExternalAccountFields
+
+}  // namespace Empiria.Financial.Accounts.WebApi

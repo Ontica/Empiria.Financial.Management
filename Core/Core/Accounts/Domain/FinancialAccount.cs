@@ -19,6 +19,8 @@ using Empiria.StateEnums;
 using Empiria.Financial.Data;
 using Empiria.Financial.Projects;
 
+using Empiria.Financial.Adapters;
+
 namespace Empiria.Financial {
 
   /// <summary>Partitioned type that represents a financial account as
@@ -448,13 +450,23 @@ namespace Empiria.Financial {
       if (AccountNo.Length == 0) {
         AccountNo = Patcher.PatchClean(fields.AccountNo, AccountNo);
       }
+
       Description = Patcher.PatchClean(fields.Description, Description);
       StandardAccount = Patcher.Patch(fields.StandardAccountUID, StandardAccount);
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       OrganizationalUnit = Patcher.Patch(fields.OrganizationalUnitUID, OrganizationalUnit);
+
       _attributes = JsonObject.Parse(fields.Attributes);
       _financialData = JsonObject.Parse(fields.FinancialData);
       _tags = EmpiriaString.Tagging(fields.Tags);
+    }
+
+
+    internal void Update(ICreditAccountData accountData) {
+
+      AccountNo = accountData.AccountNo;
+      SubledgerAccountNo = accountData.SubledgerAccountNo;
+      Description = accountData.CustomerName;
 
       MarkAsDirty();
     }

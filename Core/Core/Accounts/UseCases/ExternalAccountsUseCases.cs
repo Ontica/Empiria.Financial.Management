@@ -8,9 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Parties;
 using Empiria.Services;
 
 using Empiria.Financial.Adapters;
+using Empiria.Financial.Projects;
 
 namespace Empiria.Financial.UseCases {
 
@@ -31,6 +33,30 @@ namespace Empiria.Financial.UseCases {
     #endregion Constructors and parsers
 
     #region Credit system use cases
+
+    public FinancialAccountDto CreateAccountFromCreditSystem(string accountNo, string projectUID) {
+      Assertion.Require(accountNo, nameof(accountNo));
+      Assertion.Require(projectUID, nameof(projectUID));
+
+      var service = new ExternalCreditSystemServices();
+
+      ICreditAccountData externalAccount = service.TryGetCreditWithAccountNo(accountNo);
+
+      Assertion.Require(externalAccount, $"Unrecognized external credit system's account: '{accountNo}'");
+
+      var accountType = FinancialAccountType.CreditAccount;
+      var project = FinancialProject.Parse(projectUID);
+      var stdAccount = project.GetStandardAccounts()[0];
+      var orgUnit = (OrganizationalUnit) project.BaseOrgUnit;
+
+      var account = new FinancialAccount(accountType, stdAccount, orgUnit, project);
+
+      account.Update(externalAccount);
+
+      account.Save();
+
+      return FinancialAccountMapper.Map(account);
+    }
 
 
     public FinancialAccountDto TryGetAccountFromCreditSystem(string accountNo) {
