@@ -10,6 +10,8 @@
 
 using Empiria.Json;
 
+using Empiria.Financial.Adapters;
+
 namespace Empiria.Financial {
 
   /// <summary>Holds credit financial account attributes.</summary>
@@ -18,17 +20,23 @@ namespace Empiria.Financial {
     #region Constructors and Parsers
 
     private readonly JsonObject _attributes = new JsonObject();
-    private readonly FinancialAccount _account;
 
     public CreditAttributes() {
       // no-op
     }
 
-    internal CreditAttributes(FinancialAccount account, JsonObject attributes) {
-      Assertion.Require(account, nameof(account));
+    public CreditAttributes(ICreditAccountData account) {
+
+      Borrower = account.Borrower;
+      //CreditStage = CreditStage.ParseNamedKey<CreditStage>(account.CreditStage);
+      //CreditType = CreditType.ParseNamedKey<CreditType>(account.CreditType);
+      ExternalCreditNo = account.ExternalCreditNo;
+      SubledgerAccountNo = account.SubledgerAccountNo;
+    }
+
+    internal CreditAttributes(JsonObject attributes) {
       Assertion.Require(attributes, nameof(attributes));
 
-      _account = account;
       _attributes = attributes;
     }
 
@@ -46,12 +54,12 @@ namespace Empiria.Financial {
     }
 
 
-    public string AccountingAccount {
+    public string SubledgerAccountNo {
       get {
-        return _attributes.Get("creditAccountingAccount", string.Empty);
+        return _attributes.Get("subledgerAccountNo", string.Empty);
       }
       internal set {
-        _attributes.SetIfValue("creditAccountingAccount", value);
+        _attributes.SetIfValue("subledgerAccountNo", value);
       }
     }
 
@@ -78,8 +86,7 @@ namespace Empiria.Financial {
 
     public string ExternalCreditNo {
       get {
-        return _account.SubledgerAccountNo;
-        //_attributes.Get("externalCreditNo", string.Empty);
+        return _attributes.Get("externalCreditNo", string.Empty);
       }
       internal set {
         _attributes.SetIfValue("externalCreditNo", value);
@@ -89,6 +96,10 @@ namespace Empiria.Financial {
     #endregion Properties
 
     #region Helpers
+
+    internal JsonObject ToJson() {
+      return _attributes;
+    }
 
     internal override string ToJsonString() {
       return _attributes.ToString();

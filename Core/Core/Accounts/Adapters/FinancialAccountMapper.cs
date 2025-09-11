@@ -49,10 +49,29 @@ namespace Empiria.Financial.Adapters {
 
 
     static internal FinancialAccountDto Map(ICreditAccountData account) {
+
+      NamedEntityDto stdAccountDto = null;
+
+      var stdAccount = StandardAccount.TryParseAccountNo(account.StandardAccount);
+
+      if (stdAccount != null) {
+        stdAccountDto = stdAccount.MapToNamedEntity();
+      } else {
+        stdAccountDto = new NamedEntityDto(account.StandardAccount, account.StandardAccount);
+      }
+
       return new FinancialAccountDto {
+        UID = string.Empty,
         AccountNo = account.AccountNo,
         SubledgerAccountNo = account.SubledgerAccountNo,
-        Description = account.Borrower
+        Description = account.Borrower,
+        Currency = account.Currency.MapToNamedEntity(),
+        OrganizationalUnit = account.Area.MapToNamedEntity(),
+        Attributes = new CreditAttributes(account),
+        FinancialData = new CreditFinancialData(account),
+        FinancialAccountType = FinancialAccountType.CreditAccount.MapToNamedEntity(),
+        StandardAccount = stdAccountDto,
+        Status = EntityStatus.Active.MapToDto(),
       };
     }
 

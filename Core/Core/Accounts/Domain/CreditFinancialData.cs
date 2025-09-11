@@ -12,6 +12,8 @@ using System;
 
 using Empiria.Json;
 
+using Empiria.Financial.Adapters;
+
 namespace Empiria.Financial {
 
   /// <summary>Holds financial data for credit accounts.</summary>
@@ -25,6 +27,20 @@ namespace Empiria.Financial {
       Assertion.Require(financialData, nameof(financialData));
 
       _financialExtData = financialData;
+    }
+
+    internal CreditFinancialData(ICreditAccountData account) {
+      Assertion.Require(account, nameof(account));
+
+      CurrentBalance = account.CurrentBalance;
+      GracePeriod = account.GracePeriod;
+      InterestRate = account.InterestRate;
+      InvestmentTerm = account.InvestmentTerm;
+      InterestRateCeiling = account.InterestRateCeiling;
+      InterestRateFactor = account.InterestRateFactor;
+      InterestRateFloor = account.InterestRateFloor;
+      RepaymentDate = account.RepaymentDate;
+      RepaymentTerm = account.RepaymentTerm;
     }
 
     #endregion Properties
@@ -147,6 +163,10 @@ namespace Empiria.Financial {
       private set {
         _financialExtData.SetIfValue("interestRateCeiling", value);
       }
+    }
+
+    internal JsonObject ToJson() {
+      return _financialExtData;
     }
 
     #endregion Properties

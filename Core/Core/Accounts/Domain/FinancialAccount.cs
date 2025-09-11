@@ -253,7 +253,7 @@ namespace Empiria.Financial {
 
     public AccountAttributes Attributes {
       get {
-        return new CreditAttributes(this, _attributes);
+        return new CreditAttributes(_attributes);
       }
     }
 
@@ -478,10 +478,19 @@ namespace Empiria.Financial {
 
 
     internal void Update(ICreditAccountData accountData) {
+      Assertion.Require(accountData, nameof(accountData));
 
       AccountNo = accountData.AccountNo;
-      SubledgerAccountNo = accountData.SubledgerAccountNo;
       Description = accountData.Borrower;
+      StandardAccount = StandardAccount.TryParseAccountNo(accountData.StandardAccount) ?? StandardAccount;
+      Currency = accountData.Currency;
+      OrganizationalUnit = accountData.Area;
+      SubledgerAccountNo = accountData.SubledgerAccountNo;
+
+      Status = EntityStatus.Active;
+
+      _attributes = new CreditAttributes(accountData).ToJson();
+      _financialData = new CreditFinancialData(accountData).ToJson();
 
       MarkAsDirty();
     }
