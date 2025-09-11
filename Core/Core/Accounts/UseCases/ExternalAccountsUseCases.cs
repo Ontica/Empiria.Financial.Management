@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Parties;
 using Empiria.Services;
 
 using Empiria.Financial.Adapters;
@@ -42,8 +41,19 @@ namespace Empiria.Financial.UseCases {
 
       var accountType = FinancialAccountType.CreditAccount;
       var project = FinancialProject.Parse(projectUID);
-      var stdAccount = project.GetStandardAccounts()[0];
-      var orgUnit = (OrganizationalUnit) project.BaseOrgUnit;
+      var orgUnit = externalAccount.Area;
+
+      var stdAccount = StandardAccount.TryParseAccountNo(externalAccount.StandardAccount);
+
+      Assertion.Require(stdAccount,
+                        $"La cuenta estándar '{externalAccount.StandardAccount}' " +
+                        $"asociada a la cuenta de crédito '({externalAccount.AccountNo}) {externalAccount.Borrower}' " +
+                        $"no está registrada en el sistema.");
+
+      Assertion.Require(project.GetStandardAccounts().Contains(stdAccount),
+                        $"No se puede asignar esta cuenta de crédito al proyecto " +
+                        $"{project.Name}, debido a que todas sus cuentas deben ser del tipo " +
+                        $"({project.Subprogram.StandardAccount.StdAcctNo}) {project.Subprogram.StandardAccount.FullName}.");
 
       var account = new FinancialAccount(accountType, stdAccount, orgUnit, project);
 
@@ -71,7 +81,8 @@ namespace Empiria.Financial.UseCases {
                                                            externalAccount.AccountNo);
 
       Assertion.Require(current == null,
-                        $"La cuenta de crédito '{externalAccount}' ya está registrada en el sistema.");
+                        $"La cuenta de crédito '{externalAccount.AccountNo} {externalAccount.Borrower}' " +
+                        $"ya está registrada en el sistema.");
 
       return externalAccount;
     }

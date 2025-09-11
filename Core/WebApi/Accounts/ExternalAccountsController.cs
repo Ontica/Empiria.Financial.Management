@@ -30,7 +30,8 @@ namespace Empiria.Financial.Accounts.WebApi {
 
       using (var usecases = ExternalAccountsUseCases.UseCaseInteractor()) {
 
-        FinancialAccountDto accountDto = usecases.CreateAccountFromCreditSystem(accountNo, fields.ProjectUID);
+        FinancialAccountDto accountDto = usecases.CreateAccountFromCreditSystem(accountNo,
+                                                                                fields.ProjectUID);
 
         return new SingleObjectModel(this.Request, accountDto);
       }
@@ -38,7 +39,7 @@ namespace Empiria.Financial.Accounts.WebApi {
 
 
     [HttpGet]
-    [Route("v2/financial-accounts/external-systems/credit/{accountNo}/search")]
+    [Route("v2/financial-accounts/external-systems/credit/{accountNo}")]
     public SingleObjectModel GetAccountFromCreditSystem([FromUri] string accountNo) {
 
       using (var usecases = ExternalAccountsUseCases.UseCaseInteractor()) {
