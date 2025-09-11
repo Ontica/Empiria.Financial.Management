@@ -62,6 +62,8 @@
     <PackageReference Include="Empiria.Core" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\central\Central\Empiria.Central.csproj" />
     <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
+    <ProjectReference Include="..\..\..\financial.accounting\Core\Empiria.FinancialAccounting.Core.csproj" />
   </ItemGroup>
 </Project>
