@@ -13,10 +13,10 @@ namespace Empiria.CashFlow.Explorer.Adapters {
   /// <summary>Maps a CashFlowExplorerResult instance to its output DTO.</summary>
   static internal class CashFlowExplorerResultMapper {
 
-    static internal CashFlowExplorerResultDto Map(CashFlowExplorerResult result) {
+    static internal DynamicDto<T> Map<T>(DynamicResult<T> result) {
       Assertion.Require(result, nameof(result));
 
-      return new CashFlowExplorerResultDto {
+      return new DynamicDto<T> {
         Query = result.Query,
         Columns = result.Columns,
         Entries = result.Entries

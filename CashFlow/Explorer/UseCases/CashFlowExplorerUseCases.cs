@@ -8,16 +8,16 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Empiria.DynamicData;
 using Empiria.Services;
 
 using Empiria.FinancialAccounting.ClientServices;
 
 using Empiria.CashFlow.CashLedger.Adapters;
-
 using Empiria.CashFlow.Explorer.Adapters;
-using System;
 
 namespace Empiria.CashFlow.Explorer.UseCases {
 
@@ -40,38 +40,44 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     #region Use cases
 
-    public Task<CashFlowExplorerResultDto> ExploreCashFlow(CashFlowExplorerQuery query) {
-      Assertion.Require(query, nameof(query));
+    public async Task<DynamicDto<CashEntryDescriptor>> ConceptsAnalytics(CashFlowExplorerQuery query) {
+      FixedList<CashEntryDescriptor> entries = await _financialAccountingServices.GetCashLedgerEntries(query);
 
-      switch (query.ReportType) {
-        case CashFlowReportType.CashFlow:
-          return GetCashFlowReport(query);
+      var result = new DynamicResult<CashEntryDescriptor> {
+        Query = query,
+        Columns = GetConceptsAnalyticColumns(),
+        Entries = entries
+      };
 
-        case CashFlowReportType.ConceptAnalytic:
-          return GetConceptAnalyticReport(query);
+      return CashFlowExplorerResultMapper.Map(result);
+    }
 
-        default:
-          throw Assertion.EnsureNoReachThisCode($"El reporte {query.ReportType} no está disponible.");
-      }
+    public async Task<DynamicDto<CashFlowExplorerEntry>> ExploreCashFlow(CashFlowExplorerQuery query) {
+      FixedList<CashLedgerTotalEntryDto> totals = await _financialAccountingServices.GetCashLedgerTotals(query);
+
+      var explorer = new CashFlowExplorer(query, totals);
+
+      DynamicResult<CashFlowExplorerEntry> result = explorer.Execute();
+
+      return CashFlowExplorerResultMapper.Map(result);
     }
 
     #endregion Use cases
 
     #region Helpers
 
-    private async Task<CashFlowExplorerResultDto> GetCashFlowReport(CashFlowExplorerQuery query) {
-      FixedList<CashLedgerTotalEntryDto> totals = await _financialAccountingServices.GetCashLedgerTotals(query);
-
-      var explorer = new CashFlowExplorer(query, totals);
-
-      CashFlowExplorerResult result = explorer.Execute();
-
-      return CashFlowExplorerResultMapper.Map(result);
-    }
-
-
-    private async Task<CashFlowExplorerResultDto> GetConceptAnalyticReport(CashFlowExplorerQuery query) {
-      return await Task.FromException<CashFlowExplorerResultDto>(new NotImplementedException());
+    private FixedList<DataTableColumn> GetConceptsAnalyticColumns() {
+      return new List<DataTableColumn> {
+        new DataTableColumn("cashAccountNo", "Concepto presupuestal", "text"),
+        new DataTableColumn("conceptDescription", "Descripción", "text"),
+        new DataTableColumn("program", "Programa", "text"),
+        new DataTableColumn("subprogram", "Subprograma", "text"),
+        new DataTableColumn("financingSource", "Fuente", "text"),
+        new DataTableColumn("operationType", "Operación", "text"),
+        new DataTableColumn("currencyCode", "Moneda", "text"),
+        new DataTableColumn("inflows", "Entradas", "decimal"),
+        new DataTableColumn("outflows", "Salidas", "decimal"),
+      }.ToFixedList();
     }
 
     #endregion Helpers

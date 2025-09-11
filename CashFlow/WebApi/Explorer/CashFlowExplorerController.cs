@@ -18,6 +18,7 @@ using Empiria.CashFlow.Explorer.Adapters;
 using Empiria.CashFlow.Explorer.UseCases;
 
 using Empiria.CashFlow.Reporting;
+using Empiria.CashFlow.CashLedger.Adapters;
 
 namespace Empiria.CashFlow.Explorer.WebApi {
 
@@ -30,32 +31,71 @@ namespace Empiria.CashFlow.Explorer.WebApi {
     [Route("v1/cash-flow/explorer")]
     public async Task<SingleObjectModel> ExploreCashFlow([FromBody] CashFlowExplorerQuery query) {
 
-      using (var usecases = CashFlowExplorerUseCases.UseCaseInteractor()) {
-        CashFlowExplorerResultDto explorerResult = await usecases.ExploreCashFlow(query);
+      switch (query.ReportType) {
+        case CashFlowReportType.CashFlow:
+          var cashflow = await GetExplorerData<CashFlowExplorerEntry>(query);
 
-        return new SingleObjectModel(base.Request, explorerResult);
+          return new SingleObjectModel(base.Request, cashflow);
+
+        case CashFlowReportType.ConceptAnalytic:
+          var concepts = await GetExplorerData<CashEntryDescriptor>(query);
+
+          return new SingleObjectModel(base.Request, concepts);
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"El reporte {query.ReportType} no está disponible.");
       }
     }
-
 
     [HttpPost]
     [Route("v1/cash-flow/export")]
     public async Task<SingleObjectModel> ExportCashFlowToExcel([FromBody] CashFlowExplorerQuery query) {
 
-      using (var usecases = CashFlowExplorerUseCases.UseCaseInteractor()) {
-        CashFlowExplorerResultDto explorerResult = await usecases.ExploreCashFlow(query);
+      var reportingService = CashFlowReportingService.ServiceInteractor();
 
-        var reportingService = CashFlowReportingService.ServiceInteractor();
+      FileDto report;
 
-        FileDto report = reportingService.ExportCashFlowExplorerToExcel(explorerResult);
+      switch (query.ReportType) {
+        case CashFlowReportType.CashFlow:
+          var cashflow = await GetExplorerData<CashFlowExplorerEntry>(query);
 
-        base.SetOperation($"Se exportó el reporte de flujo de efectivo a Excel.");
+          report = reportingService.ExportCashFlowExplorerToExcel(cashflow);
 
-        return new SingleObjectModel(base.Request, report);
+          break;
+
+        case CashFlowReportType.ConceptAnalytic:
+          var concepts = await GetExplorerData<CashEntryDescriptor>(query);
+
+          report = reportingService.ExportConceptAnalyticToExcel(concepts);
+
+          break;
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"El reporte {query.ReportType} no está disponible.");
       }
+
+      base.SetOperation($"Se exportó el reporte de flujo de efectivo a Excel.");
+
+      return new SingleObjectModel(base.Request, report);
     }
 
     #endregion Web apis
+
+
+    private async Task<DynamicDto<T>> GetExplorerData<T>(CashFlowExplorerQuery query) {
+      using (var usecases = CashFlowExplorerUseCases.UseCaseInteractor()) {
+        switch (query.ReportType) {
+          case CashFlowReportType.CashFlow:
+            return (DynamicDto<T>) (object) await usecases.ExploreCashFlow(query);
+
+          case CashFlowReportType.ConceptAnalytic:
+            return (DynamicDto<T>) (object) await usecases.ConceptsAnalytics(query);
+
+          default:
+            throw Assertion.EnsureNoReachThisCode($"El reporte {query.ReportType} no está disponible.");
+        }
+      }
+    }
 
   }  // class CashFlowExplorerController
 

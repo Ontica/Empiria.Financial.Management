@@ -8,10 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Office;
 using Empiria.Services;
 using Empiria.Storage;
 
+using Empiria.CashFlow.CashLedger.Adapters;
+
+using Empiria.CashFlow.Explorer;
 using Empiria.CashFlow.Explorer.Adapters;
 
 namespace Empiria.CashFlow.Reporting {
@@ -33,7 +38,7 @@ namespace Empiria.CashFlow.Reporting {
 
     #region Services
 
-    public FileDto ExportCashFlowExplorerToExcel(CashFlowExplorerResultDto explorerResult) {
+    public FileDto ExportCashFlowExplorerToExcel(DynamicDto<CashFlowExplorerEntry> explorerResult) {
       Assertion.Require(explorerResult, nameof(explorerResult));
 
       var templateUID = $"{this.GetType().Name}.ExportCashExplorerToExcel";
@@ -45,6 +50,11 @@ namespace Empiria.CashFlow.Reporting {
       ExcelFile excelFile = exporter.CreateExcelFile(explorerResult);
 
       return excelFile.ToFileDto();
+    }
+
+
+    public FileDto ExportConceptAnalyticToExcel(DynamicDto<CashEntryDescriptor> concepts) {
+      throw new NotImplementedException();
     }
 
     #endregion Services

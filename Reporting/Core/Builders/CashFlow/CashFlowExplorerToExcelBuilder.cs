@@ -13,6 +13,7 @@ using System;
 using Empiria.Office;
 using Empiria.Storage;
 
+using Empiria.CashFlow.Explorer;
 using Empiria.CashFlow.Explorer.Adapters;
 
 namespace Empiria.CashFlow.Reporting {
@@ -31,7 +32,7 @@ namespace Empiria.CashFlow.Reporting {
     }
 
 
-    internal ExcelFile CreateExcelFile(CashFlowExplorerResultDto explorerResult) {
+    internal ExcelFile CreateExcelFile(DynamicDto<CashFlowExplorerEntry> explorerResult) {
       Assertion.Require(explorerResult, nameof(explorerResult));
 
       _excelFile = new ExcelFile(_templateConfig);
@@ -57,7 +58,7 @@ namespace Empiria.CashFlow.Reporting {
     }
 
 
-    private void FillOut(CashFlowExplorerResultDto explorerResult) {
+    private void FillOut(DynamicDto<CashFlowExplorerEntry> explorerResult) {
       int i = _templateConfig.FirstRowIndex;
 
       foreach (var entry in explorerResult.Entries) {

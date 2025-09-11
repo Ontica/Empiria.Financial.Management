@@ -34,8 +34,8 @@ namespace Empiria.CashFlow.Explorer {
 
     #region Methods
 
-    internal CashFlowExplorerResult Execute() {
-      return new CashFlowExplorerResult {
+    internal DynamicResult<CashFlowExplorerEntry> Execute() {
+      return new DynamicResult<CashFlowExplorerEntry> {
         Query = _query,
         Columns = GetDynamicColumns(),
         Entries = ProcessEntries()

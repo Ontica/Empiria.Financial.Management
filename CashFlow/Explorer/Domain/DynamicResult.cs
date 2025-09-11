@@ -15,7 +15,7 @@ using Empiria.CashFlow.Explorer.Adapters;
 namespace Empiria.CashFlow.Explorer {
 
   /// <summary>Holds the dynamic result of a cash flow explorer execution.</summary>
-  internal class CashFlowExplorerResult {
+  internal class DynamicResult<T> {
 
     public CashFlowExplorerQuery Query {
       get; internal set;
@@ -25,10 +25,10 @@ namespace Empiria.CashFlow.Explorer {
       get; internal set;
     }
 
-    public FixedList<CashFlowExplorerEntry> Entries {
+    public FixedList<T> Entries {
       get; internal set;
     }
 
-  }  // class CashFlowExplorerResult
+  }  // class DynamicResult
 
 }  // namespace Empiria.CashFlow.Explorer
