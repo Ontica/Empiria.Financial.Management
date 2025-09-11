@@ -29,8 +29,7 @@ namespace Empiria.Tests.Financial.Integation {
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut.AccountNo);
-      Assert.NotEmpty(sut.CustomerNo);
-      Assert.NotEmpty(sut.CustomerName);
+      Assert.NotEmpty(sut.Borrower);
       Assert.NotEmpty(sut.SubledgerAccountNo);
     }
 

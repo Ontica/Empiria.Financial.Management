@@ -52,7 +52,7 @@ namespace Empiria.Financial.Adapters {
       return new FinancialAccountDto {
         AccountNo = account.AccountNo,
         SubledgerAccountNo = account.SubledgerAccountNo,
-        Description = account.CustomerName
+        Description = account.Borrower
       };
     }
 

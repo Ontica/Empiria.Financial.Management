@@ -481,7 +481,7 @@ namespace Empiria.Financial {
 
       AccountNo = accountData.AccountNo;
       SubledgerAccountNo = accountData.SubledgerAccountNo;
-      Description = accountData.CustomerName;
+      Description = accountData.Borrower;
 
       MarkAsDirty();
     }
