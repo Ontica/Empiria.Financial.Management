@@ -18,7 +18,6 @@ using Empiria.CashFlow.Explorer.Adapters;
 using Empiria.CashFlow.Explorer.UseCases;
 
 using Empiria.CashFlow.Reporting;
-using Empiria.CashFlow.CashLedger.Adapters;
 
 namespace Empiria.CashFlow.Explorer.WebApi {
 
@@ -38,7 +37,7 @@ namespace Empiria.CashFlow.Explorer.WebApi {
           return new SingleObjectModel(base.Request, cashflow);
 
         case CashFlowReportType.ConceptAnalytic:
-          var concepts = await GetExplorerData<CashEntryDescriptor>(query);
+          var concepts = await GetExplorerData<ConceptAnalyticsDto>(query);
 
           return new SingleObjectModel(base.Request, concepts);
 
@@ -64,9 +63,9 @@ namespace Empiria.CashFlow.Explorer.WebApi {
           break;
 
         case CashFlowReportType.ConceptAnalytic:
-          var concepts = await GetExplorerData<CashEntryDescriptor>(query);
+          var concepts = await GetExplorerData<ConceptAnalyticsDto>(query);
 
-          report = reportingService.ExportConceptAnalyticToExcel(concepts);
+          report = reportingService.ExportConceptsAnalyticsToExcel(concepts);
 
           break;
 
