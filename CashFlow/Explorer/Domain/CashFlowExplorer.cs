@@ -35,11 +35,11 @@ namespace Empiria.CashFlow.Explorer {
     #region Methods
 
     internal DynamicDto<CashFlowExplorerEntry> Execute() {
-      return new DynamicDto<CashFlowExplorerEntry> {
-        Query = _query,
-        Columns = GetDynamicColumns(),
-        Entries = ProcessEntries()
-      };
+      return new DynamicDto<CashFlowExplorerEntry>(
+        _query,
+        GetDynamicColumns(),
+        ProcessEntries()
+      );
     }
 
 

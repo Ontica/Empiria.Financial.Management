@@ -12,8 +12,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Empiria.DynamicData;
-using Empiria.Financial;
 using Empiria.Services;
+
+using Empiria.Financial;
 
 using Empiria.FinancialAccounting.ClientServices;
 
@@ -45,11 +46,11 @@ namespace Empiria.CashFlow.Explorer.UseCases {
       FixedList<ConceptAnalyticsDto> entries =
                         await _financialAccountingServices.GetCashLedgerEntries<ConceptAnalyticsDto>(query);
 
-      return new DynamicDto<ConceptAnalyticsDto> {
-        Query = query,
-        Columns = GetConceptsAnalyticColumns(),
-        Entries = entries.Select(x => CompleteAnalytics(x)).ToFixedList()
-      };
+      return new DynamicDto<ConceptAnalyticsDto>(
+        query,
+        GetConceptsAnalyticColumns(),
+        entries.Select(x => CompleteAnalytics(x)).ToFixedList()
+      );
     }
 
     public async Task<DynamicDto<CashFlowExplorerEntry>> ExploreCashFlow(CashFlowExplorerQuery query) {

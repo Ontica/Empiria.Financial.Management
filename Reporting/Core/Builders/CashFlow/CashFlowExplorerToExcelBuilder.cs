@@ -10,11 +10,11 @@
 
 using System;
 
+using Empiria.DynamicData;
 using Empiria.Office;
 using Empiria.Storage;
 
 using Empiria.CashFlow.Explorer;
-using Empiria.CashFlow.Explorer.Adapters;
 
 namespace Empiria.CashFlow.Reporting {
 
