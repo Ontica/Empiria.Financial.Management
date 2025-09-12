@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Empiria.DynamicData;
+using Empiria.Financial;
 using Empiria.Services;
 
 using Empiria.FinancialAccounting.ClientServices;
@@ -40,13 +41,14 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     #region Use cases
 
-    public async Task<DynamicDto<CashEntryDescriptor>> ConceptsAnalytics(CashFlowExplorerQuery query) {
-      FixedList<CashEntryDescriptor> entries = await _financialAccountingServices.GetCashLedgerEntries(query);
+    public async Task<DynamicDto<ConceptAnalyticsDto>> ConceptsAnalytics(CashFlowExplorerQuery query) {
+      FixedList<ConceptAnalyticsDto> entries =
+                        await _financialAccountingServices.GetCashLedgerEntries<ConceptAnalyticsDto>(query);
 
-      var result = new DynamicResult<CashEntryDescriptor> {
+      var result = new DynamicResult<ConceptAnalyticsDto> {
         Query = query,
         Columns = GetConceptsAnalyticColumns(),
-        Entries = entries
+        Entries = entries.Select(x => CompleteAnalytics(x)).ToFixedList()
       };
 
       return CashFlowExplorerResultMapper.Map(result);
@@ -66,17 +68,40 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     #region Helpers
 
+    private ConceptAnalyticsDto CompleteAnalytics(ConceptAnalyticsDto dto) {
+
+      if (dto.CashAccountId <= 0) {
+        return dto;
+      }
+
+      FinancialAccount cashAccount = FinancialAccount.Parse(dto.CashAccountId);
+
+      dto.ConceptDescription = cashAccount.Description;
+      dto.FinancialAcctName = cashAccount.Parent.Name;
+      dto.FinancialAcctOrgUnit = cashAccount.OrganizationalUnit.FullName;
+      dto.FinancialAcctType = cashAccount.Parent.FinancialAccountType.DisplayName;
+      dto.ProjectType = cashAccount.Parent.Project.Category.Name;
+
+      return dto;
+    }
+
+
     private FixedList<DataTableColumn> GetConceptsAnalyticColumns() {
       return new List<DataTableColumn> {
         new DataTableColumn("cashAccountNo", "Concepto presupuestal", "text"),
         new DataTableColumn("conceptDescription", "Descripción", "text"),
-        new DataTableColumn("program", "Programa", "text"),
-        new DataTableColumn("subprogram", "Subprograma", "text"),
-        new DataTableColumn("financingSource", "Fuente", "text"),
-        new DataTableColumn("operationType", "Operación", "text"),
-        new DataTableColumn("currencyCode", "Moneda", "text"),
-        new DataTableColumn("inflows", "Entradas", "decimal"),
-        new DataTableColumn("outflows", "Salidas", "decimal"),
+        new DataTableColumn("accountNumber", "Cuenta", "text"),
+        new DataTableColumn("transactionAccountingDate", "Fecha", "date"),
+        new DataTableColumn("currencyName", "Mon", "text"),
+        new DataTableColumn("exchangeRate", "T.Cambio", "decimal"),
+        new DataTableColumn("debit", "Cargo", "decimal"),
+        new DataTableColumn("credit", "Abono", "decimal"),
+        new DataTableColumn("transactionNumber", "Póliza", "text-link"),
+        new DataTableColumn("financialAcctOrgUnit", "Área", "text"),
+        new DataTableColumn("subledgerAccountNumber", "Auxiliar", "text"),
+        new DataTableColumn("projectType", "Clave de obra", "text"),
+        new DataTableColumn("financialAcctType", "Tipo de cuenta", "text"),
+        new DataTableColumn("financialAcctName", "Nombre de la cuenta", "text"),
       }.ToFixedList();
     }
 
