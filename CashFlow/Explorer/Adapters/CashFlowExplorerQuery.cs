@@ -33,7 +33,7 @@ namespace Empiria.CashFlow.Explorer.Adapters {
 
 
   /// <summary>Input query DTO used to retrieve cash flow explorer information.</summary>
-  public class CashFlowExplorerQuery : BaseCashLedgerTotalsQuery {
+  public class CashFlowExplorerQuery : BaseCashLedgerTotalsQuery, IQuery {
 
     public CashFlowReportType ReportType {
       get; set;

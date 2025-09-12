@@ -45,13 +45,11 @@ namespace Empiria.CashFlow.Explorer.UseCases {
       FixedList<ConceptAnalyticsDto> entries =
                         await _financialAccountingServices.GetCashLedgerEntries<ConceptAnalyticsDto>(query);
 
-      var result = new DynamicResult<ConceptAnalyticsDto> {
+      return new DynamicDto<ConceptAnalyticsDto> {
         Query = query,
         Columns = GetConceptsAnalyticColumns(),
         Entries = entries.Select(x => CompleteAnalytics(x)).ToFixedList()
       };
-
-      return CashFlowExplorerResultMapper.Map(result);
     }
 
     public async Task<DynamicDto<CashFlowExplorerEntry>> ExploreCashFlow(CashFlowExplorerQuery query) {
@@ -59,9 +57,9 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
       var explorer = new CashFlowExplorer(query, totals);
 
-      DynamicResult<CashFlowExplorerEntry> result = explorer.Execute();
+      DynamicDto<CashFlowExplorerEntry> result = explorer.Execute();
 
-      return CashFlowExplorerResultMapper.Map(result);
+      return result;
     }
 
     #endregion Use cases

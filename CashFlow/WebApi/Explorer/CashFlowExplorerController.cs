@@ -80,6 +80,7 @@ namespace Empiria.CashFlow.Explorer.WebApi {
 
     #endregion Web apis
 
+    #region Helpers
 
     private async Task<DynamicDto<T>> GetExplorerData<T>(CashFlowExplorerQuery query) {
       using (var usecases = CashFlowExplorerUseCases.UseCaseInteractor()) {
@@ -95,6 +96,8 @@ namespace Empiria.CashFlow.Explorer.WebApi {
         }
       }
     }
+
+    #endregion Helpers
 
   }  // class CashFlowExplorerController
 
