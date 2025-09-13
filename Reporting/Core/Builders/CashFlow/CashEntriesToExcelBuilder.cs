@@ -34,7 +34,7 @@ namespace Empiria.CashFlow.Reporting {
     }
 
 
-    internal ExcelFile CreateExcelFile(FixedList<CashEntryDescriptor> entries) {
+    internal ExcelFile CreateExcelFile(FixedList<CashEntryExtendedDto> entries) {
       Assertion.Require(entries, nameof(entries));
 
       _excelFile = new ExcelFile(_templateConfig);
@@ -60,7 +60,7 @@ namespace Empiria.CashFlow.Reporting {
     }
 
 
-    private void FillOut(FixedList<CashEntryDescriptor> entries) {
+    private void FillOut(FixedList<CashEntryExtendedDto> entries) {
       int DEFAULT_CURRENCY_ID = Currency.Default.Id;
 
       int i = _templateConfig.FirstRowIndex;

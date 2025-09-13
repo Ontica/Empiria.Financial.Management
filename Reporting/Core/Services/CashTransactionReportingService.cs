@@ -33,7 +33,7 @@ namespace Empiria.CashFlow.Reporting {
 
     #region Services
 
-    public FileDto ExportAccountsAnalysisToExcel(FixedList<CashTransactionEntryDto> entries) {
+    public FileDto ExportAccountsAnalysisToExcel(FixedList<CashEntryDto> entries) {
       Assertion.Require(entries, nameof(entries));
 
       var templateUID = $"{this.GetType().Name}.ExportAccountsAnalysisToExcel";
@@ -92,7 +92,7 @@ namespace Empiria.CashFlow.Reporting {
 
 
 
-    public FileDto ExportTransactionsEntriesToExcel(FixedList<CashEntryDescriptor> entries) {
+    public FileDto ExportTransactionsEntriesToExcel(FixedList<CashEntryExtendedDto> entries) {
       Assertion.Require(entries, nameof(entries));
 
       var templateUID = $"{this.GetType().Name}.ExportEntriesToExcel";

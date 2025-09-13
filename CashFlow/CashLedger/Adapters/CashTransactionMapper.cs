@@ -36,7 +36,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     }
 
 
-    static private void SetCashAccounts(FixedList<CashTransactionEntryDto> entries) {
+    static private void SetCashAccounts(FixedList<CashEntryDto> entries) {
 
       foreach (var entry in entries) {
 

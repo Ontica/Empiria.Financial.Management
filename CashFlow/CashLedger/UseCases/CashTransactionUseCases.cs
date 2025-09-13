@@ -90,7 +90,7 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
 
           if (updatedTransactionEntries.Count > 0) {
             chunkEntries.AddRange(updatedTransactionEntries);
-            EmpiriaLog.Debug($"Rare {transaction.Transaction.Number}");
+            // EmpiriaLog.Debug($"Rare {transaction.Transaction.Number}");
             counter++;
           }
 
@@ -145,14 +145,14 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
     }
 
 
-    public async Task<FixedList<CashEntryDescriptor>> GetTransactionsEntries(FixedList<long> entriesIds) {
+    public async Task<FixedList<CashEntryExtendedDto>> GetTransactionsEntries(FixedList<long> entriesIds) {
       Assertion.Require(entriesIds, nameof(entriesIds));
 
       return await _financialAccountingServices.GetTransactionsEntries(entriesIds);
     }
 
 
-    public async Task<FixedList<CashEntryDescriptor>> SearchEntries(CashLedgerQuery query) {
+    public async Task<FixedList<CashEntryExtendedDto>> SearchEntries(CashLedgerQuery query) {
       Assertion.Require(query, nameof(query));
 
       return await _financialAccountingServices.SearchEntries(query);

@@ -68,7 +68,7 @@ namespace Empiria.CashFlow.Reporting {
       foreach (var holder in holders) {
         var txn = holder.Transaction;
 
-        foreach (CashTransactionEntryDto entry in holder.Entries) {
+        foreach (CashEntryDto entry in holder.Entries) {
 
           _excelFile.SetCell($"A{i}", txn.LedgerName);
           _excelFile.SetCell($"B{i}", txn.Number);

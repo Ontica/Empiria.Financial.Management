@@ -29,7 +29,7 @@ namespace Empiria.CashFlow.CashLedger {
     #region Constructors and parsers
 
     internal CashTransactionProcessor(CashTransactionDescriptor transaction,
-                                      FixedList<CashTransactionEntryDto> entries) {
+                                      FixedList<CashEntryDto> entries) {
       _helper = new CashTransactionProcessorHelper(transaction, entries);
     }
 
@@ -69,7 +69,7 @@ namespace Empiria.CashFlow.CashLedger {
     #region Processors
 
     private void ProcessCashFlowDirectEntries() {
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+      FixedList<CashEntryDto> entries = _helper.GetUnprocessedEntries();
 
       if (entries.Count == 0) {
         return;
@@ -118,7 +118,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     private void ProcessCashFlowEntriesOneToOne() {
-      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
+      FixedList<CashEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
 
       if (debitEntries.Count == 0) {
         return;
@@ -130,7 +130,7 @@ namespace Empiria.CashFlow.CashLedger {
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
 
         foreach (var rule in applicableRules) {
-          CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
+          CashEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
 
           if (creditEntry != null) {
             _helper.AddCashFlowEntry(rule, debitEntry, "Regla con flujo uno a uno");
@@ -144,7 +144,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     private void ProcessEqualEntriesAsNoCashFlowEntries() {
-      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
+      FixedList<CashEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
 
       if (debitEntries.Count == 0) {
         return;
@@ -152,7 +152,7 @@ namespace Empiria.CashFlow.CashLedger {
 
       foreach (var debitEntry in debitEntries) {
 
-        CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(debitEntry);
+        CashEntryDto creditEntry = _helper.TryGetMatchingEntry(debitEntry);
 
         if (creditEntry != null) {
           _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
@@ -165,7 +165,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     private void ProcessNoCashFlowCreditOrDebitEntries() {
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+      FixedList<CashEntryDto> entries = _helper.GetUnprocessedEntries();
 
       if (entries.Count == 0) {
         return;
@@ -185,7 +185,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     private void ProcessNoCashFlowEntriesOneToOne() {
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
+      FixedList<CashEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
 
       if (entries.Count == 0) {
         return;
@@ -197,7 +197,7 @@ namespace Empiria.CashFlow.CashLedger {
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
 
         foreach (var rule in applicableRules) {
-          CashTransactionEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, entry);
+          CashEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, entry);
 
           if (matchingEntry != null) {
             _helper.AddProcessedEntry(entry, CashAccountStatus.NoCashFlow,
@@ -211,7 +211,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     private void ProcessNoCashFlowEntriesOneToOneTwoWay() {
-      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
+      FixedList<CashEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
 
       if (debitEntries.Count == 0) {
         return;
@@ -224,7 +224,7 @@ namespace Empiria.CashFlow.CashLedger {
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
 
         foreach (var rule in applicableRules) {
-          CashTransactionEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
+          CashEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
 
           if (creditEntry != null) {
             _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
@@ -240,7 +240,7 @@ namespace Empiria.CashFlow.CashLedger {
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, creditEntry);
 
         foreach (var rule in applicableRules) {
-          CashTransactionEntryDto debitEntry = _helper.TryGetMatchingEntry(rule, creditEntry, true);
+          CashEntryDto debitEntry = _helper.TryGetMatchingEntry(rule, creditEntry, true);
 
           if (debitEntry != null) {
             _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
@@ -255,7 +255,7 @@ namespace Empiria.CashFlow.CashLedger {
 
     private void ProcessRemainingEntries() {
       FixedList<CashEntryFields> processed = _helper.GetProcessedEntries();
-      FixedList<CashTransactionEntryDto> unprocessed = _helper.GetUnprocessedEntries();
+      FixedList<CashEntryDto> unprocessed = _helper.GetUnprocessedEntries();
 
       foreach (var entry in unprocessed) {
         if (processed.Exists(x => x.EntryId == entry.Id)) {
@@ -273,7 +273,7 @@ namespace Empiria.CashFlow.CashLedger {
     #region Unused processors
 
     private void ProcessCashFlowDebitOrCreditEntries() {
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries();
+      FixedList<CashEntryDto> entries = _helper.GetUnprocessedEntries();
 
       if (entries.Count == 0) {
         return;
@@ -304,7 +304,7 @@ namespace Empiria.CashFlow.CashLedger {
 
     private void ProcessCashFlowDebitOrCreditEntriesOld() {
 
-      FixedList<CashTransactionEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
+      FixedList<CashEntryDto> entries = _helper.GetUnprocessedEntries(x => x.Debit > 0);
 
       if (entries.Count == 0) {
         return;
@@ -406,7 +406,7 @@ CONTINUE:
 
 
     private void ProcessEqualEntriesAsNoCashFlowEntriesAdded() {
-      FixedList<CashTransactionEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
+      FixedList<CashEntryDto> debitEntries = _helper.GetUnprocessedEntries(x => x.Debit != 0);
 
       if (debitEntries.Count == 0) {
         return;
@@ -414,9 +414,9 @@ CONTINUE:
 
       foreach (var debitGroup in debitEntries.GroupBy(x => $"{x.AccountNumber}|{x.CurrencyId}|{x.SectorCode}|{x.SubledgerAccountNumber}")) {
 
-        CashTransactionEntryDto pivotEntry = debitGroup.First();
+        CashEntryDto pivotEntry = debitGroup.First();
 
-        FixedList<CashTransactionEntryDto> creditEntries = _helper.GetUnprocessedEntries(x => x.Credit != 0 &&
+        FixedList<CashEntryDto> creditEntries = _helper.GetUnprocessedEntries(x => x.Credit != 0 &&
                                                                                               x.CurrencyId == pivotEntry.CurrencyId &&
                                                                                               x.AccountNumber == pivotEntry.AccountNumber &&
                                                                                               x.SectorCode == pivotEntry.SectorCode &&
@@ -446,9 +446,9 @@ CONTINUE:
                                                                             _helper.GetUnprocessedEntries(x => x.Debit != 0));
 
       foreach (var rule in applicableRules) {
-        FixedList<CashTransactionEntryDto> debitEntries = _helper.GetEntriesSatisfyingRule(rule,
+        FixedList<CashEntryDto> debitEntries = _helper.GetEntriesSatisfyingRule(rule,
                                                                                           _helper.GetUnprocessedEntries(x => x.Debit != 0));
-        FixedList<CashTransactionEntryDto> creditEntries = _helper.GetEntriesSatisfyingRule(rule,
+        FixedList<CashEntryDto> creditEntries = _helper.GetEntriesSatisfyingRule(rule,
                                                                                            _helper.GetUnprocessedEntries(x => x.Credit != 0));
 
         var debitEntriesByCurrency = debitEntries.GroupBy(x => x.CurrencyId);
@@ -478,7 +478,7 @@ CONTINUE:
 
 
     private void ProcessNoCashFlowLonelyEntries() {
-      FixedList<CashTransactionEntryDto> unprocessed = _helper.GetUnprocessedEntries();
+      FixedList<CashEntryDto> unprocessed = _helper.GetUnprocessedEntries();
 
       if (unprocessed.Count == 0) {
         return;

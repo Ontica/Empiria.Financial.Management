@@ -4,7 +4,7 @@
 *  Assembly : Empiria.CashFlow.CashLedger.dll            Pattern   : Service provider                        *
 *  Type     : CashTransactionAnalyzer                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Analyze a cash transaction to determine the status of its entries.                             *
+*  Summary  : Analyzes a cash transaction to determine the status of its entries.                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -16,17 +16,16 @@ using Empiria.CashFlow.CashLedger.Adapters;
 
 namespace Empiria.CashFlow.CashLedger {
 
-  /// <summary>Analyze a cash transaction to determine the status of its entries.</summary>
+  /// <summary>Analyzes a cash transaction to determine the status of its entries.</summary>
   internal class CashTransactionAnalyzer {
 
-    private readonly FixedList<CashTransactionEntryDto> _entries;
+    private readonly FixedList<CashEntryDto> _entries;
 
-    public CashTransactionAnalyzer(FixedList<CashTransactionEntryDto> entries) {
+    public CashTransactionAnalyzer(FixedList<CashEntryDto> entries) {
       Assertion.Require(entries, nameof(entries));
 
       _entries = entries;
     }
-
 
     #region Methods
 
@@ -59,7 +58,7 @@ namespace Empiria.CashFlow.CashLedger {
 
     #region Helpers
 
-    private FixedList<CashTransactionAnalysisEntry> AnalyzeEntries(Func<CashTransactionEntryDto, bool> predicate,
+    private FixedList<CashTransactionAnalysisEntry> AnalyzeEntries(Func<CashEntryDto, bool> predicate,
                                                                    string label) {
       var selectedEntries = _entries.FindAll(x => predicate.Invoke(x));
 
@@ -80,7 +79,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     private void AddTotalsEntry(List<CashTransactionAnalysisEntry> list, string label,
-                                FixedList<CashTransactionEntryDto> entries) {
+                                FixedList<CashEntryDto> entries) {
 
       var totalsEntry = new CashTransactionAnalysisEntry {
         EntryLabel = label,

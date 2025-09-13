@@ -24,7 +24,7 @@ namespace Empiria.Tests.CashFlow.CashLedger {
     [Fact]
     public void Should_Execute() {
       var processor = new CashTransactionProcessor(new CashTransactionDescriptor(),
-                                                   new FixedList<CashTransactionEntryDto>());
+                                                   new FixedList<CashEntryDto>());
 
       FixedList<CashEntryFields> sut = processor.Execute();
 

@@ -71,7 +71,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<CollectionModel> SearchCashEntries([FromBody] CashLedgerQuery query) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        FixedList<CashEntryDescriptor> entries = await usecases.SearchEntries(query);
+        FixedList<CashEntryExtendedDto> entries = await usecases.SearchEntries(query);
 
         return new CollectionModel(base.Request, entries);
       }
@@ -141,7 +141,7 @@ namespace Empiria.CashFlow.WebApi {
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
         FixedList<CashTransactionHolderDto> txns = await usecases.GetTransactions(command.GetConvertedIds());
 
-        FixedList<CashTransactionEntryDto> entries = txns.SelectFlat(x => x.Entries);
+        FixedList<CashEntryDto> entries = txns.SelectFlat(x => x.Entries);
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 
@@ -204,7 +204,7 @@ namespace Empiria.CashFlow.WebApi {
     public async Task<SingleObjectModel> ExportCashEntriesToExcel([FromBody] BulkOperationCommand command) {
 
       using (var usecases = CashTransactionUseCases.UseCaseInteractor()) {
-        FixedList<CashEntryDescriptor> entries = await usecases.GetTransactionsEntries(command.GetConvertedIds());
+        FixedList<CashEntryExtendedDto> entries = await usecases.GetTransactionsEntries(command.GetConvertedIds());
 
         var reportingService = CashTransactionReportingService.ServiceInteractor();
 

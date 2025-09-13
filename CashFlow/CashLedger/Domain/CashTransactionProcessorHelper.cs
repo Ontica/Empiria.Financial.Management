@@ -22,12 +22,12 @@ namespace Empiria.CashFlow.CashLedger {
   internal class CashTransactionProcessorHelper {
 
     private CashTransactionDescriptor _transaction;
-    private FixedList<CashTransactionEntryDto> _entries;
+    private FixedList<CashEntryDto> _entries;
 
     private List<CashEntryFields> _processedEntries;
 
     internal CashTransactionProcessorHelper(CashTransactionDescriptor transaction,
-                                            FixedList<CashTransactionEntryDto> entries) {
+                                            FixedList<CashEntryDto> entries) {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(entries, nameof(entries));
 
@@ -39,7 +39,7 @@ namespace Empiria.CashFlow.CashLedger {
 
     #region Methods
 
-    internal void AddCashFlowEntry(FinancialRule rule, CashTransactionEntryDto entry, string appliedRule) {
+    internal void AddCashFlowEntry(FinancialRule rule, CashEntryDto entry, string appliedRule) {
       FixedList<FinancialAccount> cashAccounts = TryGetCashAccounts(rule, entry);
 
       if (cashAccounts == null) {
@@ -74,7 +74,7 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    internal void AddProcessedEntry(CashTransactionEntryDto entry,
+    internal void AddProcessedEntry(CashEntryDto entry,
                                     CashAccountStatus status, string appliedRule) {
       Assertion.Require(status.IsForControl(), nameof(status));
 
@@ -99,7 +99,7 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    internal void AddProcessedEntry(CashTransactionEntryDto entry,
+    internal void AddProcessedEntry(CashEntryDto entry,
                                     FinancialAccount cashAccount, string appliedRule) {
       entry.Processed = true;
 
@@ -123,7 +123,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     internal FixedList<FinancialRule> GetApplicableRules(FixedList<FinancialRule> rules,
-                                                         FixedList<CashTransactionEntryDto> entries) {
+                                                         FixedList<CashEntryDto> entries) {
       if (rules.Count == 0 || entries.Count == 0) {
         return new FixedList<FinancialRule>();
       }
@@ -141,7 +141,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     internal FixedList<FinancialRule> GetApplicableRules(FixedList<FinancialRule> rules,
-                                                         CashTransactionEntryDto entry) {
+                                                         CashEntryDto entry) {
       if (entry.Debit != 0) {
         return rules.FindAll(x => MatchesAccountNumber(entry.AccountNumber, x.DebitAccount, x) &&
                                   (x.DebitCurrency.IsEmptyInstance || x.DebitCurrency.Id == entry.CurrencyId));
@@ -152,10 +152,10 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    internal FixedList<CashTransactionEntryDto> GetEntriesSatisfyingRule(FinancialRule rule,
-                                                                         FixedList<CashTransactionEntryDto> entries) {
+    internal FixedList<CashEntryDto> GetEntriesSatisfyingRule(FinancialRule rule,
+                                                                         FixedList<CashEntryDto> entries) {
       if (entries.Count == 0) {
-        return new FixedList<CashTransactionEntryDto>();
+        return new FixedList<CashEntryDto>();
       }
 
       return entries.FindAll(x => SatisfiesRule(rule, x));
@@ -173,18 +173,18 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    internal FixedList<CashTransactionEntryDto> GetUnprocessedEntries() {
+    internal FixedList<CashEntryDto> GetUnprocessedEntries() {
       return _entries.FindAll(x => !x.Processed);
     }
 
 
-    internal FixedList<CashTransactionEntryDto> GetUnprocessedEntries(Func<CashTransactionEntryDto, bool> predicate) {
+    internal FixedList<CashEntryDto> GetUnprocessedEntries(Func<CashEntryDto, bool> predicate) {
       return _entries.FindAll(x => !x.Processed && predicate.Invoke(x));
     }
 
 
-    internal FixedList<CashTransactionEntryDto> TryGetMatchingEntries(FinancialRule rule,
-                                                                      CashTransactionEntryDto entry) {
+    internal FixedList<CashEntryDto> TryGetMatchingEntries(FinancialRule rule,
+                                                                      CashEntryDto entry) {
       if (entry.Debit != 0) {
         return _entries.FindAll(x => !x.Processed &&
                                       x.Credit > 0 &&
@@ -204,7 +204,7 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    internal CashTransactionEntryDto TryGetMatchingEntry(CashTransactionEntryDto entry) {
+    internal CashEntryDto TryGetMatchingEntry(CashEntryDto entry) {
 
       if (entry.Debit > 0) {
         return _entries.Find(x => !x.Processed &&
@@ -224,7 +224,7 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    internal CashTransactionEntryDto TryGetMatchingEntry(FinancialRule rule, CashTransactionEntryDto entry,
+    internal CashEntryDto TryGetMatchingEntry(FinancialRule rule, CashEntryDto entry,
                                                          bool swapRule = false) {
 
       if (entry.Debit != 0) {
@@ -300,7 +300,7 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    static private bool SatisfiesRule(FinancialRule rule, CashTransactionEntryDto entry) {
+    static private bool SatisfiesRule(FinancialRule rule, CashEntryDto entry) {
       if (entry.Debit != 0) {
         return MatchesAccountNumber(entry.AccountNumber, rule.DebitAccount, rule) &&
                                     (rule.DebitCurrency.IsEmptyInstance || rule.DebitCurrency.Id == entry.CurrencyId);
@@ -312,7 +312,7 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    static private FixedList<FinancialAccount> TryGetCashAccounts(FinancialRule rule, CashTransactionEntryDto entry) {
+    static private FixedList<FinancialAccount> TryGetCashAccounts(FinancialRule rule, CashEntryDto entry) {
 
       FixedList<FinancialAccount> directAccounts = TryGetDirectCashAccounts(rule, entry);
 
@@ -343,7 +343,7 @@ namespace Empiria.CashFlow.CashLedger {
       }
     }
 
-    static private FixedList<FinancialAccount> TryGetDirectCashAccounts(FinancialRule rule, CashTransactionEntryDto entry) {
+    static private FixedList<FinancialAccount> TryGetDirectCashAccounts(FinancialRule rule, CashEntryDto entry) {
       if (entry.Debit > 0) {
         return FinancialAccount.GetList(x => x.AccountNo == rule.DebitConcept && rule.DebitConcept.Length >= 4 &&
                                              x.Currency.Id == entry.CurrencyId &&

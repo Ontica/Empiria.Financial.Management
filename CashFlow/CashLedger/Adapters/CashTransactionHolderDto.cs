@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : CashFlow Management                        Component : Adapters Layer                          *
 *  Assembly : Empiria.CashFlow.CashLedger.dll            Pattern   : Output DTO                              *
-*  Type     : CashTransactionDto                         License   : Please read LICENSE.txt file            *
+*  Type     : CashTransactionHolderDto                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Output holder DTO used for a cash transaction.                                                 *
 *                                                                                                            *
@@ -20,7 +20,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-    public FixedList<CashTransactionEntryDto> Entries {
+    public FixedList<CashEntryDto> Entries {
       get; set;
     }
 
@@ -57,19 +57,5 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     }
 
   }  // class CashTransactionActions
-
-
-  /// <summary>Output DTO used to retrieve cash ledger transaction entries.</summary>
-  public class CashTransactionEntryDto : BaseCashTransactionEntryDto {
-
-    public NamedEntityDto CashAccount {
-      get; internal set;
-    }
-
-    internal bool Processed {
-      get; set;
-    }
-
-  }  // class CashTransactionEntryDto
 
 }  // namespace Empiria.CashFlow.CashLedger.Adapters
