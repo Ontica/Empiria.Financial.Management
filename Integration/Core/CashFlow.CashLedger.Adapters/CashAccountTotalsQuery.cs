@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Integration services                       Component : Adapters Layer                          *
 *  Assembly : Empiria.Financial.Integration.Core.dll     Pattern   : Input query DTO                         *
-*  Type     : AccountsQuery                              License   : Please read LICENSE.txt file            *
+*  Type     : CashAccountTotalsQuery                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Input query DTO used to search information about accounts in a date period.                    *
+*  Summary  : Input query DTO used to search cash accounts totals in a date period.                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -15,18 +15,20 @@ using Empiria.DataTypes;
 namespace Empiria.Financial.Adapters {
 
   /// <summary>Input query DTO used to search information about accounts in a date period.</summary>
-  public class AccountsQuery {
+  public class CashAccountTotalsQuery : IQuery {
 
     public string QueryType {
       get; set;
     } = string.Empty;
 
 
+    [Newtonsoft.Json.JsonProperty(PropertyName = "FromAccountingDate")]
     public DateTime FromDate {
       get; set;
     } = DateTime.MaxValue;
 
 
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ToAccountingDate")]
     public DateTime ToDate {
       get; set;
     } = DateTime.MaxValue;
@@ -46,6 +48,12 @@ namespace Empiria.Financial.Adapters {
       get; set;
     } = new KeyValue[0];
 
-  }  // class AccountsQuery
+
+    /// <summary>ToDo: Remove this property, use Ledgers array.</summary>
+    public string AccountingLedgerUID {
+      get; set;
+    } = string.Empty;
+
+  }  // class CashAccountTotalsQuery
 
 }  // namespace Empiria.Financial.Adapters

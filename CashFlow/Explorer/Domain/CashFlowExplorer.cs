@@ -12,8 +12,6 @@ using System.Collections.Generic;
 
 using Empiria.DynamicData;
 
-using Empiria.Financial;
-
 using Empiria.CashFlow.CashLedger.Adapters;
 using Empiria.CashFlow.Explorer.Adapters;
 
@@ -22,9 +20,9 @@ namespace Empiria.CashFlow.Explorer {
   internal class CashFlowExplorer {
 
     private CashFlowExplorerQuery _query;
-    private FixedList<CashLedgerTotalEntryDto> _totals;
+    private FixedList<CashAccountTotalDto> _totals;
 
-    internal CashFlowExplorer(CashFlowExplorerQuery query, FixedList<CashLedgerTotalEntryDto> totals) {
+    internal CashFlowExplorer(CashFlowExplorerQuery query, FixedList<CashAccountTotalDto> totals) {
       Assertion.Require(query, nameof(query));
       Assertion.Require(totals, nameof(totals));
 
@@ -72,11 +70,11 @@ namespace Empiria.CashFlow.Explorer {
     }
 
 
-    private CashFlowExplorerEntry ProcessTotal(CashLedgerTotalEntryDto total) {
+    private CashFlowExplorerEntry ProcessTotal(CashAccountTotalDto total) {
       var entry = new CashFlowExplorerEntry {
         CashAccountId = total.CashAccountId,
         CashAccountNo = total.CashAccountNo,
-        CurrencyCode = Currency.Parse(total.CurrencyId).ISOCode,
+        CurrencyCode = total.CurrencyCode,
       };
 
       entry.Sum(total);

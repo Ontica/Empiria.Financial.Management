@@ -106,7 +106,7 @@ namespace Empiria.CashFlow.Explorer {
     }
 
 
-    internal void Sum(CashLedgerTotalEntryDto entry) {
+    internal void Sum(CashAccountTotalDto entry) {
       Inflows += entry.Debit;
       Outflows += entry.Credit;
     }

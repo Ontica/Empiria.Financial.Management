@@ -25,11 +25,27 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-    public decimal Inflows {
+    public int CashAccountId {
       get; set;
     }
 
-    public decimal Outflows {
+    public string CashAccountNo {
+      get; set;
+    }
+
+    public string CashAccountName {
+      get; set;
+    }
+
+    public string CurrencyCode {
+      get; set;
+    }
+
+    public decimal Debit {
+      get; set;
+    }
+
+    public decimal Credit {
       get; set;
     }
 

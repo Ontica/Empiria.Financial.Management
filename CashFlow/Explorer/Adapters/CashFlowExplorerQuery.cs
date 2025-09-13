@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.CashFlow.CashLedger.Adapters;
+using Empiria.Financial.Adapters;
 
 namespace Empiria.CashFlow.Explorer.Adapters {
 
@@ -33,7 +33,7 @@ namespace Empiria.CashFlow.Explorer.Adapters {
 
 
   /// <summary>Input query DTO used to retrieve cash flow explorer information.</summary>
-  public class CashFlowExplorerQuery : BaseCashLedgerTotalsQuery, IQuery {
+  public class CashFlowExplorerQuery : CashAccountTotalsQuery, IQuery {
 
     public CashFlowReportType ReportType {
       get; set;

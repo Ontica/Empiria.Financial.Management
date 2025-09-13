@@ -26,12 +26,12 @@ namespace Empiria.CashFlow.Explorer.UseCases {
   /// <summary>Use cases used to retrieve cash flow plans.</summary>
   public class CashFlowExplorerUseCases : UseCase {
 
-    private readonly CashLedgerTotalsServices _financialAccountingServices;
+    private readonly CashLedgerTotalsServices _accountingServices;
 
     #region Constructors and parsers
 
     protected CashFlowExplorerUseCases() {
-      _financialAccountingServices = new CashLedgerTotalsServices();
+      _accountingServices = new CashLedgerTotalsServices();
     }
 
     static public CashFlowExplorerUseCases UseCaseInteractor() {
@@ -44,7 +44,7 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     public async Task<DynamicDto<ConceptAnalyticsDto>> ConceptsAnalytics(CashFlowExplorerQuery query) {
       FixedList<ConceptAnalyticsDto> entries =
-                        await _financialAccountingServices.GetCashLedgerEntries<ConceptAnalyticsDto>(query);
+                        await _accountingServices.GetCashLedgerEntries<ConceptAnalyticsDto>(query);
 
       return new DynamicDto<ConceptAnalyticsDto>(
         query,
@@ -54,7 +54,7 @@ namespace Empiria.CashFlow.Explorer.UseCases {
     }
 
     public async Task<DynamicDto<CashFlowExplorerEntry>> ExploreCashFlow(CashFlowExplorerQuery query) {
-      FixedList<CashLedgerTotalEntryDto> totals = await _financialAccountingServices.GetCashLedgerTotals(query);
+      FixedList<CashAccountTotalDto> totals = await _accountingServices.GetCashLedgerTotals(query);
 
       var explorer = new CashFlowExplorer(query, totals);
 
