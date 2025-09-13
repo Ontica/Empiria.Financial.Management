@@ -15,6 +15,7 @@ using Empiria.DynamicData;
 using Empiria.Services;
 
 using Empiria.Financial;
+using Empiria.Financial.Adapters;
 
 using Empiria.FinancialAccounting.ClientServices;
 
@@ -42,6 +43,33 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     #region Use cases
 
+    public async Task<DynamicDto<CashAccountTotalDto>> AccountTotals(CashAccountTotalsQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      var adaptedQuery = new CashAccountTotalsQuery {
+        QueryType = query.QueryType,
+        FromDate = query.FromDate,
+        ToDate = query.ToDate,
+        Accounts = query.Accounts,
+        Ledgers = query.Ledgers,
+        CustomFields = query.CustomFields,
+      };
+
+      FixedList<CashAccountTotalDto> accountsTotals =
+                                    await _accountingServices.GetCashAccountTotals(adaptedQuery);
+
+      FixedList<DataTableColumn> columns = new DataTableColumn[5] {
+        new DataTableColumn("cashAccountNo", "CashAccountNo", "text"),
+        new DataTableColumn("cashAccountName", "CashAccountName", "text"),
+        new DataTableColumn("currencyCode", "CurrencyCode", "text"),
+        new DataTableColumn("inflows", "Inflows", "decimal"),
+        new DataTableColumn("outflows", "Outflows", "decimal"),
+      }.ToFixedList();
+
+      return new DynamicDto<CashAccountTotalDto>(query, columns, accountsTotals);
+    }
+
+
     public async Task<DynamicDto<ConceptAnalyticsDto>> ConceptsAnalytics(CashFlowExplorerQuery query) {
       FixedList<ConceptAnalyticsDto> entries =
                         await _accountingServices.GetCashLedgerEntries<ConceptAnalyticsDto>(query);
@@ -54,7 +82,7 @@ namespace Empiria.CashFlow.Explorer.UseCases {
     }
 
     public async Task<DynamicDto<CashFlowExplorerEntry>> ExploreCashFlow(CashFlowExplorerQuery query) {
-      FixedList<CashAccountTotalDto> totals = await _accountingServices.GetCashLedgerTotals(query);
+      FixedList<CashAccountTotalDto> totals = await _accountingServices.GetCashAccountTotals(query);
 
       var explorer = new CashFlowExplorer(query, totals);
 

@@ -15,10 +15,9 @@ using Empiria.DynamicData;
 using Empiria.Storage;
 using Empiria.WebApi;
 
+using Empiria.CashFlow.Reporting;
 using Empiria.CashFlow.Explorer.Adapters;
 using Empiria.CashFlow.Explorer.UseCases;
-
-using Empiria.CashFlow.Reporting;
 
 namespace Empiria.CashFlow.Explorer.WebApi {
 
@@ -32,6 +31,12 @@ namespace Empiria.CashFlow.Explorer.WebApi {
     public async Task<SingleObjectModel> ExploreCashFlow([FromBody] CashFlowExplorerQuery query) {
 
       switch (query.ReportType) {
+
+        case CashFlowReportType.AccountTotals:
+          var accountsTotals = await GetExplorerData<CashFlowExplorerEntry>(query);
+
+          return new SingleObjectModel(base.Request, accountsTotals);
+
         case CashFlowReportType.CashFlow:
           var cashflow = await GetExplorerData<CashFlowExplorerEntry>(query);
 
@@ -46,6 +51,7 @@ namespace Empiria.CashFlow.Explorer.WebApi {
           throw Assertion.EnsureNoReachThisCode($"El reporte {query.ReportType} no está disponible.");
       }
     }
+
 
     [HttpPost]
     [Route("v1/cash-flow/export")]
@@ -86,6 +92,10 @@ namespace Empiria.CashFlow.Explorer.WebApi {
     private async Task<DynamicDto<T>> GetExplorerData<T>(CashFlowExplorerQuery query) {
       using (var usecases = CashFlowExplorerUseCases.UseCaseInteractor()) {
         switch (query.ReportType) {
+
+          case CashFlowReportType.AccountTotals:
+            return (DynamicDto<T>) (object) await usecases.AccountTotals(query);
+
           case CashFlowReportType.CashFlow:
             return (DynamicDto<T>) (object) await usecases.ExploreCashFlow(query);
 
