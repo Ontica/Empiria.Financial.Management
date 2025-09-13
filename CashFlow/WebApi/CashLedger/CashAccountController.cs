@@ -11,12 +11,13 @@
 using System.Threading.Tasks;
 using System.Web.Http;
 
+using Empiria.DynamicData;
 using Empiria.WebApi;
 
 using Empiria.Financial.Adapters;
 
-using Empiria.CashFlow.CashLedger.UseCases;
 using Empiria.CashFlow.CashLedger.Adapters;
+using Empiria.CashFlow.CashLedger.UseCases;
 
 namespace Empiria.CashFlow.WebApi {
 
@@ -27,12 +28,12 @@ namespace Empiria.CashFlow.WebApi {
 
     [HttpPost]
     [Route("v1/cash-flow/cash-ledger/accounts/search")]
-    public async Task<CollectionModel> SearchCashAccounts([FromUri] AccountsQuery query) {
+    public async Task<SingleObjectModel> SearchCashAccountsWithTotals([FromUri] CashAccountTotalsQuery query) {
 
       using (var usecases = CashAccountUseCases.UseCaseInteractor()) {
-        FixedList<CashAccountTotalDto> accounts = await usecases.SearchAccounts(query);
+        DynamicDto<CashAccountTotalDto> accounts = await usecases.SearchAccountsWithTotals(query);
 
-        return new CollectionModel(base.Request, accounts);
+        return new SingleObjectModel(base.Request, accounts);
       }
     }
 
