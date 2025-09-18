@@ -16,7 +16,6 @@ using Empiria.Services;
 
 using Empiria.Financial;
 using Empiria.Financial.Adapters;
-
 using Empiria.FinancialAccounting.ClientServices;
 
 using Empiria.CashFlow.CashLedger.Adapters;
@@ -43,36 +42,13 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     #region Use cases
 
-    public async Task<DynamicDto<CashAccountTotalDto>> AccountTotals(CashAccountTotalsQuery query) {
+    public async Task<DynamicDto<ConceptAnalyticsDto>> ConceptsAnalytics(CashFlowExplorerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var adaptedQuery = new CashAccountTotalsQuery {
-        QueryType = query.QueryType,
-        FromDate = query.FromDate,
-        ToDate = query.ToDate,
-        Accounts = query.Accounts,
-        Ledgers = query.Ledgers,
-        CustomFields = query.CustomFields,
-      };
+      AccountsTotalsQuery accountsTotalsQuery = MapToAccountsTotalsQuery(query);
 
-      FixedList<CashAccountTotalDto> accountsTotals =
-                                    await _accountingServices.GetCashAccountTotals(adaptedQuery);
-
-      FixedList<DataTableColumn> columns = new DataTableColumn[5] {
-        new DataTableColumn("cashAccountNo", "CashAccountNo", "text"),
-        new DataTableColumn("cashAccountName", "CashAccountName", "text"),
-        new DataTableColumn("currencyCode", "CurrencyCode", "text"),
-        new DataTableColumn("inflows", "Inflows", "decimal"),
-        new DataTableColumn("outflows", "Outflows", "decimal"),
-      }.ToFixedList();
-
-      return new DynamicDto<CashAccountTotalDto>(query, columns, accountsTotals);
-    }
-
-
-    public async Task<DynamicDto<ConceptAnalyticsDto>> ConceptsAnalytics(CashFlowExplorerQuery query) {
       FixedList<ConceptAnalyticsDto> entries =
-                        await _accountingServices.GetCashLedgerEntries<ConceptAnalyticsDto>(query);
+                        await _accountingServices.GetCashLedgerEntries<ConceptAnalyticsDto>(accountsTotalsQuery);
 
       return new DynamicDto<ConceptAnalyticsDto>(
         query,
@@ -82,13 +58,16 @@ namespace Empiria.CashFlow.Explorer.UseCases {
     }
 
     public async Task<DynamicDto<CashFlowExplorerEntry>> ExploreCashFlow(CashFlowExplorerQuery query) {
-      FixedList<CashAccountTotalDto> totals = await _accountingServices.GetCashAccountTotals(query);
+      Assertion.Require(query, nameof(query));
+
+      AccountsTotalsQuery accountsTotalsQuery = MapToAccountsTotalsQuery(query);
+
+      FixedList<CashAccountTotalDto> totals =
+                                        await _accountingServices.GetCashAccountTotals(accountsTotalsQuery);
 
       var explorer = new CashFlowExplorer(query, totals);
 
-      DynamicDto<CashFlowExplorerEntry> result = explorer.Execute();
-
-      return result;
+      return explorer.Execute();
     }
 
     #endregion Use cases
@@ -130,6 +109,16 @@ namespace Empiria.CashFlow.Explorer.UseCases {
         new DataTableColumn("financialAcctType", "Tipo de cuenta", "text"),
         new DataTableColumn("financialAcctName", "Nombre de la cuenta", "text"),
       }.ToFixedList();
+    }
+
+
+    private AccountsTotalsQuery MapToAccountsTotalsQuery(CashFlowExplorerQuery query) {
+      return new AccountsTotalsQuery {
+        QueryType = query.ReportType.ToString(),
+        FromDate = query.FromDate,
+        ToDate = query.ToDate,
+        Ledgers = new string[] { query.AccountingLedgerUID }
+      };
     }
 
     #endregion Helpers

@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial.Adapters;
+using System;
 
 namespace Empiria.CashFlow.Explorer.Adapters {
 
@@ -33,11 +33,28 @@ namespace Empiria.CashFlow.Explorer.Adapters {
 
 
   /// <summary>Input query DTO used to retrieve cash flow explorer information.</summary>
-  public class CashFlowExplorerQuery : CashAccountTotalsQuery, IQuery {
+  public class CashFlowExplorerQuery : IQuery {
 
     public CashFlowReportType ReportType {
       get; set;
     } = CashFlowReportType.None;
+
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "FromAccountingDate")]
+    public DateTime FromDate {
+      get; set;
+    } = DateTime.MaxValue;
+
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "ToAccountingDate")]
+    public DateTime ToDate {
+      get; set;
+    } = DateTime.MaxValue;
+
+
+    public string AccountingLedgerUID {
+      get; set;
+    } = string.Empty;
 
 
     public string ProgramUID {
