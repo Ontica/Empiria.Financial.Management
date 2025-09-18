@@ -17,14 +17,6 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-    public string AccountNo {
-      get; set;
-    }
-
-    public string AccountName {
-      get; set;
-    }
-
     public int CashAccountId {
       get; set;
     }
@@ -41,11 +33,19 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-    public decimal Debit {
+    public decimal Inflows {
       get; set;
     }
 
-    public decimal Credit {
+    public decimal Outflows {
+      get; set;
+    }
+
+    public string AccountNo {
+      get; set;
+    }
+
+    public string AccountName {
       get; set;
     }
 
