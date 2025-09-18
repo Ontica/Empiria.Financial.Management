@@ -33,9 +33,12 @@ namespace Empiria.Financial.UseCases {
 
     #region Credit system use cases
 
-    public FinancialAccountDto CreateAccountFromCreditSystem(string accountNo, string projectUID) {
+    public FinancialAccountDto CreateAccountFromCreditSystem(string accountNo,
+                                                             string projectUID,
+                                                             string standardAccountUID) {
       Assertion.Require(accountNo, nameof(accountNo));
       Assertion.Require(projectUID, nameof(projectUID));
+      Assertion.Require(standardAccountUID, nameof(standardAccountUID));
 
       ICreditAccountData externalAccount = GetAccountFromCreditSystem(accountNo, true);
 
@@ -43,17 +46,13 @@ namespace Empiria.Financial.UseCases {
       var project = FinancialProject.Parse(projectUID);
       var orgUnit = externalAccount.Area;
 
-      var stdAccount = StandardAccount.TryParseAccountNo(externalAccount.StandardAccount);
-
-      Assertion.Require(stdAccount,
-                        $"La cuenta estándar '{externalAccount.StandardAccount}' " +
-                        $"asociada a la cuenta de crédito '({externalAccount.AccountNo}) {externalAccount.Borrower}' " +
-                        $"no está registrada en el sistema.");
+      var stdAccount = StandardAccount.Parse(standardAccountUID);
 
       Assertion.Require(project.GetStandardAccounts().Contains(stdAccount),
                         $"No se puede asignar esta cuenta de crédito al proyecto " +
                         $"{project.Name}, debido a que todas sus cuentas deben ser del tipo " +
-                        $"({project.Subprogram.StandardAccount.StdAcctNo}) {project.Subprogram.StandardAccount.FullName}.");
+                        $"({project.Subprogram.StandardAccount.StdAcctNo}) " +
+                        $"{project.Subprogram.StandardAccount.FullName}.");
 
       var account = new FinancialAccount(accountType, stdAccount, orgUnit, project);
 
