@@ -39,6 +39,8 @@ namespace Empiria.CashFlow.CashLedger {
 
     internal FixedList<CashEntryFields> Execute() {
 
+      ProcessNoCashFlowAccounts();
+
       ProcessNoCashFlowCreditOrDebitEntries();
 
       ProcessNoCashFlowEntriesOneToOneTwoWay();
@@ -159,6 +161,27 @@ namespace Empiria.CashFlow.CashLedger {
             "Regla anulación cargo y abono iguales");
           _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
             "Regla anulación cargo y abono iguales");
+        }
+      }
+    }
+
+
+    private void ProcessNoCashFlowAccounts() {
+      FixedList<CashEntryDto> entries = _helper.GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return;
+      }
+
+      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_ACCOUNTS");
+
+      foreach (var entry in entries) {
+
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
+
+        if (applicableRules.Count == 0) {
+          _helper.AddProcessedEntry(entry, CashAccountStatus.NoCashFlow,
+                                    "La cuenta contable no maneja operaciones con flujo");
         }
       }
     }
