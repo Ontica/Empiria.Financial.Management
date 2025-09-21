@@ -39,8 +39,6 @@ namespace Empiria.CashFlow.CashLedger {
 
     internal FixedList<CashEntryFields> Execute() {
 
-      ProcessNoCashFlowAccounts();
-
       ProcessNoCashFlowCreditOrDebitEntries();
 
       ProcessNoCashFlowEntriesOneToOneTwoWay();
@@ -48,6 +46,10 @@ namespace Empiria.CashFlow.CashLedger {
       ProcessNoCashFlowEntriesOneToOne();
 
       // ProcessNoCashFlowEntriesWithCreditsAndDebitsAdded();
+
+      ProcessNoCashFlowEntriesWithSameConcept();
+
+      ProcessNoCashFlowAccounts();
 
       ProcessEqualEntriesAsNoCashFlowEntries();
 
@@ -101,7 +103,7 @@ namespace Empiria.CashFlow.CashLedger {
         foreach (var concept in concepts) {
           var accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
                                                        x.Currency.Id == entry.CurrencyId &&
-                                                       x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
+                                                       x.IsOperationAccount);
 
           if (accounts.Count == 1) {
             _helper.AddProcessedEntry(entry, accounts[0],
@@ -134,14 +136,22 @@ namespace Empiria.CashFlow.CashLedger {
         foreach (var rule in applicableRules) {
           CashEntryDto creditEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
 
-          if (creditEntry != null) {
+          if (creditEntry == null) {
+            continue;
+
+          }
+
+          if (_helper.HaveSameCashAccount(rule, debitEntry, creditEntry)) {
+            _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow, "Regla sin flujo conceptos iguales");
+            _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow, "Regla sin flujo conceptos iguales");
+          } else {
             _helper.AddCashFlowEntry(rule, debitEntry, "Regla con flujo uno a uno");
             _helper.AddCashFlowEntry(rule, creditEntry, "Regla con flujo uno a uno");
           }
 
-        }  // foreach rule
+        } // foreach rule
 
-      }  // foreach entry
+      } // foreach debitEntry
     }
 
 
@@ -276,6 +286,11 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
+    private void ProcessNoCashFlowEntriesWithSameConcept() {
+
+    }
+
+
     private void ProcessRemainingEntries() {
       FixedList<CashEntryFields> processed = _helper.GetProcessedEntries();
       FixedList<CashEntryDto> unprocessed = _helper.GetUnprocessedEntries();
@@ -358,7 +373,7 @@ namespace Empiria.CashFlow.CashLedger {
 
           var accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
                                                        x.Currency.Id == entry.CurrencyId &&
-                                                       x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
+                                                       x.IsOperationAccount);
 
           if (accounts.Count == 1) {
             _helper.AddProcessedEntry(entry, accounts[0],

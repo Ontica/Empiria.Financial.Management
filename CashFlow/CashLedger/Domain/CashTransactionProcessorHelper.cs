@@ -50,23 +50,21 @@ namespace Empiria.CashFlow.CashLedger {
       } else if (cashAccounts.Count == 0) {
 
         AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
-          $"{appliedRule} (cuenta {entry.SubledgerAccountNumber} no registrada en PYC)");
+          $"{appliedRule} (cuenta con auxiliar no registrado en PYC)");
 
-      } else if (cashAccounts.Count == 1 && cashAccounts[0].FinancialAccountType.Equals(FinancialAccountType.OperationAccount)) {
+      } else if (cashAccounts.Count == 1 && cashAccounts[0].IsOperationAccount) {
 
         AddProcessedEntry(entry, cashAccounts[0], appliedRule);
 
-      } else if (cashAccounts.Count == 1 && !cashAccounts[0].FinancialAccountType.Equals(FinancialAccountType.OperationAccount)) {
+      } else if (cashAccounts.Count == 1 && !cashAccounts[0].IsOperationAccount) {
 
         AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
-          $"{appliedRule} (la cuenta {entry.SubledgerAccountNumber}) " +
-          $"no tiene un concepto relacionado con el tipo de operación {rule.CreditConcept})");
+          $"{appliedRule} (la cuenta no tiene un concepto relacionado con el tipo de operación)");
 
       } else if (cashAccounts.Count > 1) {
 
         AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
-          $"{appliedRule} (la cuenta {entry.SubledgerAccountNumber} " +
-          $"tiene más de un concepto relacionado con el tipo {rule.CreditConcept}.)");
+          $"{appliedRule} (la cuenta tiene más de un concepto relacionado con el tipo de operación.)");
 
       } else {
         throw Assertion.EnsureNoReachThisCode();
@@ -183,8 +181,22 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
+    internal bool HaveSameCashAccount(FinancialRule rule, CashEntryDto debitEntry, CashEntryDto creditEntry) {
+      var debitCashAccount = TryGetCashAccounts(rule, debitEntry);
+      var creditCashAccount = TryGetCashAccounts(rule, creditEntry);
+
+      if (debitCashAccount == null || creditCashAccount == null ||
+          debitCashAccount.Count != 1 || creditCashAccount.Count != 1) {
+        return false;
+      }
+
+      return debitCashAccount[0].Equals(creditCashAccount[0]) &&
+             debitCashAccount[0].IsOperationAccount;
+    }
+
+
     internal FixedList<CashEntryDto> TryGetMatchingEntries(FinancialRule rule,
-                                                                      CashEntryDto entry) {
+                                                           CashEntryDto entry) {
       if (entry.Debit != 0) {
         return _entries.FindAll(x => !x.Processed &&
                                       x.Credit > 0 &&
@@ -347,13 +359,14 @@ namespace Empiria.CashFlow.CashLedger {
       if (entry.Debit > 0) {
         return FinancialAccount.GetList(x => x.AccountNo == rule.DebitConcept && rule.DebitConcept.Length >= 4 &&
                                              x.Currency.Id == entry.CurrencyId &&
-                                             x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
+                                             x.IsOperationAccount);
       } else {
         return FinancialAccount.GetList(x => x.AccountNo == rule.CreditConcept && rule.CreditConcept.Length >= 4 &&
                                              x.Currency.Id == entry.CurrencyId &&
-                                             x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount));
+                                             x.IsOperationAccount);
       }
     }
+
 
     #endregion Helpers
 

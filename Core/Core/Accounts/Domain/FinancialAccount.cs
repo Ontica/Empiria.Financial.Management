@@ -122,7 +122,7 @@ namespace Empiria.Financial {
       _operations = new Lazy<List<FinancialAccount>>(() =>
                       _cache.FindAll(x => x._parentId == this.Id &&
                                           x.Project.Equals(this.Project) &&
-                                          x.FinancialAccountType.Equals(FinancialAccountType.OperationAccount)
+                                          x.IsOperationAccount
                       ));
     }
 
@@ -349,6 +349,12 @@ namespace Empiria.Financial {
           return true;
         }
         return false;
+      }
+    }
+
+    public bool IsOperationAccount {
+      get {
+        return FinancialAccountType.Equals(FinancialAccountType.OperationAccount);
       }
     }
 
