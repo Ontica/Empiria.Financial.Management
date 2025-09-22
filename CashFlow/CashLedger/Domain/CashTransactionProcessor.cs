@@ -39,23 +39,21 @@ namespace Empiria.CashFlow.CashLedger {
 
     internal FixedList<CashEntryFields> Execute() {
 
-      ProcessNoCashFlowCreditOrDebitEntries();
+      ProcessNoCashFlowEntriesOneToOne();
 
       ProcessNoCashFlowEntriesOneToOneTwoWay();
 
-      ProcessNoCashFlowEntriesOneToOne();
+      ProcessNoCashFlowCreditOrDebitEntries();
 
       // ProcessNoCashFlowEntriesWithCreditsAndDebitsAdded();
-
-      ProcessNoCashFlowEntriesWithSameConcept();
-
-      ProcessNoCashFlowAccounts();
-
-      ProcessEqualEntriesAsNoCashFlowEntries();
 
       // ProcessNoCashFlowLonelyEntries();
 
       // ProcessEqualEntriesAsNoCashFlowEntriesAdded();
+
+      ProcessNoCashFlowAccounts();
+
+      ProcessEqualEntriesAsNoCashFlowEntries();
 
       ProcessCashFlowEntriesOneToOne();
 
@@ -79,43 +77,16 @@ namespace Empiria.CashFlow.CashLedger {
         return;
       }
 
-      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_DIRECT");
+      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_ACCOUNTS")
+                                              .FindAll(x => x.DebitConcept.Length != 0 ||
+                                                            x.CreditConcept.Length != 0);
 
       foreach (var entry in entries) {
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
 
-        FixedList<string> concepts;
-
-        if (entry.Debit > 0) {
-          concepts = rules.FindAll(x => x.DebitAccount == entry.AccountNumber &&
-                                        x.DebitConcept.Length != 0)
-                          .SelectDistinct(x => x.DebitConcept);
-        } else {
-          concepts = rules.FindAll(x => x.CreditAccount == entry.AccountNumber &&
-                                        x.CreditConcept.Length != 0)
-                          .SelectDistinct(x => x.CreditConcept);
-        }
-
-
-        if (concepts.Count == 0) {
-          continue;
-        }
-
-        foreach (var concept in concepts) {
-          var accounts = FinancialAccount.GetList(x => x.AccountNo == concept &&
-                                                       x.Currency.Id == entry.CurrencyId &&
-                                                       x.IsOperationAccount);
-
-          if (accounts.Count == 1) {
-            _helper.AddProcessedEntry(entry, accounts[0],
-              "Regla con flujo directo");
-            continue;
-          }
-
-          if (concepts.Count > 1) {
-            _helper.AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
-              "Regla con flujo directo (existen múltiples conceptos)");
-            continue;
-          }
+        if (applicableRules.Count == 1) {
+          _helper.AddCashFlowEntry(applicableRules[0], entry,
+            "Regla con flujo directo");
         }
       }
     }
@@ -138,15 +109,18 @@ namespace Empiria.CashFlow.CashLedger {
 
           if (creditEntry == null) {
             continue;
-
           }
 
           if (_helper.HaveSameCashAccount(rule, debitEntry, creditEntry)) {
-            _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow, "Regla sin flujo conceptos iguales");
-            _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow, "Regla sin flujo conceptos iguales");
+            _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
+              "Regla sin flujo conceptos iguales");
+            _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
+              "Regla sin flujo conceptos iguales");
           } else {
-            _helper.AddCashFlowEntry(rule, debitEntry, "Regla con flujo uno a uno");
-            _helper.AddCashFlowEntry(rule, creditEntry, "Regla con flujo uno a uno");
+            _helper.AddCashFlowEntry(rule, debitEntry,
+              "Regla con flujo uno a uno");
+            _helper.AddCashFlowEntry(rule, creditEntry,
+              "Regla con flujo uno a uno");
           }
 
         } // foreach rule
@@ -191,7 +165,7 @@ namespace Empiria.CashFlow.CashLedger {
 
         if (applicableRules.Count == 0) {
           _helper.AddProcessedEntry(entry, CashAccountStatus.NoCashFlow,
-                                    "La cuenta contable no maneja operaciones con flujo");
+            "La cuenta contable no maneja operaciones con flujo");
         }
       }
     }
@@ -211,7 +185,8 @@ namespace Empiria.CashFlow.CashLedger {
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
 
         if (applicableRules.Count != 0) {
-          _helper.AddProcessedEntry(entry, CashAccountStatus.NoCashFlow, $"Regla sin flujo directa cargo o abono");
+          _helper.AddProcessedEntry(entry, CashAccountStatus.NoCashFlow,
+            $"Regla sin flujo directa cargo o abono");
         }
       }
     }
@@ -226,17 +201,17 @@ namespace Empiria.CashFlow.CashLedger {
 
       FixedList<FinancialRule> rules = _helper.GetRules("NO_CASH_FLOW_ONE_TO_ONE");
 
-      foreach (var entry in entries) {
-        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
+      foreach (var debitEntry in entries) {
+        FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
 
         foreach (var rule in applicableRules) {
-          CashEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, entry);
+          CashEntryDto matchingEntry = _helper.TryGetMatchingEntry(rule, debitEntry);
 
           if (matchingEntry != null) {
-            _helper.AddProcessedEntry(entry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo uno a uno");
+            _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
+              "Regla sin flujo uno a uno");
             _helper.AddProcessedEntry(matchingEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo uno a uno");
+              "Regla sin flujo uno a uno");
           }
         }
       }
@@ -261,9 +236,9 @@ namespace Empiria.CashFlow.CashLedger {
 
           if (creditEntry != null) {
             _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo de ida y vuelta");
+              "Regla sin flujo de ida y vuelta");
             _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo de ida y vuelta");
+              "Regla sin flujo de ida y vuelta");
           }
         }
       }
@@ -277,32 +252,26 @@ namespace Empiria.CashFlow.CashLedger {
 
           if (debitEntry != null) {
             _helper.AddProcessedEntry(creditEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo de ida y vuelta");
+              "Regla sin flujo de ida y vuelta");
             _helper.AddProcessedEntry(debitEntry, CashAccountStatus.NoCashFlow,
-              $"Regla sin flujo de ida y vuelta");
+              "Regla sin flujo de ida y vuelta");
           }
         }
       }
     }
 
 
-    private void ProcessNoCashFlowEntriesWithSameConcept() {
-
-    }
-
-
     private void ProcessRemainingEntries() {
-      FixedList<CashEntryFields> processed = _helper.GetProcessedEntries();
+      // FixedList<CashEntryFields> processed = _helper.GetProcessedEntries();
       FixedList<CashEntryDto> unprocessed = _helper.GetUnprocessedEntries();
 
+      //if (unprocessed.Sum(x => x.Debit) > 0 && unprocessed.Sum(x => x.Credit) == 0) {
+      //  return;
+      //}
+
       foreach (var entry in unprocessed) {
-        if (processed.Exists(x => x.EntryId == entry.Id)) {
-          continue;
-        }
-        if (entry.CashAccountId != 0) {
-          _helper.AddProcessedEntry(entry, CashAccountStatus.Pending,
-            "Regla dejar pendientes las sobrantes");
-        }
+        _helper.AddProcessedEntry(entry, CashAccountStatus.Pending,
+          "Regla dejar pendientes las sobrantes");
       }
     }
 
@@ -332,8 +301,7 @@ namespace Empiria.CashFlow.CashLedger {
 
         } else if (applicableRules.Count > 0) {
           _helper.AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
-            $"Regla con flujo cargo o abono (existen {applicableRules.Count} reglas " +
-            $"para la cuenta {entry.AccountNumber})");
+            $"Regla con flujo cargo o abono (la cuenta tiene múltiples reglas)");
         }
 
       }  // foreach entry
