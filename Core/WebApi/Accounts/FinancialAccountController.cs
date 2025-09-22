@@ -104,4 +104,4 @@ namespace Empiria.Financial.Accounts.WebApi {
 
   }  // class FinancialAccountController
 
-}  // namespace Empiria.Financial.Projects.WebApi
+}  // namespace Empiria.Financial.Accounts.WebApi

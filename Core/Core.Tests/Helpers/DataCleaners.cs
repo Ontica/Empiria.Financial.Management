@@ -47,7 +47,7 @@ namespace Empiria.Tests.Financial {
 
 
     [Fact]
-    internal void Clean_Financial_Rules() {
+    public void Clean_Financial_Rules() {
       var rules = BaseObject.GetFullList<FinancialRule>();
 
       foreach (var rule in rules) {
