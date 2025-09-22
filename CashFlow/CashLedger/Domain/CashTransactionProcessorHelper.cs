@@ -36,7 +36,6 @@ namespace Empiria.CashFlow.CashLedger {
       _processedEntries = new List<CashEntryFields>(_entries.Count);
     }
 
-
     #region Methods
 
     internal void AddCashFlowEntry(FinancialRule rule, CashEntryDto entry, string appliedRule) {
@@ -44,7 +43,7 @@ namespace Empiria.CashFlow.CashLedger {
 
       if (cashAccounts == null) {
 
-        AddProcessedEntry(entry, CashAccountStatus.Pending,
+        AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
           $"{appliedRule} (regla aplicada sobre cuenta sin auxiliar ni concepto directo)");
 
       } else if (cashAccounts.Count == 0) {
@@ -182,16 +181,15 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     internal bool HaveSameCashAccount(FinancialRule rule, CashEntryDto debitEntry, CashEntryDto creditEntry) {
-      var debitCashAccount = TryGetCashAccounts(rule, debitEntry);
-      var creditCashAccount = TryGetCashAccounts(rule, creditEntry);
+      var debitCashAccount = GetDirectCashAccounts(rule, debitEntry);
+      var creditCashAccount = GetDirectCashAccounts(rule, creditEntry);
 
       if (debitCashAccount == null || creditCashAccount == null ||
           debitCashAccount.Count != 1 || creditCashAccount.Count != 1) {
         return false;
       }
 
-      return debitCashAccount[0].Equals(creditCashAccount[0]) &&
-             debitCashAccount[0].IsOperationAccount;
+      return debitCashAccount[0].AccountNo == creditCashAccount[0].AccountNo;
     }
 
 
@@ -326,7 +324,7 @@ namespace Empiria.CashFlow.CashLedger {
 
     static private FixedList<FinancialAccount> TryGetCashAccounts(FinancialRule rule, CashEntryDto entry) {
 
-      FixedList<FinancialAccount> directAccounts = TryGetDirectCashAccounts(rule, entry);
+      FixedList<FinancialAccount> directAccounts = GetDirectCashAccounts(rule, entry);
 
       if (directAccounts.Count > 0) {
         return directAccounts;
@@ -355,7 +353,9 @@ namespace Empiria.CashFlow.CashLedger {
       }
     }
 
-    static private FixedList<FinancialAccount> TryGetDirectCashAccounts(FinancialRule rule, CashEntryDto entry) {
+
+    static private FixedList<FinancialAccount> GetDirectCashAccounts(FinancialRule rule,
+                                                                     CashEntryDto entry) {
       if (entry.Debit > 0) {
         return FinancialAccount.GetList(x => x.AccountNo == rule.DebitConcept && rule.DebitConcept.Length >= 4 &&
                                              x.Currency.Id == entry.CurrencyId &&
@@ -366,7 +366,6 @@ namespace Empiria.CashFlow.CashLedger {
                                              x.IsOperationAccount);
       }
     }
-
 
     #endregion Helpers
 
