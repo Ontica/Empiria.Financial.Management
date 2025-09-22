@@ -61,6 +61,8 @@ namespace Empiria.CashFlow.CashLedger {
 
       ProcessCashFlowDirectEntries();
 
+      // ProcessEqualCashFlowEntries();
+
       ProcessRemainingEntries();
 
       return _helper.GetProcessedEntries();
@@ -126,6 +128,28 @@ namespace Empiria.CashFlow.CashLedger {
         } // foreach rule
 
       } // foreach debitEntry
+    }
+
+
+    private void ProcessEqualCashFlowEntries() {
+      if (_helper.GetUnprocessedEntries().Count > 0) {
+        return;
+      }
+
+      FixedList<CashEntryFields> processed = _helper.GetProcessedEntries();
+
+      if (!processed.All(x => x.CashAccountId > 0)) {
+        return;
+      }
+
+      if (processed.SelectDistinct(x => x.CashAccountNo).Count() != 1) {
+        return;
+      }
+
+      foreach (var entry in processed) {
+        _helper.ReplaceProcessedEntry(entry, CashAccountStatus.NoCashFlow,
+          "Regla anulación cargo y abono misma cuenta de flujo");
+      }
     }
 
 

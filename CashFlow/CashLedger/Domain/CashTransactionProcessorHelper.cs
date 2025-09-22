@@ -193,6 +193,16 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
+    internal void ReplaceProcessedEntry(CashEntryFields entry,
+                                        CashAccountStatus newStatus,
+                                        string appliedRule) {
+
+      entry.CashAccountId = newStatus.ControlValue();
+      entry.CashAccountNo = newStatus.Name();
+      entry.AppliedRule = appliedRule;
+    }
+
+
     internal FixedList<CashEntryDto> TryGetMatchingEntries(FinancialRule rule,
                                                            CashEntryDto entry) {
       if (entry.Debit != 0) {
