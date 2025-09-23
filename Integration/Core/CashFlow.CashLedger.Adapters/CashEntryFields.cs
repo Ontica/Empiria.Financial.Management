@@ -29,9 +29,15 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-    public string AppliedRule {
+    public int AppliedRuleId {
       get; set;
-    }
+    } = -1;
+
+
+    public string AppliedRuleText {
+      get; set;
+    } = string.Empty;
+
 
     public int UserId {
       get; set;

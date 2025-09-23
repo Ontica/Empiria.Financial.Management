@@ -99,15 +99,19 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
       get; set;
     }
 
-    public string CashAccountAppliedRule {
+    public int CashFlowAppliedRuleId {
       get; set;
     }
 
-    public int CashAccountRecordedById {
+    public string CashFlowAppliedRuleText {
       get; set;
     }
 
-    public DateTime CashAccountRecordingTime {
+    public int CashFlowRecordedById {
+      get; set;
+    }
+
+    public DateTime CashFlowRecordingTime {
       get; set;
     }
 

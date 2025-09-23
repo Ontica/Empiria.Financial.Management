@@ -10,11 +10,9 @@
 
 using System;
 using System.Collections.Generic;
-
+using Empiria.CashFlow.CashLedger.Adapters;
 using Empiria.Financial;
 using Empiria.Financial.Rules;
-
-using Empiria.CashFlow.CashLedger.Adapters;
 
 namespace Empiria.CashFlow.CashLedger {
 
@@ -43,26 +41,26 @@ namespace Empiria.CashFlow.CashLedger {
 
       if (cashAccounts == null) {
 
-        AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+        AddProcessedEntry(rule, entry, CashAccountStatus.CashFlowUnassigned,
           $"{appliedRule} (regla aplicada sobre cuenta sin auxiliar ni concepto directo)");
 
       } else if (cashAccounts.Count == 0) {
 
-        AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+        AddProcessedEntry(rule, entry, CashAccountStatus.CashFlowUnassigned,
           $"{appliedRule} (cuenta con auxiliar no registrado en PYC)");
 
       } else if (cashAccounts.Count == 1 && cashAccounts[0].IsOperationAccount) {
 
-        AddProcessedEntry(entry, cashAccounts[0], appliedRule);
+        AddProcessedEntry(rule, entry, cashAccounts[0], appliedRule);
 
       } else if (cashAccounts.Count == 1 && !cashAccounts[0].IsOperationAccount) {
 
-        AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+        AddProcessedEntry(rule, entry, CashAccountStatus.CashFlowUnassigned,
           $"{appliedRule} (la cuenta no tiene un concepto relacionado con el tipo de operación)");
 
       } else if (cashAccounts.Count > 1) {
 
-        AddProcessedEntry(entry, CashAccountStatus.CashFlowUnassigned,
+        AddProcessedEntry(rule, entry, CashAccountStatus.CashFlowUnassigned,
           $"{appliedRule} (la cuenta tiene más de un concepto relacionado con el tipo de operación.)");
 
       } else {
@@ -71,14 +69,14 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    internal void AddProcessedEntry(CashEntryDto entry,
-                                    CashAccountStatus status, string appliedRule) {
+    internal void AddProcessedEntry(FinancialRule rule, CashEntryDto entry,
+                                    CashAccountStatus status, string appliedRuleText) {
       Assertion.Require(status.IsForControl(), nameof(status));
 
       entry.Processed = true;
 
       if (entry.CashAccountId == status.ControlValue() &&
-          entry.CashAccountAppliedRule == appliedRule) {
+          entry.CashFlowAppliedRuleId == rule.Id) {
         return;
       }
 
@@ -89,19 +87,20 @@ namespace Empiria.CashFlow.CashLedger {
         CashAccountId = status.ControlValue(),
         CashAccountNo = status.Name(),
         TransactionId = _transaction.Id,
-        AppliedRule = appliedRule
+        AppliedRuleId = rule.Id,
+        AppliedRuleText = appliedRuleText
       };
 
       _processedEntries.Add(fields);
     }
 
 
-    internal void AddProcessedEntry(CashEntryDto entry,
-                                    FinancialAccount cashAccount, string appliedRule) {
+    internal void AddProcessedEntry(FinancialRule rule, CashEntryDto entry,
+                                    FinancialAccount cashAccount, string appliedRuleText) {
       entry.Processed = true;
 
       if (entry.CashAccountId == cashAccount.Id &&
-          entry.CashAccountAppliedRule == appliedRule) {
+          entry.CashFlowAppliedRuleId == rule.Id) {
         return;
       }
 
@@ -112,7 +111,8 @@ namespace Empiria.CashFlow.CashLedger {
         CashAccountId = cashAccount.Id,
         CashAccountNo = cashAccount.AccountNo,
         TransactionId = _transaction.Id,
-        AppliedRule = appliedRule
+        AppliedRuleId = rule.Id,
+        AppliedRuleText = appliedRuleText
       };
 
       _processedEntries.Add(fields);
@@ -150,7 +150,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     internal FixedList<CashEntryDto> GetEntriesSatisfyingRule(FinancialRule rule,
-                                                                         FixedList<CashEntryDto> entries) {
+                                                              FixedList<CashEntryDto> entries) {
       if (entries.Count == 0) {
         return new FixedList<CashEntryDto>();
       }
@@ -199,7 +199,7 @@ namespace Empiria.CashFlow.CashLedger {
 
       entry.CashAccountId = newStatus.ControlValue();
       entry.CashAccountNo = newStatus.Name();
-      entry.AppliedRule = appliedRule;
+      entry.AppliedRuleText = appliedRule;
     }
 
 
@@ -210,7 +210,8 @@ namespace Empiria.CashFlow.CashLedger {
                                       x.Credit > 0 &&
                                       x.CurrencyId == entry.CurrencyId &&
                                       MatchesAccountNumber(x.AccountNumber, rule.CreditAccount, rule) &&
-                                      MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, rule) &&
+                                      MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber,
+                                                                    entry.SubledgerAccountNumber, rule) &&
                                       MatchesSector(x.SectorCode, entry.SectorCode, rule));
 
       } else {
@@ -218,7 +219,8 @@ namespace Empiria.CashFlow.CashLedger {
                                       x.Debit > 0 &&
                                       x.CurrencyId == entry.CurrencyId &&
                                       MatchesAccountNumber(x.AccountNumber, rule.DebitAccount, rule) &&
-                                      MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, rule) &&
+                                      MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber,
+                                                                    entry.SubledgerAccountNumber, rule) &&
                                       MatchesSector(x.SectorCode, entry.SectorCode, rule));
       }
     }
@@ -245,22 +247,26 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     internal CashEntryDto TryGetMatchingEntry(FinancialRule rule, CashEntryDto entry,
-                                                         bool swapRule = false) {
+                                              bool swapRule = false) {
 
       if (entry.Debit != 0) {
         return _entries.Find(x => !x.Processed &&
                                   x.Credit == entry.Debit &&
                                   x.CurrencyId == entry.CurrencyId &&
-                                  MatchesAccountNumber(x.AccountNumber, swapRule ? rule.DebitAccount : rule.CreditAccount, rule) &&
-                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, rule) &&
+                                  MatchesAccountNumber(x.AccountNumber,
+                                                       swapRule ? rule.DebitAccount : rule.CreditAccount, rule) &&
+                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber,
+                                                                entry.SubledgerAccountNumber, rule) &&
                                   MatchesSector(x.SectorCode, entry.SectorCode, rule));
 
       } else {
         return _entries.Find(x => !x.Processed &&
                                   x.Debit == entry.Credit &&
                                   x.CurrencyId == entry.CurrencyId &&
-                                  MatchesAccountNumber(x.AccountNumber, swapRule ? rule.CreditAccount : rule.DebitAccount, rule) &&
-                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber, rule) &&
+                                  MatchesAccountNumber(x.AccountNumber,
+                                                       swapRule ? rule.CreditAccount : rule.DebitAccount, rule) &&
+                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber,
+                                                                entry.SubledgerAccountNumber, rule) &&
                                   MatchesSector(x.SectorCode, entry.SectorCode, rule));
       }
     }
@@ -270,23 +276,25 @@ namespace Empiria.CashFlow.CashLedger {
 
     #region Helpers
 
-    static private bool MatchesAccountNumber(string accountNumber, string ruleAccountNumber, FinancialRule rule = null) {
+    static private bool MatchesAccountNumber(string accountNo,
+                                             string patternAccountNo,
+                                             FinancialRule rule = null) {
 
       rule = rule ?? FinancialRule.Empty;
 
-      if (string.IsNullOrWhiteSpace(ruleAccountNumber)) {
+      if (string.IsNullOrWhiteSpace(patternAccountNo)) {
         return rule.Category.IsSingleEntry;
       }
 
-      bool isPatternRule = ruleAccountNumber.Contains("*") && ruleAccountNumber.EndsWith("]");
+      bool isPatternRule = patternAccountNo.Contains("*") && patternAccountNo.EndsWith("]");
 
       if (isPatternRule) {
-        string startsWith = ruleAccountNumber.Split('*')[0];
-        string endsWith = EmpiriaString.TrimAll(ruleAccountNumber.Split('*')[1], "]", string.Empty);
+        string startsWith = patternAccountNo.Split('*')[0];
+        string endsWith = EmpiriaString.TrimAll(patternAccountNo.Split('*')[1], "]", string.Empty);
 
-        return accountNumber.StartsWith(startsWith) && accountNumber.EndsWith(endsWith);
+        return accountNo.StartsWith(startsWith) && accountNo.EndsWith(endsWith);
       } else {
-        return accountNumber.StartsWith(ruleAccountNumber);
+        return accountNo.StartsWith(patternAccountNo);
       }
     }
 
@@ -304,8 +312,8 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    static private bool MatchesSubLedgerAccountNumber(string subledgerAccountNumber1,
-                                                      string subledgerAccountNumber2,
+    static private bool MatchesSubLedgerAccountNumber(string subledgerAcctNo1,
+                                                      string subledgerAcctNo2,
                                                       FinancialRule rule = null) {
 
       rule = rule ?? FinancialRule.Empty;
@@ -314,20 +322,22 @@ namespace Empiria.CashFlow.CashLedger {
         return true;
       }
 
-      return subledgerAccountNumber1 == subledgerAccountNumber2 ||
-            (string.IsNullOrWhiteSpace(subledgerAccountNumber1) && !string.IsNullOrWhiteSpace(subledgerAccountNumber2)) ||
-            (!string.IsNullOrWhiteSpace(subledgerAccountNumber1) && string.IsNullOrWhiteSpace(subledgerAccountNumber2));
+      return subledgerAcctNo1 == subledgerAcctNo2 ||
+            (string.IsNullOrWhiteSpace(subledgerAcctNo1) && !string.IsNullOrWhiteSpace(subledgerAcctNo2)) ||
+            (!string.IsNullOrWhiteSpace(subledgerAcctNo1) && string.IsNullOrWhiteSpace(subledgerAcctNo2));
     }
 
 
     static private bool SatisfiesRule(FinancialRule rule, CashEntryDto entry) {
       if (entry.Debit != 0) {
         return MatchesAccountNumber(entry.AccountNumber, rule.DebitAccount, rule) &&
-                                    (rule.DebitCurrency.IsEmptyInstance || rule.DebitCurrency.Id == entry.CurrencyId);
+                                    (rule.DebitCurrency.IsEmptyInstance ||
+                                     rule.DebitCurrency.Id == entry.CurrencyId);
 
       } else {
         return MatchesAccountNumber(entry.AccountNumber, rule.CreditAccount, rule) &&
-                                   (rule.CreditCurrency.IsEmptyInstance || rule.CreditCurrency.Id == entry.CurrencyId);
+                                   (rule.CreditCurrency.IsEmptyInstance ||
+                                    rule.CreditCurrency.Id == entry.CurrencyId);
       }
     }
 
