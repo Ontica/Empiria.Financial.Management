@@ -99,7 +99,10 @@ namespace Empiria.CashFlow.CashLedger {
         return;
       }
 
-      FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_ONE_TO_ONE");
+      FixedList<FinancialRule> rules = FixedList<FinancialRule>.Merge(_helper.GetRules("CASH_FLOW_ONE_TO_ONE"),
+                                                                      _helper.GetRules("CASH_FLOW_DEBIT_OR_CREDIT"));
+
+      // FixedList<FinancialRule> rules = _helper.GetRules("CASH_FLOW_ONE_TO_ONE");
 
       foreach (var debitEntry in debitEntries) {
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, debitEntry);
@@ -284,12 +287,7 @@ namespace Empiria.CashFlow.CashLedger {
 
 
     private void ProcessRemainingEntries() {
-      // FixedList<CashEntryFields> processed = _helper.GetProcessedEntries();
       FixedList<CashEntryDto> unprocessed = _helper.GetUnprocessedEntries();
-
-      //if (unprocessed.Sum(x => x.Debit) > 0 && unprocessed.Sum(x => x.Credit) == 0) {
-      //  return;
-      //}
 
       foreach (var entry in unprocessed) {
         _helper.AddProcessedEntry(FinancialRule.Empty, entry, CashAccountStatus.Pending,
