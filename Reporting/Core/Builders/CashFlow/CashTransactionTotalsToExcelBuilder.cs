@@ -138,6 +138,12 @@ namespace Empiria.CashFlow.Reporting {
           _excelFile.SetCellIfValue($"AM{i}", entries.Count(x => x.Correct));
           _excelFile.SetCellIfValue($"AN{i}", entries.Count(x => x.FalsePositive));
 
+          var rulesIds = entries.ToFixedList()
+                        .FindAll(x => x.FalsePositive)
+                        .SelectDistinct(x => x.CashFlowAppliedRuleId)
+                        .ToArray();
+
+          _excelFile.SetCell($"AO{i}", string.Join("; ", rulesIds));
           i++;
 
         }  //  foreach entry

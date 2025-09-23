@@ -91,11 +91,18 @@ namespace Empiria.CashFlow.Reporting {
 
         var rules = group.ToFixedList()
                           .FindAll(x => x.FalsePositive)
-                          .SelectDistinct(x => x.CashAccountAppliedRule)
+                          .SelectDistinct(x => x.CashFlowAppliedRuleText)
                           .ToArray();
 
 
         _excelFile.SetCell($"N{i}", string.Join("; ", rules));
+
+        var rules2 = group.ToFixedList()
+                  .FindAll(x => x.FalsePositive)
+                  .SelectDistinct(x => x.CashFlowAppliedRuleId)
+                  .ToArray();
+
+        _excelFile.SetCell($"O{i}", string.Join("; ", rules2));
 
         i++;
 

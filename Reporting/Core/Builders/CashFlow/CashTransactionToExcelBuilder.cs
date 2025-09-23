@@ -105,7 +105,8 @@ namespace Empiria.CashFlow.Reporting {
           _excelFile.SetCellIfValue($"Z{i}", entry.Exact ? 1 : 0);
           _excelFile.SetCellIfValue($"AA{i}", entry.Correct ? 1 : 0);
           _excelFile.SetCellIfValue($"AB{i}", entry.FalsePositive ? 1 : 0);
-          _excelFile.SetCell($"AC{i}", entry.CashAccountAppliedRule);
+          _excelFile.SetCell($"AC{i}", entry.CashFlowAppliedRuleText);
+          _excelFile.SetCell($"AD{i}", entry.CashFlowAppliedRuleId);
 
           i++;
 
