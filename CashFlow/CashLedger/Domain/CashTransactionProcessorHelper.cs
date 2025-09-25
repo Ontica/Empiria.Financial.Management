@@ -43,12 +43,12 @@ namespace Empiria.CashFlow.CashLedger {
 
       if (cashAccounts == null) {
 
-        AddProcessedEntry(rule, entry, CashAccountStatus.Pending,
+        AddProcessedEntry(rule, entry, CashAccountStatus.CashFlowUnassigned,
           $"{appliedRule} (regla aplicada sobre cuenta sin auxiliar ni concepto directo)");
 
       } else if (cashAccounts.Count == 0) {
 
-        AddProcessedEntry(rule, entry, CashAccountStatus.Pending,
+        AddProcessedEntry(rule, entry, CashAccountStatus.CashFlowUnassigned,
           $"{appliedRule} (cuenta con auxiliar no registrado en PYC)");
 
       } else if (cashAccounts.Count == 1 && cashAccounts[0].IsOperationAccount) {
@@ -57,12 +57,12 @@ namespace Empiria.CashFlow.CashLedger {
 
       } else if (cashAccounts.Count == 1 && !cashAccounts[0].IsOperationAccount) {
 
-        AddProcessedEntry(rule, entry, CashAccountStatus.Pending,
+        AddProcessedEntry(rule, entry, CashAccountStatus.CashFlowUnassigned,
           $"{appliedRule} (la cuenta no tiene un concepto relacionado con el tipo de operación)");
 
       } else if (cashAccounts.Count > 1) {
 
-        AddProcessedEntry(rule, entry, CashAccountStatus.Pending,
+        AddProcessedEntry(rule, entry, CashAccountStatus.CashFlowUnassigned,
           $"{appliedRule} (la cuenta tiene más de un concepto relacionado con el tipo de operación.)");
 
       } else {
@@ -162,7 +162,6 @@ namespace Empiria.CashFlow.CashLedger {
       return entries.FindAll(x => SatisfiesRule(rule, x));
     }
 
-
     internal FixedList<CashEntryFields> GetProcessedEntries() {
       return _processedEntries.ToFixedList();
     }
@@ -197,13 +196,15 @@ namespace Empiria.CashFlow.CashLedger {
     }
 
 
-    internal void ReplaceProcessedEntry(CashEntryFields entry,
+    internal void ReplaceProcessedEntry(CashEntryDto entry,
                                         CashAccountStatus newStatus,
-                                        string appliedRule) {
+                                        string appliedRuleText) {
 
-      entry.CashAccountId = newStatus.ControlValue();
-      entry.CashAccountNo = newStatus.Name();
-      entry.AppliedRuleText = appliedRule;
+      var entryFields = _processedEntries.Find(x => x.EntryId == entry.Id);
+
+      _processedEntries.Remove(entryFields);
+
+      AddProcessedEntry(FinancialRule.Empty, entry, newStatus, appliedRuleText);
     }
 
 
