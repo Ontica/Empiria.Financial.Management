@@ -73,9 +73,9 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
       Assertion.Require(transactionIds, nameof(transactionIds));
 
       int counter = 0;
-      int CHUNK_SIZE = 200;
+      int BATCH_SIZE = 400;
 
-      FixedList<long>[] chunks = transactionIds.Split(CHUNK_SIZE);
+      FixedList<long>[] chunks = transactionIds.Split(BATCH_SIZE);
 
       foreach (FixedList<long> chunk in chunks) {
 
@@ -90,7 +90,6 @@ namespace Empiria.CashFlow.CashLedger.UseCases {
 
           if (updatedTransactionEntries.Count > 0) {
             chunkEntries.AddRange(updatedTransactionEntries);
-            // EmpiriaLog.Debug($"Rare {transaction.Transaction.Number}");
             counter++;
           }
 
