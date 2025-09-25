@@ -20,9 +20,18 @@ namespace Empiria.Financial {
   /// <summary>Partitioned type that represents an standard account.</summary>
   [PartitionedType(typeof(StandardAccountType))]
   public class StandardAccount : BaseObject, INamedEntity {
-    //private ProjectFields fields;
+
+    #region Fields
+
+    static readonly private FixedList<StandardAccount> _cache;
+
+    #endregion Fields
 
     #region Constructors and parsers
+
+    static StandardAccount() {
+      _cache = GetFullList<StandardAccount>("STD_ACCT_STATUS <> 'X'");
+    }
 
     protected StandardAccount(StandardAccountType powertype) : base(powertype) {
       // Require by Empiria FrameWork
@@ -33,7 +42,7 @@ namespace Empiria.Financial {
     static public StandardAccount Parse(string uid) => ParseKey<StandardAccount>(uid);
 
     static internal StandardAccount TryParseAccountNo(string stdAcctNo) {
-      return TryParse<StandardAccount>($"STD_ACCT_NUMBER = '{stdAcctNo}'");
+      return _cache.Find(x => x.StdAcctNo == stdAcctNo);
     }
 
     static public StandardAccount Empty => ParseEmpty<StandardAccount>();
