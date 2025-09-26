@@ -37,7 +37,7 @@ namespace Empiria.Tests.CashFlow.CashLedger {
     [Fact]
     public async void Should_AutoCodifyTransaction() {
 
-      var sut = await _usecases.AutoCodifyTransaction(9118739);
+      var sut = await _usecases.AutoCodifyTransaction(9118755);
 
       Assert.NotNull(sut);
     }
