@@ -162,6 +162,26 @@ namespace Empiria.CashFlow.CashLedger {
       return entries.FindAll(x => SatisfiesRule(rule, x));
     }
 
+
+    internal FixedList<CashEntryDto> GetEntriesSatisfyingRules(FixedList<FinancialRule> rules,
+                                                               FixedList<CashEntryDto> entries) {
+      if (rules.Count == 0 || entries.Count == 0) {
+        return new FixedList<CashEntryDto>();
+      }
+
+      var satisfyingEntries = new List<CashEntryDto>(entries.Count);
+
+      foreach (var rule in rules) {
+        var ruleEntries = GetEntriesSatisfyingRule(rule, entries)
+                         .FindAll(x => !satisfyingEntries.Contains(x));
+
+        satisfyingEntries.AddRange(ruleEntries);
+      }
+
+      return satisfyingEntries.ToFixedList();
+    }
+
+
     internal FixedList<CashEntryFields> GetProcessedEntries() {
       return _processedEntries.ToFixedList();
     }

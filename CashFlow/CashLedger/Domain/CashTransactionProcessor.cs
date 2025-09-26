@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
+
 using Empiria.Financial.Rules;
 
 using Empiria.CashFlow.CashLedger.Adapters;
@@ -44,11 +46,13 @@ namespace Empiria.CashFlow.CashLedger {
 
       ProcessNoCashFlowDebitOrCreditEntriesRule2();
 
+      ProcessNoCashFlowGroupedEntries();
+
+      ProcessNoCashFlowEntriesSwapedFromCashFlowRules();
+
       ProcessNoCashFlowAccounts();
 
       ProcessEqualEntriesAsNoCashFlowEntries();
-
-      ProcessNoCashFlowEntriesSwapedFromCashFlowRules();
 
       ProcessCashFlowEntriesOneToOne();
 
@@ -271,6 +275,64 @@ namespace Empiria.CashFlow.CashLedger {
         } // foreach rule
 
       }  // foreach creditEntry
+    }
+
+
+    private void ProcessNoCashFlowGroupedEntries() {
+      var entries = _helper.GetUnprocessedEntries();
+
+      if (entries.Count == 0) {
+        return;
+      }
+
+      var groupedRules = _helper.GetApplicableRules(_helper.GetRules("NO_CASH_FLOW_GROUPED"), entries)
+                                .GroupBy(x => x.GroupId);
+
+      foreach (var group in groupedRules) {
+
+        FixedList<FinancialRule> debitRules = _helper.GetApplicableRules(group.ToFixedList(),
+                                                                         entries.FindAll(x => x.Debit != 0));
+
+        FixedList<FinancialRule> creditRules = _helper.GetApplicableRules(group.ToFixedList(),
+                                                                          entries.FindAll(x => x.Credit != 0));
+
+
+        FixedList<int> currencies = entries.SelectDistinct(x => x.CurrencyId);
+
+
+        foreach (int currencyId in currencies) {
+
+          FixedList<CashEntryDto> debitEntries =
+                      _helper.GetEntriesSatisfyingRules(debitRules, entries.FindAll(x => x.Debit != 0 &&
+                                                                                         x.CurrencyId == currencyId));
+
+          FixedList<CashEntryDto> creditEntries =
+                      _helper.GetEntriesSatisfyingRules(creditRules, entries.FindAll(x => x.Credit != 0 &&
+                                                                                          x.CurrencyId == currencyId));
+
+          decimal debitSum = debitEntries.Sum(x => x.Debit);
+          decimal creditSum = creditEntries.Sum(x => x.Credit);
+
+          if (debitSum != creditSum) {
+            continue;
+          }
+
+          foreach (var debitEntry in debitEntries) {
+            _helper.AddProcessedEntry(FinancialRule.Empty, debitEntry, CashAccountStatus.NoCashFlow,
+              $"Regla sin flujo agrupada");
+          }
+
+          foreach (var creditEntry in creditEntries) {
+            _helper.AddProcessedEntry(FinancialRule.Empty, creditEntry, CashAccountStatus.NoCashFlow,
+              $"Regla sin flujo agrupada");
+          }
+
+          entries = _helper.GetUnprocessedEntries();
+
+        }   // foreach currencyId
+
+      }  // foreach group
+
     }
 
 
