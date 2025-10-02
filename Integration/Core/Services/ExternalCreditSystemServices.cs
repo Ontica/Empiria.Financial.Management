@@ -42,6 +42,17 @@ namespace Empiria.Financial {
 
     #region Methods
 
+    public FixedList<ICreditEntryData> GetCreditEntries(FixedList<string> creditIDs,
+                                                        DateTime fromDate,
+                                                        DateTime toDate) {
+      Assertion.Require(creditIDs, nameof(creditIDs));
+      Assertion.Require(fromDate, nameof(fromDate));
+      Assertion.Require(toDate, nameof(toDate));
+
+      return _service.GetCreditsEntries(creditIDs, fromDate, toDate);
+    }
+
+
     public ICreditAccountData TryGetCreditWithAccountNo(string creditNo) {
       Assertion.Require(creditNo, nameof(creditNo));
 
