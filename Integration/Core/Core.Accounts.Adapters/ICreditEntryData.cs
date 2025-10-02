@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Integration services                       Component : Adapters Layer                          *
 *  Assembly : Empiria.Financial.Integration.Core.dll     Pattern   : Adaptation Interface                    *
-*  Type     : ICreditAccountService                      License   : Please read LICENSE.txt file            *
+*  Type     : ICreditEntryData                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Interface used to retrieve credit accounts data from external systems.                         *
+*  Summary  : Interface for a credit account entry used to connect with external systems.                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,16 +12,33 @@ using System;
 
 namespace Empiria.Financial.Adapters {
 
-  /// <summary>Interface used to retrieve credit accounts data from external systems.</summary>
-  public interface ICreditAccountService {
+  /// <summary>Interface for a credit account entry used to connect with external systems.</summary>
+  public interface ICreditEntryData {
 
-    FixedList<ICreditEntryData> GetCreditsEntries(FixedList<string> creditIDs,
-                                                  DateTime fromDate,
-                                                  DateTime toDate);
+    string AccountNo {
+      get;
+    }
 
+    string SubledgerAccountNo {
+      get;
+    }
 
-    ICreditAccountData TryGetCredit(string creditNo);
+    DateTime ApplicationDate {
+      get;
+    }
 
-  }  // ICreditAccountService
+    string OperationTypeNo {
+      get;
+    }
 
-}  // namespace Empiria.Financial.Adapters
+    string OperationName {
+      get;
+    }
+
+    decimal Amount {
+      get;
+    }
+
+  }  // ICreditEntryData
+
+}  // Empiria.Financial.Adapters

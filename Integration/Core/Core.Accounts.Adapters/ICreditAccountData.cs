@@ -4,16 +4,17 @@
 *  Assembly : Empiria.Financial.Integration.Core.dll     Pattern   : Adaptation Interface                    *
 *  Type     : ICreditAccountData                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Interface with credit account data used to connect with external systems.                      *
+*  Summary  : Interface with credit account data coming from external systems.                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-using Empiria.Parties;
 
+using System;
+
+using Empiria.Parties;
 
 namespace Empiria.Financial.Adapters {
 
-  /// <summary>Interface with credit account data used to connect with external systems.</summary>
+  /// <summary>Interface with credit account data coming from external systems.</summary>
   public interface ICreditAccountData {
 
     string AccountNo {
