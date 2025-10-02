@@ -358,6 +358,20 @@ namespace Empiria.Financial {
       }
     }
 
+
+    public StandardAccountSegment OperationType {
+      get {
+        if (!IsOperationAccount) {
+          return StandardAccountSegment.Empty;
+        }
+
+        var operationCode = StandardAccount.StdAcctNo.Substring(15, 2);
+
+        return StandardAccountSegment.Parse(StandardAccountCategory.ParseWithNamedKey("operationType"),
+                                            operationCode);
+      }
+    }
+
     #endregion Properties
 
     #region Methods

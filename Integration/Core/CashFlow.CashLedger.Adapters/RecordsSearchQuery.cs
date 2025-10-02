@@ -56,9 +56,10 @@ namespace Empiria.Financial.Adapters {
     } = new string[0];
 
 
-    public string[] Parties {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "Parties")]
+    public string OrgUnitUID {
       get; set;
-    } = new string[0];
+    } = string.Empty;
 
   }  // class RecordsSearchQuery
 

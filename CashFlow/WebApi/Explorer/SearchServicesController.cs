@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Threading.Tasks;
 using System.Web.Http;
 
 using Empiria.DynamicData;
@@ -16,6 +15,7 @@ using Empiria.WebApi;
 
 using Empiria.Financial.Adapters;
 
+using Empiria.CashFlow.Explorer.Adapters;
 using Empiria.CashFlow.Explorer.UseCases;
 
 namespace Empiria.CashFlow.Explorer.WebApi {
@@ -26,13 +26,14 @@ namespace Empiria.CashFlow.Explorer.WebApi {
     #region Web apis
 
     [HttpPost]
-    [Route("v1/cash-flow/accounts-totals/search")]
-    public async Task<SingleObjectModel> SearchAccountsTotals([FromBody] RecordsSearchQuery query) {
+    [Route("v1/financial-management/search-services/AccountTotals")]  // ToDo: Change to CashFlowAccounts
+    [Route("v1/financial-management/search-services/CashFlowAccounts")]
+    public SingleObjectModel SearchCashFlowAccounts([FromBody] RecordsSearchQuery query) {
 
-      using (var usecases = CashFlowAccountsTotalsUseCases.UseCaseInteractor()) {
-        var accountsTotals = await usecases.AccountTotals(query);
+      using (var services = CashFlowSearchServices.ServiceInteractor()) {
+        DynamicDto<CashFlowAccountDto> accounts = services.SearchCashFlowAccounts(query);
 
-        return new SingleObjectModel(base.Request, accountsTotals);
+        return new SingleObjectModel(base.Request, accounts);
       }
     }
 
