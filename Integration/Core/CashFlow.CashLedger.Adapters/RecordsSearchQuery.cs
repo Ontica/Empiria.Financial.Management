@@ -2,37 +2,51 @@
 *                                                                                                            *
 *  Module   : Integration services                       Component : Adapters Layer                          *
 *  Assembly : Empiria.Financial.Integration.Core.dll     Pattern   : Input query DTO                         *
-*  Type     : AccountsTotalsQuery                        License   : Please read LICENSE.txt file            *
+*  Type     : RecordsSearchQuery                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Input query DTO used to search accounts totals in a date period.                               *
+*  Summary  : Input query DTO used to search cash flow related data and entities.                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 
-using Empiria.DataTypes;
-
 namespace Empiria.Financial.Adapters {
 
-  /// <summary>Input query DTO used to search information about accounts in a date period.</summary>
-  public class AccountsTotalsQuery : IQuery {
+  public enum RecordSearchQueryType {
+    AccountTotals,
+    AccountingEntriesByAccount,
+    AccountingEntriesBySubledgerAccount,
+    CashFlowAccountingEntries,
+    CashFlowEntries,
+    CreditEntries,
+    None
+  }
 
-    public string QueryType {
+
+  /// <summary>Input query DTO used to search cash flow related data and entities.</summary>
+  public class RecordsSearchQuery : IQuery {
+
+    public RecordSearchQueryType QueryType {
       get; set;
-    } = string.Empty;
+    } = RecordSearchQueryType.None;
 
 
     public DateTime FromDate {
       get; set;
-    } = DateTime.MaxValue;
+    } = DateTime.MinValue;
 
 
     public DateTime ToDate {
       get; set;
-    } = DateTime.MaxValue;
+    } = DateTime.MinValue;
 
 
-    public string[] Accounts {
+    public string OperationTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string[] Keywords {
       get; set;
     } = new string[0];
 
@@ -42,10 +56,10 @@ namespace Empiria.Financial.Adapters {
     } = new string[0];
 
 
-    public KeyValue[] CustomFields {
+    public string[] Parties {
       get; set;
-    } = new KeyValue[0];
+    } = new string[0];
 
-  }  // class AccountsTotalsQuery
+  }  // class RecordsSearchQuery
 
 }  // namespace Empiria.Financial.Adapters

@@ -45,7 +45,7 @@ namespace Empiria.CashFlow.Explorer.UseCases {
     public async Task<DynamicDto<ConceptAnalyticsDto>> ConceptsAnalytics(CashFlowExplorerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      AccountsTotalsQuery accountsTotalsQuery = MapToAccountsTotalsQuery(query);
+      RecordsSearchQuery accountsTotalsQuery = MapToAccountsTotalsQuery(query);
 
       FixedList<ConceptAnalyticsDto> entries =
                         await _accountingServices.GetCashLedgerEntries<ConceptAnalyticsDto>(accountsTotalsQuery);
@@ -60,7 +60,7 @@ namespace Empiria.CashFlow.Explorer.UseCases {
     public async Task<DynamicDto<CashFlowExplorerEntry>> ExploreCashFlow(CashFlowExplorerQuery query) {
       Assertion.Require(query, nameof(query));
 
-      AccountsTotalsQuery accountsTotalsQuery = MapToAccountsTotalsQuery(query);
+      RecordsSearchQuery accountsTotalsQuery = MapToAccountsTotalsQuery(query);
 
       FixedList<CashAccountTotalDto> totals =
                                         await _accountingServices.GetCashAccountTotals(accountsTotalsQuery);
@@ -112,9 +112,9 @@ namespace Empiria.CashFlow.Explorer.UseCases {
     }
 
 
-    private AccountsTotalsQuery MapToAccountsTotalsQuery(CashFlowExplorerQuery query) {
-      return new AccountsTotalsQuery {
-        QueryType = query.ReportType.ToString(),
+    private RecordsSearchQuery MapToAccountsTotalsQuery(CashFlowExplorerQuery query) {
+      return new RecordsSearchQuery {
+        QueryType = RecordSearchQueryType.None,
         FromDate = query.FromDate,
         ToDate = query.ToDate,
         Ledgers = new string[] { query.AccountingLedgerUID }

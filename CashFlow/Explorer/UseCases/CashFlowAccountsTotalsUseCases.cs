@@ -41,7 +41,7 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     #region Use cases
 
-    public async Task<DynamicDto<CashAccountTotalDto>> AccountTotals(AccountsTotalsQuery query) {
+    public async Task<DynamicDto<CashAccountTotalDto>> AccountTotals(RecordsSearchQuery query) {
       Assertion.Require(query, nameof(query));
 
       FixedList<CashAccountTotalDto> accountsTotals =
