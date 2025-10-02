@@ -40,19 +40,27 @@ namespace Empiria.CashFlow.Explorer.Adapters {
     } = CashFlowReportType.None;
 
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "FromAccountingDate")]
     public DateTime FromDate {
       get; set;
     } = DateTime.MaxValue;
 
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "ToAccountingDate")]
     public DateTime ToDate {
       get; set;
     } = DateTime.MaxValue;
 
 
-    public string AccountingLedgerUID {
+    public string Keywords {
+      get; set;
+    } = string.Empty;
+
+
+    public string OperationTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string PartyUID {
       get; set;
     } = string.Empty;
 
@@ -70,17 +78,6 @@ namespace Empiria.CashFlow.Explorer.Adapters {
     public string FinancingSourceUID {
       get; set;
     } = string.Empty;
-
-
-    public string OperationTypeUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string PartyUID {
-      get; set;
-    } = string.Empty;
-
 
     public string ProjectTypeUID {
       get; set;

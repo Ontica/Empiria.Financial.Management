@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Empiria.DynamicData;
 
 using Empiria.CashFlow.CashLedger.Adapters;
+
 using Empiria.CashFlow.Explorer.Adapters;
 
 namespace Empiria.CashFlow.Explorer {
@@ -43,12 +44,13 @@ namespace Empiria.CashFlow.Explorer {
 
     private FixedList<DataTableColumn> GetDynamicColumns() {
       var columns = new List<DataTableColumn> {
-        new DataTableColumn("cashAccountNo", "Concepto presupuestal", "text"),
-        new DataTableColumn("conceptDescription", "Descripción", "text"),
         new DataTableColumn("program", "Programa", "text"),
         new DataTableColumn("subprogram", "Subprograma", "text"),
         new DataTableColumn("financingSource", "Fuente", "text"),
         new DataTableColumn("operationType", "Operación", "text"),
+        new DataTableColumn("cashAccountNo", "Concepto", "text"),
+        new DataTableColumn("conceptDescription", "Descripción", "text"),
+        new DataTableColumn("organizationalUnit", "Área", "text"),
         new DataTableColumn("currencyCode", "Moneda", "text"),
         new DataTableColumn("inflows", "Entradas", "decimal"),
         new DataTableColumn("outflows", "Salidas", "decimal"),
@@ -65,8 +67,32 @@ namespace Empiria.CashFlow.Explorer {
         entries.Add(ProcessTotal(entry));
       }
 
-      return entries.ToFixedList()
-                    .Sort(x => $"{x.StandardAccountNo.PadRight(64)}|{x.CashAccountNo.PadRight(16)}|{x.CurrencyCode}");
+      var filteredEntries = ApplyFilters(entries);
+
+      return filteredEntries.Sort(x => $"{x.StandardAccountNo.PadRight(64)}|{x.OperationType.PadRight(64)}|{x.CashAccountNo.PadRight(16)}|" +
+                                      $"{x.ConceptDescription.PadRight(300)}|{x.OrganizationalUnit.PadRight(255)}||{x.CurrencyCode}");
+    }
+
+
+    private FixedList<CashFlowExplorerEntry> ApplyFilters(List<CashFlowExplorerEntry> entries) {
+      var filtered = entries.ToFixedList()
+                            .FindAll(x => x.CashAccountId > 0);
+
+      if (_query.OperationTypeUID.Length != 0) {
+        filtered = filtered.FindAll(x => x.CashAccount.OperationType.UID == _query.OperationTypeUID);
+      }
+
+      if (_query.PartyUID.Length != 0) {
+        filtered = filtered.FindAll(x => x.CashAccount.OrganizationalUnit.UID == _query.PartyUID);
+      }
+
+      if (EmpiriaString.BuildKeywords(_query.Keywords).Length != 0) {
+        var queryKeywords = EmpiriaString.BuildKeywords(_query.Keywords);
+
+        filtered = filtered.FindAll(x => EmpiriaString.ContainsAny(x.CashAccount.Parent.Keywords, queryKeywords));
+      }
+
+      return filtered.ToFixedList();
     }
 
 
@@ -74,7 +100,7 @@ namespace Empiria.CashFlow.Explorer {
       var entry = new CashFlowExplorerEntry {
         CashAccountId = total.CashAccountId,
         CashAccountNo = total.CashAccountNo,
-        CurrencyCode = total.CurrencyCode,
+        CurrencyCode = total.CurrencyCode
       };
 
       entry.Sum(total);

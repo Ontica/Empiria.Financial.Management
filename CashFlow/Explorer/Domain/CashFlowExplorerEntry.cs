@@ -30,7 +30,7 @@ namespace Empiria.CashFlow.Explorer {
         if (CashAccountId <= 0) {
           return CashAccountNo;
         }
-        return Account.Parent.Description;
+        return CashAccount.Parent.Description;
       }
     }
 
@@ -39,17 +39,26 @@ namespace Empiria.CashFlow.Explorer {
         if (CashAccountId <= 0) {
           return CashAccountNo;
         }
-        return Account.StandardAccount.StdAcctNo;
+        return CashAccount.StandardAccount.StdAcctNo;
+      }
+    }
+
+    public string OrganizationalUnit {
+      get {
+        if (CashAccountId <= 0) {
+          return "No aplica";
+        }
+        return CashAccount.OrganizationalUnit.FullName;
       }
     }
 
     public string Program {
       get {
         if (CashAccountId <= 0) {
-          return "N/D";
+          return "No aplica";
         }
         var segment = StandardAccountSegment.Parse(StandardAccountCategory.ParseWithNamedKey("program"),
-                                                    Account.StandardAccount.StdAcctNo.Substring(0, 2));
+                                                   CashAccount.StandardAccount.StdAcctNo.Substring(0, 2));
 
         return ((INamedEntity) segment).Name;
       }
@@ -59,10 +68,10 @@ namespace Empiria.CashFlow.Explorer {
     public string Subprogram {
       get {
         if (CashAccountId <= 0) {
-          return "N/D";
+          return "No aplica";
         }
         var segment = StandardAccountSegment.Parse(StandardAccountCategory.ParseWithNamedKey("subprogram"),
-                                                   Account.StandardAccount.StdAcctNo.Substring(3, 2));
+                                                   CashAccount.StandardAccount.StdAcctNo.Substring(3, 2));
 
         return ((INamedEntity) segment).Name;
       }
@@ -72,10 +81,10 @@ namespace Empiria.CashFlow.Explorer {
     public string FinancingSource {
       get {
         if (CashAccountId <= 0) {
-          return "N/D";
+          return "No aplica";
         }
         var segment = StandardAccountSegment.Parse(StandardAccountCategory.ParseWithNamedKey("financingSource"),
-                                                   Account.StandardAccount.StdAcctNo.Substring(12, 2));
+                                                   CashAccount.StandardAccount.StdAcctNo.Substring(12, 2));
 
         return ((INamedEntity) segment).Name;
       }
@@ -84,10 +93,10 @@ namespace Empiria.CashFlow.Explorer {
     public string OperationType {
       get {
         if (CashAccountId <= 0) {
-          return "N/D";
+          return "No aplica";
         }
         var segment = StandardAccountSegment.Parse(StandardAccountCategory.ParseWithNamedKey("operationType"),
-                                                   Account.StandardAccount.StdAcctNo.Substring(15, 2));
+                                                   CashAccount.StandardAccount.StdAcctNo.Substring(15, 2));
 
         return ((INamedEntity) segment).Name;
       }
@@ -111,7 +120,7 @@ namespace Empiria.CashFlow.Explorer {
       Outflows += entry.Outflows;
     }
 
-    private FinancialAccount Account {
+    internal FinancialAccount CashAccount {
       get {
         if (CashAccountId <= 0) {
           return FinancialAccount.Empty;

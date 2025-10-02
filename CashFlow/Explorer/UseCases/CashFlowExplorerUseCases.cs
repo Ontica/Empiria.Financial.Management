@@ -116,8 +116,7 @@ namespace Empiria.CashFlow.Explorer.UseCases {
       return new RecordsSearchQuery {
         QueryType = RecordSearchQueryType.None,
         FromDate = query.FromDate,
-        ToDate = query.ToDate,
-        Ledgers = new string[] { query.AccountingLedgerUID }
+        ToDate = query.ToDate
       };
     }
 
