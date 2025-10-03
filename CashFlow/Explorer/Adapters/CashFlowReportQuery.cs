@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : CashFlow Explorer                          Component : Adapters Layer                          *
 *  Assembly : Empiria.CashFlow.Explorer.dll              Pattern   : Query DTO                               *
-*  Type     : CashFlowExplorerQuery                      License   : Please read LICENSE.txt file            *
+*  Type     : CashFlowReportQuery                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Input query DTO used to retrieve cash flow explorer information.                               *
+*  Summary  : Input query DTO used to retrieve cash flow related reports.                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,32 +12,24 @@ using System;
 
 namespace Empiria.CashFlow.Explorer.Adapters {
 
-  public enum CashFlowExplorerReportType {
-
-    AccountTotals,
-
-    CashFlow,
+  public enum CashFlowReportType {
 
     ConceptAnalytic,
 
     ConceptDetail,
 
-    ConceptTotals,
-
-    ProjectTotals,
-
     None
 
-  }  // CashFlowExplorerType
+  }  // CashFlowReportType
 
 
 
-  /// <summary>Input query DTO used to retrieve cash flow explorer information.</summary>
-  public class CashFlowExplorerQuery : IQuery {
+  /// <summary>Input query DTO used to retrieve cash flow related reports information.</summary>
+  public class CashFlowReportQuery : IQuery {
 
-    public CashFlowExplorerReportType ReportType {
+    public CashFlowReportType ReportType {
       get; set;
-    } = CashFlowExplorerReportType.None;
+    } = CashFlowReportType.None;
 
 
     public DateTime FromDate {
@@ -53,6 +45,21 @@ namespace Empiria.CashFlow.Explorer.Adapters {
     public string Keywords {
       get; set;
     } = string.Empty;
+
+
+    public string AccountingLedgerUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string[] Accounts {
+      get; set;
+    } = new string[0];
+
+
+    public string[] SubledgerAccounts {
+      get; set;
+    } = new string[0];
 
 
     public string OperationTypeUID {
