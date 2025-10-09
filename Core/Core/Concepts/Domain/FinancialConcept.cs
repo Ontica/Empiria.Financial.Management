@@ -53,9 +53,10 @@ namespace Empiria.Financial.Concepts {
     }
 
 
-    [DataField("CPT_DESCRIPTION")]
-    public string Description {
-      get; private set;
+    string INamedEntity.Name {
+      get {
+        return $"{ConceptNo} {Name}";
+      }
     }
 
     public string FullName {
@@ -64,10 +65,16 @@ namespace Empiria.Financial.Concepts {
           return string.Empty;
         }
         if (Parent.FullName.Length == 0) {
-          return Description;
+          return Name;
         }
-        return $"{Description} - {Parent.FullName}";
+        return $"{Name} - {Parent.FullName}";
       }
+    }
+
+
+    [DataField("CPT_DESCRIPTION")]
+    public string Description {
+      get; private set;
     }
 
 
@@ -133,7 +140,7 @@ namespace Empiria.Financial.Concepts {
     }
 
 
-    [DataField("CPT_START_DATE", Default = "ExecutionServer.DateMinValue")]
+    [DataField("CPT_START_DATE")]
     public DateTime StartDate {
       get; private set;
     }
