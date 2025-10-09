@@ -26,6 +26,17 @@ namespace Empiria.Financial.Concepts.Data {
       return DataReader.GetFixedList<FinancialConcept>(op);
     }
 
+
+    static internal FixedList<FinancialConcept> SearchFinancialConcepts(string filter) {
+      var sql = "SELECT * FROM FMS_CONCEPTS " +
+         $"WHERE {filter} " +
+         $"ORDER BY CPT_NO";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<FinancialConcept>(op);
+    }
+
   }  // class FinancialConceptsData
 
 }  // namespace Empiria.Financial.Concepts.Data
