@@ -13,6 +13,9 @@ using Xunit;
 using Empiria.Financial;
 using Empiria.Financial.Data;
 
+using Empiria.Financial.Concepts;
+using Empiria.Financial.Concepts.Data;
+
 using Empiria.Financial.Projects;
 using Empiria.Financial.Projects.Data;
 
@@ -32,6 +35,24 @@ namespace Empiria.Tests.Financial {
 
       foreach (var account in accounts) {
         FinancialAccountDataService.CleanAccount(account);
+      }
+    }
+
+
+
+    [Fact]
+    public void Clean_Financial_Concepts() {
+      var groups = FinancialConceptGroup.GetList();
+
+      foreach (var group in groups) {
+        var concepts = group.GetConcepts();
+
+        foreach (var parent in concepts) {
+          var children = parent.GetAllChildren();
+          foreach (var concept in children) {
+            FinancialConceptsData.CleanConcept(concept, parent);
+          }
+        }
       }
     }
 

@@ -67,7 +67,7 @@ namespace Empiria.Financial.Concepts {
         if (Parent.FullName.Length == 0) {
           return Name;
         }
-        return $"{Name} - {Parent.FullName}";
+        return $"{Parent.FullName} » {Name}";
       }
     }
 
@@ -110,7 +110,7 @@ namespace Empiria.Financial.Concepts {
 
     public string Keywords {
       get {
-        return $"{ConceptNo} " + EmpiriaString.BuildKeywords(Name, Description, Group.Name);
+        return $"{ConceptNo} " + EmpiriaString.BuildKeywords(Name, Description, Parent.FullName, Group.Name);
       }
     }
 
