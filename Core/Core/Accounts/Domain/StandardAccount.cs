@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Json;
 using Empiria.Ontology;
@@ -205,7 +206,10 @@ namespace Empiria.Financial {
 
     public int Level {
       get {
-        return EmpiriaString.CountOccurences(StdAcctNo, '.') + 1;
+        if (this.IsEmptyInstance || Parent.IsEmptyInstance) {
+          return 1;
+        }
+        return Parent.Level + 1;
       }
     }
 
@@ -220,24 +224,30 @@ namespace Empiria.Financial {
 
     #region Methods
 
-    private FixedList<StandardAccount> _allChildren = null;
+    private List<StandardAccount> _allChildren = null;
     internal FixedList<StandardAccount> GetAllChildren() {
-      if (_allChildren == null) {
-        _allChildren = GetFullList<StandardAccount>()
-                      .ToFixedList()
-                      .FindAll(x => x.StdAcctNo.StartsWith($"{this.StdAcctNo}.") &&
-                                    x.ChartOfAccounts.Equals(ChartOfAccounts) &&
-                                   !x.IsEmptyInstance)
-                                   .Sort((x, y) => x.StdAcctNo.CompareTo(y.StdAcctNo)
-                      );
+      if (_allChildren != null) {
+        return _allChildren.ToFixedList();
       }
-      return _allChildren;
+      foreach (var child in GetChildren()) {
+        _allChildren.Add(child);
+        _allChildren.AddRange(child.GetAllChildren());
+      }
+      return _allChildren.ToFixedList();
     }
 
 
+    private FixedList<StandardAccount> _children = null;
     internal FixedList<StandardAccount> GetChildren() {
-      return GetAllChildren()
-            .FindAll(x => x.Parent.Equals(this));
+      if (this.IsEmptyInstance) {
+        return new FixedList<StandardAccount>();
+      }
+      if (_children == null) {
+        _children = ChartOfAccounts.GetStandardAccounts()
+                                   .FindAll(x => x.Parent.Equals(this))
+                                   .Sort((x, y) => x.StdAcctNo.CompareTo(y.StdAcctNo));
+      }
+      return _children;
     }
 
 
