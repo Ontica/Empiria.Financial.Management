@@ -40,7 +40,7 @@ namespace Empiria.Financial.WebApi {
 
       using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
 
-        FixedList<NamedEntityDto> chartsOfAccounts = usecases.GetChartsOfAccountsList();
+        FixedList<ChartOfAccountsDefinitionDto> chartsOfAccounts = usecases.GetChartsOfAccountsList();
 
         return new CollectionModel(base.Request, chartsOfAccounts);
       }

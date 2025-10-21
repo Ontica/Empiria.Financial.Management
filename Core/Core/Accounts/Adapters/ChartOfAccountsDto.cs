@@ -29,6 +29,44 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
-  }  // public class ChartOfAccountsDto
+  }  // class ChartOfAccountsDto
+
+
+
+  public class ChartOfAccountsDefinitionDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+
+    public string Name {
+      get; internal set;
+    }
+
+
+    public AutoGroupingDto AutoGrouping {
+      get; internal set;
+    }
+
+  }  // class ChartOfAccountsDefinitionDto
+
+
+
+  public class AutoGroupingDto {
+
+    public bool Applies {
+      get; internal set;
+    }
+
+    public NamedEntityDto FinancialConceptGroup {
+      get; internal set;
+    }
+
+    public FixedList<NamedEntityDto> StandardAccountCategories {
+      get; internal set;
+    }
+
+  }  // class AutoGroupingDto
 
 }  // namespace Empiria.Financial.Adapters

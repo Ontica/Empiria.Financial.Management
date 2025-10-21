@@ -31,6 +31,28 @@ namespace Empiria.Financial.Adapters {
       };
     }
 
+
+    static internal FixedList<ChartOfAccountsDefinitionDto> Map(FixedList<ChartOfAccounts> chartsOfAccounts) {
+      return chartsOfAccounts.Select(x => MapToDefinition(x))
+                             .ToFixedList();
+
+    }
+
+
+    static private ChartOfAccountsDefinitionDto MapToDefinition(ChartOfAccounts chartOfAccount) {
+      AutoGrouping autoGroupingConfig = chartOfAccount.AutoGrouping;
+
+      return new ChartOfAccountsDefinitionDto {
+        UID = chartOfAccount.UID,
+        Name = chartOfAccount.Name,
+        AutoGrouping = new AutoGroupingDto {
+          Applies = !autoGroupingConfig.IsEmptyInstance,
+          FinancialConceptGroup = autoGroupingConfig.FinancialConceptGroup.MapToNamedEntity(),
+          StandardAccountCategories = autoGroupingConfig.StandardAccountCategories.MapToNamedEntityList(),
+        }
+      };
+    }
+
   }  // class ChartOfAccountsMapper
 
-}  // namespace Empiria.FinancialAccounting.Adapters
+}  // namespace Empiria.Financial.Adapters

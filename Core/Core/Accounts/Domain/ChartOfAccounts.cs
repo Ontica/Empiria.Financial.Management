@@ -10,9 +10,50 @@
 
 using System;
 
+using Empiria.Financial.Concepts;
+
 using Empiria.Financial.Data;
 
 namespace Empiria.Financial {
+
+  /// <summary>Defines an automatic grouping of standard account categories under a financial concept group.</summary>
+  public class AutoGrouping {
+
+    internal AutoGrouping(FinancialConceptGroup financialConceptGroup,
+                          FixedList<StandardAccountCategory> standardAccountCategories) {
+      Assertion.Require(financialConceptGroup, nameof(financialConceptGroup));
+      Assertion.Require(standardAccountCategories, nameof(standardAccountCategories));
+
+      FinancialConceptGroup = financialConceptGroup;
+      StandardAccountCategories = standardAccountCategories;
+    }
+
+    static public AutoGrouping Empty = new AutoGrouping(FinancialConceptGroup.Empty,
+                                                        FixedList<StandardAccountCategory>.Empty);
+
+    #region Properties
+
+    internal bool IsEmptyInstance {
+      get {
+        return FinancialConceptGroup.IsEmptyInstance;
+      }
+    }
+
+
+    public FinancialConceptGroup FinancialConceptGroup {
+      get;
+    }
+
+
+    public FixedList<StandardAccountCategory> StandardAccountCategories {
+      get;
+    }
+
+    #endregion Properties
+
+  }  // class AutoGrouping
+
+
 
   /// <summary>Defines a chart of accounts that is an aggregate of standard accounts.</summary>
   public class ChartOfAccounts : CommonStorage {
@@ -44,6 +85,21 @@ namespace Empiria.Financial {
     }
 
     #endregion Constructors and parsers
+
+    #region Properties
+
+    public AutoGrouping AutoGrouping {
+      get {
+        if (!ExtData.Contains("autoGrouping")) {
+          return AutoGrouping.Empty;
+        }
+
+        return new AutoGrouping(ExtData.Get<FinancialConceptGroup>("autoGrouping/groupId"),
+                                ExtData.GetFixedList<StandardAccountCategory>("autoGrouping/stdAccountCategories"));
+      }
+    }
+
+    #endregion Properties
 
     #region Methods
 

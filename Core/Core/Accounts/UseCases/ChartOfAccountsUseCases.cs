@@ -40,10 +40,10 @@ namespace Empiria.Financial.UseCases {
     }
 
 
-    public FixedList<NamedEntityDto> GetChartsOfAccountsList() {
-      var chartOfAccounts = ChartOfAccounts.GetList();
+    public FixedList<ChartOfAccountsDefinitionDto> GetChartsOfAccountsList() {
+      var chartsOfAccounts = ChartOfAccounts.GetList();
 
-      return chartOfAccounts.MapToNamedEntityList();
+      return ChartOfAccountsMapper.Map(chartsOfAccounts);
     }
 
 
