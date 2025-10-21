@@ -49,7 +49,9 @@ namespace Empiria.Financial.Adapters {
           Applies = !autoGroupingConfig.IsEmptyInstance,
           FinancialConceptGroup = autoGroupingConfig.FinancialConceptGroup.MapToNamedEntity(),
           StandardAccountCategories = autoGroupingConfig.StandardAccountCategories.MapToNamedEntityList(),
-        }
+        },
+        ShowAccounts = chartOfAccount.ShowAccounts,
+        ShowOrgUnits = chartOfAccount.ShowOrgUnits,
       };
     }
 

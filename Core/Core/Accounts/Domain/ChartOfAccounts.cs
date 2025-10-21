@@ -99,6 +99,20 @@ namespace Empiria.Financial {
       }
     }
 
+
+    public bool ShowAccounts {
+      get {
+        return ExtData.Get<bool>("showAccounts", false);
+      }
+    }
+
+
+    public bool ShowOrgUnits {
+      get {
+        return ExtData.Get<bool>("showOrgUnits", false);
+      }
+    }
+
     #endregion Properties
 
     #region Methods

@@ -49,6 +49,16 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+
+    public bool ShowAccounts {
+      get; internal set;
+    }
+
+
+    public bool ShowOrgUnits {
+      get; internal set;
+    }
+
   }  // class ChartOfAccountsDefinitionDto
 
 
