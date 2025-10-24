@@ -8,7 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.DynamicData;
 using Empiria.Services;
+
+using Empiria.Financial.Rules.Adapters;
 
 namespace Empiria.Financial.Rules.UseCases {
 
@@ -32,6 +35,17 @@ namespace Empiria.Financial.Rules.UseCases {
     public FixedList<NamedEntityDto> GetCategories() {
       return FinancialRuleCategory.GetList()
                                   .MapToNamedEntityList();
+    }
+
+
+    public DynamicDto<FinancialRuleDto> SearchRules(FinancialRuleQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      var category = FinancialRuleCategory.Parse(query.CategoryUID);
+
+      FixedList<FinancialRule> rules = category.GetFinancialRules(query.Date);
+
+      return FinancialRuleMapper.Map(category, rules);
     }
 
     #endregion Use cases

@@ -10,8 +10,10 @@
 
 using System.Web.Http;
 
+using Empiria.DynamicData;
 using Empiria.WebApi;
 
+using Empiria.Financial.Rules.Adapters;
 using Empiria.Financial.Rules.UseCases;
 
 namespace Empiria.Financial.Rules.WebApi {
@@ -22,14 +24,30 @@ namespace Empiria.Financial.Rules.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v3/financial-rules/types")]
-    public CollectionModel GetFinancialRuleCategories() {
+    [Route("v3/financial-rules/categories")]
+    public CollectionModel GetCategories() {
 
       using (var usecases = FinancialRuleUseCases.UseCaseInteractor()) {
 
         FixedList<NamedEntityDto> categories = usecases.GetCategories();
 
         return new CollectionModel(base.Request, categories);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v3/financial-rules/categories/{categoryUID:guid}")]
+    public SingleObjectModel SearchRules([FromUri] string categoryUID,
+                                         [FromUri] FinancialRuleQuery query) {
+
+      query.CategoryUID = categoryUID;
+
+      using (var usecases = FinancialRuleUseCases.UseCaseInteractor()) {
+
+        DynamicDto<FinancialRuleDto> rules = usecases.SearchRules(query);
+
+        return new SingleObjectModel(base.Request, rules);
       }
     }
 
