@@ -19,7 +19,7 @@ namespace Empiria.Financial.Concepts.Adapters {
       get; internal set;
     }
 
-    public FixedList<FinancialConceptDescriptor> Integration {
+    public FixedList<FinancialConceptEntryDescriptor> Integration {
       get; internal set;
     }
 
@@ -159,5 +159,35 @@ namespace Empiria.Financial.Concepts.Adapters {
     }
 
   }  // class FinancialConceptEntityDto
+
+
+
+  public class FinancialConceptEntryDescriptor {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string Name {
+      get; internal set;
+    }
+
+    public string TypeName {
+      get; internal set;
+    }
+
+    public DateTime StartDate {
+      get; internal set;
+    }
+
+    public DateTime EndDate {
+      get; internal set;
+    }
+
+    public string Operation {
+      get; internal set;
+    }
+
+  }  // class FinancialConceptEntryDescriptor
 
 }  // namespace Empiria.Financial.Concepts.Adapters

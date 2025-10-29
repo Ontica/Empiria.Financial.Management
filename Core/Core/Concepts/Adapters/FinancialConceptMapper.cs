@@ -38,7 +38,7 @@ namespace Empiria.Financial.Concepts.Adapters {
     static internal FinancialConceptHolder MapToHolder(FinancialConcept concept) {
       return new FinancialConceptHolder {
         Concept = Map(concept),
-        Integration = new FixedList<FinancialConceptDescriptor>(),
+        Integration = Map(concept.GetEntries()),
         Actions = MapActions(concept)
       };
     }
@@ -47,9 +47,9 @@ namespace Empiria.Financial.Concepts.Adapters {
 
     static private FinancialConceptActions MapActions(FinancialConcept concept) {
       return new FinancialConceptActions {
-        CanActivate = concept.Status == EntityStatus.Suspended,
-        CanSuspend = concept.Status == EntityStatus.Active,
-        CanUpdate = true,
+        CanActivate = false,
+        CanSuspend = false,
+        CanUpdate = false,
       };
     }
 
@@ -67,6 +67,24 @@ namespace Empiria.Financial.Concepts.Adapters {
         Status = concept.Status.MapToDto(),
         StartDate = concept.StartDate,
         EndDate = concept.EndDate
+      };
+    }
+
+
+    static private FixedList<FinancialConceptEntryDescriptor> Map(FixedList<FinancialConceptEntry> entries) {
+      return entries.Select(x => MapToDescriptor(x))
+                    .ToFixedList();
+    }
+
+
+    static private FinancialConceptEntryDescriptor MapToDescriptor(FinancialConceptEntry entry) {
+      return new FinancialConceptEntryDescriptor {
+        UID = entry.UID,
+        Name = entry.Name,
+        TypeName = entry.TypeName,
+        StartDate = entry.StartDate,
+        EndDate = entry.EndDate,
+        Operation = entry.Operation
       };
     }
 

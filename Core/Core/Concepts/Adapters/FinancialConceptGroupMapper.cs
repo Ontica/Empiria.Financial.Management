@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Financial Concepts                         Component : Interface adapters                      *
+*  Module   : Financial Concepts                         Component : Adapters Layer                          *
 *  Assembly : Empiria.Financial.Core.dll                 Pattern   : Mapper                                  *
 *  Type     : FinancialConceptGroupMapper                License   : Please read LICENSE.txt file            *
 *                                                                                                            *

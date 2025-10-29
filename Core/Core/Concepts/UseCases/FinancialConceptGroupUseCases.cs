@@ -40,7 +40,7 @@ namespace Empiria.Financial.Concepts.UseCases {
 
       return concepts.Select(x => new FinancialConceptEntityDto {
         UID = x.UID,
-        Name = x.Name,
+        Name = ((INamedEntity) x).Name,
         FullName = x.FullName,
       })
       .ToFixedList();
@@ -57,9 +57,9 @@ namespace Empiria.Financial.Concepts.UseCases {
     public FinancialConceptGroupDto SearchConcepts(FinancialConceptsQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var group = FinancialConceptGroup.Parse(query.GroupUID);
-
       FixedList<FinancialConcept> concepts = query.Execute();
+
+      var group = FinancialConceptGroup.Parse(query.GroupUID);
 
       return FinancialConceptGroupMapper.Map(group, concepts);
     }
