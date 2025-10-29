@@ -10,6 +10,8 @@
 
 using System;
 
+using Empiria.DynamicData;
+
 using Empiria.Financial.Rules.Data;
 
 namespace Empiria.Financial.Rules {
@@ -78,6 +80,10 @@ namespace Empiria.Financial.Rules {
     #endregion Methods
 
     #region Helpers
+
+    internal FixedList<DataTableColumn> GetDataColumns() {
+      return ExtData.GetFixedList<DataTableColumn>("dataColumns", false);
+    }
 
     private void Refesh() {
       _rules = new Lazy<FixedList<FinancialRule>>(() => FinancialRulesData.GetFinancialRules(this));

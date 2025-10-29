@@ -13,20 +13,27 @@ namespace Empiria.Financial.Rules.Adapters {
   /// <summary>Output DTO for a financial rule.</summary>
   public class FinancialRuleDto {
     public string UID {
-      get;
-      internal set;
+      get; internal set;
     }
+
     public string Description {
-      get;
-      internal set;
+      get; internal set;
     }
+
     public string DebitAccount {
-      get;
-      internal set;
+      get; internal set;
     }
+
     public string CreditAccount {
-      get;
-      internal set;
+      get; internal set;
+    }
+
+    public string DebitConcept {
+      get; internal set;
+    }
+
+    public string CreditConcept {
+      get; internal set;
     }
   }  // class FinancialRuleDto
 

@@ -18,20 +18,18 @@ namespace Empiria.Financial.Rules.Adapters {
     static public DynamicDto<FinancialRuleDto> Map(FinancialRuleCategory category,
                                                    FixedList<FinancialRule> rules) {
 
+      rules.Sort((x, y) => x.DebitAccount.CompareTo(y.DebitAccount));
+
       var dtos = rules.Select(rule => new FinancialRuleDto {
         UID = rule.UID,
         Description = rule.Description,
         DebitAccount = rule.DebitAccount,
         CreditAccount = rule.CreditAccount,
+        DebitConcept = rule.DebitConcept,
+        CreditConcept = rule.CreditConcept,
       }).ToFixedList();
 
-      var columns = new FixedList<DataTableColumn>(new[] {
-        new DataTableColumn("debitAccount", "Cuenta de cargo", "text-link"),
-        new DataTableColumn("creditAccount", "Cuenta de abono", "text"),
-        new DataTableColumn("description", "Descripción", "text"),
-      });
-
-      return new DynamicDto<FinancialRuleDto>(columns, dtos);
+      return new DynamicDto<FinancialRuleDto>(category.GetDataColumns(), dtos);
     }
 
   }  // class FinancialRuleMapper
