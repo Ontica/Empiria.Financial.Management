@@ -26,14 +26,16 @@ namespace Empiria.CashFlow.Explorer.WebApi {
     #region Web apis
 
     [HttpPost]
-    [Route("v1/financial-management/search-services/AccountTotals")]  // ToDo: Change to CashFlowAccounts
-    [Route("v1/financial-management/search-services/CashFlowAccounts")]
-    public SingleObjectModel SearchCashFlowAccounts([FromBody] RecordsSearchQuery query) {
+    [Route("v1/financial-management/search-services/AccountTotals")]
+    [Route("v1/financial-management/search-services/CashFlowConcepts")]
+    public SingleObjectModel SearchCashFlowConcepts([FromBody] RecordsSearchQuery query) {
+
+      query.QueryType = RecordSearchQueryType.CashFlowConcepts;
 
       using (var services = CashFlowSearchServices.ServiceInteractor()) {
-        DynamicDto<CashFlowAccountDto> accounts = services.SearchCashFlowAccounts(query);
+        DynamicDto<CashFlowAccountDto> concepts = services.SearchCashFlowConcepts(query);
 
-        return new SingleObjectModel(base.Request, accounts);
+        return new SingleObjectModel(base.Request, concepts);
       }
     }
 

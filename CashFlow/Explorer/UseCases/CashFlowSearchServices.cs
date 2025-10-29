@@ -11,11 +11,12 @@
 using System.Linq;
 
 using Empiria.DynamicData;
-using Empiria.Financial;
 using Empiria.Services;
 
-using Empiria.Financial.Adapters;
+using Empiria.Financial;
+using Empiria.Financial.Concepts;
 
+using Empiria.Financial.Adapters;
 using Empiria.CashFlow.Explorer.Adapters;
 
 namespace Empiria.CashFlow.Explorer.UseCases {
@@ -37,13 +38,17 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     #region Services
 
-    public DynamicDto<CashFlowAccountDto> SearchCashFlowAccounts(RecordsSearchQuery query) {
+    public DynamicDto<CashFlowAccountDto> SearchCashFlowConcepts(RecordsSearchQuery query) {
       Assertion.Require(query, nameof(query));
 
       var accounts = FinancialAccount.GetList()
-                                    .FindAll(a => a.IsOperationAccount &&
-                                                  query.Keywords.ToFixedList()
-                                                                .Contains(x => a.AccountNo.StartsWith(x)));
+                                     .FindAll(a => a.IsOperationAccount);
+
+      if (query.ClassificationUID.Length != 0) {
+        var concept = FinancialConcept.Parse(query.ClassificationUID);
+
+        accounts = accounts.FindAll(a => a.StandardAccount.MainConcept.ConceptNo.StartsWith(concept.ConceptNo));
+      }
 
       if (query.OperationTypeUID.Length != 0) {
         accounts = accounts.FindAll(a => a.OperationType.UID == query.OperationTypeUID);
@@ -88,8 +93,8 @@ namespace Empiria.CashFlow.Explorer.UseCases {
       ExternalCreditSystemServices provider = new ExternalCreditSystemServices();
 
       FixedList<ICreditEntryData> entries = provider.GetCreditEntries(query.Keywords.ToFixedList(),
-                                                                        query.FromDate,
-                                                                        query.ToDate);
+                                                                      query.FromDate,
+                                                                      query.ToDate);
       var columns = new DataTableColumn[] {
         new DataTableColumn("accountNo", "No crédito", "text"),
         new DataTableColumn("subledgerAccountNo", "Auxiliar", "text"),

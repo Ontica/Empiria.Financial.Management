@@ -13,12 +13,13 @@ using System;
 namespace Empiria.Financial.Adapters {
 
   public enum RecordSearchQueryType {
-    AccountTotals,
-    AccountingEntriesByAccount,
-    AccountingEntriesBySubledgerAccount,
-    CashFlowAccountingEntries,
-    CashFlowEntries,
+
+    CashFlowConcepts,
+
+    CashFlowEntriesBySubledger,
+
     CreditEntries,
+
     None
   }
 
@@ -39,6 +40,11 @@ namespace Empiria.Financial.Adapters {
     public DateTime ToDate {
       get; set;
     } = DateTime.MinValue;
+
+
+    public string ClassificationUID {
+      get; set;
+    } = string.Empty;
 
 
     public string OperationTypeUID {
