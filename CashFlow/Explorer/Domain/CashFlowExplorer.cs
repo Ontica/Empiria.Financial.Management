@@ -44,6 +44,12 @@ namespace Empiria.CashFlow.Explorer {
 
     private FixedList<DataTableColumn> GetDynamicColumns() {
       var columns = new List<DataTableColumn> {
+        new DataTableColumn("cashFlowAcct_01", "Clasificación 1", "text"),
+        new DataTableColumn("cashFlowAcct_02", "Clasificación 2", "text"),
+        new DataTableColumn("cashFlowAcct_03", "Clasificación 3", "text"),
+        new DataTableColumn("cashFlowAcct_04", "Clasificación 4", "text"),
+        new DataTableColumn("cashFlowAcct_05", "Clasificación 5", "text"),
+        new DataTableColumn("cashFlowAcct_06", "Clasificación 6", "text"),
         new DataTableColumn("program", "Programa", "text"),
         new DataTableColumn("subprogram", "Subprograma", "text"),
         new DataTableColumn("financingSource", "Fuente", "text"),

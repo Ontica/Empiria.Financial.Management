@@ -16,7 +16,9 @@ namespace Empiria.CashFlow.Explorer.Adapters {
 
     AccountTotals,
 
-    CashFlow,
+    CashFlowConceptsReport,
+
+    CashFlowReport,
 
     ConceptAnalytic,
 
