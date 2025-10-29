@@ -25,9 +25,9 @@ namespace Empiria.Financial.Concepts {
       // Require by Empiria FrameWork
     }
 
-    static internal FinancialConcept Parse(int id) => ParseId<FinancialConcept>(id);
+    static public FinancialConcept Parse(int id) => ParseId<FinancialConcept>(id);
 
-    static internal FinancialConcept Parse(string uid) => ParseKey<FinancialConcept>(uid);
+    static public FinancialConcept Parse(string uid) => ParseKey<FinancialConcept>(uid);
 
     static public FinancialConcept Empty => ParseEmpty<FinancialConcept>();
 
@@ -204,6 +204,29 @@ namespace Empiria.Financial.Concepts {
     internal FixedList<FinancialConcept> GetChildren() {
       return GetAllChildren()
             .FindAll(x => x.Parent.Equals(this));
+    }
+
+
+    internal FixedList<FinancialConceptEntry> GetEntries() {
+      return new FixedList<FinancialConceptEntry>();
+    }
+
+
+    public FinancialConcept GetLevel(int level) {
+      if (this.Level == level) {
+        return this;
+      }
+      if (this.Level < level) {
+        return this;
+      }
+
+      FinancialConcept parent = this.Parent;
+      while (true) {
+        if (parent.Level == level) {
+          return parent;
+        }
+        parent = parent.Parent;
+      }
     }
 
     #endregion Methods

@@ -16,6 +16,8 @@ using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Financial.Concepts;
+
 namespace Empiria.Financial {
 
   /// <summary>Partitioned type that represents an standard account.</summary>
@@ -220,6 +222,11 @@ namespace Empiria.Financial {
       }
     }
 
+    [DataField("STD_ACCT_MAIN_GROUP_ID")]
+    public FinancialConcept MainConcept {
+      get; private set;
+    }
+
     #endregion Properties
 
     #region Methods
@@ -229,10 +236,13 @@ namespace Empiria.Financial {
       if (_allChildren != null) {
         return _allChildren.ToFixedList();
       }
+
+      _allChildren = new List<StandardAccount>();
       foreach (var child in GetChildren()) {
         _allChildren.Add(child);
         _allChildren.AddRange(child.GetAllChildren());
       }
+
       return _allChildren.ToFixedList();
     }
 
