@@ -36,6 +36,21 @@ namespace Empiria.Financial.Rules.Adapters {
       return new DynamicDto<FinancialRuleDescriptor>(category.GetDataColumns(), dtos);
     }
 
+
+    static internal FinancialRuleDto Map(FinancialRule rule) {
+      return new FinancialRuleDto {
+        UID = rule.UID,
+        DebitAccount = rule.DebitAccount,
+        CreditAccount = rule.CreditAccount,
+        DebitConcept = rule.DebitConcept,
+        CreditConcept = rule.CreditConcept,
+        Description = rule.Description,
+        StartDate = rule.StartDate,
+        EndDate = rule.EndDate,
+        Status = rule.Status.MapToDto()
+      };
+    }
+
   }  // class FinancialRuleMapper
 
 }  // namespace Empiria.Financial.Rules.Adapters

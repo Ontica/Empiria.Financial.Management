@@ -13,6 +13,49 @@ using System;
 namespace Empiria.Financial.Rules.Adapters {
 
   /// <summary>Output DTO for a financial rule.</summary>
+  public class FinancialRuleDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string DebitAccount {
+      get; internal set;
+    }
+
+    public string CreditAccount {
+      get; internal set;
+    }
+
+    public string DebitConcept {
+      get; internal set;
+    }
+
+    public string CreditConcept {
+      get; internal set;
+    }
+
+    public string Description {
+      get; internal set;
+    }
+
+    public DateTime StartDate {
+      get; internal set;
+    }
+
+    public DateTime EndDate {
+      get; internal set;
+    }
+
+    public NamedEntityDto Status {
+      get; internal set;
+    }
+
+  }  // class FinancialRuleDto
+
+
+
+  /// <summary>Output DTO for a financial rule for use in lists.</summary>
   public class FinancialRuleDescriptor {
 
     public string UID {
@@ -51,6 +94,6 @@ namespace Empiria.Financial.Rules.Adapters {
       get; internal set;
     }
 
-  }  // class FinancialRuleDto
+  }  // class FinancialRuleDescriptor
 
 }  // namespace Empiria.Financial.Rules.Adapters

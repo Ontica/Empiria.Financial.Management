@@ -38,6 +38,15 @@ namespace Empiria.Financial.Rules.UseCases {
     }
 
 
+    public FinancialRuleDto GetRule(string ruleUID) {
+      Assertion.Require(ruleUID, nameof(ruleUID));
+
+      var rule = FinancialRule.Parse(ruleUID);
+
+      return FinancialRuleMapper.Map(rule);
+    }
+
+
     public DynamicDto<FinancialRuleDescriptor> SearchRules(FinancialRuleQuery query) {
       Assertion.Require(query, nameof(query));
 

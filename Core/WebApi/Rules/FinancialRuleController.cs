@@ -36,6 +36,19 @@ namespace Empiria.Financial.Rules.WebApi {
     }
 
 
+    [HttpGet]
+    [Route("v3/financial-rules/{ruleUID:guid}")]
+    public SingleObjectModel GetRule([FromUri] string ruleUID) {
+
+      using (var usecases = FinancialRuleUseCases.UseCaseInteractor()) {
+
+        FinancialRuleDto rule = usecases.GetRule(ruleUID);
+
+        return new SingleObjectModel(base.Request, rule);
+      }
+    }
+
+
     [HttpPost]
     [Route("v3/financial-rules/categories/{categoryUID:guid}")]
     public SingleObjectModel SearchRules([FromUri] string categoryUID,
