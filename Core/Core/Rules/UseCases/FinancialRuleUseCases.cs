@@ -13,6 +13,7 @@ using Empiria.Services;
 
 using Empiria.Financial.Rules.Adapters;
 
+
 namespace Empiria.Financial.Rules.UseCases {
 
   /// <summary>Provides use cases for update and retrieve financial rules.</summary>
@@ -55,6 +56,19 @@ namespace Empiria.Financial.Rules.UseCases {
       FixedList<FinancialRule> rules = category.GetFinancialRules(query.Date);
 
       return FinancialRuleMapper.Map(category, rules);
+    }
+
+
+    public FinancialRuleDto UpdateRule(FinancialRuleFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      var rule = FinancialRule.Parse(fields.UID);
+
+      rule.Update(fields);
+
+      rule.Save();
+
+      return FinancialRuleMapper.Map(rule);
     }
 
     #endregion Use cases

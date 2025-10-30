@@ -52,6 +52,17 @@ namespace Empiria.Financial.Rules.Data {
       return DataReader.GetFixedList<FinancialRule>(op);
     }
 
+
+    static internal void WriteFinancialRule(FinancialRule o) {
+      var op = DataOperation.Parse("write_FMS_Rule", o.Id, o.UID, o.FinancialRuleType.Id,
+                  o.Category.Id, o.GroupId, o.DebitAccount, o.DebitConcept, o.DebitCurrency.Id,
+                  o.CreditAccount, o.CreditConcept, o.CreditCurrency.Id, o.Description,
+                  o.Conditions.ToString(), o.Exceptions.ToString(), o.ExtData.ToString(),
+                  o.Keywords, o.StartDate, o.EndDate, o.PostingTime, o.PostedBy.Id, (char) o.Status);
+
+      DataWriter.Execute(op);
+    }
+
     #endregion Methods
 
   }  // class FinancialRulesData

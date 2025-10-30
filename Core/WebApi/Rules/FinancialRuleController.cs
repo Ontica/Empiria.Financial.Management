@@ -64,6 +64,23 @@ namespace Empiria.Financial.Rules.WebApi {
       }
     }
 
+
+    [HttpPut, HttpPatch]
+    [Route("v3/financial-rules/{ruleUID:guid}")]
+    public SingleObjectModel UpdateRule([FromUri] string ruleUID,
+                                        [FromBody] FinancialRuleFields fields) {
+
+      fields.UID = ruleUID;
+
+      using (var usecases = FinancialRuleUseCases.UseCaseInteractor()) {
+
+        FinancialRuleDto rule = usecases.UpdateRule(fields);
+
+        return new SingleObjectModel(base.Request, rule);
+      }
+    }
+
+
     #endregion Query web apis
 
   }  // class FinancialRuleController

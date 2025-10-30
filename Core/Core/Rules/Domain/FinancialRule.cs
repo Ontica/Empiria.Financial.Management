@@ -15,6 +15,8 @@ using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Financial.Rules.Data;
+
 namespace Empiria.Financial.Rules {
 
   /// <summary>Represents a financial rule.</summary>
@@ -152,12 +154,39 @@ namespace Empiria.Financial.Rules {
     }
 
 
-    [DataField("RULE_STATUS", Default = EntityStatus.Pending)]
+    [DataField("RULE_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get; private set;
     }
 
     #endregion Properties
+
+    #region Methods
+
+    protected override void OnSave() {
+      if (this.IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+        Status = EntityStatus.Active;
+      }
+
+      FinancialRulesData.WriteFinancialRule(this);
+    }
+
+
+    internal void Update(FinancialRuleFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      DebitAccount = EmpiriaString.Clean(fields.DebitAccount);
+      CreditAccount = EmpiriaString.Clean(fields.CreditAccount);
+      DebitConcept = EmpiriaString.Clean(fields.DebitConcept);
+      CreditConcept = EmpiriaString.Clean(fields.CreditConcept);
+      Description = EmpiriaString.Clean(fields.Description);
+      StartDate = Patcher.Patch(fields.StartDate, StartDate);
+      EndDate = Patcher.Patch(fields.EndDate, EndDate);
+    }
+
+    #endregion Methods
 
   } // class FinancialRule
 
