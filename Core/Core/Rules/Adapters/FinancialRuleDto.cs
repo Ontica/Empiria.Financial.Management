@@ -8,15 +8,14 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 namespace Empiria.Financial.Rules.Adapters {
 
   /// <summary>Output DTO for a financial rule.</summary>
-  public class FinancialRuleDto {
-    public string UID {
-      get; internal set;
-    }
+  public class FinancialRuleDescriptor {
 
-    public string Description {
+    public string UID {
       get; internal set;
     }
 
@@ -35,6 +34,23 @@ namespace Empiria.Financial.Rules.Adapters {
     public string CreditConcept {
       get; internal set;
     }
+
+    public string Description {
+      get; internal set;
+    }
+
+    public DateTime StartDate {
+      get; internal set;
+    }
+
+    public DateTime EndDate {
+      get; internal set;
+    }
+
+    public string StatusName {
+      get; internal set;
+    }
+
   }  // class FinancialRuleDto
 
 }  // namespace Empiria.Financial.Rules.Adapters

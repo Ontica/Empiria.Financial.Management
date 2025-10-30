@@ -38,7 +38,7 @@ namespace Empiria.Financial.Rules.UseCases {
     }
 
 
-    public DynamicDto<FinancialRuleDto> SearchRules(FinancialRuleQuery query) {
+    public DynamicDto<FinancialRuleDescriptor> SearchRules(FinancialRuleQuery query) {
       Assertion.Require(query, nameof(query));
 
       var category = FinancialRuleCategory.Parse(query.CategoryUID);

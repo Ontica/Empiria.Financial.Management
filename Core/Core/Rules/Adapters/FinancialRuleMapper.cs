@@ -9,27 +9,31 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.DynamicData;
+using Empiria.StateEnums;
 
 namespace Empiria.Financial.Rules.Adapters {
 
   /// <summary>Provides financial rules mapping methods.</summary>
   static internal class FinancialRuleMapper {
 
-    static public DynamicDto<FinancialRuleDto> Map(FinancialRuleCategory category,
+    static public DynamicDto<FinancialRuleDescriptor> Map(FinancialRuleCategory category,
                                                    FixedList<FinancialRule> rules) {
 
       rules.Sort((x, y) => x.DebitAccount.CompareTo(y.DebitAccount));
 
-      var dtos = rules.Select(rule => new FinancialRuleDto {
+      var dtos = rules.Select(rule => new FinancialRuleDescriptor {
         UID = rule.UID,
-        Description = rule.Description,
         DebitAccount = rule.DebitAccount,
         CreditAccount = rule.CreditAccount,
         DebitConcept = rule.DebitConcept,
         CreditConcept = rule.CreditConcept,
+        Description = rule.Description,
+        StartDate = rule.StartDate,
+        EndDate = rule.EndDate,
+        StatusName = rule.Status.GetName()
       }).ToFixedList();
 
-      return new DynamicDto<FinancialRuleDto>(category.GetDataColumns(), dtos);
+      return new DynamicDto<FinancialRuleDescriptor>(category.GetDataColumns(), dtos);
     }
 
   }  // class FinancialRuleMapper

@@ -45,7 +45,7 @@ namespace Empiria.Financial.Rules.WebApi {
 
       using (var usecases = FinancialRuleUseCases.UseCaseInteractor()) {
 
-        DynamicDto<FinancialRuleDto> rules = usecases.SearchRules(query);
+        DynamicDto<FinancialRuleDescriptor> rules = usecases.SearchRules(query);
 
         return new SingleObjectModel(base.Request, rules);
       }
