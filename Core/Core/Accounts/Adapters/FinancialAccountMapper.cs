@@ -66,7 +66,7 @@ namespace Empiria.Financial.Adapters {
         SubledgerAccountNo = account.SubledgerAccountNo,
         Description = account.Borrower,
         Currency = account.Currency.MapToNamedEntity(),
-        OrganizationalUnit = account.Area.MapToNamedEntity(),
+        OrganizationalUnit = account.OrganizationalUnit.MapToNamedEntity(),
         Attributes = new CreditAttributes(account),
         FinancialData = new CreditFinancialData(account),
         FinancialAccountType = FinancialAccountType.CreditAccount.MapToNamedEntity(),

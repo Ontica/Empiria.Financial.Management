@@ -243,8 +243,7 @@ namespace Empiria.Financial {
 
     [DataField("ACCT_SUBLEDGER_ACCT_NO")]
     public string SubledgerAccountNo {
-      get;
-      private set;
+      get; private set;
     }
 
 
@@ -341,16 +340,10 @@ namespace Empiria.Financial {
 
     public bool IsInflowAccount {
       get {
-        string[] segments = StandardAccount.StdAcctSegments;
-
-        int lastSegmentAsInteger = int.Parse(segments[segments.Length - 1]);
-
-        if (1 <= lastSegmentAsInteger && lastSegmentAsInteger <= 5) {
-          return true;
-        }
-        return false;
+        return StandardAccount.DebtorCreditorType == DebtorCreditorType.Acreedora;
       }
     }
+
 
     public bool IsOperationAccount {
       get {
@@ -504,7 +497,7 @@ namespace Empiria.Financial {
       Description = accountData.Borrower;
       StandardAccount = StandardAccount.TryParseAccountNo(accountData.StandardAccount) ?? StandardAccount;
       Currency = accountData.Currency;
-      OrganizationalUnit = accountData.Area;
+      OrganizationalUnit = accountData.OrganizationalUnit;
       SubledgerAccountNo = accountData.SubledgerAccountNo;
 
       Status = EntityStatus.Active;

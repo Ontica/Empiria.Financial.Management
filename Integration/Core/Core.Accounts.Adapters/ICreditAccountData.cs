@@ -41,7 +41,7 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    OrganizationalUnit Area {
+    OrganizationalUnit OrganizationalUnit {
       get;
     }
 

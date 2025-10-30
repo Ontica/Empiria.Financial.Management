@@ -44,7 +44,7 @@ namespace Empiria.Financial.UseCases {
 
       var accountType = FinancialAccountType.CreditAccount;
       var project = FinancialProject.Parse(projectUID);
-      var orgUnit = externalAccount.Area;
+      var orgUnit = externalAccount.OrganizationalUnit;
 
       var stdAccount = StandardAccount.Parse(standardAccountUID);
 
