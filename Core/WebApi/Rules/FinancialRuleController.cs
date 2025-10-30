@@ -81,6 +81,19 @@ namespace Empiria.Financial.Rules.WebApi {
     }
 
 
+    [HttpDelete]
+    [Route("v3/financial-rules/{ruleUID:guid}")]
+    public NoDataModel DeleteRule([FromUri] string ruleUID) {
+
+      using (var usecases = FinancialRuleUseCases.UseCaseInteractor()) {
+
+        _ = usecases.DeleteRule(ruleUID);
+
+        return new NoDataModel(base.Request);
+      }
+    }
+
+
     [HttpPut, HttpPatch]
     [Route("v3/financial-rules/{ruleUID:guid}")]
     public SingleObjectModel UpdateRule([FromUri] string ruleUID,

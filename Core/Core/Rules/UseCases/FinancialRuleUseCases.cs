@@ -48,6 +48,19 @@ namespace Empiria.Financial.Rules.UseCases {
     }
 
 
+    public FinancialRuleDto DeleteRule(string ruleUID) {
+      Assertion.Require(ruleUID, nameof(ruleUID));
+
+      var rule = FinancialRule.Parse(ruleUID);
+
+      rule.Delete();
+
+      rule.Save();
+
+      return FinancialRuleMapper.Map(rule);
+    }
+
+
     public FixedList<NamedEntityDto> GetCategories() {
       return FinancialRuleCategory.GetList()
                                   .MapToNamedEntityList();

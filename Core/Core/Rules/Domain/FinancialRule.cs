@@ -165,6 +165,14 @@ namespace Empiria.Financial.Rules {
 
     #region Methods
 
+    internal void Delete() {
+      Status = EntityStatus.Deleted;
+      EndDate = DateTime.Today;
+
+      MarkAsDirty();
+    }
+
+
     protected override void OnSave() {
       if (this.IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
@@ -186,6 +194,8 @@ namespace Empiria.Financial.Rules {
       Description = EmpiriaString.Clean(fields.Description);
       StartDate = Patcher.Patch(fields.StartDate, StartDate);
       EndDate = Patcher.Patch(fields.EndDate, EndDate);
+
+      MarkAsDirty();
     }
 
     #endregion Methods
