@@ -19,6 +19,10 @@ namespace Empiria.Financial.Rules.Adapters {
       get; internal set;
     }
 
+    public string CategoryUID {
+      get; internal set;
+    }
+
     public string DebitAccount {
       get; internal set;
     }
