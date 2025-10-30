@@ -29,8 +29,10 @@ namespace Empiria.Financial.Rules {
       // Required by Empiria Framework
     }
 
-    internal FinancialRule(FinancialRuleCategory category) : base(FinancialRuleType.Empty) {
-
+    internal FinancialRule(FinancialRuleCategory category) : base(category.FinancialRuleType) {
+      Category = category;
+      StartDate = DateTime.Today;
+      EndDate = ExecutionServer.DateMaxValue;
     }
 
     static public FinancialRule Parse(int id) => ParseId<FinancialRule>(id);

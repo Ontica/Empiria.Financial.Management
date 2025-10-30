@@ -19,6 +19,11 @@ namespace Empiria.Financial.Rules {
     } = string.Empty;
 
 
+    public string CategoryUID {
+      get; set;
+    } = string.Empty;
+
+
     public string DebitAccount {
       get; set;
     } = string.Empty;

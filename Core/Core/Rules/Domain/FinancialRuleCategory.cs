@@ -51,6 +51,15 @@ namespace Empiria.Financial.Rules {
 
     #region Properties
 
+    public FinancialRuleType FinancialRuleType {
+      get {
+        int id = base.ExtData.Get<int>("ruleTypeId");
+
+        return FinancialRuleType.Parse(id);
+      }
+    }
+
+
     public bool IsSingleEntry {
       get {
         return base.ExtData.Get("isSingleEntry", false);
