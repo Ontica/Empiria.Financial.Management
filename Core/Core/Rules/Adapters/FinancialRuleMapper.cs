@@ -40,7 +40,7 @@ namespace Empiria.Financial.Rules.Adapters {
     static internal FinancialRuleDto Map(FinancialRule rule) {
       return new FinancialRuleDto {
         UID = rule.UID,
-        CategoryUID = rule.Category.UID,
+        Category = rule.Category.MapToNamedEntity(),
         DebitAccount = rule.DebitAccount,
         CreditAccount = rule.CreditAccount,
         DebitConcept = rule.DebitConcept,

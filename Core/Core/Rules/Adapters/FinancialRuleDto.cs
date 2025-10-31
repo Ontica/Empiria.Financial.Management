@@ -19,7 +19,7 @@ namespace Empiria.Financial.Rules.Adapters {
       get; internal set;
     }
 
-    public string CategoryUID {
+    public NamedEntityDto Category {
       get; internal set;
     }
 
