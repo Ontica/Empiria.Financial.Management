@@ -47,7 +47,7 @@ namespace Empiria.CashFlow.Explorer.UseCases {
       if (query.ClassificationUID.Length != 0) {
         var concept = FinancialConcept.Parse(query.ClassificationUID);
 
-        accounts = accounts.FindAll(a => a.StandardAccount.MainConcept.ConceptNo.StartsWith(concept.ConceptNo));
+        accounts = accounts.FindAll(a => a.StandardAccount.MainClassification.ConceptNo.StartsWith(concept.ConceptNo));
       }
 
       if (query.OperationTypeUID.Length != 0) {

@@ -70,6 +70,7 @@ namespace Empiria.Financial.Adapters {
         Type = account.Category.MapToNamedEntity(),
         RoleType = account.RoleType.MapToNamedEntity(),
         DebtorCreditorType = account.DebtorCreditorType.MapToNamedEntity(),
+        Classification = account.MainClassification.MapToNamedEntity("Sin clasificación asignada"),
         Level = account.Level,
         IsLastLevel = account.IsLastLevel,
         Status = account.Status.MapToDto(),

@@ -20,37 +20,37 @@ namespace Empiria.CashFlow.Explorer {
 
     public string CashFlowAcct_01 {
       get {
-        return MainConcept.GetLevel(1).Name;
+        return MainClassification.GetLevel(1).Name;
       }
     }
 
     public string CashFlowAcct_02 {
       get {
-        return MainConcept.GetLevel(2).Name;
+        return MainClassification.GetLevel(2).Name;
       }
     }
 
     public string CashFlowAcct_03 {
       get {
-        return MainConcept.GetLevel(3).Name;
+        return MainClassification.GetLevel(3).Name;
       }
     }
 
     public string CashFlowAcct_04 {
       get {
-        return MainConcept.GetLevel(4).Name;
+        return MainClassification.GetLevel(4).Name;
       }
     }
 
     public string CashFlowAcct_05 {
       get {
-        return MainConcept.GetLevel(5).Name;
+        return MainClassification.GetLevel(5).Name;
       }
     }
 
     public string CashFlowAcct_06 {
       get {
-        return MainConcept.GetLevel(6).Name;
+        return MainClassification.GetLevel(6).Name;
       }
     }
 
@@ -166,12 +166,12 @@ namespace Empiria.CashFlow.Explorer {
       }
     }
 
-    private FinancialConcept MainConcept {
+    private FinancialConcept MainClassification {
       get {
         if (CashAccountId <= 0) {
           return FinancialConcept.Empty;
         }
-        return CashAccount.StandardAccount.MainConcept;
+        return CashAccount.StandardAccount.MainClassification;
       }
     }
 

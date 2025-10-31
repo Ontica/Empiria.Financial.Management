@@ -222,8 +222,8 @@ namespace Empiria.Financial {
       }
     }
 
-    [DataField("STD_ACCT_MAIN_GROUP_ID")]
-    public FinancialConcept MainConcept {
+    [DataField("STD_ACCT_MAIN_CLASSIFICATION_ID")]
+    public FinancialConcept MainClassification {
       get; private set;
     }
 
