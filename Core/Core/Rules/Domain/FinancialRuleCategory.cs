@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial  ****************************************************************************************
 *                                                                                                            *
 *  Module   : Financial Rules                            Component : Domain Layer                            *
-*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Information Holder, Aggregate root      *
+*  Assembly : Empiria.Financial.Core.dll                 Pattern   : Aggregate root                          *
 *  Type     : FinancialRuleCategory                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a financial rule category that serves as an aggregate root for FinancialRules.      *
@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.DynamicData;
 
@@ -21,7 +22,7 @@ namespace Empiria.Financial.Rules {
 
     #region Fields
 
-    private Lazy<FixedList<FinancialRule>> _rules = new Lazy<FixedList<FinancialRule>>();
+    private Lazy<List<FinancialRule>> _rules = new Lazy<List<FinancialRule>>();
 
     #endregion Fields
 
@@ -77,13 +78,46 @@ namespace Empiria.Financial.Rules {
 
     #region Methods
 
+    internal FinancialRule AddRule(FinancialRuleFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      var rule = new FinancialRule(this);
+
+      rule.Update(fields);
+
+      _rules.Value.Add(rule);
+
+      return rule;
+    }
+
+
     public FixedList<FinancialRule> GetFinancialRules() {
-      return _rules.Value;
+      return _rules.Value.ToFixedList();
     }
 
 
     public FixedList<FinancialRule> GetFinancialRules(DateTime date) {
-      return _rules.Value.FindAll(x => x.StartDate <= date && date <= x.EndDate);
+      return _rules.Value.FindAll(x => x.StartDate <= date && date <= x.EndDate)
+                         .ToFixedList();
+    }
+
+
+    internal void RemoveRule(FinancialRule rule) {
+      Assertion.Require(rule, nameof(rule));
+      Assertion.Require(_rules.Value.Contains(rule), "rule does not belong to this category.");
+
+      rule.Delete();
+
+      _rules.Value.Remove(rule);
+    }
+
+
+    internal void UpdateRule(FinancialRule rule, FinancialRuleFields fields) {
+      Assertion.Require(rule, nameof(rule));
+      Assertion.Require(_rules.Value.Contains(rule), "rule does not belong to this category.");
+      Assertion.Require(fields, nameof(fields));
+
+      rule.Update(fields);
     }
 
     #endregion Methods
@@ -95,7 +129,7 @@ namespace Empiria.Financial.Rules {
     }
 
     private void Refesh() {
-      _rules = new Lazy<FixedList<FinancialRule>>(() => FinancialRulesData.GetFinancialRules(this));
+      _rules = new Lazy<List<FinancialRule>>(() => FinancialRulesData.GetFinancialRules(this));
     }
 
     #endregion Helpers

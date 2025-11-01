@@ -38,9 +38,7 @@ namespace Empiria.Financial.Rules.UseCases {
 
       var category = FinancialRuleCategory.Parse(fields.CategoryUID);
 
-      var rule = new FinancialRule(category);
-
-      rule.Update(fields);
+      FinancialRule rule = category.AddRule(fields);
 
       rule.Save();
 
@@ -53,7 +51,7 @@ namespace Empiria.Financial.Rules.UseCases {
 
       var rule = FinancialRule.Parse(ruleUID);
 
-      rule.Delete();
+      rule.Category.RemoveRule(rule);
 
       rule.Save();
 
@@ -92,7 +90,7 @@ namespace Empiria.Financial.Rules.UseCases {
 
       var rule = FinancialRule.Parse(fields.UID);
 
-      rule.Update(fields);
+      rule.Category.UpdateRule(rule, fields);
 
       rule.Save();
 
