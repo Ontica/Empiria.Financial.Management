@@ -78,7 +78,7 @@ namespace Empiria.Payments.Payables.Adapters {
 
       Assertion.Require(BudgetAccountUID, "Necesito el número de cuenta del presupuesto.");
 
-       _ = BudgetAccount.Parse(BudgetAccountUID);
+       _ = FormerBudgetAccount.Parse(BudgetAccountUID);
     }
 
     #endregion Methods

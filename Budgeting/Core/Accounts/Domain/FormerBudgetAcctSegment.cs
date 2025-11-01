@@ -26,34 +26,34 @@ namespace Empiria.Budgeting {
   /// Budget account segments can be functional or administrative areas, development programs, projects,
   /// budget concepts or units, activities, financial sources, geographic regions, etcetera.
   /// BudgetAccountSegment instances are the constitutive parts of budget accounts.</summary>
-  [PartitionedType(typeof(BudgetAccountSegmentType))]
-  public class BudgetAccountSegment : BaseObject, INamedEntity {
+  [PartitionedType(typeof(FormerBudgetAcctSegmentType))]
+  public class FormerBudgetAcctSegment : BaseObject, INamedEntity {
 
     #region Fields
 
-    private Lazy<FixedList<BudgetAccountSegment>> _children;
+    private Lazy<FixedList<FormerBudgetAcctSegment>> _children;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected BudgetAccountSegment(BudgetAccountSegmentType powertype) : base(powertype) {
+    protected FormerBudgetAcctSegment(FormerBudgetAcctSegmentType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static public BudgetAccountSegment Parse(int id) => ParseId<BudgetAccountSegment>(id);
+    static public FormerBudgetAcctSegment Parse(int id) => ParseId<FormerBudgetAcctSegment>(id);
 
-    static public BudgetAccountSegment Parse(string uid) => ParseKey<BudgetAccountSegment>(uid);
+    static public FormerBudgetAcctSegment Parse(string uid) => ParseKey<FormerBudgetAcctSegment>(uid);
 
-    static public BudgetAccountSegment Empty => ParseEmpty<BudgetAccountSegment>();
+    static public FormerBudgetAcctSegment Empty => ParseEmpty<FormerBudgetAcctSegment>();
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public BudgetAccountSegmentType BudgetSegmentType {
+    public FormerBudgetAcctSegmentType BudgetSegmentType {
       get {
-        return (BudgetAccountSegmentType) base.GetEmpiriaType();
+        return (FormerBudgetAcctSegmentType) base.GetEmpiriaType();
       }
     }
 
@@ -93,12 +93,12 @@ namespace Empiria.Budgeting {
     } = -1;
 
 
-    public BudgetAccountSegment Parent {
+    public FormerBudgetAcctSegment Parent {
       get {
         if (this.IsEmptyInstance || this.ParentId == this.Id) {
           return this;
         }
-        return BudgetAccountSegment.Parse(this.ParentId);
+        return FormerBudgetAcctSegment.Parse(this.ParentId);
       }
     }
 
@@ -164,7 +164,7 @@ namespace Empiria.Budgeting {
       get; private set;
     }
 
-    public FixedList<BudgetAccountSegment> Children {
+    public FixedList<FormerBudgetAcctSegment> Children {
       get {
         return _children.Value;
       }
@@ -176,14 +176,14 @@ namespace Empiria.Budgeting {
 
     protected override void OnLoad() {
       if (this.BudgetSegmentType.HasChildrenSegmentType) {
-        _children = new Lazy<FixedList<BudgetAccountSegment>>(() => BudgetAccountSegmentDataService.BudgetAccountChildrenSegments(this));
+        _children = new Lazy<FixedList<FormerBudgetAcctSegment>>(() => FormerBudgetAcctSegmentData.BudgetAccountChildrenSegments(this));
       } else {
-        _children = new Lazy<FixedList<BudgetAccountSegment>>(() => new FixedList<BudgetAccountSegment>());
+        _children = new Lazy<FixedList<FormerBudgetAcctSegment>>(() => new FixedList<FormerBudgetAcctSegment>());
       }
     }
 
     protected override void OnSave() {
-      BudgetAccountSegmentDataService.Write(this);
+      FormerBudgetAcctSegmentData.Write(this);
     }
 
     #endregion Methods

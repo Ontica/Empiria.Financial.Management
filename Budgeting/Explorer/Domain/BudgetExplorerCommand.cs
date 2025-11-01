@@ -17,7 +17,7 @@ namespace Empiria.Budgeting.Explorer {
       get; set;
     }
 
-    internal FixedList<BudgetAccountSegmentType> GroupBy {
+    internal FixedList<FormerBudgetAcctSegmentType> GroupBy {
       get; set;
     }
 
@@ -32,11 +32,11 @@ namespace Empiria.Budgeting.Explorer {
   /// <summary>Specifies a filter for budget segments.</summary>
   internal class BudgetSegmentFilter {
 
-    internal BudgetAccountSegmentType SegmentType {
+    internal FormerBudgetAcctSegmentType SegmentType {
       get; set;
     }
 
-    internal FixedList<BudgetAccountSegment> SegmentItems {
+    internal FixedList<FormerBudgetAcctSegment> SegmentItems {
       get; set;
     }
 

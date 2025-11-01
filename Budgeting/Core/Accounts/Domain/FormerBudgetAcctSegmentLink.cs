@@ -14,22 +14,22 @@ namespace Empiria.Budgeting {
 
   /// <summary>Links a BudgetAccountSegment with other objects, like projects,
   /// products or geolocations.</summary>
-  public class BudgetAccountSegmentLink : BaseObjectLink {
+  public class FormerBudgetAcctSegmentLink : BaseObjectLink {
 
     #region Types
 
     static public BaseObjectLinkType ProcurementProductLink =>
-                    BaseObjectLinkType.Parse("ObjectTypeInfo.BudgetAccountSegmentLink.ProcurementProduct");
+                    BaseObjectLinkType.Parse("ObjectTypeInfo.FormerBudgetAccountSegmentLink.ProcurementProduct");
 
     #endregion Types
 
     #region Constructors and parsers
 
-    protected BudgetAccountSegmentLink(BaseObjectLinkType powertype) : base(powertype) {
+    protected FormerBudgetAcctSegmentLink(BaseObjectLinkType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal BudgetAccountSegmentLink(BudgetAccountSegment segment, Product product,
+    internal FormerBudgetAcctSegmentLink(FormerBudgetAcctSegment segment, Product product,
                                       string code, string description)
               : base(ProcurementProductLink, segment, product) {
 
@@ -37,23 +37,23 @@ namespace Empiria.Budgeting {
       base.Description = EmpiriaString.Clean(description);
     }
 
-    static public BudgetAccountSegmentLink Parse(int id) => ParseId<BudgetAccountSegmentLink>(id);
+    static public FormerBudgetAcctSegmentLink Parse(int id) => ParseId<FormerBudgetAcctSegmentLink>(id);
 
-    static public BudgetAccountSegmentLink Parse(string uid) => ParseKey<BudgetAccountSegmentLink>(uid);
+    static public FormerBudgetAcctSegmentLink Parse(string uid) => ParseKey<FormerBudgetAcctSegmentLink>(uid);
 
 
-    static public FixedList<BudgetAccountSegment> GetBudgetAccountSegmentsForProduct(Product product) {
+    static public FixedList<FormerBudgetAcctSegment> GetBudgetAccountSegmentsForProduct(Product product) {
       Assertion.Require(product, nameof(product));
 
-      return GetBaseObjectsFor<BudgetAccountSegment>(ProcurementProductLink, product)
+      return GetBaseObjectsFor<FormerBudgetAcctSegment>(ProcurementProductLink, product)
             .Sort((x, y) => x.Code.CompareTo(y.Code));
     }
 
 
-    static internal FixedList<BudgetAccountSegmentLink> GetListForProduct(Product product) {
+    static internal FixedList<FormerBudgetAcctSegmentLink> GetListForProduct(Product product) {
       Assertion.Require(product, nameof(product));
 
-      return GetListWithLinkedObject<BudgetAccountSegmentLink>(ProcurementProductLink, product)
+      return GetListWithLinkedObject<FormerBudgetAcctSegmentLink>(ProcurementProductLink, product)
             .Sort((x, y) => x.BudgetAccountSegment.Code.CompareTo(y.BudgetAccountSegment.Code));
     }
 
@@ -62,9 +62,9 @@ namespace Empiria.Budgeting {
 
     #region Properties
 
-    internal BudgetAccountSegment BudgetAccountSegment {
+    internal FormerBudgetAcctSegment BudgetAccountSegment {
       get {
-        return base.GetBaseObject<BudgetAccountSegment>();
+        return base.GetBaseObject<FormerBudgetAcctSegment>();
       }
     }
 

@@ -69,7 +69,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_ENTRY_BUDGET_ACCT_ID")]
-    public BudgetAccount BudgetAccount {
+    public FormerBudgetAccount BudgetAccount {
       get; private set;
     }
 

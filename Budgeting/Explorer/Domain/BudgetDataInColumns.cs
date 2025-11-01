@@ -31,7 +31,7 @@ namespace Empiria.Budgeting.Explorer {
     }
 
     [DataField("BUDGET_ACCT_ID")]
-    internal BudgetAccount BudgetAccount {
+    internal FormerBudgetAccount BudgetAccount {
       get; private set;
     }
 

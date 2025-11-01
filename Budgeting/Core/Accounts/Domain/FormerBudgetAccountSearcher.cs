@@ -17,12 +17,12 @@ using Empiria.Budgeting.Data;
 namespace Empiria.Budgeting {
 
   /// <summary>Searches budget accounts.</summary>
-  public class BudgetAccountSearcher {
+  public class FormerBudgetAccountSearcher {
 
     private readonly BudgetType _budgetType;
     private readonly string _keywords;
 
-    public BudgetAccountSearcher(BudgetType budgetType, string keywords = "") {
+    public FormerBudgetAccountSearcher(BudgetType budgetType, string keywords = "") {
       Assertion.Require(budgetType, nameof(budgetType));
 
       _budgetType = budgetType;
@@ -31,7 +31,7 @@ namespace Empiria.Budgeting {
 
     #region Methods
 
-    public bool HasSegment(OrganizationalUnit orgUnit, BudgetAccountSegment segment) {
+    public bool HasSegment(OrganizationalUnit orgUnit, FormerBudgetAcctSegment segment) {
       string budgetTypeFilter = GetBudgetTypeFilter();
       string orgUnitFilter = GetOrgUnitFilter(orgUnit);
       string baseSegmentFilter = $"BDG_ACCT_BASE_SEGMENT_ID = {segment.Id}";
@@ -41,14 +41,14 @@ namespace Empiria.Budgeting {
       filter.AppendAnd(orgUnitFilter);
       filter.AppendAnd(baseSegmentFilter);
 
-      var accounts = BudgetAccountDataService.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
+      var accounts = FormerBudgetAcctData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
 
       return accounts.Count != 0;
     }
 
 
-    public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit,
-                                           FixedList<BudgetAccountSegment> baseSegments) {
+    public FixedList<FormerBudgetAccount> Search(OrganizationalUnit orgUnit,
+                                           FixedList<FormerBudgetAcctSegment> baseSegments) {
 
       string budgetTypeFilter = GetBudgetTypeFilter();
       string orgUnitFilter = GetOrgUnitFilter(orgUnit);
@@ -61,11 +61,11 @@ namespace Empiria.Budgeting {
       filter.AppendAnd(baseSegmentsFilter);
       filter.AppendAnd(keywordsFilter);
 
-      return BudgetAccountDataService.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
+      return FormerBudgetAcctData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
     }
 
 
-    public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit, string filterString) {
+    public FixedList<FormerBudgetAccount> Search(OrganizationalUnit orgUnit, string filterString) {
       Assertion.Require(orgUnit, nameof(orgUnit));
 
       filterString = EmpiriaString.Clean(filterString ?? string.Empty);
@@ -81,19 +81,19 @@ namespace Empiria.Budgeting {
       filter.AppendAnd(keywordsFilter);
       filter.AppendAnd(filterString);
 
-      return BudgetAccountDataService.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
+      return FormerBudgetAcctData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
     }
 
 
-    public FixedList<BudgetAccountSegment> SearchUnassignedBaseSegments(OrganizationalUnit orgUnit,
+    public FixedList<FormerBudgetAcctSegment> SearchUnassignedBaseSegments(OrganizationalUnit orgUnit,
                                                                         string filterString) {
       Assertion.Require(orgUnit, nameof(orgUnit));
 
       filterString = EmpiriaString.Clean(filterString ?? string.Empty);
 
-      FixedList<BudgetAccount> assignedAccounts = Search(orgUnit, filterString);
+      FixedList<FormerBudgetAccount> assignedAccounts = Search(orgUnit, filterString);
 
-      FixedList<BudgetAccountSegment> allSegments = _budgetType.ProductProcurementSegmentType.SearchInstances(filterString, _keywords);
+      FixedList<FormerBudgetAcctSegment> allSegments = _budgetType.ProductProcurementSegmentType.SearchInstances(filterString, _keywords);
 
       return allSegments.Remove(assignedAccounts.Select(x => x.BaseSegment))
                         .Distinct()
@@ -124,7 +124,7 @@ namespace Empiria.Budgeting {
 
 
     private string GetSegmentsFilter(string segmentColumn,
-                                     FixedList<BudgetAccountSegment> segments) {
+                                     FixedList<FormerBudgetAcctSegment> segments) {
       return SearchExpression.ParseInSet(segmentColumn, segments.Select(x => x.Id));
     }
 

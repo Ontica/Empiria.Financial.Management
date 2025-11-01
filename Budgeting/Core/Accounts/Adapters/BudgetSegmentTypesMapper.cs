@@ -15,12 +15,12 @@ namespace Empiria.Budgeting.Adapters {
 
     #region Mappers
 
-    static internal FixedList<BudgetSegmentTypeDto> Map(FixedList<BudgetAccountSegmentType> segmentTypes) {
+    static internal FixedList<BudgetSegmentTypeDto> Map(FixedList<FormerBudgetAcctSegmentType> segmentTypes) {
       return segmentTypes.Select(x => Map(x)).ToFixedList();
     }
 
 
-    static internal BudgetSegmentTypeDto Map(BudgetAccountSegmentType segmentType) {
+    static internal BudgetSegmentTypeDto Map(FormerBudgetAcctSegmentType segmentType) {
       var dto = MapWithoutStructure(segmentType);
 
       if (segmentType.HasParentSegmentType) {
@@ -36,7 +36,7 @@ namespace Empiria.Budgeting.Adapters {
       return dto;
     }
 
-    static internal BudgetSegmentTypeDto MapWithoutStructure(BudgetAccountSegmentType segmentType) {
+    static internal BudgetSegmentTypeDto MapWithoutStructure(FormerBudgetAcctSegmentType segmentType) {
       return new BudgetSegmentTypeDto {
         UID = segmentType.UID,
         Name = segmentType.DisplayName

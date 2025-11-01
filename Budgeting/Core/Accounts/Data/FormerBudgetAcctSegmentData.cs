@@ -15,9 +15,9 @@ using Empiria.Data;
 namespace Empiria.Budgeting.Data {
 
   /// <summary>Provides data access services for budget account segments.</summary>
-  static internal class BudgetAccountSegmentDataService {
+  static internal class FormerBudgetAcctSegmentData {
 
-    static internal void CleanSegment(BudgetAccountSegment segment) {
+    static internal void CleanSegment(FormerBudgetAcctSegment segment) {
       if (segment.IsEmptyInstance) {
         return;
       }
@@ -33,7 +33,7 @@ namespace Empiria.Budgeting.Data {
     }
 
 
-    static internal FixedList<BudgetAccountSegment> BudgetAccountSegments(BudgetAccountSegmentType segmentType,
+    static internal FixedList<FormerBudgetAcctSegment> BudgetAccountSegments(FormerBudgetAcctSegmentType segmentType,
                                                                           string filterString,
                                                                           string keywords) {
       filterString = EmpiriaString.Clean(filterString ?? string.Empty);
@@ -55,11 +55,11 @@ namespace Empiria.Budgeting.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<BudgetAccountSegment>(op);
+      return DataReader.GetFixedList<FormerBudgetAcctSegment>(op);
     }
 
 
-    static internal FixedList<BudgetAccountSegment> BudgetAccountChildrenSegments(BudgetAccountSegment parentSegment) {
+    static internal FixedList<FormerBudgetAcctSegment> BudgetAccountChildrenSegments(FormerBudgetAcctSegment parentSegment) {
       var sql = "SELECT * FROM FMS_BUDGET_ACCOUNTS_SEGMENTS " +
                 $"WHERE BDG_ACCT_SEGMENT_PARENT_ID = {parentSegment.Id} " +
                 "AND BDG_ACCT_SEGMENT_STATUS <> 'X' " +
@@ -67,11 +67,11 @@ namespace Empiria.Budgeting.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<BudgetAccountSegment>(op);
+      return DataReader.GetFixedList<FormerBudgetAcctSegment>(op);
     }
 
 
-    static internal void Write(BudgetAccountSegment o) {
+    static internal void Write(FormerBudgetAcctSegment o) {
       var op = DataOperation.Parse("WRITE_FMS_BUDGET_ACCOUNT_SEGMENT",
                           o.Id, o.UID, o.BudgetSegmentType.Id,
                           o.Code, o.Name, o.Description, o.ExternalObjectReferenceId,

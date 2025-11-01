@@ -112,7 +112,7 @@ namespace Empiria.Payments.Payables {
 
 
     [DataField("PAYABLE_ITEM_BUDGET_ACCOUNT_ID")]
-    public BudgetAccount BudgetAccount {
+    public FormerBudgetAccount BudgetAccount {
       get; private set;
     }
 
@@ -197,7 +197,7 @@ namespace Empiria.Payments.Payables {
       this.Quantity = fields.Quantity;
       this.UnitPrice = fields.UnitPrice;
       this.Discount = fields.Discount;
-      this.BudgetAccount = BudgetAccount.Parse(fields.BudgetAccountUID);
+      this.BudgetAccount = FormerBudgetAccount.Parse(fields.BudgetAccountUID);
     }
 
     #endregion Methods

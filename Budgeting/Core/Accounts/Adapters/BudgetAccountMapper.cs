@@ -17,13 +17,13 @@ namespace Empiria.Budgeting.Adapters {
   /// <summary>Mapping methods for budget accounts.</summary>
   static internal class BudgetAccountMapper {
 
-    static internal FixedList<BudgetAccountDto> Map(FixedList<BudgetAccount> accounts) {
+    static internal FixedList<BudgetAccountDto> Map(FixedList<FormerBudgetAccount> accounts) {
       return accounts.Select(x => Map(x))
                      .ToFixedList();
     }
 
 
-    static public BudgetAccountDto Map(BudgetAccount account) {
+    static public BudgetAccountDto Map(FormerBudgetAccount account) {
       return new BudgetAccountDto {
         UID = account.UID,
         BaseSegmentUID = account.BaseSegment.UID,
@@ -37,8 +37,8 @@ namespace Empiria.Budgeting.Adapters {
     }
 
 
-    static internal FixedList<BudgetAccountDto> Map(FixedList<BudgetAccount> accounts,
-                                                    FixedList<BudgetAccountSegment> unassignedSegments) {
+    static internal FixedList<BudgetAccountDto> Map(FixedList<FormerBudgetAccount> accounts,
+                                                    FixedList<FormerBudgetAcctSegment> unassignedSegments) {
       FixedList<BudgetAccountDto> mappedAccounts = accounts.Select(x => Map(x))
                                                            .ToFixedList();
 
@@ -52,7 +52,7 @@ namespace Empiria.Budgeting.Adapters {
 
     #region Helpers
 
-    static private BudgetAccountDto Map(BudgetAccountSegment segment) {
+    static private BudgetAccountDto Map(FormerBudgetAcctSegment segment) {
       return new BudgetAccountDto {
         UID = string.Empty,
         BaseSegmentUID = segment.UID,

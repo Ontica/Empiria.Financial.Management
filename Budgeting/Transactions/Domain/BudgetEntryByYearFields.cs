@@ -109,7 +109,7 @@ namespace Empiria.Budgeting.Transactions {
       fields.Description = EmpiriaString.Clean(fields.Description);
 
       _ = BudgetTransaction.Parse(fields.TransactionUID);
-      _ = BudgetAccount.Parse(fields.BudgetAccountUID);
+      _ = FormerBudgetAccount.Parse(fields.BudgetAccountUID);
       _ = BalanceColumn.Parse(fields.BalanceColumnUID);
 
       if (fields.ProductUID.Length != 0) {

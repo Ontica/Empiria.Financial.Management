@@ -20,18 +20,18 @@ using Empiria.Budgeting.Data;
 namespace Empiria.Budgeting {
 
   /// <summary>Partitioned type that represents a budget account.</summary>
-  [PartitionedType(typeof(BudgetAccountType))]
-  public class BudgetAccount : BaseObject, INamedEntity {
+  [PartitionedType(typeof(FormerBudgetAccountType))]
+  public class FormerBudgetAccount : BaseObject, INamedEntity {
 
     #region Constructors and parsers
 
-    protected BudgetAccount(BudgetAccountType powertype) : base(powertype) {
+    protected FormerBudgetAccount(FormerBudgetAccountType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
     }
 
 
-    public BudgetAccount(BudgetAccountType accountType,
-                         BudgetAccountSegment baseSegment,
+    public FormerBudgetAccount(FormerBudgetAccountType accountType,
+                         FormerBudgetAcctSegment baseSegment,
                          OrganizationalUnit orgUnit) : this(accountType) {
       Assertion.Require(accountType, nameof(accountType));
       Assertion.Require(baseSegment, nameof(baseSegment));
@@ -46,19 +46,19 @@ namespace Empiria.Budgeting {
     }
 
 
-    static public BudgetAccount Parse(int id) => ParseId<BudgetAccount>(id);
+    static public FormerBudgetAccount Parse(int id) => ParseId<FormerBudgetAccount>(id);
 
-    static public BudgetAccount Parse(string uid) => ParseKey<BudgetAccount>(uid);
+    static public FormerBudgetAccount Parse(string uid) => ParseKey<FormerBudgetAccount>(uid);
 
-    static public BudgetAccount Empty => ParseEmpty<BudgetAccount>();
+    static public FormerBudgetAccount Empty => ParseEmpty<FormerBudgetAccount>();
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public BudgetAccountType BudgetAccountType {
+    public FormerBudgetAccountType BudgetAccountType {
       get {
-        return (BudgetAccountType) base.GetEmpiriaType();
+        return (FormerBudgetAccountType) base.GetEmpiriaType();
       }
     }
 
@@ -102,7 +102,7 @@ namespace Empiria.Budgeting {
 
 
     [DataField("BDG_ACCT_BASE_SEGMENT_ID")]
-    public BudgetAccountSegment BaseSegment {
+    public FormerBudgetAcctSegment BaseSegment {
       get; private set;
     }
 
@@ -187,7 +187,7 @@ namespace Empiria.Budgeting {
         PostingTime = DateTime.Now;
       }
 
-      BudgetAccountDataService.WriteBudgetAccount(this, ExtData.ToString());
+      FormerBudgetAcctData.WriteBudgetAccount(this, ExtData.ToString());
     }
 
 

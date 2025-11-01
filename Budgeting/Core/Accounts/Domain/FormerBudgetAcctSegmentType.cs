@@ -15,20 +15,20 @@ using Empiria.Budgeting.Data;
 namespace Empiria.Budgeting {
 
   /// <summary>Power type that describes a budget account segment partitioned type.</summary>
-  [Powertype(typeof(BudgetAccountSegment))]
-  public sealed class BudgetAccountSegmentType : Powertype {
+  [Powertype(typeof(FormerBudgetAcctSegment))]
+  public sealed class FormerBudgetAcctSegmentType : Powertype {
 
     #region Constructors and parsers
 
-    private BudgetAccountSegmentType() {
+    private FormerBudgetAcctSegmentType() {
       // Empiria power types always have this constructor.
     }
 
-    static public new BudgetAccountSegmentType Parse(int typeId) => Parse<BudgetAccountSegmentType>(typeId);
+    static public new FormerBudgetAcctSegmentType Parse(int typeId) => Parse<FormerBudgetAcctSegmentType>(typeId);
 
-    static public new BudgetAccountSegmentType Parse(string typeName) => Parse<BudgetAccountSegmentType>(typeName);
+    static public new FormerBudgetAcctSegmentType Parse(string typeName) => Parse<FormerBudgetAcctSegmentType>(typeName);
 
-    static public BudgetAccountSegmentType Empty => Parse("ObjectTypeInfo.BudgetAccountSegment");
+    static public FormerBudgetAcctSegmentType Empty => Parse("ObjectTypeInfo.FormerBudgetAccountSegment");
 
     #endregion Constructors and parsers
 
@@ -60,7 +60,7 @@ namespace Empiria.Budgeting {
     }
 
 
-    public BudgetAccountSegmentType ChildrenSegmentType {
+    public FormerBudgetAcctSegmentType ChildrenSegmentType {
       get {
         if (this.IsEmptyInstance) {
           return this;
@@ -85,7 +85,7 @@ namespace Empiria.Budgeting {
     }
 
 
-    public BudgetAccountSegmentType ParentSegmentType {
+    public FormerBudgetAcctSegmentType ParentSegmentType {
       get {
         if (this.IsEmptyInstance) {
           return this;
@@ -96,11 +96,11 @@ namespace Empiria.Budgeting {
     }
 
 
-    public FixedList<BudgetAccountSegment> SearchInstances(string filterString, string keywords) {
+    public FixedList<FormerBudgetAcctSegment> SearchInstances(string filterString, string keywords) {
       filterString = filterString ?? string.Empty;
       keywords = keywords ?? string.Empty;
 
-      return BudgetAccountSegmentDataService.BudgetAccountSegments(this, filterString, keywords);
+      return FormerBudgetAcctSegmentData.BudgetAccountSegments(this, filterString, keywords);
     }
 
     #endregion Properties

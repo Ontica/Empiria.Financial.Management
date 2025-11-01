@@ -22,7 +22,7 @@ namespace Empiria.Tests.Budgeting {
 
     [Fact]
     public void Should_Parse_All_Budget_Accounts_Segment_Links() {
-      var segments = BaseObject.GetList<BudgetAccountSegmentLink>();
+      var segments = BaseObject.GetList<FormerBudgetAcctSegmentLink>();
 
       foreach (var sut in segments) {
         Assert.NotNull(sut.BaseObjectLinkType);
@@ -35,7 +35,7 @@ namespace Empiria.Tests.Budgeting {
 
     [Fact]
     public void Should_Read_All_Budget_Accounts_Segment_Links() {
-      var sut = BaseObject.GetList<BudgetAccountSegmentLink>();
+      var sut = BaseObject.GetList<FormerBudgetAcctSegmentLink>();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
@@ -44,7 +44,7 @@ namespace Empiria.Tests.Budgeting {
 
     [Fact]
     public void Should_Read_All_Budget_Accounts_Segment_Products_Links() {
-      var sut = BaseObjectLink.GetList<BudgetAccountSegmentLink>(BudgetAccountSegmentLink.ProcurementProductLink);
+      var sut = BaseObjectLink.GetList<FormerBudgetAcctSegmentLink>(FormerBudgetAcctSegmentLink.ProcurementProductLink);
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
@@ -53,7 +53,7 @@ namespace Empiria.Tests.Budgeting {
 
     [Fact]
     public void Should_Read_Budget_Account_Segments_For_A_Product() {
-      var sut = BaseObjectLink.GetBaseObjectsFor<BudgetAccountSegment>(BudgetAccountSegmentLink.ProcurementProductLink,
+      var sut = BaseObjectLink.GetBaseObjectsFor<FormerBudgetAcctSegment>(FormerBudgetAcctSegmentLink.ProcurementProductLink,
                                                                        Product.Parse(4));
 
       Assert.NotNull(sut);
@@ -63,8 +63,8 @@ namespace Empiria.Tests.Budgeting {
 
     [Fact]
     public void Should_Read_All_Products_For_A_Budget_Account_Segment() {
-      var sut = BaseObjectLink.GetLinkedObjectsFor<Product>(BudgetAccountSegmentLink.ProcurementProductLink,
-                                                            BudgetAccountSegment.Parse(2205));
+      var sut = BaseObjectLink.GetLinkedObjectsFor<Product>(FormerBudgetAcctSegmentLink.ProcurementProductLink,
+                                                            FormerBudgetAcctSegment.Parse(2205));
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);

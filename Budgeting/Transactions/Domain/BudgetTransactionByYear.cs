@@ -67,7 +67,7 @@ namespace Empiria.Budgeting.Transactions {
          UID = entryByYearUID,
          TransactionUID = BudgetTransaction.Parse(parts[0]).UID,
          BalanceColumnUID = BalanceColumn.Parse(parts[1]).UID,
-         BudgetAccountUID = BudgetAccount.Parse(parts[2]).UID,
+         BudgetAccountUID = FormerBudgetAccount.Parse(parts[2]).UID,
          ProductUID = Product.Parse(parts[3]).UID,
          ProductUnitUID = ProductUnit.Parse(parts[4]).UID,
          ProjectUID = Project.Parse(parts[5]).UID,
@@ -112,7 +112,7 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(fields, nameof(fields));
 
       var column = Patcher.Patch(fields.BalanceColumnUID, BalanceColumn.Empty);
-      var account = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount.Empty);
+      var account = Patcher.Patch(fields.BudgetAccountUID, FormerBudgetAccount.Empty);
       var product = Patcher.Patch(fields.ProductUID, Product.Empty);
       var productUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
       var project = Patcher.Patch(fields.ProjectUID, Project.Empty);

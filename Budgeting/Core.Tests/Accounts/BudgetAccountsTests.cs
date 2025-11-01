@@ -22,17 +22,17 @@ namespace Empiria.Tests.Budgeting {
 
     [Fact]
     public void Clean_Budget_Accounts() {
-      var accounts = BaseObject.GetFullList<BudgetAccount>();
+      var accounts = BaseObject.GetFullList<FormerBudgetAccount>();
 
       foreach(var account in accounts) {
-        BudgetAccountDataService.CleanAccount(account);
+        FormerBudgetAcctData.CleanAccount(account);
       }
     }
 
 
     [Fact]
     public void Should_Read_Empty_BudgetAccount() {
-      var sut = BudgetAccount.Empty;
+      var sut = FormerBudgetAccount.Empty;
 
       Assert.NotNull(sut);
     }
@@ -40,7 +40,7 @@ namespace Empiria.Tests.Budgeting {
 
     [Fact]
     public void Should_Read_All_Budget_Accounts() {
-      var sut = BudgetAccount.GetList<BudgetAccount>();
+      var sut = FormerBudgetAccount.GetList<FormerBudgetAccount>();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);

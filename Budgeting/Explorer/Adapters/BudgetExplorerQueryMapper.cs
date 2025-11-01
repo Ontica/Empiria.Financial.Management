@@ -31,8 +31,8 @@ namespace Empiria.Budgeting.Explorer.Adapters {
 
       foreach (var item in segmentFilter) {
         var filter = new BudgetSegmentFilter {
-           SegmentType = BudgetAccountSegmentType.Parse(item.SegmentTypeUID),
-           SegmentItems = item.SegmentItems.Select(x => BudgetAccountSegment.Parse(x))
+           SegmentType = FormerBudgetAcctSegmentType.Parse(item.SegmentTypeUID),
+           SegmentItems = item.SegmentItems.Select(x => FormerBudgetAcctSegment.Parse(x))
                                            .ToFixedList()
         };
       }
@@ -41,11 +41,11 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     }
 
 
-    static private FixedList<BudgetAccountSegmentType> MapToGroupBy(string[] segmentTypes) {
-      var list = new List<BudgetAccountSegmentType>(segmentTypes.Length);
+    static private FixedList<FormerBudgetAcctSegmentType> MapToGroupBy(string[] segmentTypes) {
+      var list = new List<FormerBudgetAcctSegmentType>(segmentTypes.Length);
 
       foreach (var segmentTypeUID in segmentTypes) {
-        var segmentType = BudgetAccountSegmentType.Parse(segmentTypeUID);
+        var segmentType = FormerBudgetAcctSegmentType.Parse(segmentTypeUID);
 
         list.Add(segmentType);
       }

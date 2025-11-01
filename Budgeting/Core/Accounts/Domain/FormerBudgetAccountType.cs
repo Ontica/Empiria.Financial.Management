@@ -13,20 +13,20 @@ using Empiria.Ontology;
 namespace Empiria.Budgeting {
 
   /// <summary>Power type that describes a budget account.</summary>
-  [Powertype(typeof(BudgetAccount))]
-  public sealed class BudgetAccountType : Powertype {
+  [Powertype(typeof(FormerBudgetAccount))]
+  public sealed class FormerBudgetAccountType : Powertype {
 
     #region Constructors and parsers
 
-    private BudgetAccountType() {
+    private FormerBudgetAccountType() {
       // Empiria powertype types always have this constructor.
     }
 
-    static public new BudgetAccountType Parse(int typeId) => Parse<BudgetAccountType>(typeId);
+    static public new FormerBudgetAccountType Parse(int typeId) => Parse<FormerBudgetAccountType>(typeId);
 
-    static public new BudgetAccountType Parse(string typeName) => Parse<BudgetAccountType>(typeName);
+    static public new FormerBudgetAccountType Parse(string typeName) => Parse<FormerBudgetAccountType>(typeName);
 
-    public static BudgetAccountType GastoCorriente => Parse("ObjectTypeInfo.BudgetAccount.GastoCorriente");
+    public static FormerBudgetAccountType GastoCorriente => Parse("ObjectTypeInfo.FormerBudgetAccount.GastoCorriente");
 
     #endregion Constructors and parsers
 

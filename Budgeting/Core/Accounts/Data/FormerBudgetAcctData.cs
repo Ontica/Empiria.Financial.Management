@@ -8,16 +8,14 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Data;
 
 namespace Empiria.Budgeting.Data {
 
   /// <summary>Provides data access services for budget accounts.</summary>
-  static internal class BudgetAccountDataService {
+  static internal class FormerBudgetAcctData {
 
-    static internal void CleanAccount(BudgetAccount account) {
+    static internal void CleanAccount(FormerBudgetAccount account) {
       if (account.IsEmptyInstance) {
         return;
       }
@@ -31,7 +29,7 @@ namespace Empiria.Budgeting.Data {
     }
 
 
-    static internal FixedList<BudgetAccount> SearchBudgetAcccounts(string filter, string sort) {
+    static internal FixedList<FormerBudgetAccount> SearchBudgetAcccounts(string filter, string sort) {
 
       var sql = "SELECT * FROM FMS_BUDGET_ACCOUNTS";
 
@@ -44,11 +42,11 @@ namespace Empiria.Budgeting.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<BudgetAccount>(op);
+      return DataReader.GetFixedList<FormerBudgetAccount>(op);
     }
 
 
-    static internal void WriteBudgetAccount(BudgetAccount o, string extData) {
+    static internal void WriteBudgetAccount(FormerBudgetAccount o, string extData) {
       var op = DataOperation.Parse("write_fms_budget_account", o.Id, o.UID,
               o.BudgetAccountType.Id, o.BudgetType.Id, o.Code, o.Description,
               o.Organization.Id, o.OrganizationalUnit.Id, o.BaseSegment.Id,

@@ -47,7 +47,7 @@ namespace Empiria.Budgeting.Explorer {
     }
 
 
-    public BudgetAccount BudgetAccount {
+    public FormerBudgetAccount BudgetAccount {
       get; private set;
     }
 

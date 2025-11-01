@@ -237,19 +237,19 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       Assertion.Require(requestedSegmentUID, nameof(requestedSegmentUID));
 
       var transaction = BudgetTransaction.Parse(budgetTransactionUID);
-      var requestedSegment = BudgetAccountSegment.Parse(requestedSegmentUID);
+      var requestedSegment = FormerBudgetAcctSegment.Parse(requestedSegmentUID);
       var orgUnit = (OrganizationalUnit) transaction.BaseParty;
 
       Assertion.Require(transaction.Rules.CanUpdate,
           "Esta operación sólo está disponible para transacciones abiertas.");
 
-      var searcher = new BudgetAccountSearcher(transaction.BaseBudget.BudgetType);
+      var searcher = new FormerBudgetAccountSearcher(transaction.BaseBudget.BudgetType);
 
       Assertion.Require(!searcher.HasSegment(orgUnit, requestedSegment),
           $"{orgUnit.FullName} ya tiene asignada la cuenta presupuestal {requestedSegment.FullName}");
 
 
-      var newBudgetAccount = new BudgetAccount(BudgetAccountType.GastoCorriente, requestedSegment, orgUnit);
+      var newBudgetAccount = new FormerBudgetAccount(FormerBudgetAccountType.GastoCorriente, requestedSegment, orgUnit);
 
       newBudgetAccount.Save();
 

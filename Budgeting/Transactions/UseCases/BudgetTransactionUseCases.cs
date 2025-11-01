@@ -102,12 +102,12 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var transaction = BudgetTransaction.Parse(query.TransactionUID);
 
-      var searcher = new BudgetAccountSearcher(transaction.BaseBudget.BudgetType, query.Keywords);
+      var searcher = new FormerBudgetAccountSearcher(transaction.BaseBudget.BudgetType, query.Keywords);
 
-      FixedList<BudgetAccount> accounts = searcher.Search((OrganizationalUnit) transaction.BaseParty,
+      FixedList<FormerBudgetAccount> accounts = searcher.Search((OrganizationalUnit) transaction.BaseParty,
                                                           transaction.BudgetTransactionType.BudgetAccountsFilter);
 
-      FixedList<BudgetAccountSegment> unassignedSegments =
+      FixedList<FormerBudgetAcctSegment> unassignedSegments =
                                       searcher.SearchUnassignedBaseSegments((OrganizationalUnit) transaction.BaseParty,
                                                                             transaction.BudgetTransactionType.BudgetAccountsFilter);
 

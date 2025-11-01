@@ -59,16 +59,16 @@ namespace Empiria.Budgeting {
     }
 
 
-    public BudgetAccountSegmentType ProductProcurementSegmentType {
+    public FormerBudgetAcctSegmentType ProductProcurementSegmentType {
       get {
-        return ExtensionData.Get("productProcurementSegmentTypeId", BudgetAccountSegmentType.Empty);
+        return ExtensionData.Get("productProcurementSegmentTypeId", FormerBudgetAcctSegmentType.Empty);
       }
     }
 
 
-    public FixedList<BudgetAccountSegmentType> SegmentTypes {
+    public FixedList<FormerBudgetAcctSegmentType> SegmentTypes {
       get {
-        return base.ExtensionData.GetFixedList<BudgetAccountSegmentType>("segmentTypes");
+        return base.ExtensionData.GetFixedList<FormerBudgetAcctSegmentType>("segmentTypes");
       }
     }
 
