@@ -43,6 +43,28 @@ namespace Empiria.Financial.Concepts.Data {
       return DataReader.GetFixedList<FinancialConcept>(op);
     }
 
+    static internal FixedList<StandardAccount> GetStandardAccounts(FinancialConcept concept) {
+
+      int[] ids = concept.GetAllChildren()
+                         .SelectDistinct(x => x.Id)
+                         .ToArray();
+
+      var filter = SearchExpression.ParseInSet("STD_ACCT_MAIN_CLASSIFICATION_ID", ids);
+
+      if (filter.Length == 0) {
+        filter = SearchExpression.NoRecordsFilter;
+      }
+
+      var sql = "SELECT DISTINCT * " +
+                "FROM FMS_STD_ACCOUNTS " +
+                $"WHERE STD_ACCT_MAIN_CLASSIFICATION_ID = {concept.Id} OR {filter} " +
+                $"ORDER BY STD_ACCT_NUMBER";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<StandardAccount>(op);
+    }
+
 
     static internal FixedList<FinancialConcept> SearchFinancialConcepts(string filter) {
       var sql = "SELECT * FROM FMS_CONCEPTS " +

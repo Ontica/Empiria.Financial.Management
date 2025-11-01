@@ -10,6 +10,8 @@
 
 using System;
 
+using Empiria.Financial.Adapters;
+
 namespace Empiria.Financial.Concepts.Adapters {
 
   /// <summary>Output DTO holder for financial concepts.</summary>
@@ -19,7 +21,7 @@ namespace Empiria.Financial.Concepts.Adapters {
       get; internal set;
     }
 
-    public FixedList<FinancialConceptEntryDescriptor> Integration {
+    public FixedList<StandardAccountDescriptor> Integration {
       get; internal set;
     }
 

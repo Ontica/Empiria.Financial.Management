@@ -10,6 +10,8 @@
 
 using Empiria.StateEnums;
 
+using Empiria.Financial.Adapters;
+
 namespace Empiria.Financial.Concepts.Adapters {
 
   /// <summary>Mapping methods for financial concepts.</summary>
@@ -38,7 +40,7 @@ namespace Empiria.Financial.Concepts.Adapters {
     static internal FinancialConceptHolder MapToHolder(FinancialConcept concept) {
       return new FinancialConceptHolder {
         Concept = Map(concept),
-        Integration = Map(concept.GetEntries()),
+        Integration = StandardAccountMapper.MapToDescriptor(concept.GetEntries()),
         Actions = MapActions(concept)
       };
     }

@@ -14,6 +14,8 @@ using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Financial.Concepts.Data;
+
 namespace Empiria.Financial.Concepts {
 
   /// <summary>Represents a financial concept.</summary>
@@ -207,8 +209,8 @@ namespace Empiria.Financial.Concepts {
     }
 
 
-    internal FixedList<FinancialConceptEntry> GetEntries() {
-      return new FixedList<FinancialConceptEntry>();
+    internal FixedList<StandardAccount> GetEntries() {
+      return FinancialConceptsData.GetStandardAccounts(this);
     }
 
 
