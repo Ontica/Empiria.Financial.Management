@@ -69,7 +69,7 @@ namespace Empiria.Tests.Financial {
 
     [Fact]
     public void Clean_Financial_Rules() {
-      var rules = BaseObject.GetFullList<FinancialRule>();
+      var rules = BaseObject.GetFullList<FinancialRule>("RULE_CATEGORY_ID > 0");
 
       foreach (var rule in rules) {
         FinancialRulesData.CleanFinancialRule(rule);

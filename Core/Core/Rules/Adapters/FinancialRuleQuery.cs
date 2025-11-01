@@ -10,6 +10,10 @@
 
 using System;
 
+using Empiria.Data;
+
+using Empiria.Financial.Rules.Data;
+
 namespace Empiria.Financial.Rules.Adapters {
 
   /// <summary>Input query used to search financial rules.</summary>
@@ -22,13 +26,76 @@ namespace Empiria.Financial.Rules.Adapters {
 
     public DateTime Date {
       get; set;
-    } = DateTime.Today;
+    } = ExecutionServer.DateMinValue;
 
 
     public string Keywords {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
   }  // class FinancialRuleQuery
+
+
+
+  /// <summary>FinancialRuleQuery extension methods.</summary>
+  static internal class FinancialRuleQueryExtensions {
+
+    static internal FixedList<FinancialRule> Execute(this FinancialRuleQuery query) {
+      string filter = GetFilterString(query);
+
+      return FinancialRulesData.SearchFinancialRules(filter);
+    }
+
+
+    static private string GetFilterString(FinancialRuleQuery query) {
+      string categoryFilter = BuildCategoryFilter(query.CategoryUID);
+      string dateFilter = BuildDateFilter(query.Date);
+      string keywordsFilter = BuildKeywordsFilter(query.Keywords);
+      string statusFilter = BuildStatusFilter();
+
+      var filter = new Filter(categoryFilter);
+
+      filter.AppendAnd(dateFilter);
+      filter.AppendAnd(keywordsFilter);
+      filter.AppendAnd(statusFilter);
+
+      return filter.ToString();
+    }
+
+    #region Helpers
+
+    static private string BuildCategoryFilter(string categoryUID) {
+      var category = FinancialRuleCategory.Parse(categoryUID);
+
+      return $"RULE_CATEGORY_ID = {category.Id}";
+    }
+
+
+    static private string BuildDateFilter(DateTime date) {
+      if (ExecutionServer.IsMinOrMaxDate(date)) {
+        return string.Empty;
+      }
+
+      return $"(RULE_START_DATE <= {DataCommonMethods.FormatSqlDbDate(date)} AND " +
+             $"{DataCommonMethods.FormatSqlDbDate(date)} <= RULE_END_DATE)";
+    }
+
+
+    static private string BuildKeywordsFilter(string keywords) {
+      if (keywords.Length == 0) {
+        return string.Empty;
+      }
+
+      return SearchExpression.ParseAndLikeKeywords("RULE_KEYWORDS", keywords);
+    }
+
+
+    static private string BuildStatusFilter() {
+      return $"RULE_STATUS <> 'X'";
+    }
+
+    #endregion Helpers
+
+  }  // class FinancialRuleQueryExtensions
 
 }  // namespace Empiria.Financial.Rules.Adapters

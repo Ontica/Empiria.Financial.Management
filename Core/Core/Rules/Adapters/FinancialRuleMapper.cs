@@ -17,9 +17,7 @@ namespace Empiria.Financial.Rules.Adapters {
   static internal class FinancialRuleMapper {
 
     static public DynamicDto<FinancialRuleDescriptor> Map(FinancialRuleCategory category,
-                                                   FixedList<FinancialRule> rules) {
-
-      rules.Sort((x, y) => x.DebitAccount.CompareTo(y.DebitAccount));
+                                                          FixedList<FinancialRule> rules) {
 
       var dtos = rules.Select(rule => new FinancialRuleDescriptor {
         UID = rule.UID,

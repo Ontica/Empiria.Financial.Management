@@ -55,6 +55,20 @@ namespace Empiria.Financial.Rules.Data {
     }
 
 
+    static internal FixedList<FinancialRule> SearchFinancialRules(string filter) {
+      Assertion.Require(filter, nameof(filter));
+
+      var sql = "SELECT * FROM FMS_RULES " +
+                $"WHERE {filter} " +
+                $"ORDER BY RULE_DEBIT_ACCOUNT, RULE_CREDIT_ACCOUNT, " +
+                $"RULE_DEBIT_CONCEPT, RULE_CREDIT_CONCEPT";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<FinancialRule>(op);
+    }
+
+
     static internal void WriteFinancialRule(FinancialRule o) {
       var op = DataOperation.Parse("write_FMS_Rule", o.Id, o.UID, o.FinancialRuleType.Id,
                   o.Category.Id, o.GroupId, o.DebitAccount, o.DebitConcept, o.DebitCurrency.Id,

@@ -52,7 +52,7 @@ namespace Empiria.Financial.Rules.WebApi {
     [HttpPost]
     [Route("v3/financial-rules/categories/{categoryUID:guid}")]
     public SingleObjectModel SearchRules([FromUri] string categoryUID,
-                                         [FromUri] FinancialRuleQuery query) {
+                                         [FromBody] FinancialRuleQuery query) {
 
       query.CategoryUID = categoryUID;
 

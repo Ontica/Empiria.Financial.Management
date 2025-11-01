@@ -127,7 +127,8 @@ namespace Empiria.Financial.Rules {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(Description, DebitAccount, CreditAccount,
-                                           FinancialRuleType.DisplayName, Category.Keywords);
+                                           DebitConcept, CreditConcept,
+                                           Category.Keywords, FinancialRuleType.DisplayName);
       }
     }
 
