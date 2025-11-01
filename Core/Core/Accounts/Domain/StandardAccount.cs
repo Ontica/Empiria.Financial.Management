@@ -262,10 +262,14 @@ namespace Empiria.Financial {
 
 
     internal FixedList<FinancialAccount> GetNonOperationAccounts() {
+      FixedList<int> ids = this.GetAllChildren()
+                               .Select(x => x.Id)
+                               .ToFixedList();
+
       return FinancialAccount.GetList()
-                             .FindAll(x => x.StandardAccount.StdAcctNo.StartsWith(StdAcctNo) &&
-                                          !x.IsOperationAccount)
-                             .Sort((x, y) => $"{x.Project.ProjectNo}|{x.AccountNo}".CompareTo($"{y.Project.ProjectNo}|{y.AccountNo}"));
+        .FindAll(x => ids.Contains(x.StandardAccount.Id) && !x.IsOperationAccount)
+        .Sort((x, y) => $"{x.AccountNo.PadRight(32)}|{x.OrganizationalUnit.Code.PadRight(32)}|{x.Project.ProjectNo.PadRight(32)}"
+             .CompareTo($"{y.AccountNo.PadRight(32)}|{y.OrganizationalUnit.Code.PadRight(32)}|{y.Project.ProjectNo.PadRight(32)}"));
     }
 
     #endregion Methods

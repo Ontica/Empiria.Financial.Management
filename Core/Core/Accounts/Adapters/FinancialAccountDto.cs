@@ -152,6 +152,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public string OrganizationalUnitCode {
+      get; internal set;
+    }
+
     public string OrganizationalUnitName {
       get; internal set;
     }
