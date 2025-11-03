@@ -140,6 +140,13 @@ namespace Empiria.Financial {
       return _standardAccounts.Value.FindAll(x => x.Category.Equals(category));
     }
 
+
+    public T GetValue<T>(string valueName) {
+      Assertion.Require(valueName, nameof(valueName));
+
+      return ExtData.Get<T>(valueName);
+    }
+
     #endregion Methods
 
   } // class ChartOfAccounts

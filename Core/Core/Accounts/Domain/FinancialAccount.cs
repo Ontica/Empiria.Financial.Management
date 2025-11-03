@@ -59,14 +59,16 @@ namespace Empiria.Financial {
       Assertion.Require(orgUnit, nameof(orgUnit));
       Assertion.Require(!orgUnit.IsEmptyInstance, nameof(orgUnit));
 
-      this.StandardAccount = stdAccount;
-      this.Currency = Currency.Default;
+      StandardAccount = stdAccount;
+      AccountNo = StandardAccount.StdAcctNo;
+      Currency = Currency.Default;
 
-      this.Description = stdAccount.Description;
+      Description = stdAccount.Description;
 
-      this.OrganizationalUnit = orgUnit;
+      Organization = Parties.Organization.Primary;
+      OrganizationalUnit = orgUnit;
 
-      this.StartDate = DateTime.Today;
+      StartDate = DateTime.Today;
     }
 
 
@@ -279,7 +281,7 @@ namespace Empiria.Financial {
     }
 
 
-    public string Keywords {
+    public virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(Code, Name, _identifiers, _tags,
                                            SubledgerAccountNo,
@@ -467,6 +469,13 @@ namespace Empiria.Financial {
       _deletedOperations.Add(operation);
 
       return operation;
+    }
+
+
+    protected void SetStatus(EntityStatus newStatus) {
+      Status = newStatus;
+
+      MarkAsDirty();
     }
 
 
