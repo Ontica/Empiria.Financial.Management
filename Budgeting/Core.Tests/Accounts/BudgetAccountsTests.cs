@@ -11,7 +11,6 @@
 using Xunit;
 
 using Empiria.Budgeting;
-using Empiria.Budgeting.Data;
 
 namespace Empiria.Tests.Budgeting {
 
@@ -21,18 +20,8 @@ namespace Empiria.Tests.Budgeting {
     #region Facts
 
     [Fact]
-    public void Clean_Budget_Accounts() {
-      var accounts = BaseObject.GetFullList<FormerBudgetAccount>();
-
-      foreach(var account in accounts) {
-        FormerBudgetAcctData.CleanAccount(account);
-      }
-    }
-
-
-    [Fact]
     public void Should_Read_Empty_BudgetAccount() {
-      var sut = FormerBudgetAccount.Empty;
+      var sut = BudgetAccount.Empty;
 
       Assert.NotNull(sut);
     }
@@ -40,7 +29,7 @@ namespace Empiria.Tests.Budgeting {
 
     [Fact]
     public void Should_Read_All_Budget_Accounts() {
-      var sut = FormerBudgetAccount.GetList<FormerBudgetAccount>();
+      var sut = BudgetAccount.GetList<BudgetAccount>();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
