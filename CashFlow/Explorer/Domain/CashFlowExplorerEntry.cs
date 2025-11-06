@@ -166,7 +166,7 @@ namespace Empiria.CashFlow.Explorer {
       }
     }
 
-    private FinancialConcept MainClassification {
+    internal FinancialConcept MainClassification {
       get {
         if (CashAccountId <= 0) {
           return FinancialConcept.Empty;

@@ -52,7 +52,7 @@ namespace Empiria.CashFlow.Explorer.UseCases {
     }
 
 
-    public async Task<DynamicDto<CashFlowExplorerEntry>> GetCashFlowTotals(CashFlowExplorerQuery query) {
+    public async Task<DynamicDto<CashFlowTotalEntry>> GetCashFlowTotals(CashFlowExplorerQuery query) {
 
       FixedList<CashFlowExplorerEntry> entries = await GetCashFlowExplorerEntries(query);
 
