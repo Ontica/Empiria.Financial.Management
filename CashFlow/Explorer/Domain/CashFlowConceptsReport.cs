@@ -19,8 +19,8 @@ namespace Empiria.CashFlow.Explorer {
   /// <summary>Builds a cash flow report with detailed concepts.</summary>
   internal class CashFlowConceptsReport {
 
-    private CashFlowExplorerQuery _query;
-    private FixedList<CashFlowExplorerEntry> _sourceEntries;
+    private readonly CashFlowExplorerQuery _query;
+    private readonly FixedList<CashFlowExplorerEntry> _sourceEntries;
 
     public CashFlowConceptsReport(CashFlowExplorerQuery query,
                                   FixedList<CashFlowExplorerEntry> sourceEntries) {
@@ -54,6 +54,8 @@ namespace Empiria.CashFlow.Explorer {
         new DataTableColumn("currencyCode", "Moneda", "text"),
         new DataTableColumn("inflows", "Entradas", "decimal"),
         new DataTableColumn("outflows", "Salidas", "decimal"),
+        new DataTableColumn("total", "Total", "decimal"),
+        new DataTableColumn("totalMXN", "Total M.N", "decimal"),
       }.ToFixedList();
     }
 

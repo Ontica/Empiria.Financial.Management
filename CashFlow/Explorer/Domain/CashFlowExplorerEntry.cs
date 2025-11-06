@@ -151,6 +151,42 @@ namespace Empiria.CashFlow.Explorer {
       get; private set;
     }
 
+    public decimal Total {
+      get {
+        if (MainClassification.ConceptNo.StartsWith("1")) {
+          return Inflows;
+        } else if (MainClassification.ConceptNo.StartsWith("2")) {
+          return Outflows;
+        } else {
+          return Inflows - Outflows;
+        }
+      }
+    }
+
+
+    public decimal TotalMXN {
+      get {
+        switch (CurrencyCode) {
+          case "MXN":
+            return Total;
+
+          case "UDI":
+            return Total * 8.525333m;
+
+          case "USD":
+            return Total * 18.868000m;
+
+          case "EUR":
+            return Total * 21.596310m;
+
+          case "JPY":
+            return Total * 0.125470m;
+
+          default:
+            return Total;
+        }
+      }
+    }
 
     internal void Sum(CashAccountTotalDto entry) {
       Inflows += entry.Inflows;
