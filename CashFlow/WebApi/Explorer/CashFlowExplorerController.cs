@@ -31,9 +31,27 @@ namespace Empiria.CashFlow.Explorer.WebApi {
     public async Task<SingleObjectModel> ExploreCashFlow([FromBody] CashFlowExplorerQuery query) {
 
       using (var usecases = CashFlowExplorerUseCases.UseCaseInteractor()) {
-        var cashflow = await usecases.ExploreCashFlow(query);
 
-        return new SingleObjectModel(base.Request, cashflow);
+        switch (query.ReportType) {
+
+          case CashFlowExplorerReportType.CashFlowConceptsReport:
+            var cashFlowConcepts = await usecases.GetCashFlowConcepts(query);
+
+            base.SetOperation($"Se consultó el explorador de flujo de efectivo por conceptos.");
+
+            return new SingleObjectModel(base.Request, cashFlowConcepts);
+
+          case CashFlowExplorerReportType.CashFlowReport:
+
+            var cashFlowTotals = await usecases.GetCashFlowTotals(query);
+
+            base.SetOperation($"Se consultó el reporte ejecutivo de flujo de efectivo.");
+
+            return new SingleObjectModel(base.Request, cashFlowTotals);
+
+          default:
+            throw Assertion.EnsureNoReachThisCode($"Unhandled report type {query.ReportType}");
+        }
       }
     }
 
@@ -43,7 +61,7 @@ namespace Empiria.CashFlow.Explorer.WebApi {
     public async Task<SingleObjectModel> ExportCashFlowToExcel([FromBody] CashFlowExplorerQuery query) {
 
       using (var usecases = CashFlowExplorerUseCases.UseCaseInteractor()) {
-        var cashflow = await usecases.ExploreCashFlow(query);
+        var cashflow = await usecases.GetCashFlowConcepts(query);
 
         var reportingService = CashFlowReportingService.ServiceInteractor();
 

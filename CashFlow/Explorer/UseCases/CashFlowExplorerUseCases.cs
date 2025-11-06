@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 using Empiria.DynamicData;
 using Empiria.Services;
+
 using Empiria.Financial.Adapters;
 using Empiria.FinancialAccounting.ClientServices;
 
@@ -39,7 +40,34 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
     #region Use cases
 
-    public async Task<DynamicDto<CashFlowExplorerEntry>> ExploreCashFlow(CashFlowExplorerQuery query) {
+    public async Task<DynamicDto<CashFlowExplorerEntry>> GetCashFlowConcepts(CashFlowExplorerQuery query) {
+
+      FixedList<CashFlowExplorerEntry> entries = await GetCashFlowExplorerEntries(query);
+
+      var report = new CashFlowConceptsReport(query, entries);
+
+      report.Build();
+
+      return report.ToDynamicDto();
+    }
+
+
+    public async Task<DynamicDto<CashFlowExplorerEntry>> GetCashFlowTotals(CashFlowExplorerQuery query) {
+
+      FixedList<CashFlowExplorerEntry> entries = await GetCashFlowExplorerEntries(query);
+
+      var report = new CashFlowTotalsReport(query, entries);
+
+      report.Build();
+
+      return report.ToDynamicDto();
+    }
+
+    #endregion Use cases
+
+    #region Helpers
+
+    private async Task<FixedList<CashFlowExplorerEntry>> GetCashFlowExplorerEntries(CashFlowExplorerQuery query) {
       Assertion.Require(query, nameof(query));
 
       RecordsSearchQuery accountsTotalsQuery = MapToAccountsTotalsQuery(query);
@@ -49,12 +77,9 @@ namespace Empiria.CashFlow.Explorer.UseCases {
 
       var explorer = new CashFlowExplorer(query, totals);
 
-      return explorer.Execute();
+      return explorer.GetEntries();
     }
 
-    #endregion Use cases
-
-    #region Helpers
 
     private RecordsSearchQuery MapToAccountsTotalsQuery(CashFlowExplorerQuery query) {
       return new RecordsSearchQuery {

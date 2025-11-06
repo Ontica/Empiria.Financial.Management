@@ -14,19 +14,9 @@ namespace Empiria.CashFlow.Explorer.Adapters {
 
   public enum CashFlowExplorerReportType {
 
-    AccountTotals,
-
     CashFlowConceptsReport,
 
     CashFlowReport,
-
-    ConceptAnalytic,
-
-    ConceptDetail,
-
-    ConceptTotals,
-
-    ProjectTotals,
 
     None
 
