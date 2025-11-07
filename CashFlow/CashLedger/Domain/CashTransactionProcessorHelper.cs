@@ -401,18 +401,18 @@ namespace Empiria.CashFlow.CashLedger {
 
     private FixedList<FinancialAccount> GetDirectCashAccounts(FinancialRule rule,
                                                               CashEntryDto entry) {
-      string directConcept = TryGetDirectAccountConcept(rule, entry);
+      string directConceptNo = TryGetDirectAccountConceptNo(rule, entry);
 
-      if (directConcept != null && directConcept.Length < 4) {
+      if (directConceptNo != null && directConceptNo.Length < 4) {
         return new FixedList<FinancialAccount>();
       }
 
-      return FinancialAccount.GetList(x => x.AccountNo == directConcept &&
+      return FinancialAccount.GetList(x => x.AccountNo == directConceptNo &&
                                            x.Currency.Id == entry.CurrencyId &&
                                            x.IsOperationAccount);
     }
 
-    private string TryGetDirectAccountConcept(FinancialRule rule, CashEntryDto entry) {
+    private string TryGetDirectAccountConceptNo(FinancialRule rule, CashEntryDto entry) {
 
       if (entry.Debit > 0 && rule.DebitConcept.Length >= 4) {
         return rule.DebitConcept;
@@ -432,7 +432,6 @@ namespace Empiria.CashFlow.CashLedger {
                     ?.CreditConcept;
       }
     }
-
 
     #endregion Helpers
 

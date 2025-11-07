@@ -17,6 +17,7 @@ using Empiria.Services;
 using Empiria.Financial;
 using Empiria.Financial.Adapters;
 using Empiria.FinancialAccounting.ClientServices;
+
 using Empiria.CashFlow.Explorer.Adapters;
 
 namespace Empiria.CashFlow.Explorer.UseCases {

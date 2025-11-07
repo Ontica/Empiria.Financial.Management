@@ -90,9 +90,10 @@ namespace Empiria.CashFlow.Explorer {
 
     private List<CashFlowExplorerEntry> SortEntries(List<CashFlowExplorerEntry> entries) {
       return new List<CashFlowExplorerEntry>(
-                    entries.ToFixedList()
-                    .Sort(x => $"{x.MainClassification.ConceptNo.PadRight(64)}|{x.StandardAccountNo.PadRight(64)}|{x.OperationType.PadRight(64)}|{x.CashAccountNo.PadRight(16)}|" +
-                               $"{x.ConceptDescription.PadRight(300)}|{x.OrganizationalUnit.PadRight(255)}||{x.CurrencyCode}"));
+        entries.ToFixedList()
+               .Sort(x => $"{x.MainClassification.ConceptNo.PadRight(64)}|{x.StandardAccountNo.PadRight(64)}|" +
+                          $"{x.OperationType.PadRight(64)}|{x.CashAccountNo.PadRight(16)}|" +
+                          $"{x.ConceptDescription.PadRight(300)}|{x.OrganizationalUnit.PadRight(255)}||{x.CurrencyCode}"));
     }
 
     #endregion Methods

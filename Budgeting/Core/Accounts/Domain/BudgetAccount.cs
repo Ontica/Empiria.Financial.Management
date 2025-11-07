@@ -36,6 +36,8 @@ namespace Empiria.Budgeting {
 
     static public new BudgetAccount Parse(string uid) => ParseKey<BudgetAccount>(uid);
 
+    static public BudgetAccount TryParse(string accountNo) => TryParse<BudgetAccount>($"ACCT_NUMBER = '{accountNo}'");
+
     static public new BudgetAccount Empty => ParseEmpty<BudgetAccount>();
 
     #endregion Constructors and parsers

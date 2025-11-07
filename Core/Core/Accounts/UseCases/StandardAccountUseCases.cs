@@ -31,19 +31,6 @@ namespace Empiria.Financial.Accounts.UseCases {
 
     #region Use cases
 
-    public StandardAccount GetStandardAccount(string uid) {
-      Assertion.Require(uid, nameof(uid));
-
-      return StandardAccount.Parse(uid);
-    }
-
-
-    public FixedList<NamedEntityDto> GetStandardAccountCategories() {
-      return StandardAccountCategory.GetList()
-                                    .Select(x => new NamedEntity(x.NamedKey, x.Name))
-                                    .MapToNamedEntityList();
-    }
-
 
     public FixedList<NamedEntityDto> GetStandardAccountsInCategory(string stdAccountCategoryNamedKey) {
       Assertion.Require(stdAccountCategoryNamedKey, nameof(stdAccountCategoryNamedKey));

@@ -62,7 +62,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
                                   .FindAll(x => x.BaseBudget.Equals(budget) && x.Status == TransactionStatus.Authorized);
 
       int counter = 0;
-      foreach(var txn in txns) {
+      foreach (var txn in txns) {
         FixedList<DocumentDto> documents = DocumentServices.GetEntityDocuments(txn);
 
         if (documents.Count == 2) {
@@ -254,7 +254,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       newBudgetAccount.Save();
 
       HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Envío de solicitud de autorización de partida presupuestal",
-                                                                              $"Partida {newBudgetAccount.Name}"));
+                                                                        $"Partida {newBudgetAccount.Name}"));
 
       return BudgetAccountMapper.Map(newBudgetAccount);
     }
@@ -330,7 +330,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       }
 
       int count = BudgetTransactionDataService.GetTransactions(budget, transactionType)
-                                              .FindAll(x=> x.BaseParty.Equals(baseParty)).Count;
+                                              .FindAll(x => x.BaseParty.Equals(baseParty)).Count;
 
       if (rule == MultiplicityRule.OnePerYear && count >= 1) {
         Assertion.RequireFail($"Ya existe una transacción del tipo {transactionType.DisplayName} " +
