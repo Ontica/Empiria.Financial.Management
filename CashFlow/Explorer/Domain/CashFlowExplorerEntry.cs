@@ -143,15 +143,52 @@ namespace Empiria.CashFlow.Explorer {
       get; internal set;
     }
 
-    public decimal Inflows {
-      get; private set;
+    public decimal TotalPlanned {
+      get; internal set;
+    } = EmpiriaMath.GetRandom(100000, 99999999);
+
+
+    public decimal TotalAuthorized {
+      get; internal set;
+    } = EmpiriaMath.GetRandom(100000, 99999999);
+
+
+    public decimal PeriodAuthorized {
+      get; internal set;
+    } = EmpiriaMath.GetRandom(100000 / 12, 99999999 / 12);
+
+
+    public decimal YtdAuthorized {
+      get; internal set;
+    } = EmpiriaMath.GetRandom(100000 * 7 / 12, 99999999 * 7 / 12);
+
+
+    public decimal PeriodTotal {
+      get {
+        switch (CurrencyCode) {
+          case "MXN":
+            return PeriodTotalOriginalCurrency;
+
+          case "UDI":
+            return PeriodTotalOriginalCurrency * 8.525333m;
+
+          case "USD":
+            return PeriodTotalOriginalCurrency * 18.868000m;
+
+          case "EUR":
+            return PeriodTotalOriginalCurrency * 21.596310m;
+
+          case "JPY":
+            return PeriodTotalOriginalCurrency * 0.125470m;
+
+          default:
+            return PeriodTotalOriginalCurrency;
+        }
+      }
     }
 
-    public decimal Outflows {
-      get; private set;
-    }
 
-    public decimal Total {
+    public decimal PeriodTotalOriginalCurrency {
       get {
         if (MainClassification.ConceptNo.StartsWith("1")) {
           return Inflows;
@@ -164,28 +201,32 @@ namespace Empiria.CashFlow.Explorer {
     }
 
 
-    public decimal TotalMXN {
+    public decimal YtdTotal {
       get {
-        switch (CurrencyCode) {
-          case "MXN":
-            return Total;
-
-          case "UDI":
-            return Total * 8.525333m;
-
-          case "USD":
-            return Total * 18.868000m;
-
-          case "EUR":
-            return Total * 21.596310m;
-
-          case "JPY":
-            return Total * 0.125470m;
-
-          default:
-            return Total;
-        }
+        return EmpiriaMath.GetRandom(100000 * 6 / 12, 99999999 * 6 / 12) + PeriodTotal;
       }
+    }
+
+
+    public decimal PeriodDifference {
+      get {
+        return PeriodTotal - PeriodAuthorized;
+      }
+    }
+
+
+    public decimal YtdDifference {
+      get {
+        return YtdTotal - YtdAuthorized;
+      }
+    }
+
+    public decimal Inflows {
+      get; internal set;
+    }
+
+    public decimal Outflows {
+      get; private set;
     }
 
     internal void Sum(CashAccountTotalDto entry) {

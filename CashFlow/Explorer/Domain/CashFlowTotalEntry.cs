@@ -39,15 +39,28 @@ namespace Empiria.CashFlow.Explorer {
       }
     }
 
-    public decimal Inflows {
-      get; private set;
-    }
 
-    public decimal Outflows {
-      get; private set;
-    }
+    public decimal TotalPlanned {
+      get; internal set;
+    } = EmpiriaMath.GetRandom(100000, 99999999);
 
-    public decimal Total {
+
+    public decimal TotalAuthorized {
+      get; internal set;
+    } = EmpiriaMath.GetRandom(100000, 99999999);
+
+
+    public decimal PeriodAuthorized {
+      get; internal set;
+    } = EmpiriaMath.GetRandom(100000 / 12, 99999999 / 12);
+
+
+    public decimal YtdAuthorized {
+      get; internal set;
+    } = EmpiriaMath.GetRandom(100000 * 7 / 12, 99999999 * 7 / 12);
+
+
+    public decimal PeriodTotal {
       get {
         if (ConceptNo.StartsWith("1")) {
           return Inflows;
@@ -59,6 +72,37 @@ namespace Empiria.CashFlow.Explorer {
           return Inflows - Outflows;
         }
       }
+    }
+
+
+    public decimal YtdTotal {
+      get {
+        return EmpiriaMath.GetRandom(100000 * 6 / 12, 99999999 * 6 / 12) + PeriodTotal;
+      }
+    }
+
+
+    public decimal PeriodDifference {
+      get {
+        return PeriodTotal - PeriodAuthorized;
+      }
+    }
+
+
+    public decimal YtdDifference {
+      get {
+        return YtdTotal - YtdAuthorized;
+      }
+    }
+
+
+    public decimal Inflows {
+      get; private set;
+    }
+
+
+    public decimal Outflows {
+      get; private set;
     }
 
 

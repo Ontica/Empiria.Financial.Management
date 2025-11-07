@@ -52,10 +52,15 @@ namespace Empiria.CashFlow.Explorer {
         new DataTableColumn("conceptDescription", "Descripción", "text"),
         new DataTableColumn("organizationalUnit", "Área", "text"),
         new DataTableColumn("currencyCode", "Moneda", "text"),
-        new DataTableColumn("inflows", "Entradas", "decimal"),
-        new DataTableColumn("outflows", "Salidas", "decimal"),
-        new DataTableColumn("total", "Total", "decimal"),
-        new DataTableColumn("totalMXN", "Total M.N", "decimal"),
+        new DataTableColumn("totalPlanned", "Planeado anual", "decimal"),
+        new DataTableColumn("totalAuthorized", "Autorizado anual", "decimal"),
+        new DataTableColumn("periodAuthorized", "Autorizado período", "decimal"),
+        new DataTableColumn("ytdAuthorized", "Autorizado acumulado", "decimal"),
+        new DataTableColumn("periodTotalOriginalCurrency", "Ejercido MO", "decimal"),
+        new DataTableColumn("periodTotal", "Ejercido", "decimal"),
+        new DataTableColumn("ytdTotal", "Ejercido acumulado", "decimal"),
+        new DataTableColumn("periodDifference", "Variación", "decimal"),
+        new DataTableColumn("ytdDifference", "Variación acumulada", "decimal")
       }.ToFixedList();
     }
 

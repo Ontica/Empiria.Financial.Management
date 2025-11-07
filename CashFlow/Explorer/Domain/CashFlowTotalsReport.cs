@@ -100,10 +100,15 @@ namespace Empiria.CashFlow.Explorer {
     private FixedList<DataTableColumn> GetColumns() {
       return new List<DataTableColumn> {
         new DataTableColumn("conceptNo", "Cuenta", "text"),
-        new DataTableColumn("conceptName", "Descripción", "text"),
-        new DataTableColumn("inflows", "Entradas", "decimal"),
-        new DataTableColumn("outflows", "Salidas", "decimal"),
-        new DataTableColumn("total", "Total", "decimal"),
+        new DataTableColumn("conceptName", "Descripción", "text-nowrap"),
+        new DataTableColumn("yearPlanned", "Planeado anual", "decimal"),
+        new DataTableColumn("yearAuthorized", "Autorizado anual", "decimal"),
+        new DataTableColumn("periodAuthorized", "Autorizado período", "decimal"),
+        new DataTableColumn("ytdAuthorized", "Autorizado acumulado", "decimal"),
+        new DataTableColumn("periodTotal", "Ejercido", "decimal"),
+        new DataTableColumn("ytdTotal", "Ejercido acumulado", "decimal"),
+        new DataTableColumn("periodDifference", "Variación", "decimal"),
+        new DataTableColumn("ytdDifference", "Variación acumulada", "decimal"),
       }.ToFixedList();
     }
 
