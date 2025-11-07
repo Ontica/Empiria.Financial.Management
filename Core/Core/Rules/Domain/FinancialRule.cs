@@ -194,7 +194,7 @@ namespace Empiria.Financial.Rules {
       CreditConcept = EmpiriaString.Clean(fields.CreditConcept);
       Description = EmpiriaString.Clean(fields.Description);
       StartDate = Patcher.Patch(fields.StartDate, StartDate);
-      EndDate = Patcher.Patch(fields.EndDate, EndDate);
+      EndDate = Patcher.Patch(fields.EndDate, ExecutionServer.DateMaxValue);
 
       MarkAsDirty();
     }
