@@ -28,11 +28,10 @@ namespace Empiria.Budgeting {
     static public Budget Parse(string uid) => ParseKey<Budget>(uid);
 
     static public FixedList<Budget> GetList() {
-      return BaseObject.GetList<Budget>(string.Empty, "ObjectName")
-                       .FindAll(x => x.Status != StateEnums.EntityStatus.Deleted)
-                       .ToFixedList()
-                       .Sort((x, y) => x.Year.CompareTo(y.Year))
-                       .Reverse();
+      return GetList<Budget>(string.Empty, "ObjectName")
+            .FindAll(x => x.Status != StateEnums.EntityStatus.Deleted)
+            .ToFixedList()
+            .Sort((x, y) => x.Year.CompareTo(y.Year));
     }
 
 

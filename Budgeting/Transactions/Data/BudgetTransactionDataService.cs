@@ -11,8 +11,6 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Financial;
-
 using Empiria.Data;
 
 namespace Empiria.Budgeting.Transactions.Data {
@@ -82,13 +80,11 @@ namespace Empiria.Budgeting.Transactions.Data {
     }
 
 
-    static internal FixedList<BudgetTransaction> GetTransactions(IPayableEntity payableEntity) {
-      Assertion.Require(payableEntity, nameof(payableEntity));
+    static internal FixedList<BudgetTransaction> GetTransactions(IBudgetingEntity entity) {
+      Assertion.Require(entity, nameof(entity));
 
-      var baseObject = BaseObject.Parse(payableEntity.Type.UID, payableEntity.UID);
-
-      var filter = $"BDG_TXN_ENTITY_TYPE_ID = {baseObject.GetEmpiriaType().Id} AND " +
-                   $"BDG_TXN_ENTITY_ID = {baseObject.Id} AND " +
+      var filter = $"BDG_TXN_ENTITY_TYPE_ID = {entity.GetEmpiriaType().Id} AND " +
+                   $"BDG_TXN_ENTITY_ID = {entity.Id} AND " +
                    $"BDG_TXN_STATUS <> 'X'";
 
       return SearchTransactions(filter, "BDG_TXN_ID");

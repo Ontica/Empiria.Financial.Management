@@ -11,8 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using Empiria.Financial;
+using Empiria.Budgeting.Transactions.Data;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
@@ -20,7 +19,10 @@ using Empiria.Products;
 using Empiria.Projects;
 using Empiria.StateEnums;
 
-using Empiria.Budgeting.Transactions.Data;
+namespace Empiria.Budgeting {
+
+}  // namespace Empiria.Budgeting
+
 
 namespace Empiria.Budgeting.Transactions {
 
@@ -47,27 +49,27 @@ namespace Empiria.Budgeting.Transactions {
                                          Budget baseBudget) : base(transactionType) {
       Assertion.Require(baseBudget, nameof(baseBudget));
 
-      this.BaseBudget = baseBudget;
-      this.EntityTypeId = -1;
-      this.EntityId = -1;
+      BaseBudget = baseBudget;
+      EntityTypeId = -1;
+      EntityId = -1;
     }
 
     internal protected BudgetTransaction(BudgetTransactionType transactionType,
                                          Budget baseBudget,
-                                         BaseObject entity) : base(transactionType) {
+                                         IBudgetingEntity entity) : base(transactionType) {
       Assertion.Require(baseBudget, nameof(baseBudget));
 
-      this.BaseBudget = baseBudget;
-      this.EntityTypeId = entity.GetEmpiriaType().Id;
-      this.EntityId = entity.Id;
+      BaseBudget = baseBudget;
+      EntityTypeId = entity.GetEmpiriaType().Id;
+      EntityId = entity.Id;
     }
 
     static public BudgetTransaction Parse(int id) => ParseId<BudgetTransaction>(id);
 
     static public BudgetTransaction Parse(string uid) => ParseKey<BudgetTransaction>(uid);
 
-    static public FixedList<BudgetTransaction> GetFor(IPayableEntity payableEntity) {
-      return BudgetTransactionDataService.GetTransactions(payableEntity);
+    static public FixedList<BudgetTransaction> GetFor(IBudgetingEntity entity) {
+      return BudgetTransactionDataService.GetTransactions(entity);
     }
 
     static public BudgetTransaction Empty => ParseEmpty<BudgetTransaction>();

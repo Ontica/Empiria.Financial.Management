@@ -101,7 +101,7 @@ namespace Empiria.Budgeting.Transactions {
 
       var budget = Budget.Parse(_fields.BaseBudgetUID);
 
-      var transaction = new BudgetTransaction(transactionType, budget, (BaseObject) _payableEntity);
+      var transaction = new BudgetTransaction(transactionType, budget, (IBudgetingEntity) _payableEntity);
 
       transaction.Update(_fields);
 

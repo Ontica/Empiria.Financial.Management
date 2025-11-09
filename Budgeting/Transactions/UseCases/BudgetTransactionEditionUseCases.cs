@@ -8,18 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
-
-using Empiria.Parties;
-using Empiria.Services;
-using Empiria.StateEnums;
-
-using Empiria.Documents;
-using Empiria.History;
-
 using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.Data;
+using Empiria.Documents;
+using Empiria.Financial;
+using Empiria.History;
+using Empiria.Parties;
+using Empiria.Services;
+using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions.UseCases {
 
@@ -125,7 +122,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       if (fields.BaseEntityTypeUID.Length != 0) {
         var baseEntity = BaseObject.Parse(fields.BaseEntityTypeUID, fields.BaseEntityUID);
 
-        transaction = new BudgetTransaction(transactionType, budget, baseEntity);
+        transaction = new BudgetTransaction(transactionType, budget, (IBudgetingEntity) baseEntity);
 
       } else {
         transaction = new BudgetTransaction(transactionType, budget);
