@@ -19,14 +19,11 @@ using Empiria.Billing;
 using Empiria.Billing.Adapters;
 using Empiria.Billing.UseCases;
 
+using Empiria.Budgeting;
 using Empiria.Budgeting.Transactions;
 using Empiria.Budgeting.Transactions.UseCases;
 
-using Empiria.Procurement.Contracts;
-
 using Empiria.Payments.Payables;
-using Empiria.Budgeting;
-
 
 namespace Empiria.Payments {
 
@@ -113,16 +110,6 @@ namespace Empiria.Payments {
     static private BudgetTransactionFields TransformToBudgetTransactionFields(Payable payable,
                                                                               BudgetTransactionType transactionType,
                                                                               DateTime applicationDate) {
-
-      int contractId = -1;
-
-      if (payable.PayableEntity is Contract contract) {
-        contractId = contract.Id;
-      }
-      if (payable.PayableEntity is ContractOrder contractOrder) {
-        contractId = contractOrder.Contract.Id;
-      }
-
       return new BudgetTransactionFields {
         TransactionTypeUID = transactionType.UID,
         BaseBudgetUID = Budget.Parse(1).UID,

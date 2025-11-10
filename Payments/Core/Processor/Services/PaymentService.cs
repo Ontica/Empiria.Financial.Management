@@ -45,17 +45,27 @@ namespace Empiria.Payments.Processor.Services {
       Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
 
       EnsureIsNotSent(paymentOrder);
-           
+
+      EmpiriaLog.Debug("After Ensure is not sent");
+
       var instruction = new PaymentInstruction(broker, paymentOrder);
+
+      EmpiriaLog.Debug("After parse payment instruction");
 
       PaymentInstructionDto instructionDto = PaymentInstructionMapper.Map(instruction);
 
+      EmpiriaLog.Debug("After map payment instruction");
+
       IPaymentsBrokerService paymentsService = broker.GetService();
-           
+
+      EmpiriaLog.Debug("After get payments service");
+
       PaymentInstructionResultDto paymentResult = paymentsService.SendPaymentInstruction(instructionDto);
 
+      EmpiriaLog.Debug("After send payment instruction");
+
       UpdatePaymentInstruction(instruction, paymentResult);
-     
+
       UpdatePaymentOrder(paymentOrder,paymentResult.Status);
 
       return instruction;

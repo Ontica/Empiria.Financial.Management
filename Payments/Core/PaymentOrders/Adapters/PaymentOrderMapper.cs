@@ -20,11 +20,10 @@ using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Services;
 
-
 namespace Empiria.Payments.Orders.Adapters {
 
   /// <summary>Provides data mapping services for payment orders.</summary>
-  static internal class PaymentOrderMapper {
+  static public class PaymentOrderMapper {
 
     static internal PaymentOrderHolderDto Map(PaymentOrder paymentOrder) {
       return new PaymentOrderHolderDto {
@@ -38,8 +37,9 @@ namespace Empiria.Payments.Orders.Adapters {
       };
     }
 
-    static internal FixedList<PaymentOrderDescriptor> MapToDescriptor(FixedList<PaymentOrder> orders) {
-      return orders.Select(x => MapToDescriptor(x)).ToFixedList();
+    static public FixedList<PaymentOrderDescriptor> MapToDescriptor(FixedList<PaymentOrder> orders) {
+      return orders.Select(x => MapToDescriptor(x))
+                   .ToFixedList();
     }
 
     #region Helpers
@@ -64,9 +64,9 @@ namespace Empiria.Payments.Orders.Adapters {
       var paymentOrderActions = PaymentOrderActions.SetActions(paymentOrder.Status);
 
       return new PaymentOrderActionsDto {
-        CanDelete =  paymentOrderActions.CanDelete,
+        CanDelete = paymentOrderActions.CanDelete,
         CanEditDocuments = paymentOrderActions.CanEditDocuments,
-        CanSendToPay  = paymentOrderActions.CanSendToPay,
+        CanSendToPay = paymentOrderActions.CanSendToPay,
         CanUpdate = paymentOrderActions.CanUpdate,
       };
 

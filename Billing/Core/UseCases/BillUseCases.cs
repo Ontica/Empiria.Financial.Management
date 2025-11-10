@@ -18,8 +18,6 @@ using Empiria.Billing.SATMexicoImporter;
 
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
-using System;
-using System.Linq;
 
 namespace Empiria.Billing.UseCases {
 
@@ -39,7 +37,6 @@ namespace Empiria.Billing.UseCases {
     #endregion Constructors and parsers
 
     #region Use cases
-
 
     public BillDto CreateBill(string xmlString, IPayable payable) {
       Assertion.Require(xmlString, nameof(xmlString));
@@ -152,7 +149,6 @@ namespace Empiria.Billing.UseCases {
       BillData.SetBillAsPayed(billUID);
     }
 
-
     #endregion Use cases
 
     #region Private methods
@@ -234,7 +230,7 @@ namespace Empiria.Billing.UseCases {
 
       foreach (BillTaxEntryFields taxFields in allTaxesFields) {
 
-        var billTaxEntry = new BillTaxEntry(bill,  billRelatedDocumentId);
+        var billTaxEntry = new BillTaxEntry(bill, billRelatedDocumentId);
 
         billTaxEntry.Update(taxFields);
         billTaxEntry.Save();

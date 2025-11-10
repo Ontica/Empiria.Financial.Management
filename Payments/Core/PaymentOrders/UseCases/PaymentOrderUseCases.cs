@@ -46,7 +46,7 @@ namespace Empiria.Payments.Orders.UseCases {
       fields.EnsureValid();
 
       fields.PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c";
-            
+
       var order = new PaymentOrder(fields);
 
       order.Save();
@@ -80,24 +80,32 @@ namespace Empiria.Payments.Orders.UseCases {
 
       return paymentOrderTypes.MapToNamedEntityList();
     }
-         
+
 
 
     public PaymentOrderHolderDto SendPaymentOrderToPay(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);   
+      EmpiriaLog.Debug("Before paymentorder parsing");
+
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+
+      EmpiriaLog.Debug("After paymentorder parsing");
 
       PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
+
+      EmpiriaLog.Debug("After get payments broker");
 
       using (var usecases = PaymentService.ServiceInteractor()) {
 
         _ = usecases.SendToPay(broker, paymentOrder);
 
+        EmpiriaLog.Debug("After PaymentService use case call");
+
         return PaymentOrderMapper.Map(paymentOrder);
       }
     }
-        
+
 
     public FixedList<PaymentOrderDescriptor> SearchPaymentOrders(PaymentOrdersQuery query) {
       Assertion.Require(query, nameof(query));
@@ -137,7 +145,7 @@ namespace Empiria.Payments.Orders.UseCases {
       fields.EnsureValid();
 
       fields.PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c";
-              
+
       var order = PaymentOrder.Parse(uid);
 
       order.Update(fields);
@@ -157,10 +165,10 @@ namespace Empiria.Payments.Orders.UseCases {
 
       var paymentInstruction = PaymentInstruction.GetListFor(paymentOrder)
                                .Find(instruction => instruction.Status == PaymentInstructionStatus.InProcess);
-   
+
       using (var usecases = PaymentService.ServiceInteractor()) {
         usecases.UpdatePaymentInstructionStatus(paymentInstruction);
-       
+
         return PaymentOrderMapper.Map(paymentOrder);
       }
 
