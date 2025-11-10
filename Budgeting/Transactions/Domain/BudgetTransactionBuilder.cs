@@ -89,8 +89,8 @@ namespace Empiria.Budgeting.Transactions {
         BaseEntityItemId = item.Id,
         //ProjectUID = item.Project.UID,
         CurrencyUID = item.Currency.UID,
-        OriginalAmount = item.Total,
-        Amount = isDeposit ? item.Total : -1 * item.Total
+        OriginalAmount = item.Subtotal,
+        Amount = isDeposit ? item.Subtotal : -1 * item.Subtotal
       };
     }
 

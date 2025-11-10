@@ -57,7 +57,7 @@ namespace Empiria.Payments.Payables.Adapters {
         Product = item.Product.MapToNamedEntity(),
         Description = item.Description,
         UnitPrice = item.UnitPrice,
-        Total = item.Total,
+        Total = item.Subtotal,
         BudgetAccount = item.BudgetAccount.MapToNamedEntity(),
       };
     }

@@ -60,7 +60,7 @@ namespace Empiria.Billing {
       ManagedBy = Party.Parse(payable.PayableEntity.OrganizationalUnit.UID);
       BillCategory = billCategory;
       BillNo = billNo;
-      PayableTotal = payable.PayableEntity.Items.Sum(x => x.Total);
+      PayableTotal = payable.PayableEntity.Items.Sum(x => x.Subtotal);
     }
 
     static public Bill Empty => ParseEmpty<Bill>();
@@ -258,7 +258,7 @@ namespace Empiria.Billing {
     } = new FixedList<BillConcept>();
 
 
-    internal FixedList<BillRelatedBill> BillRelatedBills{
+    internal FixedList<BillRelatedBill> BillRelatedBills {
       get; set;
     } = new FixedList<BillRelatedBill>();
 
@@ -266,13 +266,13 @@ namespace Empiria.Billing {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(BillNo, RelatedBillNo, BillCategory.Keywords,
-                                          _identificators, _tags,  IssuedBy.Keywords, IssuedTo.Keywords);
+                                          _identificators, _tags, IssuedBy.Keywords, IssuedTo.Keywords);
       }
     }
 
 
     public decimal PayableTotal {
-      get;private set;
+      get; private set;
     }
 
     #endregion Properties
