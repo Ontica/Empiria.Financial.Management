@@ -97,19 +97,23 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public FixedList<BudgetAccountDto> SearchTransactionAccounts(BudgetTransactionAccountsQuery query) {
+    public FixedList<BudgetAccountDto> SearchBudgetAccounts(BudgetAccountsQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var transaction = BudgetTransaction.Parse(query.TransactionUID);
+      query.EnsureValid();
 
-      var searcher = new FormerBudgetAccountSearcher(transaction.BaseBudget.BudgetType, query.Keywords);
+      var searcher = new FormerBudgetAccountSearcher(query.GetBaseBudget().BudgetType, query.Keywords);
 
-      FixedList<FormerBudgetAccount> accounts = searcher.Search((OrganizationalUnit) transaction.BaseParty,
-                                                          transaction.BudgetTransactionType.BudgetAccountsFilter);
+      FixedList<FormerBudgetAccount> accounts = searcher.Search(query.GetBaseParty(),
+                                                                query.GetTransactionType().BudgetAccountsFilter);
+
+      if (query.OnlyAssignedAccounts) {
+        return BudgetAccountMapper.Map(accounts, new FixedList<FormerBudgetAcctSegment>());
+      }
 
       FixedList<FormerBudgetAcctSegment> unassignedSegments =
-                                      searcher.SearchUnassignedBaseSegments((OrganizationalUnit) transaction.BaseParty,
-                                                                            transaction.BudgetTransactionType.BudgetAccountsFilter);
+                                      searcher.SearchUnassignedBaseSegments(query.GetBaseParty(),
+                                                                            query.GetTransactionType().BudgetAccountsFilter);
 
       return BudgetAccountMapper.Map(accounts, unassignedSegments);
     }

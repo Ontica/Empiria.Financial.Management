@@ -204,10 +204,10 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
     [HttpPost]
     [Route("v2/budgeting/transactions/accounts/search")]
-    public CollectionModel SearchTransactionAccounts([FromBody] BudgetTransactionAccountsQuery query) {
+    public CollectionModel SearchTransactionAccounts([FromBody] BudgetAccountsQuery query) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
-        FixedList<BudgetAccountDto> accounts = usecases.SearchTransactionAccounts(query);
+        FixedList<BudgetAccountDto> accounts = usecases.SearchBudgetAccounts(query);
 
         return new CollectionModel(base.Request, accounts);
       }
