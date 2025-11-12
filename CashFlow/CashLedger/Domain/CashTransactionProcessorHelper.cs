@@ -32,7 +32,9 @@ namespace Empiria.CashFlow.CashLedger {
       Assertion.Require(entries, nameof(entries));
 
       _transaction = transaction;
-      _entries = entries;
+
+      _entries = entries.FindAll(x => x.CashFlowRecordedById == -1);
+
       _processedEntries = new List<CashEntryFields>(_entries.Count);
     }
 
