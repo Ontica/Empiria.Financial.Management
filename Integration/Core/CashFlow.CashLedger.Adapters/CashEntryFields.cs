@@ -39,9 +39,9 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
     } = string.Empty;
 
 
-    public int UserId {
+    public int CashFlowRecordedById {
       get; set;
-    }
+    } = -1;
 
   }  // class CashEntryFields
 
