@@ -107,6 +107,12 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public MultiplicityRule MultiplicityRule {
+      get {
+        return ExtensionData.Get("multiplicityRule", MultiplicityRule.None);
+      }
+    }
+
     public FixedList<OperationSource> OperationSources {
       get {
         return ExtensionData.GetFixedList<OperationSource>("sources", false)
@@ -114,6 +120,12 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+
+    public string OperationTypes {
+      get {
+        return ExtensionData.Get("operationTypes", string.Empty);
+      }
+    }
 
     public string Prefix {
       get {
@@ -135,12 +147,6 @@ namespace Empiria.Budgeting.Transactions {
     public ThreeStateValue SelectProduct {
       get {
         return ExtensionData.Get("selectProduct", ThreeStateValue.False);
-      }
-    }
-
-    public MultiplicityRule MultiplicityRule {
-      get {
-        return ExtensionData.Get("multiplicityRule", MultiplicityRule.None);
       }
     }
 
