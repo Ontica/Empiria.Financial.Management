@@ -73,6 +73,10 @@ namespace Empiria.Budgeting.Transactions {
       get; private set;
     }
 
+    [DataField("BDG_ENTRY_CONTROL_NO")]
+    public string ControlNo {
+      get; private set;
+    }
 
     [DataField("BDG_ENTRY_PRODUCT_ID")]
     public Product Product {
@@ -255,7 +259,6 @@ namespace Empiria.Budgeting.Transactions {
         return EmpiriaString.BuildKeywords(BudgetAccount.Keywords, Transaction.Keywords);
       }
     }
-
 
     #endregion Properties
 
