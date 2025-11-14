@@ -11,13 +11,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Empiria.Budgeting.Transactions.Data;
+
+using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.Products;
 using Empiria.Projects;
 using Empiria.StateEnums;
+
+using Empiria.Budgeting.Transactions.Data;
 
 namespace Empiria.Budgeting {
 
@@ -54,22 +57,22 @@ namespace Empiria.Budgeting.Transactions {
       EntityId = -1;
     }
 
-    internal protected BudgetTransaction(BudgetTransactionType transactionType,
-                                         Budget baseBudget,
-                                         IBudgetingEntity entity) : base(transactionType) {
+    public BudgetTransaction(BudgetTransactionType transactionType,
+                             Budget baseBudget,
+                             IBudgetable budgetable) : base(transactionType) {
       Assertion.Require(baseBudget, nameof(baseBudget));
 
       BaseBudget = baseBudget;
-      EntityTypeId = entity.GetEmpiriaType().Id;
-      EntityId = entity.Id;
+      EntityTypeId = budgetable.GetEmpiriaType().Id;
+      EntityId = budgetable.Id;
     }
 
     static public BudgetTransaction Parse(int id) => ParseId<BudgetTransaction>(id);
 
     static public BudgetTransaction Parse(string uid) => ParseKey<BudgetTransaction>(uid);
 
-    static public FixedList<BudgetTransaction> GetFor(IBudgetingEntity entity) {
-      return BudgetTransactionDataService.GetTransactions(entity);
+    static public FixedList<BudgetTransaction> GetFor(IBudgetable budgetable) {
+      return BudgetTransactionDataService.GetTransactions(budgetable);
     }
 
     static public BudgetTransaction Empty => ParseEmpty<BudgetTransaction>();
@@ -158,8 +161,10 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    public BaseObject GetEntity() {
-      return BaseObject.Parse(EntityTypeId, EntityId);
+    public IBudgetable GetEntity() {
+      Assertion.Require(HasEntity, "This budget transaction has no associated budgetable entity.");
+
+      return (IBudgetable) Parse(EntityTypeId, EntityId);
     }
 
 
@@ -271,8 +276,8 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool HasTransactionNo {
       get {
-        return this.TransactionNo.Length != 0 &&
-               this.TransactionNo != TO_ASSIGN_TRANSACTION_NO;
+        return TransactionNo.Length != 0 &&
+               TransactionNo != TO_ASSIGN_TRANSACTION_NO;
       }
     }
 
@@ -286,7 +291,7 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Methods
 
-    internal BudgetEntry AddEntry(BudgetEntryFields entryFields) {
+    public BudgetEntry AddEntry(BudgetEntryFields entryFields) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
 
       Assertion.Require(entryFields, nameof(entryFields));
@@ -451,7 +456,7 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal void Update(BudgetTransactionFields fields) {
+    public void Update(BudgetTransactionFields fields) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
       Assertion.Require(fields, nameof(fields));
 

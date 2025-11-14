@@ -87,25 +87,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public BudgetTransaction CreateTransaction(IPayableEntity payable,
-                                               BudgetTransactionFields fields) {
-      Assertion.Require(fields, nameof(fields));
-      Assertion.Require(payable, nameof(payable));
-
-      var transactionBuilder = new BudgetTransactionBuilder(payable, fields);
-
-      BudgetTransaction transaction = transactionBuilder.Build();
-
-      transaction.SendToAuthorization();
-
-      transaction.Save();
-
-      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Creada"));
-
-      return transaction;
-    }
-
-
     public BudgetTransactionHolderDto CreateTransaction(BudgetTransactionFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -120,9 +101,9 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       BudgetTransaction transaction;
 
       if (fields.BaseEntityTypeUID.Length != 0) {
-        var baseEntity = BaseObject.Parse(fields.BaseEntityTypeUID, fields.BaseEntityUID);
+        var budgetable = BaseObject.Parse(fields.BaseEntityTypeUID, fields.BaseEntityUID);
 
-        transaction = new BudgetTransaction(transactionType, budget, (IBudgetingEntity) baseEntity);
+        transaction = new BudgetTransaction(transactionType, budget, (IBudgetable) budgetable);
 
       } else {
         transaction = new BudgetTransaction(transactionType, budget);
