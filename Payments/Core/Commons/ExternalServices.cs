@@ -100,9 +100,9 @@ namespace Empiria.Payments {
                                                                           applicationDate);
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        BudgetTransaction transaction = usecases.CreateTransaction(payable.PayableEntity, fields);
+        var transaction = usecases.CreateTransaction(fields);
 
-        CreateBudgetTransactionDocumentLinks(payable, transaction);
+        CreateBudgetTransactionDocumentLinks(payable, BudgetTransaction.Parse(transaction.Transaction.UID));
       }
     }
 

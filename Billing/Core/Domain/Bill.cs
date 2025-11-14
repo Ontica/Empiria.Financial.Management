@@ -54,13 +54,13 @@ namespace Empiria.Billing {
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
 
-      PayableEntityTypeId = ObjectTypeInfo.Parse(payable.PayableEntity.Type.UID).Id;
+      PayableEntityTypeId = payable.PayableEntity.GetEmpiriaType().Id;
       PayableEntityId = payable.PayableEntity.Id;
       PayableId = payable.Id;
       ManagedBy = Party.Parse(payable.PayableEntity.OrganizationalUnit.UID);
       BillCategory = billCategory;
       BillNo = billNo;
-      PayableTotal = payable.PayableEntity.Items.Sum(x => x.Subtotal);
+      PayableTotal = payable.Total;
     }
 
     static public Bill Empty => ParseEmpty<Bill>();

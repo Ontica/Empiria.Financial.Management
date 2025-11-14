@@ -28,7 +28,7 @@ namespace Empiria.Payments.Payables.Adapters {
     static internal PayableEntityDto Map(IPayableEntity payableEntity) {
       return new PayableEntityDto {
         UID = payableEntity.UID,
-        Type = payableEntity.Type.MapToNamedEntity(),
+        Type = payableEntity.GetEmpiriaType().MapToNamedEntity(),
         EntityNo = payableEntity.EntityNo,
         Name = payableEntity.Name,
         Description = payableEntity.Description,

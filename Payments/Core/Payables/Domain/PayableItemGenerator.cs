@@ -46,7 +46,7 @@ namespace Empiria.Payments.Payables {
       List<PayableItem> payableItems = new List<PayableItem>();
 
       foreach (var entityItem in entityItems) {
-        PayableItemFields fields = TransformEntityItemToPayableItem(this.Payable, entityItem);
+        PayableItemFields fields = TransformEntityItemToPayableItem(Payable, entityItem);
 
         PayableItem payableItem = AddPayableItem(fields);
 
