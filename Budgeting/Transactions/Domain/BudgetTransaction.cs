@@ -168,12 +168,6 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_TXN_CONTRACT_ID")]
-    internal int ContractId {
-      get; private set;
-    }
-
-
     [DataField("BDG_TXN_PAYABLE_ID")]
     internal int PayableId {
       get; private set;
@@ -466,7 +460,6 @@ namespace Empiria.Budgeting.Transactions {
       Justification = EmpiriaString.Clean(fields.Justification);
       BaseParty = Patcher.Patch(fields.BasePartyUID, BaseParty);
       RequestedBy = Patcher.Patch(fields.RequestedByUID, RequestedBy);
-      ContractId = fields.ContractId;
       PayableId = fields.PayableId;
       OperationSource = Patcher.Patch(fields.OperationSourceUID, OperationSource);
       ApplicationDate = Patcher.Patch(fields.ApplicationDate, ApplicationDate);

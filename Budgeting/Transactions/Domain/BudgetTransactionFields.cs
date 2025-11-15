@@ -52,11 +52,6 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
-    public int ContractId {
-      get; set;
-    } = -1;
-
-
     public int PayableId {
       get; set;
     } = -1;
