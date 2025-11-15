@@ -125,7 +125,7 @@ namespace Empiria.Payments.Payables.UseCases {
 
       Assertion.Require(payable.PaymentMethod.Id > -1, "Necesito se proporcione el método de pago, para realizar la instrucción de pago.");
       if (payable.PaymentMethod.LinkedToAccount) {
-        Assertion.Require(payable.PaymentAccount.Id > -1 , "Necesito el identificador UID de la cuenta donde se debe realizar el pago.");
+        Assertion.Require(payable.PaymentAccount.Id > -1, "Necesito el identificador UID de la cuenta donde se debe realizar el pago.");
       }
 
       PayableServices.SetOnPayment(payable);
@@ -213,39 +213,6 @@ namespace Empiria.Payments.Payables.UseCases {
     }
 
     #endregion PayableItem use cases
-
-    #region Link use cases
-
-    public PayableDto AddPayableLink(PayableLinkFields fields) {
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureValid();
-
-      var payable = Payable.Parse(fields.PayableUID);
-      var linkType = PayableLinkType.Parse(fields.LinkTypeUID);
-
-      BaseObject linkedObject = linkType.ParseLinkedObject(fields.LinkedObjectUID);
-
-      var link = new PayableLink(linkType, payable, linkedObject);
-
-      link.Save();
-
-      return PayableMapper.Map(payable);
-    }
-
-
-    public void RemovePayableLink(string payableUID, string payableLinkUID) {
-      Assertion.Require(payableUID, nameof(payableUID));
-      Assertion.Require(payableLinkUID, nameof(payableLinkUID));
-
-      Payable payable = Payable.Parse(payableUID);
-
-      PayableLink link = PayableLink.Parse(payableLinkUID);
-
-      link.Save();
-    }
-
-    #endregion Link use cases
 
     #region Helpers
 
