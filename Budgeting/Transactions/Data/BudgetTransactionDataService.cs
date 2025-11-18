@@ -26,7 +26,7 @@ namespace Empiria.Budgeting.Transactions.Data {
       var sql = "UPDATE FMS_BUDGET_ENTRIES " +
                $"SET BDG_ENTRY_UID = '{Guid.NewGuid().ToString()}', " +
                $"BDG_ENTRY_KEYWORDS = '{entry.Keywords}' " +
-               $"WHERE BGD_ENTRY_ID = {entry.Id}";
+               $"WHERE BDG_ENTRY_ID = {entry.Id}";
 
       var op = DataOperation.Parse(sql);
 
@@ -110,7 +110,7 @@ namespace Empiria.Budgeting.Transactions.Data {
       var sql = "SELECT * FROM FMS_BUDGET_ENTRIES " +
                $"WHERE BDG_ENTRY_TXN_ID = {transaction.Id} AND " +
                      $"BDG_ENTRY_STATUS <> 'X' " +
-               $"ORDER BY BGD_ENTRY_ID";
+               $"ORDER BY BDG_ENTRY_ID";
 
       var op = DataOperation.Parse(sql);
 
@@ -135,12 +135,12 @@ namespace Empiria.Budgeting.Transactions.Data {
     static internal void WriteEntry(BudgetEntry o) {
       var op = DataOperation.Parse("write_FMS_Budget_Entry",
         o.Id, o.UID, o.Transaction.Id, o.BudgetEntryTypeId, o.Budget.Id,
-        o.BudgetAccount.Id, o.ControlNo, o.Product.Id, o.ProductUnit.Id, o.ProductQty,
-        o.Project.Id, o.Party.Id, o.OperationTypeId, o.OperationId, o.BaseEntityItemId,
-        o.Year, o.Month, o.Day, o.BalanceColumn.Id, o.Currency.Id, o.OriginalAmount,
+        o.BudgetAccount.Id, o.ProgramCode, o.ControlNo, o.Product.Id, o.ProductCode, o.ProductName,
+        o.ProductUnit.Id, o.ProductQty, o.Project.Id, o.Party.Id, o.EntityTypeId, o.EntityId, o.OperationNo,
+        o.Year, o.Month, o.Day, o.BalanceColumn.Id, o.Currency.Id, o.RequestedAmount,
         o.Deposit, o.Withdrawal, o.ExchangeRate, o.Description, o.Justification,
         o.Identificators, o.Tags, o.ExtensionData.ToString(), o.Keywords,
-        o.LinkedBudgetEntryId, o.Position, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+        o.RelatedEntryId, o.Position, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
@@ -160,6 +160,33 @@ namespace Empiria.Budgeting.Transactions.Data {
       DataWriter.Execute(op);
     }
 
+    static internal string GetNextControlNo(BudgetEntry entry) {
+      Assertion.Require(entry, nameof(entry));
+
+      if (entry.Deposit == 0) {
+        return string.Empty;
+      }
+
+      string year = entry.Budget.Year.ToString().Substring(2);
+
+      string prefix = $"{year}";
+
+      string sql = "SELECT MAX(BDG_ENTRY_CONTROL_NO) " +
+                   "FROM FMS_BUDGET_ENTRIES " +
+                   $"WHERE BDG_ENTRY_CONTROL_NO LIKE '{prefix}-%'";
+
+      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), String.Empty);
+
+      if (lastUniqueID != null && lastUniqueID.Length != 0) {
+
+        int consecutive = int.Parse(lastUniqueID.Split('-')[1]) + 1;
+
+        return $"{prefix}-{consecutive:00000}";
+
+      } else {
+        return $"{prefix}-00001";
+      }
+    }
   }  // class BudgetTransactionDataService
 
 }  // namespace Empiria.Budgeting.Transactions.Data

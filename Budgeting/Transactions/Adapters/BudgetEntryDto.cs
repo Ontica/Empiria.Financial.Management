@@ -78,7 +78,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public decimal OriginalAmount {
+    public decimal RequestedAmount {
       get; internal set;
     }
 
@@ -110,6 +110,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
     public string BudgetAccountName {
+      get; internal set;
+    }
+
+    public string ProductName {
       get; internal set;
     }
 

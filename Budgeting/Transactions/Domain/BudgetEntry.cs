@@ -73,13 +73,33 @@ namespace Empiria.Budgeting.Transactions {
       get; private set;
     }
 
-    [DataField("BDG_ENTRY_CONTROL_NO")]
-    public string ControlNo {
+
+    [DataField("BDG_ENTRY_PROGRAM")]
+    public string ProgramCode {
       get; private set;
     }
 
+
+    [DataField("BDG_ENTRY_CONTROL_NO")]
+    public string ControlNo {
+      get; internal set;
+    }
+
+
     [DataField("BDG_ENTRY_PRODUCT_ID")]
     public Product Product {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ENTRY_PRODUCT_CODE")]
+    public string ProductCode {
+      get; private set;
+    }
+
+
+    [DataField("BDG_ENTRY_PRODUCT_NAME")]
+    public string ProductName {
       get; private set;
     }
 
@@ -108,22 +128,22 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_ENTRY_OPERATION_TYPE_ID")]
-    public int OperationTypeId {
+    [DataField("BDG_ENTRY_ENTITY_TYPE_ID")]
+    public int EntityTypeId {
       get; private set;
     } = -1;
 
 
-    [DataField("BDG_ENTRY_OPERATION_ID")]
-    public int OperationId {
+    [DataField("BDG_ENTRY_ENTITY_ID")]
+    public int EntityId {
       get; private set;
     } = -1;
 
 
-    [DataField("BDG_ENTRY_BASE_ENTITY_ITEM_ID")]
-    public int BaseEntityItemId {
+    [DataField("BDG_ENTRY_OPERATION_NO")]
+    public string OperationNo {
       get; private set;
-    } = -1;
+    }
 
 
     [DataField("BDG_ENTRY_YEAR")]
@@ -140,7 +160,11 @@ namespace Empiria.Budgeting.Transactions {
 
     public string MonthName {
       get {
-        return new DateTime(Year, Month, 1).ToString("MMMM");
+        if (Month == 0) {
+          return $"Durante {Year}";
+        } else {
+          return new DateTime(Year, Month, 1).ToString("MMMM");
+        }
       }
     }
 
@@ -163,16 +187,9 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_ENTRY_ORIGINAL_AMOUNT")]
-    public decimal OriginalAmount {
+    [DataField("BDG_ENTRY_REQUESTED_AMOUNT")]
+    public decimal RequestedAmount {
       get; private set;
-    }
-
-
-    public decimal Amount {
-      get {
-        return Deposit + Withdrawal;
-      }
     }
 
 
@@ -187,6 +204,11 @@ namespace Empiria.Budgeting.Transactions {
       get; private set;
     }
 
+    public decimal Amount {
+      get {
+        return Deposit + Withdrawal;
+      }
+    }
 
     [DataField("BDG_ENTRY_EXCHANGE_RATE")]
     public decimal ExchangeRate {
@@ -224,8 +246,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_ENTRY_LINKED_BDG_ENTRY_ID")]
-    internal int LinkedBudgetEntryId {
+    [DataField("BDG_ENTRY_RELATED_ENTRY_ID")]
+    internal int RelatedEntryId {
       get; private set;
     } = -1;
 
@@ -284,25 +306,28 @@ namespace Empiria.Budgeting.Transactions {
 
       fields.EnsureIsValid();
 
-      this.BudgetAccount = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount);
-      this.Product = Patcher.Patch(fields.ProductUID, Product.Empty);
-      this.ProductUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
-      this.ProductQty = fields.ProductQty;
-      this.Project = Patcher.Patch(fields.ProjectUID, Project.Empty);
-      this.Party = Patcher.Patch(fields.PartyUID, Party.Empty);
-      this.OperationTypeId = fields.OperationTypeId;
-      this.OperationId = fields.OperationId;
-      this.BaseEntityItemId = fields.BaseEntityItemId;
-      this.BalanceColumn = Patcher.Patch(fields.BalanceColumnUID, BalanceColumn);
-      this.Description = EmpiriaString.Clean(fields.Description);
-      this.Justification = EmpiriaString.Clean(fields.Justification);
-      this.Year = fields.Year != 0 ? fields.Year : this.Year;
-      this.Month = fields.Month != 0 ? fields.Month : this.Month;
-      this.Currency = Patcher.Patch(fields.CurrencyUID, Budget.BudgetType.Currency);
-      this.OriginalAmount = fields.OriginalAmount != 0 ? fields.OriginalAmount : Math.Abs(fields.Amount);
-      this.Deposit = fields.Amount > 0 ? fields.Amount : 0m;
-      this.Withdrawal = fields.Amount < 0 ? Math.Abs(fields.Amount) : 0m;
-      this.ExchangeRate = fields.ExchangeRate;
+      BudgetAccount = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount);
+      Product = Patcher.Patch(fields.ProductUID, Product.Empty);
+      ProductCode = EmpiriaString.Clean(fields.ProductCode);
+      ProductName = EmpiriaString.Clean(fields.ProductName);
+      ProductUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
+      ProductQty = fields.ProductQty;
+      Project = Patcher.Patch(fields.ProjectUID, Project.Empty);
+      Party = Patcher.Patch(fields.PartyUID, Party.Empty);
+      EntityTypeId = fields.EntityTypeId;
+      EntityId = fields.EntityId;
+      OperationNo = fields.OperationNo;
+      BalanceColumn = Patcher.Patch(fields.BalanceColumnUID, BalanceColumn);
+      Description = EmpiriaString.Clean(fields.Description);
+      Justification = EmpiriaString.Clean(fields.Justification);
+      Year = fields.Year;
+      Month = fields.Month;
+      Day = fields.Day;
+      Currency = Patcher.Patch(fields.CurrencyUID, Budget.BudgetType.Currency);
+      RequestedAmount = fields.OriginalAmount != 0 ? fields.OriginalAmount : Math.Abs(fields.Amount);
+      Deposit = fields.Amount > 0 ? fields.Amount : 0m;
+      Withdrawal = fields.Amount < 0 ? Math.Abs(fields.Amount) : 0m;
+      ExchangeRate = fields.ExchangeRate;
 
       MarkAsDirty();
     }

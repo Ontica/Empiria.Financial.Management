@@ -36,6 +36,16 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
+    public string ProductCode {
+      get; set;
+    } = string.Empty;
+
+
+    public string ProductName {
+      get; set;
+    } = string.Empty;
+
+
     public string Description {
       get; set;
     } = string.Empty;
@@ -65,19 +75,19 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
-    public int OperationTypeId {
+    public int EntityTypeId {
       get; set;
     } = -1;
 
 
-    public int OperationId {
+    public int EntityId {
       get; set;
     } = -1;
 
 
-    public int BaseEntityItemId {
+    public string OperationNo {
       get; set;
-    } = -1;
+    } = string.Empty;
 
 
     public string CurrencyUID {
@@ -93,6 +103,10 @@ namespace Empiria.Budgeting.Transactions {
       get; set;
     }
 
+    public int Day {
+      get; set;
+    }
+
     public decimal OriginalAmount {
       get; set;
     }
@@ -104,7 +118,6 @@ namespace Empiria.Budgeting.Transactions {
     public decimal ExchangeRate {
       get; set;
     } = 1m;
-
 
   }  // class BudgetEntryFields
 
