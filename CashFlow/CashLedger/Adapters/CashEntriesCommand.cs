@@ -104,7 +104,7 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
         TransactionId = this.TransactionId,
         CashAccountId = accountId,
         CashAccountNo = accountNo,
-        CashFlowRecordedById = ExecutionServer.CurrentUserId
+        CashFlowRecordedById = status != CashAccountStatus.Pending ? ExecutionServer.CurrentUserId : -1
       };
     }
 
