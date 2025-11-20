@@ -58,9 +58,9 @@ namespace Empiria.Budgeting.Reporting {
       StringBuilder html = new StringBuilder(_htmlTemplate);
 
       html = BuildHeader(html);
-      //html = BuildEntries(html);
-      //html = BuildTotals(html);
-      //html = BuildFooter(html);
+      html = BuildEntries(html);
+      html = BuildTotals(html);
+      html = BuildFooter(html);
 
       return html.ToString();
     }
@@ -71,44 +71,75 @@ namespace Empiria.Budgeting.Reporting {
 
       var entriesHtml = new StringBuilder();
 
+      foreach (var entry in _order.GetItems<OrderItem>()) {
+        var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT_CODE}}",
+                                          entry.BudgetAccount.Code));
+
+        entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", entry.BudgetAccount.Code);
+        entryHtml.Replace("{{PRODUCT_CODE}}", entry.ProductCode);
+        entryHtml.Replace("{{DESCRIPTION}}", entry.Description);
+        entryHtml.Replace("{{CONTROL_NO}}", entry.BudgetEntry.ControlNo);
+        entryHtml.Replace("{{PROGRAM}}", entry.BudgetAccount.BudgetProgram);
+        entryHtml.Replace("{{YEAR}}", entry.BudgetEntry.Year.ToString());
+        entryHtml.Replace("{{PRODUCT_UNIT}}", entry.ProductUnit.Name);
+        entryHtml.Replace("{{QUANTITY}}", entry.Quantity.ToString("C2"));
+        entryHtml.Replace("{{UNIT_PRICE}}", entry.UnitPrice.ToString("C2"));
+        entryHtml.Replace("{{TOTAL}}", entry.Subtotal.ToString("C2"));
+
+        entriesHtml.Append(entryHtml);
+      }
+
       return ReplaceEntriesTemplate(html, entriesHtml);
     }
 
 
     private StringBuilder BuildFooter(StringBuilder html) {
-      var totalsHtml = new StringBuilder();
+      var footerHtml = new StringBuilder();
 
-      return ReplaceTotalsTemplate(html, totalsHtml);
-    }
-
-    private StringBuilder BuildHeader(StringBuilder html) {
-      const string NO_VALID = "<span class='warning'> SUFICIENCIA PRESUPUESTAL PENDIENTE DE AUTORIZAR </span>";
-
-      html.Replace("{{SYSTEM.DATETIME}}", $"Impresión: {DateTime.Now.ToString("dd/MMM/yyyy HH:mm")}");
-      html.Replace("{{REPORT.TITLE}}",
-                    _txn.AuthorizedBy.IsEmptyInstance ? NO_VALID : _templateConfig.Title);
-      html.Replace("{{TRANSACTION_NUMBER}}", _txn.TransactionNo);
-      html.Replace("{{TRANSACTION_TYPE.NAME}}", _txn.BudgetTransactionType.DisplayName);
-      html.Replace("{{BASE_PARTY.NAME}}", _txn.BaseParty.Name);
-      html.Replace("{{BUDGET.NAME}}", _txn.BaseBudget.Name);
-      html.Replace("{{BASE_ENTITY_TYPE.NAME}}", "No aplica");
-      html.Replace("{{BASE_ENTITY}}", "No aplica");
-      html.Replace("{{RECORDED_BY}}", _txn.RecordedBy.Name);
-      html.Replace("{{RECORDING_DATE}}", _txn.RecordingDate.ToString("dd/MMM/yyyy"));
-      html.Replace("{{AUTHORIZED_BY}}", _txn.AuthorizedBy.Name);
-      html.Replace("{{AUTHORIZATION_DATE}}",
-                    _txn.AuthorizedBy.IsEmptyInstance ? NO_VALID : _txn.AuthorizationDate.ToString("dd/MMM/yyyy"));
+      html.Replace("{{JUSTIFICATION}}", _order.Justification);
+      html.Replace("{{OBSERVATIONS}}", _order.Observations);
+      html.Replace("{{GUARANTEE_NOTES}}", _order.GuaranteeNotes);
+      html.Replace("{{DELIVERY_NOTES}}", _order.DeliveryNotes);
 
       return html;
     }
 
 
-    private StringBuilder BuildTotals(StringBuilder html) {
-      string TEMPLATE = GetTotalsTemplate();
+    private StringBuilder BuildHeader(StringBuilder html) {
+      const string NO_VALID = "<span class='warning'> SUFICIENCIA PRESUPUESTAL PENDIENTE DE AUTORIZAR </span>";
 
-      var totalsHtml = new StringBuilder();
+      html.Replace("{{SYSTEM.DATETIME}}", $"Impresión: {DateTime.Now.ToString("dd/MMM/yyyy HH:mm")}");
+      html.Replace("{{REPORT.TITLE}}", _txn.AuthorizedBy.IsEmptyInstance ? NO_VALID : _templateConfig.Title);
+      html.Replace("{{ORDER_NO}}", _order.OrderNo);
+      html.Replace("{{FOLIO}}", "");
+      html.Replace("{{REQUESTED_BY}}", _order.RequestedBy.Name);
+      html.Replace("{{RECORDING_TIME}}", _order.RequestedTime.ToString("dd/MMM/yyyy"));      
+      html.Replace("{{REQUIRED_TIME}}", _order.RequiredTime.ToString("dd/MMM/yyyy"));
+      
+      return html;
+    }
 
-      return ReplaceTotalsTemplate(html, totalsHtml);
+
+    private StringBuilder BuildTotals(StringBuilder html) { 
+      string TEMPLATE = GetTotalsTemplate(); 
+
+      var totalsHtml = new StringBuilder(); 
+
+      foreach (var entry in _order.Taxes.GetList()) { 
+        var totalHtml = new StringBuilder(TEMPLATE.Replace("{{TOTAL_TYPE}}", entry.TaxType.Name)); 
+
+        totalHtml.Replace("{{TOTAL}}", entry.Total.ToString("C2")); 
+    
+        totalsHtml.Append(totalHtml); 
+      }
+
+      var orderTotallHtml = new StringBuilder(TEMPLATE.Replace("{{TOTAL_TYPE}}", "Total"));
+
+      orderTotallHtml.Replace("{{TOTAL}}", _order.GetTotal().ToString("C2"));
+
+      totalsHtml.Append(orderTotallHtml);
+
+      return ReplaceTotalsTemplate(html, totalsHtml); 
     }
 
 
