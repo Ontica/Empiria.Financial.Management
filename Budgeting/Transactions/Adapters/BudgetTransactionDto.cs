@@ -31,6 +31,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public FixedList<TaxEntryDto> Taxes {
+      get; internal set;
+    }
+
     public FixedList<DocumentDto> Documents {
       get; internal set;
     }
@@ -238,5 +242,20 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
   }  // BudgetTransactionDescriptorDto
+
+
+
+  /// <summary>Output DTO used for tax entries in budget transactions.</summary>
+  public class TaxEntryDto {
+
+    public NamedEntityDto TaxType {
+      get; internal set;
+    }
+
+    public decimal Total {
+      get; internal set;
+    }
+
+  }  // class TaxEntryDto
 
 }  // namespace Empiria.Budgeting.Transactions.Adapters

@@ -12,6 +12,8 @@ using Empiria.Documents;
 using Empiria.History;
 using Empiria.StateEnums;
 
+using Empiria.Financial;
+
 using Empiria.Budgeting.Adapters;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
@@ -28,12 +30,12 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Transaction = MapTransaction(transaction),
         Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
         GroupedEntries = new BudgetEntriesByYearTableDto(byYearTransaction.GetEntries()),
+        Taxes = MapTaxes(transaction),
         Documents = DocumentServices.GetAllEntityDocuments(transaction),
         History = HistoryServices.GetEntityHistory(transaction),
         Actions = MapActions(transaction.Rules)
       };
     }
-
 
     static internal FixedList<BudgetTypeForEditionDto> MapBudgetTypesForEdition(FixedList<BudgetType> budgetTypes) {
       return budgetTypes.Select(x => MapBudgetTypeForEdition(x))
@@ -104,12 +106,31 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     static private BudgetForEditionDto MapBudgetForEdition(Budget budget) {
       return new BudgetForEditionDto {
-         UID = budget.UID,
-         Name = budget.Name,
-         Year = budget.Year,
-         Type = budget.BudgetType.MapToNamedEntity(),
-         TransactionTypes = MapTransactionTypes(budget),
-         SegmentTypes = BudgetSegmentTypesMapper.Map(budget.BudgetType.SegmentTypes),
+        UID = budget.UID,
+        Name = budget.Name,
+        Year = budget.Year,
+        Type = budget.BudgetType.MapToNamedEntity(),
+        TransactionTypes = MapTransactionTypes(budget),
+        SegmentTypes = BudgetSegmentTypesMapper.Map(budget.BudgetType.SegmentTypes),
+      };
+    }
+
+
+    static private FixedList<TaxEntryDto> MapTaxes(BudgetTransaction transaction) {
+      if (!transaction.HasEntity) {
+        return FixedList<TaxEntryDto>.Empty;
+      }
+      FixedList<ITaxEntry> taxes = transaction.GetEntity().Taxes;
+
+      return taxes.Select(x => MapTaxes(x))
+                  .ToFixedList();
+    }
+
+
+    static private TaxEntryDto MapTaxes(ITaxEntry taxEntry) {
+      return new TaxEntryDto {
+        TaxType = taxEntry.TaxType.MapToNamedEntity(),
+        Total = taxEntry.Total
       };
     }
 
