@@ -75,10 +75,18 @@ namespace Empiria.Budgeting.Reporting {
         var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT_CODE}}",
                                           entry.BudgetAccount.Code));
 
+        var budgetEntry = _txn.Entries.Find(x => entry.Id == x.EntityId && x.ControlNo.Length != 0);
+
+        string controlNo = string.Empty;
+
+        if (budgetEntry != null) {
+          controlNo = budgetEntry.ControlNo;
+        }
+
         entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", entry.BudgetAccount.Code);
         entryHtml.Replace("{{PRODUCT_CODE}}", entry.ProductCode);
         entryHtml.Replace("{{DESCRIPTION}}", entry.Description);
-        entryHtml.Replace("{{CONTROL_NO}}", entry.BudgetEntry.ControlNo);
+        entryHtml.Replace("{{CONTROL_NO}}", controlNo);
         entryHtml.Replace("{{PROGRAM}}", entry.BudgetAccount.BudgetProgram);
         entryHtml.Replace("{{YEAR}}", entry.BudgetEntry.Year.ToString());
         entryHtml.Replace("{{PRODUCT_UNIT}}", entry.ProductUnit.Name);
@@ -101,6 +109,22 @@ namespace Empiria.Budgeting.Reporting {
       html.Replace("{{GUARANTEE_NOTES}}", _order.GuaranteeNotes);
       html.Replace("{{DELIVERY_NOTES}}", _order.DeliveryNotes);
 
+      if (_txn.AuthorizedBy.IsEmptyInstance) {
+        html.Replace("{{SECURITY_CODE}}", "<span class='warning'>PENDIENTE DE AUTORIZAR</span>");
+        html.Replace("{{SECURITY_SEAL}}", "<span class='warning'>ESTE DOCUMENTO NO TIENE VALIDEZ OFICIAL</span>");
+
+        return html;
+      }
+
+      var seal = $"{_txn.TransactionNo}|{_order.OrderNo}|{_txn.Justification}|{_txn.GetTotal()}|{_order.Taxes}|{_order.Items}";
+
+      seal = Security.Cryptographer.Encrypt(Security.EncryptionMode.Standard, seal);
+
+      seal = EmpiriaString.DivideLongString(seal, 95, "<br/>");
+
+      html.Replace("{{SECURITY_CODE}}", _txn.TransactionNo.GetHashCode().ToString("00000000"));
+      html.Replace("{{SECURITY_SEAL}}", seal);
+
       return html;
     }
 
@@ -110,27 +134,34 @@ namespace Empiria.Budgeting.Reporting {
 
       html.Replace("{{SYSTEM.DATETIME}}", $"Impresión: {DateTime.Now.ToString("dd/MMM/yyyy HH:mm")}");
       html.Replace("{{REPORT.TITLE}}", _txn.AuthorizedBy.IsEmptyInstance ? NO_VALID : _templateConfig.Title);
-      html.Replace("{{ORDER_NO}}", _order.OrderNo);
-      html.Replace("{{FOLIO}}", "");
+      html.Replace("{{ORDER_NO}}", $"{_txn.TransactionNo}: {_order.Name}");
+      html.Replace("{{FOLIO}}", _order.OrderNo);
       html.Replace("{{REQUESTED_BY}}", _order.RequestedBy.Name);
-      html.Replace("{{RECORDING_TIME}}", _order.RequestedTime.ToString("dd/MMM/yyyy"));      
-      html.Replace("{{REQUIRED_TIME}}", _order.RequiredTime.ToString("dd/MMM/yyyy"));
-      
+      html.Replace("{{RECORDING_TIME}}", _order.RequestedTime.ToString("dd/MMM/yyyy"));
+
+      if (ExecutionServer.IsMinOrMaxDate(_order.StartDate)) {
+        html.Replace("{{REQUIRED_TIME}}", _order.RequestedTime.ToString("dd/MMM/yyyy"));
+      } else if (_order.StartDate == _order.EndDate) {
+        html.Replace("{{REQUIRED_TIME}}", EmpiriaString.DateTimeLongString(_order.StartDate));
+      } else {
+        html.Replace("{{REQUIRED_TIME}}", $"Del {EmpiriaString.DateTimeLongString(_order.StartDate)} " +
+                                          $"al {EmpiriaString.DateTimeLongString(_order.EndDate)}");
+      }
       return html;
     }
 
 
-    private StringBuilder BuildTotals(StringBuilder html) { 
-      string TEMPLATE = GetTotalsTemplate(); 
+    private StringBuilder BuildTotals(StringBuilder html) {
+      string TEMPLATE = GetTotalsTemplate();
 
-      var totalsHtml = new StringBuilder(); 
+      var totalsHtml = new StringBuilder();
 
-      foreach (var entry in _order.Taxes.GetList()) { 
-        var totalHtml = new StringBuilder(TEMPLATE.Replace("{{TOTAL_TYPE}}", entry.TaxType.Name)); 
+      foreach (var entry in _order.Taxes.GetList()) {
+        var totalHtml = new StringBuilder(TEMPLATE.Replace("{{TOTAL_TYPE}}", entry.TaxType.Name));
 
-        totalHtml.Replace("{{TOTAL}}", entry.Total.ToString("C2")); 
-    
-        totalsHtml.Append(totalHtml); 
+        totalHtml.Replace("{{TOTAL}}", entry.Total.ToString("C2"));
+
+        totalsHtml.Append(totalHtml);
       }
 
       var orderTotallHtml = new StringBuilder(TEMPLATE.Replace("{{TOTAL_TYPE}}", "Total"));
@@ -139,7 +170,7 @@ namespace Empiria.Budgeting.Reporting {
 
       totalsHtml.Append(orderTotallHtml);
 
-      return ReplaceTotalsTemplate(html, totalsHtml); 
+      return ReplaceTotalsTemplate(html, totalsHtml);
     }
 
 
