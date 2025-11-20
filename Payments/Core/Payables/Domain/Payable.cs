@@ -265,7 +265,7 @@ namespace Empiria.Payments.Payables {
 
       _items.Value.Add(payableItem);
 
-      Total += payableItem.Total;
+      Total += payableItem.InputTotal;
     }
 
 
@@ -297,7 +297,7 @@ namespace Empiria.Payments.Payables {
 
       payableItem.Delete();
 
-      Total -= payableItem.Total;
+      Total -= payableItem.InputTotal;
 
       return payableItem;
     }
@@ -311,13 +311,13 @@ namespace Empiria.Payments.Payables {
 
       _items.Value.Remove(payableItem);
 
-      Total -= payableItem.Total;
+      Total -= payableItem.InputTotal;
 
       payableItem.Update(fields);
 
       _items.Value.Add(payableItem);
 
-      Total += payableItem.Total;
+      Total += payableItem.InputTotal;
 
       return payableItem;
     }

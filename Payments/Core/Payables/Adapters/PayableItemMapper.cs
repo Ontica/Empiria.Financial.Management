@@ -24,13 +24,10 @@ namespace Empiria.Payments.Payables.Adapters {
     static internal PayableItemDto Map(PayableItem payableItem) {
       return new PayableItemDto {
         UID = payableItem.UID,
-        Description = payableItem.Description,
-        Product = payableItem.Product.MapToNamedEntity(),
-        Unit = payableItem.Unit.MapToNamedEntity(),
-        Quantity = payableItem.Quantity,
-        UnitPrice = payableItem.UnitPrice,
-        Subtotal = payableItem.Total,
-        BudgetAccount = payableItem.BudgetAccount.MapToNamedEntity(),
+        OutputTotal = payableItem.OutputTotal,
+        InputTotal = payableItem.InputTotal,
+        Currency = payableItem.Currency.MapToNamedEntity(),
+        ExchangeRate = payableItem.ExchangeRate,
         Status = payableItem.Status.MapToDto()
       };
     }

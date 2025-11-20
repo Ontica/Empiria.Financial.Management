@@ -10,18 +10,13 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-
-using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
-using Empiria.Products;
 using Empiria.StateEnums;
-
-using Empiria.Budgeting;
-using Empiria.Billing;
 
 using Empiria.Payments.Payables.Adapters;
 using Empiria.Payments.Payables.Data;
+using Empiria.Financial;
 
 namespace Empiria.Payments.Payables {
 
@@ -68,66 +63,47 @@ namespace Empiria.Payments.Payables {
     }
 
 
-    [DataField("PAYABLE_ITEM_PRODUCT_ID")]
-    public Product Product {
+    [DataField("PAYABLE_ITEM_ENTITY_TYPE_ID")]
+    public int PayableEntityTypeId {
       get; private set;
     }
 
 
-    [DataField("PAYABLE_ITEM_DESCRIPTION")]
-    public string Description {
+    [DataField("PAYABLE_ITEM_INPUT_TOTAL")]
+    public decimal InputTotal {
       get; private set;
     }
 
 
-    [DataField("PAYABLE_ITEM_PRODUCT_UNIT_ID")]
-    public ProductUnit Unit {
+    [DataField("PAYABLE_ITEM_OUTPUT_TOTAL")]
+    public decimal OutputTotal {
       get; private set;
     }
 
 
-    [DataField("PAYABLE_ITEM_PRODUCT_QTY")]
-    public decimal Quantity {
+    [DataField("PAYABLE_ITEM_CURRENCY_ID")]
+    public Currency Currency {
       get; private set;
     }
 
 
-    [DataField("PAYABLE_ITEM_UNIT_PRICE")]
-    public decimal UnitPrice {
+    [DataField("PAYABLE_ITEM_EXCHANGE_RATE")]
+    public decimal ExchangeRate {
       get; private set;
     }
 
 
-    [DataField("PAYABLE_ITEM_DISCOUNT")]
-    public decimal Discount {
-      get; private set;
+    [DataField("PAYABLE_ITEM_CONTROL_EXT_DATA")]
+    private JsonObject ControlExtData {
+      get; set;
     }
 
 
-    public decimal Total {
-      get {
-        return Math.Round((Quantity * UnitPrice) - Discount, 2);
-      }
+    [DataField("PAYABLE_ITEM_SECURITY_EXT_DATA")]
+    private JsonObject SecurityExtData {
+      get; set;
     }
 
-
-    [DataField("PAYABLE_ITEM_BUDGET_ACCOUNT_ID")]
-    public FormerBudgetAccount BudgetAccount {
-      get; private set;
-    }
-
-
-    [DataField("PAYABLE_ITEM_BILL_CONCEPT_ID")]
-    public BillConcept BillConcept {
-      get; private set;
-    }
-
-
-    public bool HasBillConcept {
-      get {
-        return !BillConcept.IsEmptyInstance;
-      }
-    }
 
     [DataField("PAYABLE_ITEM_EXT_DATA")]
     private JsonObject ExtData {
@@ -155,7 +131,7 @@ namespace Empiria.Payments.Payables {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Product.Keywords, Description, Payable.Keywords);
+        return EmpiriaString.BuildKeywords(Payable.Keywords);
       }
     }
 
@@ -173,14 +149,7 @@ namespace Empiria.Payments.Payables {
         this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
-      PayableData.WritePayableItem(this, this.ExtData.ToString());
-    }
-
-
-    internal void SetBillConcept(BillConcept billConcept) {
-      Assertion.Require(billConcept, nameof(billConcept));
-
-      this.BillConcept = billConcept;
+      PayableData.WritePayableItem(this, this.ControlExtData.ToString(), this.SecurityExtData.ToString(), this.ExtData.ToString());
     }
 
 
@@ -189,15 +158,12 @@ namespace Empiria.Payments.Payables {
 
       fields.EnsureValid();
 
-      this.Product = Product.Parse(fields.ProductUID);
-      this.Unit = ProductUnit.Parse(fields.UnitUID);
-
       this.PayableEntityItemId = fields.EntityItemId;
-      this.Description = fields.Description;
-      this.Quantity = fields.Quantity;
-      this.UnitPrice = fields.UnitPrice;
-      this.Discount = fields.Discount;
-      this.BudgetAccount = FormerBudgetAccount.Parse(fields.BudgetAccountUID);
+      this.PayableEntityTypeId = fields.EntityTypeId;
+      this.InputTotal = fields.InputTotal;
+      this.OutputTotal = fields.OutputTotal;
+      this.Currency = Currency.Parse(fields.CurrencyUID);
+      this.ExchangeRate = fields.ExchangeRate;
     }
 
     #endregion Methods
