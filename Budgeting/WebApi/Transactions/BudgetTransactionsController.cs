@@ -145,11 +145,11 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpGet]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
-    public SingleObjectModel GetTransaction([FromUri] string budgetTransactionUID) {
+    [Route("v2/budgeting/transactions/{transactionUID:guid}")]
+    public SingleObjectModel GetTransaction([FromUri] string transactionUID) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
-        BudgetTransactionHolderDto transaction = usecases.GetTransaction(budgetTransactionUID);
+        BudgetTransactionHolderDto transaction = usecases.GetTransaction(transactionUID);
 
         return new SingleObjectModel(base.Request, transaction);
       }
@@ -157,13 +157,13 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/request-account/{requestedSegmentUID:guid}")]
-    public SingleObjectModel RequestBudgetAccount([FromUri] string budgetTransactionUID,
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/request-account/{requestedSegmentUID:guid}")]
+    public SingleObjectModel RequestBudgetAccount([FromUri] string transactionUID,
                                                   [FromUri] string requestedSegmentUID) {
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
 
-        BudgetAccountDto requestedAccount = usecases.RequestBudgetAccount(budgetTransactionUID,
+        BudgetAccountDto requestedAccount = usecases.RequestBudgetAccount(transactionUID,
                                                                           requestedSegmentUID);
 
         return new SingleObjectModel(base.Request, requestedAccount);
@@ -172,16 +172,14 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpGet]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/print")]
-    public SingleObjectModel PrintTransaction([FromUri] string budgetTransactionUID) {
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/print")]
+    public SingleObjectModel PrintTransaction([FromUri] string transactionUID) {
 
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+      var transaction = BudgetTransaction.Parse(transactionUID);
 
       using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
 
-        var byYearTransaction = new BudgetTransactionByYear(transaction);
-
-        FileDto file = reportingService.ExportTransactionToPdf(byYearTransaction);
+        FileDto file = reportingService.ExportTransactionVoucherToPdf(transaction);
 
         return new SingleObjectModel(base.Request, file);
       }
@@ -189,12 +187,12 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/reject")]
-    public SingleObjectModel RejectTransaction([FromUri] string budgetTransactionUID,
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/reject")]
+    public SingleObjectModel RejectTransaction([FromUri] string transactionUID,
                                                [FromBody] RejectFields fields) {
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        BudgetTransactionHolderDto transaction = usecases.RejectTransaction(budgetTransactionUID,
+        BudgetTransactionHolderDto transaction = usecases.RejectTransaction(transactionUID,
                                                                             fields.Message);
 
         return new SingleObjectModel(base.Request, transaction);
@@ -239,11 +237,11 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/send-to-authorization")]
-    public SingleObjectModel SendToAuthorization([FromUri] string budgetTransactionUID) {
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/send-to-authorization")]
+    public SingleObjectModel SendToAuthorization([FromUri] string transactionUID) {
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        BudgetTransactionHolderDto transaction = usecases.SendToAuthorization(budgetTransactionUID);
+        BudgetTransactionHolderDto transaction = usecases.SendToAuthorization(transactionUID);
 
         return new SingleObjectModel(base.Request, transaction);
       }
@@ -251,12 +249,12 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPut, HttpPatch]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}")]
-    public SingleObjectModel UpdateTransaction([FromUri] string budgetTransactionUID,
+    [Route("v2/budgeting/transactions/{transactionUID:guid}")]
+    public SingleObjectModel UpdateTransaction([FromUri] string transactionUID,
                                                [FromBody] BudgetTransactionFields fields) {
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        BudgetTransactionHolderDto transaction = usecases.UpdateTransaction(budgetTransactionUID, fields);
+        BudgetTransactionHolderDto transaction = usecases.UpdateTransaction(transactionUID, fields);
 
         return new SingleObjectModel(base.Request, transaction);
       }

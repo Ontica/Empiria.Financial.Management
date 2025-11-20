@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Budget Management                             Component : Reporting Services                   *
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Report builder                       *
-*  Type     : BudgetTransactionVoucherBuilder               License   : Please read LICENSE.txt file         *
+*  Type     : BudgetTransactionByYearVoucherBuilder         License   : Please read LICENSE.txt file         *
 *                                                                                                            *
-*  Summary  : Builds a Pdf file with a voucher for a budget transaction.                                     *
+*  Summary  : Builds a PDF file with a voucher for a budget transaction with year months in columns.         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -19,13 +19,13 @@ using Empiria.Budgeting.Transactions;
 
 namespace Empiria.Budgeting.Reporting {
 
-  /// <summary>Builds a Pdf file with a voucher for a budget transaction.</summary>
-  internal class BudgetTransactionVoucherBuilder {
+  /// <summary>Builds a PDF file with a voucher for a budget transaction with year months in columns.</summary>
+  internal class BudgetTransactionByYearVoucherBuilder {
 
     private readonly FileTemplateConfig _templateConfig;
     private readonly string _htmlTemplate;
 
-    public BudgetTransactionVoucherBuilder(FileTemplateConfig templateConfig) {
+    public BudgetTransactionByYearVoucherBuilder(FileTemplateConfig templateConfig) {
       Assertion.Require(templateConfig, nameof(templateConfig));
 
       _templateConfig = templateConfig;
@@ -64,7 +64,8 @@ namespace Empiria.Budgeting.Reporting {
       var entriesHtml = new StringBuilder();
 
       foreach (var entry in txn.GetEntries()) {
-        var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT.CODE}}", entry.BudgetAccount.BaseSegment.Code));
+        var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT.CODE}}",
+                                          entry.BudgetAccount.BaseSegment.Code));
 
         entryHtml.Replace("{{BUDGET_ACCOUNT.NAME}}", entry.BudgetAccount.BaseSegment.Name);
         entryHtml.Replace("{{BUDGET_PROGRAM.CODE}}", entry.BudgetAccount.BudgetProgram);
@@ -191,7 +192,7 @@ namespace Empiria.Budgeting.Reporting {
     #region Helpers
 
     private string GetFileName(string filename) {
-      return Path.Combine(FileTemplateConfig.GenerationStoragePath + "/budgeting.transactions/", filename);
+      return Path.Combine($"{FileTemplateConfig.GenerationStoragePath}/budgeting.transactions/", filename);
     }
 
 
@@ -215,11 +216,11 @@ namespace Empiria.Budgeting.Reporting {
 
 
     private FileDto ToFileDto(string filename) {
-      return new FileDto(FileType.Pdf, FileTemplateConfig.GeneratedFilesBaseUrl + "/budgeting.transactions/" + filename);
+      return new FileDto(FileType.Pdf, $"{FileTemplateConfig.GeneratedFilesBaseUrl}/budgeting.transactions/{filename}");
     }
 
     #endregion Helpers
 
-  } // class BudgetTransactionVoucherBuilder
+  } // class BudgetTransactionByYearVoucherBuilder
 
 } // namespace Empiria.Budgeting.Reporting
