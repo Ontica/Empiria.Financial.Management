@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Budgeting;
+using Empiria.Financial;
 
 namespace Empiria.Payments.Payables.Adapters {
 
@@ -63,7 +63,7 @@ namespace Empiria.Payments.Payables.Adapters {
       Assertion.Require(PayableUID, nameof(PayableUID));
       Assertion.Require(CurrencyUID, "Necesito la moneda.");
 
-      _ = FormerBudgetAccount.Parse(CurrencyUID);
+      _ = Currency.Parse(CurrencyUID);
     }
 
     #endregion Methods

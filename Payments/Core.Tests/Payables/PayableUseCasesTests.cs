@@ -55,11 +55,12 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     public void Should_Create_Payable() {
       var fields = new PayableFields {
         PayableTypeUID = "ObjectTypeInfo.Payable.ContractOrder",
-        PayableEntityUID = "fda34114-d994-4d81-9f75-6b35dfe20d78",
+        PayableEntityUID = "abe5bd58-91fc-4e0f-b96b-bed19953940e",
         Description = "Payable de Prueba",
         PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
         PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
         DueTime = DateTime.Today,
+
       };
 
 
@@ -98,7 +99,7 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
     [Fact]
     public void Should_Get_Payable() {
 
-      var sut = _usecases.GetPayable("a2ec6468-7eb1-4158-be50-41b011d4d276");
+      var sut = _usecases.GetPayable("710a9b3a-34db-402a-9c53-5e51b63024a6");
 
       Assert.NotNull(sut);
     }

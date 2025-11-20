@@ -23,7 +23,8 @@ namespace Empiria.Payments.Payables.Adapters {
       return new PayableHolderDto {
         Payable = PayableMapper.Map(payable),
         PayableEntity = PayableEntityMapper.Map(payable.PayableEntity),
-        Items = MapPayableItems(payable.GetItems()),
+        Items = new FixedList<PayableDataItemDto>(),
+        // MapPayableItems(payable.GetItems()),
         Bills = ExternalServices.GetPayableBills(payable),
         Documents = DocumentServices.GetAllEntityDocuments(payable),
         History = HistoryServices.GetEntityHistory(payable),
