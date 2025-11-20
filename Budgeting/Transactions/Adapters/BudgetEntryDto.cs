@@ -113,7 +113,19 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public string ProductName {
+    public string Program {
+      get; internal set;
+    }
+
+    public string ProductCode {
+      get; internal set;
+    }
+
+    public string Description {
+      get; internal set;
+    }
+
+    public string ControlNo {
       get; internal set;
     }
 

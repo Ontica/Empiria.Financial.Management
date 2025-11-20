@@ -99,7 +99,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         UID = entry.UID,
         BudgetAccountCode = entry.BudgetAccount.Code,
         BudgetAccountName = entry.BudgetAccount.Name,
-        ProductName = entry.Product.Name,
+        Program = entry.ProgramCode.Length == 0 ?
+                            entry.BudgetAccount.BudgetProgram : entry.ProgramCode,
+        ProductCode = entry.ProductCode,
+        Description = entry.ProductName,
+        ControlNo = entry.ControlNo,
         Year = entry.Year,
         Month = entry.Month,
         MonthName = entry.MonthName,
