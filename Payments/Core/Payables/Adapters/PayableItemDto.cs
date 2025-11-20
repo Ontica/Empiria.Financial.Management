@@ -17,45 +17,26 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-    public string Description {
+    public NamedEntityDto Payable {
       get; internal set;
     }
 
-    public NamedEntityDto Product {
+    public decimal InputTotal {
       get; internal set;
     }
 
-    public NamedEntityDto Unit {
+    public decimal OutputTotal {
       get; internal set;
     }
 
-    public decimal Quantity {
-      get; internal set;
-    }
-
-    public decimal UnitPrice {
-      get; internal set;
-    }
-
-
-    // ToDo: REMOVE
     public NamedEntityDto Currency {
       get; internal set;
     }
 
 
-    // ToDo: REMOVE
     public decimal ExchangeRate {
       get; internal set;
     } = 1;
-
-    public decimal Subtotal {
-      get; internal set;
-    }
-
-    public NamedEntityDto BudgetAccount {
-      get; internal set;
-    }
 
     public NamedEntityDto Status {
       get; internal set;

@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
-
 using Empiria.Budgeting;
 
 namespace Empiria.Payments.Payables.Adapters {
@@ -29,43 +27,33 @@ namespace Empiria.Payments.Payables.Adapters {
     } = string.Empty;
 
 
-    public string ProductUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string UnitUID {
-      get; set;
-    } = string.Empty;
-
-
     public int EntityItemId {
       get; set;
     } = -1;
 
-    public string Description {
+
+    public int EntityTypeId {
       get; set;
-    } = string.Empty;
+    } = -1;
 
-
-    public decimal Quantity {
-      get; set;
-    }
-
-
-    public decimal UnitPrice {
+    public decimal InputTotal {
       get; set;
     }
 
 
-    public decimal Discount {
+    public decimal OutputTotal {
+      get; set;
+    }
+
+
+    public string CurrencyUID {
+      get; set;
+    }
+
+
+    public decimal ExchangeRate {
       get; set;
     } = 0;
-
-
-    public string BudgetAccountUID {
-      get; set;
-    } = string.Empty;
 
     #endregion Properties
 
@@ -73,12 +61,9 @@ namespace Empiria.Payments.Payables.Adapters {
 
     internal void EnsureValid() {
       Assertion.Require(PayableUID, nameof(PayableUID));
-      Assertion.Require(Quantity > 0, "Necesito la cantidad.");
-      Assertion.Require(UnitPrice > 0, "Necesito el precio unitario.");
+      Assertion.Require(CurrencyUID, "Necesito la moneda.");
 
-      Assertion.Require(BudgetAccountUID, "Necesito el número de cuenta del presupuesto.");
-
-       _ = FormerBudgetAccount.Parse(BudgetAccountUID);
+      _ = FormerBudgetAccount.Parse(CurrencyUID);
     }
 
     #endregion Methods

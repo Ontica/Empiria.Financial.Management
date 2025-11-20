@@ -75,14 +75,7 @@ namespace Empiria.Payments.Payables {
 
     private PayableItemFields TransformEntityItemToPayableItem(Payable payable, IPayableEntityItem entityItem) {
       return new PayableItemFields {
-        PayableUID = this.Payable.UID,
-        BudgetAccountUID = entityItem.BudgetAccount.UID,
-        EntityItemId = entityItem.Id,
-        ProductUID = entityItem.Product.UID,
-        UnitUID = entityItem.Unit.UID,
-        Description = entityItem.Description,
-        Quantity = entityItem.Quantity,
-        UnitPrice = entityItem.UnitPrice,
+        PayableUID = this.Payable.UID
       };
     }
 

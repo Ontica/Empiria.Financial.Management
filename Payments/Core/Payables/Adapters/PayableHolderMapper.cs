@@ -57,21 +57,10 @@ namespace Empiria.Payments.Payables.Adapters {
 
     static private PayableDataItemDto MapPayableItem(PayableItem payableItem) {
 
-      string billConceptName = "No se ha anexado la factura";
-
-      if (payableItem.HasBillConcept) {
-        billConceptName = payableItem.BillConcept.Description;
-      }
 
       return new PayableDataItemDto {
         UID = payableItem.UID,
-        Name = payableItem.Description,
-        BudgetAccount = payableItem.BudgetAccount.MapToNamedEntity(),
-        BillConcept = billConceptName,
         PayableEntityItemUID = payableItem.PayableEntityItemId.ToString(),
-        Quantity = payableItem.Quantity,
-        Unit  = payableItem.Unit.Name,
-        Total = payableItem.Total
       };
     }
 
