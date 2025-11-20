@@ -45,7 +45,7 @@ namespace Empiria.Financial {
     static public StandardAccount Parse(string uid) => ParseKey<StandardAccount>(uid);
 
     static internal StandardAccount TryParseAccountNo(string stdAcctNo) {
-      return _cache.Find(x => x.StdAcctNo == stdAcctNo);
+      return TryParse<StandardAccount>($"STD_ACCT_NUMBER == '{stdAcctNo}'");
     }
 
     static public StandardAccount Empty => ParseEmpty<StandardAccount>();

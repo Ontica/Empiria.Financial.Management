@@ -142,10 +142,10 @@ namespace Empiria.Budgeting.Reporting {
       if (ExecutionServer.IsMinOrMaxDate(_order.StartDate)) {
         html.Replace("{{REQUIRED_TIME}}", _order.RequestedTime.ToString("dd/MMM/yyyy"));
       } else if (_order.StartDate == _order.EndDate) {
-        html.Replace("{{REQUIRED_TIME}}", EmpiriaString.DateTimeLongString(_order.StartDate));
+        html.Replace("{{REQUIRED_TIME}}", EmpiriaString.DateLongString(_order.StartDate));
       } else {
-        html.Replace("{{REQUIRED_TIME}}", $"Del {EmpiriaString.DateTimeLongString(_order.StartDate)} " +
-                                          $"al {EmpiriaString.DateTimeLongString(_order.EndDate)}");
+        html.Replace("{{REQUIRED_TIME}}", $"Del {EmpiriaString.DateLongString(_order.StartDate)} " +
+                                          $"al {EmpiriaString.DateLongString(_order.EndDate)}");
       }
       return html;
     }

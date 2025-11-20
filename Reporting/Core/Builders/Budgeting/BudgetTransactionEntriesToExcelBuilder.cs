@@ -26,7 +26,6 @@ namespace Empiria.Budgeting.Reporting {
 
     private ExcelFile _excelFile;
 
-
     public BudgetTransactionEntriesToExcelBuilder(FileTemplateConfig templateConfig) {
       Assertion.Require(templateConfig, nameof(templateConfig));
 

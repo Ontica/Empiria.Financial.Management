@@ -72,6 +72,12 @@ namespace Empiria.Tests.Financial.Projects {
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
+
+      foreach (FinancialProject project in sut) {
+        Assert.NotNull(project.Subprogram);
+        Assert.NotNull(project.Accounts);
+        Assert.NotNull(project.GetStandardAccounts());
+      }
     }
 
 

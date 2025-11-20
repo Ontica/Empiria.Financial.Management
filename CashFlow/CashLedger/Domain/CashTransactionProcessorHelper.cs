@@ -414,14 +414,14 @@ namespace Empiria.CashFlow.CashLedger {
                                            x.IsOperationAccount);
     }
 
+
     private string TryGetDirectAccountConceptNo(FinancialRule rule, CashEntryDto entry) {
 
       if (entry.Debit > 0 && rule.DebitConcept.Length >= 4) {
         return rule.DebitConcept;
 
-      } else if (rule.CreditConcept.Length >= 4) {
+      } else if (entry.Credit > 0 && rule.CreditConcept.Length >= 4) {
         return rule.CreditConcept;
-
       }
 
       var rules = GetRules("CASH_FLOW_ACCOUNTS");

@@ -67,9 +67,9 @@ namespace Empiria.Budgeting.Transactions.Data {
                    "FROM FMS_BUDGET_TRANSACTIONS " +
                    $"WHERE BDG_TXN_NUMBER LIKE '{prefix}-%'";
 
-      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), String.Empty);
+      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), string.Empty);
 
-      if (lastUniqueID != null && lastUniqueID.Length != 0) {
+      if (lastUniqueID.Length != 0) {
 
         int consecutive = int.Parse(lastUniqueID.Split('-')[3]) + 1;
 

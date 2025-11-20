@@ -34,7 +34,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
       Assert.NotNull(sut);
       Assert.Equal(StandardAccount.Parse("Empty"), sut);
-      Assert.Equal(-1, sut .Id);
+      Assert.Equal(-1, sut.Id);
     }
 
     #endregion Facts

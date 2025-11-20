@@ -86,6 +86,15 @@ namespace Empiria.Tests.Financial.Rules {
       Assert.Equal(FinancialRuleCategory.Parse("Empty"), sut);
     }
 
+
+    [Fact]
+    public void Should_Read_FinancialRuleCategory() {
+      var sut = FinancialRuleCategory.ParseNamedKey("BUDGETING_ACCOUNTS");
+
+      Assert.NotNull(sut);
+      Assert.Single(sut.GetFinancialRules());
+    }
+
     #endregion Facts
 
   }  // class FinancialRuleCategoryTests
