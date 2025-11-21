@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Payments Management                          Component : Web Api                               *
 *  Assembly : Empiria.Payments.WebApi.dll                  Pattern   : Web api Controller                    *
-*  Type     : DocumentsController                          License   : Please read LICENSE.txt file          *
+*  Type     : PayableDocumentsController                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update documents for payments entities.                            *
+*  Summary  : Web API used to retrive and update documents for payable entities.                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -22,8 +22,8 @@ using Empiria.Payments.Payables.UseCases;
 
 namespace Empiria.Payments.WebApi {
 
-  /// <summary>Web API used to retrive and update documents for payments entities.</summary>
-  public class DocumentsController : WebApiController {
+  /// <summary>Web API used to retrive and update documents for payable entities.</summary>
+  public class PayableDocumentsController : WebApiController {
 
     #region Command web apis
 
@@ -134,6 +134,6 @@ namespace Empiria.Payments.WebApi {
 
     #endregion Command web apis
 
-  }  // class DocumentsController
+  }  // class PayableDocumentsController
 
 }  // namespace Empiria.Payments.WebApi
