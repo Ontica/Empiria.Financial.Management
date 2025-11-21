@@ -16,7 +16,7 @@ using Empiria.History;
 namespace Empiria.Billing.Adapters {
 
   /// <summary>Mapping methods for bill.</summary>
-  static internal class BillMapper {
+  static public class BillMapper {
 
     #region Public methods
 
@@ -33,11 +33,21 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static internal BillDto MapToBillDto(Bill bill) {
+    static public FixedList<BillDto> MapToBillDto(FixedList<Bill> bills) {
+      return bills.Select((x) => MapToBillDto(x))
+                  .ToFixedList();
+    }
+
+
+    static public BillDto MapToBillDto(Bill bill) {
+
+      var files = DocumentServices.GetAllEntityDocuments(bill);
 
       return new BillDto {
         UID = bill.UID,
         BillNo = bill.BillNo,
+        Name = "Este es el nombre",
+        Description = "Esta es la descripción",
         Category = bill.BillCategory.MapToNamedEntity(),
         BillType = bill.BillType.MapToNamedEntity(),
         ManagedBy = bill.ManagedBy.MapToNamedEntity(),
@@ -50,7 +60,9 @@ namespace Empiria.Billing.Adapters {
         IssueDate = bill.IssueDate,
         PostedBy = bill.PostedBy.MapToNamedEntity(),
         PostingTime = bill.PostingTime,
-        Status = bill.Status.MapToDto()
+        Status = bill.Status.MapToDto(),
+        Files = files.Select(x => x.File)
+                      .ToFixedList(),
       };
     }
 

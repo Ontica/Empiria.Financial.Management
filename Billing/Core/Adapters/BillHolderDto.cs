@@ -12,6 +12,7 @@ using System;
 
 using Empiria.Documents;
 using Empiria.History;
+using Empiria.Storage;
 
 namespace Empiria.Billing.Adapters {
 
@@ -55,6 +56,15 @@ namespace Empiria.Billing.Adapters {
 
 
     public string BillNo {
+      get; internal set;
+    }
+
+    public string Name {
+      get; internal set;
+    }
+
+
+    public string Description {
       get; internal set;
     }
 
@@ -120,6 +130,10 @@ namespace Empiria.Billing.Adapters {
 
 
     public NamedEntityDto Status {
+      get; internal set;
+    }
+
+    public FixedList<FileDto> Files {
       get; internal set;
     }
 
