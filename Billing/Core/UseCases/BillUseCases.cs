@@ -121,6 +121,17 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    public string ExtractBillNo(string xmlString) {
+      Assertion.Require(xmlString, nameof(xmlString));
+
+      var reader = new SATBillXmlReader(xmlString);
+
+      SATBillDto satDto = reader.ReadAsBillDto();
+
+      return satDto.SATComplemento.UUID;
+    }
+
+
     public BillWithConceptsDto GetBillWithConceptsDto(string billUID) {
       Assertion.Require(billUID, nameof(billUID));
 
