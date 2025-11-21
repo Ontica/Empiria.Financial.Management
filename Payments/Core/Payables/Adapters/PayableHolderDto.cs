@@ -103,35 +103,35 @@ namespace Empiria.Payments.Payables.Adapters {
   public class PayableEntityDto {
 
     public string UID {
-      get; internal set;
+      get; set;
     }
 
     public NamedEntityDto Type {
-      get; internal set;
+      get; set;
     }
 
     public string EntityNo {
-      get; internal set;
+      get; set;
     }
 
     public string Name {
-      get; internal set;
+      get; set;
     }
 
     public string Description {
-      get; internal set;
+      get; set;
     }
 
     public NamedEntityDto Budget {
-      get; internal set;
+      get; set;
     }
 
     public NamedEntityDto Currency {
-      get; internal set;
+      get; set;
     }
 
     public decimal Total {
-      get; internal set;
+      get; set;
     }
 
     public NamedEntityDto PayTo {

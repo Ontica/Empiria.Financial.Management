@@ -38,7 +38,6 @@ namespace Empiria.Financial {
     /// <summary>Debtor and Creditor account (naturaleza combinada).</summary>
     Combinada = 'C',
 
-
     Undefined = 'U',
 
   }  // enum DebtorCreditorType

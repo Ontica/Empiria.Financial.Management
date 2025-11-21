@@ -39,7 +39,6 @@ namespace Empiria.Tests.Financial {
     }
 
 
-
     [Fact]
     public void Clean_Financial_Concepts() {
       var groups = FinancialConceptGroup.GetList();
