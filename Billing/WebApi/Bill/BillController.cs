@@ -46,7 +46,6 @@ namespace Empiria.Billing.WebApi {
       }
     }
 
-
     #endregion Web apis
 
   } // class BillController

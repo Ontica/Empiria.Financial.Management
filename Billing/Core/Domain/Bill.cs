@@ -325,7 +325,7 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
-      fields.EnsureIsValidBill(PayableId, PayableTotal, BillCategory);
+
       fields.EnsureIsValidCreditNote(BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;

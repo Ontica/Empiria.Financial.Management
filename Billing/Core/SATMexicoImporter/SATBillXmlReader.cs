@@ -7,16 +7,15 @@
 *  Summary  : Service used to read a bill as xml string and return a SATBillDto object.                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Contexts;
-using System.Security.Cryptography;
 using System.Xml;
 
 namespace Empiria.Billing.SATMexicoImporter {
 
   /// <summary>Service used to read a bill as xml string and return a SATBillDto object.</summary>
-  internal class SATBillXmlReader {
+  public class SATBillXmlReader {
 
     private readonly SATBillDto _satBillDto;
 

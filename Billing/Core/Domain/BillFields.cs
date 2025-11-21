@@ -17,7 +17,6 @@ using Empiria.Billing.Data;
 
 namespace Empiria.Billing {
 
-
   internal interface IBillFields {
 
   }
@@ -515,17 +514,6 @@ namespace Empiria.Billing {
     }
 
 
-    static internal void EnsureIsValidBill(this BillFields fields, int payableId,
-                                           decimal payableTotal, BillCategory billCategory) {
-
-      var billsByPayable = BillData.GetBillsForPayable(payableId, billCategory);
-
-      Assertion.Require((billsByPayable.Sum(x => x.Total) + fields.Total) <= payableTotal,
-                        "El monto total de las facturas registradas y/o " +
-                        "la factura que intenta guardar es mayor al monto total del contrato.");
-    }
-
-
     static internal void EnsureIsValidCreditNote(this BillFields fields, BillCategory billCategory) {
 
       if (billCategory != BillCategory.NotaDeCreditoProveedores) {
@@ -540,13 +528,6 @@ namespace Empiria.Billing {
       Assertion.Require(relatedBill,
                         "El CFDI al que hace referencia la nota de crédito, " +
                         "no ha sido registrado en el sistema.");
-
-      var relatedDocuments = BillData.GetRelatedDocuments(fields.CFDIRelated);
-
-      Assertion.Require((relatedDocuments.Sum(x => x.Total) + fields.Total) <= relatedBill.Total,
-                        "El total de ésta nota de crédito y la suma de las notas de crédito " +
-                        "registradas exceden el total de la factura " +
-                        $"(CFDI relacionado: {fields.CFDIRelated}).");
     }
 
 
@@ -595,7 +576,7 @@ namespace Empiria.Billing {
 
       var billsByPayable = BillData.GetBillsForPayable(payableId, billCategory);
 
-      Assertion.Require((billsByPayable.Sum(x=>x.Total) + fieldsTotal) <= payableTotal,
+      Assertion.Require((billsByPayable.Sum(x => x.Total) + fieldsTotal) <= payableTotal,
                           "El monto total de las facturas registradas y/o " +
                           "la factura que intenta guardar es mayor al monto total del contrato.");
     }

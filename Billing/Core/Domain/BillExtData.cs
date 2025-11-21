@@ -8,15 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-using Empiria.Financial;
 using Empiria.Json;
-using Empiria.Services;
 
 namespace Empiria.Billing {
 
   /// <summary>Holds additional bill information according to the bill's.</summary>
-  internal class BillExtData {
+  public class BillExtData {
 
     private readonly JsonObject _extData = new JsonObject();
 
