@@ -22,7 +22,7 @@ namespace Empiria.Billing {
 
   /// <summary>Represents a bill for an invoice, credit note, paycheck, payment reception, etc.</summary>
   [PartitionedType(typeof(BillType))]
-  internal class Bill : BaseObject {
+  public class Bill : BaseObject {
 
     #region Constructors and parsers
 
@@ -33,6 +33,9 @@ namespace Empiria.Billing {
     static public Bill Parse(int id) => ParseId<Bill>(id);
 
     static public Bill Parse(string uid) => ParseKey<Bill>(uid);
+
+    static public Bill TryParseWithBillNo(string billNo) =>
+                            TryParse<Bill>($"BILL_NO = '{billNo}' AND BILL_STATUS <> 'X'");
 
     public Bill(BillCategory billCategory,
                 string billNo) : base(billCategory.BillType) {
@@ -47,23 +50,29 @@ namespace Empiria.Billing {
       PayableTotal = 2170128.00M;
     }
 
-    public Bill(IPayable payable,
+    public Bill(IPayableEntity payable,
                 BillCategory billCategory,
                 string billNo) : base(billCategory.BillType) {
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
 
-      PayableEntityTypeId = payable.PayableEntity.GetEmpiriaType().Id;
-      PayableEntityId = payable.PayableEntity.Id;
+      PayableEntityTypeId = payable.GetEmpiriaType().Id;
+      PayableEntityId = payable.Id;
       PayableId = payable.Id;
-      ManagedBy = Party.Parse(payable.PayableEntity.OrganizationalUnit.UID);
+      ManagedBy = Party.Parse(payable.OrganizationalUnit.UID);
       BillCategory = billCategory;
       BillNo = billNo;
       PayableTotal = payable.Total;
     }
 
     static public Bill Empty => ParseEmpty<Bill>();
+
+    static public FixedList<Bill> GetListFor(IPayableEntity payable) {
+      return GetList<Bill>($"BILL_PAYABLE_ENTITY_ID = {payable.Id} " +
+                           $"AND BILL_STATUS <> 'X'")
+            .ToFixedList();
+    }
 
     #endregion Constructors and parsers
 
@@ -278,6 +287,10 @@ namespace Empiria.Billing {
     #endregion Properties
 
     #region Methods
+
+    public void Delete() {
+      this.Status = BillStatus.Deleted;
+    }
 
     protected override void OnSave() {
       if (IsNew) {

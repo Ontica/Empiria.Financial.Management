@@ -11,9 +11,9 @@
 using System;
 using System.IO;
 
-using Empiria.Parties;
-
 using Empiria.Documents;
+using Empiria.Financial;
+using Empiria.Parties;
 
 using Empiria.Billing;
 using Empiria.Billing.Adapters;
@@ -42,7 +42,7 @@ namespace Empiria.Payments {
     }
 
 
-    static internal Bill GenerateBill(Payable payable, DocumentDto billDocument) {
+    static internal Bill GenerateBill(IPayableEntity payable, DocumentDto billDocument) {
       Assertion.Require(billDocument, nameof(billDocument));
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
@@ -64,7 +64,7 @@ namespace Empiria.Payments {
     }
 
 
-    static internal FixedList<BillDto> GetPayableBills(Payable payable) {
+    static internal FixedList<BillDto> GetPayableBills(IPayableEntity payable) {
       Assertion.Require(payable, nameof(payable));
 
       return new FixedList<BillDto>();

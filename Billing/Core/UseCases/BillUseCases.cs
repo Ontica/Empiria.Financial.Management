@@ -38,7 +38,7 @@ namespace Empiria.Billing.UseCases {
 
     #region Use cases
 
-    public BillDto CreateBill(string xmlString, IPayable payable) {
+    public BillDto CreateBill(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
 
@@ -67,7 +67,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public BillDto CreateBillPaymentComplement(string xmlString, IPayable payable) {
+    public BillDto CreateBillPaymentComplement(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
 
@@ -94,7 +94,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public BillDto CreateCreditNote(string xmlString, IPayable payable) {
+    public BillDto CreateCreditNote(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
 
@@ -164,7 +164,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateBillByCategory(IPayable payable, BillFields fields, BillCategory billCategory) {
+    private Bill CreateBillByCategory(IPayableEntity payable, BillFields fields, BillCategory billCategory) {
 
       var bill = new Bill(payable, billCategory, fields.BillNo);
 
@@ -216,7 +216,7 @@ namespace Empiria.Billing.UseCases {
 
 
 
-    private Bill CreateBillImplementation(IPayable payable, BillFields fields) {
+    private Bill CreateBillImplementation(IPayableEntity payable, BillFields fields) {
 
       return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
     }
@@ -258,7 +258,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateCreditNoteImplementation(IPayable payable, BillFields fields) {
+    private Bill CreateCreditNoteImplementation(IPayableEntity payable, BillFields fields) {
 
       return CreateBillByCategory(payable, fields, BillCategory.NotaDeCreditoProveedores);
     }
@@ -282,7 +282,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreatePaymentComplementImplementation(IPayable payable, BillPaymentComplementFields fields) {
+    private Bill CreatePaymentComplementImplementation(IPayableEntity payable, BillPaymentComplementFields fields) {
 
       var billCategory = BillCategory.ComplementoPagoProveedores;
 
@@ -316,7 +316,6 @@ namespace Empiria.Billing.UseCases {
 
       return bill;
     }
-
 
     #endregion Private methods
 
