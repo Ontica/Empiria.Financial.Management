@@ -29,7 +29,7 @@ namespace Empiria.Payments.Orders.Adapters {
       return new PaymentOrderHolderDto {
         PaymentOrder = MapPaymentOrder(paymentOrder),
         Items = PayableItemMapper.Map(paymentOrder.Payable.GetItems()),
-        Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
+        // Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
         Documents = DocumentServices.GetAllEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),
         Log = GetPaymentOrderLog(paymentOrder),

@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Services;
 
 using Empiria.Documents;
@@ -42,14 +44,17 @@ namespace Empiria.Payments.Payables.UseCases {
         return document;
       }
 
-      var payable = Payable.Parse(payableUID);
+      throw new NotImplementedException();
 
-      Bill bill = ExternalServices.GenerateBill(payable, document);
+      //var payable = Payable.Parse(payableUID);
 
-      SetPayableBillConcepts(payable.GetItems(), bill.Concepts);
+      //Bill bill = ExternalServices.GenerateBill(payable, document);
 
-      return ExternalServices.UpdatePayableDocumentWithBillData(payable, document, bill);
+      //SetPayableBillConcepts(payable.GetItems(), bill.Concepts);
+
+      //return ExternalServices.UpdatePayableDocumentWithBillData(payable, document, bill);
     }
+
 
     private void SetPayableBillConcepts(FixedList<PayableItem> payableItems,
                                         FixedList<BillConcept> billConcepts) {

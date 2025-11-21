@@ -10,9 +10,6 @@
 
 using System.Collections.Generic;
 
-using Empiria.Documents;
-using Empiria.History;
-
 namespace Empiria.Payments.Payables.Adapters {
 
   /// <summary>Provides data mapping services for payable data objects and related types.</summary>
@@ -21,14 +18,14 @@ namespace Empiria.Payments.Payables.Adapters {
     static internal PayableHolderDto Map(Payable payable) {
 
       return new PayableHolderDto {
-        Payable = PayableMapper.Map(payable),
-        PayableEntity = PayableEntityMapper.Map(payable.PayableEntity),
-        Items = new FixedList<PayableDataItemDto>(),
-        // MapPayableItems(payable.GetItems()),
-        Bills = ExternalServices.GetPayableBills(payable),
-        Documents = DocumentServices.GetAllEntityDocuments(payable),
-        History = HistoryServices.GetEntityHistory(payable),
-        Actions = MapActions(),
+        //Payable = PayableMapper.Map(payable),
+        //PayableEntity = PayableEntityMapper.Map(payable.PayableEntity),
+        //Items = new FixedList<PayableDataItemDto>(),
+        //MapPayableItems(payable.GetItems()),
+        //Bills = ExternalServices.GetPayableBills(payable),
+        //Documents = DocumentServices.GetAllEntityDocuments(payable),
+        //History = HistoryServices.GetEntityHistory(payable),
+        //Actions = MapActions(),
       };
 
     }
