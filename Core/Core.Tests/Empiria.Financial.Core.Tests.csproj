@@ -78,6 +78,10 @@
     <ProjectReference Include="..\Core\Empiria.Financial.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Budgeting\Core\Empiria.Budgeting.Core.csproj" />
+    <ProjectReference Include="..\..\Budgeting\Transactions\Empiria.Budgeting.Transactions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="empiria.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

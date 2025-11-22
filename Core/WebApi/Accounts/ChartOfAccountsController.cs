@@ -9,7 +9,13 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Web.Http;
+
 using Empiria.WebApi;
+
+using Empiria.Financial.Data;
+
+using Empiria.Financial.Projects;
+using Empiria.Financial.Projects.Data;
 
 using Empiria.Financial.Adapters;
 using Empiria.Financial.UseCases;
@@ -18,6 +24,34 @@ namespace Empiria.Financial.WebApi {
 
   /// <summary>Web API used to retrive and update chart of accounts.</summary>
   public class ChartOfAccountsController : WebApiController {
+
+    [HttpPost]
+    [Route("v3/charts-of-accounts/clean")]
+    public NoDataModel Clean() {
+
+      var stdAccounts = BaseObject.GetFullList<StandardAccount>();
+
+      foreach (var stdAccount in stdAccounts) {
+        StandardAccountDataService.CleanStandardAccount(stdAccount);
+      }
+
+
+      var projects = BaseObject.GetFullList<FinancialProject>();
+
+      foreach (var project in projects) {
+        FinancialProjectDataService.CleanProject(project);
+      }
+
+
+      var accounts = BaseObject.GetFullList<FinancialAccount>();
+
+      foreach (var account in accounts) {
+        FinancialAccountDataService.CleanAccount(account);
+      }
+
+      return new NoDataModel(base.Request);
+    }
+
 
     #region Query web apis
 

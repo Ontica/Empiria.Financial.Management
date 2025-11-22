@@ -10,14 +10,8 @@
 
 using Xunit;
 
-using Empiria.Financial;
-using Empiria.Financial.Data;
-
 using Empiria.Financial.Concepts;
 using Empiria.Financial.Concepts.Data;
-
-using Empiria.Financial.Projects;
-using Empiria.Financial.Projects.Data;
 
 using Empiria.Financial.Rules;
 using Empiria.Financial.Rules.Data;
@@ -28,16 +22,6 @@ namespace Empiria.Tests.Financial {
   public class DataCleaners {
 
     #region Facts
-
-    [Fact]
-    public void Clean_Financial_Accounts() {
-      var accounts = BaseObject.GetFullList<FinancialAccount>();
-
-      foreach (var account in accounts) {
-        FinancialAccountDataService.CleanAccount(account);
-      }
-    }
-
 
     [Fact]
     public void Clean_Financial_Concepts() {
@@ -57,31 +41,11 @@ namespace Empiria.Tests.Financial {
 
 
     [Fact]
-    public void Clean_Financial_Projects() {
-      var projects = BaseObject.GetFullList<FinancialProject>();
-
-      foreach (var project in projects) {
-        FinancialProjectDataService.CleanProject(project);
-      }
-    }
-
-
-    [Fact]
     public void Clean_Financial_Rules() {
       var rules = BaseObject.GetFullList<FinancialRule>("RULE_CATEGORY_ID > 0");
 
       foreach (var rule in rules) {
         FinancialRulesData.CleanFinancialRule(rule);
-      }
-    }
-
-
-    [Fact]
-    public void Clean_Standard_Accounts() {
-      var stdAccounts = BaseObject.GetFullList<StandardAccount>();
-
-      foreach (var stdAccount in stdAccounts) {
-        StandardAccountDataService.CleanStandardAccount(stdAccount);
       }
     }
 
