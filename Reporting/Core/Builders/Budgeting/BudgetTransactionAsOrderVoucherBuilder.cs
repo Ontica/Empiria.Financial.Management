@@ -86,9 +86,10 @@ namespace Empiria.Budgeting.Reporting {
         entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", entry.BudgetAccount.Code);
         entryHtml.Replace("{{PRODUCT_CODE}}", entry.ProductCode);
         entryHtml.Replace("{{DESCRIPTION}}", entry.Description);
+        entryHtml.Replace("{{ORIGIN_COUNTRY}}", entry.OriginCountry.CountryISOCode);
         entryHtml.Replace("{{CONTROL_NO}}", controlNo);
         entryHtml.Replace("{{PROGRAM}}", entry.BudgetAccount.BudgetProgram);
-        entryHtml.Replace("{{YEAR}}", entry.BudgetEntry.Year.ToString());
+        entryHtml.Replace("{{YEAR}}", entry.Budget.Year.ToString());
         entryHtml.Replace("{{PRODUCT_UNIT}}", entry.ProductUnit.Name);
         entryHtml.Replace("{{QUANTITY}}", entry.Quantity.ToString("C2"));
         entryHtml.Replace("{{UNIT_PRICE}}", entry.UnitPrice.ToString("C2"));
@@ -107,6 +108,7 @@ namespace Empiria.Budgeting.Reporting {
       html.Replace("{{JUSTIFICATION}}", _order.Justification);
       html.Replace("{{OBSERVATIONS}}", _order.Observations);
       html.Replace("{{GUARANTEE_NOTES}}", _order.GuaranteeNotes);
+      html.Replace("{{PENALTY_NOTES}}", _order.PenaltyNotes);
       html.Replace("{{DELIVERY_NOTES}}", _order.DeliveryNotes);
 
       if (_txn.AuthorizedBy.IsEmptyInstance) {
@@ -130,13 +132,23 @@ namespace Empiria.Budgeting.Reporting {
 
 
     private StringBuilder BuildHeader(StringBuilder html) {
-      const string NO_VALID = "<span class='warning'> SUFICIENCIA PRESUPUESTAL PENDIENTE DE AUTORIZAR </span>";
+
+      string title = _templateConfig.Title;
+
+      if (_txn.IsMultiYear) {
+        title = $"{title} (plurianual)";
+      }
+      if (_txn.AuthorizedBy.IsEmptyInstance) {
+        title = $"<span class='warning'>{title}</span>";
+      }
+
 
       html.Replace("{{SYSTEM.DATETIME}}", $"Impresión: {DateTime.Now.ToString("dd/MMM/yyyy HH:mm")}");
-      html.Replace("{{REPORT.TITLE}}", _txn.AuthorizedBy.IsEmptyInstance ? NO_VALID : _templateConfig.Title);
-      html.Replace("{{ORDER_NO}}", $"{_txn.TransactionNo}: {_order.Name}");
-      html.Replace("{{FOLIO}}", _order.OrderNo);
-      html.Replace("{{REQUESTED_BY}}", _order.RequestedBy.Name);
+      html.Replace("{{REPORT.TITLE}}", title);
+      html.Replace("{{TRANSACTION_NO}}", _txn.TransactionNo);
+      html.Replace("{{ORDER_NAME}}", _order.Name);
+      html.Replace("{{ORDER_NO}}", $"{_order.OrderNo} {(_txn.IsMultiYear ? "(Plurianual)" : string.Empty)}");
+      html.Replace("{{REQUESTED_BY}}", ((INamedEntity) _order.RequestedBy).Name);
       html.Replace("{{RECORDING_TIME}}", _order.RequestedTime.ToString("dd/MMM/yyyy"));
 
       if (ExecutionServer.IsMinOrMaxDate(_order.StartDate)) {
@@ -147,6 +159,9 @@ namespace Empiria.Budgeting.Reporting {
         html.Replace("{{REQUIRED_TIME}}", $"Del {EmpiriaString.DateLongString(_order.StartDate)} " +
                                           $"al {EmpiriaString.DateLongString(_order.EndDate)}");
       }
+
+      html.Replace("{{ESTIMATED_MONTHS}}", _order.EstimatedMonths.ToString("00"));
+
       return html;
     }
 
