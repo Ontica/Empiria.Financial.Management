@@ -21,6 +21,11 @@ namespace Empiria.Budgeting.Transactions {
   /// <summary>Input fields used to create and update budget entries.</summary>
   public class BudgetEntryFields {
 
+    public string BudgetUID {
+      get; set;
+    } = string.Empty;
+
+
     public string BudgetAccountUID {
       get; set;
     } = string.Empty;

@@ -306,6 +306,7 @@ namespace Empiria.Budgeting.Transactions {
 
       fields.EnsureIsValid();
 
+      Budget = Patcher.Patch(fields.BudgetUID, Transaction.BaseBudget);
       BudgetAccount = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount);
       Product = Patcher.Patch(fields.ProductUID, Product.Empty);
       ProductCode = EmpiriaString.Clean(fields.ProductCode);
