@@ -110,7 +110,8 @@ namespace Empiria.Budgeting.Transactions.Data {
       var sql = "SELECT * FROM FMS_BUDGET_ENTRIES " +
                $"WHERE BDG_ENTRY_TXN_ID = {transaction.Id} AND " +
                      $"BDG_ENTRY_STATUS <> 'X' " +
-               $"ORDER BY BDG_ENTRY_ID";
+               $"ORDER BY BDG_ENTRY_POSITION, BDG_ENTRY_YEAR, BDG_ENTRY_MONTH, BDG_ENTRY_DAY, " +
+                         $"BDG_ENTRY_CONTROL_NO, BDG_ENTRY_ID";
 
       var op = DataOperation.Parse(sql);
 

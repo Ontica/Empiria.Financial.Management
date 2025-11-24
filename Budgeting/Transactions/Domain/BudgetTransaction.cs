@@ -22,11 +22,6 @@ using Empiria.StateEnums;
 
 using Empiria.Budgeting.Transactions.Data;
 
-namespace Empiria.Budgeting {
-
-}  // namespace Empiria.Budgeting
-
-
 namespace Empiria.Budgeting.Transactions {
 
   /// <summary>Partitioned type that represents a budget transaction with its entries.</summary>
@@ -156,7 +151,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool HasEntity {
       get {
-        return EntityTypeId != -1;
+        return EntityTypeId != -1 && EntityId != -1;
       }
     }
 
@@ -281,6 +276,15 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+
+    public bool IsMultiYear {
+      get {
+        return _entries.Value.ToFixedList()
+                             .SelectDistinct(x => x.Budget.Year)
+                             .Count() > 1;
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -328,7 +332,6 @@ namespace Empiria.Budgeting.Transactions {
       }
       this.Status = TransactionStatus.Closed;
     }
-
 
     internal void DeleteOrCancel() {
       Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this transaction.");
