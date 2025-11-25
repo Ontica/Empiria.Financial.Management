@@ -15,8 +15,6 @@ using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
-using Empiria.Budgeting.Data;
-
 namespace Empiria.Budgeting {
 
   /// <summary>Partitioned type that represents a budget account.</summary>
@@ -187,7 +185,7 @@ namespace Empiria.Budgeting {
         PostingTime = DateTime.Now;
       }
 
-      FormerBudgetAcctData.WriteBudgetAccount(this, ExtData.ToString());
+      // BudgetAccountData.WriteBudgetAccount(this, ExtData.ToString());
     }
 
 

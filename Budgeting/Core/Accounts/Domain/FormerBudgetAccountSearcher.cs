@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Linq;
-
 using Empiria.Parties;
 
 using Empiria.Budgeting.Data;
@@ -41,7 +39,7 @@ namespace Empiria.Budgeting {
       filter.AppendAnd(orgUnitFilter);
       filter.AppendAnd(baseSegmentFilter);
 
-      var accounts = FormerBudgetAcctData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
+      var accounts = BudgetAccountData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
 
       return accounts.Count != 0;
     }
@@ -50,26 +48,28 @@ namespace Empiria.Budgeting {
     public FixedList<FormerBudgetAccount> Search(OrganizationalUnit orgUnit,
                                            FixedList<FormerBudgetAcctSegment> baseSegments) {
 
-      string budgetTypeFilter = GetBudgetTypeFilter();
-      string orgUnitFilter = GetOrgUnitFilter(orgUnit);
-      string baseSegmentsFilter = GetSegmentsFilter("BDG_ACCT_BASE_SEGMENT_ID", baseSegments);
-      string keywordsFilter = GetKeywordsFilter();
+      throw new System.NotImplementedException("FormerBudgetAccountSearcher.Search with baseSegments is not implemented.");
 
-      var filter = new Filter(budgetTypeFilter);
+      //string budgetTypeFilter = GetBudgetTypeFilter();
+      //string orgUnitFilter = GetOrgUnitFilter(orgUnit);
+      //string baseSegmentsFilter = GetSegmentsFilter("BDG_ACCT_BASE_SEGMENT_ID", baseSegments);
+      //string keywordsFilter = GetKeywordsFilter();
 
-      filter.AppendAnd(orgUnitFilter);
-      filter.AppendAnd(baseSegmentsFilter);
-      filter.AppendAnd(keywordsFilter);
+      //var filter = new Filter(budgetTypeFilter);
 
-      return FormerBudgetAcctData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
+      //filter.AppendAnd(orgUnitFilter);
+      //filter.AppendAnd(baseSegmentsFilter);
+      //filter.AppendAnd(keywordsFilter);
+
+      //return BudgetAccountData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
     }
 
 
-    public FixedList<FormerBudgetAccount> Search(OrganizationalUnit orgUnit, string filterString) {
+    public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit, string filterString) {
       Assertion.Require(orgUnit, nameof(orgUnit));
 
       filterString = EmpiriaString.Clean(filterString ?? string.Empty);
-      filterString = filterString.Replace("{{ACCOUNT.CODE.FIELD}}", "BDG_ACCT_CODE");
+      filterString = filterString.Replace("{{ACCOUNT.CODE.FIELD}}", "ACCT_NUMBER");
 
       string budgetTypeFilter = GetBudgetTypeFilter();
       string orgUnitFilter = GetOrgUnitFilter(orgUnit);
@@ -81,24 +81,27 @@ namespace Empiria.Budgeting {
       filter.AppendAnd(keywordsFilter);
       filter.AppendAnd(filterString);
 
-      return FormerBudgetAcctData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
+      return BudgetAccountData.SearchBudgetAcccounts(filter.ToString(), "ACCT_NUMBER");
     }
 
 
     public FixedList<FormerBudgetAcctSegment> SearchUnassignedBaseSegments(OrganizationalUnit orgUnit,
                                                                         string filterString) {
-      Assertion.Require(orgUnit, nameof(orgUnit));
 
-      filterString = EmpiriaString.Clean(filterString ?? string.Empty);
+      return new FixedList<FormerBudgetAcctSegment>();
 
-      FixedList<FormerBudgetAccount> assignedAccounts = Search(orgUnit, filterString);
+      //Assertion.Require(orgUnit, nameof(orgUnit));
 
-      FixedList<FormerBudgetAcctSegment> allSegments = _budgetType.ProductProcurementSegmentType.SearchInstances(filterString, _keywords);
+      //filterString = EmpiriaString.Clean(filterString ?? string.Empty);
 
-      return allSegments.Remove(assignedAccounts.Select(x => x.BaseSegment))
-                        .Distinct()
-                        .ToFixedList()
-                        .Sort((x, y) => x.Code.CompareTo(y.Code));
+      //FixedList<FormerBudgetAccount> assignedAccounts = Search(orgUnit, filterString);
+
+      //FixedList<FormerBudgetAcctSegment> allSegments = _budgetType.ProductProcurementSegmentType.SearchInstances(filterString, _keywords);
+
+      //return allSegments.Remove(assignedAccounts.Select(x => x.BaseSegment))
+      //                  .Distinct()
+      //                  .ToFixedList()
+      //                  .Sort((x, y) => x.Code.CompareTo(y.Code));
     }
 
     #endregion Methods

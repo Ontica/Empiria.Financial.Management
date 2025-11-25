@@ -44,9 +44,9 @@ namespace Empiria.Budgeting {
 
     #region Properties
 
-    public FormerBudgetAccountType BudgetAccountType {
+    public FinancialAccountType BudgetAccountType {
       get {
-        return (FormerBudgetAccountType) base.GetEmpiriaType();
+        return (FinancialAccountType) base.GetEmpiriaType();
       }
     }
 

@@ -438,7 +438,7 @@ namespace Empiria.Budgeting.Transactions {
 
     internal BudgetEntry TryGetEntry(BudgetEntryFields fields) {
       var column = Patcher.Patch(fields.BalanceColumnUID, BalanceColumn.Empty);
-      var account = Patcher.Patch(fields.BudgetAccountUID, FormerBudgetAccount.Empty);
+      var account = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount.Empty);
       var product = Patcher.Patch(fields.ProductUID, Product.Empty);
       var productUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
       var project = Patcher.Patch(fields.ProjectUID, Project.Empty);

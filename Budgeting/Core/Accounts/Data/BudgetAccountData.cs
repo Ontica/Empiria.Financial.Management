@@ -13,25 +13,11 @@ using Empiria.Data;
 namespace Empiria.Budgeting.Data {
 
   /// <summary>Provides data access services for budget accounts.</summary>
-  static internal class FormerBudgetAcctData {
+  static internal class BudgetAccountData {
 
-    static internal void CleanAccount(FormerBudgetAccount account) {
-      if (account.IsEmptyInstance) {
-        return;
-      }
-      var sql = "UPDATE FMS_BUDGET_ACCOUNTS " +
-               $"SET BDG_ACCT_KEYWORDS = '{account.Keywords}' " +
-               $"WHERE BDG_ACCT_ID = {account.Id}";
+    static internal FixedList<BudgetAccount> SearchBudgetAcccounts(string filter, string sort) {
 
-      var op = DataOperation.Parse(sql);
-
-      DataWriter.Execute(op);
-    }
-
-
-    static internal FixedList<FormerBudgetAccount> SearchBudgetAcccounts(string filter, string sort) {
-
-      var sql = "SELECT * FROM FMS_BUDGET_ACCOUNTS";
+      var sql = "SELECT * FROM FMS_ACCOUNTS";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql += $" WHERE {filter}";
@@ -42,18 +28,7 @@ namespace Empiria.Budgeting.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<FormerBudgetAccount>(op);
-    }
-
-
-    static internal void WriteBudgetAccount(FormerBudgetAccount o, string extData) {
-      var op = DataOperation.Parse("write_fms_budget_account", o.Id, o.UID,
-              o.BudgetAccountType.Id, o.BudgetType.Id, o.Code, o.Description,
-              o.Organization.Id, o.OrganizationalUnit.Id, o.BaseSegment.Id,
-              EmpiriaString.Tagging(o.Identificators), EmpiriaString.Tagging(o.Tags), extData, o.Keywords,
-              o.Id, o.StartDate, o.EndDate, o.PostedBy.Id, o.PostingTime, (char) o.Status);
-
-      DataWriter.Execute(op);
+      return DataReader.GetFixedList<BudgetAccount>(op);
     }
 
   }  // class BudgetAccountDataService
