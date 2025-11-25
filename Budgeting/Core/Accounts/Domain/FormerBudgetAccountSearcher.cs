@@ -45,26 +45,6 @@ namespace Empiria.Budgeting {
     }
 
 
-    public FixedList<FormerBudgetAccount> Search(OrganizationalUnit orgUnit,
-                                           FixedList<FormerBudgetAcctSegment> baseSegments) {
-
-      throw new System.NotImplementedException("FormerBudgetAccountSearcher.Search with baseSegments is not implemented.");
-
-      //string budgetTypeFilter = GetBudgetTypeFilter();
-      //string orgUnitFilter = GetOrgUnitFilter(orgUnit);
-      //string baseSegmentsFilter = GetSegmentsFilter("BDG_ACCT_BASE_SEGMENT_ID", baseSegments);
-      //string keywordsFilter = GetKeywordsFilter();
-
-      //var filter = new Filter(budgetTypeFilter);
-
-      //filter.AppendAnd(orgUnitFilter);
-      //filter.AppendAnd(baseSegmentsFilter);
-      //filter.AppendAnd(keywordsFilter);
-
-      //return BudgetAccountData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
-    }
-
-
     public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit, string filterString) {
       Assertion.Require(orgUnit, nameof(orgUnit));
 
@@ -86,7 +66,9 @@ namespace Empiria.Budgeting {
 
 
     public FixedList<FormerBudgetAcctSegment> SearchUnassignedBaseSegments(OrganizationalUnit orgUnit,
-                                                                        string filterString) {
+                                                                           string filterString) {
+
+      // ToDo: Implement method searching for unassigned standard accounts instead of FormerBudgetAcctSegment
 
       return new FixedList<FormerBudgetAcctSegment>();
 

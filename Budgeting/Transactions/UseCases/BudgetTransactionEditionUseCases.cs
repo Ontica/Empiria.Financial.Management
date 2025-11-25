@@ -227,14 +227,17 @@ namespace Empiria.Budgeting.Transactions.UseCases {
           $"{orgUnit.FullName} ya tiene asignada la cuenta presupuestal {requestedSegment.FullName}");
 
 
-      var newBudgetAccount = new FormerBudgetAccount(FormerBudgetAccountType.GastoCorriente, requestedSegment, orgUnit);
+      // ToDo: Update this code to the new BudgetAccount creation process
 
-      newBudgetAccount.Save();
+      //var newBudgetAccount = new FormerBudgetAccount(FormerBudgetAccountType.GastoCorriente, requestedSegment, orgUnit);
 
-      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Envío de solicitud de autorización de partida presupuestal",
-                                                                        $"Partida {newBudgetAccount.Name}"));
+      //newBudgetAccount.Save();
+
+      //HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Envío de solicitud de autorización de partida presupuestal",
+      //                                                                  $"Partida {newBudgetAccount.Name}"));
 
       throw new System.NotImplementedException("Refactorized code");
+
       // return BudgetAccountMapper.Map(newBudgetAccount);
     }
 
