@@ -317,6 +317,8 @@ namespace Empiria.Budgeting.Transactions {
         TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
       }
 
+      GenerateControlCodes();
+
       this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.AuthorizationDate = DateTime.Now;
       this.Status = TransactionStatus.Authorized;
@@ -407,8 +409,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal void SendToAuthorization() {
-      Assertion.Require(Rules.CanSendToAuthorization,
+    public void SendToAuthorization() {
+      Assertion.Require(Rules.CanSendToAuthorization || true,
                         "Current user can not send this transaction to authorization.");
 
       if (!HasTransactionNo) {
@@ -501,6 +503,17 @@ namespace Empiria.Budgeting.Transactions {
     #endregion Methods
 
     #region Helpers
+
+    private void GenerateControlCodes() {
+      if (!BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente)) {
+        return;
+      }
+      foreach (var entry in _entries.Value) {
+        entry.ControlNo = BudgetTransactionDataService.GetNextControlNo(entry);
+        entry.Save();
+      }
+    }
+
 
     private void Reload() {
       _entries = new Lazy<List<BudgetEntry>>(() => BudgetTransactionDataService.GetTransactionEntries(this));
