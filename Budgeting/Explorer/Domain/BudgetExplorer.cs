@@ -117,25 +117,25 @@ namespace Empiria.Budgeting.Explorer {
         return entry.BudgetAccount.OrganizationalUnit.Code;
       }
       if (AREA_CAPITULO) {
-        return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.BaseSegment.Parent.Code}";
+        return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.StandardAccount.Parent.StdAcctNo}";
       }
       if (AREA_PARTIDA) {
-        return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.BaseSegment.Code}";
+        return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.StandardAccount.StdAcctNo}";
       }
       if (CAPITULO) {
-        return entry.BudgetAccount.BaseSegment.Parent.Code;
+        return entry.BudgetAccount.StandardAccount.Parent.StdAcctNo;
       }
       if (CAPITULO_AREA) {
-        return $"{entry.BudgetAccount.BaseSegment.Parent.Code}{entry.BudgetAccount.OrganizationalUnit.Code}";
+        return $"{entry.BudgetAccount.StandardAccount.Parent.StdAcctNo}{entry.BudgetAccount.OrganizationalUnit.Code}";
       }
       if (PARTIDA) {
-        return entry.BudgetAccount.BaseSegment.Code;
+        return entry.BudgetAccount.StandardAccount.StdAcctNo;
       }
       if (PARTIDA_AREA) {
-        return $"{entry.BudgetAccount.BaseSegment.Code}{entry.BudgetAccount.OrganizationalUnit.Code}";
+        return $"{entry.BudgetAccount.StandardAccount.StdAcctNo}{entry.BudgetAccount.OrganizationalUnit.Code}";
       }
 
-      return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.BaseSegment.Code}";
+      return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.StandardAccount.StdAcctNo}";
     }
 
 
@@ -144,25 +144,25 @@ namespace Empiria.Budgeting.Explorer {
         return x => new { x.BudgetAccount.OrganizationalUnit };
       }
       if (AREA_CAPITULO) {
-        return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.BaseSegment.Parent };
+        return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.StandardAccount.Parent };
       }
       if (AREA_PARTIDA) {
-        return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.BaseSegment };
+        return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.StandardAccount };
       }
       if (CAPITULO) {
-        return x => new { x.BudgetAccount.BaseSegment.Parent };
+        return x => new { x.BudgetAccount.StandardAccount.Parent };
       }
       if (CAPITULO_AREA) {
-        return x => new { x.BudgetAccount.BaseSegment.Parent, x.BudgetAccount.OrganizationalUnit };
+        return x => new { x.BudgetAccount.StandardAccount.Parent, x.BudgetAccount.OrganizationalUnit };
       }
       if (PARTIDA) {
-        return x => new { x.BudgetAccount.BaseSegment };
+        return x => new { x.BudgetAccount.StandardAccount };
       }
       if (PARTIDA_AREA) {
-        return x => new { x.BudgetAccount.BaseSegment, x.BudgetAccount.OrganizationalUnit };
+        return x => new { x.BudgetAccount.StandardAccount, x.BudgetAccount.OrganizationalUnit };
       }
 
-      return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.BaseSegment };
+      return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.StandardAccount };
     }
 
 
