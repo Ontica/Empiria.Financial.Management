@@ -114,7 +114,7 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(billUID, nameof(billUID));
 
       Bill bill = Bill.Parse(billUID);
-      bill.AssignConcepts();
+
       bill.AssignBillRelatedBills();
 
       return BillMapper.Map(bill);
@@ -136,7 +136,7 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(billUID, nameof(billUID));
 
       Bill bill = Bill.Parse(billUID);
-      bill.AssignConcepts();
+
       bill.AssignBillRelatedBills();
 
       return BillMapper.MapToBillWithConcepts(bill);
@@ -164,16 +164,6 @@ namespace Empiria.Billing.UseCases {
 
     #region Private methods
 
-    private void AssignConcepts(Bill bill) {
-
-      bill.Concepts = BillConcept.GetListFor(bill);
-
-      foreach (var concept in bill.Concepts) {
-
-        concept.TaxEntries = BillTaxEntry.GetListFor(bill.BillType.Id, concept.Id);
-      }
-    }
-
 
     private Bill CreateBillByCategory(IPayableEntity payable, BillFields fields, BillCategory billCategory) {
 
@@ -183,7 +173,7 @@ namespace Empiria.Billing.UseCases {
 
       bill.Save();
 
-      bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
+      CreateBillConcepts(bill, fields.Concepts);
 
       return bill;
     }
@@ -201,7 +191,7 @@ namespace Empiria.Billing.UseCases {
 
         billConcept.Save();
 
-        billConcept.TaxEntries = CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
+        CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
 
         concepts.Add(billConcept);
       }
@@ -220,7 +210,7 @@ namespace Empiria.Billing.UseCases {
 
       bill.Save();
 
-      bill.Concepts = CreateBillConcepts(bill, fields.Concepts);
+      CreateBillConcepts(bill, fields.Concepts);
 
       return bill;
     }
@@ -303,7 +293,7 @@ namespace Empiria.Billing.UseCases {
 
       bill.Save();
 
-      bill.Concepts = CreatePaymentComplementConcepts(bill, fields.Concepts);
+      CreatePaymentComplementConcepts(bill, fields.Concepts);
 
       bill.BillRelatedBills = CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
 
@@ -321,7 +311,7 @@ namespace Empiria.Billing.UseCases {
 
       bill.Save();
 
-      bill.Concepts = CreatePaymentComplementConcepts(bill, fields.Concepts);
+      CreatePaymentComplementConcepts(bill, fields.Concepts);
 
       bill.BillRelatedBills = CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
 

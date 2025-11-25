@@ -263,8 +263,10 @@ namespace Empiria.Billing {
 
 
     internal FixedList<BillConcept> Concepts {
-      get; set;
-    } = new FixedList<BillConcept>();
+      get {
+        return BillConcept.GetListFor(this);
+      }
+    }
 
 
     internal FixedList<BillRelatedBill> BillRelatedBills {
@@ -298,16 +300,6 @@ namespace Empiria.Billing {
         PostingTime = DateTime.Now;
       }
       BillData.WriteBill(this, ExtData.ToString());
-    }
-
-
-    internal void AssignConcepts() {
-
-      this.Concepts = BillConcept.GetListFor(this);
-
-      foreach (var concept in Concepts) {
-        concept.TaxEntries = BillTaxEntry.GetListFor(this.BillType.Id, concept.BillConceptId);
-      }
     }
 
 
