@@ -162,6 +162,11 @@ namespace Empiria.Billing {
       get; private set;
     }
 
+    public decimal Taxes {
+      get {
+        return Concepts.SelectFlat(x => x.TaxEntries).Sum(x => x.Total);
+      }
+    }
 
     [DataField("BILL_TOTAL")]
     public decimal Total {

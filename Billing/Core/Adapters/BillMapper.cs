@@ -43,11 +43,13 @@ namespace Empiria.Billing.Adapters {
 
       var files = DocumentServices.GetAllEntityDocuments(bill);
 
+      var concepts = bill.Concepts;
+
       return new BillDto {
         UID = bill.UID,
         BillNo = bill.BillNo,
-        Name = "Este es el nombre",
-        Description = "Esta es la descripción",
+        Name = concepts.Count != 0 ? concepts[0].Description : "La factura no tiene conceptos",
+        //Description = Set file name
         Category = bill.BillCategory.MapToNamedEntity(),
         BillType = bill.BillType.MapToNamedEntity(),
         ManagedBy = bill.ManagedBy.MapToNamedEntity(),
@@ -56,6 +58,7 @@ namespace Empiria.Billing.Adapters {
         CurrencyCode = bill.Currency.ISOCode,
         Subtotal = bill.Subtotal,
         Discount = bill.Discount,
+        Taxes = bill.Taxes,
         Total = bill.Total,
         IssueDate = bill.IssueDate,
         PostedBy = bill.PostedBy.MapToNamedEntity(),

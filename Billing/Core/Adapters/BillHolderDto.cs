@@ -114,6 +114,11 @@ namespace Empiria.Billing.Adapters {
     }
 
 
+    public decimal Taxes {
+      get; internal set;
+    }
+
+
     public decimal Total {
       get; internal set;
     }
