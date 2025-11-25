@@ -234,7 +234,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Envío de solicitud de autorización de partida presupuestal",
                                                                         $"Partida {newBudgetAccount.Name}"));
 
-      return BudgetAccountMapper.Map(newBudgetAccount);
+      throw new System.NotImplementedException("Refactorized code");
+      // return BudgetAccountMapper.Map(newBudgetAccount);
     }
 
 
@@ -335,7 +336,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     private void SetOnReviewAccountsToPending(BudgetTransaction transaction) {
       var onReviewAccounts = transaction.Entries.FindAll(x => x.BudgetAccount.Status == EntityStatus.OnReview)
                                                 .SelectDistinct(x => x.BudgetAccount)
-                                                .Sort((x, y) => x.BaseSegment.Code.CompareTo(y.BaseSegment.Code));
+                                                .Sort((x, y) => x.Code.CompareTo(y.Code));
 
       foreach (var account in onReviewAccounts) {
         account.SetStatus(EntityStatus.Pending);
@@ -352,7 +353,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var pendingAccounts = transaction.Entries.FindAll(x => x.BudgetAccount.Status == EntityStatus.Pending)
                                                .SelectDistinct(x => x.BudgetAccount)
-                                               .Sort((x, y) => x.BaseSegment.Code.CompareTo(y.BaseSegment.Code));
+                                               .Sort((x, y) => x.Code.CompareTo(y.Code));
 
       foreach (var account in pendingAccounts) {
         account.SetStatus(EntityStatus.OnReview);

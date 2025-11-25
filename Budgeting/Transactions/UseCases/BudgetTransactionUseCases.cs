@@ -104,8 +104,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var searcher = new FormerBudgetAccountSearcher(query.GetBaseBudget().BudgetType, query.Keywords);
 
-      FixedList<FormerBudgetAccount> accounts = searcher.Search(query.GetBaseParty(),
-                                                                query.GetTransactionType().BudgetAccountsFilter);
+      FixedList<BudgetAccount> accounts = searcher.Search(query.GetBaseParty(),
+                                                          query.GetTransactionType().BudgetAccountsFilter);
 
       if (query.OnlyAssignedAccounts) {
         return BudgetAccountMapper.Map(accounts, new FixedList<FormerBudgetAcctSegment>());

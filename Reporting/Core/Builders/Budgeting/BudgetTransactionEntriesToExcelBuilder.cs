@@ -71,7 +71,7 @@ namespace Empiria.Budgeting.Reporting {
           _excelFile.SetCell($"E{i}", ((OrganizationalUnit) txn.Transaction.BaseParty).Code);
           _excelFile.SetCell($"F{i}", txn.Transaction.BaseParty.Name);
           _excelFile.SetCell($"G{i}", entry.BudgetAccount.Code);
-          _excelFile.SetCell($"H{i}", entry.BudgetAccount.BaseSegment.Name);
+          _excelFile.SetCell($"H{i}", entry.BudgetAccount.StandardAccount.Name);
           _excelFile.SetCell($"I{i}", entry.BudgetAccount.BudgetProgram);
           _excelFile.SetCell($"J{i}", entry.Year);
           _excelFile.SetCell($"K{i}", entry.BalanceColumn.Name);

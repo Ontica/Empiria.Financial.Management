@@ -65,9 +65,9 @@ namespace Empiria.Budgeting.Reporting {
 
       foreach (var entry in txn.GetEntries()) {
         var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT.CODE}}",
-                                          entry.BudgetAccount.BaseSegment.Code));
+                                          entry.BudgetAccount.StandardAccount.StdAcctNo));
 
-        entryHtml.Replace("{{BUDGET_ACCOUNT.NAME}}", entry.BudgetAccount.BaseSegment.Name);
+        entryHtml.Replace("{{BUDGET_ACCOUNT.NAME}}", entry.BudgetAccount.StandardAccount.Name);
         entryHtml.Replace("{{BUDGET_PROGRAM.CODE}}", entry.BudgetAccount.BudgetProgram);
 
         entryHtml.Replace("{{YEAR}}", entry.Year.ToString());
