@@ -45,12 +45,6 @@ namespace Empiria.Tests.Payments {
 
     static internal string CONTRACT_ITEM_UNIT_UID = "3a99bb8a-113f-4e0c-846c-9c0bf8ec1ded";
 
-    static internal readonly string PAYABLE_ENTITY_UID = "fda34114-d994-4d81-9f75-6b35dfe20d78";
-
-    static internal readonly string PAYABLE_ID = "33c97347-923f-41d9-8bbc-3618411096a4";
-
-    static internal readonly string PAYABLE_TYPE_UID = "ObjectTypeInfo.Payable.ContractOrder";
-
   }  // class TestingConstants
 
 }  // namespace Empiria.Tests.Payments
