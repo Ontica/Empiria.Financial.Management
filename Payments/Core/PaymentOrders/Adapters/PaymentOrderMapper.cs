@@ -14,8 +14,6 @@ using Empiria.History;
 using Empiria.Financial;
 using Empiria.Financial.Adapters;
 
-using Empiria.Payments.Payables.Adapters;
-
 using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Services;
@@ -28,7 +26,7 @@ namespace Empiria.Payments.Orders.Adapters {
     static internal PaymentOrderHolderDto Map(PaymentOrder paymentOrder) {
       return new PaymentOrderHolderDto {
         PaymentOrder = MapPaymentOrder(paymentOrder),
-        Items = PayableItemMapper.Map(paymentOrder.PayableEntity.Items),
+        Items = MapItems(paymentOrder.PayableEntity.Items),
         // Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
         Documents = DocumentServices.GetAllEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),
@@ -43,6 +41,21 @@ namespace Empiria.Payments.Orders.Adapters {
     }
 
     #region Helpers
+
+    static internal FixedList<PaymentOrderItemDto> MapItems(FixedList<IPayableEntityItem> items) {
+      return items.Select(x => MapItems(x))
+                  .ToFixedList();
+    }
+
+
+    static internal PaymentOrderItemDto MapItems(IPayableEntityItem payableItem) {
+      return new PaymentOrderItemDto {
+        UID = payableItem.UID,
+        Subtotal = payableItem.Subtotal,
+        Currency = payableItem.Currency.MapToNamedEntity()
+      };
+    }
+
 
     static private PaymentOrderDescriptor MapToDescriptor(PaymentOrder paymentOrder) {
       return new PaymentOrderDescriptor {

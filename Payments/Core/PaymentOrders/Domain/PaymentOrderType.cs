@@ -7,8 +7,6 @@
 *  Summary  : Represents a payment order type.                                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 namespace Empiria.Payments.Orders {
 
   /// <summary>Represents a payment order type.</summary>
@@ -32,7 +30,6 @@ namespace Empiria.Payments.Orders {
       return BaseObject.GetList<PaymentOrderType>()
                        .ToFixedList();
     }
-
 
     #endregion Public Methods
 

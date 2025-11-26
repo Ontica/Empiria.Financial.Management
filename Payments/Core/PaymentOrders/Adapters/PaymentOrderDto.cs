@@ -13,11 +13,10 @@ using System;
 using Empiria.Documents;
 using Empiria.History;
 
+using Empiria.Financial.Adapters;
 using Empiria.Billing.Adapters;
 
-using Empiria.Payments.Payables.Adapters;
 using Empiria.Payments.Processor.Adapters;
-using Empiria.Financial.Adapters;
 
 namespace Empiria.Payments.Orders.Adapters {
 
@@ -28,7 +27,7 @@ namespace Empiria.Payments.Orders.Adapters {
       get; internal set;
     }
 
-    public FixedList<PayableItemDto> Items {
+    public FixedList<PaymentOrderItemDto> Items {
       get; internal set;
     }
 
@@ -184,5 +183,7 @@ namespace Empiria.Payments.Orders.Adapters {
     }
 
   } // class PaymentOrderDescriptor
+
+
 
 }  // namespace Empiria.Payments.Orders.Adapters

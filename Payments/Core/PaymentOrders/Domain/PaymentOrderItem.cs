@@ -10,12 +10,12 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
-using Empiria.Financial;
-using Empiria.Payments.Orders.Adapter;
 
+using Empiria.Payments.Orders.Adapter;
 
 namespace Empiria.Payments.Orders {
 
