@@ -18,8 +18,6 @@ using Empiria.Parties;
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.Data;
 
-using Empiria.Payments.Payables;
-
 namespace Empiria.Payments.Orders {
 
   /// <summary>Represents a payment order.</summary>
@@ -56,16 +54,10 @@ namespace Empiria.Payments.Orders {
       return BaseObject.ParseId<PaymentOrder>(Id);
     }
 
-
-    static internal PaymentOrder TryGetFor(Payable payable) {
-      return BaseObject.TryParse<PaymentOrder>($"PYMT_ORD_PAYABLE_ID = {payable.Id} AND PYMT_ORD_STATUS <> 'X' ");
-    }
-
-
     static internal PaymentOrder TryGetForControlNo(string controlNo) {
       Assertion.Require(controlNo, nameof(controlNo));
 
-      return BaseObject.TryParse<PaymentOrder>($"PYMT_ORD_CONTROL_NO = '{controlNo}' AND PYMT_ORD_STATUS <> 'X' ");
+      return TryParse<PaymentOrder>($"PYMT_ORD_CONTROL_NO = '{controlNo}' AND PYMT_ORD_STATUS <> 'X' ");
     }
 
 
