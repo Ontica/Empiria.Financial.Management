@@ -37,6 +37,11 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
+    public string BudgetProgramUID {
+      get; set;
+    } = string.Empty;
+
+
     public string ProductUID {
       get; set;
     } = string.Empty;

@@ -46,7 +46,8 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(entry, nameof(entry));
 
       return $"{entry.Transaction.Id}|{entry.BalanceColumn.Id}|{entry.BudgetAccount.Id}|" +
-             $"{entry.Product.Id}|{entry.ProductUnit.Id}|{entry.Project.Id}|{entry.Currency.Id}|{entry.Year}";
+             $"{entry.BudgetProgram.Id}|{entry.Product.Id}|{entry.ProductUnit.Id}|" +
+             $"{entry.Project.Id}|{entry.Currency.Id}|{entry.Year}";
     }
 
 
@@ -54,7 +55,8 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(entry, nameof(entry));
 
       return $"{entry.Transaction.Id}|{entry.BalanceColumn.Id}|{entry.BudgetAccount.Id}|" +
-             $"{entry.Product.Id}|{entry.ProductUnit.Id}|{entry.Project.Id}|{entry.Currency.Id}|{entry.Year}";
+             $"{entry.BudgetProgram.Id}|{entry.Product.Id}|{entry.ProductUnit.Id}|" +
+             $"{entry.Project.Id}|{entry.Currency.Id}|{entry.Year}";
     }
 
 
@@ -68,11 +70,12 @@ namespace Empiria.Budgeting.Transactions {
         TransactionUID = BudgetTransaction.Parse(parts[0]).UID,
         BalanceColumnUID = BalanceColumn.Parse(parts[1]).UID,
         BudgetAccountUID = BudgetAccount.Parse(parts[2]).UID,
-        ProductUID = Product.Parse(parts[3]).UID,
-        ProductUnitUID = ProductUnit.Parse(parts[4]).UID,
-        ProjectUID = Project.Parse(parts[5]).UID,
-        CurrencyUID = Currency.Parse(parts[6]).UID,
-        Year = parts[7],
+        BudgetProgramUID = BudgetProgram.Parse(parts[3]).UID,
+        ProductUID = Product.Parse(parts[4]).UID,
+        ProductUnitUID = ProductUnit.Parse(parts[5]).UID,
+        ProjectUID = Project.Parse(parts[6]).UID,
+        CurrencyUID = Currency.Parse(parts[7]).UID,
+        Year = parts[8],
       };
     }
 
@@ -98,11 +101,12 @@ namespace Empiria.Budgeting.Transactions {
 
       FixedList<BudgetEntry> entries = Transaction.Entries.FindAll(x => x.BalanceColumn.Id == parts[1] &&
                                                                         x.BudgetAccount.Id == parts[2] &&
-                                                                        x.Product.Id == parts[3] &&
-                                                                        x.ProductUnit.Id == parts[4] &&
-                                                                        x.Project.Id == parts[5] &&
-                                                                        x.Currency.Id == parts[6] &&
-                                                                        x.Year == parts[7]);
+                                                                        x.BudgetProgram.Id == parts[3] &&
+                                                                        x.Product.Id == parts[4] &&
+                                                                        x.ProductUnit.Id == parts[5] &&
+                                                                        x.Project.Id == parts[6] &&
+                                                                        x.Currency.Id == parts[7] &&
+                                                                        x.Year == parts[8]);
 
       return entries.Sort((x, y) => x.Month.CompareTo(y.Month));
     }
@@ -293,10 +297,8 @@ namespace Empiria.Budgeting.Transactions {
         ProjectUID = fields.ProjectUID,
         ProductUID = fields.ProductUID,
         ProductUnitUID = fields.ProductUnitUID,
-
         Description = fields.Description,
         Justification = fields.Justification,
-
         Amount = amount.Amount,
         OriginalAmount = amount.Amount,
         ProductQty = amount.ProductQty,

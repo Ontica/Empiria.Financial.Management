@@ -29,6 +29,7 @@ namespace Empiria.Budgeting.Transactions {
       Transaction = BudgetTransaction.Parse(fields.TransactionUID);
       BalanceColumn = BalanceColumn.Parse(fields.BalanceColumnUID);
       BudgetAccount = BudgetAccount.Parse(fields.BudgetAccountUID);
+      BudgetProgram = BudgetProgram.Parse(fields.BudgetProgramUID);
       Product = Product.Parse(fields.ProductUID);
       ProductUnit = ProductUnit.Parse(fields.ProductUnitUID);
       Project = Project.Parse(fields.ProjectUID);
@@ -55,6 +56,10 @@ namespace Empiria.Budgeting.Transactions {
     }
 
     public BudgetAccount BudgetAccount {
+      get;
+    }
+
+    public BudgetProgram BudgetProgram {
       get;
     }
 

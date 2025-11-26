@@ -68,7 +68,7 @@ namespace Empiria.Budgeting.Reporting {
                                           entry.BudgetAccount.StandardAccount.StdAcctNo));
 
         entryHtml.Replace("{{BUDGET_ACCOUNT.NAME}}", entry.BudgetAccount.StandardAccount.Name);
-        entryHtml.Replace("{{BUDGET_PROGRAM.CODE}}", entry.BudgetAccount.BudgetProgram);
+        entryHtml.Replace("{{BUDGET_PROGRAM.CODE}}", entry.BudgetProgram.Code);
 
         entryHtml.Replace("{{YEAR}}", entry.Year.ToString());
         entryHtml.Replace("{{BALANCE_COLUMN}}", entry.BalanceColumn.Name);

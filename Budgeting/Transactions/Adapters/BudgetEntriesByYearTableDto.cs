@@ -141,7 +141,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       TransactionUID = entry.Transaction.UID;
       BalanceColumn = entry.BalanceColumn.Name;
       BudgetAccount = entry.BudgetAccount.Name;
-      BudgetProgram = entry.BudgetAccount.BudgetProgram;
+      BudgetProgram = entry.BudgetProgram.Code;
       Product = entry.Product.Name;
       Description = entry.Description;
       ProductUnit = entry.ProductUnit.Name;
