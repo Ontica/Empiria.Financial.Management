@@ -74,8 +74,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    [DataField("BDG_ENTRY_PROGRAM")]
-    public string ProgramCode {
+    [DataField("BDG_ENTRY_PROGRAM_ID")]
+    public BudgetProgram BudgetProgram {
       get; private set;
     }
 
@@ -308,6 +308,9 @@ namespace Empiria.Budgeting.Transactions {
 
       Budget = Patcher.Patch(fields.BudgetUID, Transaction.BaseBudget);
       BudgetAccount = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount);
+
+      BudgetProgram = BudgetAccount.BudgetProgram;
+
       Product = Patcher.Patch(fields.ProductUID, Product.Empty);
       ProductCode = EmpiriaString.Clean(fields.ProductCode);
       ProductName = EmpiriaString.Clean(fields.ProductName);

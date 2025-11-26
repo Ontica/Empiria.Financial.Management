@@ -99,8 +99,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         UID = entry.UID,
         BudgetAccountCode = entry.BudgetAccount.Code,
         BudgetAccountName = entry.BudgetAccount.Name,
-        Program = entry.ProgramCode.Length == 0 ?
-                            entry.BudgetAccount.BudgetProgram : entry.ProgramCode,
+        Program = entry.BudgetProgram.Code,
         ProductCode = entry.ProductCode,
         Description = entry.ProductName,
         ControlNo = entry.ControlNo,

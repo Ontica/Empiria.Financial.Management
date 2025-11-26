@@ -68,19 +68,19 @@ namespace Empiria.Budgeting {
     }
 
 
-    public string BudgetProgram {
+    public BudgetProgram BudgetProgram {
       get {
-        return ExtData.Get("budgetProgram", "N/D");
+        return BudgetProgram.ParseWithCode(ExtData.Get<string>("budgetProgram"));
       }
       private set {
-        ExtData.SetIfValue("budgetProgram", value);
+        ExtData.SetIfValue("budgetProgram", value.Code);
       }
     }
 
 
     public override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(base.Keywords, BudgetProgram);
+        return EmpiriaString.BuildKeywords(base.Keywords, BudgetProgram.Name);
       }
     }
 
@@ -92,10 +92,16 @@ namespace Empiria.Budgeting {
     internal new void SetStatus(EntityStatus newStatus) {
 
       if (Status == EntityStatus.Pending && newStatus == EntityStatus.OnReview) {
-        BudgetProgram = OrganizationalUnit.ExtendedData.Get("budgetProgram", "N/A");
+        var programCode = OrganizationalUnit.ExtendedData.Get("budgetProgram", string.Empty);
+
+        if (programCode.Length != 0) {
+          BudgetProgram = BudgetProgram.ParseWithCode(programCode);
+        } else {
+          BudgetProgram = BudgetProgram.Undefined;
+        }
 
       } else if (Status == EntityStatus.OnReview && newStatus == EntityStatus.Pending) {
-        BudgetProgram = "N/D";
+        BudgetProgram = BudgetProgram.Undefined;
       }
 
       base.SetStatus(newStatus);

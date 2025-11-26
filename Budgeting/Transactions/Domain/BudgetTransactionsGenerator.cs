@@ -66,8 +66,7 @@ namespace Empiria.Budgeting.Transactions {
 
     private FixedList<OrganizationalUnit> GetBudgetingOrgUnits() {
       return BaseObject.GetFullList<OrganizationalUnit>()
-                       .FindAll(x => x.ExtendedData.HasValue("budgetProgram") &&
-                                     x.ExtendedData.Get("budgetProgram", "N/A") != "N/A");
+                       .FindAll(x => x.ExtendedData.HasValue("budgetProgram"));
     }
 
 

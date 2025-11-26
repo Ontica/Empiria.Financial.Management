@@ -78,9 +78,11 @@ namespace Empiria.Budgeting.Reporting {
         var budgetEntry = _txn.Entries.Find(x => entry.Id == x.EntityId && x.ControlNo.Length != 0);
 
         string controlNo = string.Empty;
+        string budgetProgram = string.Empty;
 
         if (budgetEntry != null) {
           controlNo = budgetEntry.ControlNo;
+          budgetProgram = budgetEntry.BudgetProgram.Code;
         }
 
         entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", entry.BudgetAccount.Code);
@@ -88,7 +90,7 @@ namespace Empiria.Budgeting.Reporting {
         entryHtml.Replace("{{DESCRIPTION}}", entry.Description);
         entryHtml.Replace("{{ORIGIN_COUNTRY}}", entry.OriginCountry.CountryISOCode);
         entryHtml.Replace("{{CONTROL_NO}}", controlNo);
-        entryHtml.Replace("{{PROGRAM}}", entry.BudgetAccount.BudgetProgram);
+        entryHtml.Replace("{{PROGRAM}}", budgetProgram);
         entryHtml.Replace("{{YEAR}}", entry.Budget.Year.ToString());
         entryHtml.Replace("{{PRODUCT_UNIT}}", entry.ProductUnit.Name);
         entryHtml.Replace("{{QUANTITY}}", entry.Quantity.ToString("C2"));
