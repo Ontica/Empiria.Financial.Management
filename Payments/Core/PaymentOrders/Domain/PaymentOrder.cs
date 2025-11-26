@@ -37,6 +37,15 @@ namespace Empiria.Payments.Orders {
       Update(fields);
     }
 
+    public PaymentOrder(PaymentOrderType paymentOrderType, IPayableEntity payableEntity) {
+      Assertion.Require(paymentOrderType, nameof(paymentOrderType));
+      Assertion.Require(payableEntity, nameof(payableEntity));
+
+      PaymentOrderType = paymentOrderType;
+
+      _payableEntityTypeId = payableEntity.GetEmpiriaType().Id;
+      _payableEntityId = payableEntity.Id;
+    }
 
     static internal PaymentOrder Parse(string UID) {
       return BaseObject.ParseKey<PaymentOrder>(UID);
@@ -49,7 +58,7 @@ namespace Empiria.Payments.Orders {
 
 
     static internal PaymentOrder TryGetFor(Payable payable) {
-     return BaseObject.TryParse<PaymentOrder>($"PYMT_ORD_PAYABLE_ID = {payable.Id} AND PYMT_ORD_STATUS <> 'X' ");
+      return BaseObject.TryParse<PaymentOrder>($"PYMT_ORD_PAYABLE_ID = {payable.Id} AND PYMT_ORD_STATUS <> 'X' ");
     }
 
 
@@ -90,17 +99,19 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    [DataField("PYMT_ORD_PAYABLE_ID")]
-    public Payable Payable {
-      get; internal set;
+    [DataField("PYMT_ORD_PAYABLE_ENTITY_TYPE_ID")]
+    private int _payableEntityTypeId = -1;
+
+
+    [DataField("PYMT_ORD_PAYABLE_ENTITY_ID")]
+    private int _payableEntityId = -1;
+
+
+    public IPayableEntity PayableEntity {
+      get {
+        return (IPayableEntity) Parse(_payableEntityTypeId, this._payableEntityId);
+      }
     }
-
-
-    [DataField("PYMT_ORD_PAYABLE_TYPE_ID")]
-    public int PayableTypeId {
-      get; internal set;
-    }
-
 
     [DataField("PYMT_ORD_PAYMENT_METHOD_ID")]
     public PaymentMethod PaymentMethod {
@@ -217,7 +228,7 @@ namespace Empiria.Payments.Orders {
       Assertion.Require(this.Status == PaymentOrderStatus.Received,
                $"No se puede realizar el pago debido " +
                $"a que tiene el estado {this.Status.GetName()}.");
-      
+
       this.Status = PaymentOrderStatus.Payed;
     }
 
@@ -269,11 +280,8 @@ namespace Empiria.Payments.Orders {
 
       fields.EnsureValid();
 
-      this.ControlNo = (fields.ControlNo is null) ? String.Empty : fields.ControlNo ;
-      this.PaymentOrderType = PaymentOrderType.Parse(fields.PaymentOrderTypeUID);
+      this.ControlNo = (fields.ControlNo is null) ? String.Empty : fields.ControlNo;
       this.PayTo = Party.Parse(fields.PayToUID);
-      this.Payable = Payable.Parse(-1);
-      this.PayableTypeId = this.Payable.PayableType.Id;
       this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
       this.Currency = Currency.Parse(fields.CurrencyUID);
       this.PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);

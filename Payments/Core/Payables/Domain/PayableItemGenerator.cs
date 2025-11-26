@@ -43,6 +43,7 @@ namespace Empiria.Payments.Payables {
     internal FixedList<PayableItem> Generate() {
 
       var entityItems = Payable.PayableEntity.Items;
+
       List<PayableItem> payableItems = new List<PayableItem>();
 
       foreach (var entityItem in entityItems) {

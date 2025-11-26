@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.StateEnums;
+using Empiria.Financial;
 
 namespace Empiria.Payments.Payables.Adapters {
 
@@ -17,18 +17,15 @@ namespace Empiria.Payments.Payables.Adapters {
 
     #region Methods
 
-    static internal FixedList<PayableItemDto> Map(FixedList<PayableItem> payableItems) {
-      return payableItems.Select(x => Map(x)).ToFixedList();
+    static internal FixedList<PayableItemDto> Map(FixedList<IPayableEntityItem> items) {
+      return items.Select(x => Map(x)).ToFixedList();
     }
 
-    static internal PayableItemDto Map(PayableItem payableItem) {
+    static internal PayableItemDto Map(IPayableEntityItem payableItem) {
       return new PayableItemDto {
         UID = payableItem.UID,
-        OutputTotal = payableItem.OutputTotal,
-        InputTotal = payableItem.InputTotal,
-        Currency = payableItem.Currency.MapToNamedEntity(),
-        ExchangeRate = payableItem.ExchangeRate,
-        Status = payableItem.Status.MapToDto()
+        Subtotal = payableItem.Subtotal,
+        Currency = payableItem.Currency.MapToNamedEntity()
       };
     }
 

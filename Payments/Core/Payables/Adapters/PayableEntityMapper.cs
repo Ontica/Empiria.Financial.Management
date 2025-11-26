@@ -43,7 +43,7 @@ namespace Empiria.Payments.Payables.Adapters {
 
     #region Helpers
 
-    static private FixedList<PayableEntityItemDto> MapItems(IEnumerable<IPayableEntityItem> items) {
+    static private FixedList<PayableEntityItemDto> MapItems(FixedList<IPayableEntityItem> items) {
       return items.Select(x => MapItem(x))
                   .ToFixedList();
     }

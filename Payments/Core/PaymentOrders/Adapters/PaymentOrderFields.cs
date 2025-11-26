@@ -11,12 +11,26 @@
 using System;
 
 using Empiria.Financial;
-using Empiria.Payments.Payables;
 
 namespace Empiria.Payments.Orders.Adapters {
 
   /// <summary>Fields structure used for create and update payment orders.</summary>
   public class PaymentOrderFields {
+
+    public string PaymentOrderTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string PayableEntityTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string PayableEntityUID {
+      get; set;
+    } = string.Empty;
+
 
     public string ControlNo {
       get; set;
@@ -24,16 +38,6 @@ namespace Empiria.Payments.Orders.Adapters {
 
 
     public string ReferenceNumber {
-      get; set;
-    } = string.Empty;
-
-
-    public string PaymentOrderTypeUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string PayableUID {
       get; set;
     } = string.Empty;
 
@@ -93,7 +97,7 @@ namespace Empiria.Payments.Orders.Adapters {
       }
 
       Assertion.Require(PaymentMethodUID, "Necesito el método de pago.");
-      var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);        
+      var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);
 
       if (paymentMethod.LinkedToAccount == true) {
         Assertion.Require(PaymentAccountUID, "Necesito el número de cuenta.");
@@ -113,4 +117,4 @@ namespace Empiria.Payments.Orders.Adapters {
   }  // class PaymentOrderFields
 
 
-  }  // namespace Empiria.Payments.Orders.Adapters
+}  // namespace Empiria.Payments.Orders.Adapters

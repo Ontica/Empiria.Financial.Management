@@ -17,28 +17,11 @@ namespace Empiria.Payments.Payables.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto Payable {
-      get; internal set;
-    }
-
-    public decimal InputTotal {
-      get; internal set;
-    }
-
-    public decimal OutputTotal {
-      get; internal set;
-    }
-
     public NamedEntityDto Currency {
       get; internal set;
     }
 
-
-    public decimal ExchangeRate {
-      get; internal set;
-    } = 1;
-
-    public NamedEntityDto Status {
+    public decimal Subtotal {
       get; internal set;
     }
 

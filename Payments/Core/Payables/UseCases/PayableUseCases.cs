@@ -84,17 +84,6 @@ namespace Empiria.Payments.Payables.UseCases {
     }
 
 
-    public FixedList<PayableItemDto> GetPayableItems(string payableUID) {
-      Assertion.Require(payableUID, nameof(payableUID));
-
-      Payable payable = Payable.Parse(payableUID);
-
-      FixedList<PayableItem> payableItems = payable.GetItems();
-
-      return PayableItemMapper.Map(payableItems);
-    }
-
-
     public FixedList<NamedEntityDto> GetPayableTypes() {
 
       FixedList<PayableType> payableTypes = PayableType.GetList();
@@ -158,26 +147,6 @@ namespace Empiria.Payments.Payables.UseCases {
 
     #region PayableItem use cases
 
-    public PayableItemDto AddPayableItem(string payableUID, PayableItemFields fields) {
-      Assertion.Require(payableUID, nameof(payableUID));
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureValid();
-
-      var payable = Payable.Parse(payableUID);
-
-      PayableItem payableItem = new PayableItem(payable);
-
-      payableItem.Update(fields);
-
-      payable.AddItem(payableItem);
-
-      payableItem.Save();
-
-      return PayableItemMapper.Map(payableItem);
-    }
-
-
     public void RemovePayableItem(string payableUID, string payableItemUID) {
       Assertion.Require(payableUID, nameof(payableUID));
       Assertion.Require(payableItemUID, nameof(payableItemUID));
@@ -187,29 +156,6 @@ namespace Empiria.Payments.Payables.UseCases {
       PayableItem payableItem = payable.RemoveItem(payableItemUID);
 
       payableItem.Save();
-    }
-
-
-    public PayableItemDto UpdatePayableItem(string payableUID,
-                                            string payableItemUID,
-                                            PayableItemFields fields) {
-
-      Assertion.Require(payableUID, nameof(payableUID));
-      Assertion.Require(payableItemUID, nameof(payableItemUID));
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureValid();
-
-      Assertion.Require(payableUID = fields.PayableUID, "fields.PayableUID field mismatch.");
-      Assertion.Require(payableItemUID = fields.UID, "fields.UID field mismatch.");
-
-      Payable payable = Payable.Parse(payableUID);
-
-      PayableItem payableItem = payable.UpdateItem(payableItemUID, fields);
-
-      payableItem.Save();
-
-      return PayableItemMapper.Map(payableItem);
     }
 
     #endregion PayableItem use cases
@@ -229,7 +175,7 @@ namespace Empiria.Payments.Payables.UseCases {
     private PaymentOrderFields TransformPayableToPaymentOrderFields(Payable payable) {
       return new PaymentOrderFields {
         PaymentOrderTypeUID = "32e1b307-676b-4488-b26f-1cbc03878875",
-        PayableUID = payable.UID,
+        PayableEntityUID = payable.UID,
         PayToUID = payable.PayTo.UID,
         PaymentMethodUID = payable.PaymentMethod.UID,
         CurrencyUID = payable.Currency.UID,

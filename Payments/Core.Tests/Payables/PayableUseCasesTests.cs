@@ -37,19 +37,6 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
 
     #region Facts
 
-    [Fact]
-    public void Should_Add_PayableItem() {
-      var fields = new PayableItemFields {
-        PayableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c",
-
-      };
-
-      var payableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c";
-      var sut = _usecases.AddPayableItem(payableUID, fields);
-
-      Assert.NotNull(sut);
-    }
-
 
     [Fact]
     public void Should_Create_Payable() {
@@ -106,15 +93,6 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
 
 
     [Fact]
-    public void Should_Get_PayableItems() {
-
-      var sut = _usecases.GetPayableItems("1537c110-e3f1-4ab8-b822-c00733ac3dd5");
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
     public void Should_Get_Payable_Types() {
 
       var sut = _usecases.GetPayableTypes();
@@ -158,21 +136,6 @@ namespace Empiria.Tests.Payments.Payables.UseCases {
       var payableUID = "abdc27b9-5fb1-4386-aa87-f5ad5ec66fea";
 
       var sut = _usecases.UpdatePayable(payableUID, fields);
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public void Should_Update_PayableItem() {
-      var fields = new PayableItemFields {
-        UID = "675f4977-d3cd-4114-953f-8c46f8a3ace3",
-        PayableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c",
-      };
-
-      var payableUID = "713b2755-aee1-44af-9f3c-1f46caebca1c";
-      var payableItemUID = "675f4977-d3cd-4114-953f-8c46f8a3ace3";
-      var sut = _usecases.UpdatePayableItem(payableUID, payableItemUID, fields);
 
       Assert.NotNull(sut);
     }

@@ -28,7 +28,7 @@ namespace Empiria.Payments.Orders.Adapters {
     static internal PaymentOrderHolderDto Map(PaymentOrder paymentOrder) {
       return new PaymentOrderHolderDto {
         PaymentOrder = MapPaymentOrder(paymentOrder),
-        Items = PayableItemMapper.Map(paymentOrder.Payable.GetItems()),
+        Items = PayableItemMapper.Map(paymentOrder.PayableEntity.Items),
         // Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
         Documents = DocumentServices.GetAllEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),

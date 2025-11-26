@@ -12,13 +12,12 @@ using System;
 
 using Empiria.Services;
 
-using Empiria.Payments.Payables;
-
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.Data;
 
 using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Services;
+using Empiria.Financial;
 
 
 namespace Empiria.Payments.Orders.UseCases {
@@ -45,9 +44,10 @@ namespace Empiria.Payments.Orders.UseCases {
 
       fields.EnsureValid();
 
-      fields.PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c";
+      var paymentOderType = PaymentOrderType.Parse(fields.PaymentOrderTypeUID);
+      var payableEntity = (IPayableEntity) BaseObject.Parse(fields.PayableEntityTypeUID, fields.PayableEntityUID);
 
-      var order = new PaymentOrder(fields);
+      var order = new PaymentOrder(paymentOderType, payableEntity);
 
       order.Save();
 
@@ -176,7 +176,7 @@ namespace Empiria.Payments.Orders.UseCases {
 
     public int ValidatePayment() {
       var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
-       int count = 0;
+      int count = 0;
 
       foreach (var paymentInstruction in paymentInstructions) {
         using (var usecases = PaymentService.ServiceInteractor()) {
