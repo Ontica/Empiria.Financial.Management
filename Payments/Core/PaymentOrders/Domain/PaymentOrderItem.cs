@@ -16,6 +16,7 @@ using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Financial;
+using Empiria.Payments.Orders.Data;
 
 namespace Empiria.Payments.Orders {
 
@@ -104,6 +105,13 @@ namespace Empiria.Payments.Orders {
     }
 
 
+    public virtual string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(PaymentOrder.Keywords);
+      }
+    }
+
+
     [DataField("PYMT_ORD_ITEM_POSTED_BY_ID")]
     public Party PostedBy {
       get; private set;
@@ -121,13 +129,6 @@ namespace Empiria.Payments.Orders {
       get; private set;
     } = EntityStatus.Pending;
 
-
-    public virtual string Keywords {
-      get {
-        return EmpiriaString.BuildKeywords(PaymentOrder.Keywords);
-      }
-    }
-
     #endregion Properties
 
     #region Methods
@@ -142,6 +143,7 @@ namespace Empiria.Payments.Orders {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
+      PaymentOrderData.WritePaymentOrderItem(this, this.SecurityExtData.ToString(), this.ExtData.ToString());
     }
 
 

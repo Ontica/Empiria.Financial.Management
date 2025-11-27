@@ -33,15 +33,14 @@ namespace Empiria.Payments.Orders {
       Update(fields);
     }
 
-    public PaymentOrder(PaymentOrderType paymentOrderType, IPayableEntity payableEntity) {
-      Assertion.Require(paymentOrderType, nameof(paymentOrderType));
-      Assertion.Require(payableEntity, nameof(payableEntity));
 
-      PaymentOrderType = paymentOrderType;
+    public PaymentOrder(IPayableEntity payableEntity) {
+      Assertion.Require(payableEntity, nameof(payableEntity));
 
       _payableEntityTypeId = payableEntity.GetEmpiriaType().Id;
       _payableEntityId = payableEntity.Id;
     }
+
 
     static internal PaymentOrder Parse(string UID) {
       return BaseObject.ParseKey<PaymentOrder>(UID);
@@ -65,20 +64,20 @@ namespace Empiria.Payments.Orders {
 
     #region Properties
 
-    [DataField("PYMT_ORD_TYPE_ID")]
-    public PaymentOrderType PaymentOrderType {
-      get; private set;
-    }
-
-
     [DataField("PYMT_ORD_NO")]
     public string PaymentOrderNo {
       get; private set;
     }
 
 
-    [DataField("PYMT_ORD_PAY_TO_ID")]
-    public Party PayTo {
+    [DataField("PYMT_ORD_DESCRIPTION")]
+    public string Description {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_OBSERVATIONS")]
+    public string Observations {
       get; private set;
     }
 
@@ -90,12 +89,17 @@ namespace Empiria.Payments.Orders {
     [DataField("PYMT_ORD_PAYABLE_ENTITY_ID")]
     private int _payableEntityId = -1;
 
-
     public IPayableEntity PayableEntity {
       get {
         return (IPayableEntity) Parse(_payableEntityTypeId, this._payableEntityId);
       }
     }
+
+    [DataField("PYMT_ORD_PAY_TO_ID")]
+    public Party PayTo {
+      get; private set;
+    }
+
 
     [DataField("PYMT_ORD_PAYMENT_METHOD_ID")]
     public PaymentMethod PaymentMethod {
@@ -115,38 +119,14 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    [DataField("PYMT_ORD_DESCRIPTION")]
-    public string Description {
+    [DataField("PYMT_ORD_DUETIME")]
+    public DateTime DueTime {
       get; private set;
     }
 
 
-    [DataField("PYMT_ORD_OBSERVATIONS")]
-    public string Observations {
-      get; private set;
-    }
-
-
-    [DataField("PYMT_ORD_REQUESTED_BY_ID")]
-    public OrganizationalUnit RequestedBy {
-      get; private set;
-    }
-
-
-    [DataField("PYMT_ORD_REQUESTED_TIME")]
-    public DateTime RequestedTime {
-      get; private set;
-    }
-
-
-    [DataField("PYMT_ORD_CLOSED_BY_ID")]
-    public OrganizationalUnit ClosedBy {
-      get; private set;
-    }
-
-
-    [DataField("PYMT_ORD_CLOSING_TIME")]
-    public DateTime ClosingTime {
+    [DataField("PYMT_ORD_SECURITY_EXT_DATA")]
+    public JsonObject SecurityExtData {
       get; private set;
     }
 
@@ -166,27 +146,55 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    public decimal Total {
-      get; private set;
-    }
-
-
-    [DataField("PYMT_ORD_DUETIME")]
-    public DateTime DueTime {
-      get; private set;
-    }
-
-
-
-
-
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.PaymentOrderNo, this.PayTo.Name,
-                                           this.RequestedBy.Name, this.PaymentOrderType.Name,
-                                           this.PaymentMethod.Name);
+                                           this.RequestedBy.Name, this.PaymentMethod.Name);
       }
     }
+
+
+    [DataField("PYMT_ORD_REQUESTED_BY_ID")]
+    public OrganizationalUnit RequestedBy {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_REQUESTED_TIME")]
+    public DateTime RequestedTime {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_AUTHORIZED_BY_ID")]
+    public Contact AuthorizedBy {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_AUTHORIZATION_TIME")]
+    public DateTime AuthorizedTime {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_PAYED_BY_ID")]
+    public OrganizationalUnit PayedBy {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_CLOSING_TIME")]
+    public DateTime ClosingTime {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_CLOSED_BY_ID")]
+    public Contact ClosedBy {
+      get; private set;
+    }
+
 
 
     [DataField("PYMT_ORD_POSTED_BY_ID")]
@@ -206,6 +214,12 @@ namespace Empiria.Payments.Orders {
       get; private set;
     } = PaymentOrderStatus.Pending;
 
+
+    public decimal Total {
+      get;
+      internal set;
+    }
+
     #endregion Properties
 
     #region Methods
@@ -224,7 +238,7 @@ namespace Empiria.Payments.Orders {
         this.PostingTime = DateTime.Now;
       }
 
-      PaymentOrderData.WritePaymentOrder(this, this.ExtData.ToString());
+      PaymentOrderData.WritePaymentOrder(this, this.SecurityExtData.ToString(), this.ExtData.ToString());
     }
 
 
@@ -252,7 +266,6 @@ namespace Empiria.Payments.Orders {
 
       this.Status = PaymentOrderStatus.Received;
     }
-
 
 
     internal void SetReferenceNumber(string referenceNumber) {
@@ -284,14 +297,17 @@ namespace Empiria.Payments.Orders {
 
       fields.EnsureValid();
 
+      this.Description = fields.Notes;
+      this.Observations = fields.Observations;
       this.PayTo = Party.Parse(fields.PayToUID);
       this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
       this.Currency = Currency.Parse(fields.CurrencyUID);
       this.PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
-      this.Description = fields.Notes;
+      this.DueTime = fields.DueTime;
       this.RequestedTime = fields.RequestedTime;
       this.DueTime = fields.DueTime;
       this.RequestedBy = OrganizationalUnit.Parse(fields.RequestedByUID);
+
       this.ReferenceNumber = fields.ReferenceNumber;
     }
 

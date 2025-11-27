@@ -62,6 +62,12 @@ namespace Empiria.Payments.Orders {
     } = string.Empty;
 
 
+    public string Observations {
+      get;
+      internal set;
+    } = string.Empty;
+
+
     public DateTime DueTime {
       get; set;
     } = ExecutionServer.DateMinValue;

@@ -60,7 +60,6 @@ namespace Empiria.Payments.Orders.Adapters {
     static private PaymentOrderDescriptor MapToDescriptor(PaymentOrder paymentOrder) {
       return new PaymentOrderDescriptor {
         UID = paymentOrder.UID,
-        PaymentOrderTypeName = paymentOrder.PaymentOrderType.Name,
         PaymentOrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.Name,
         PaymentMethod = paymentOrder.PaymentMethod.Name,
@@ -96,7 +95,6 @@ namespace Empiria.Payments.Orders.Adapters {
     static private PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
         UID = paymentOrder.UID,
-        PaymentOrderType = paymentOrder.PaymentOrderType.MapToNamedEntity(),
         OrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.MapToNamedEntity(),
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),

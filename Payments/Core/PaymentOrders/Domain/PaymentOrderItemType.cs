@@ -11,26 +11,21 @@
 namespace Empiria.Payments.Orders {
 
   /// <summary>Represents a payment order type.</summary>
-  public class PaymentOrderType : GeneralObject {
+  public class PaymentOrderItemType : GeneralObject {
 
     #region Constructors and parsers
 
-    static internal PaymentOrderType Parse(string uid) {
-      return BaseObject.ParseKey<PaymentOrderType>(uid);
+    static internal PaymentOrderItemType Parse(string uid) {
+      return BaseObject.ParseKey<PaymentOrderItemType>(uid);
     }
 
-    static internal PaymentOrderType Parse(int id) => BaseObject.ParseId<PaymentOrderType>(id);
+    static internal PaymentOrderItemType Parse(int id) => BaseObject.ParseId<PaymentOrderItemType>(id);
 
-    static internal PaymentOrderType Empty => BaseObject.ParseEmpty<PaymentOrderType>();
+    static internal PaymentOrderItemType Empty => BaseObject.ParseEmpty<PaymentOrderItemType>();
 
     #endregion Constructors and parsers
 
     #region Public Methods
-
-    static internal FixedList<PaymentOrderType> GetList() {
-      return BaseObject.GetList<PaymentOrderType>()
-                       .ToFixedList();
-    }
 
     #endregion Public Methods
 

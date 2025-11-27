@@ -86,9 +86,7 @@ namespace Empiria.Payments.Orders.Adapters {
         return string.Empty;
       }
 
-      var paymentOrderType = PaymentOrderType.Parse(paymentOrderTypeUID);
-
-      return $"PYMT_ORD_TYPE_ID = {paymentOrderType.Id}";
+      return string.Empty;
     }
 
 

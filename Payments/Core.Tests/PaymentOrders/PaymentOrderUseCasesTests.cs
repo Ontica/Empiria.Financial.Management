@@ -66,16 +66,6 @@ namespace Empiria.Tests.Payments.Orders {
       _usecases.DeletePaymentOrder("3c97430d-41e2-445e-81d2-2b6f9ef75207");
     }
 
-
-    [Fact]
-    public void Should_Get_Payment_Order_Types() {
-
-      var sut = _usecases.GetPaymentOrderTypes();
-
-      Assert.NotNull(sut);
-    }
-
-
     [Fact]
     public void Should_Update_Payment_Order() {
       var fields = new PaymentOrderFields {

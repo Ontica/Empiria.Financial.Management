@@ -44,10 +44,10 @@ namespace Empiria.Payments.Orders.UseCases {
 
       fields.EnsureValid();
 
-      var paymentOderType = PaymentOrderType.Parse(fields.PaymentOrderTypeUID);
+
       var payableEntity = (IPayableEntity) BaseObject.Parse(fields.PayableEntityTypeUID, fields.PayableEntityUID);
 
-      var order = new PaymentOrder(paymentOderType, payableEntity);
+      var order = new PaymentOrder(payableEntity);
 
       order.Save();
 
@@ -73,14 +73,6 @@ namespace Empiria.Payments.Orders.UseCases {
 
       return PaymentOrderMapper.Map(order);
     }
-
-
-    public FixedList<NamedEntityDto> GetPaymentOrderTypes() {
-      var paymentOrderTypes = PaymentOrderType.GetList();
-
-      return paymentOrderTypes.MapToNamedEntityList();
-    }
-
 
 
     public PaymentOrderHolderDto SendPaymentOrderToPay(string paymentOrderUID) {
