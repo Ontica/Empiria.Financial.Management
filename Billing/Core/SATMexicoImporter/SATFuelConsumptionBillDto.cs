@@ -44,14 +44,23 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = new SATBillComplementDto();
 
 
-    public SATBillAddenda Addenda {
+    public SATFuelConsumptionAddendaDto Addenda {
       get; internal set;
-    } = new SATBillAddenda();
+    } = new SATFuelConsumptionAddendaDto();
 
   } // class SATFuelConsumptionBillDto
 
 
-  public class FuelConsumptionComplementDataDto {
+  internal class SATFuelConsumptionAddendaDto {
+
+    public FixedList<SATBillConceptWithTaxDto> AddendaConceptos {
+      get; internal set;
+    } = new FixedList<SATBillConceptWithTaxDto>();
+
+  } // SATFuelConsumptionAddendaDto
+
+
+  internal class FuelConsumptionComplementDataDto {
 
     public string Version {
       get; internal set;
@@ -63,7 +72,7 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    public int NumeroDeCuenta {
+    public string NumeroDeCuenta {
       get; internal set;
     }
 
@@ -85,7 +94,7 @@ namespace Empiria.Billing.SATMexicoImporter {
   } // class FuelConsumptionComplementDataDto
 
 
-  public class FuelConsumptionComplementConceptDataDto {
+  internal class FuelConsumptionComplementConceptDataDto {
 
     public string Identificador {
       get; internal set;

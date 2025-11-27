@@ -23,9 +23,9 @@ namespace Empiria.Tests.Billing {
 
       var xmlText = System.IO.File.ReadAllText(xmlFilePath);
 
-      var reader = new SATBillXmlReader(xmlText);
+      var reader = new SATFuelConsumptionBillXmlReader(xmlText);
 
-      SATBillDto sut = reader.ReadAsBillDto();
+      SATFuelConsumptionBillDto sut = reader.ReadAsBillDto();
 
       Assert.NotNull(sut);
     }
