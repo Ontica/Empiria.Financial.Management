@@ -70,7 +70,7 @@ namespace Empiria.Budgeting {
 
     public BudgetProgram BudgetProgram {
       get {
-        return BudgetProgram.ParseWithCode(ExtData.Get<string>("budgetProgram"));
+        return BudgetProgram.ParseWithCode(ExtData.Get<string>("budgetProgram", "N/D"));
       }
       private set {
         ExtData.SetIfValue("budgetProgram", value.Code);
