@@ -7,6 +7,7 @@
 *  Summary  : Represents a payment order type.                                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 namespace Empiria.Payments.Orders {
 
   /// <summary>Represents a payment order type.</summary>

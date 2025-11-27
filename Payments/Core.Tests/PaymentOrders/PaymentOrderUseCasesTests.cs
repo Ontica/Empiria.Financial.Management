@@ -7,11 +7,15 @@
 *  Summary  : Test cases for payment order use cases.                                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using Xunit;
 
+using System;
+
+using Empiria.Payments.Orders;
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.UseCases;
+
 
 namespace Empiria.Tests.Payments.Orders {
 
@@ -40,13 +44,11 @@ namespace Empiria.Tests.Payments.Orders {
     public void Should_Add_Payment_Order() {
       var fields = new PaymentOrderFields {
         PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c",
-        ControlNo = "20250427013",
         PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
         PaymentMethodUID = "ff779080-f58c-41ac-a48d-c1a00a2c5232",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
         PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
         Notes = "",
-        Total = 100.77m,
         DueTime = DateTime.Today,
         RequestedByUID = "6bebca32-c14f-4996-8300-77ac86513a59",
         RequestedTime = DateTime.Now,
@@ -77,18 +79,15 @@ namespace Empiria.Tests.Payments.Orders {
     [Fact]
     public void Should_Update_Payment_Order() {
       var fields = new PaymentOrderFields {
-        ControlNo = "4945",
         PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
         PaymentMethodUID = "b7784ef7-0d58-43df-a128-9b35e2da678e",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",
         PaymentAccountUID = "b5a5081a-7945-49da-9913-7c278880ba43",
         Notes = "Updated by test",
-        Total = 6000m,
         DueTime = DateTime.Today,
         RequestedByUID = "6bebca32-c14f-4996-8300-77ac86513a59",
         RequestedTime = DateTime.Now,
         ReferenceNumber = "9999"
-
       };
 
       var sut = _usecases.UpdatePaymentOrder("abe5bd58-91fc-4e0f-b96b-bed19953940e", fields);

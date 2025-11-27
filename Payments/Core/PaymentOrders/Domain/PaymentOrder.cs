@@ -14,8 +14,6 @@ using Empiria.Contacts;
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
-
-using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.Data;
 
 namespace Empiria.Payments.Orders {
@@ -79,12 +77,6 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    [DataField("PYMT_ORD_CONTROL_NO")]
-    public string ControlNo {
-      get; private set;
-    }
-
-
     [DataField("PYMT_ORD_PAY_TO_ID")]
     public Party PayTo {
       get; private set;
@@ -123,14 +115,38 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    [DataField("PYMT_ORD_NOTES")]
+    [DataField("PYMT_ORD_DESCRIPTION")]
     public string Description {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_OBSERVATIONS")]
+    public string Observations {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_REQUESTED_BY_ID")]
+    public OrganizationalUnit RequestedBy {
       get; private set;
     }
 
 
     [DataField("PYMT_ORD_REQUESTED_TIME")]
     public DateTime RequestedTime {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_CLOSED_BY_ID")]
+    public OrganizationalUnit ClosedBy {
+      get; private set;
+    }
+
+
+    [DataField("PYMT_ORD_CLOSING_TIME")]
+    public DateTime ClosingTime {
       get; private set;
     }
 
@@ -150,7 +166,6 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    [DataField("PYMT_ORD_TOTAL")]
     public decimal Total {
       get; private set;
     }
@@ -162,10 +177,7 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    [DataField("PYMT_ORD_REQUESTED_BY_ID")]
-    public OrganizationalUnit RequestedBy {
-      get; private set;
-    }
+
 
 
     public string Keywords {
@@ -272,7 +284,6 @@ namespace Empiria.Payments.Orders {
 
       fields.EnsureValid();
 
-      this.ControlNo = (fields.ControlNo is null) ? String.Empty : fields.ControlNo;
       this.PayTo = Party.Parse(fields.PayToUID);
       this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
       this.Currency = Currency.Parse(fields.CurrencyUID);
@@ -281,7 +292,6 @@ namespace Empiria.Payments.Orders {
       this.RequestedTime = fields.RequestedTime;
       this.DueTime = fields.DueTime;
       this.RequestedBy = OrganizationalUnit.Parse(fields.RequestedByUID);
-      this.Total = fields.Total;
       this.ReferenceNumber = fields.ReferenceNumber;
     }
 

@@ -70,4 +70,4 @@ namespace Empiria.Payments.Orders {
 
   }  // class PaymentOrderItemFields
 
-}  // namespace Empiria.Payments
+}  // namespace Empiria.Payments.Orders

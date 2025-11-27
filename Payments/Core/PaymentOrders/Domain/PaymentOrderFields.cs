@@ -12,7 +12,7 @@ using System;
 
 using Empiria.Financial;
 
-namespace Empiria.Payments.Orders.Adapters {
+namespace Empiria.Payments.Orders {
 
   /// <summary>Fields structure used for create and update payment orders.</summary>
   public class PaymentOrderFields {
@@ -28,11 +28,6 @@ namespace Empiria.Payments.Orders.Adapters {
 
 
     public string PayableEntityUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string ControlNo {
       get; set;
     } = string.Empty;
 
@@ -67,11 +62,6 @@ namespace Empiria.Payments.Orders.Adapters {
     } = string.Empty;
 
 
-    public Decimal Total {
-      get; set;
-    }
-
-
     public DateTime DueTime {
       get; set;
     } = ExecutionServer.DateMinValue;
@@ -89,13 +79,6 @@ namespace Empiria.Payments.Orders.Adapters {
 
     internal void EnsureValid() {
 
-      Assertion.Require(ControlNo, "Necesito el método de pago.");
-
-      var paymentOrder = PaymentOrder.TryGetForControlNo(ControlNo);
-      if (paymentOrder != null) {
-        Assertion.EnsureNoReachThisCode($"Ya existe una orden de pago con el Número de Control: {ControlNo}");
-      }
-
       Assertion.Require(PaymentMethodUID, "Necesito el método de pago.");
       var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);
 
@@ -106,12 +89,9 @@ namespace Empiria.Payments.Orders.Adapters {
         PaymentAccountUID = "Empty";
       }
 
-
       Assertion.Require(CurrencyUID, "Necesito la moneda.");
       _ = Currency.Parse(CurrencyUID);
 
-
-      Assertion.Require(Total > 0, "Necesito que el importe a pagar sea mayor a cero.");
     }
 
   }  // class PaymentOrderFields

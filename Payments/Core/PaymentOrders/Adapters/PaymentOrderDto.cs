@@ -81,10 +81,6 @@ namespace Empiria.Payments.Orders.Adapters {
       get; internal set;
     }
 
-    public string ControlNo {
-      get; internal set;
-    }
-
     public NamedEntityDto PayTo {
       get; internal set;
     }

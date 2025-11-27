@@ -98,7 +98,6 @@ namespace Empiria.Payments.Orders.Adapters {
         UID = paymentOrder.UID,
         PaymentOrderType = paymentOrder.PaymentOrderType.MapToNamedEntity(),
         OrderNo = paymentOrder.PaymentOrderNo,
-        ControlNo = paymentOrder.ControlNo,
         PayTo = paymentOrder.PayTo.MapToNamedEntity(),
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
         RequestedDate = paymentOrder.RequestedTime,
