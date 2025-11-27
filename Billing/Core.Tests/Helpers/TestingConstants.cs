@@ -34,6 +34,15 @@ namespace Empiria.Tests.Billing {
     }
 
 
+    static public string XML_FUEL_CONSUMPTION_BILL_FILE_PATH {
+      get {
+        var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+
+        return Path.Combine(directory.Parent.FullName, @"Resources\factura_consumo_combustible.xml");
+      }
+    }
+
+
     static public string XML_PAYMENT_COMPLEMENT_FILE_PATH {
       get {
         var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);

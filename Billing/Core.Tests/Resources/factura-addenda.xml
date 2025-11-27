@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" 
+<cfdi:Comprobante 
+  xmlns:cfdi="http://www.sat.gob.mx/cfd/4" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xmlns:aieps="http://www.sat.gob.mx/acreditamiento" 
   xmlns:implocal="http://www.sat.gob.mx/implocal" 
