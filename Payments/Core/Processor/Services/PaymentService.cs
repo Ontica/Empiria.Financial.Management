@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Threading.Tasks;
+
 using Empiria.Services;
 
 using Empiria.Payments.Orders;
@@ -38,7 +40,7 @@ namespace Empiria.Payments.Processor.Services {
     }
 
 
-    internal PaymentInstruction SendToPay(PaymentsBroker broker, PaymentOrder paymentOrder) {
+    internal async Task<PaymentInstruction> SendToPay(PaymentsBroker broker, PaymentOrder paymentOrder) {
       Assertion.Require(broker, nameof(broker));
       Assertion.Require(!broker.IsEmptyInstance, nameof(broker));
       Assertion.Require(paymentOrder, nameof(paymentOrder));
@@ -60,13 +62,13 @@ namespace Empiria.Payments.Processor.Services {
 
       EmpiriaLog.Debug("After get payments service");
 
-      PaymentInstructionResultDto paymentResult = paymentsService.SendPaymentInstruction(instructionDto);
+      PaymentInstructionResultDto paymentResult = await paymentsService.SendPaymentInstruction(instructionDto);
 
       EmpiriaLog.Debug("After send payment instruction");
 
       UpdatePaymentInstruction(instruction, paymentResult);
 
-      UpdatePaymentOrder(paymentOrder,paymentResult.Status);
+      UpdatePaymentOrder(paymentOrder, paymentResult.Status);
 
       return instruction;
     }

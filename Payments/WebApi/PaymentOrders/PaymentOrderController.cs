@@ -14,6 +14,7 @@ using Empiria.WebApi;
 
 using Empiria.Payments.Orders.UseCases;
 using Empiria.Payments.Orders.Adapters;
+using System.Threading.Tasks;
 
 namespace Empiria.Payments.Orders.WebApi {
 
@@ -99,11 +100,11 @@ namespace Empiria.Payments.Orders.WebApi {
 
     [HttpPost]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/pay")]
-    public SingleObjectModel SendPaymentOrderToPay([FromUri] string paymentOrderUID) {
+    public async Task<SingleObjectModel> SendPaymentOrderToPay([FromUri] string paymentOrderUID) {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-        PaymentOrderHolderDto paymentOrder = usecases.SendPaymentOrderToPay(paymentOrderUID);
+        PaymentOrderHolderDto paymentOrder = await usecases.SendPaymentOrderToPay(paymentOrderUID);
 
         return new SingleObjectModel(this.Request, paymentOrder);
       }

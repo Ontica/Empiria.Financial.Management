@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Threading.Tasks;
+
 namespace Empiria.Payments.Processor.Adapters {
 
   /// <summary>Interface to integrate payments broker service providers with Empiria Payments.</summary>
@@ -17,7 +19,7 @@ namespace Empiria.Payments.Processor.Adapters {
 
     PaymentInstructionStatusDto GetPaymentInstructionStatus(string instructionUID);
 
-    PaymentInstructionResultDto SendPaymentInstruction(PaymentInstructionDto instruction);
+    Task<PaymentInstructionResultDto> SendPaymentInstruction(PaymentInstructionDto instruction);
 
   }  // interface IPaymentsBrokerService
 

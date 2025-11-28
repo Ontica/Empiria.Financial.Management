@@ -11,11 +11,11 @@
 using Xunit;
 
 using System;
+using System.Threading.Tasks;
 
 using Empiria.Payments.Orders;
 using Empiria.Payments.Orders.Adapters;
 using Empiria.Payments.Orders.UseCases;
-
 
 namespace Empiria.Tests.Payments.Orders {
 
@@ -101,8 +101,8 @@ namespace Empiria.Tests.Payments.Orders {
 
 
     [Fact]
-    public void Should_Send_Payment_Order_To_Pay() {
-      var sut = _usecases.SendPaymentOrderToPay("fa3697b3-a42c-4753-b4bc-8d5f27737c4f");
+    public async Task Should_Send_Payment_Order_To_Pay() {
+      var sut = await _usecases.SendPaymentOrderToPay("fa3697b3-a42c-4753-b4bc-8d5f27737c4f");
 
       Assert.NotNull(sut);
     }

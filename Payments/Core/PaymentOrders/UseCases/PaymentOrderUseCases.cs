@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Threading.Tasks;
 
 using Empiria.Services;
 
@@ -18,7 +19,6 @@ using Empiria.Payments.Orders.Data;
 using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Services;
 using Empiria.Financial;
-
 
 namespace Empiria.Payments.Orders.UseCases {
 
@@ -75,7 +75,7 @@ namespace Empiria.Payments.Orders.UseCases {
     }
 
 
-    public PaymentOrderHolderDto SendPaymentOrderToPay(string paymentOrderUID) {
+    public async Task<PaymentOrderHolderDto> SendPaymentOrderToPay(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
       EmpiriaLog.Debug("Before paymentorder parsing");
@@ -90,7 +90,7 @@ namespace Empiria.Payments.Orders.UseCases {
 
       using (var usecases = PaymentService.ServiceInteractor()) {
 
-        _ = usecases.SendToPay(broker, paymentOrder);
+        _ = await usecases.SendToPay(broker, paymentOrder);
 
         EmpiriaLog.Debug("After PaymentService use case call");
 
