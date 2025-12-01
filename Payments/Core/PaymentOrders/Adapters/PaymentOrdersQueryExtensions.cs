@@ -14,7 +14,7 @@ using Empiria.Data;
 using Empiria.Financial;
 using Empiria.Parties;
 
-namespace Empiria.Payments.Orders.Adapters {
+namespace Empiria.Payments.Adapters {
 
   /// <summary>Extension methods for RequestsQuery interface adapter.</summary>
   static internal class PaymentOrdersQueryExtensions {
@@ -113,4 +113,4 @@ namespace Empiria.Payments.Orders.Adapters {
 
   }  // class PaymentOrdersQueryExtensions
 
-}  // namespace Empiria.Payments.Orders.Adapters
+}  // namespace Empiria.Payments.Adapters

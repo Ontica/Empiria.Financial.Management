@@ -16,9 +16,10 @@ using Empiria.Parties;
 using Empiria.StateEnums;
 
 using Empiria.Financial;
-using Empiria.Payments.Orders.Data;
 
-namespace Empiria.Payments.Orders {
+using Empiria.Payments.Data;
+
+namespace Empiria.Payments {
 
   /// <summary>Represents an item of a payment order object.It can be a bill, a contract supply order,
   /// a service order, a loan, travel expenses, a fixed fund provision, etc.</summary>
@@ -164,4 +165,4 @@ namespace Empiria.Payments.Orders {
 
   }  // class PaymentOrderItem
 
-}  // namespace Empiria.Payments.Orders
+}  // namespace Empiria.Payments

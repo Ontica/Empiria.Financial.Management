@@ -8,9 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
-
-namespace Empiria.Payments.Orders {
+namespace Empiria.Payments {
 
   /// <summary>Contains fields in order to create or update a payment order item.</summary>
   public class PaymentOrderItemFields {
@@ -48,7 +46,7 @@ namespace Empiria.Payments.Orders {
 
     public string CurrencyUID {
       get; set;
-    }
+    } = string.Empty;
 
 
     public decimal ExchangeRate {
@@ -61,13 +59,11 @@ namespace Empiria.Payments.Orders {
 
     internal void EnsureValid() {
       Assertion.Require(PayableUID, nameof(PayableUID));
-      Assertion.Require(CurrencyUID, "Necesito la moneda.");
 
-      _ = Currency.Parse(CurrencyUID);
     }
 
     #endregion Methods
 
   }  // class PaymentOrderItemFields
 
-}  // namespace Empiria.Payments.Orders
+}  // namespace Empiria.Payments

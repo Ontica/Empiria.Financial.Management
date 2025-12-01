@@ -12,8 +12,6 @@ using System;
 
 using Empiria.Json;
 
-using Empiria.Payments.Orders;
-
 using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Data;
 

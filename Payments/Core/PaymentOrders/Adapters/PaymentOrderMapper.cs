@@ -18,7 +18,7 @@ using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Services;
 
-namespace Empiria.Payments.Orders.Adapters {
+namespace Empiria.Payments.Adapters {
 
   /// <summary>Provides data mapping services for payment orders.</summary>
   static public class PaymentOrderMapper {
@@ -126,4 +126,4 @@ namespace Empiria.Payments.Orders.Adapters {
 
   }  // class PaymentOrderMapper
 
-}  // namespace Empiria.Payments.Orders.Adapters
+}  // namespace Empiria.Payments.Adapters

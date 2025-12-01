@@ -13,7 +13,6 @@ using System;
 using Empiria.Json;
 using Empiria.Parties;
 
-using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Data;
 
 namespace Empiria.Payments.Processor {

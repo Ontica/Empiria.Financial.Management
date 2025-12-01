@@ -10,8 +10,6 @@
 
 using System;
 
-using Empiria.Payments.Orders;
-
 namespace Empiria.Payments.Processor.Adapters {
 
   /// <summary>Output DTO that holds information about a payment instruction

@@ -7,16 +7,17 @@
 *  Summary  : Web API used to retrive and update payment orders and their catalogues.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Web.Http;
+using System.Threading.Tasks;
 
 using Empiria.WebApi;
 
-using Empiria.Payments.Orders.UseCases;
-using Empiria.Payments.Orders.Adapters;
-using System.Threading.Tasks;
+using Empiria.Payments.UseCases;
+using Empiria.Payments.Adapters;
 
-namespace Empiria.Payments.Orders.WebApi {
+namespace Empiria.Payments.WebApi {
 
   /// <summary>Web API used to retrive and update payment orders and their catalogues.</summary>
   public class PaymentOrderController : WebApiController {
@@ -132,4 +133,4 @@ namespace Empiria.Payments.Orders.WebApi {
 
   }  // class PaymentOrderController
 
-}  // namespace Empiria.Payments.WebApi.PaymentOrders
+}  // namespace Empiria.Payments.WebApi

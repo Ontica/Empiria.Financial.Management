@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Payments.Orders {
+namespace Empiria.Payments {
 
   /// <summary>Enumerates the status of a payment order.</summary>
   public enum PaymentOrderStatus {
@@ -34,6 +34,7 @@ namespace Empiria.Payments.Orders {
     All = '@',
 
   }  // enum PaymentOrderStatus
+
 
 
   /// <summary>Extension methods for PaymentOrderStatus enumeration.</summary>
@@ -71,4 +72,4 @@ namespace Empiria.Payments.Orders {
 
   }  // class PaymentOrderStatusExtensions
 
-}  // namespace Empiria.Payments.Orders
+}  // namespace Empiria.Payments

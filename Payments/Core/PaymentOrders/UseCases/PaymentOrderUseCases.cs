@@ -13,14 +13,15 @@ using System.Threading.Tasks;
 
 using Empiria.Services;
 
-using Empiria.Payments.Orders.Adapters;
-using Empiria.Payments.Orders.Data;
+using Empiria.Financial;
 
 using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Services;
-using Empiria.Financial;
 
-namespace Empiria.Payments.Orders.UseCases {
+using Empiria.Payments.Adapters;
+using Empiria.Payments.Data;
+
+namespace Empiria.Payments.UseCases {
 
   /// <summary>Use cases for payment orders management.</summary>
   public class PaymentOrderUseCases : UseCase {
@@ -163,8 +164,8 @@ namespace Empiria.Payments.Orders.UseCases {
 
         return PaymentOrderMapper.Map(paymentOrder);
       }
-
     }
+
 
     public int ValidatePayment() {
       var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
@@ -180,15 +181,8 @@ namespace Empiria.Payments.Orders.UseCases {
       return count;
     }
 
-
     #endregion Use cases
-
-    #region Helpers
-
-
-
-    #endregion  Helpers
 
   }  // class PaymentOrderUseCases
 
-}  // namespace Empiria.Payments.Orders.UseCases
+}  // namespace Empiria.Payments.UseCases

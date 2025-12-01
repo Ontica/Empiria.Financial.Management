@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 using Empiria.Services;
 
-using Empiria.Payments.Orders;
 using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Processor.Services {

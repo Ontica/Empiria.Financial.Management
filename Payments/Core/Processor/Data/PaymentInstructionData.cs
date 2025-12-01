@@ -10,8 +10,6 @@
 
 using Empiria.Data;
 
-using Empiria.Payments.Orders;
-
 namespace Empiria.Payments.Processor.Data {
 
   /// <summary>Provides data read and write methods for PaymentInstruction and PaymentLog data.</summary>
@@ -46,9 +44,9 @@ namespace Empiria.Payments.Processor.Data {
 
 
     static internal FixedList<PaymentInstruction> GetPaymentOrderInstructionsByInProcessStatus() {
-     
+
       var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
-                $"WHERE PYMT_INSTRUCTION_STATUS =  'A'" + 
+                $"WHERE PYMT_INSTRUCTION_STATUS = 'A' " +
                 $"ORDER BY PYMT_INSTRUCTION_ID";
 
       var op = DataOperation.Parse(sql);

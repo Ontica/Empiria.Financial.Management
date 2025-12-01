@@ -12,7 +12,7 @@ using System;
 
 using Empiria.Financial;
 
-namespace Empiria.Payments.Orders {
+namespace Empiria.Payments {
 
   /// <summary>Fields structure used for create and update payment orders.</summary>
   public class PaymentOrderFields {
@@ -103,4 +103,4 @@ namespace Empiria.Payments.Orders {
   }  // class PaymentOrderFields
 
 
-}  // namespace Empiria.Payments.Orders.Adapters
+}  // namespace Empiria.Payments.Adapters

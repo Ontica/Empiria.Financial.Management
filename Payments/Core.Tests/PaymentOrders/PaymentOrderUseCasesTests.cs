@@ -13,11 +13,11 @@ using Xunit;
 using System;
 using System.Threading.Tasks;
 
-using Empiria.Payments.Orders;
-using Empiria.Payments.Orders.Adapters;
-using Empiria.Payments.Orders.UseCases;
+using Empiria.Payments;
+using Empiria.Payments.Adapters;
+using Empiria.Payments.UseCases;
 
-namespace Empiria.Tests.Payments.Orders {
+namespace Empiria.Tests.Payments {
 
   /// <summary>Test cases for payment order use cases.</summary>
   public class PaymentOrderUseCasesTests {
@@ -127,4 +127,4 @@ namespace Empiria.Tests.Payments.Orders {
 
   }  // class PaymentOrderUseCasesTests
 
-}  // namespace Empiria.Tests.Payments.Orders
+}  // namespace Empiria.Tests.Payments

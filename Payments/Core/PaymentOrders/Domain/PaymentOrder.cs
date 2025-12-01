@@ -14,9 +14,10 @@ using Empiria.Contacts;
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
-using Empiria.Payments.Orders.Data;
 
-namespace Empiria.Payments.Orders {
+using Empiria.Payments.Data;
+
+namespace Empiria.Payments {
 
   /// <summary>Represents a payment order.</summary>
   public class PaymentOrder : BaseObject {
@@ -310,4 +311,4 @@ namespace Empiria.Payments.Orders {
 
   }  // class PaymentOrder
 
-}  // namespace Empiria.Payments.Orders
+}  // namespace Empiria.Payments

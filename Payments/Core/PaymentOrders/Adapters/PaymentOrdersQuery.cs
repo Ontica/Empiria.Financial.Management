@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Empiria.Payments.Orders.Adapters {
+namespace Empiria.Payments.Adapters {
 
   /// <summary>Query DTO used to search payment orders.</summary>
   public class PaymentOrdersQuery {
@@ -56,4 +56,4 @@ namespace Empiria.Payments.Orders.Adapters {
 
   }  // class PaymentOrdersQuery
 
-}  // namespace Empiria.Payments.Orders.Adapters
+}  // namespace Empiria.Payments.Adapters

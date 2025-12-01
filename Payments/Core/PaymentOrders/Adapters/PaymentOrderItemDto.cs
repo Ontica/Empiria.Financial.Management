@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Payments.Orders.Adapters {
+namespace Empiria.Payments.Adapters {
 
   /// <summary>Data transfer objects used to return payment order items.</summary>
   public class PaymentOrderItemDto {
@@ -27,5 +27,4 @@ namespace Empiria.Payments.Orders.Adapters {
 
   } // class PaymentOrderItemDto
 
-
-}  // namespace Empiria.Payments.Orders.Adapters
+}  // namespace Empiria.Payments.Adapters

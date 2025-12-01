@@ -18,7 +18,7 @@ using Empiria.Billing.Adapters;
 
 using Empiria.Payments.Processor.Adapters;
 
-namespace Empiria.Payments.Orders.Adapters {
+namespace Empiria.Payments.Adapters {
 
   /// <summary>Output DTO used to return a complete payment order.</summary>
   public class PaymentOrderHolderDto {
@@ -57,14 +57,17 @@ namespace Empiria.Payments.Orders.Adapters {
 
   }  // class PaymentOrderHolderDto
 
+
+
   public class PaymentOrderActionsDto : BaseActions {
 
     public bool CanSendToPay {
       get; internal set;
     }
 
+  }  // class PaymentOrderActionsDto
 
-  }
+
 
   /// <summary>Output DTO used to return a payment order.</summary>
   public class PaymentOrderDto {
@@ -128,6 +131,7 @@ namespace Empiria.Payments.Orders.Adapters {
   }  // class PaymentOrderDto
 
 
+
   /// <summary>Output DTO used to return minimal payment order's data for use in lists.</summary>
   public class PaymentOrderDescriptor {
 
@@ -180,6 +184,4 @@ namespace Empiria.Payments.Orders.Adapters {
 
   } // class PaymentOrderDescriptor
 
-
-
-}  // namespace Empiria.Payments.Orders.Adapters
+}  // namespace Empiria.Payments.Adapters

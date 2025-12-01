@@ -12,7 +12,7 @@ using Empiria.Data;
 
 using Empiria.Financial;
 
-namespace Empiria.Payments.Orders.Data {
+namespace Empiria.Payments.Data {
 
   /// <summary>Provides data read and write methods for contract instances.</summary>
   static internal class PaymentOrderData {
@@ -71,9 +71,8 @@ namespace Empiria.Payments.Orders.Data {
       DataWriter.Execute(op);
     }
 
-
     #endregion Methods
 
-  }  // class ContractData
+  }  // class PaymentOrderData
 
-}  // namespace Empiria.Payments.Orders.Data
+}  // namespace Empiria.Payments.Data
