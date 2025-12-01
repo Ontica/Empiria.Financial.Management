@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Payments Managem ent                       Component : Data Layer                              *
+*  Module   : Payments Management                        Component : Data Layer                              *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Data service                            *
 *  Type     : PaymentOrderData                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -10,12 +10,27 @@
 
 using Empiria.Data;
 
+using Empiria.Financial;
+
 namespace Empiria.Payments.Orders.Data {
 
   /// <summary>Provides data read and write methods for contract instances.</summary>
   static internal class PaymentOrderData {
 
     #region Methods
+
+    static internal FixedList<PaymentOrder> GetPaymentOrders(IPayableEntity payableEntity) {
+      var sql = "SELECT * FROM FMS_PAYMENT_ORDERS " +
+               $"WHERE PYMT_ORD_PAYABLE_ENTITY_TYPE_ID = {payableEntity.GetEmpiriaType().Id} AND " +
+               $"PYMT_ORD_PAYABLE_ENTITY_ID = {payableEntity.Id} AND " +
+               $"PYMT_ORD_STATUS <> 'X' " +
+               $"ORDER BY PYMT_ORD_NO DESC";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<PaymentOrder>(op);
+    }
+
 
     static internal FixedList<PaymentOrder> GetPaymentOrders(string filter, string sortBy) {
       var sql = "SELECT * FROM FMS_PAYMENT_ORDERS";
@@ -32,7 +47,6 @@ namespace Empiria.Payments.Orders.Data {
 
       return DataReader.GetFixedList<PaymentOrder>(dataOperation);
     }
-
 
     static internal void WritePaymentOrder(PaymentOrder o, string securityData, string extensionData) {
 

@@ -27,12 +27,6 @@ namespace Empiria.Payments.Orders {
       // Required by Empiria Framework.
     }
 
-    public PaymentOrder(PaymentOrderFields fields) {
-      Assertion.Require(fields, nameof(fields));
-
-      Update(fields);
-    }
-
 
     public PaymentOrder(IPayableEntity payableEntity) {
       Assertion.Require(payableEntity, nameof(payableEntity));
@@ -42,23 +36,17 @@ namespace Empiria.Payments.Orders {
     }
 
 
-    static internal PaymentOrder Parse(string UID) {
-      return BaseObject.ParseKey<PaymentOrder>(UID);
-    }
+    static internal PaymentOrder Parse(string uid) => ParseKey<PaymentOrder>(uid);
 
-
-    static internal PaymentOrder Parse(int Id) {
-      return BaseObject.ParseId<PaymentOrder>(Id);
-    }
-
-    static internal PaymentOrder TryGetForControlNo(string controlNo) {
-      Assertion.Require(controlNo, nameof(controlNo));
-
-      return TryParse<PaymentOrder>($"PYMT_ORD_CONTROL_NO = '{controlNo}' AND PYMT_ORD_STATUS <> 'X' ");
-    }
-
+    static internal PaymentOrder Parse(int id) => ParseId<PaymentOrder>(id);
 
     static public PaymentOrder Empty => ParseEmpty<PaymentOrder>();
+
+    static public FixedList<PaymentOrder> GetListFor(IPayableEntity payableEntity) {
+      Assertion.Require(payableEntity, nameof(payableEntity));
+
+      return PaymentOrderData.GetPaymentOrders(payableEntity);
+    }
 
     #endregion Constructors and parsers
 
@@ -216,8 +204,7 @@ namespace Empiria.Payments.Orders {
 
 
     public decimal Total {
-      get;
-      internal set;
+      get; internal set;
     }
 
     #endregion Properties
