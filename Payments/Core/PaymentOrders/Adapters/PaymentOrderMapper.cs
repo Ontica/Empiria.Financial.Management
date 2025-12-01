@@ -60,14 +60,23 @@ namespace Empiria.Payments.Adapters {
     static private PaymentOrderDescriptor MapToDescriptor(PaymentOrder paymentOrder) {
       return new PaymentOrderDescriptor {
         UID = paymentOrder.UID,
+        PaymentOrderTypeName = paymentOrder.GetEmpiriaType().DisplayName,
         PaymentOrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.Name,
         PaymentMethod = paymentOrder.PaymentMethod.Name,
-        Total = paymentOrder.Total,
-        Currency = paymentOrder.Currency.Name,
+        PaymentAccount = paymentOrder.PaymentAccount.AccountNo,
+        CurrencyCode = paymentOrder.PayableEntity.Currency.Name,
+        Total = paymentOrder.PayableEntity.Total,
+        DueTime = paymentOrder.DueTime,
+
+        PayableNo = paymentOrder.PayableEntity.EntityNo,
+        PayableTypeName = paymentOrder.PayableEntity.GetEmpiriaType().DisplayName,
+        ContractNo = "No aplica",
+        BudgetTypeName = paymentOrder.PayableEntity.Budget.Name,
+
         RequestedBy = paymentOrder.RequestedBy.Name,
         RequestedDate = paymentOrder.RequestedTime,
-        DueTime = paymentOrder.DueTime,
+
         StatusName = paymentOrder.Status.GetName()
       };
     }

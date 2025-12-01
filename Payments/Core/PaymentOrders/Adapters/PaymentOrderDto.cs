@@ -139,18 +139,51 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-
     public string PaymentOrderTypeName {
       get; internal set;
     }
-
 
     public string PaymentOrderNo {
       get; internal set;
     }
 
-
     public string PayTo {
+      get; internal set;
+    }
+
+    public string PaymentMethod {
+      get; internal set;
+    }
+
+    public string PaymentAccount {
+      get; internal set;
+    }
+
+    public string CurrencyCode {
+      get; internal set;
+    }
+
+    public decimal Total {
+      get; internal set;
+    }
+
+    public DateTime DueTime {
+      get; internal set;
+    }
+
+    public string PayableNo {
+      get; internal set;
+    }
+
+    public string PayableTypeName {
+      get; internal set;
+    }
+
+    public string ContractNo {
+      get; internal set;
+    }
+
+    public string BudgetTypeName {
       get; internal set;
     }
 
@@ -159,22 +192,6 @@ namespace Empiria.Payments.Adapters {
     }
 
     public DateTime RequestedDate {
-      get; internal set;
-    }
-
-    public DateTime DueTime {
-      get; internal set;
-    }
-
-    public string PaymentMethod {
-      get; internal set;
-    }
-
-    public string Currency {
-      get; internal set;
-    }
-
-    public decimal Total {
       get; internal set;
     }
 
