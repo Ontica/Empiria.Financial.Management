@@ -9,10 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using System.Linq;
-using Empiria.Billing.Data;
-using Empiria.Billing.SATMexicoImporter;
-using Empiria.Parties;
 
 namespace Empiria.Billing {
 

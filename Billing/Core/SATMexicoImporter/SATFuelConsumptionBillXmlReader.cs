@@ -10,7 +10,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Contexts;
 using System.Xml;
 
 namespace Empiria.Billing.SATMexicoImporter {
@@ -32,10 +31,9 @@ namespace Empiria.Billing.SATMexicoImporter {
       _xmlDocument.LoadXml(xmlString);
     }
 
-
     #region Services
 
-    internal SATFuelConsumptionBillDto ReadAsBillDto() {
+    internal SATFuelConsumptionBillDto ReadAsFuelConsumptionBillDto() {
 
       XmlElement generalData = _xmlDocument.DocumentElement;
       XmlNodeList nodes = generalData.ChildNodes;

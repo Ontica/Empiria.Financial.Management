@@ -12,7 +12,7 @@ using System;
 namespace Empiria.Billing.SATMexicoImporter {
 
   /// <summary>Output DTO used to return a SAT Mexico bill object</summary>
-  internal class SATFuelConsumptionBillDto {
+  internal class SATFuelConsumptionBillDto : ISATBillDto {
 
     public SATBillGeneralDataDto DatosGenerales {
       get; internal set;

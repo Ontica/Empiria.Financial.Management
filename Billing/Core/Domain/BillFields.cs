@@ -107,6 +107,71 @@ namespace Empiria.Billing {
   } // class BillFields
 
 
+  internal class BillGeneralDataFields {
+
+    public string BillCategoryUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string BillNo {
+      get; set;
+    } = string.Empty;
+
+
+    public string CertificationNo {
+      get; set;
+    } = string.Empty;
+
+
+    public string CFDIRelated {
+      get;
+      internal set;
+    } = string.Empty;
+
+
+    public string IssuedByUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string IssuedToUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string ManagedByUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string[] Tags {
+      get; set;
+    } = new string[0];
+
+
+    public string CurrencyUID {
+      get; set;
+    } = string.Empty;
+
+
+    public decimal Subtotal {
+      get; set;
+    }
+
+
+    public decimal Discount {
+      get; set;
+    }
+
+
+    public decimal Total {
+      get; set;
+    }
+
+  }
+
+
   public class BillOrganizationFields {
 
     public string RegimenFiscal {
