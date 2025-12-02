@@ -10,7 +10,6 @@
 
 using System;
 
-using Empiria.Contacts;
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
@@ -127,10 +126,10 @@ namespace Empiria.Payments {
 
     internal string ReferenceNumber {
       get {
-        return this.ExtData.Get("ReferenceNumber", string.Empty);
+        return this.ExtData.Get("referenceNumber", string.Empty);
       }
       private set {
-        this.ExtData.SetIfValue("ReferenceNumber", value);
+        this.ExtData.SetIfValue("referenceNumber", value);
       }
     }
 
@@ -156,7 +155,7 @@ namespace Empiria.Payments {
 
 
     [DataField("PYMT_ORD_AUTHORIZED_BY_ID")]
-    public Contact AuthorizedBy {
+    public Party AuthorizedBy {
       get; private set;
     }
 
@@ -180,14 +179,14 @@ namespace Empiria.Payments {
 
 
     [DataField("PYMT_ORD_CLOSED_BY_ID")]
-    public Contact ClosedBy {
+    public Party ClosedBy {
       get; private set;
     }
 
 
 
     [DataField("PYMT_ORD_POSTED_BY_ID")]
-    public Contact PostedBy {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -222,7 +221,7 @@ namespace Empiria.Payments {
     protected override void OnSave() {
       if (base.IsNew) {
         this.PaymentOrderNo = GeneratePaymentOrderNo();
-        this.PostedBy = ExecutionServer.CurrentContact;
+        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
 
@@ -265,7 +264,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal void Suspend(Contact suspendedBy, DateTime suspendedUntil) {
+    internal void Suspend(Party suspendedBy, DateTime suspendedUntil) {
       Assertion.Require(suspendedBy, nameof(suspendedBy));
 
       Assertion.Require(this.Status == PaymentOrderStatus.Received ||
@@ -277,7 +276,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal void Update(PaymentOrderFields fields) {
+    public void Update(PaymentOrderFields fields) {
       Assertion.Require(fields, nameof(fields));
       Assertion.Require(this.Status == PaymentOrderStatus.Pending,
                         $"No se pueden actualizar los datos de la orden de pago " +
@@ -285,18 +284,17 @@ namespace Empiria.Payments {
 
       fields.EnsureValid();
 
-      this.Description = fields.Notes;
-      this.Observations = fields.Observations;
-      this.PayTo = Party.Parse(fields.PayToUID);
-      this.PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
-      this.Currency = Currency.Parse(fields.CurrencyUID);
-      this.PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
-      this.DueTime = fields.DueTime;
-      this.RequestedTime = fields.RequestedTime;
-      this.DueTime = fields.DueTime;
-      this.RequestedBy = OrganizationalUnit.Parse(fields.RequestedByUID);
-
-      this.ReferenceNumber = fields.ReferenceNumber;
+      Description = fields.Description;
+      Observations = fields.Observations;
+      PayTo = Party.Parse(fields.PayToUID);
+      PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
+      Currency = Currency.Parse(fields.CurrencyUID);
+      PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
+      DueTime = fields.DueTime;
+      RequestedTime = fields.RequestedTime;
+      RequestedBy = OrganizationalUnit.Parse(fields.RequestedByUID);
+      ReferenceNumber = fields.ReferenceNumber;
+      Total = fields.Total;
     }
 
     #endregion Methods

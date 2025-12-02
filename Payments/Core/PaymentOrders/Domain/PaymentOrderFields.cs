@@ -57,14 +57,17 @@ namespace Empiria.Payments {
     } = string.Empty;
 
 
-    public string Notes {
+    public decimal Total {
+      get; set;
+    }
+
+    public string Description {
       get; set;
     } = string.Empty;
 
 
     public string Observations {
-      get;
-      internal set;
+      get; set;
     } = string.Empty;
 
 
