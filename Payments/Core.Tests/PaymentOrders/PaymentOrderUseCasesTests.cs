@@ -109,16 +109,16 @@ namespace Empiria.Tests.Payments {
 
 
     [Fact]
-    public void Should_Validate_Is_Payment_Order_Is_Payed() {
-      var sut = _usecases.ValidatePaymentOrderIsPayed("65dccef4-cd85-4b5b-8a99-b6ca255c8ac3");
+    public async Task Should_Validate_Is_Payment_Order_Is_Payed() {
+      var sut = await _usecases.ValidatePaymentOrderIsPayed("65dccef4-cd85-4b5b-8a99-b6ca255c8ac3");
 
       Assert.NotNull(sut);
     }
 
 
     [Fact]
-    public void Should_Validate_Is_Payments_Orders_Are_Payed() {
-      var sut = _usecases.ValidatePayment();
+    public async Task Should_Validate_Is_Payments_Orders_Are_Payed() {
+      var sut = await _usecases.ValidatePayment();
 
       Assert.NotEqual(0, sut);
     }
