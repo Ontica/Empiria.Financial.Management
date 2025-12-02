@@ -37,6 +37,22 @@ namespace Empiria.Tests.Billing {
 
 
     [Fact]
+    public void Create_Fuel_Consumption_Bill_Test() {
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+        string xmlFilePath = TestingConstants.XML_FUEL_CONSUMPTION_BILL_FILE_PATH;
+
+        var xmlText = System.IO.File.ReadAllText(xmlFilePath);
+
+        BillDto sut = usecases.CreateBillPaymentComplementTest(xmlText);
+
+        Assert.NotNull(sut);
+      }
+    }
+
+
+    [Fact]
     public void Create_Payment_Complement_Test() {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {

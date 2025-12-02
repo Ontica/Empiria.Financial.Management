@@ -58,6 +58,7 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(xmlString, nameof(xmlString));
 
       var reader = new SATBillXmlReader(xmlString);
+
       ISATBillDto satDto = reader.ReadAsBillDto();
 
       IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
@@ -105,6 +106,21 @@ namespace Empiria.Billing.UseCases {
       IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
 
       Bill bill = CreateCreditNoteImplementation(payable, (BillFields) fields);
+
+      return BillMapper.MapToBillDto(bill);
+    }
+
+
+    public BillDto CreateFuelConsumptionBillTest(string xmlString) {
+      Assertion.Require(xmlString, nameof(xmlString));
+
+      var reader = new SATFuelConsumptionBillXmlReader(xmlString);
+
+      ISATBillDto satDto = reader.ReadAsFuelConsumptionBillDto();
+
+      IBillFields fields = FuelConsumptionBillMapper.Map((SATFuelConsumptionBillDto) satDto);
+
+      Bill bill = CreatePaymentComplementTest((BillPaymentComplementFields) fields);
 
       return BillMapper.MapToBillDto(bill);
     }
