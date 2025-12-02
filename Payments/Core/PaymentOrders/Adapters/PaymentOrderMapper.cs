@@ -14,9 +14,14 @@ using Empiria.History;
 using Empiria.Financial;
 using Empiria.Financial.Adapters;
 
+using Empiria.Billing.Adapters;
+
+
 using Empiria.Payments.Processor;
 using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Services;
+using Empiria.Budgeting.Transactions;
+using Empiria.Budgeting.Transactions.Adapters;
 
 namespace Empiria.Payments.Adapters {
 
@@ -24,11 +29,16 @@ namespace Empiria.Payments.Adapters {
   static public class PaymentOrderMapper {
 
     static internal PaymentOrderHolderDto Map(PaymentOrder paymentOrder) {
+      var bills = Billing.Bill.GetListFor(paymentOrder.PayableEntity);
+      var txns = BudgetTransaction.GetFor((IBudgetable) paymentOrder.PayableEntity);
+
       return new PaymentOrderHolderDto {
         PaymentOrder = MapPaymentOrder(paymentOrder),
+        PayableEntity = PayableEntityMapper.Map(paymentOrder.PayableEntity),
         Items = MapItems(paymentOrder.PayableEntity.Items),
-        // Bills = ExternalServices.GetPayableBills(paymentOrder.Payable),
-        Documents = DocumentServices.GetAllEntityDocuments(paymentOrder),
+        Bills = BillMapper.MapToBillDto(bills),
+        BudgetTransactions = BudgetTransactionMapper.MapToDescriptor(txns),
+        Documents = DocumentServices.GetAllEntityDocuments((BaseObject) paymentOrder.PayableEntity),
         History = HistoryServices.GetEntityHistory(paymentOrder),
         Log = GetPaymentOrderLog(paymentOrder),
         Actions = MapActions(paymentOrder)
@@ -51,8 +61,12 @@ namespace Empiria.Payments.Adapters {
     static internal PaymentOrderItemDto MapItems(IPayableEntityItem payableItem) {
       return new PaymentOrderItemDto {
         UID = payableItem.UID,
-        Subtotal = payableItem.Subtotal,
-        Currency = payableItem.Currency.MapToNamedEntity()
+        BudgetAccount = payableItem.BudgetAccount.MapToNamedEntity(),
+        Quantity = payableItem.Quantity,
+        Name = payableItem.Description,
+        Unit = payableItem.Unit.Name,
+        PayableEntityItemUID = payableItem.UID,
+        Total = payableItem.Subtotal,
       };
     }
 
@@ -77,7 +91,7 @@ namespace Empiria.Payments.Adapters {
         RequestedBy = paymentOrder.RequestedBy.Name,
         RequestedDate = paymentOrder.RequestedTime,
 
-        StatusName = paymentOrder.Status.GetName()
+        Status = paymentOrder.Status.MapToNamedEntity()
       };
     }
 
@@ -89,6 +103,7 @@ namespace Empiria.Payments.Adapters {
         CanEditDocuments = paymentOrderActions.CanEditDocuments,
         CanSendToPay = paymentOrderActions.CanSendToPay,
         CanUpdate = paymentOrderActions.CanUpdate,
+        CanRequestBudget = true,
       };
 
     }
@@ -104,16 +119,19 @@ namespace Empiria.Payments.Adapters {
     static private PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
         UID = paymentOrder.UID,
-        OrderNo = paymentOrder.PaymentOrderNo,
+        PaymentOrderType = paymentOrder.GetEmpiriaType().MapToNamedEntity(),
+        PaymentOrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.MapToNamedEntity(),
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
         RequestedDate = paymentOrder.RequestedTime,
         DueTime = paymentOrder.DueTime,
-        Notes = paymentOrder.Description,
+        Description = paymentOrder.Description,
+        Budget = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
+        BudgetType = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
         PaymentMethod = MapPaymentMethod(paymentOrder.PaymentMethod),
         PaymentAccount = MapPaymentAccount(paymentOrder.PaymentAccount),
         Currency = paymentOrder.Currency.MapToNamedEntity(),
-        Total = paymentOrder.Total,
+        Total = paymentOrder.PayableEntity.Total,
         Status = paymentOrder.Status.MapToNamedEntity(),
         ReferenceNumber = paymentOrder.ReferenceNumber,
       };

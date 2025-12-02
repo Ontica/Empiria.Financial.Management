@@ -17,11 +17,28 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto Currency {
+    public string Name {
       get; internal set;
     }
 
-    public decimal Subtotal {
+    public NamedEntityDto BudgetAccount {
+      get; internal set;
+    }
+
+
+    public string PayableEntityItemUID {
+      get; internal set;
+    }
+
+    public decimal Quantity {
+      get; internal set;
+    }
+
+    public string Unit {
+      get; internal set;
+    }
+
+    public decimal Total {
       get; internal set;
     }
 

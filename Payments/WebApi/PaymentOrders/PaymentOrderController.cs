@@ -25,6 +25,7 @@ namespace Empiria.Payments.WebApi {
     #region Query web apis
 
     [HttpGet]
+    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
     public SingleObjectModel GetPaymentOrder([FromUri] string paymentOrderUID) {
 

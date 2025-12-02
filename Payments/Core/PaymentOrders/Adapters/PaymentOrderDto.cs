@@ -16,6 +16,8 @@ using Empiria.History;
 using Empiria.Financial.Adapters;
 using Empiria.Billing.Adapters;
 
+using Empiria.Budgeting.Transactions.Adapters;
+
 using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Adapters {
@@ -23,7 +25,12 @@ namespace Empiria.Payments.Adapters {
   /// <summary>Output DTO used to return a complete payment order.</summary>
   public class PaymentOrderHolderDto {
 
+    [Newtonsoft.Json.JsonProperty(PropertyName = "Payable")]
     public PaymentOrderDto PaymentOrder {
+      get; internal set;
+    }
+
+    public PayableEntityDto PayableEntity {
       get; internal set;
     }
 
@@ -35,6 +42,15 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public FixedList<BudgetTransactionDescriptorDto> BudgetTransactions {
+      get; internal set;
+    }
+
+
+    public FixedList<PaymentInstructionLogDescriptorDto> Log {
+      get; internal set;
+    }
+
 
     public FixedList<DocumentDto> Documents {
       get; internal set;
@@ -42,11 +58,6 @@ namespace Empiria.Payments.Adapters {
 
 
     public FixedList<HistoryEntryDto> History {
-      get; internal set;
-    }
-
-
-    public FixedList<PaymentInstructionLogDescriptorDto> Log {
       get; internal set;
     }
 
@@ -65,6 +76,10 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public bool CanRequestBudget {
+      get; internal set;
+    }
+
   }  // class PaymentOrderActionsDto
 
 
@@ -76,13 +91,28 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    [Newtonsoft.Json.JsonProperty(PropertyName = "payableType")]
     public NamedEntityDto PaymentOrderType {
       get; internal set;
     }
 
-    public string OrderNo {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "payableNo")]
+    public string PaymentOrderNo {
       get; internal set;
     }
+
+    public string Description {
+      get; internal set;
+    }
+
+    public NamedEntityDto BudgetType {
+      get; internal set;
+    }
+
+    public NamedEntityDto Budget {
+      get; internal set;
+    }
+
 
     public NamedEntityDto PayTo {
       get; internal set;
@@ -97,10 +127,6 @@ namespace Empiria.Payments.Adapters {
     }
 
     public DateTime DueTime {
-      get; internal set;
-    }
-
-    public string Notes {
       get; internal set;
     }
 
@@ -195,7 +221,7 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public string StatusName {
+    public NamedEntityDto Status {
       get; internal set;
     }
 
