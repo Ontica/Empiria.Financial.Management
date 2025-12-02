@@ -9,7 +9,10 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 using Empiria.Billing.SATMexicoImporter;
+using Empiria.Parties;
+using Empiria.Products.SATMexico;
 
 namespace Empiria.Billing.Adapters {
 
@@ -28,10 +31,185 @@ namespace Empiria.Billing.Adapters {
 
     #region Private methods
 
-    static private IBillFields MapToFuelConsumptionBillFields(
-                                SATFuelConsumptionBillDto paymentComplementDto) {
+    static private FuelConsumptionBillAddendaFields MapToAddendaData(SATFuelConsumptionAddendaDto addenda) {
 
-      throw new NotImplementedException();
+      return new FuelConsumptionBillAddendaFields {
+        Concepts = MapToFuelConsumptionConceptFields(addenda.AddendaConceptos)
+      };
+    }
+
+
+    private static FixedList<FuelConseptionComplementConceptDataFields> MapToComplementConcepts(
+                                    FixedList<FuelConsumptionComplementConceptDataDto> complementConcepts) {
+
+      var conceptsListFields = new List<FuelConseptionComplementConceptDataFields>();
+
+      foreach (var concept in complementConcepts) {
+
+        var fields = new FuelConseptionComplementConceptDataFields {
+          Identificador = concept.Identificador,
+          Rfc = concept.Rfc,
+          ClaveEstacion = concept.ClaveEstacion,
+          TipoCombustible = concept.TipoCombustible,
+          Unidad = concept.Unidad,
+          NombreCombustible = concept.NombreCombustible,
+          FolioOperacion = concept.FolioOperacion,
+          Fecha = concept.Fecha,
+          Cantidad = concept.Cantidad,
+          ValorUnitario = concept.ValorUnitario,
+          Importe = concept.Importe,
+          TaxEntries = MapToTaxFields(concept.Impuestos)
+        };
+        conceptsListFields.Add(fields);
+      }
+
+      return conceptsListFields.ToFixedList();
+    }
+
+
+    static private IBillFields MapToFuelConsumptionBillFields(SATFuelConsumptionBillDto dto) {
+
+      return new FuelConsumptionBillFields {
+        BillCategoryUID = BillCategory.ComplementoPagoProveedores.UID,
+        BillNo = dto.SATComplemento.UUID,
+        CertificationNo = dto.DatosGenerales.NoCertificado,
+        IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
+        IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
+        CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
+        Subtotal = dto.DatosGenerales.SubTotal,
+        Total = dto.DatosGenerales.Total,
+        Concepts = MapToFuelConsumptionConceptFields(dto.Conceptos),
+        SchemaData = MapToFuelConsumptionSchemaData(dto),
+        SecurityData = MapToFuelConsumptionSecurityData(dto),
+        ComplementData = MapToFuelConsumptionComplementData(dto.DatosComplemento),
+        Addenda = MapToAddendaData(dto.Addenda)
+      };
+    }
+
+
+    static private FuelConsumptionComplementDataFields MapToFuelConsumptionComplementData(
+                                                        FuelConsumptionComplementDataDto datosComplementos) {
+
+      return new FuelConsumptionComplementDataFields {
+        Version = datosComplementos.Version,
+        TipoOperacion = datosComplementos.TipoOperacion,
+        NumeroDeCuenta = datosComplementos.NumeroDeCuenta,
+        SubTotal = datosComplementos.SubTotal, 
+        Total = datosComplementos.Total,
+        ComplementConcepts = MapToComplementConcepts(datosComplementos.ComplementConcepts)
+      };
+    }
+
+
+    static private FixedList<BillConceptWithTaxFields> MapToFuelConsumptionConceptFields(
+                                                        FixedList<SATBillConceptWithTaxDto> conceptos) {
+
+      List<BillConceptWithTaxFields> fields = new List<BillConceptWithTaxFields>();
+
+      foreach (var concepto in conceptos) {
+
+        var field = new BillConceptWithTaxFields {
+          ProductUID = string.Empty,
+          SATProductUID = string.Empty,
+          SATProductCode = concepto.ClaveProdServ,
+          ClaveUnidad = concepto.ClaveUnidad,
+          Unidad = concepto.Unidad,
+          NoIdentificacion = concepto.NoIdentificacion,
+          ObjetoImp = concepto.ObjetoImp,
+          Description = concepto.Descripcion,
+          Quantity = concepto.Cantidad,
+          UnitPrice = concepto.ValorUnitario,
+          Subtotal = concepto.Importe,
+          TaxEntries = MapToTaxFields(concepto.Impuestos)
+        };
+        fields.Add(field);
+      }
+      return fields.ToFixedList();
+    }
+
+
+    static private BillSchemaDataFields MapToFuelConsumptionSchemaData(SATFuelConsumptionBillDto dto) {
+
+      return new BillSchemaDataFields() {
+        IssuedBy = MapToIssuedBy(dto.Emisor),
+        IssuedTo = MapToIssuedTo(dto.Receptor),
+        SchemaVersion = dto.DatosGenerales.CFDIVersion,
+        Fecha = dto.DatosGenerales.Fecha,
+        Folio = dto.DatosGenerales.Folio,
+        Serie = dto.DatosGenerales.Serie,
+        MetodoPago = dto.DatosGenerales.MetodoPago,
+        FormaPago = dto.DatosGenerales.FormaPago,
+        Exportacion = dto.DatosGenerales.Exportacion,
+        LugarExpedicion = dto.DatosGenerales.LugarExpedicion,
+        Moneda = dto.DatosGenerales.Moneda,
+        Subtotal = dto.DatosGenerales.SubTotal,
+        Total = dto.DatosGenerales.Total,
+        TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
+      };
+    }
+
+
+    static private BillSecurityDataFields MapToFuelConsumptionSecurityData(SATFuelConsumptionBillDto dto) {
+
+      return new BillSecurityDataFields() {
+        Xmlns_Xsi = dto.SATComplemento.Xmlns_Xsi,
+        Xsi_SchemaLocation = dto.SATComplemento.Xsi_SchemaLocation,
+        NoCertificado = dto.DatosGenerales.NoCertificado,
+        Certificado = dto.DatosGenerales.Certificado,
+        Sello = dto.DatosGenerales.Sello,
+
+        UUID = dto.SATComplemento.UUID,
+        SelloCFD = dto.SATComplemento.SelloCFD,
+        SelloSAT = dto.SATComplemento.SelloSAT,
+        FechaTimbrado = dto.SATComplemento.FechaTimbrado,
+        RfcProvCertif = dto.SATComplemento.RfcProvCertif,
+        NoCertificadoSAT = dto.SATComplemento.NoCertificadoSAT,
+        Tfd_Version = dto.SATComplemento.Tfd_Version,
+        Xmlns_Tfd = dto.SATComplemento.Xmlns_Tfd
+      };
+    }
+
+
+    static private BillOrganizationFields MapToIssuedBy(SATBillOrganizationDto emisor) {
+
+      return new BillOrganizationFields() {
+        Nombre = emisor.Nombre,
+        RFC = emisor.RFC,
+        RegimenFiscal = emisor.RegimenFiscal
+      };
+    }
+
+
+    static private BillOrganizationFields MapToIssuedTo(SATBillOrganizationDto receptor) {
+
+      return new BillOrganizationFields() {
+        Nombre = receptor.Nombre,
+        RFC = receptor.RFC,
+        RegimenFiscal = receptor.RegimenFiscal,
+        DomicilioFiscal = receptor.DomicilioFiscal,
+        UsoCFDI = receptor.UsoCFDI
+      };
+    }
+
+
+    static private FixedList<BillTaxEntryFields> MapToTaxFields(FixedList<SATBillTaxDto> impuestos) {
+
+      List<BillTaxEntryFields> fields = new List<BillTaxEntryFields>();
+
+      foreach (SATBillTaxDto tax in impuestos) {
+
+        var field = new BillTaxEntryFields {
+          TaxMethod = tax.MetodoAplicacion,
+          TaxFactorType = BillTaxEntryFields.GetFactorTypeByTax(tax.TipoFactor),
+          Factor = tax.TasaOCuota,
+          BaseAmount = tax.Base,
+          Impuesto = tax.Impuesto,
+          Total = tax.Importe
+        };
+
+        fields.Add(field);
+      }
+      return fields.ToFixedList();
     }
 
     #endregion Private methods
