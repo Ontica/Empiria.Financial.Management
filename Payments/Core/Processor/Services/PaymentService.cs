@@ -74,7 +74,7 @@ namespace Empiria.Payments.Processor.Services {
 
 
 
-    internal void UpdatePaymentInstructionStatus(PaymentInstruction paymentInstruction) {
+    internal async Task UpdatePaymentInstructionStatus(PaymentInstruction paymentInstruction) {
       Assertion.Require(paymentInstruction, nameof(paymentInstruction));
       Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
       Assertion.Require(!paymentInstruction.IsNew, "paymentInstruction must be stored.");
@@ -88,7 +88,7 @@ namespace Empiria.Payments.Processor.Services {
 
       Assertion.Require(paymentInstruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
 
-      PaymentInstructionStatusDto newStatus = paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
+      PaymentInstructionStatusDto newStatus = await paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
 
       UpdatePaymentInstruction(paymentInstruction, newStatus);
 

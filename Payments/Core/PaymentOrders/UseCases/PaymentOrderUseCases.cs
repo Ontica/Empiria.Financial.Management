@@ -149,7 +149,7 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    public PaymentOrderHolderDto ValidatePaymentOrderIsPayed(string paymentOrderUID) {
+    public async Task<PaymentOrderHolderDto> ValidatePaymentOrderIsPayed(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
       var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
@@ -160,20 +160,20 @@ namespace Empiria.Payments.UseCases {
                                .Find(instruction => instruction.Status == PaymentInstructionStatus.InProcess);
 
       using (var usecases = PaymentService.ServiceInteractor()) {
-        usecases.UpdatePaymentInstructionStatus(paymentInstruction);
+        await usecases.UpdatePaymentInstructionStatus(paymentInstruction);
 
         return PaymentOrderMapper.Map(paymentOrder);
       }
     }
 
 
-    public int ValidatePayment() {
+    public async Task<int> ValidatePayment() {
       var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
       int count = 0;
 
       foreach (var paymentInstruction in paymentInstructions) {
         using (var usecases = PaymentService.ServiceInteractor()) {
-          usecases.UpdatePaymentInstructionStatus(paymentInstruction);
+          await usecases.UpdatePaymentInstructionStatus(paymentInstruction);
           count++;
         }
       }

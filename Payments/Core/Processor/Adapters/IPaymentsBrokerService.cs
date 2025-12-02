@@ -15,9 +15,9 @@ namespace Empiria.Payments.Processor.Adapters {
   /// <summary>Interface to integrate payments broker service providers with Empiria Payments.</summary>
   public interface IPaymentsBrokerService {
 
-    PaymentInstructionResultDto CancelPaymentInstruction(PaymentInstructionDto instruction);
+    Task<PaymentInstructionResultDto> CancelPaymentInstruction(PaymentInstructionDto instruction);
 
-    PaymentInstructionStatusDto GetPaymentInstructionStatus(string instructionUID);
+    Task<PaymentInstructionStatusDto> GetPaymentInstructionStatus(string instructionUID);
 
     Task<PaymentInstructionResultDto> SendPaymentInstruction(PaymentInstructionDto instruction);
 

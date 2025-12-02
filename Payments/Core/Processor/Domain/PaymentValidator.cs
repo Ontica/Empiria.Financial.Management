@@ -58,6 +58,8 @@ namespace Empiria.Payments.Processor {
     }
 
 
+
+
     /// <summary>Stops the execution engine.</summary>
     static public void Stop() {
       if (!isRunning) {
@@ -75,17 +77,17 @@ namespace Empiria.Payments.Processor {
 
     #region Helpers
 
-    static private void ValidatePayment(object stateInfo) {
+    static private async void ValidatePayment(object stateInfo) {
       var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
 
       foreach (var paymentInstruction in paymentInstructions) {
         using (var usecases = PaymentService.ServiceInteractor()) {
-          usecases.UpdatePaymentInstructionStatus(paymentInstruction);
+          await usecases.UpdatePaymentInstructionStatus(paymentInstruction);
         }
       }
 
     }
-      
+
 
     #endregion Helpers
 
