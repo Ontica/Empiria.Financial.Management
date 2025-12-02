@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using Empiria.Billing.SATMexicoImporter;
 
 namespace Empiria.Billing {
 
@@ -31,14 +30,14 @@ namespace Empiria.Billing {
     } = new BillSecurityDataFields();
 
 
-    public FixedList<FuelConsumptionComplementDataFields> ComplementData {
+    public FuelConsumptionComplementDataFields ComplementData {
       get; internal set;
-    } = new FixedList<FuelConsumptionComplementDataFields>();
+    } = new FuelConsumptionComplementDataFields();
 
 
-    public FixedList<FuelConsumptionBillAddendaFields> Addenda {
+    public FuelConsumptionBillAddendaFields Addenda {
       get; set;
-    } = new FixedList<FuelConsumptionBillAddendaFields>();
+    } = new FuelConsumptionBillAddendaFields();
 
   } // class FuelConsumptionBillFields
 
