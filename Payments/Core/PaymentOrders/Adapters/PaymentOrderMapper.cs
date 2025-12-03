@@ -9,17 +9,16 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Documents;
-using Empiria.History;
-
 using Empiria.Financial;
 using Empiria.Financial.Adapters;
+using Empiria.History;
 
 using Empiria.Billing.Adapters;
-
 using Empiria.Budgeting.Transactions;
 using Empiria.Budgeting.Transactions.Adapters;
 
 using Empiria.Payments.Processor;
+using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Adapters {
 
@@ -29,6 +28,7 @@ namespace Empiria.Payments.Adapters {
     static internal PaymentOrderHolderDto Map(PaymentOrder paymentOrder) {
       var bills = Billing.Bill.GetListFor(paymentOrder.PayableEntity);
       var txns = BudgetTransaction.GetFor((IBudgetable) paymentOrder.PayableEntity);
+      var instructions = PaymentInstruction.GetListFor(paymentOrder);
 
       return new PaymentOrderHolderDto {
         PaymentOrder = MapPaymentOrder(paymentOrder),
@@ -36,16 +36,11 @@ namespace Empiria.Payments.Adapters {
         Items = MapItems(paymentOrder.PayableEntity.Items),
         Bills = BillMapper.MapToBillDto(bills),
         BudgetTransactions = BudgetTransactionMapper.MapToDescriptor(txns),
-        PaymentInstructions = Map(PaymentInstruction.GetListFor(paymentOrder)),
+        PaymentInstructions = PaymentInstructionMapper.MapToDescriptor(instructions),
         Documents = DocumentServices.GetAllEntityDocuments((BaseObject) paymentOrder.PayableEntity),
         History = HistoryServices.GetEntityHistory(paymentOrder),
         Actions = MapActions(paymentOrder)
       };
-    }
-
-    static private FixedList<PaymentOrderDescriptor> Map(FixedList<PaymentInstruction> instructions) {
-      return instructions.Select(x => Map(x))
-                         .ToFixedList();
     }
 
     static public FixedList<PaymentOrderDescriptor> MapToDescriptor(FixedList<PaymentOrder> orders) {
@@ -54,21 +49,6 @@ namespace Empiria.Payments.Adapters {
     }
 
     #region Helpers
-
-    static private PaymentOrderDescriptor Map(PaymentInstruction x) {
-      return new PaymentOrderDescriptor {
-        UID = x.UID,
-        PaymentOrderTypeName = x.Broker.Name,
-        PayTo = x.PaymentOrder.PayTo.Name,
-        PaymentOrderNo = x.PaymentInstructionNo,
-        PaymentAccount = x.PaymentOrder.PaymentAccount.AccountNo,
-        PaymentMethod = x.PaymentOrder.PaymentMethod.Name,
-        RequestedBy = x.PaymentOrder.RequestedBy.Name,
-        RequestedDate = x.PostingTime,
-        DueTime = x.PaymentOrder.DueTime,
-        Total = x.PaymentOrder.Total,
-      };
-    }
 
     static internal FixedList<PaymentOrderItemDto> MapItems(FixedList<IPayableEntityItem> items) {
       return items.Select(x => MapItems(x))
