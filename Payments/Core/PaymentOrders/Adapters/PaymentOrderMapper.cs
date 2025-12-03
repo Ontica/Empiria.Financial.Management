@@ -16,12 +16,10 @@ using Empiria.Financial.Adapters;
 
 using Empiria.Billing.Adapters;
 
-
-using Empiria.Payments.Processor;
-using Empiria.Payments.Processor.Adapters;
-using Empiria.Payments.Processor.Services;
 using Empiria.Budgeting.Transactions;
 using Empiria.Budgeting.Transactions.Adapters;
+
+using Empiria.Payments.Processor;
 
 namespace Empiria.Payments.Adapters {
 
@@ -38,11 +36,16 @@ namespace Empiria.Payments.Adapters {
         Items = MapItems(paymentOrder.PayableEntity.Items),
         Bills = BillMapper.MapToBillDto(bills),
         BudgetTransactions = BudgetTransactionMapper.MapToDescriptor(txns),
+        PaymentInstructions = Map(PaymentInstruction.GetListFor(paymentOrder)),
         Documents = DocumentServices.GetAllEntityDocuments((BaseObject) paymentOrder.PayableEntity),
         History = HistoryServices.GetEntityHistory(paymentOrder),
-        Log = GetPaymentOrderLog(paymentOrder),
         Actions = MapActions(paymentOrder)
       };
+    }
+
+    static private FixedList<PaymentOrderDescriptor> Map(FixedList<PaymentInstruction> instructions) {
+      return instructions.Select(x => Map(x))
+                         .ToFixedList();
     }
 
     static public FixedList<PaymentOrderDescriptor> MapToDescriptor(FixedList<PaymentOrder> orders) {
@@ -51,6 +54,21 @@ namespace Empiria.Payments.Adapters {
     }
 
     #region Helpers
+
+    static private PaymentOrderDescriptor Map(PaymentInstruction x) {
+      return new PaymentOrderDescriptor {
+        UID = x.UID,
+        PaymentOrderTypeName = x.Broker.Name,
+        PayTo = x.PaymentOrder.PayTo.Name,
+        PaymentOrderNo = x.PaymentInstructionNo,
+        PaymentAccount = x.PaymentOrder.PaymentAccount.AccountNo,
+        PaymentMethod = x.PaymentOrder.PaymentMethod.Name,
+        RequestedBy = x.PaymentOrder.RequestedBy.Name,
+        RequestedDate = x.PostingTime,
+        DueTime = x.PaymentOrder.DueTime,
+        Total = x.PaymentOrder.Total,
+      };
+    }
 
     static internal FixedList<PaymentOrderItemDto> MapItems(FixedList<IPayableEntityItem> items) {
       return items.Select(x => MapItems(x))
@@ -104,6 +122,7 @@ namespace Empiria.Payments.Adapters {
         CanSendToPay = paymentOrderActions.CanSendToPay,
         CanUpdate = paymentOrderActions.CanUpdate,
         CanRequestBudget = true,
+        CanExerciseBudget = true
       };
 
     }
@@ -135,18 +154,6 @@ namespace Empiria.Payments.Adapters {
         Status = paymentOrder.Status.MapToNamedEntity(),
         ReferenceNumber = paymentOrder.ReferenceNumber,
       };
-    }
-
-
-    static private FixedList<PaymentInstructionLogDescriptorDto> GetPaymentOrderLog(PaymentOrder paymentOrder) {
-      Assertion.Require(paymentOrder, nameof(paymentOrder));
-
-      using (var usecases = PaymentService.ServiceInteractor()) {
-
-        FixedList<PaymentInstructionLogEntry> paymentInstructionLogs = usecases.GetPaymentInstructionLogs(paymentOrder);
-
-        return PaymentInstructionLogMapper.Map(paymentInstructionLogs);
-      }
     }
 
     #endregion Helpers

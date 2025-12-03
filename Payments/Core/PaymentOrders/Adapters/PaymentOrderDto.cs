@@ -18,8 +18,6 @@ using Empiria.Billing.Adapters;
 
 using Empiria.Budgeting.Transactions.Adapters;
 
-using Empiria.Payments.Processor.Adapters;
-
 namespace Empiria.Payments.Adapters {
 
   /// <summary>Output DTO used to return a complete payment order.</summary>
@@ -46,11 +44,9 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-
-    public FixedList<PaymentInstructionLogDescriptorDto> Log {
+    public FixedList<PaymentOrderDescriptor> PaymentInstructions {
       get; internal set;
     }
-
 
     public FixedList<DocumentDto> Documents {
       get; internal set;
@@ -77,6 +73,10 @@ namespace Empiria.Payments.Adapters {
     }
 
     public bool CanRequestBudget {
+      get; internal set;
+    }
+
+    public bool CanExerciseBudget {
       get; internal set;
     }
 
