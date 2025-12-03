@@ -47,23 +47,13 @@ namespace Empiria.Payments.Processor.Services {
 
       EnsureIsNotSent(paymentOrder);
 
-      EmpiriaLog.Debug("After Ensure is not sent");
-
       var instruction = new PaymentInstruction(broker, paymentOrder);
-
-      EmpiriaLog.Debug("After parse payment instruction");
 
       PaymentInstructionDto instructionDto = PaymentInstructionMapper.Map(instruction);
 
-      EmpiriaLog.Debug("After map payment instruction");
-
       IPaymentsBrokerService paymentsService = broker.GetService();
 
-      EmpiriaLog.Debug("After get payments service");
-
       PaymentInstructionResultDto paymentResult = await paymentsService.SendPaymentInstruction(instructionDto);
-
-      EmpiriaLog.Debug("After send payment instruction");
 
       UpdatePaymentInstruction(instruction, paymentResult);
 

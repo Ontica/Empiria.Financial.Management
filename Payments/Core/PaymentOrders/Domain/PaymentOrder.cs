@@ -35,10 +35,9 @@ namespace Empiria.Payments {
       _payableEntityId = payableEntity.Id;
     }
 
-
-    static internal PaymentOrder Parse(string uid) => ParseKey<PaymentOrder>(uid);
-
     static internal PaymentOrder Parse(int id) => ParseId<PaymentOrder>(id);
+
+    static public PaymentOrder Parse(string uid) => ParseKey<PaymentOrder>(uid);
 
     static public PaymentOrder Empty => ParseEmpty<PaymentOrder>();
 

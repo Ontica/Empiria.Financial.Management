@@ -11,8 +11,8 @@
 using System;
 using System.Threading.Tasks;
 
+using Empiria.Parties;
 using Empiria.Services;
-
 using Empiria.Financial;
 
 using Empiria.Payments.Processor;
@@ -79,21 +79,13 @@ namespace Empiria.Payments.UseCases {
     public async Task<PaymentOrderHolderDto> SendPaymentOrderToPay(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
-      EmpiriaLog.Debug("Before paymentorder parsing");
-
       var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
 
-      EmpiriaLog.Debug("After paymentorder parsing");
-
       PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
-
-      EmpiriaLog.Debug("After get payments broker");
 
       using (var usecases = PaymentService.ServiceInteractor()) {
 
         _ = await usecases.SendToPay(broker, paymentOrder);
-
-        EmpiriaLog.Debug("After PaymentService use case call");
 
         return PaymentOrderMapper.Map(paymentOrder);
       }
@@ -122,7 +114,7 @@ namespace Empiria.Payments.UseCases {
 
       var order = PaymentOrder.Parse(paymentOrderUID);
 
-      var suspendedBy = Contacts.Contact.Parse(suspendedByUID);
+      var suspendedBy = Party.Parse(suspendedByUID);
 
       order.Suspend(suspendedBy, suspendedUntil);
 
