@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 using Empiria.Services;
 
+using Empiria.Payments.Adapters;
 using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Processor.Services {
@@ -36,6 +37,15 @@ namespace Empiria.Payments.Processor.Services {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
       return PaymentInstructionLogEntry.GetListFor(paymentOrder);
+    }
+
+
+    internal FixedList<PaymentOrderDescriptor> SearchPaymentInstructions(PaymentOrdersQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      var instructions = BaseObject.GetFullList<PaymentInstruction>("PYMT_INSTRUCTION_STATUS <> 'X'");
+
+      return PaymentInstructionMapper.MapToDescriptor(instructions);
     }
 
 
