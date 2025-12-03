@@ -25,7 +25,7 @@ namespace Empiria.Payments.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]
+    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]   // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
     public SingleObjectModel GetPaymentOrder([FromUri] string paymentOrderUID) {
 
@@ -67,6 +67,7 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpDelete]
+    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]   // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
     public NoDataModel DeletePaymentOrder([FromUri] string paymentOrderUID) {
 
@@ -114,6 +115,7 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPut]
+    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]   // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
     public SingleObjectModel UpdatePaymentOrder([FromUri] string paymentOrderUID,
                                                 [FromBody] PaymentOrderFields fields) {
@@ -128,7 +130,6 @@ namespace Empiria.Payments.WebApi {
         return new SingleObjectModel(this.Request, paymentOrder);
       }
     }
-
 
     #endregion Command web apis
 
