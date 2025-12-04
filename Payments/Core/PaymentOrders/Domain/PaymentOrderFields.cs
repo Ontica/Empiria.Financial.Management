@@ -91,7 +91,7 @@ namespace Empiria.Payments {
       Assertion.Require(PaymentMethodUID, "Necesito el método de pago.");
       var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);
 
-      if (paymentMethod.LinkedToAccount == true) {
+      if (paymentMethod.AccountRelated == true) {
         Assertion.Require(PaymentAccountUID, "Necesito el número de cuenta.");
         _ = PaymentAccount.Parse(PaymentAccountUID);
       } else {
