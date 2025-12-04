@@ -36,19 +36,17 @@ namespace Empiria.Payments.Processor {
       switch (status) {
 
         case PaymentInstructionStatus.Pending:
-          return "Pendiente de enviar a pagos";
-
         case PaymentInstructionStatus.InProcess:
-          return "En proceso (pago enviado)";
+          return "En proceso";
 
         case PaymentInstructionStatus.Payed:
-          return "Pagado";
+          return "Pagada";
 
         case PaymentInstructionStatus.Failed:
-          return "Rechazado o fallido";
+          return "Rechazada o fallida";
 
         case PaymentInstructionStatus.Canceled:
-          return "Cancelado";
+          return "Cancelada";
 
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled payment order status {status}.");

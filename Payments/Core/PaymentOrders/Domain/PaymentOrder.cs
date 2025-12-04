@@ -211,46 +211,54 @@ namespace Empiria.Payments {
     #region Methods
 
     internal void Delete() {
-      Assertion.Require(this.Status == PaymentOrderStatus.Pending,
-                  $"No se puede eliminar una orden de pago que está en estado {this.Status.GetName()}.");
+      Assertion.Require(Status == PaymentOrderStatus.Pending,
+                  $"No se puede eliminar una orden de pago que " +
+                  $"está en estado {Status.GetName()}.");
 
-      this.Status = PaymentOrderStatus.Deleted;
+      Status = PaymentOrderStatus.Deleted;
     }
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.PaymentOrderNo = GeneratePaymentOrderNo();
-        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        this.PostingTime = DateTime.Now;
+        PaymentOrderNo = GeneratePaymentOrderNo();
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
       }
 
-      PaymentOrderData.WritePaymentOrder(this, this.SecurityExtData.ToString(), this.ExtData.ToString());
+      PaymentOrderData.WritePaymentOrder(this, SecurityExtData.ToString(), ExtData.ToString());
     }
 
 
-    internal void Pay() {
-      Assertion.Require(this.Status == PaymentOrderStatus.Received,
-               $"No se puede realizar el pago debido " +
-               $"a que tiene el estado {this.Status.GetName()}.");
+    internal void SetAsPayed() {
+      Assertion.Require(Status == PaymentOrderStatus.Received,
+               $"No se puede cambiar el estado del pago debido " +
+               $"a que tiene el estado {Status.GetName()}.");
 
-      this.Status = PaymentOrderStatus.Payed;
+      Status = PaymentOrderStatus.Payed;
     }
 
 
     internal void Reject() {
-      Assertion.Require(this.Status == PaymentOrderStatus.Pending || this.Status == PaymentOrderStatus.Received,
-               $"No se puede realizar el pago debido " +
-               $"a que tiene el estado {this.Status.GetName()}.");
-      this.Status = PaymentOrderStatus.Rejected;
+      Assertion.Require(Status == PaymentOrderStatus.Pending ||
+                        Status == PaymentOrderStatus.Received,
+               $"No se puede rechazar el pago debido " +
+               $"a que tiene el estado {Status.GetName()}.");
+      Status = PaymentOrderStatus.Rejected;
     }
 
 
-    internal void SentToPay() {
-      Assertion.Require(this.Status == PaymentOrderStatus.Pending,
-               $"No se puede realizar el pago debido " +
-               $"a que tiene el estado {this.Status.GetName()}.");
+    internal void SendToPay() {
+      Assertion.Require(Status == PaymentOrderStatus.Pending ||
+                        Status == PaymentOrderStatus.Rejected,
+               $"No se puede enviar el pago debido " +
+               $"a que tiene el estado {Status.GetName()}.");
 
-      this.Status = PaymentOrderStatus.Received;
+      Status = PaymentOrderStatus.Received;
+    }
+
+
+    internal void SetAsPending() {
+      Status = PaymentOrderStatus.Pending;
     }
 
 
@@ -266,20 +274,20 @@ namespace Empiria.Payments {
     internal void Suspend(Party suspendedBy, DateTime suspendedUntil) {
       Assertion.Require(suspendedBy, nameof(suspendedBy));
 
-      Assertion.Require(this.Status == PaymentOrderStatus.Received ||
-                        this.Status == PaymentOrderStatus.Suspended,
+      Assertion.Require(Status == PaymentOrderStatus.Received ||
+                        Status == PaymentOrderStatus.Suspended,
                 $"No se puede suspender la orden de pago debido " +
-                $"a que tiene el estado {this.Status.GetName()}.");
+                $"a que tiene el estado {Status.GetName()}.");
 
-      this.Status = PaymentOrderStatus.Suspended;
+      Status = PaymentOrderStatus.Suspended;
     }
 
 
     public void Update(PaymentOrderFields fields) {
       Assertion.Require(fields, nameof(fields));
-      Assertion.Require(this.Status == PaymentOrderStatus.Pending,
+      Assertion.Require(Status == PaymentOrderStatus.Pending,
                         $"No se pueden actualizar los datos de la orden de pago " +
-                        $"debido a que tiene el estado {this.Status.GetName()}.");
+                        $"debido a que tiene el estado {Status.GetName()}.");
 
       fields.EnsureValid();
 
