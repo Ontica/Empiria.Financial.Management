@@ -13,6 +13,8 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.Payments.Adapters;
+
+using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Services;
 
 namespace Empiria.Payments.WebApi {
@@ -21,6 +23,18 @@ namespace Empiria.Payments.WebApi {
   public class PaymentInstructionController : WebApiController {
 
     #region Query web apis
+
+    [HttpGet]
+    [Route("v2/payments-management/payment-instructions/{instructionUID:guid}")]
+    public SingleObjectModel GetPaymentInstruction([FromUri] string instructionUID) {
+
+      using (var usecases = PaymentService.ServiceInteractor()) {
+        PaymentInstructionHolderDto instruction = usecases.GetPaymentInstruction(instructionUID);
+
+        return new SingleObjectModel(base.Request, instruction);
+      }
+    }
+
 
     [HttpPost]
     [Route("v2/payments-management/payment-orders/search")]

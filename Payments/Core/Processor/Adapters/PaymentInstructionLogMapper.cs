@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Collections.Generic;
-
 namespace Empiria.Payments.Processor.Adapters {
 
   /// <summary>Provides data mapping services for payment log.</summary>
@@ -17,16 +15,11 @@ namespace Empiria.Payments.Processor.Adapters {
 
     #region Methods
 
-    static internal FixedList<PaymentInstructionLogDescriptorDto> Map(FixedList<PaymentInstructionLogEntry> paymentInstructionLogs) {
-      List<PaymentInstructionLogDescriptorDto> logs = new List<PaymentInstructionLogDescriptorDto>();
+    static internal FixedList<PaymentInstructionLogDescriptorDto> Map(PaymentInstruction instruction) {
+      FixedList<PaymentInstructionLogEntry> log = PaymentInstructionLogEntry.GetListFor(instruction);
 
-      foreach (var conceppaymentInstructionLog in paymentInstructionLogs) {
-        var paymentInstructionLogdDto = Map(conceppaymentInstructionLog);
-
-        logs.Add(paymentInstructionLogdDto);
-      }
-
-      return logs.ToFixedList();
+      return log.Select(x => Map(x))
+                .ToFixedList();
     }
 
 
@@ -36,7 +29,7 @@ namespace Empiria.Payments.Processor.Adapters {
         UID = paymentInstructionLog.UID,
         PaymentOrdeNo = paymentInstructionLog.PaymentOrder.PaymentOrderNo,
         PaymentMethod = paymentInstructionLog.PaymentOrder.PaymentMethod.Name,
-        Total = paymentInstructionLog.PaymentOrder.Total,
+        Total = paymentInstructionLog.PaymentOrder.PayableEntity.Total,
         Currency = paymentInstructionLog.PaymentOrder.Currency.Name,
         RequestTime = paymentInstructionLog.RequestTime,
         RequestCode = paymentInstructionLog.ExternalRequestID,
@@ -45,8 +38,6 @@ namespace Empiria.Payments.Processor.Adapters {
       };
 
     }
-
-
 
     #endregion Methods
 
