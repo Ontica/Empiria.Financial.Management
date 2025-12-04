@@ -108,17 +108,6 @@ namespace Empiria.Payments.Adapters {
 
     }
 
-
-    static private PaymentAccountDto MapPaymentAccount(PaymentAccount paymentAccount) {
-      return PaymentAccountMapper.Map(paymentAccount);
-    }
-
-
-    static private PaymentMethodDto MapPaymentMethod(PaymentMethod paymentMethod) {
-      return PaymentMethodMapper.Map(paymentMethod);
-    }
-
-
     static internal PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
         UID = paymentOrder.UID,
@@ -131,8 +120,8 @@ namespace Empiria.Payments.Adapters {
         Description = paymentOrder.Description,
         Budget = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
         BudgetType = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
-        PaymentMethod = MapPaymentMethod(paymentOrder.PaymentMethod),
-        PaymentAccount = MapPaymentAccount(paymentOrder.PaymentAccount),
+        PaymentMethod = new PaymentMethodDto(paymentOrder.PaymentMethod),
+        PaymentAccount = new PaymentAccountDto(paymentOrder.PaymentAccount),
         Currency = paymentOrder.Currency.MapToNamedEntity(),
         Total = paymentOrder.PayableEntity.Total,
         Status = paymentOrder.Status.MapToNamedEntity(),
