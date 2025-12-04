@@ -23,6 +23,7 @@ namespace Empiria.Payments.Processor.Services {
 
     protected PaymentService() {
       // no-op
+      PaymentValidator.Start();
     }
 
     static public PaymentService ServiceInteractor() {
@@ -32,6 +33,15 @@ namespace Empiria.Payments.Processor.Services {
     #endregion Constructors and parsers
 
     #region Services
+
+    internal PaymentInstructionHolderDto GetPaymentInstruction(string instructionUID) {
+      Assertion.Require(instructionUID, nameof(instructionUID));
+
+      var paymentInstruction = PaymentInstruction.Parse(instructionUID);
+
+      return PaymentInstructionMapper.Map(paymentInstruction);
+    }
+
 
     internal FixedList<PaymentInstructionLogEntry> GetPaymentInstructionLogs(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
@@ -59,7 +69,7 @@ namespace Empiria.Payments.Processor.Services {
 
       var instruction = new PaymentInstruction(broker, paymentOrder);
 
-      PaymentInstructionDto instructionDto = PaymentInstructionMapper.Map(instruction);
+      PaymentInstructionDto instructionDto = PaymentInstructionMapper.MapForBroker(instruction);
 
       IPaymentsBrokerService paymentsService = broker.GetService();
 
@@ -71,7 +81,6 @@ namespace Empiria.Payments.Processor.Services {
 
       return instruction;
     }
-
 
 
     internal async Task UpdatePaymentInstructionStatus(PaymentInstruction paymentInstruction) {
@@ -112,7 +121,7 @@ namespace Empiria.Payments.Processor.Services {
     static private void UpdatePaymentOrder(PaymentOrder paymentOrder,
                                           PaymentInstructionStatusDto newStatus) {
       if (newStatus.Status == PaymentInstructionStatus.Payed) {
-        paymentOrder.Pay();
+        paymentOrder.SetAsPayed();
         paymentOrder.Save();
       } else if (newStatus.Status == PaymentInstructionStatus.Failed) {
         paymentOrder.Reject();
@@ -123,17 +132,16 @@ namespace Empiria.Payments.Processor.Services {
 
 
     static private void UpdatePaymentOrder(PaymentOrder paymentOrder,
-                                          PaymentInstructionStatus status) {
+                                           PaymentInstructionStatus status) {
       if (status == PaymentInstructionStatus.InProcess) {
-        paymentOrder.SentToPay();
+        paymentOrder.SendToPay();
         paymentOrder.Save();
       } else if (status == PaymentInstructionStatus.Failed) {
-        paymentOrder.Reject();
+        paymentOrder.SetAsPending();
         paymentOrder.Save();
       }
-
-
     }
+
 
     static private void UpdatePaymentInstruction(PaymentInstruction paymentInstruction,
                                                  PaymentInstructionResultDto paymentResultDto) {

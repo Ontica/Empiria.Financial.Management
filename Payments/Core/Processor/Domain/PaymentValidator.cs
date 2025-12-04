@@ -41,9 +41,10 @@ namespace Empiria.Payments.Processor {
           return;
         }
 
-        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 5);
-        timer = new Timer(ValidatePayment, null, 10 * 1000,
-                          MESSAGE_ENGINE_EXECUTION_MINUTES * 60 * 1000);
+        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 1);
+        timer = new Timer(ValidatePayment, null,
+                          TimeSpan.FromMinutes((double) MESSAGE_ENGINE_EXECUTION_MINUTES),
+                          TimeSpan.FromMinutes((double) MESSAGE_ENGINE_EXECUTION_MINUTES));
 
         isRunning = true;
         EmpiriaLog.Info("PaymentValidator was started.");
