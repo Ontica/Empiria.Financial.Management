@@ -87,19 +87,20 @@ namespace Empiria.Payments.Adapters {
         BudgetTypeName = paymentOrder.PayableEntity.Budget.Name,
 
         RequestedBy = paymentOrder.RequestedBy.Name,
-        RequestedDate = paymentOrder.RequestedTime,
+        RequestedTime = paymentOrder.RequestedTime,
 
-        Status = paymentOrder.Status.MapToNamedEntity()
+        StatusName = paymentOrder.Status.GetName()
       };
     }
 
-    private static PaymentOrderActionsDto MapActions(PaymentOrder paymentOrder) {
+
+    static private PaymentOrderActionsDto MapActions(PaymentOrder paymentOrder) {
       var paymentOrderActions = PaymentOrderActions.SetActions(paymentOrder.Status);
 
       return new PaymentOrderActionsDto {
         CanDelete = paymentOrderActions.CanDelete,
         CanEditDocuments = paymentOrderActions.CanEditDocuments,
-        CanSendToPay = paymentOrderActions.CanSendToPay,
+        CanSendToPay = true,
         CanUpdate = paymentOrderActions.CanUpdate,
         CanRequestBudget = true,
         CanExerciseBudget = true
@@ -107,15 +108,18 @@ namespace Empiria.Payments.Adapters {
 
     }
 
+
     static private PaymentAccountDto MapPaymentAccount(PaymentAccount paymentAccount) {
       return PaymentAccountMapper.Map(paymentAccount);
     }
+
 
     static private PaymentMethodDto MapPaymentMethod(PaymentMethod paymentMethod) {
       return PaymentMethodMapper.Map(paymentMethod);
     }
 
-    static private PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
+
+    static internal PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
         UID = paymentOrder.UID,
         PaymentOrderType = paymentOrder.GetEmpiriaType().MapToNamedEntity(),

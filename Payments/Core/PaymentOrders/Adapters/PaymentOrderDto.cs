@@ -217,11 +217,15 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public DateTime RequestedDate {
+    public DateTime RequestedTime {
       get; internal set;
     }
 
-    public NamedEntityDto Status {
+    public string StatusName {
+      get; internal set;
+    }
+
+    public DateTime RequestedDate {
       get; internal set;
     }
 

@@ -25,7 +25,7 @@ namespace Empiria.Payments.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]   // ToDo: Remove this deprecated route in future versions.
+    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]  // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
     public SingleObjectModel GetPaymentOrder([FromUri] string paymentOrderUID) {
 
@@ -90,6 +90,7 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPost]
+    [Route("v8/payments-management/payables/{paymentOrderUID:guid}/send-to-pay")] // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/pay")]
     public async Task<SingleObjectModel> SendPaymentOrderToPay([FromUri] string paymentOrderUID) {
 
