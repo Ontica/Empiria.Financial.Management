@@ -96,7 +96,7 @@ namespace Empiria.Billing.Adapters {
         NumeroDeCuenta = datosComplementos.NumeroDeCuenta,
         SubTotal = datosComplementos.SubTotal, 
         Total = datosComplementos.Total,
-        ComplementConcepts = MapToComplementConcepts(datosComplementos.ComplementConcepts)
+        ComplementConcepts = MapToComplementConcepts(datosComplementos.ComplementoConceptos)
       };
     }
 

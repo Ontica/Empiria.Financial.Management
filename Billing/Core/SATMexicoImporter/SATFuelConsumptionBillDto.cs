@@ -87,7 +87,7 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    public FixedList<FuelConsumptionComplementConceptDataDto> ComplementConcepts {
+    public FixedList<FuelConsumptionComplementConceptDataDto> ComplementoConceptos {
       get; internal set;
     } = new FixedList<FuelConsumptionComplementConceptDataDto>();
 

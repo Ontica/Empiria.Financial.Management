@@ -22,6 +22,8 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private readonly XmlDocument _xmlDocument;
 
+    private readonly SATBillGeneralDataXmlReader generalDataReader;
+
     internal SATPaymentComplementXmlReader(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
@@ -30,6 +32,8 @@ namespace Empiria.Billing.SATMexicoImporter {
       _xmlDocument = new XmlDocument();
 
       _xmlDocument.LoadXml(xmlString);
+
+      generalDataReader = new SATBillGeneralDataXmlReader();
     }
 
 
@@ -40,17 +44,17 @@ namespace Empiria.Billing.SATMexicoImporter {
       XmlElement generalData = _xmlDocument.DocumentElement;
       XmlNodeList nodes = generalData.ChildNodes;
 
-      GenerateGeneralData(generalData);
+      _satPaymentComplementDto.DatosGenerales = generalDataReader.GenerateGeneralData(generalData);
 
       foreach (XmlNode node in nodes) {
 
         if (node.Name == "cfdi:Emisor") {
 
-          GenerateSenderData(node);
+          _satPaymentComplementDto.Emisor = generalDataReader.GenerateSenderData(node);
         }
         if (node.Name == "cfdi:Receptor") {
 
-          GenerateReceiverData(node);
+          _satPaymentComplementDto.Receptor = generalDataReader.GenerateReceiverData(node);
         }
         if (node.Name == "cfdi:Conceptos") {
 
@@ -92,16 +96,16 @@ namespace Empiria.Billing.SATMexicoImporter {
       }
 
       _satPaymentComplementDto.SATComplemento = new SATBillComplementDto {
-        Xmlns_Tfd = GetAttribute(timbre, "xmlns:tfd"),
-        Xmlns_Xsi = GetAttribute(timbre, "xmlns:xsi"),
-        Xsi_SchemaLocation = GetAttribute(timbre, "xsi:schemaLocation"),
-        Tfd_Version = GetAttribute(timbre, "Version"),
-        UUID = GetAttribute(timbre, "UUID"),
-        FechaTimbrado = GetAttribute<DateTime>(timbre, "FechaTimbrado"),
-        RfcProvCertif = GetAttribute(timbre, "RfcProvCertif"),
-        SelloCFD = GetAttribute(timbre, "SelloCFD"),
-        NoCertificadoSAT = GetAttribute(timbre, "NoCertificadoSAT"),
-        SelloSAT = GetAttribute(timbre, "SelloSAT")
+        Xmlns_Tfd = generalDataReader.GetAttribute(timbre, "xmlns:tfd"),
+        Xmlns_Xsi = generalDataReader.GetAttribute(timbre, "xmlns:xsi"),
+        Xsi_SchemaLocation = generalDataReader.GetAttribute(timbre, "xsi:schemaLocation"),
+        Tfd_Version = generalDataReader.GetAttribute(timbre, "Version"),
+        UUID = generalDataReader.GetAttribute(timbre, "UUID"),
+        FechaTimbrado = generalDataReader.GetAttribute<DateTime>(timbre, "FechaTimbrado"),
+        RfcProvCertif = generalDataReader.GetAttribute(timbre, "RfcProvCertif"),
+        SelloCFD = generalDataReader.GetAttribute(timbre, "SelloCFD"),
+        NoCertificadoSAT = generalDataReader.GetAttribute(timbre, "NoCertificadoSAT"),
+        SelloSAT = generalDataReader.GetAttribute(timbre, "SelloSAT")
       };
     }
 
@@ -109,7 +113,7 @@ namespace Empiria.Billing.SATMexicoImporter {
     private void GetPaymentData(XmlNode pago20Pagos) {
 
       _satPaymentComplementDto.DatosComplemento = new PaymentComplementDataDto {
-        PagosVersion = GetAttribute(pago20Pagos, "Version")
+        PagosVersion = generalDataReader.GetAttribute(pago20Pagos, "Version")
       };
 
       var balancesDataList = new List<ComplementBalanceDataDto>();
@@ -142,87 +146,21 @@ namespace Empiria.Billing.SATMexicoImporter {
         }
 
         var conceptoDto = new SATBillConceptDto() {
-          ClaveProdServ = GetAttribute(concept, "ClaveProdServ"),
-          ClaveUnidad = GetAttribute(concept, "ClaveUnidad"),
-          Cantidad = GetAttribute<decimal>(concept, "Cantidad"),
-          Unidad = GetAttribute(concept, "Unidad"),
-          NoIdentificacion = GetAttribute(concept, "NoIdentificacion"),
-          Descripcion = GetAttribute(concept, "Descripcion"),
-          ValorUnitario = GetAttribute<decimal>(concept, "ValorUnitario"),
-          Importe = GetAttribute<decimal>(concept, "Importe"),
-          ObjetoImp = GetAttribute(concept, "ObjetoImp"),
+          ClaveProdServ = generalDataReader.GetAttribute(concept, "ClaveProdServ"),
+          ClaveUnidad = generalDataReader.GetAttribute(concept, "ClaveUnidad"),
+          Cantidad = generalDataReader.GetAttribute<decimal>(concept, "Cantidad"),
+          Unidad = generalDataReader.GetAttribute(concept, "Unidad"),
+          NoIdentificacion = generalDataReader.GetAttribute(concept, "NoIdentificacion"),
+          Descripcion = generalDataReader.GetAttribute(concept, "Descripcion"),
+          ValorUnitario = generalDataReader.GetAttribute<decimal>(concept, "ValorUnitario"),
+          Importe = generalDataReader.GetAttribute<decimal>(concept, "Importe"),
+          ObjetoImp = generalDataReader.GetAttribute(concept, "ObjetoImp"),
         };
 
         conceptosDto.Add(conceptoDto);
 
       }
       _satPaymentComplementDto.Conceptos = conceptosDto.ToFixedList();
-    }
-
-
-    private void GenerateGeneralData(XmlElement generalDataNode) {
-
-      if (!generalDataNode.Name.Equals("cfdi:Comprobante")) {
-        Assertion.EnsureFailed("The xml file is not a valid CFDI document.");
-      } else if (!generalDataNode.GetAttribute("Version").Equals("4.0")) {
-        Assertion.EnsureFailed("The CFDI version is not correct.");
-      }
-
-      _satPaymentComplementDto.DatosGenerales = new SATBillGeneralDataDto {
-        CFDIVersion = GetAttribute(generalDataNode, "Version"),
-        Folio = GetAttribute(generalDataNode, "Folio"),
-        Fecha = GetAttribute<DateTime>(generalDataNode, "Fecha"),
-        Sello = GetAttribute(generalDataNode, "Sello"),
-        Serie = GetAttribute(generalDataNode, "Serie"),
-        FormaPago = GetAttribute(generalDataNode, "FormaPago"),
-        NoCertificado = GetAttribute(generalDataNode, "NoCertificado"),
-        Certificado = GetAttribute(generalDataNode, "Certificado"),
-        SubTotal = GetAttribute<decimal>(generalDataNode, "SubTotal"),
-        Moneda = GetAttribute(generalDataNode, "Moneda"),
-        Total = GetAttribute<decimal>(generalDataNode, "Total"),
-
-        TipoDeComprobante = GetAttribute(generalDataNode, "TipoDeComprobante"),
-        Exportacion = GetAttribute(generalDataNode, "Exportacion"),
-        MetodoPago = GetAttribute(generalDataNode, "MetodoPago"),
-        LugarExpedicion = GetAttribute(generalDataNode, "LugarExpedicion"),
-      };
-
-    }
-
-
-    private void GenerateReceiverData(XmlNode receiverNode) {
-
-      _satPaymentComplementDto.Receptor = new SATBillOrganizationDto {
-        RegimenFiscal = GetAttribute(receiverNode, "RegimenFiscalReceptor"),
-        RFC = GetAttribute(receiverNode, "Rfc"),
-        Nombre = GetAttribute(receiverNode, "Nombre"),
-        DomicilioFiscal = GetAttribute(receiverNode, "DomicilioFiscalReceptor"),
-        UsoCFDI = GetAttribute(receiverNode, "UsoCFDI"),
-      };
-    }
-
-
-    private void GenerateSenderData(XmlNode senderNode) {
-
-      _satPaymentComplementDto.Emisor = new SATBillOrganizationDto {
-        RegimenFiscal = GetAttribute(senderNode, "RegimenFiscal"),
-        RFC = GetAttribute(senderNode, "Rfc"),
-        Nombre = GetAttribute(senderNode, "Nombre"),
-      };
-    }
-
-
-    private string GetAttribute(XmlNode concept, string attributeName) {
-      return Patcher.Patch(concept.Attributes[attributeName]?.Value, string.Empty);
-    }
-
-
-    private T GetAttribute<T>(XmlNode concept, string attributeName) {
-      if (concept.Attributes[attributeName]?.Value == null) {
-        return default;
-      } else {
-        return (T) Convert.ChangeType(concept.Attributes[attributeName]?.Value, typeof(T));
-      }
     }
 
 
@@ -240,12 +178,12 @@ namespace Empiria.Billing.SATMexicoImporter {
     private ComplementRelatedPayoutDataDto GetPayoutData(XmlNode concept) {
 
       var payoutData = new ComplementRelatedPayoutDataDto {
-        FechaPago = GetAttribute<DateTime>(concept, "FechaPago"),
-        FormaDePagoP = GetAttribute(concept, "FormaDePagoP"),
-        MonedaP = GetAttribute(concept, "MonedaP"),
-        TipoCambioP = GetAttribute(concept, "TipoCambioP"),
+        FechaPago = generalDataReader.GetAttribute<DateTime>(concept, "FechaPago"),
+        FormaDePagoP = generalDataReader.GetAttribute(concept, "FormaDePagoP"),
+        MonedaP = generalDataReader.GetAttribute(concept, "MonedaP"),
+        TipoCambioP = generalDataReader.GetAttribute(concept, "TipoCambioP"),
         Monto = Convert.ToDecimal(concept.Attributes["Monto"].Value),
-        NumOperacion = GetAttribute(concept, "NumOperacion"),
+        NumOperacion = generalDataReader.GetAttribute(concept, "NumOperacion"),
         RelatedDocumentData = GetRelatedDocumentData(concept.ChildNodes)
       };
 
@@ -262,14 +200,14 @@ namespace Empiria.Billing.SATMexicoImporter {
         if (relatedDocNode.Name.Equals("pago20:DoctoRelacionado")) {
 
           var relatedDoc = new ComplementRelatedDocumentDataDto {
-            IdDocumento = GetAttribute(relatedDocNode, "IdDocumento"),
-            MonedaDR = GetAttribute(relatedDocNode, "MonedaDR"),
-            EquivalenciaDR = GetAttribute(relatedDocNode, "EquivalenciaDR"),
-            NumParcialidad = GetAttribute(relatedDocNode, "NumParcialidad"),
-            ImpSaldoAnt = Convert.ToDecimal(relatedDocNode.Attributes["ImpSaldoAnt"].Value),
-            ImpPagado = Convert.ToDecimal(relatedDocNode.Attributes["ImpPagado"].Value),
-            ImpSaldoInsoluto = Convert.ToDecimal(relatedDocNode.Attributes["ImpSaldoInsoluto"].Value),
-            ObjetoImpDR = GetAttribute(relatedDocNode, "ObjetoImpDR"),
+            IdDocumento = generalDataReader.GetAttribute(relatedDocNode, "IdDocumento"),
+            MonedaDR = generalDataReader.GetAttribute(relatedDocNode, "MonedaDR"),
+            EquivalenciaDR = generalDataReader.GetAttribute(relatedDocNode, "EquivalenciaDR"),
+            NumParcialidad = generalDataReader.GetAttribute(relatedDocNode, "NumParcialidad"),
+            ImpSaldoAnt = generalDataReader.GetAttribute<decimal>(relatedDocNode, "ImpSaldoAnt"),
+            ImpPagado = generalDataReader.GetAttribute<decimal>(relatedDocNode, "ImpPagado"),
+            ImpSaldoInsoluto = generalDataReader.GetAttribute<decimal>(relatedDocNode, "ImpSaldoInsoluto"),
+            ObjetoImpDR = generalDataReader.GetAttribute(relatedDocNode, "ObjetoImpDR"),
             Taxes = GetTaxes(relatedDocNode.FirstChild)
           };
           relatedDocumentsList.Add(relatedDoc);
