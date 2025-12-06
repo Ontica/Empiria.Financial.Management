@@ -68,6 +68,14 @@ namespace Empiria.Billing {
 
     static public Bill Empty => ParseEmpty<Bill>();
 
+
+    static public FixedList<Bill> GetListFor(Party party) {
+      return GetList<Bill>($"BILL_ISSUED_BY_ID = {party.Id} " +
+                           $"AND BILL_STATUS <> 'X'")
+            .ToFixedList();
+    }
+
+
     static public FixedList<Bill> GetListFor(IPayableEntity payable) {
       return GetList<Bill>($"BILL_PAYABLE_ENTITY_ID = {payable.Id} " +
                            $"AND BILL_STATUS <> 'X'")
