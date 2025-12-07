@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budgets                                    Component : Domain Layer                            *
-*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Partitioned Type + Aggregate Root       *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Partitioned Common Storage Type         *
 *  Type     : Budget                                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Partitioned type that represents a budget and serves as an aggregate root for its accounts.    *
+*  Summary  : Partitioned type that represents a budget.                                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,10 +12,9 @@ using Empiria.Ontology;
 
 namespace Empiria.Budgeting {
 
-  /// <summary>Partitioned type that represents a budget and serves as an aggregate root
-  /// for its accounts.</summary>
+  /// <summary>Partitioned type that represents a budget.</summary>
   [PartitionedType(typeof(BudgetType))]
-  public class Budget : GeneralObject {
+  public class Budget : CommonStorage {
 
     #region Constructors and parsers
 
@@ -28,9 +27,7 @@ namespace Empiria.Budgeting {
     static public Budget Parse(string uid) => ParseKey<Budget>(uid);
 
     static public FixedList<Budget> GetList() {
-      return GetList<Budget>(string.Empty, "ObjectName")
-            .FindAll(x => x.Status != StateEnums.EntityStatus.Deleted)
-            .ToFixedList()
+      return GetStorageObjects<Budget>()
             .Sort((x, y) => x.Year.CompareTo(y.Year));
     }
 
@@ -38,7 +35,8 @@ namespace Empiria.Budgeting {
     static public FixedList<Budget> GetList(BudgetType budgetType) {
       Assertion.Require(budgetType, nameof(budgetType));
 
-      return GetList().FindAll(x => x.BudgetType.Equals(budgetType));
+      return GetStorageObjects<Budget>()
+            .FindAll(x => x.BudgetType.Equals(budgetType));
     }
 
     static public Budget Empty => ParseEmpty<Budget>();
@@ -49,7 +47,7 @@ namespace Empiria.Budgeting {
 
     public FixedList<INamedEntity> AvailableTransactionTypes {
       get {
-        FixedList<int> ids = base.ExtendedDataField.GetFixedList<int>("availableTransactionTypes", false);
+        FixedList<int> ids = base.ExtData.GetFixedList<int>("availableTransactionTypes", false);
 
         return ids.Select(x => (INamedEntity) ObjectTypeInfo.Parse(x))
                   .ToFixedList()
@@ -74,7 +72,7 @@ namespace Empiria.Budgeting {
 
     public FixedList<INamedEntity> PlanningAutoGenerationTransactionTypes {
       get {
-        FixedList<int> ids = base.ExtendedDataField.GetFixedList<int>("planningAutoGenerationTransactionTypes", false);
+        FixedList<int> ids = base.ExtData.GetFixedList<int>("planningAutoGenerationTransactionTypes", false);
 
         return ids.Select(x => (INamedEntity) ObjectTypeInfo.Parse(x))
                   .ToFixedList()
@@ -85,7 +83,7 @@ namespace Empiria.Budgeting {
 
     public int Year {
       get {
-        return base.ExtendedDataField.Get<int>("year");
+        return base.ExtData.Get<int>("year");
       }
     }
 
