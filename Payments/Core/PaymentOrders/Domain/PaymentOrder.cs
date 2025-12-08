@@ -203,7 +203,12 @@ namespace Empiria.Payments {
 
 
     public decimal Total {
-      get; internal set;
+      get {
+        return this.ExtData.Get("total", 0m);
+      }
+      private set {
+        this.ExtData.Set("total", value);
+      }
     }
 
     #endregion Properties
