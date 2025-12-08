@@ -102,6 +102,7 @@ namespace Empiria.Payments.Adapters {
         CanEditDocuments = paymentOrderActions.CanEditDocuments,
         CanSendToPay = true,
         CanUpdate = paymentOrderActions.CanUpdate,
+        CanCommitBudget = true,
         CanRequestBudget = true,
         CanExerciseBudget = true
       };
