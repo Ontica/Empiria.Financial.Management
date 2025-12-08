@@ -120,7 +120,7 @@ namespace Empiria.Billing.UseCases {
 
       IBillFields fields = FuelConsumptionBillMapper.Map((SATFuelConsumptionBillDto) satDto);
 
-      Bill bill = CreatePaymentComplementTest((BillPaymentComplementFields) fields);
+      Bill bill = CreateFuelConsumptionTest((FuelConsumptionBillFields) fields);
 
       return BillMapper.MapToBillDto(bill);
     }
@@ -333,6 +333,40 @@ namespace Empiria.Billing.UseCases {
 
       return bill;
     }
+
+
+    private Bill CreateFuelConsumptionTest(FuelConsumptionBillFields fields) {
+
+      var billCategory = BillCategory.ComplementoPagoProveedores;
+
+      var bill = new Bill(billCategory, fields.BillNo);
+
+      bill.UpdateFuelConsumptionBill(fields);
+
+      //bill.Save();
+
+      //CreateFuelConsumptionConcepts(bill, fields.Concepts);
+
+      return bill;
+    }
+
+
+    //private FixedList<BillConcept> CreateFuelConsumptionConcepts(Bill bill,
+    //                                FixedList<BillConceptWithTaxFields> conceptFields) {
+    //  var concepts = new List<BillConceptWithTaxFields>();
+
+    //  foreach (BillConceptWithTaxFields fields in conceptFields) {
+
+    //    var billConcept = new BillConcept(bill, Product.Empty);
+    //    BillConceptWithTaxFields _concept = new BillConcept(billConcept);
+    //    //billConcept.Update(fields);
+
+    //    //billConcept.Save();
+
+    //    concepts.Add(billConcept);
+    //  }
+    //  return concepts.ToFixedList();
+    //}
 
     #endregion Private methods
 

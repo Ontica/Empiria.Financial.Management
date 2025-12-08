@@ -49,6 +49,8 @@ namespace Empiria.Billing {
 
     static public BillCategory ComplementoPagoProveedores => Parse(703);
 
+    static public BillCategory FacturaConsumoCombustible => Parse(-2);
+
     #endregion Constructors and parsers
 
     #region Properties
