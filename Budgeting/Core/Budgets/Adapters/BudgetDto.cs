@@ -29,6 +29,10 @@ namespace Empiria.Budgeting.Adapters {
       get; internal set;
     }
 
+    public FixedList<NamedEntityDto> TransactionTypes {
+      get; internal set;
+    }
+
   }  // class BudgetDto
 
 }  // namespace Empiria.Budgeting.Adapters

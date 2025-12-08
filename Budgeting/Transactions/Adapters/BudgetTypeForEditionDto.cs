@@ -43,7 +43,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public FixedList<TransactionTypeForEditionDto> TransactionTypes {
+    public new FixedList<TransactionTypeForEditionDto> TransactionTypes {
       get; internal set;
     }
 

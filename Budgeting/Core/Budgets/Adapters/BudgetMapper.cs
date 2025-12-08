@@ -24,7 +24,8 @@ namespace Empiria.Budgeting.Adapters {
         UID = budget.UID,
         Name = budget.Name,
         Year = budget.Year,
-        Type = new NamedEntityDto(budget.BudgetType.UID, budget.BudgetType.DisplayName)
+        Type = new NamedEntityDto(budget.BudgetType.UID, budget.BudgetType.DisplayName),
+        TransactionTypes = budget.AvailableTransactionTypes.MapToNamedEntityList()
       };
     }
 
