@@ -198,7 +198,7 @@ namespace Empiria.Billing {
 
       fields.EnsureIsValid();
       this.SATProduct = Patcher.Patch(fields.SATProductUID, SATProducto.Empty);
-      this.SATProductCode = fields.SATProductCode;
+      this.SATProductCode = fields.SATProductServiceCode;
       this.Product = Patcher.Patch(fields.ProductUID, Product);
       this.Description = Patcher.Patch(fields.Description, Description);
       _tags = EmpiriaString.Tagging(fields.Tags);

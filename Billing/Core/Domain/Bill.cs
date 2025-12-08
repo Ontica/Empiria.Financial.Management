@@ -37,6 +37,14 @@ namespace Empiria.Billing {
     static public Bill TryParseWithBillNo(string billNo) =>
                             TryParse<Bill>($"BILL_NO = '{billNo}' AND BILL_STATUS <> 'X'");
 
+    static public Bill Empty => ParseEmpty<Bill>();
+
+    static public FixedList<Bill> GetListFor(IPayableEntity payable) {
+      return GetList<Bill>($"BILL_PAYABLE_ENTITY_ID = {payable.Id} " +
+                           $"AND BILL_STATUS <> 'X'")
+            .ToFixedList();
+    }
+
     public Bill(BillCategory billCategory,
                 string billNo) : base(billCategory.BillType) {
 
@@ -64,14 +72,6 @@ namespace Empiria.Billing {
       BillCategory = billCategory;
       BillNo = billNo;
       PayableTotal = payable.Total;
-    }
-
-    static public Bill Empty => ParseEmpty<Bill>();
-
-    static public FixedList<Bill> GetListFor(IPayableEntity payable) {
-      return GetList<Bill>($"BILL_PAYABLE_ENTITY_ID = {payable.Id} " +
-                           $"AND BILL_STATUS <> 'X'")
-            .ToFixedList();
     }
 
     #endregion Constructors and parsers
@@ -324,6 +324,27 @@ namespace Empiria.Billing {
       fields.EnsureIsValid();
 
       fields.EnsureIsValidCreditNote(BillCategory);
+
+      RelatedBillNo = fields.CFDIRelated;
+      IssueDate = Patcher.Patch(fields.SchemaData.Fecha, IssueDate);
+      IssuedBy = Patcher.Patch(fields.IssuedByUID, IssuedBy);
+      IssuedTo = Patcher.Patch(fields.IssuedToUID, IssuedTo);
+      _tags = EmpiriaString.Tagging(fields.Tags);
+      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
+      Subtotal = fields.Subtotal;
+      Discount = fields.Discount;
+      Total = fields.Total;
+
+      SchemaData.Update(fields.SchemaData);
+      SecurityData.Update(fields.SecurityData);
+      BillExtData.Update(fields.Addenda);
+    }
+
+
+    internal void UpdateFuelConsumptionBill(FuelConsumptionBillFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureIsValidFuelConsumption(BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;
       IssueDate = Patcher.Patch(fields.SchemaData.Fecha, IssueDate);

@@ -123,15 +123,15 @@ namespace Empiria.Billing {
     internal void Update(BillConceptFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      ClaveProdServ = fields.SATProductCode;
+      ClaveProdServ = fields.SATProductServiceCode;
       Cantidad = fields.Quantity;
-      ClaveUnidad = fields.ClaveUnidad;
-      Unidad = fields.Unidad;
+      ClaveUnidad = fields.UnitKey;
+      Unidad = fields.Unit;
       Descripcion = fields.Description;
       ValorUnitario = fields.UnitPrice;
       Importe = fields.Subtotal;
-      NoIdentificacion = fields.NoIdentificacion;
-      ObjetoImp = fields.ObjetoImp;
+      NoIdentificacion = fields.IdentificationNo;
+      ObjetoImp = fields.ObjectImp;
     }
   }  // class BillConceptSchemaData
 

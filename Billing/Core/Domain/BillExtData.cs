@@ -135,6 +135,14 @@ namespace Empiria.Billing {
       }
     }
 
+
+    internal void Update(FuelConsumptionBillAddendaFields addenda) {
+      
+      foreach (var concept in addenda.Concepts) {
+
+      }
+    }
+
   } // class BillExtData
 
 } // namespace Empiria.Billing
