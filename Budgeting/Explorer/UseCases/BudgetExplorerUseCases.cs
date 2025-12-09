@@ -31,6 +31,15 @@ namespace Empiria.Budgeting.Explorer.UseCases {
 
     #region Use cases
 
+    public FixedList<BudgetDataInColumns> GetAvailableBudget(AvailableBudgetQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      var builder = new AvailableBudgetBuilder(query);
+
+      return builder.Build();
+    }
+
+
     public BudgetExplorerResultDto ExploreBudget(BudgetExplorerQuery query) {
       Assertion.Require(query, nameof(query));
 

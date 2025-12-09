@@ -74,6 +74,12 @@ namespace Empiria.Billing {
       PayableTotal = payable.Total;
     }
 
+    static public FixedList<Bill> GetListFor(Party party) {
+      return GetList<Bill>($"BILL_ISSUED_BY_ID = {party.Id} " +
+                           $"AND BILL_STATUS <> 'X'")
+            .ToFixedList();
+    }
+
     #endregion Constructors and parsers
 
     #region Properties

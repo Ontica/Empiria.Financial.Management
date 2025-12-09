@@ -72,9 +72,14 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public bool CanCommitBudget {
+      get; internal set;
+    }
+
     public bool CanRequestBudget {
       get; internal set;
     }
+
 
     public bool CanExerciseBudget {
       get; internal set;

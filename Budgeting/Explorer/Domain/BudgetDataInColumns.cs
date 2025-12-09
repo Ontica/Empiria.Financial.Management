@@ -13,85 +13,85 @@ using Empiria.Financial;
 namespace Empiria.Budgeting.Explorer {
 
   /// <summary>Value type that holds budget data in columns.</summary>
-  internal class BudgetDataInColumns {
+  public class BudgetDataInColumns {
 
     [DataField("BUDGET_ID")]
-    internal Budget Budget {
+    public Budget Budget {
       get; private set;
     }
 
-    //[DataField("YEAR")]
-    internal int Year {
+    [DataField("BUDGET_YEAR", ConvertFrom = typeof(long))]
+    public int Year {
       get; private set;
     }
 
-    //[DataField("MONTH")]
-    internal int Month {
+    [DataField("BUDGET_MONTH", ConvertFrom = typeof(long))]
+    public int Month {
       get; private set;
     }
 
     [DataField("BUDGET_ACCT_ID")]
-    internal BudgetAccount BudgetAccount {
+    public BudgetAccount BudgetAccount {
       get; private set;
     }
 
     [DataField("CURRENCY_ID")]
-    internal Currency Currency {
+    public Currency Currency {
       get; private set;
     }
 
     [DataField("PLANNED")]
-    internal decimal Planned {
+    public decimal Planned {
       get; private set;
     }
 
     [DataField("AUTHORIZED")]
-    internal decimal Authorized {
+    public decimal Authorized {
       get; private set;
     }
 
     [DataField("EXPANDED")]
-    internal decimal Expanded {
+    public decimal Expanded {
       get; private set;
     }
 
     [DataField("REDUCED")]
-    internal decimal Reduced {
+    public decimal Reduced {
       get; private set;
     }
 
     [DataField("MODIFIED")]
-    internal decimal Modified {
+    public decimal Modified {
       get; private set;
     }
 
     [DataField("REQUESTED")]
-    internal decimal Requested {
+    public decimal Requested {
       get; private set;
     }
 
     [DataField("COMMITED")]
-    internal decimal Commited {
+    public decimal Commited {
       get; private set;
     }
 
     [DataField("TOPAY")]
-    internal decimal ToPay {
+    public decimal ToPay {
       get; private set;
     }
 
     [DataField("EXERCISED")]
-    internal decimal Excercised {
+    public decimal Excercised {
       get; private set;
     }
 
     [DataField("TOEXERCISE")]
-    internal decimal ToExercise {
+    public decimal ToExercise {
       get; private set;
     }
 
     [DataField("AVAILABLE")]
-    internal decimal Available {
+    public decimal Available {
       get; private set;
     }
 

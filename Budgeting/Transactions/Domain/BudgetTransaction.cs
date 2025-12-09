@@ -11,8 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
@@ -310,7 +308,7 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal void Authorize() {
+    public void Authorize() {
       Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this transaction.");
 
       if (!HasTransactionNo) {
@@ -325,7 +323,7 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal void Close() {
+    public void Close() {
       Assertion.Require(Rules.CanClose, "Current user can not close this transaction.");
 
       this.AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
