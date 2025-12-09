@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Linq;
-
 using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Adapters {
@@ -35,37 +33,6 @@ namespace Empiria.Budgeting.Adapters {
         IsAssigned = true
       };
     }
-
-
-    static internal FixedList<BudgetAccountDto> Map(FixedList<BudgetAccount> accounts,
-                                                    FixedList<FormerBudgetAcctSegment> unassignedSegments) {
-      FixedList<BudgetAccountDto> mappedAccounts = accounts.Select(x => Map(x))
-                                                           .ToFixedList();
-
-      FixedList<BudgetAccountDto> mappedSegments = unassignedSegments.Select(x => Map(x))
-                                                                     .ToFixedList();
-
-      return mappedAccounts.Concat(mappedSegments)
-                           .ToFixedList()
-                           .Sort((x, y) => x.Code.CompareTo(y.Code));
-    }
-
-    #region Helpers
-
-    static private BudgetAccountDto Map(FormerBudgetAcctSegment segment) {
-      return new BudgetAccountDto {
-        UID = string.Empty,
-        BaseSegmentUID = segment.UID,
-        Code = segment.Code,
-        Name = $"{segment.FullName} (Requiere autorización)",
-        Type = segment.BudgetSegmentType.MapToNamedEntity(),
-        OrganizationalUnit = NamedEntityDto.Empty,
-        Status = segment.Status.MapToDto(),
-        IsAssigned = false
-      };
-    }
-
-    #endregion Helpers
 
   }  // class BudgetAccountMapper
 
