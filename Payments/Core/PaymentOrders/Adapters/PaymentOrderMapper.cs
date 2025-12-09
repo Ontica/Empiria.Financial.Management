@@ -78,7 +78,7 @@ namespace Empiria.Payments.Adapters {
         PaymentMethod = paymentOrder.PaymentMethod.Name,
         PaymentAccount = paymentOrder.PaymentAccount.AccountNo,
         CurrencyCode = paymentOrder.PayableEntity.Currency.Name,
-        Total = paymentOrder.PayableEntity.Total,
+        Total = paymentOrder.Total,
         DueTime = paymentOrder.DueTime,
 
         PayableNo = paymentOrder.PayableEntity.EntityNo,
@@ -88,6 +88,7 @@ namespace Empiria.Payments.Adapters {
 
         RequestedBy = paymentOrder.RequestedBy.Name,
         RequestedTime = paymentOrder.RequestedTime,
+        RequestedDate = paymentOrder.RequestedTime,
 
         StatusName = paymentOrder.Status.GetName()
       };
@@ -124,7 +125,7 @@ namespace Empiria.Payments.Adapters {
         PaymentMethod = new PaymentMethodDto(paymentOrder.PaymentMethod),
         PaymentAccount = new PaymentAccountDto(paymentOrder.PaymentAccount),
         Currency = paymentOrder.Currency.MapToNamedEntity(),
-        Total = paymentOrder.PayableEntity.Total,
+        Total = paymentOrder.Total,
         Status = paymentOrder.Status.MapToNamedEntity(),
         ReferenceNumber = paymentOrder.ReferenceNumber,
       };

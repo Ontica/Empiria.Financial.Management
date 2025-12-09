@@ -62,7 +62,7 @@ namespace Empiria.Budgeting {
 
     public new string Name {
       get {
-        return $"{StandardAccount.StdAcctNo} - {StandardAccount.Name}" +
+        return $"{StandardAccount.Name}" +
                (Status == EntityStatus.Pending ? " (Autorización pendiente)" : string.Empty);
       }
     }

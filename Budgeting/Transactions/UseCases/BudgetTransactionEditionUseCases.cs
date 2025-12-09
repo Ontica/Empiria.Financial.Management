@@ -8,15 +8,14 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Budgeting.Adapters;
-using Empiria.Budgeting.Transactions.Adapters;
-using Empiria.Budgeting.Transactions.Data;
 using Empiria.Documents;
-using Empiria.Financial;
 using Empiria.History;
 using Empiria.Parties;
 using Empiria.Services;
 using Empiria.StateEnums;
+
+using Empiria.Budgeting.Transactions.Adapters;
+using Empiria.Budgeting.Transactions.Data;
 
 namespace Empiria.Budgeting.Transactions.UseCases {
 
@@ -208,40 +207,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public BudgetAccountDto RequestBudgetAccount(string budgetTransactionUID,
-                                                 string requestedSegmentUID) {
-
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
-      Assertion.Require(requestedSegmentUID, nameof(requestedSegmentUID));
-
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
-      var requestedSegment = FormerBudgetAcctSegment.Parse(requestedSegmentUID);
-      var orgUnit = (OrganizationalUnit) transaction.BaseParty;
-
-      Assertion.Require(transaction.Rules.CanUpdate,
-          "Esta operación sólo está disponible para transacciones abiertas.");
-
-      var searcher = new FormerBudgetAccountSearcher(transaction.BaseBudget.BudgetType);
-
-      Assertion.Require(!searcher.HasSegment(orgUnit, requestedSegment),
-          $"{orgUnit.FullName} ya tiene asignada la cuenta presupuestal {requestedSegment.FullName}");
-
-
-      // ToDo: Update this code to the new BudgetAccount creation process
-
-      //var newBudgetAccount = new FormerBudgetAccount(FormerBudgetAccountType.GastoCorriente, requestedSegment, orgUnit);
-
-      //newBudgetAccount.Save();
-
-      //HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Envío de solicitud de autorización de partida presupuestal",
-      //                                                                  $"Partida {newBudgetAccount.Name}"));
-
-      throw new System.NotImplementedException("Refactorized code");
-
-      // return BudgetAccountMapper.Map(newBudgetAccount);
-    }
-
-
     public BudgetTransactionHolderDto SendToAuthorization(string budgetTransactionUID) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
 
@@ -305,6 +270,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
 
     private void AssertTransactionTypeMultiplicity(BudgetTransactionType transactionType, Budget budget, Party baseParty) {
+
       MultiplicityRule rule = transactionType.MultiplicityRule;
 
       if (rule == MultiplicityRule.None) {

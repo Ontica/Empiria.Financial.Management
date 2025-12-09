@@ -15,12 +15,12 @@ using Empiria.Budgeting.Data;
 namespace Empiria.Budgeting {
 
   /// <summary>Searches budget accounts.</summary>
-  public class FormerBudgetAccountSearcher {
+  public class BudgetAccountSearcher {
 
     private readonly BudgetType _budgetType;
     private readonly string _keywords;
 
-    public FormerBudgetAccountSearcher(BudgetType budgetType, string keywords = "") {
+    public BudgetAccountSearcher(BudgetType budgetType, string keywords = "") {
       Assertion.Require(budgetType, nameof(budgetType));
 
       _budgetType = budgetType;
@@ -28,22 +28,6 @@ namespace Empiria.Budgeting {
     }
 
     #region Methods
-
-    public bool HasSegment(OrganizationalUnit orgUnit, FormerBudgetAcctSegment segment) {
-      string budgetTypeFilter = GetBudgetTypeFilter();
-      string orgUnitFilter = GetOrgUnitFilter(orgUnit);
-      string baseSegmentFilter = $"BDG_ACCT_BASE_SEGMENT_ID = {segment.Id}";
-
-      var filter = new Filter(budgetTypeFilter);
-
-      filter.AppendAnd(orgUnitFilter);
-      filter.AppendAnd(baseSegmentFilter);
-
-      var accounts = BudgetAccountData.SearchBudgetAcccounts(filter.ToString(), "BDG_ACCT_CODE");
-
-      return accounts.Count != 0;
-    }
-
 
     public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit, string filterString) {
       Assertion.Require(orgUnit, nameof(orgUnit));
@@ -54,36 +38,16 @@ namespace Empiria.Budgeting {
       string budgetTypeFilter = GetBudgetTypeFilter();
       string orgUnitFilter = GetOrgUnitFilter(orgUnit);
       string keywordsFilter = GetKeywordsFilter();
+      string statusFilter = GetStatusFilter();
 
       var filter = new Filter(budgetTypeFilter);
 
       filter.AppendAnd(orgUnitFilter);
       filter.AppendAnd(keywordsFilter);
       filter.AppendAnd(filterString);
+      filter.AppendAnd(statusFilter);
 
-      return BudgetAccountData.SearchBudgetAcccounts(filter.ToString(), "ACCT_NUMBER");
-    }
-
-
-    public FixedList<FormerBudgetAcctSegment> SearchUnassignedBaseSegments(OrganizationalUnit orgUnit,
-                                                                           string filterString) {
-
-      // ToDo: Implement method searching for unassigned standard accounts instead of FormerBudgetAcctSegment
-
-      return new FixedList<FormerBudgetAcctSegment>();
-
-      //Assertion.Require(orgUnit, nameof(orgUnit));
-
-      //filterString = EmpiriaString.Clean(filterString ?? string.Empty);
-
-      //FixedList<FormerBudgetAccount> assignedAccounts = Search(orgUnit, filterString);
-
-      //FixedList<FormerBudgetAcctSegment> allSegments = _budgetType.ProductProcurementSegmentType.SearchInstances(filterString, _keywords);
-
-      //return allSegments.Remove(assignedAccounts.Select(x => x.BaseSegment))
-      //                  .Distinct()
-      //                  .ToFixedList()
-      //                  .Sort((x, y) => x.Code.CompareTo(y.Code));
+      return BudgetAccountData.SearchBudgetAccounts(filter.ToString(), "ACCT_NUMBER");
     }
 
     #endregion Methods
@@ -91,7 +55,7 @@ namespace Empiria.Budgeting {
     #region Helpers
 
     private string GetBudgetTypeFilter() {
-      return $"BDG_ACCT_BUDGET_TYPE_ID = {_budgetType.Id}";
+      return $"STD_ACCT_TYPE_ID = {_budgetType.StandardAccountType.Id}";
     }
 
 
@@ -99,18 +63,17 @@ namespace Empiria.Budgeting {
       if (_keywords.Length == 0) {
         return string.Empty;
       }
-      return SearchExpression.ParseAndLikeKeywords("BDG_ACCT_KEYWORDS", _keywords);
+      return SearchExpression.ParseAndLikeKeywords("ACCT_KEYWORDS", _keywords);
     }
 
 
     private string GetOrgUnitFilter(Party party) {
-      return $"BDG_ACCT_ORG_UNIT_ID = {party.Id}";
+      return $"ACCT_ORG_UNIT_ID = {party.Id}";
     }
 
 
-    private string GetSegmentsFilter(string segmentColumn,
-                                     FixedList<FormerBudgetAcctSegment> segments) {
-      return SearchExpression.ParseInSet(segmentColumn, segments.Select(x => x.Id));
+    private string GetStatusFilter() {
+      return $"ACCT_STATUS = 'A'";
     }
 
     #endregion Helpers

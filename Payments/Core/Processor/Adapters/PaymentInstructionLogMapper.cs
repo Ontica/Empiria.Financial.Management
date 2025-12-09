@@ -29,7 +29,7 @@ namespace Empiria.Payments.Processor.Adapters {
         UID = paymentInstructionLog.UID,
         PaymentOrdeNo = paymentInstructionLog.PaymentOrder.PaymentOrderNo,
         PaymentMethod = paymentInstructionLog.PaymentOrder.PaymentMethod.Name,
-        Total = paymentInstructionLog.PaymentOrder.PayableEntity.Total,
+        Total = paymentInstructionLog.PaymentOrder.Total,
         Currency = paymentInstructionLog.PaymentOrder.Currency.Name,
         RequestTime = paymentInstructionLog.RequestTime,
         RequestCode = paymentInstructionLog.ExternalRequestID,
