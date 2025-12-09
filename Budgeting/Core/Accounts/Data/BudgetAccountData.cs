@@ -15,9 +15,11 @@ namespace Empiria.Budgeting.Data {
   /// <summary>Provides data access services for budget accounts.</summary>
   static internal class BudgetAccountData {
 
-    static internal FixedList<BudgetAccount> SearchBudgetAcccounts(string filter, string sort) {
+    static internal FixedList<BudgetAccount> SearchBudgetAccounts(string filter, string sort) {
 
-      var sql = "SELECT * FROM FMS_ACCOUNTS";
+      var sql = "SELECT FMS_ACCOUNTS.* " +
+                "FROM FMS_ACCOUNTS INNER JOIN FMS_STD_ACCOUNTS " +
+                "ON FMS_ACCOUNTS.ACCT_STD_ACCT_ID = FMS_STD_ACCOUNTS.STD_ACCT_ID";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql += $" WHERE {filter}";
