@@ -72,6 +72,12 @@ namespace Empiria.Budgeting {
       }
     }
 
+    public StandardAccountType StandardAccountType {
+      get {
+        return base.ExtensionData.Get("standardAccountTypeId", StandardAccountType.Empty);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
