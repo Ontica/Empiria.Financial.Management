@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
@@ -503,12 +504,18 @@ namespace Empiria.Budgeting.Transactions {
     #region Helpers
 
     private void GenerateControlCodes() {
-      if (!BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente)) {
-        return;
-      }
-      foreach (var entry in _entries.Value) {
-        entry.ControlNo = BudgetTransactionDataService.GetNextControlNo(entry);
-        entry.Save();
+      if (BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente)) {
+
+        BudgetTransactionDataService.GenerateAvailableControlCodes(this);
+
+      } else if (BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente)) {
+
+        FixedList<BudgetEntry> entries = GetFor(GetEntity())
+                                        .FindAll(x => x.BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente))
+                                        .SelectFlat(x => x.Entries)
+                                        .FindAll(x => x.Deposit != 0);
+
+        BudgetTransactionDataService.GenerateCommitControlCodes(this, entries);
       }
     }
 

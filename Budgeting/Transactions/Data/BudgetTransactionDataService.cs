@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 
 using Empiria.Data;
-using Empiria.Financial;
 
 namespace Empiria.Budgeting.Transactions.Data {
 
@@ -46,6 +45,69 @@ namespace Empiria.Budgeting.Transactions.Data {
       var op = DataOperation.Parse(sql);
 
       DataWriter.Execute(op);
+    }
+
+
+    static internal void GenerateAvailableControlCodes(BudgetTransaction transaction) {
+
+      foreach (var year in transaction.Entries.SelectDistinct(x => x.Year)) {
+
+        var entriesForYear = transaction.Entries.FindAll(x => x.Year == year);
+
+        foreach (var account in entriesForYear.SelectDistinct(x => x.BudgetAccount)) {
+
+          var entriesForAccountAndYear = entriesForYear.FindAll(x => x.BudgetAccount.Equals(account));
+
+          var controlNo = GetNextControlNo(year);
+
+          foreach (var entry in entriesForAccountAndYear) {
+            entry.ControlNo = controlNo;
+            entry.Save();
+          }
+        }
+      }
+    }
+
+
+    static internal void GenerateCommitControlCodes(BudgetTransaction transaction,
+                                                    FixedList<BudgetEntry> requestedEntries) {
+
+      int counter = BudgetTransaction.GetFor(transaction.GetEntity())
+                                     .CountAll(x => x.BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente));
+
+      string counterString = (counter + 1).ToString("00");
+
+      foreach (var entry in transaction.Entries) {
+        var requestEntry = requestedEntries.Find(x => x.BudgetAccount.Equals(entry.BudgetAccount) &&
+                                                      x.Year == entry.Year);
+
+        if (requestEntry != null) {
+          entry.ControlNo = $"{requestEntry.ControlNo}/{counterString}";
+          entry.Save();
+        }
+      }
+    }
+
+
+    static private string GetNextControlNo(int requestYear) {
+
+      string prefix = $"{requestYear.ToString().Substring(2)}";
+
+      string sql = "SELECT MAX(BDG_ENTRY_CONTROL_NO) " +
+                   "FROM FMS_BUDGET_ENTRIES " +
+                   $"WHERE BDG_ENTRY_CONTROL_NO LIKE '{prefix}-%'";
+
+      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), string.Empty);
+
+      if (lastUniqueID.Length != 0) {
+
+        int consecutive = int.Parse(lastUniqueID.Split('-')[1]) + 1;
+
+        return $"{prefix}-{consecutive:00000}";
+
+      } else {
+        return $"{prefix}-00001";
+      }
     }
 
 
@@ -159,34 +221,6 @@ namespace Empiria.Budgeting.Transactions.Data {
           o.ExtensionData.ToString(), o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
-    }
-
-    static internal string GetNextControlNo(BudgetEntry entry) {
-      Assertion.Require(entry, nameof(entry));
-
-      if (entry.Deposit == 0) {
-        return string.Empty;
-      }
-
-      string year = entry.Budget.Year.ToString().Substring(2);
-
-      string prefix = $"{year}";
-
-      string sql = "SELECT MAX(BDG_ENTRY_CONTROL_NO) " +
-                   "FROM FMS_BUDGET_ENTRIES " +
-                   $"WHERE BDG_ENTRY_CONTROL_NO LIKE '{prefix}-%'";
-
-      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), String.Empty);
-
-      if (lastUniqueID != null && lastUniqueID.Length != 0) {
-
-        int consecutive = int.Parse(lastUniqueID.Split('-')[1]) + 1;
-
-        return $"{prefix}-{consecutive:00000}";
-
-      } else {
-        return $"{prefix}-00001";
-      }
     }
 
   }  // class BudgetTransactionDataService
