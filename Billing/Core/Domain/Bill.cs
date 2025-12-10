@@ -39,11 +39,28 @@ namespace Empiria.Billing {
 
     static public Bill Empty => ParseEmpty<Bill>();
 
-    static public FixedList<Bill> GetListFor(IPayableEntity payable) {
-      return GetList<Bill>($"BILL_PAYABLE_ENTITY_ID = {payable.Id} " +
+    static public FixedList<Bill> GetListFor(IPayableEntity payableEntity) {
+      Assertion.Require(payableEntity, nameof(payableEntity));
+
+      return GetList<Bill>($"BILL_PAYABLE_ENTITY_ID = {payableEntity.Id} " +
                            $"AND BILL_STATUS <> 'X'")
             .ToFixedList();
     }
+
+
+    static public FixedList<Bill> GetListFor(FixedList<IPayableEntity> payableEntities) {
+      Assertion.Require(payableEntities, nameof(payableEntities));
+
+      if (payableEntities.Count == 0) {
+        return FixedList<Bill>.Empty;
+      }
+
+      return GetList<Bill>($"BILL_PAYABLE_ENTITY_ID IN " +
+                           $"({string.Join(",", payableEntities.Select(x => x.Id))}) " +
+                           $"AND BILL_STATUS <> 'X'")
+            .ToFixedList();
+    }
+
 
     public Bill(BillCategory billCategory,
                 string billNo) : base(billCategory.BillType) {
