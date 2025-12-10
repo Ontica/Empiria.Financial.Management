@@ -246,6 +246,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public string RejectedReason {
+      get; internal set;
+    }
+
   }  // BudgetTransactionDescriptorDto
 
 

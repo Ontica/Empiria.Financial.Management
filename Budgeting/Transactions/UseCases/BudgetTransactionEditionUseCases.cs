@@ -117,6 +117,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       return BudgetTransactionMapper.Map(transaction);
     }
 
+
     public BudgetEntryDto CreateBudgetEntry(string budgetTransactionUID, BudgetEntryFields fields) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
       Assertion.Require(fields, nameof(fields));
@@ -177,7 +178,9 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var transaction = BudgetTransaction.Parse(budgetTransactionUID);
 
-      transaction.Reject();
+      reason = EmpiriaString.Clean(reason);
+
+      transaction.Reject(reason);
 
       transaction.Save();
 

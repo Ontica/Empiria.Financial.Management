@@ -103,7 +103,6 @@ namespace Empiria.Budgeting.Transactions {
       get; private set;
     }
 
-
     [DataField("BDG_TXN_DESCRIPTION")]
     public string Description {
       get; private set;
@@ -284,6 +283,15 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+    public string RejectedReason {
+      get {
+        return ExtensionData.Get("rejectedReason", string.Empty);
+      }
+      private set {
+        ExtensionData.SetIfValue("rejectedReason", value);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -334,6 +342,7 @@ namespace Empiria.Budgeting.Transactions {
       this.Status = TransactionStatus.Closed;
     }
 
+
     internal void DeleteOrCancel() {
       Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this transaction.");
 
@@ -377,6 +386,7 @@ namespace Empiria.Budgeting.Transactions {
         TransactionNo = TO_ASSIGN_TRANSACTION_NO;
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
+
       } else if (Status == TransactionStatus.Pending) {
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         RecordingDate = DateTime.Now;
@@ -394,17 +404,19 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal void Reject() {
+    internal void Reject(string reason) {
+      Assertion.Require(reason, nameof(reason));
+
       Assertion.Require(Rules.CanReject,
                         $"Can not reject this budget transaction. Its status is {Status.GetName()}.");
 
-      this.RequestedBy = Party.Empty;
-      this.RequestedDate = ExecutionServer.DateMaxValue;
+      TransactionNo = "Rechazada";
 
-      this.AuthorizedBy = Party.Empty;
-      this.AuthorizationDate = ExecutionServer.DateMaxValue;
+      RejectedReason = EmpiriaString.Clean(reason);
 
-      this.Status = TransactionStatus.Pending;
+      Status = TransactionStatus.Rejected;
+
+      this.Entries.ToList().ForEach(x => x.Reject());
     }
 
 

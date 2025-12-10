@@ -76,6 +76,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         ApplicationDate = transaction.ApplicationDate,
         AppliedBy = transaction.AppliedBy.Name,
         StatusName = transaction.Status.GetName(),
+        RejectedReason = transaction.RejectedReason
       };
     }
 
