@@ -14,6 +14,9 @@ using Empiria.StateEnums;
 
 using Empiria.Financial;
 
+using Empiria.Billing;
+using Empiria.Billing.Adapters;
+
 using Empiria.Budgeting.Adapters;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
@@ -26,16 +29,26 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static internal BudgetTransactionHolderDto Map(BudgetTransaction transaction) {
       var byYearTransaction = new BudgetTransactionByYear(transaction);
 
+      FixedList<Bill> bills = FixedList<Bill>.Empty;
+
+      if (transaction.HasEntity) {
+        var payableEntities = transaction.GetEntity().GetPayableEntities();
+
+        bills = Bill.GetListFor(payableEntities);
+      }
+
       return new BudgetTransactionHolderDto {
         Transaction = MapTransaction(transaction),
         Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
         GroupedEntries = new BudgetEntriesByYearTableDto(byYearTransaction.GetEntries()),
         Taxes = MapTaxes(transaction),
+        Bills = BillMapper.MapToBillDto(bills),
         Documents = DocumentServices.GetAllEntityDocuments(transaction),
         History = HistoryServices.GetEntityHistory(transaction),
         Actions = MapActions(transaction.Rules)
       };
     }
+
 
     static internal FixedList<BudgetTypeForEditionDto> MapBudgetTypesForEdition(FixedList<BudgetType> budgetTypes) {
       return budgetTypes.Select(x => MapBudgetTypeForEdition(x))
@@ -63,6 +76,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         ApplicationDate = transaction.ApplicationDate,
         AppliedBy = transaction.AppliedBy.Name,
         StatusName = transaction.Status.GetName(),
+        RejectedReason = transaction.RejectedReason
       };
     }
 

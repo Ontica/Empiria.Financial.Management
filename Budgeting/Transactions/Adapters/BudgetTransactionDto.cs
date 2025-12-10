@@ -13,8 +13,9 @@ using System;
 using Empiria.Documents;
 using Empiria.History;
 
-namespace Empiria.Budgeting.Transactions.Adapters {
+using Empiria.Billing.Adapters;
 
+namespace Empiria.Budgeting.Transactions.Adapters {
 
   /// <summary>Output holder DTO used for a budget transaction.</summary>
   public class BudgetTransactionHolderDto {
@@ -32,6 +33,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
     public FixedList<TaxEntryDto> Taxes {
+      get; internal set;
+    }
+
+    public FixedList<BillDto> Bills {
       get; internal set;
     }
 
@@ -238,6 +243,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
     public string StatusName {
+      get; internal set;
+    }
+
+    public string RejectedReason {
       get; internal set;
     }
 

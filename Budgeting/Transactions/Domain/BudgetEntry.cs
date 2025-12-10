@@ -292,6 +292,14 @@ namespace Empiria.Budgeting.Transactions {
       MarkAsDirty();
     }
 
+
+    internal void Reject() {
+      Status = TransactionStatus.Rejected;
+
+      MarkAsDirty();
+    }
+
+
     protected override void OnSave() {
       if (IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);

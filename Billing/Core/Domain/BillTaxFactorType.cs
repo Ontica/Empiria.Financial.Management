@@ -13,9 +13,11 @@ namespace Empiria.Billing {
   /// <summary>Enumerates a bill tax factor type.</summary>
   public enum BillTaxFactorType {
 
-    Cuota =  'C',
+    Cuota = 'C',
 
     Tasa = 'T',
+
+    Exento = 'E',
 
   }  // enum BillTaxFactorType
 
@@ -23,22 +25,8 @@ namespace Empiria.Billing {
   /// <summary>Extension methods for BillTaxFactorType.</summary>
   static public class BillTaxFactorTypeExtensions {
 
-    static public string GetName(this BillTaxFactorType status) {
-      switch (status) {
-        case BillTaxFactorType.Cuota:
-          return "Cuota";
-
-        case BillTaxFactorType.Tasa:
-          return "Tasa";
-
-        default:
-          throw Assertion.EnsureNoReachThisCode($"Unrecognized status {status}");
-      }
-    }
-
-
     static public NamedEntityDto MapToDto(this BillTaxFactorType status) {
-      return new NamedEntityDto(status.ToString(), status.GetName());
+      return new NamedEntityDto(status.ToString(), status.ToString());
     }
 
   }  // class BillTaxFactorTypeExtensions

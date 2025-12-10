@@ -71,31 +71,28 @@ namespace Empiria.Budgeting.Reporting {
 
       var entriesHtml = new StringBuilder();
 
-      foreach (var entry in _order.GetItems<OrderItem>()) {
+      foreach (var orderEntry in _order.GetItems<OrderItem>()) {
         var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT_CODE}}",
-                                          entry.BudgetAccount.Code));
+                                          orderEntry.BudgetAccount.Code));
 
-        var budgetEntry = _txn.Entries.Find(x => entry.Id == x.EntityId && x.ControlNo.Length != 0);
+        var budgetEntry = _txn.Entries.Find(x => orderEntry.Id == x.EntityId &&
+                                                 orderEntry.GetEmpiriaType().Id == x.EntityTypeId);
 
-        string controlNo = string.Empty;
-        string budgetProgram = string.Empty;
-
-        if (budgetEntry != null) {
-          controlNo = budgetEntry.ControlNo;
-          budgetProgram = budgetEntry.BudgetProgram.Code;
+        if (budgetEntry == null) {
+          continue;
         }
 
-        entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", entry.BudgetAccount.Code);
-        entryHtml.Replace("{{PRODUCT_CODE}}", entry.ProductCode);
-        entryHtml.Replace("{{DESCRIPTION}}", entry.Description);
-        entryHtml.Replace("{{ORIGIN_COUNTRY}}", entry.OriginCountry.CountryISOCode);
-        entryHtml.Replace("{{CONTROL_NO}}", controlNo);
-        entryHtml.Replace("{{PROGRAM}}", budgetProgram);
-        entryHtml.Replace("{{YEAR}}", entry.Budget.Year.ToString());
-        entryHtml.Replace("{{PRODUCT_UNIT}}", entry.ProductUnit.Name);
-        entryHtml.Replace("{{QUANTITY}}", entry.Quantity.ToString("C2"));
-        entryHtml.Replace("{{UNIT_PRICE}}", entry.UnitPrice.ToString("C2"));
-        entryHtml.Replace("{{TOTAL}}", entry.Subtotal.ToString("C2"));
+        entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", orderEntry.BudgetAccount.Code);
+        entryHtml.Replace("{{PRODUCT_CODE}}", orderEntry.ProductCode);
+        entryHtml.Replace("{{DESCRIPTION}}", orderEntry.Description);
+        entryHtml.Replace("{{ORIGIN_COUNTRY}}", orderEntry.OriginCountry.CountryISOCode);
+        entryHtml.Replace("{{CONTROL_NO}}", budgetEntry.ControlNo);
+        entryHtml.Replace("{{PROGRAM}}", budgetEntry.BudgetProgram.Code);
+        entryHtml.Replace("{{YEAR}}", orderEntry.Budget.Year.ToString());
+        entryHtml.Replace("{{PRODUCT_UNIT}}", orderEntry.ProductUnit.Name);
+        entryHtml.Replace("{{QUANTITY}}", orderEntry.Quantity.ToString("C2"));
+        entryHtml.Replace("{{UNIT_PRICE}}", orderEntry.UnitPrice.ToString("C2"));
+        entryHtml.Replace("{{TOTAL}}", orderEntry.Subtotal.ToString("C2"));
 
         entriesHtml.Append(entryHtml);
       }

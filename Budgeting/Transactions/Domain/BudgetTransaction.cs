@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
@@ -101,7 +102,6 @@ namespace Empiria.Budgeting.Transactions {
     public string TransactionNo {
       get; private set;
     }
-
 
     [DataField("BDG_TXN_DESCRIPTION")]
     public string Description {
@@ -283,6 +283,15 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+    public string RejectedReason {
+      get {
+        return ExtensionData.Get("rejectedReason", string.Empty);
+      }
+      private set {
+        ExtensionData.SetIfValue("rejectedReason", value);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -333,6 +342,7 @@ namespace Empiria.Budgeting.Transactions {
       this.Status = TransactionStatus.Closed;
     }
 
+
     internal void DeleteOrCancel() {
       Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this transaction.");
 
@@ -376,6 +386,7 @@ namespace Empiria.Budgeting.Transactions {
         TransactionNo = TO_ASSIGN_TRANSACTION_NO;
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
+
       } else if (Status == TransactionStatus.Pending) {
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         RecordingDate = DateTime.Now;
@@ -393,17 +404,19 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal void Reject() {
+    internal void Reject(string reason) {
+      Assertion.Require(reason, nameof(reason));
+
       Assertion.Require(Rules.CanReject,
                         $"Can not reject this budget transaction. Its status is {Status.GetName()}.");
 
-      this.RequestedBy = Party.Empty;
-      this.RequestedDate = ExecutionServer.DateMaxValue;
+      TransactionNo = "Rechazada";
 
-      this.AuthorizedBy = Party.Empty;
-      this.AuthorizationDate = ExecutionServer.DateMaxValue;
+      RejectedReason = EmpiriaString.Clean(reason);
 
-      this.Status = TransactionStatus.Pending;
+      Status = TransactionStatus.Rejected;
+
+      this.Entries.ToList().ForEach(x => x.Reject());
     }
 
 
@@ -503,12 +516,18 @@ namespace Empiria.Budgeting.Transactions {
     #region Helpers
 
     private void GenerateControlCodes() {
-      if (!BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente)) {
-        return;
-      }
-      foreach (var entry in _entries.Value) {
-        entry.ControlNo = BudgetTransactionDataService.GetNextControlNo(entry);
-        entry.Save();
+      if (BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente)) {
+
+        BudgetTransactionDataService.GenerateAvailableControlCodes(this);
+
+      } else if (BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente)) {
+
+        FixedList<BudgetEntry> entries = GetFor(GetEntity())
+                                        .FindAll(x => x.BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente))
+                                        .SelectFlat(x => x.Entries)
+                                        .FindAll(x => x.Deposit != 0);
+
+        BudgetTransactionDataService.GenerateCommitControlCodes(this, entries);
       }
     }
 

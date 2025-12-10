@@ -28,6 +28,7 @@ namespace Empiria.Budgeting.Transactions {
 
     ObjectTypeInfo GetEmpiriaType();
 
+    FixedList<IPayableEntity> GetPayableEntities();
 
   } // interface IBudgetable
 
