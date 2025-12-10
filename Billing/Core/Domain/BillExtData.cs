@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+using System.Collections.Generic;
 using Empiria.Json;
 
 namespace Empiria.Billing {
@@ -114,6 +116,16 @@ namespace Empiria.Billing {
     }
 
 
+    public FixedList<BillConceptExtData> Concepts {
+      get {
+        return _extData.GetFixedList<BillConceptExtData>("Concepts", true);
+      }
+      private set {
+        _extData.SetIfValue("Concepts", value);
+      }
+    }
+
+
     internal string ToJsonString() {
       return _extData.ToString();
     }
@@ -137,12 +149,207 @@ namespace Empiria.Billing {
 
 
     internal void Update(FuelConsumptionBillAddendaFields addenda) {
-      
-      foreach (var concept in addenda.Concepts) {
+      Assertion.Require(addenda, nameof(addenda));
 
+      if (addenda.Concepts.Count==0) {
+        return;
       }
+
+      var conceptsExtData = new List<BillConceptExtData>();
+
+      foreach (var conceptFields in addenda.Concepts) {
+
+        var billConceptExtData = new BillConceptExtData();
+
+        billConceptExtData.Update(conceptFields);
+
+        conceptsExtData.Add(billConceptExtData);
+      }
+      Concepts = conceptsExtData.ToFixedList();
     }
 
   } // class BillExtData
+
+
+  public class BillConceptExtData {
+
+    private readonly JsonObject _conceptExtData = new JsonObject();
+
+    public BillConceptExtData() {
+
+    }
+
+    internal BillConceptExtData(JsonObject schemaData) {
+      Assertion.Require(schemaData, nameof(schemaData));
+
+      _conceptExtData = schemaData;
+    }
+
+
+    public string BillUID {
+      get {
+        return _conceptExtData.Get("billUID", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("billUID", value);
+      }
+    }
+
+
+    public string ProductUID {
+      get {
+        return _conceptExtData.Get("productUID", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("productUID", value);
+      }
+    }
+
+
+    public string SATProductUID {
+      get {
+        return _conceptExtData.Get("satProductUID", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("satProductUID", value);
+      }
+    }
+
+
+    public string SATProductServiceCode {
+      get {
+        return _conceptExtData.Get("satProductServiceCode", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("satProductServiceCode", value);
+      }
+    }
+
+
+    public string UnitKey {
+      get {
+        return _conceptExtData.Get("unitKey", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("unitKey", value);
+      }
+    }
+
+
+    public string Unit {
+      get {
+        return _conceptExtData.Get("unit", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("unit", value);
+      }
+    }
+
+
+    public string IdentificationNo {
+      get {
+        return _conceptExtData.Get("identificationNo", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("identificationNo", value);
+      }
+    }
+
+
+    public string ObjectImp {
+      get {
+        return _conceptExtData.Get("objectImp", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("objectImp", value);
+      }
+    }
+
+
+    public string Description {
+      get {
+        return _conceptExtData.Get("description", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("description", value);
+      }
+    }
+
+
+    public string Tags {
+      get {
+        return _conceptExtData.Get("tags", string.Empty);
+      }
+      private set {
+        _conceptExtData.SetIfValue("tags", value);
+      }
+    }
+
+
+    public decimal Quantity {
+      get {
+        return _conceptExtData.Get("quantity", 0);
+      }
+      private set {
+        _conceptExtData.SetIfValue("quantity", value);
+      }
+    }
+
+
+    public decimal UnitPrice {
+      get {
+        return _conceptExtData.Get("unitPrice", 0);
+      }
+      private set {
+        _conceptExtData.SetIfValue("unitPrice", value);
+      }
+    }
+
+
+    public decimal Subtotal {
+      get {
+        return _conceptExtData.Get("subtotal", 0);
+      }
+      private set {
+        _conceptExtData.SetIfValue("subtotal", value);
+      }
+    }
+
+
+    public decimal Discount {
+      get {
+        return _conceptExtData.Get("discount", 0);
+      }
+      private set {
+        _conceptExtData.SetIfValue("discount", value);
+      }
+    }
+
+
+    internal string ToJsonString() {
+      return _conceptExtData.ToString();
+    }
+
+
+    internal void Update(BillConceptWithTaxFields conceptFields) {
+      Assertion.Require(conceptFields, nameof(conceptFields));
+
+      BillUID = conceptFields.BillUID;
+      ProductUID = conceptFields.ProductUID;
+      SATProductUID = conceptFields.SATProductUID;
+      SATProductServiceCode = conceptFields.SATProductServiceCode;
+      UnitKey= conceptFields.UnitKey;
+      Unit = conceptFields.Unit;
+      IdentificationNo = conceptFields.IdentificationNo;
+      ObjectImp = conceptFields.ObjectImp;
+      Description = conceptFields.Description;
+      Tags = EmpiriaString.Tagging(conceptFields.Tags);
+      Quantity = conceptFields.Quantity;
+      UnitPrice = conceptFields.UnitPrice;
+      Subtotal = conceptFields.Subtotal;
+      Discount = conceptFields.Discount;
+    }
+
+  } // class BillConceptFields
 
 } // namespace Empiria.Billing

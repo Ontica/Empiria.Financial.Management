@@ -343,30 +343,33 @@ namespace Empiria.Billing.UseCases {
 
       bill.UpdateFuelConsumptionBill(fields);
 
-      //bill.Save();
+      bill.Save();
 
-      //CreateFuelConsumptionConcepts(bill, fields.Concepts);
+      CreateFuelConsumptionConcepts(bill, fields.Concepts);
 
       return bill;
     }
 
 
-    //private FixedList<BillConcept> CreateFuelConsumptionConcepts(Bill bill,
-    //                                FixedList<BillConceptWithTaxFields> conceptFields) {
-    //  var concepts = new List<BillConceptWithTaxFields>();
+    private FixedList<BillConcept> CreateFuelConsumptionConcepts(Bill bill,
+                                    FixedList<BillConceptWithTaxFields> conceptFields) {
 
-    //  foreach (BillConceptWithTaxFields fields in conceptFields) {
+      var concepts = new List<BillConcept>();
 
-    //    var billConcept = new BillConcept(bill, Product.Empty);
-    //    BillConceptWithTaxFields _concept = new BillConcept(billConcept);
-    //    //billConcept.Update(fields);
+      foreach (BillConceptWithTaxFields fields in conceptFields) {
 
-    //    //billConcept.Save();
+        var billConcept = new BillConcept(bill, Product.Empty);
 
-    //    concepts.Add(billConcept);
-    //  }
-    //  return concepts.ToFixedList();
-    //}
+        billConcept.Update(fields);
+
+        billConcept.Save();
+
+        CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
+
+        concepts.Add(billConcept);
+      }
+      return concepts.ToFixedList();
+    }
 
     #endregion Private methods
 
