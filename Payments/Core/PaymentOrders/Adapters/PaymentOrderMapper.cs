@@ -101,10 +101,9 @@ namespace Empiria.Payments.Adapters {
       return new PaymentOrderActionsDto {
         CanDelete = paymentOrderActions.CanDelete,
         CanEditDocuments = paymentOrderActions.CanEditDocuments,
-        CanSendToPay = true,
+        CanGeneratePaymentInstruction = true,
         CanUpdate = paymentOrderActions.CanUpdate,
-        CanCommitBudget = true,
-        CanRequestBudget = true,
+        CanApprovePayment = true,
         CanExerciseBudget = true
       };
 

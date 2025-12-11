@@ -68,18 +68,16 @@ namespace Empiria.Payments.Adapters {
 
   public class PaymentOrderActionsDto : BaseActions {
 
-    public bool CanSendToPay {
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "CanSendToPay")]
+    public bool CanGeneratePaymentInstruction {
       get; internal set;
     }
 
-    public bool CanCommitBudget {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "CanAprovePayment")]
+    public bool CanApprovePayment {
       get; internal set;
     }
-
-    public bool CanRequestBudget {
-      get; internal set;
-    }
-
 
     public bool CanExerciseBudget {
       get; internal set;
