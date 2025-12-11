@@ -38,6 +38,12 @@ namespace Empiria.Financial {
 
     #endregion Constructors and parsers
 
+    public bool IsProjectRelated {
+      get {
+        return base.ExtensionData.Get("isProjectRelated", false);
+      }
+    }
+
   } // class StandardAccountType
 
 }  // namespace Empiria.Financial

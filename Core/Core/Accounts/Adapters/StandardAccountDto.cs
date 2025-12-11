@@ -91,6 +91,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public bool IsProjectRelated {
+      get; internal set;
+    }
+
     public NamedEntityDto Status {
       get; internal set;
     }

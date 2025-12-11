@@ -73,6 +73,7 @@ namespace Empiria.Financial.Adapters {
         Classification = account.MainClassification.MapToNamedEntity("Sin clasificación asignada"),
         Level = account.Level,
         IsLastLevel = account.IsLastLevel,
+        IsProjectRelated = account.StandardAccountType.IsProjectRelated,
         Status = account.Status.MapToDto(),
         StartDate = account.StartDate,
         EndDate = account.EndDate
