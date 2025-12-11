@@ -75,6 +75,11 @@ namespace Empiria.Budgeting.Explorer {
       get; private set;
     }
 
+    [DataField("PROVISIONED")]
+    public decimal Provisioned {
+      get; private set;
+    }
+
     [DataField("TOPAY")]
     public decimal ToPay {
       get; private set;
