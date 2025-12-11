@@ -128,13 +128,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       int userId = ExecutionServer.CurrentUserId;
 
       if (stage == TransactionStage.MyInbox) {
-        return $"(BDG_TXN_POSTED_BY_ID = {userId} OR " +
-               $"BDG_TXN_RECORDED_BY_ID = {userId} OR " +
-               $"BDG_TXN_REQUESTED_BY_ID = {userId} OR " +
-               $"BDG_TXN_AUTHORIZED_BY_ID = {userId} OR " +
-               $"BDG_TXN_APPLIED_BY_ID = {userId})";
-
-      } else if (stage == TransactionStage.ControlDesk) {
 
         if (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
             userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER)) {
@@ -149,6 +142,19 @@ namespace Empiria.Budgeting.Transactions.Adapters {
           }
 
           return SearchExpression.ParseInSet("BDG_TXN_BASE_PARTY_ID", orgUnits.Select(x => x.Id));
+        }
+
+        return $"(BDG_TXN_POSTED_BY_ID = {userId} OR " +
+              $"BDG_TXN_RECORDED_BY_ID = {userId} OR " +
+              $"BDG_TXN_REQUESTED_BY_ID = {userId} OR " +
+              $"BDG_TXN_AUTHORIZED_BY_ID = {userId} OR " +
+              $"BDG_TXN_APPLIED_BY_ID = {userId})";
+
+      } else if (stage == TransactionStage.ControlDesk) {
+
+        if (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
+            userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER)) {
+          return "BDG_TXN_STATUS NOT IN ('J', 'C', 'D', 'X')";
         }
       }
 
