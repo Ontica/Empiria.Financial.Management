@@ -4,7 +4,7 @@
 *  Assembly : Empiria.CashFlow.CashLedger.dll            Pattern   : Use case interactor class               *
 *  Type     : CashLedgerUseCases                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases used to retrive and manage cash ledger transactions.                                 *
+*  Summary  : Use cases used to retrieve and manage cash ledger transactions.                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -20,7 +20,7 @@ using Empiria.CashFlow.CashLedger.Adapters;
 
 namespace Empiria.CashFlow.CashLedger.UseCases {
 
-  /// <summary>Use cases used to retrive and manage cash ledger transactions.</summary>
+  /// <summary>Use cases used to retrieve and manage cash ledger transactions.</summary>
   public class CashTransactionUseCases : UseCase {
 
     private readonly CashTransactionServices _financialAccountingServices;

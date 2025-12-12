@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Builder                                 *
 *  Type     : BudgetExplorer                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Retrives budget information bases on a query returning a dynamic result data structure.        *
+*  Summary  : Retrieves budget information bases on a query returning a dynamic result data structure.       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -18,7 +18,7 @@ using Empiria.Budgeting.Explorer.Data;
 
 namespace Empiria.Budgeting.Explorer {
 
-  /// <summary>Retrives budget information bases on a query returning a dynamic result data structure.</summary>
+  /// <summary>Retrieves budget information bases on a query returning a dynamic result data structure.</summary>
   internal class BudgetExplorer {
 
     private readonly BudgetExplorerCommand _command;

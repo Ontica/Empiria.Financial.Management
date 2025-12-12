@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Budgeting.WebApi.dll                 Pattern   : Web api Controller                    *
 *  Type     : BudgetAccountSegmentsController              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update budget account segments.                                    *
+*  Summary  : Web API used to retrieve and update budget account segments.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -17,7 +17,7 @@ using Empiria.Budgeting.UseCases;
 
 namespace Empiria.Budgeting.WebApi {
 
-  /// <summary>Web API used to retrive and update budget account segments.</summary>
+  /// <summary>Web API used to retrieve and update budget account segments.</summary>
   public class BudgetAccountSegmentsController : WebApiController {
 
     #region Web Apis

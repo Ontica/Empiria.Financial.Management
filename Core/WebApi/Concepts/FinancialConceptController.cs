@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Financial.WebApi.dll                 Pattern   : Web api Controller                    *
 *  Type     : FinancialConceptController                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update financial concepts.                                         *
+*  Summary  : Web API used to retrieve and update financial concepts.                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -17,7 +17,7 @@ using Empiria.Financial.Concepts.UseCases;
 
 namespace Empiria.Financial.Concepts.WebApi {
 
-  /// <summary>Web API used to retrive and update financial concepts.</summary>
+  /// <summary>Web API used to retrieve and update financial concepts.</summary>
   public class FinancialConceptController : WebApiController {
 
     #region Query web apis

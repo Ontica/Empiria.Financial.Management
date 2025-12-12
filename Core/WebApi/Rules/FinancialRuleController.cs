@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Financial.WebApi.dll                 Pattern   : Web api Controller                    *
 *  Type     : FinancialRuleController                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update financial rules.                                            *
+*  Summary  : Web API used to retrieve and update financial rules.                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -18,7 +18,7 @@ using Empiria.Financial.Rules.UseCases;
 
 namespace Empiria.Financial.Rules.WebApi {
 
-  /// <summary>Web API used to retrive and update financial rules.</summary>
+  /// <summary>Web API used to retrieve and update financial rules.</summary>
   public class FinancialRuleController : WebApiController {
 
     #region Query web apis

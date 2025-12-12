@@ -4,7 +4,7 @@
 *  Assembly : Empiria.CashFlow.WebApi.dll                  Pattern   : Query Web Api Controller              *
 *  Type     : CashFlowExplorerController                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Query web API used to retrive cash flow explorer information.                                  *
+*  Summary  : Query web API used to retrieve cash flow explorer information.                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -21,7 +21,7 @@ using Empiria.CashFlow.Explorer.UseCases;
 
 namespace Empiria.CashFlow.Explorer.WebApi {
 
-  /// <summary>Query web API used to retrive cash flow explorer information.</summary>
+  /// <summary>Query web API used to retrieve cash flow explorer information.</summary>
   public class CashFlowExplorerController : WebApiController {
 
     #region Web apis

@@ -4,7 +4,7 @@
 *  Assembly : Empiria.CashFlow.WebApi.dll                  Pattern   : Web Api Controller                    *
 *  Type     : CashTransactionController                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update transactions.                                               *
+*  Summary  : Web API used to retrieve and update transactions.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -21,7 +21,7 @@ using Empiria.CashFlow.Reporting;
 
 namespace Empiria.CashFlow.WebApi {
 
-  /// <summary>Web API used to retrive and update cash ledger transactions.</summary>
+  /// <summary>Web API used to retrieve and update cash ledger transactions.</summary>
   public class CashTransactionController : WebApiController {
 
     #region Query web apis

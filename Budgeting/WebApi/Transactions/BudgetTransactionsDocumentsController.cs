@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Contracts.WebApi.dll                 Pattern   : Web api Controller                    *
 *  Type     : BudgetTransactionsDocumentsController        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update budget transaction documents.                               *
+*  Summary  : Web API used to retrieve and update budget transaction documents.                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -19,7 +19,7 @@ using Empiria.Budgeting.Transactions;
 
 namespace Empiria.Budgeting.WebApi {
 
-  /// <summary>Web API used to retrive and update budget transaction documents.</summary>
+  /// <summary>Web API used to retrieve and update budget transaction documents.</summary>
   public class BudgetTransactionsDocumentsController : WebApiController {
 
     #region Command web apis

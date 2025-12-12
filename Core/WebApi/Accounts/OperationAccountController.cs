@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Financial.WebApi.dll                 Pattern   : Web api Controller                    *
 *  Type     : OperationAccountController                  License   : Please read LICENSE.txt file           *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update operation accounts belonging to financial accounts.         *
+*  Summary  : Web API used to retrieve and update operation accounts belonging to financial accounts.        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -17,7 +17,7 @@ using Empiria.Financial.UseCases;
 
 namespace Empiria.Financial.Accounts.WebApi {
 
-  /// <summary>Web API used to retrive and update operation accounts belonging to financial accounts.</summary>
+  /// <summary>Web API used to retrieve and update operation accounts belonging to financial accounts.</summary>
   public class OperationAccountController : WebApiController {
 
     #region Query web apis

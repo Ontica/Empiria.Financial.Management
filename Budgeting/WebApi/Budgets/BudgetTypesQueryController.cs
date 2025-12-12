@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Budgeting.WebApi.dll                 Pattern   : Query Controller                      *
 *  Type     : BudgetTypesQueryController                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Query web API used to retrive budget types.                                                    *
+*  Summary  : Query web API used to retrieve budget types.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -21,7 +21,7 @@ using Empiria.Budgeting.Transactions.UseCases;
 
 namespace Empiria.Budgeting.WebApi {
 
-  /// <summary>Query web API used to retrive budget types.</summary>
+  /// <summary>Query web API used to retrieve budget types.</summary>
   public class BudgetTypesQueryController : WebApiController {
 
     #region Web Apis
