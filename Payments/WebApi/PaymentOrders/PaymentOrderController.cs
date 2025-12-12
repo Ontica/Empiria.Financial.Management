@@ -35,6 +35,19 @@ namespace Empiria.Payments.WebApi {
       }
     }
 
+
+    [HttpPost]
+    [Route("v2/payments-management/payables/search")]   // ToDo: Remove this endpoint in future versions.
+    // [Route("v2/payments-management/payment-orders/search")] // Activate this route on next version
+    public CollectionModel SearchPaymentOrders([FromBody] PaymentOrdersQuery query) {
+
+      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
+        FixedList<PaymentOrderDescriptor> paymentOrders = usecases.SearchPaymentOrders(query);
+
+        return new CollectionModel(base.Request, paymentOrders);
+      }
+    }
+
     #endregion Query web apis
 
     #region Command web apis
