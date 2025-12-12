@@ -32,25 +32,25 @@ namespace Empiria.Payments.Processor {
 
     #region Services
 
-    internal async Task RefreshPaymentInstruction(PaymentInstruction paymentInstruction) {
-      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
-      Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
-      Assertion.Require(!paymentInstruction.IsNew, "paymentInstruction must be stored.");
+    internal async Task RefreshPaymentInstruction(PaymentInstruction instruction) {
+      Assertion.Require(instruction, nameof(instruction));
+      Assertion.Require(!instruction.IsEmptyInstance, nameof(instruction));
+      Assertion.Require(!instruction.IsNew, "paymentInstruction must be stored.");
 
 
-      Assertion.Require(!paymentInstruction.Status.IsFinal(),
-                        $"La instrucción de pago está en un estado final: {paymentInstruction.Status.GetName()}");
+      Assertion.Require(!instruction.Status.IsFinal(),
+                        $"La instrucción de pago está en un estado final: {instruction.Status.GetName()}");
 
 
-      IPaymentsBrokerService paymentsService = paymentInstruction.Broker.GetService();
+      IPaymentsBrokerService paymentsService = instruction.Broker.GetService();
 
-      Assertion.Require(paymentInstruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
+      Assertion.Require(instruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
 
-      PaymentInstructionStatusDto newStatus = await paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
+      PaymentInstructionStatusDto newStatus = await paymentsService.GetPaymentInstructionStatus(instruction.ExternalRequestUniqueNo);
 
-      UpdatePaymentLog(paymentInstruction, newStatus);
+      UpdatePaymentLog(instruction, newStatus);
 
-      UpdatePaymentOrder(paymentInstruction.PaymentOrder, newStatus);
+      UpdatePaymentOrder(instruction.PaymentOrder, newStatus);
     }
 
 

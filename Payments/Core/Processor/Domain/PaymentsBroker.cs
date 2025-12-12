@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Information Holder                      *
+*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Common Storage Type                     *
 *  Type     : PaymentsBroker                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a payments broker.                                                                  *
@@ -15,9 +15,7 @@ using Empiria.Reflection;
 namespace Empiria.Payments.Processor {
 
   /// <summary>Represents a payments broker.</summary>
-  internal class PaymentsBroker : GeneralObject {
-
-    static private int DEFAULT_BROKER_ID = ConfigurationData.Get<int>("Default.PaymentsBroker.Id", 750);
+  internal class PaymentsBroker : CommonStorage {
 
     #region Constructors and parsers
 
@@ -26,14 +24,21 @@ namespace Empiria.Payments.Processor {
     static public PaymentsBroker Parse(string uid) => ParseKey<PaymentsBroker>(uid);
 
     static public FixedList<PaymentsBroker> GetList() {
-      return BaseObject.GetList<PaymentsBroker>()
-                       .ToFixedList();
+      return GetStorageObjects<PaymentsBroker>();
+    }
+
+    static public PaymentsBroker Default {
+      get {
+        return GetList().Find(broker => broker.IsDefault)
+                            ?? throw new InvalidOperationException("No default payments broker is defined.");
+      }
     }
 
     static internal PaymentsBroker GetPaymentsBroker(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
-      return Parse(DEFAULT_BROKER_ID);
+      // ToDo: For now, we only have one broker. Substitute this logic when multiple brokers are supported.
+      return Default;
     }
 
     static public PaymentsBroker Empty => ParseEmpty<PaymentsBroker>();
@@ -42,15 +47,23 @@ namespace Empiria.Payments.Processor {
 
     #region Properties
 
-    private string ServiceAssemblyName {
+    public bool IsDefault {
       get {
-        return ExtendedDataField.Get<string>("serviceAssemblyName");
+        return ExtData.Get<bool>("isDefault", false);
       }
     }
 
+
+    private string ServiceAssemblyName {
+      get {
+        return ExtData.Get<string>("serviceAssemblyName");
+      }
+    }
+
+
     private string ServiceTypeName {
       get {
-        return ExtendedDataField.Get<string>("serviceTypeName");
+        return ExtData.Get<string>("serviceTypeName");
       }
     }
 
