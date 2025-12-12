@@ -11,7 +11,6 @@
 using Xunit;
 
 using System;
-using System.Threading.Tasks;
 
 using Empiria.Payments;
 using Empiria.Payments.Adapters;
@@ -97,30 +96,6 @@ namespace Empiria.Tests.Payments {
       var sut = _usecases.SearchPaymentOrders(query);
 
       Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public async Task Should_Send_Payment_Order_To_Pay() {
-      var sut = await _usecases.SendPaymentOrderToPay("fa3697b3-a42c-4753-b4bc-8d5f27737c4f");
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public async Task Should_Validate_Is_Payment_Order_Is_Payed() {
-      var sut = await _usecases.ValidatePaymentOrderIsPayed("65dccef4-cd85-4b5b-8a99-b6ca255c8ac3");
-
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public async Task Should_Validate_Is_Payments_Orders_Are_Payed() {
-      var sut = await _usecases.ValidatePayment();
-
-      Assert.NotEqual(0, sut);
     }
 
     #endregion Facts

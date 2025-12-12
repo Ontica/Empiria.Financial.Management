@@ -16,7 +16,7 @@ using Empiria.Billing.Adapters;
 namespace Empiria.Payments.Adapters {
 
   /// <summary>Output DTO with a payment instruction holder.</summary>
-  internal class PaymentInstructionHolderDto {
+  public class PaymentInstructionHolderDto {
 
     public PaymentOrderDto PaymentOrder {
       get; internal set;
@@ -45,4 +45,4 @@ namespace Empiria.Payments.Adapters {
 
   } // class PaymentInstructionHolderDto
 
-}  // namespace Empiria.Payments.Processor.Adapters
+}  // namespace Empiria.Payments.Adapters

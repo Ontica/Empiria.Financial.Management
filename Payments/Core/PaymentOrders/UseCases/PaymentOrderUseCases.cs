@@ -9,14 +9,10 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using System.Threading.Tasks;
 
 using Empiria.Parties;
 using Empiria.Services;
 using Empiria.Financial;
-
-using Empiria.Payments.Processor;
-using Empiria.Payments.Processor.Services;
 
 using Empiria.Payments.Adapters;
 using Empiria.Payments.Data;
@@ -76,22 +72,6 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    public async Task<PaymentOrderHolderDto> SendPaymentOrderToPay(string paymentOrderUID) {
-      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
-
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-
-      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
-
-      using (var usecases = PaymentService.ServiceInteractor()) {
-
-        _ = await usecases.SendToPay(broker, paymentOrder);
-
-        return PaymentOrderMapper.Map(paymentOrder);
-      }
-    }
-
-
     public FixedList<PaymentOrderDescriptor> SearchPaymentOrders(PaymentOrdersQuery query) {
       Assertion.Require(query, nameof(query));
 
@@ -138,39 +118,6 @@ namespace Empiria.Payments.UseCases {
       order.Save();
 
       return PaymentOrderMapper.Map(order);
-    }
-
-
-    public async Task<PaymentOrderHolderDto> ValidatePaymentOrderIsPayed(string paymentOrderUID) {
-      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
-
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-
-      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
-
-      var paymentInstruction = PaymentInstruction.GetListFor(paymentOrder)
-                               .Find(instruction => instruction.Status == PaymentInstructionStatus.InProcess);
-
-      using (var usecases = PaymentService.ServiceInteractor()) {
-        await usecases.UpdatePaymentInstructionStatus(paymentInstruction);
-
-        return PaymentOrderMapper.Map(paymentOrder);
-      }
-    }
-
-
-    public async Task<int> ValidatePayment() {
-      var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
-      int count = 0;
-
-      foreach (var paymentInstruction in paymentInstructions) {
-        using (var usecases = PaymentService.ServiceInteractor()) {
-          await usecases.UpdatePaymentInstructionStatus(paymentInstruction);
-          count++;
-        }
-      }
-
-      return count;
     }
 
     #endregion Use cases

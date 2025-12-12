@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Payments Management                          Component : Web Api                               *
-*  Assembly : Empiria.Payments.WebApi.dll                  Pattern   : Web api Controller                    *
+*  Assembly : Empiria.Payments.WebApi.dll                  Pattern   : Query web api                         *
 *  Type     : PaymentInstructionController                 License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive payment orders instructions.                                           *
+*  Summary  : Query web API used to retrieve payment instructions.                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -13,12 +13,11 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.Payments.Adapters;
-
-using Empiria.Payments.Processor.Services;
+using Empiria.Payments.UseCases;
 
 namespace Empiria.Payments.WebApi {
 
-  /// <summary>Web API used to retrive and update payment orders and their catalogues.</summary>
+  /// <summary>Query web API used to retrieve payment instructions.</summary>
   public class PaymentInstructionController : WebApiController {
 
     #region Query web apis
@@ -27,7 +26,7 @@ namespace Empiria.Payments.WebApi {
     [Route("v2/payments-management/payment-instructions/{instructionUID:guid}")]
     public SingleObjectModel GetPaymentInstruction([FromUri] string instructionUID) {
 
-      using (var usecases = PaymentService.ServiceInteractor()) {
+      using (var usecases = PaymentInstructionUseCases.UseCaseInteractor()) {
         PaymentInstructionHolderDto instruction = usecases.GetPaymentInstruction(instructionUID);
 
         return new SingleObjectModel(base.Request, instruction);
@@ -36,11 +35,11 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPost]
-    [Route("v2/payments-management/payment-orders/search")]
+    [Route("v2/payments-management/payment-orders/search")]  // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-instructions/search")]
     public CollectionModel SearchPaymentInstructions([FromBody] PaymentOrdersQuery query) {
 
-      using (var services = PaymentService.ServiceInteractor()) {
+      using (var services = PaymentInstructionUseCases.UseCaseInteractor()) {
         FixedList<PaymentOrderDescriptor> instructions = services.SearchPaymentInstructions(query);
 
         return new CollectionModel(base.Request, instructions);

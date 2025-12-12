@@ -169,4 +169,4 @@ namespace Empiria.Payments {
 
   }  // class PaymentInstruction
 
-} // namespace Empiria.Payments.Processor
+} // namespace Empiria.Payments

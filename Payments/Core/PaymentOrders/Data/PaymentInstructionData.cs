@@ -93,4 +93,4 @@ namespace Empiria.Payments.Data {
 
   }  // class PaymentInstructionData
 
-}  // namespace Empiria.Payments.Processor.Data
+}  // namespace Empiria.Payments.Data

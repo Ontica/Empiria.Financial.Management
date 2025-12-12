@@ -43,4 +43,4 @@ namespace Empiria.Payments.Adapters {
 
   }  // class PaymentLogMapper
 
-}  // namespace Empiria.Payments.Processor.Services
+}  // namespace Empiria.Payments.Adapters
