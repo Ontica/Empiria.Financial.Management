@@ -15,23 +15,21 @@ namespace Empiria.Payments {
 
     Pending = 'P',
 
-    Received = 'R',
-
-    Suspended = 'S',
-
-    Returned = 'T',
-
-    Rejected = 'J',
-
-    Committed = 'M',
-
-    Programmed = 'G',
-
-    Payed = 'C',
+    Canceled = 'L',
 
     Deleted = 'X',
 
-    All = '@',
+    Suspended = 'S',
+
+    Programmed = 'G',
+
+    InProgress = 'I',
+
+    Payed = 'Y',
+
+    Failed = 'F',
+
+    All = '@'
 
   }  // enum PaymentOrderStatus
 
@@ -44,22 +42,28 @@ namespace Empiria.Payments {
       switch (status) {
         case PaymentOrderStatus.Pending:
           return "Pendiente";
-        case PaymentOrderStatus.Received:
-          return "Recibida";
-        case PaymentOrderStatus.Suspended:
-          return "Suspendida";
-        case PaymentOrderStatus.Returned:
-          return "Regresada";
-        case PaymentOrderStatus.Rejected:
-          return "Rechazada";
-        case PaymentOrderStatus.Committed:
-          return "Comprometida";
-        case PaymentOrderStatus.Programmed:
-          return "Programada";
-        case PaymentOrderStatus.Payed:
-          return "Pagada";
+
+        case PaymentOrderStatus.Canceled:
+          return "Cancelada";
+
         case PaymentOrderStatus.Deleted:
           return "Eliminada";
+
+        case PaymentOrderStatus.Suspended:
+          return "Suspendida";
+
+        case PaymentOrderStatus.Programmed:
+          return "Programada";
+
+        case PaymentOrderStatus.InProgress:
+          return "En proceso";
+
+        case PaymentOrderStatus.Payed:
+          return "Pagada";
+
+        case PaymentOrderStatus.Failed:
+          return "El pago falló";
+
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled payment order status {status}.");
       }

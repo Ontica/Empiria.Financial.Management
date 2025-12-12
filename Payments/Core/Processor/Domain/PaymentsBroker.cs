@@ -46,13 +46,13 @@ namespace Empiria.Payments.Processor {
 
     private string ServiceAssemblyName {
       get {
-        return base.ExtendedDataField.Get<string>("serviceAssemblyName");
+        return ExtendedDataField.Get<string>("serviceAssemblyName");
       }
     }
 
     private string ServiceTypeName {
       get {
-        return base.ExtendedDataField.Get<string>("serviceTypeName");
+        return ExtendedDataField.Get<string>("serviceTypeName");
       }
     }
 

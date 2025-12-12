@@ -135,8 +135,8 @@ namespace Empiria.Payments {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(this.PaymentOrderNo, this.PayTo.Name,
-                                           this.RequestedBy.Name, this.PaymentMethod.Name);
+        return EmpiriaString.BuildKeywords(PaymentOrderNo, PayTo.Name,
+                                           RequestedBy.Name, PaymentMethod.Name);
       }
     }
 
@@ -202,18 +202,35 @@ namespace Empiria.Payments {
     } = PaymentOrderStatus.Pending;
 
 
+    // ToDo: How to deal with this
     public decimal Total {
       get {
-        return this.ExtData.Get("total", 0m);
+        return ExtData.Get("total", 0m);
       }
       private set {
-        this.ExtData.Set("total", value);
+        ExtData.Set("total", value);
       }
     }
 
     #endregion Properties
 
     #region Methods
+
+    internal void Cancel() {
+      Assertion.Require(Status == PaymentOrderStatus.Pending,
+               $"No se puede rechazar el pago debido " +
+               $"a que tiene el estado {Status.GetName()}.");
+      Status = PaymentOrderStatus.Canceled;
+    }
+
+
+    public bool CanCreatePaymentInstruction() {
+      if (Status == PaymentOrderStatus.Pending ||
+          Status == PaymentOrderStatus.Failed) {
+        return true;
+      }
+      return false;
+    }
 
     internal void Delete() {
       Assertion.Require(Status == PaymentOrderStatus.Pending,
@@ -222,6 +239,7 @@ namespace Empiria.Payments {
 
       Status = PaymentOrderStatus.Deleted;
     }
+
 
     protected override void OnSave() {
       if (base.IsNew) {
@@ -235,7 +253,7 @@ namespace Empiria.Payments {
 
 
     internal void SetAsPayed() {
-      Assertion.Require(Status == PaymentOrderStatus.Received,
+      Assertion.Require(Status == PaymentOrderStatus.InProgress,
                $"No se puede cambiar el estado del pago debido " +
                $"a que tiene el estado {Status.GetName()}.");
 
@@ -243,26 +261,12 @@ namespace Empiria.Payments {
     }
 
 
-    internal void Reject() {
-      Assertion.Require(Status == PaymentOrderStatus.Pending ||
-                        Status == PaymentOrderStatus.Received,
-               $"No se puede rechazar el pago debido " +
-               $"a que tiene el estado {Status.GetName()}.");
-      Status = PaymentOrderStatus.Rejected;
-    }
-
-
-    internal void SendToPay() {
-      Assertion.Require(Status == PaymentOrderStatus.Pending ||
-                        Status == PaymentOrderStatus.Rejected,
-               $"No se puede enviar el pago debido " +
-               $"a que tiene el estado {Status.GetName()}.");
-
-      Status = PaymentOrderStatus.Received;
-    }
-
-
     internal void SetAsPending() {
+      Assertion.Require(Status == PaymentOrderStatus.Suspended ||
+                        Status == PaymentOrderStatus.Programmed,
+                        $"No se puede cambiar el estado del pago debido " +
+                        $"a que tiene el estado {Status.GetName()}.");
+
       Status = PaymentOrderStatus.Pending;
     }
 
@@ -279,8 +283,8 @@ namespace Empiria.Payments {
     internal void Suspend(Party suspendedBy, DateTime suspendedUntil) {
       Assertion.Require(suspendedBy, nameof(suspendedBy));
 
-      Assertion.Require(Status == PaymentOrderStatus.Received ||
-                        Status == PaymentOrderStatus.Suspended,
+      Assertion.Require(Status == PaymentOrderStatus.Pending ||
+                        Status == PaymentOrderStatus.Programmed,
                 $"No se puede suspender la orden de pago debido " +
                 $"a que tiene el estado {Status.GetName()}.");
 
@@ -314,6 +318,8 @@ namespace Empiria.Payments {
     #region Helpers
 
     private string GeneratePaymentOrderNo() {
+      // ToDo: Generate real pament order number
+
       return "O-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
     }
 

@@ -13,6 +13,8 @@ namespace Empiria.Payments.Processor {
   /// <summary>Enumerates the status of a payment instruction.</summary>
   public enum PaymentInstructionStatus {
 
+    Requested = 'R',
+
     Pending = 'P',
 
     InProcess = 'A',
@@ -55,7 +57,8 @@ namespace Empiria.Payments.Processor {
 
 
     static public bool IsFinal(this PaymentInstructionStatus status) {
-      if (status == PaymentInstructionStatus.Pending || status == PaymentInstructionStatus.InProcess) {
+      if (status == PaymentInstructionStatus.Pending ||
+          status == PaymentInstructionStatus.InProcess) {
         return false;
       }
       return true;

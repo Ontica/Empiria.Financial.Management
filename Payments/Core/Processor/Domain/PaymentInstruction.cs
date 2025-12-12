@@ -29,7 +29,9 @@ namespace Empiria.Payments.Processor {
       Assertion.Require(!broker.IsEmptyInstance, nameof(broker));
       Assertion.Require(paymentOrder, nameof(paymentOrder));
       Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
-
+      Assertion.Require(paymentOrder.CanCreatePaymentInstruction(),
+                        $"Payment order has status {paymentOrder.Status}. " +
+                        $"Payment instruction can not be created.");
       Broker = broker;
       PaymentOrder = paymentOrder;
       PaymentInstructionNo = GeneratePaymentInstructionNo();
@@ -110,16 +112,19 @@ namespace Empiria.Payments.Processor {
         this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
       }
-      PaymentInstructionData.WritePaymentInstruction(this, this.ExtData.ToString());
+
+      PaymentInstructionData.WritePaymentInstruction(this, ExtData.ToString());
     }
+
 
     internal void SetExternalUniqueNo(string uniqueNo) {
       Assertion.Require(uniqueNo, nameof(uniqueNo));
-      Assertion.Require(this.IsNew,
-                        "SetExternalUniqueNo() can not be called on already stored payment instructions.");
+      Assertion.Require(ExternalRequestUniqueNo.Length == 0,
+                        "ExternalRequestUniqueNo already assigned.");
 
       ExternalRequestUniqueNo = uniqueNo;
     }
+
 
     internal void UpdateStatus(PaymentInstructionStatus status) {
       EnsureCanUpdateStatusTo(status);
@@ -153,6 +158,8 @@ namespace Empiria.Payments.Processor {
 
 
     private string GeneratePaymentInstructionNo() {
+      // ToDo: Implement a better way to generate unique payment instruction numbers
+
       return "PI-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
     }
 
