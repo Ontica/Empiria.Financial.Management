@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Domain Layer                            *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Common Storage Type                     *
-*  Type     : PaymentsBroker                             License   : Please read LICENSE.txt file            *
+*  Type     : PaymentsBrokerConfigData                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a payments broker.                                                                  *
+*  Summary  : Holds a payments broker's configuration data.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -12,36 +12,38 @@ using System;
 
 using Empiria.Reflection;
 
-namespace Empiria.Payments.Processor {
+using Empiria.Payments.Processor;
 
-  /// <summary>Represents a payments broker.</summary>
-  internal class PaymentsBroker : CommonStorage {
+namespace Empiria.Payments {
+
+  /// <summary>Holds a payments broker's configuration data.</summary>
+  public class PaymentsBrokerConfigData : CommonStorage {
 
     #region Constructors and parsers
 
-    static public PaymentsBroker Parse(int id) => ParseId<PaymentsBroker>(id);
+    static public PaymentsBrokerConfigData Parse(int id) => ParseId<PaymentsBrokerConfigData>(id);
 
-    static public PaymentsBroker Parse(string uid) => ParseKey<PaymentsBroker>(uid);
+    static public PaymentsBrokerConfigData Parse(string uid) => ParseKey<PaymentsBrokerConfigData>(uid);
 
-    static public FixedList<PaymentsBroker> GetList() {
-      return GetStorageObjects<PaymentsBroker>();
+    static public FixedList<PaymentsBrokerConfigData> GetList() {
+      return GetStorageObjects<PaymentsBrokerConfigData>();
     }
 
-    static public PaymentsBroker Default {
+    static public PaymentsBrokerConfigData Default {
       get {
         return GetList().Find(broker => broker.IsDefault)
                             ?? throw new InvalidOperationException("No default payments broker is defined.");
       }
     }
 
-    static internal PaymentsBroker GetPaymentsBroker(PaymentOrder paymentOrder) {
+    static internal PaymentsBrokerConfigData GetPaymentsBroker(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
       // ToDo: For now, we only have one broker. Substitute this logic when multiple brokers are supported.
       return Default;
     }
 
-    static public PaymentsBroker Empty => ParseEmpty<PaymentsBroker>();
+    static public PaymentsBrokerConfigData Empty => ParseEmpty<PaymentsBrokerConfigData>();
 
     #endregion Constructors and parsers
 
@@ -80,6 +82,6 @@ namespace Empiria.Payments.Processor {
 
     #endregion Methods
 
-  }  // class PaymentsBroker
+  }  // class PaymentsBrokerConfigData
 
-}  // namespace Empiria.Payments.Processor
+}  // namespace Empiria.Payments

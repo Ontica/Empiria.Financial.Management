@@ -73,7 +73,7 @@ namespace Empiria.Payments.Data {
     static internal void WritePaymentInstruction(PaymentInstruction o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Payment_Instruction",
                      o.Id, o.UID, o.GetEmpiriaType().Id, o.PaymentInstructionNo,
-                     o.PaymentOrder.Id, o.Description, o.Broker.Id,
+                     o.PaymentOrder.Id, o.Description, o.BrokerConfigData.Id,
                      o.ExternalRequestUniqueNo, extensionData,
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 

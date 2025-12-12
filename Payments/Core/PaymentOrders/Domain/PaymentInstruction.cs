@@ -24,15 +24,16 @@ namespace Empiria.Payments {
       // Required by Empira Framework
     }
 
-    internal PaymentInstruction(PaymentsBroker broker, PaymentOrder paymentOrder) {
-      Assertion.Require(broker, nameof(broker));
-      Assertion.Require(!broker.IsEmptyInstance, nameof(broker));
+    internal PaymentInstruction(PaymentsBrokerConfigData brokerConfigData,
+                                PaymentOrder paymentOrder) {
+      Assertion.Require(brokerConfigData, nameof(brokerConfigData));
+      Assertion.Require(!brokerConfigData.IsEmptyInstance, nameof(brokerConfigData));
       Assertion.Require(paymentOrder, nameof(paymentOrder));
       Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
       Assertion.Require(paymentOrder.PaymentInstructions.CanCreateNewInstruction(),
                         $"Payment order has status {paymentOrder.Status}. " +
                         $"Payment instruction can not be created.");
-      Broker = broker;
+      BrokerConfigData = brokerConfigData;
       PaymentOrder = paymentOrder;
       PaymentInstructionNo = GeneratePaymentInstructionNo();
     }
@@ -52,7 +53,7 @@ namespace Empiria.Payments {
 
 
     [DataField("PYMT_INSTRUCTION_BROKER_ID")]
-    public PaymentsBroker Broker {
+    public PaymentsBrokerConfigData BrokerConfigData {
       get; private set;
     }
 

@@ -42,7 +42,7 @@ namespace Empiria.Payments.Processor {
                         $"La instrucción de pago está en un estado final: {instruction.Status.GetName()}");
 
 
-      IPaymentsBrokerService paymentsService = instruction.Broker.GetService();
+      IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
 
       Assertion.Require(instruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
 
@@ -59,7 +59,7 @@ namespace Empiria.Payments.Processor {
 
       var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
 
-      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
+      PaymentsBrokerConfigData broker = PaymentsBrokerConfigData.GetPaymentsBroker(paymentOrder);
 
       _ = await SendToPay(broker, paymentOrder);
 
@@ -85,7 +85,7 @@ namespace Empiria.Payments.Processor {
 
       var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
 
-      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
+      PaymentsBrokerConfigData broker = PaymentsBrokerConfigData.GetPaymentsBroker(paymentOrder);
 
       var currentInstruction = paymentOrder.PaymentInstructions.Current;
 
@@ -97,7 +97,7 @@ namespace Empiria.Payments.Processor {
     }
 
 
-    internal async Task<PaymentInstruction> SendToPay(PaymentsBroker broker, PaymentOrder paymentOrder) {
+    internal async Task<PaymentInstruction> SendToPay(PaymentsBrokerConfigData broker, PaymentOrder paymentOrder) {
       Assertion.Require(broker, nameof(broker));
       Assertion.Require(!broker.IsEmptyInstance, nameof(broker));
       Assertion.Require(paymentOrder, nameof(paymentOrder));

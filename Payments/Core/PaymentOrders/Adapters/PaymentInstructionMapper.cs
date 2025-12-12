@@ -56,7 +56,7 @@ namespace Empiria.Payments.Adapters {
     static private PaymentOrderDescriptor MapToDescriptor(PaymentInstruction x) {
       return new PaymentOrderDescriptor {
         UID = x.UID,
-        PaymentOrderTypeName = x.Broker.Name,
+        PaymentOrderTypeName = x.BrokerConfigData.Name,
         PayTo = x.PaymentOrder.PayTo.Name,
         PaymentOrderNo = x.PaymentInstructionNo,
         PaymentAccount = $"{x.PaymentOrder.PaymentAccount.Institution.Name} {x.PaymentOrder.PaymentAccount.AccountNo}",
@@ -69,7 +69,7 @@ namespace Empiria.Payments.Adapters {
         CurrencyCode = x.PaymentOrder.Currency.ISOCode,
         BudgetTypeName = x.PaymentOrder.PayableEntity.Budget.Name,
         PayableNo = x.PaymentOrder.PayableEntity.EntityNo,
-        PayableTypeName = x.Broker.Name,
+        PayableTypeName = x.BrokerConfigData.Name,
         StatusName = x.Status.GetName()
       };
     }

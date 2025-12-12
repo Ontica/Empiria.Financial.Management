@@ -64,7 +64,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal PaymentInstruction CreatePaymentInstruction(PaymentsBroker broker) {
+    internal PaymentInstruction CreatePaymentInstruction(PaymentsBrokerConfigData broker) {
       Assertion.Require(broker, nameof(broker));
 
       Assertion.Require(CanCreateNewInstruction(),
