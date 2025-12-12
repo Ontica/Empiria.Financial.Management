@@ -65,19 +65,29 @@ namespace Empiria.Payments.Processor.Services {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
       Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
 
-      EnsureIsNotSent(paymentOrder);
+      await Task.CompletedTask;
 
-      var instruction = new PaymentInstruction(broker, paymentOrder);
+      Assertion.Require(paymentOrder.CanCreatePaymentInstruction(),
+                        $"No es posible crear la instrucción de pago debido a que " +
+                        $"la solicitud de pago está en estado {paymentOrder.Status.GetName()}.");
+
+      IPaymentsBrokerService brokerService = broker.GetService();
+
+      PaymentInstruction instruction = paymentOrder.CreatePaymentInstruction(broker);
+
+      paymentOrder.Save();
 
       PaymentInstructionDto instructionDto = PaymentInstructionMapper.MapForBroker(instruction);
 
-      IPaymentsBrokerService paymentsService = broker.GetService();
+      PaymentInstructionResultDto paymentResult = await brokerService.SendPaymentInstruction(instructionDto);
 
-      PaymentInstructionResultDto paymentResult = await paymentsService.SendPaymentInstruction(instructionDto);
+      paymentOrder.UpdatePaymentInstruction(instruction,
+                                            paymentResult.ExternalRequestID,
+                                            paymentResult.Status);
 
-      UpdatePaymentInstruction(instruction, paymentResult);
+      paymentOrder.Save();
 
-      UpdatePaymentOrder(paymentOrder, paymentResult.Status);
+      UpdatePaymentLog(instruction, paymentResult);
 
       return instruction;
     }
@@ -99,7 +109,7 @@ namespace Empiria.Payments.Processor.Services {
 
       PaymentInstructionStatusDto newStatus = await paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
 
-      UpdatePaymentInstruction(paymentInstruction, newStatus);
+      UpdatePaymentLog(paymentInstruction, newStatus);
 
       UpdatePaymentOrder(paymentInstruction.PaymentOrder, newStatus);
     }
@@ -108,56 +118,28 @@ namespace Empiria.Payments.Processor.Services {
 
     #region Helpers
 
-    static private void EnsureIsNotSent(PaymentOrder paymentOrder) {
-      FixedList<PaymentInstruction> instructions = PaymentInstruction.GetListFor(paymentOrder);
-
-      if (instructions.Contains(x => !x.Status.IsFinal())) {
-        Assertion.RequireFail($"No es posible enviar la orden de pago al sistema de pagos, ya que tiene " +
-                              $"una transacción pendiente.");
-      }
-    }
-
-
     static private void UpdatePaymentOrder(PaymentOrder paymentOrder,
                                           PaymentInstructionStatusDto newStatus) {
       if (newStatus.Status == PaymentInstructionStatus.Payed) {
         paymentOrder.SetAsPayed();
         paymentOrder.Save();
       } else if (newStatus.Status == PaymentInstructionStatus.Failed) {
-        paymentOrder.Reject();
+        paymentOrder.Cancel();
         paymentOrder.Save();
       }
     }
 
 
-
-    static private void UpdatePaymentOrder(PaymentOrder paymentOrder,
-                                           PaymentInstructionStatus status) {
-      if (status == PaymentInstructionStatus.InProcess) {
-        paymentOrder.SendToPay();
-        paymentOrder.Save();
-      } else if (status == PaymentInstructionStatus.Failed) {
-        paymentOrder.SetAsPending();
-        paymentOrder.Save();
-      }
-    }
-
-
-    static private void UpdatePaymentInstruction(PaymentInstruction paymentInstruction,
-                                                 PaymentInstructionResultDto paymentResultDto) {
+    static private void UpdatePaymentLog(PaymentInstruction paymentInstruction,
+                                         PaymentInstructionResultDto paymentResultDto) {
 
       var logEntry = new PaymentInstructionLogEntry(paymentInstruction, paymentResultDto);
-
-      paymentInstruction.SetExternalUniqueNo(paymentResultDto.ExternalRequestID);
-      paymentInstruction.UpdateStatus(paymentResultDto.Status);
-
-      paymentInstruction.Save();
 
       logEntry.Save();
     }
 
-    private void UpdatePaymentInstruction(PaymentInstruction paymentInstruction,
-                                          PaymentInstructionStatusDto newStatus) {
+    private void UpdatePaymentLog(PaymentInstruction paymentInstruction,
+                                  PaymentInstructionStatusDto newStatus) {
       var logEntry = new PaymentInstructionLogEntry(paymentInstruction, newStatus);
 
       if (paymentInstruction.Status != newStatus.Status) {

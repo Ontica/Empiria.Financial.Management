@@ -14,6 +14,8 @@ using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
 
+using Empiria.Payments.Processor;
+
 using Empiria.Payments.Data;
 
 namespace Empiria.Payments {
@@ -232,6 +234,24 @@ namespace Empiria.Payments {
       return false;
     }
 
+
+    internal PaymentInstruction CreatePaymentInstruction(PaymentsBroker broker) {
+      Assertion.Require(broker, nameof(broker));
+
+      Assertion.Require(CanCreatePaymentInstruction(),
+               $"No se puede crear la instrucción de pago debido " +
+               $"a que tiene el estado {Status.GetName()}.");
+
+      var instruction = new PaymentInstruction(broker, this);
+
+      // ToDo: Create aggregate root  -> _instructions.Add(instruction);
+
+      Status = PaymentOrderStatus.Programmed;
+
+      return instruction;
+    }
+
+
     internal void Delete() {
       Assertion.Require(Status == PaymentOrderStatus.Pending,
                   $"No se puede eliminar una orden de pago que " +
@@ -317,10 +337,29 @@ namespace Empiria.Payments {
 
     #region Helpers
 
+
     private string GeneratePaymentOrderNo() {
       // ToDo: Generate real pament order number
 
       return "O-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
+    }
+
+
+    internal void UpdatePaymentInstruction(PaymentInstruction instruction,
+                                           string externalRequestID,
+                                           PaymentInstructionStatus initialStatus) {
+      Assertion.Require(instruction, nameof(instruction));
+      Assertion.Require(externalRequestID, nameof(externalRequestID));
+
+      instruction.SetExternalUniqueNo(externalRequestID);
+      instruction.UpdateStatus(initialStatus);
+
+      if (initialStatus == PaymentInstructionStatus.InProcess) {
+        Status = PaymentOrderStatus.InProgress;
+
+      } else if (initialStatus == PaymentInstructionStatus.Failed) {
+        Status = PaymentOrderStatus.Failed;
+      }
     }
 
     #endregion Helpers
