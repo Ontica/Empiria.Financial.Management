@@ -25,7 +25,7 @@ namespace Empiria.Payments.Adapters {
     static internal PaymentOrderHolderDto Map(PaymentOrder paymentOrder) {
       var bills = Billing.Bill.GetListFor(paymentOrder.PayableEntity);
       var txns = BudgetTransaction.GetFor((IBudgetable) paymentOrder.PayableEntity);
-      var instructions = PaymentInstruction.GetListFor(paymentOrder);
+      var instructions = paymentOrder.PaymentInstructions.ToFixedList();
 
       return new PaymentOrderHolderDto {
         PaymentOrder = MapPaymentOrder(paymentOrder),

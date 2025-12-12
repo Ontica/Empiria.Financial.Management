@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Collections.Generic;
+
 using Empiria.Data;
 
 namespace Empiria.Payments.Data {
@@ -30,7 +32,7 @@ namespace Empiria.Payments.Data {
     }
 
 
-    static internal FixedList<PaymentInstruction> GetPaymentOrderInstructions(PaymentOrder paymentOrder) {
+    static internal List<PaymentInstruction> GetPaymentOrderInstructions(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
       var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
@@ -39,11 +41,11 @@ namespace Empiria.Payments.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<PaymentInstruction>(op);
+      return DataReader.GetList<PaymentInstruction>(op);
     }
 
 
-    static internal FixedList<PaymentInstruction> GetPaymentOrderInstructionsByInProcessStatus() {
+    static internal FixedList<PaymentInstruction> GetPaymentInstructionsInProgress() {
 
       var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
                 $"WHERE PYMT_INSTRUCTION_STATUS = 'A' " +

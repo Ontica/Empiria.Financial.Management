@@ -48,9 +48,9 @@ namespace Empiria.Payments.Processor {
 
       PaymentInstructionStatusDto newStatus = await paymentsService.GetPaymentInstructionStatus(instruction.ExternalRequestUniqueNo);
 
-      UpdatePaymentLog(instruction, newStatus);
+      UpdatePaymentOrder(instruction, newStatus);
 
-      UpdatePaymentOrder(instruction.PaymentOrder, newStatus);
+      UpdatePaymentLog(instruction, newStatus);
     }
 
 
@@ -68,7 +68,7 @@ namespace Empiria.Payments.Processor {
 
 
     public async Task<int> ValidatePayment() {
-      var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
+      var paymentInstructions = PaymentInstruction.GetInProgress();
       int count = 0;
 
       foreach (var paymentInstruction in paymentInstructions) {
@@ -87,10 +87,11 @@ namespace Empiria.Payments.Processor {
 
       PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
 
-      var paymentInstruction = PaymentInstruction.GetListFor(paymentOrder)
-                                                 .Find(x => x.Status == PaymentInstructionStatus.InProcess);
+      var currentInstruction = paymentOrder.PaymentInstructions.Current;
 
-      await RefreshPaymentInstruction(paymentInstruction);
+      if (currentInstruction.Status == PaymentInstructionStatus.InProcess) {
+        await RefreshPaymentInstruction(currentInstruction);
+      }
 
       return PaymentOrderMapper.Map(paymentOrder);
     }
@@ -104,13 +105,13 @@ namespace Empiria.Payments.Processor {
 
       await Task.CompletedTask;
 
-      Assertion.Require(paymentOrder.CanCreatePaymentInstruction(),
+      Assertion.Require(paymentOrder.PaymentInstructions.CanCreateNewInstruction(),
                         $"No es posible crear la instrucción de pago debido a que " +
                         $"la solicitud de pago está en estado {paymentOrder.Status.GetName()}.");
 
       IPaymentsBrokerService brokerService = broker.GetService();
 
-      PaymentInstruction instruction = paymentOrder.CreatePaymentInstruction(broker);
+      PaymentInstruction instruction = paymentOrder.PaymentInstructions.CreatePaymentInstruction(broker);
 
       paymentOrder.Save();
 
@@ -118,7 +119,7 @@ namespace Empiria.Payments.Processor {
 
       PaymentInstructionResultDto paymentResult = await brokerService.SendPaymentInstruction(instructionDto);
 
-      paymentOrder.UpdatePaymentInstruction(instruction,
+      paymentOrder.PaymentInstructions.UpdatePaymentInstruction(instruction,
                                             paymentResult.ExternalRequestID,
                                             paymentResult.Status);
 
@@ -134,14 +135,16 @@ namespace Empiria.Payments.Processor {
 
     #region Helpers
 
-    static private void UpdatePaymentOrder(PaymentOrder paymentOrder,
-                                          PaymentInstructionStatusDto newStatus) {
+    static private void UpdatePaymentOrder(PaymentInstruction instruction,
+                                           PaymentInstructionStatusDto newStatus) {
+      var paymentOrder = instruction.PaymentOrder;
+
       if (newStatus.Status == PaymentInstructionStatus.Payed) {
-        paymentOrder.SetAsPayed();
-        paymentOrder.Save();
+        paymentOrder.EventHandler(instruction, PaymentOrderStatus.Payed);
+
       } else if (newStatus.Status == PaymentInstructionStatus.Failed) {
-        paymentOrder.Cancel();
-        paymentOrder.Save();
+        paymentOrder.EventHandler(instruction, PaymentOrderStatus.Failed);
+
       }
     }
 

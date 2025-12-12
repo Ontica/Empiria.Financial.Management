@@ -13,14 +13,12 @@ using System;
 using Empiria.Json;
 using Empiria.Parties;
 
-using Empiria.Payments.Processor;
-
 using Empiria.Payments.Data;
 
 namespace Empiria.Payments {
 
   /// <summary>Represents a payment instruction.</summary>
-  internal class PaymentInstruction : BaseObject {
+  public class PaymentInstruction : BaseObject {
 
     private PaymentInstruction() {
       // Required by Empira Framework
@@ -31,7 +29,7 @@ namespace Empiria.Payments {
       Assertion.Require(!broker.IsEmptyInstance, nameof(broker));
       Assertion.Require(paymentOrder, nameof(paymentOrder));
       Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
-      Assertion.Require(paymentOrder.CanCreatePaymentInstruction(),
+      Assertion.Require(paymentOrder.PaymentInstructions.CanCreateNewInstruction(),
                         $"Payment order has status {paymentOrder.Status}. " +
                         $"Payment instruction can not be created.");
       Broker = broker;
@@ -42,10 +40,6 @@ namespace Empiria.Payments {
     static public PaymentInstruction Parse(int id) => ParseId<PaymentInstruction>(id);
 
     static public PaymentInstruction Parse(string uid) => ParseKey<PaymentInstruction>(uid);
-
-    static internal FixedList<PaymentInstruction> GetListFor(PaymentOrder paymentOrder) {
-      return PaymentInstructionData.GetPaymentOrderInstructions(paymentOrder);
-    }
 
     static public PaymentInstruction Empty => ParseEmpty<PaymentInstruction>();
 
@@ -135,8 +129,8 @@ namespace Empiria.Payments {
     }
 
 
-    static internal FixedList<PaymentInstruction> GetInProccessPaymentInstructions() {
-      return PaymentInstructionData.GetPaymentOrderInstructionsByInProcessStatus();
+    static internal FixedList<PaymentInstruction> GetInProgress() {
+      return PaymentInstructionData.GetPaymentInstructionsInProgress();
     }
 
     #endregion Methods

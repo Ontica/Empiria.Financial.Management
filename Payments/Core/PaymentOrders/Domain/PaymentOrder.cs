@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Payments Management                        Component : Domain Layer                            *
-*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Information Holder                      *
+*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Aggregate root information holder       *
 *  Type     : PaymentOrder                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a payment order.                                                                    *
+*  Summary  : Represents a payment order that serves as an aggregate root of payment instructions.           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -14,18 +14,18 @@ using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
 
-using Empiria.Payments.Processor;
-
 using Empiria.Payments.Data;
 
 namespace Empiria.Payments {
 
-  /// <summary>Represents a payment order.</summary>
+  /// <summary>Represents a payment order that serves as an aggregate root of payment instructions.</summary>
   public class PaymentOrder : BaseObject {
+
+    private PaymentOrderInstructions _paymentInstructions;
 
     #region Constructors and parsers
 
-    public PaymentOrder() {
+    protected PaymentOrder() {
       // Required by Empiria Framework.
     }
 
@@ -35,6 +35,8 @@ namespace Empiria.Payments {
 
       _payableEntityTypeId = payableEntity.GetEmpiriaType().Id;
       _payableEntityId = payableEntity.Id;
+
+      _paymentInstructions = new PaymentOrderInstructions(this);
     }
 
     static internal PaymentOrder Parse(int id) => ParseId<PaymentOrder>(id);
@@ -47,6 +49,10 @@ namespace Empiria.Payments {
       Assertion.Require(payableEntity, nameof(payableEntity));
 
       return PaymentOrderData.GetPaymentOrders(payableEntity);
+    }
+
+    protected override void OnLoad() {
+      _paymentInstructions = new PaymentOrderInstructions(this);
     }
 
     #endregion Constructors and parsers
@@ -185,7 +191,6 @@ namespace Empiria.Payments {
     }
 
 
-
     [DataField("PYMT_ORD_POSTED_BY_ID")]
     public Party PostedBy {
       get; private set;
@@ -214,6 +219,13 @@ namespace Empiria.Payments {
       }
     }
 
+
+    public PaymentOrderInstructions PaymentInstructions {
+      get {
+        return _paymentInstructions;
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -226,32 +238,6 @@ namespace Empiria.Payments {
     }
 
 
-    public bool CanCreatePaymentInstruction() {
-      if (Status == PaymentOrderStatus.Pending ||
-          Status == PaymentOrderStatus.Failed) {
-        return true;
-      }
-      return false;
-    }
-
-
-    internal PaymentInstruction CreatePaymentInstruction(PaymentsBroker broker) {
-      Assertion.Require(broker, nameof(broker));
-
-      Assertion.Require(CanCreatePaymentInstruction(),
-               $"No se puede crear la instrucción de pago debido " +
-               $"a que tiene el estado {Status.GetName()}.");
-
-      var instruction = new PaymentInstruction(broker, this);
-
-      // ToDo: Create aggregate root  -> _instructions.Add(instruction);
-
-      Status = PaymentOrderStatus.Programmed;
-
-      return instruction;
-    }
-
-
     internal void Delete() {
       Assertion.Require(Status == PaymentOrderStatus.Pending,
                   $"No se puede eliminar una orden de pago que " +
@@ -261,6 +247,23 @@ namespace Empiria.Payments {
     }
 
 
+    internal void EventHandler(PaymentInstruction instruction,
+                               PaymentOrderStatus newStatus) {
+      Assertion.Require(instruction, nameof(instruction));
+
+      if (newStatus == PaymentOrderStatus.Payed) {
+        Assertion.Require(Status == PaymentOrderStatus.InProgress,
+                          $"No se puede cambiar el estado del pago debido " +
+                          $"a que tiene el estado {Status.GetName()}.");
+      }
+
+      // ToDo: control other state machine's status
+
+      Status = newStatus;
+
+      Save();
+    }
+
     protected override void OnSave() {
       if (base.IsNew) {
         PaymentOrderNo = GeneratePaymentOrderNo();
@@ -269,15 +272,6 @@ namespace Empiria.Payments {
       }
 
       PaymentOrderData.WritePaymentOrder(this, SecurityExtData.ToString(), ExtData.ToString());
-    }
-
-
-    internal void SetAsPayed() {
-      Assertion.Require(Status == PaymentOrderStatus.InProgress,
-               $"No se puede cambiar el estado del pago debido " +
-               $"a que tiene el estado {Status.GetName()}.");
-
-      Status = PaymentOrderStatus.Payed;
     }
 
 
@@ -337,29 +331,10 @@ namespace Empiria.Payments {
 
     #region Helpers
 
-
     private string GeneratePaymentOrderNo() {
       // ToDo: Generate real pament order number
 
       return "O-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
-    }
-
-
-    internal void UpdatePaymentInstruction(PaymentInstruction instruction,
-                                           string externalRequestID,
-                                           PaymentInstructionStatus initialStatus) {
-      Assertion.Require(instruction, nameof(instruction));
-      Assertion.Require(externalRequestID, nameof(externalRequestID));
-
-      instruction.SetExternalUniqueNo(externalRequestID);
-      instruction.UpdateStatus(initialStatus);
-
-      if (initialStatus == PaymentInstructionStatus.InProcess) {
-        Status = PaymentOrderStatus.InProgress;
-
-      } else if (initialStatus == PaymentInstructionStatus.Failed) {
-        Status = PaymentOrderStatus.Failed;
-      }
     }
 
     #endregion Helpers

@@ -76,7 +76,7 @@ namespace Empiria.Payments.Processor {
     #region Helpers
 
     static private async void RefreshPaymentInstructions(object stateInfo) {
-      var instructions = PaymentInstruction.GetInProccessPaymentInstructions();
+      var instructions = PaymentInstruction.GetInProgress();
 
       using (var usecases = PaymentService.ServiceInteractor()) {
 
