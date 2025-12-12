@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Payments.Processor.Adapters {
+namespace Empiria.Payments.Adapters {
 
   /// <summary>Integration DTO that holds a a payment result sent by a payments broker.</summary>
   public class PaymentInstructionResultDto {
@@ -60,4 +60,4 @@ namespace Empiria.Payments.Processor.Adapters {
 
   }  // class PaymentInstructionStatusDto
 
-}  // namespace Empiria.Payments.Processor.Adapters
+}  // namespace Empiria.Payments.Adapters

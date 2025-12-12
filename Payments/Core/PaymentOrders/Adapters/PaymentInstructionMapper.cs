@@ -16,10 +16,7 @@ using Empiria.History;
 using Empiria.Billing;
 using Empiria.Billing.Adapters;
 
-using Empiria.Payments.Adapters;
-
-
-namespace Empiria.Payments.Processor.Adapters {
+namespace Empiria.Payments.Adapters {
 
   static internal class PaymentInstructionMapper {
 
@@ -81,4 +78,4 @@ namespace Empiria.Payments.Processor.Adapters {
 
   }  // class PaymentInstructionMapper
 
-}  // namespace Empiria.Payments.Processor.Adapters
+}  // namespace Empiria.Payments.Adapters

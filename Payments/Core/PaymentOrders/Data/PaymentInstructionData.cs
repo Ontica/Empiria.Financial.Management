@@ -10,7 +10,7 @@
 
 using Empiria.Data;
 
-namespace Empiria.Payments.Processor.Data {
+namespace Empiria.Payments.Data {
 
   /// <summary>Provides data read and write methods for PaymentInstruction and PaymentLog data.</summary>
   static internal class PaymentInstructionData {

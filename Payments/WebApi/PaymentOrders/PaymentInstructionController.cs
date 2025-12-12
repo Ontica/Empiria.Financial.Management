@@ -14,7 +14,6 @@ using Empiria.WebApi;
 
 using Empiria.Payments.Adapters;
 
-using Empiria.Payments.Processor.Adapters;
 using Empiria.Payments.Processor.Services;
 
 namespace Empiria.Payments.WebApi {

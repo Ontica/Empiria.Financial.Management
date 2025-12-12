@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Payments.Processor.Adapters {
+namespace Empiria.Payments.Adapters {
 
   /// <summary>Provides data mapping services for payment log.</summary>
   static internal class PaymentInstructionLogMapper {

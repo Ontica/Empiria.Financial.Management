@@ -17,9 +17,6 @@ using Empiria.Billing.Adapters;
 using Empiria.Budgeting.Transactions;
 using Empiria.Budgeting.Transactions.Adapters;
 
-using Empiria.Payments.Processor;
-using Empiria.Payments.Processor.Adapters;
-
 namespace Empiria.Payments.Adapters {
 
   /// <summary>Provides data mapping services for payment orders.</summary>

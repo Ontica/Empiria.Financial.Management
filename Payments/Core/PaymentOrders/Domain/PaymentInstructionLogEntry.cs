@@ -9,13 +9,12 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-
 using Empiria.Json;
 
-using Empiria.Payments.Processor.Adapters;
-using Empiria.Payments.Processor.Data;
+using Empiria.Payments.Adapters;
+using Empiria.Payments.Data;
 
-namespace Empiria.Payments.Processor {
+namespace Empiria.Payments {
 
   /// <summary>Holds data for a payment instruction log entry.</summary>
   internal class PaymentInstructionLogEntry : BaseObject {
@@ -131,7 +130,7 @@ namespace Empiria.Payments.Processor {
 
     protected override void OnSave() {
       RecordingTime = DateTime.Now;
-      PaymentInstructionData.WritePaymentLog(this, this.ExtData.ToString());
+      PaymentInstructionData.WritePaymentLog(this, ExtData.ToString());
     }
 
 
@@ -140,7 +139,7 @@ namespace Empiria.Payments.Processor {
 
       ExternalRequestID = dto.ExternalRequestID;
       ExternalResultText = dto.ExternalResultText;
-      Status = this.PaymentInstruction.Status;
+      Status = PaymentInstruction.Status;
 
       RequestTime = time;
       ApplicationTime = time;
@@ -162,4 +161,4 @@ namespace Empiria.Payments.Processor {
 
   }  // class PaymentLog
 
-}  // namespace Empiria.Payments.Processor
+}  // namespace Empiria.Payments

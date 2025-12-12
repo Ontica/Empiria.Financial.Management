@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Payments.Processor {
+namespace Empiria.Payments {
 
   /// <summary>Enumerates the status of a payment instruction.</summary>
   public enum PaymentInstructionStatus {
@@ -66,4 +66,4 @@ namespace Empiria.Payments.Processor {
 
   }  // class PaymentInstructionStatusExtensions
 
-}  // namespace Empiria.Payments.Payables
+}  // namespace Empiria.Payments

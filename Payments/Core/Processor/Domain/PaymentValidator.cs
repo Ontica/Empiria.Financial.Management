@@ -10,8 +10,8 @@
 
 using System;
 using System.Threading;
-using Empiria.Payments.Processor.Services;
 
+using Empiria.Payments.Processor.Services;
 
 namespace Empiria.Payments.Processor {
 
@@ -59,8 +59,6 @@ namespace Empiria.Payments.Processor {
     }
 
 
-
-
     /// <summary>Stops the execution engine.</summary>
     static public void Stop() {
       if (!isRunning) {
@@ -88,7 +86,6 @@ namespace Empiria.Payments.Processor {
       }
 
     }
-
 
     #endregion Helpers
 

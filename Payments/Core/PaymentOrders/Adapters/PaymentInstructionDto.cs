@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Empiria.Payments.Processor.Adapters {
+namespace Empiria.Payments.Adapters {
 
   /// <summary>Output DTO that holds information about a payment instruction
   /// to be sent to a payments broker.</summary>
@@ -34,4 +34,4 @@ namespace Empiria.Payments.Processor.Adapters {
 
   }  // class PaymentInstructionDto
 
-}  // namespace Empiria.Payments.Processor.Adapters
+}  // namespace Empiria.Payments.Adapters

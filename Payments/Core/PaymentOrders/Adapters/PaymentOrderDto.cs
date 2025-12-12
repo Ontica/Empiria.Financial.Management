@@ -74,7 +74,6 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "CanAprovePayment")]
     public bool CanApprovePayment {
       get; internal set;
     }

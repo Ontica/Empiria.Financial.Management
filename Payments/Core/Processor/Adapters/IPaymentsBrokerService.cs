@@ -10,6 +10,8 @@
 
 using System.Threading.Tasks;
 
+using Empiria.Payments.Adapters;
+
 namespace Empiria.Payments.Processor.Adapters {
 
   /// <summary>Interface to integrate payments broker service providers with Empiria Payments.</summary>

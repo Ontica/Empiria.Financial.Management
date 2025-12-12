@@ -13,9 +13,11 @@ using System;
 using Empiria.Json;
 using Empiria.Parties;
 
-using Empiria.Payments.Processor.Data;
+using Empiria.Payments.Processor;
 
-namespace Empiria.Payments.Processor {
+using Empiria.Payments.Data;
+
+namespace Empiria.Payments {
 
   /// <summary>Represents a payment instruction.</summary>
   internal class PaymentInstruction : BaseObject {

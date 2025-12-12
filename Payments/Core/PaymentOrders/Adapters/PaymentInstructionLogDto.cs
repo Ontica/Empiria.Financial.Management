@@ -10,8 +10,8 @@
 
 using System;
 
-namespace Empiria.Payments.Processor.Adapters {
-  
+namespace Empiria.Payments.Adapters {
+
   /// <summary>Data transfer objects used to return payment instruction log.</summary>
   public class PaymentInstructionLogDescriptorDto {
 
@@ -23,7 +23,7 @@ namespace Empiria.Payments.Processor.Adapters {
     public string PaymentOrdeNo {
       get; internal set;
     }
-    
+
 
     public string PaymentMethod {
       get; internal set;
@@ -42,7 +42,7 @@ namespace Empiria.Payments.Processor.Adapters {
     }
 
     public string RequestCode {
-      get; internal set; 
+      get; internal set;
     }
 
     public string Description {
@@ -53,7 +53,6 @@ namespace Empiria.Payments.Processor.Adapters {
       get; internal set;
     }
 
+  } // class PaymentInstructionLogDescriptorDto
 
-  } // class PaymentInstructionLogdDescriptorDto
-
-}  // namespace Empiria.Payments.Processor.Services
+}  // namespace Empiria.Payments.Adapters
