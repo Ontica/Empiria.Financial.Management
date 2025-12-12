@@ -40,7 +40,7 @@ namespace Empiria.Payments.WebApi {
     public CollectionModel SearchPaymentInstructions([FromBody] PaymentOrdersQuery query) {
 
       using (var services = PaymentInstructionUseCases.UseCaseInteractor()) {
-        FixedList<PaymentOrderDescriptor> instructions = services.SearchPaymentInstructions(query);
+        FixedList<PaymentInstructionDescriptor> instructions = services.SearchPaymentInstructions(query);
 
         return new CollectionModel(base.Request, instructions);
       }

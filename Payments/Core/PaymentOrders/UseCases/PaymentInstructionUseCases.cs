@@ -40,7 +40,7 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    public FixedList<PaymentOrderDescriptor> SearchPaymentInstructions(PaymentOrdersQuery query) {
+    public FixedList<PaymentInstructionDescriptor> SearchPaymentInstructions(PaymentOrdersQuery query) {
       Assertion.Require(query, nameof(query));
 
       var instructions = BaseObject.GetFullList<PaymentInstruction>("PYMT_INSTRUCTION_STATUS <> 'X'");
