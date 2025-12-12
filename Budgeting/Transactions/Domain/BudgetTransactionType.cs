@@ -60,6 +60,8 @@ namespace Empiria.Budgeting.Transactions {
 
     static public BudgetTransactionType ComprometerCostoFinanciero => Parse("ObjectTypeInfo.BudgetTransaction.ComprometerCostoFinanciero");
 
+    static public BudgetTransactionType AutorizarPagoGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.AutorizarPagoGastoCorriente");
+
     static public BudgetTransactionType EjercerGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.EjercerGastoCorriente");
 
     static public BudgetTransactionType EjercerCostoFinanciero => Parse("ObjectTypeInfo.BudgetTransaction.EjercerCostoFinanciero");

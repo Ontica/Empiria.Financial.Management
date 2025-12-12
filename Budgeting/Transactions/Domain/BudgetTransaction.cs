@@ -520,7 +520,7 @@ namespace Empiria.Budgeting.Transactions {
 
         BudgetTransactionDataService.GenerateAvailableControlCodes(this);
 
-      } else if (BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente)) {
+      } else if (BudgetTransactionType.Equals(BudgetTransactionType.AutorizarPagoGastoCorriente)) {
 
         FixedList<BudgetEntry> entries = GetFor(GetEntity())
                                         .FindAll(x => x.BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente))
