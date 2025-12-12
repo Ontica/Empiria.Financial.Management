@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 using Empiria.Payments.Adapters;
 
-namespace Empiria.Payments.Processor.Adapters {
+namespace Empiria.Payments.Processor {
 
   /// <summary>Interface to integrate payments broker service providers with Empiria Payments.</summary>
   public interface IPaymentsBrokerService {
@@ -25,4 +25,4 @@ namespace Empiria.Payments.Processor.Adapters {
 
   }  // interface IPaymentsBrokerService
 
-}  // namespace Empiria.Payments.Processor.Adapters
+}  // namespace Empiria.Payments.Processor

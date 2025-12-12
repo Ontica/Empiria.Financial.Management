@@ -13,17 +13,15 @@ using System.Threading.Tasks;
 using Empiria.Services;
 
 using Empiria.Payments.Adapters;
-using Empiria.Payments.Processor.Adapters;
 
-namespace Empiria.Payments.Processor.Services {
+namespace Empiria.Payments.Processor {
 
   internal class PaymentService : Service {
 
     #region Constructors and parsers
 
     protected PaymentService() {
-      // no-op
-      PaymentValidator.Start();
+      PaymentsProcessor.Start();
     }
 
     static public PaymentService ServiceInteractor() {
@@ -34,28 +32,67 @@ namespace Empiria.Payments.Processor.Services {
 
     #region Services
 
-    internal PaymentInstructionHolderDto GetPaymentInstruction(string instructionUID) {
-      Assertion.Require(instructionUID, nameof(instructionUID));
+    internal async Task RefreshPaymentInstruction(PaymentInstruction paymentInstruction) {
+      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
+      Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
+      Assertion.Require(!paymentInstruction.IsNew, "paymentInstruction must be stored.");
 
-      var paymentInstruction = PaymentInstruction.Parse(instructionUID);
 
-      return PaymentInstructionMapper.Map(paymentInstruction);
+      Assertion.Require(!paymentInstruction.Status.IsFinal(),
+                        $"La instrucción de pago está en un estado final: {paymentInstruction.Status.GetName()}");
+
+
+      IPaymentsBrokerService paymentsService = paymentInstruction.Broker.GetService();
+
+      Assertion.Require(paymentInstruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
+
+      PaymentInstructionStatusDto newStatus = await paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
+
+      UpdatePaymentLog(paymentInstruction, newStatus);
+
+      UpdatePaymentOrder(paymentInstruction.PaymentOrder, newStatus);
     }
 
 
-    internal FixedList<PaymentInstructionLogEntry> GetPaymentInstructionLogs(PaymentOrder paymentOrder) {
-      Assertion.Require(paymentOrder, nameof(paymentOrder));
+    public async Task<PaymentOrderHolderDto> SendPaymentOrderToPay(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
-      return PaymentInstructionLogEntry.GetListFor(paymentOrder);
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+
+      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
+
+      _ = await SendToPay(broker, paymentOrder);
+
+      return PaymentOrderMapper.Map(paymentOrder);
     }
 
 
-    internal FixedList<PaymentOrderDescriptor> SearchPaymentInstructions(PaymentOrdersQuery query) {
-      Assertion.Require(query, nameof(query));
+    public async Task<int> ValidatePayment() {
+      var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
+      int count = 0;
 
-      var instructions = BaseObject.GetFullList<PaymentInstruction>("PYMT_INSTRUCTION_STATUS <> 'X'");
+      foreach (var paymentInstruction in paymentInstructions) {
+        await RefreshPaymentInstruction(paymentInstruction);
+        count++;
+      }
 
-      return PaymentInstructionMapper.MapToDescriptor(instructions);
+      return count;
+    }
+
+
+    public async Task<PaymentOrderHolderDto> ValidatePaymentOrderIsPayed(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+
+      PaymentsBroker broker = PaymentsBroker.GetPaymentsBroker(paymentOrder);
+
+      var paymentInstruction = PaymentInstruction.GetListFor(paymentOrder)
+                                                 .Find(x => x.Status == PaymentInstructionStatus.InProcess);
+
+      await RefreshPaymentInstruction(paymentInstruction);
+
+      return PaymentOrderMapper.Map(paymentOrder);
     }
 
 
@@ -92,27 +129,6 @@ namespace Empiria.Payments.Processor.Services {
       return instruction;
     }
 
-
-    internal async Task UpdatePaymentInstructionStatus(PaymentInstruction paymentInstruction) {
-      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
-      Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
-      Assertion.Require(!paymentInstruction.IsNew, "paymentInstruction must be stored.");
-
-
-      Assertion.Require(!paymentInstruction.Status.IsFinal(),
-                        $"La instrucción de pago está en un estado final: {paymentInstruction.Status.GetName()}");
-
-
-      IPaymentsBrokerService paymentsService = paymentInstruction.Broker.GetService();
-
-      Assertion.Require(paymentInstruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
-
-      PaymentInstructionStatusDto newStatus = await paymentsService.GetPaymentInstructionStatus(paymentInstruction.ExternalRequestUniqueNo);
-
-      UpdatePaymentLog(paymentInstruction, newStatus);
-
-      UpdatePaymentOrder(paymentInstruction.PaymentOrder, newStatus);
-    }
 
     #endregion Services
 
@@ -154,4 +170,4 @@ namespace Empiria.Payments.Processor.Services {
 
   }  // class PaymentService
 
-} // namespace Empiria.Payments.Processor.Services
+} // namespace Empiria.Payments.Processor

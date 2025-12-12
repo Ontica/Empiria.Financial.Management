@@ -12,8 +12,6 @@ using System;
 
 using Empiria.Reflection;
 
-using Empiria.Payments.Processor.Adapters;
-
 namespace Empiria.Payments.Processor {
 
   /// <summary>Represents a payments broker.</summary>

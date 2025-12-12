@@ -2,21 +2,19 @@
 *                                                                                                            *
 *  Module   : Payments validator services                Component : payment notfication                     *
 *  Assembly : Empiria.Payments.Core.dll                  Pattern   : Payment validator processor             *
-*  Type     : PaymentValidator                           License   : Please read LICENSE.txt file            *
+*  Type     : PaymentsProcessor                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Describes a workflow status change of a land transaction.                                      *
+*  Summary  : Provides services to process payment instructions.                                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 using System.Threading;
 
-using Empiria.Payments.Processor.Services;
-
 namespace Empiria.Payments.Processor {
 
-  /// <summary>Represents a payment instruction.</summary>
-  internal class PaymentValidator {
+  /// <summary>Provides services to process payment instructions.</summary>
+  internal class PaymentsProcessor {
 
     private static bool isRunning = false;
     private static volatile Timer timer = null;
@@ -42,15 +40,16 @@ namespace Empiria.Payments.Processor {
         }
 
         int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 1);
-        timer = new Timer(ValidatePayment, null,
-                          TimeSpan.FromMinutes((double) MESSAGE_ENGINE_EXECUTION_MINUTES),
-                          TimeSpan.FromMinutes((double) MESSAGE_ENGINE_EXECUTION_MINUTES));
+        timer = new Timer(RefreshPaymentInstructions, null,
+                          TimeSpan.FromMinutes(MESSAGE_ENGINE_EXECUTION_MINUTES),
+                          TimeSpan.FromMinutes(MESSAGE_ENGINE_EXECUTION_MINUTES));
 
         isRunning = true;
-        EmpiriaLog.Info("PaymentValidator was started.");
+
+        EmpiriaLog.Info("PaymentsProcessor was started.");
 
       } catch (Exception e) {
-        EmpiriaLog.Info("PaymentValidator was stopped due to an ocurred exception.");
+        EmpiriaLog.Info("PaymentsProcessor was stopped due to an ocurred exception.");
 
         EmpiriaLog.Error(e);
 
@@ -68,7 +67,7 @@ namespace Empiria.Payments.Processor {
       timer = null;
       isRunning = false;
 
-      EmpiriaLog.Info("PaymentValidator was stopped.");
+      EmpiriaLog.Info("PaymentsProcessor was stopped.");
     }
 
 
@@ -76,19 +75,19 @@ namespace Empiria.Payments.Processor {
 
     #region Helpers
 
-    static private async void ValidatePayment(object stateInfo) {
-      var paymentInstructions = PaymentInstruction.GetInProccessPaymentInstructions();
+    static private async void RefreshPaymentInstructions(object stateInfo) {
+      var instructions = PaymentInstruction.GetInProccessPaymentInstructions();
 
-      foreach (var paymentInstruction in paymentInstructions) {
-        using (var usecases = PaymentService.ServiceInteractor()) {
-          await usecases.UpdatePaymentInstructionStatus(paymentInstruction);
+      using (var usecases = PaymentService.ServiceInteractor()) {
+
+        foreach (var instruction in instructions) {
+          await usecases.RefreshPaymentInstruction(instruction);
         }
       }
-
     }
 
     #endregion Helpers
 
-  }  // class PaymentValidator
+  }  // class PaymentsExecutor
 
 } // namespace Empiria.Payments.Processor
