@@ -41,7 +41,6 @@ namespace Empiria.Payments.UseCases {
 
       fields.EnsureValid();
 
-
       var payableEntity = (IPayableEntity) BaseObject.Parse(fields.PayableEntityTypeUID, fields.PayableEntityUID);
 
       var order = new PaymentOrder(payableEntity);
@@ -52,12 +51,12 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    public void DeletePaymentOrder(string paymentOrderUID) {
+    public void CancelPaymentOrder(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
       var order = PaymentOrder.Parse(paymentOrderUID);
 
-      order.Delete();
+      order.Cancel();
 
       order.Save();
     }
