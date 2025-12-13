@@ -8,11 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using System.Threading.Tasks;
 
 using Empiria.Services;
 
 using Empiria.Payments.Adapters;
+using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Processor {
 
@@ -44,13 +46,15 @@ namespace Empiria.Payments.Processor {
 
       IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
 
-      Assertion.Require(instruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
+      Assertion.Require(instruction.BrokerInstructionNo, nameof(instruction.BrokerInstructionNo));
 
-      PaymentInstructionStatusDto newStatus = await paymentsService.GetPaymentInstructionStatus(instruction.ExternalRequestUniqueNo);
+      BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
 
-      UpdatePaymentOrder(instruction, newStatus);
+      BrokerResponseDto response = await paymentsService.RequestPaymentStatus(brokerRequest);
 
-      UpdatePaymentLog(instruction, newStatus);
+      UpdatePaymentOrder(instruction, response);
+
+      UpdatePaymentLog(instruction, response);
     }
 
 
@@ -89,7 +93,7 @@ namespace Empiria.Payments.Processor {
 
       var currentInstruction = paymentOrder.PaymentInstructions.Current;
 
-      if (currentInstruction.Status == PaymentInstructionStatus.InProcess) {
+      if (currentInstruction.Status == PaymentInstructionStatus.InProgress) {
         await RefreshPaymentInstruction(currentInstruction);
       }
 
@@ -115,17 +119,15 @@ namespace Empiria.Payments.Processor {
 
       paymentOrder.Save();
 
-      PaymentInstructionDto instructionDto = PaymentInstructionMapper.MapForBroker(instruction);
+      BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
 
-      PaymentInstructionResultDto paymentResult = await brokerService.SendPaymentInstruction(instructionDto);
+      BrokerResponseDto brokerResponse = await brokerService.SendPaymentInstruction(brokerRequest);
 
-      paymentOrder.PaymentInstructions.UpdatePaymentInstruction(instruction,
-                                            paymentResult.ExternalRequestID,
-                                            paymentResult.Status);
+      paymentOrder.PaymentInstructions.UpdatePaymentInstruction(instruction, brokerResponse);
 
       paymentOrder.Save();
 
-      UpdatePaymentLog(instruction, paymentResult);
+      UpdatePaymentLog(instruction, brokerResponse);
 
       return instruction;
     }
@@ -135,36 +137,34 @@ namespace Empiria.Payments.Processor {
 
     #region Helpers
 
+    static private BrokerRequestDto MapToBrokerRequest(PaymentInstruction instruction) {
+      return new BrokerRequestDto {
+        RequestedTime = DateTime.Now,
+        RequestUniqueNo = instruction.PaymentInstructionNo,
+        ReferenceNo = instruction.PaymentOrder.ReferenceNumber,
+        PaymentOrder = instruction.PaymentOrder
+      };
+    }
+
+
     static private void UpdatePaymentOrder(PaymentInstruction instruction,
-                                           PaymentInstructionStatusDto newStatus) {
+                                           BrokerResponseDto brokerResponse) {
       var paymentOrder = instruction.PaymentOrder;
 
-      if (newStatus.Status == PaymentInstructionStatus.Payed) {
+      if (brokerResponse.Status == PaymentInstructionStatus.Payed) {
         paymentOrder.EventHandler(instruction, PaymentOrderStatus.Payed);
 
-      } else if (newStatus.Status == PaymentInstructionStatus.Failed) {
+      } else if (brokerResponse.Status == PaymentInstructionStatus.Failed) {
         paymentOrder.EventHandler(instruction, PaymentOrderStatus.Failed);
 
       }
     }
 
 
-    static private void UpdatePaymentLog(PaymentInstruction paymentInstruction,
-                                         PaymentInstructionResultDto paymentResultDto) {
+    static private void UpdatePaymentLog(PaymentInstruction instruction,
+                                         BrokerResponseDto brokerResponse) {
 
-      var logEntry = new PaymentInstructionLogEntry(paymentInstruction, paymentResultDto);
-
-      logEntry.Save();
-    }
-
-    private void UpdatePaymentLog(PaymentInstruction paymentInstruction,
-                                  PaymentInstructionStatusDto newStatus) {
-      var logEntry = new PaymentInstructionLogEntry(paymentInstruction, newStatus);
-
-      if (paymentInstruction.Status != newStatus.Status) {
-        paymentInstruction.UpdateStatus(newStatus.Status);
-        paymentInstruction.Save();
-      }
+      var logEntry = new PaymentInstructionLogEntry(instruction, brokerResponse);
 
       logEntry.Save();
     }

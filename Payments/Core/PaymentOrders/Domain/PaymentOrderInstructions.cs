@@ -12,6 +12,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using Empiria.Payments.Processor.Adapters;
+
 using Empiria.Payments.Data;
 
 namespace Empiria.Payments {
@@ -26,11 +28,16 @@ namespace Empiria.Payments {
 
     public PaymentOrderInstructions(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
-      Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
 
       _paymentOrder = paymentOrder;
+
+      if (_paymentOrder.IsEmptyInstance) {
+        _instructions = new Lazy<List<PaymentInstruction>>(() => new List<PaymentInstruction>());
+        return;
+      }
+
       _instructions = new Lazy<List<PaymentInstruction>>(() =>
-          PaymentInstructionData.GetPaymentOrderInstructions(_paymentOrder));
+              PaymentInstructionData.GetPaymentOrderInstructions(_paymentOrder));
     }
 
     #region Properties
@@ -82,18 +89,16 @@ namespace Empiria.Payments {
 
 
     internal void UpdatePaymentInstruction(PaymentInstruction instruction,
-                                           string externalRequestID,
-                                           PaymentInstructionStatus initialStatus) {
+                                           BrokerResponseDto brokerResponse) {
       Assertion.Require(instruction, nameof(instruction));
-      Assertion.Require(externalRequestID, nameof(externalRequestID));
+      Assertion.Require(brokerResponse, nameof(brokerResponse));
 
-      instruction.SetExternalUniqueNo(externalRequestID);
-      instruction.UpdateStatus(initialStatus);
+      instruction.Update(brokerResponse);
 
-      if (initialStatus == PaymentInstructionStatus.InProcess) {
+      if (brokerResponse.Status == PaymentInstructionStatus.InProgress) {
         _paymentOrder.EventHandler(instruction, PaymentOrderStatus.InProgress);
 
-      } else if (initialStatus == PaymentInstructionStatus.Failed) {
+      } else if (brokerResponse.Status == PaymentInstructionStatus.Failed) {
         _paymentOrder.EventHandler(instruction, PaymentOrderStatus.Failed);
       }
     }

@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Documents;
 using Empiria.History;
 
@@ -41,15 +39,6 @@ namespace Empiria.Payments.Adapters {
     }
 
 
-    static internal PaymentInstructionDto MapForBroker(PaymentInstruction paymentInstruction) {
-      return new PaymentInstructionDto {
-        RequestedTime = DateTime.Now,
-        ReferenceNo = paymentInstruction.PaymentInstructionNo,
-        RequestUniqueNo = paymentInstruction.PaymentInstructionNo,
-        PaymentOrder = paymentInstruction.PaymentOrder,
-      };
-    }
-
     #region Helpers
 
     static private PaymentInstructionDescriptor MapToDescriptor(PaymentInstruction x) {
@@ -60,7 +49,7 @@ namespace Empiria.Payments.Adapters {
         PaymentOrderNo = x.PaymentInstructionNo,
         PaymentAccount = $"{x.PaymentOrder.PaymentAccount.Institution.Name} {x.PaymentOrder.PaymentAccount.AccountNo}",
         PaymentMethod = x.PaymentOrder.PaymentMethod.Name,
-        RequestedBy = x.ExternalRequestUniqueNo,
+        RequestedBy = x.BrokerInstructionNo,
         RequestedTime = x.PaymentOrder.RequestedTime,
         RequestedDate = x.PaymentOrder.RequestedTime,
         DueTime = x.PaymentOrder.DueTime,
