@@ -13,6 +13,8 @@ using System;
 using Empiria.Json;
 using Empiria.Parties;
 
+using Empiria.Payments.Processor.Adapters;
+
 using Empiria.Payments.Data;
 
 namespace Empiria.Payments {
@@ -20,7 +22,7 @@ namespace Empiria.Payments {
   /// <summary>Represents a payment instruction.</summary>
   public class PaymentInstruction : BaseObject {
 
-    private PaymentInstruction() {
+    protected PaymentInstruction() {
       // Required by Empira Framework
     }
 
@@ -71,15 +73,14 @@ namespace Empiria.Payments {
 
 
     [DataField("PYMT_INSTRUCTION_EXTERNAL_REQUEST_NO")]
-    public string ExternalRequestUniqueNo {
-      get;
-      private set;
+    public string BrokerInstructionNo {
+      get; private set;
     }
 
 
     [DataField("PYMT_INSTRUCTION_EXT_DATA")]
-    protected JsonObject ExtData {
-      get; set;
+    internal JsonObject ExtData {
+      get; private set;
     }
 
 
@@ -95,7 +96,7 @@ namespace Empiria.Payments {
     }
 
 
-    [DataField("PYMT_INSTRUCTION_STATUS", Default = PaymentInstructionStatus.Pending)]
+    [DataField("PYMT_INSTRUCTION_STATUS", Default = PaymentInstructionStatus.Programmed)]
     public PaymentInstructionStatus Status {
       get; private set;
     }
@@ -110,23 +111,19 @@ namespace Empiria.Payments {
         this.PostingTime = DateTime.Now;
       }
 
-      PaymentInstructionData.WritePaymentInstruction(this, ExtData.ToString());
+      PaymentInstructionData.WritePaymentInstruction(this);
     }
 
 
-    internal void SetExternalUniqueNo(string uniqueNo) {
-      Assertion.Require(uniqueNo, nameof(uniqueNo));
-      Assertion.Require(ExternalRequestUniqueNo.Length == 0,
-                        "ExternalRequestUniqueNo already assigned.");
+    internal void Update(BrokerResponseDto brokerResponse) {
+      Assertion.Require(brokerResponse, nameof(brokerResponse));
 
-      ExternalRequestUniqueNo = uniqueNo;
-    }
+      EnsureCanUpdateStatusTo(brokerResponse.Status);
 
-
-    internal void UpdateStatus(PaymentInstructionStatus status) {
-      EnsureCanUpdateStatusTo(status);
-
-      this.Status = status;
+      if (BrokerInstructionNo.Length == 0) {
+        BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
+      }
+      Status = brokerResponse.Status;
     }
 
 
@@ -139,18 +136,84 @@ namespace Empiria.Payments {
     #region Helpers
 
     private void EnsureCanUpdateStatusTo(PaymentInstructionStatus newStatus) {
+
       if (this.Status.IsFinal()) {
-        Assertion.RequireFail("La instrucción de pago no se puede modificar " +
-                              $"debido a que está en el estado final: {this.Status.GetName()}.");
+        Assertion.RequireFail("El estado de la instrucción de pago no se puede modificar " +
+                               $"debido a que está en el estado final: {this.Status.GetName()}.");
       }
-      if (!this.Status.IsFinal() && newStatus.IsFinal()) {
-        return;
+
+
+      switch (Status) {
+        case PaymentInstructionStatus.Programmed:
+
+          if (newStatus == PaymentInstructionStatus.WaitingRequest ||
+              newStatus == PaymentInstructionStatus.Canceled ||
+              newStatus == PaymentInstructionStatus.Suspended) {
+
+            return;
+          }
+
+          break;
+
+        case PaymentInstructionStatus.Suspended:
+
+          if (newStatus == PaymentInstructionStatus.Programmed) {
+
+            return;
+          }
+
+          break;
+
+        case PaymentInstructionStatus.WaitingRequest:
+
+          if (newStatus == PaymentInstructionStatus.Requested) {
+
+            return;
+          }
+
+          break;
+
+        case PaymentInstructionStatus.Requested:
+
+          if (newStatus == PaymentInstructionStatus.InProgress ||
+              newStatus == PaymentInstructionStatus.Failed) {
+
+            return;
+          }
+
+          break;
+
+        case PaymentInstructionStatus.InProgress:
+
+          if (newStatus == PaymentInstructionStatus.InProgress ||
+              newStatus == PaymentInstructionStatus.PaymentConfirmation ||
+              newStatus == PaymentInstructionStatus.Failed) {
+
+            return;
+          }
+
+          break;
+
+
+        case PaymentInstructionStatus.PaymentConfirmation:
+
+          if (newStatus == PaymentInstructionStatus.Payed ||
+              newStatus == PaymentInstructionStatus.Failed) {
+
+            return;
+          }
+
+          break;
+
+        default:
+
+          throw Assertion.EnsureNoReachThisCode($"Unhandled payment instruction status change from " +
+                                                $"{this.Status.GetName()} to {newStatus.GetName()}.");
       }
-      if (this.Status == PaymentInstructionStatus.InProcess &&
-          newStatus == PaymentInstructionStatus.Pending) {
-        Assertion.RequireFail("No es posible cambiar el estado de la instrucción de pago " +
-                              "de en proceso a pendiente.");
-      }
+
+
+      Assertion.RequireFail("No es posible cambiar el estado de la instrucción de pago " +
+                            $"del estado {this.Status.GetName()} al estado {newStatus.GetName()}.");
     }
 
 
