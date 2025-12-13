@@ -40,6 +40,7 @@ namespace Empiria.Payments.Adapters {
       };
     }
 
+
     static public FixedList<PaymentOrderDescriptor> MapToDescriptor(FixedList<PaymentOrder> orders) {
       return orders.Select(x => MapToDescriptor(x))
                    .ToFixedList();

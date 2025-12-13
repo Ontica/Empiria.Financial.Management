@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Financial.WebApi.dll                 Pattern   : Web api Controller                    *
 *  Type     : ChartOfAccountsController                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update chart of accounts.                                          *
+*  Summary  : Web API used to retrieve and update chart of accounts.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -22,7 +22,7 @@ using Empiria.Financial.UseCases;
 
 namespace Empiria.Financial.WebApi {
 
-  /// <summary>Web API used to retrive and update chart of accounts.</summary>
+  /// <summary>Web API used to retrieve and update chart of accounts.</summary>
   public class ChartOfAccountsController : WebApiController {
 
     [HttpPost]

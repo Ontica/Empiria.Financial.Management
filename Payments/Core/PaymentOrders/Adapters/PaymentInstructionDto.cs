@@ -34,4 +34,78 @@ namespace Empiria.Payments.Adapters {
 
   }  // class PaymentInstructionDto
 
+
+  /// <summary>Output DTO used to return minimal payment instruction's data for use in lists.</summary>
+  public class PaymentInstructionDescriptor {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public string PaymentOrderTypeName {
+      get; internal set;
+    }
+
+    public string PaymentOrderNo {
+      get; internal set;
+    }
+
+    public string PayTo {
+      get; internal set;
+    }
+
+    public string PaymentMethod {
+      get; internal set;
+    }
+
+    public string PaymentAccount {
+      get; internal set;
+    }
+
+    public string CurrencyCode {
+      get; internal set;
+    }
+
+    public decimal Total {
+      get; internal set;
+    }
+
+    public DateTime DueTime {
+      get; internal set;
+    }
+
+    public string PayableNo {
+      get; internal set;
+    }
+
+    public string PayableTypeName {
+      get; internal set;
+    }
+
+    public string ContractNo {
+      get; internal set;
+    }
+
+    public string BudgetTypeName {
+      get; internal set;
+    }
+
+    public string RequestedBy {
+      get; internal set;
+    }
+
+    public DateTime RequestedTime {
+      get; internal set;
+    }
+
+    public string StatusName {
+      get; internal set;
+    }
+
+    public DateTime RequestedDate {
+      get; internal set;
+    }
+
+  } // class PaymentInstructionDescriptor
+
 }  // namespace Empiria.Payments.Adapters

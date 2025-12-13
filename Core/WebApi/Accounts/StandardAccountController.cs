@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Financial.WebApi.dll                 Pattern   : Web api Controller                    *
 *  Type     : StandardAccountController                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and update standard accounts.                                          *
+*  Summary  : Web API used to retrieve and update standard accounts.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -16,7 +16,7 @@ using Empiria.Financial.Accounts.UseCases;
 
 namespace Empiria.Financial.Accounts.WebApi {
 
-  /// <summary>Web API used to retrive and update standard accounts.</summary>
+  /// <summary>Web API used to retrieve and update standard accounts.</summary>
   public class StandardAccountController : WebApiController {
 
     #region Query web apis

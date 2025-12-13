@@ -10,9 +10,9 @@
 
 using System;
 
+using Empiria.Financial;
 using Empiria.Parties;
 using Empiria.Services;
-using Empiria.Financial;
 
 using Empiria.Payments.Adapters;
 using Empiria.Payments.Data;

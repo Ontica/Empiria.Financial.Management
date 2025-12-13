@@ -35,8 +35,7 @@ namespace Empiria.Payments.Adapters {
       };
     }
 
-
-    static internal FixedList<PaymentOrderDescriptor> MapToDescriptor(FixedList<PaymentInstruction> instructions) {
+    static internal FixedList<PaymentInstructionDescriptor> MapToDescriptor(FixedList<PaymentInstruction> instructions) {
       return instructions.Select(x => MapToDescriptor(x))
                          .ToFixedList();
     }
@@ -53,8 +52,8 @@ namespace Empiria.Payments.Adapters {
 
     #region Helpers
 
-    static private PaymentOrderDescriptor MapToDescriptor(PaymentInstruction x) {
-      return new PaymentOrderDescriptor {
+    static private PaymentInstructionDescriptor MapToDescriptor(PaymentInstruction x) {
+      return new PaymentInstructionDescriptor {
         UID = x.UID,
         PaymentOrderTypeName = x.BrokerConfigData.Name,
         PayTo = x.PaymentOrder.PayTo.Name,

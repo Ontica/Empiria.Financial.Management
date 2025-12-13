@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Financial.WebApi.dll                 Pattern   : Web api Controller                    *
 *  Type     : FinancialConceptGroupController              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive financial concepts through their groups.                               *
+*  Summary  : Web API used to retrieve financial concepts through their groups.                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -17,7 +17,7 @@ using Empiria.Financial.Concepts.UseCases;
 
 namespace Empiria.Financial.Concepts.WebApi {
 
-  /// <summary>Web API used to retrive financial concepts through their groups.</summary>
+  /// <summary>Web API used to retrieve financial concepts through their groups.</summary>
   public class FinancialConceptGroupController : WebApiController {
 
     #region Query web apis

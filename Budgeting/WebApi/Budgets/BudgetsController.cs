@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Budgeting.WebApi.dll                 Pattern   : Web api Controller                    *
 *  Type     : BudgetsController                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrive and create budgets.                                                    *
+*  Summary  : Web API used to retrieve and create budgets.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -17,7 +17,7 @@ using Empiria.Budgeting.UseCases;
 
 namespace Empiria.Budgeting.WebApi {
 
-  /// <summary>Query web API used to retrive and create budgets.</summary>
+  /// <summary>Query web API used to retrieve and create budgets.</summary>
   public class BudgetsController : WebApiController {
 
     #region Web Apis

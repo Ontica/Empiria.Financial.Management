@@ -4,7 +4,7 @@
 *  Assembly : Empiria.CashFlow.WebApi.dll                  Pattern   : Query Controller                      *
 *  Type     : CashLedgerDataController                     License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Query web API used to retrive cash ledger associated data.                                     *
+*  Summary  : Query web API used to retrieve cash ledger associated data.                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -17,7 +17,7 @@ using Empiria.FinancialAccounting.ClientServices;
 
 namespace Empiria.CashFlow.WebApi {
 
-  /// <summary>Query web API used to retrive cash ledger associated data.</summary>
+  /// <summary>Query web API used to retrieve cash ledger associated data.</summary>
   public class CashLedgerDataController : WebApiController {
 
     private readonly CashLedgerServices _financialAccountingServices;

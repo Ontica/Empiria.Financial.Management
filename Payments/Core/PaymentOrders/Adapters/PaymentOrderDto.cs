@@ -44,7 +44,7 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public FixedList<PaymentOrderDescriptor> PaymentInstructions {
+    public FixedList<PaymentInstructionDescriptor> PaymentInstructions {
       get; internal set;
     }
 
