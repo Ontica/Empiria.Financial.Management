@@ -18,6 +18,7 @@ using Empiria.Billing.SATMexicoImporter;
 
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
+using System;
 
 namespace Empiria.Billing.UseCases {
 
@@ -335,6 +336,12 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    private void CreateFuelConsumptionComplements(Bill bill,
+                                                  FuelConsumptionComplementDataFields complementData) {
+
+    }
+
+
     private Bill CreateFuelConsumptionTest(FuelConsumptionBillFields fields) {
 
       var billCategory = BillCategory.ComplementoPagoProveedores;
@@ -346,6 +353,8 @@ namespace Empiria.Billing.UseCases {
       bill.Save();
 
       CreateFuelConsumptionConcepts(bill, fields.Concepts);
+
+      CreateFuelConsumptionComplements(bill, fields.ComplementData);
 
       return bill;
     }
