@@ -127,16 +127,17 @@ namespace Empiria.Payments {
 
 
     [DataField("PYMT_ORD_EXT_DATA")]
-    private JsonObject ExtData {
-      get; set;
+    internal JsonObject ExtData {
+      get; private set;
     }
+
 
     internal string ReferenceNumber {
       get {
-        return this.ExtData.Get("referenceNumber", string.Empty);
+        return ExtData.Get("referenceNumber", string.Empty);
       }
       private set {
-        this.ExtData.SetIfValue("referenceNumber", value);
+        ExtData.SetIfValue("referenceNumber", value);
       }
     }
 
@@ -238,12 +239,12 @@ namespace Empiria.Payments {
     }
 
 
-    internal void Delete() {
+    internal void Suspend() {
       Assertion.Require(Status == PaymentOrderStatus.Pending,
-                  $"No se puede eliminar una orden de pago que " +
+                  $"No se puede suspender una orden de pago que " +
                   $"está en estado {Status.GetName()}.");
 
-      Status = PaymentOrderStatus.Deleted;
+      Status = PaymentOrderStatus.Suspended;
     }
 
 
@@ -271,7 +272,7 @@ namespace Empiria.Payments {
         PostingTime = DateTime.Now;
       }
 
-      PaymentOrderData.WritePaymentOrder(this, SecurityExtData.ToString(), ExtData.ToString());
+      PaymentOrderData.WritePaymentOrder(this);
     }
 
 

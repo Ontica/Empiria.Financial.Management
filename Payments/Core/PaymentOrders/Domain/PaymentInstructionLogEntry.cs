@@ -105,10 +105,11 @@ namespace Empiria.Payments {
       }
     }
 
+
     [DataField("PYMT_LOG_EXT_DATA")]
-    protected JsonObject ExtData {
-      get; set;
-    } = JsonObject.Empty;
+    internal JsonObject ExtData {
+      get; private set;
+    }
 
 
     [DataField("PYMT_LOG_STATUS", Default = PaymentInstructionStatus.Programmed)]
@@ -123,7 +124,7 @@ namespace Empiria.Payments {
 
     protected override void OnSave() {
       RecordingTime = DateTime.Now;
-      PaymentInstructionData.WritePaymentLog(this, ExtData.ToString());
+      PaymentInstructionData.WritePaymentLog(this);
     }
 
 

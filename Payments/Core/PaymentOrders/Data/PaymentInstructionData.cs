@@ -70,23 +70,23 @@ namespace Empiria.Payments.Data {
     }
 
 
-    static internal void WritePaymentInstruction(PaymentInstruction o, string extensionData) {
+    static internal void WritePaymentInstruction(PaymentInstruction o) {
       var op = DataOperation.Parse("write_FMS_Payment_Instruction",
                      o.Id, o.UID, o.GetEmpiriaType().Id, o.PaymentInstructionNo,
                      o.PaymentOrder.Id, o.Description, o.BrokerConfigData.Id,
-                     o.ExternalRequestUniqueNo, extensionData,
+                     o.BrokerInstructionNo, o.ExtData.ToString(),
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
 
 
-    static internal void WritePaymentLog(PaymentInstructionLogEntry o, string extensionData) {
+    static internal void WritePaymentLog(PaymentInstructionLogEntry o) {
       var op = DataOperation.Parse("apd_FMS_Payment_Log",
                      o.Id, o.UID, o.PaymentInstruction.Id, o.PaymentOrder.Id,
-                     o.ExternalResultText, o.ExternalRequestID,
+                     o.BrokerMessage, o.BrokerInstructionNo,
                      o.RequestTime, o.ApplicationTime, o.RecordingTime,
-                     extensionData, (char) o.Status);
+                     o.ExtensionData.ToString(), (char) o.Status);
 
       DataWriter.Execute(op);
     }
