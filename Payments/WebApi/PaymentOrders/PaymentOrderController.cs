@@ -66,6 +66,23 @@ namespace Empiria.Payments.WebApi {
     }
 
 
+
+    [HttpPost]
+    [Route("v8/payments-management/payables/{paymentOrderUID:guid}/send-to-pay")] // ToDo: Remove this deprecated route in future versions.
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/pay")]  //  // ToDo: Remove this deprecated route in future versions.
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/create-payment-instruction")]  //  // ToDo: Remove this deprecated route in future versions.
+    public SingleObjectModel CreatePaymentInstruction([FromUri] string paymentOrderUID) {
+
+      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
+
+        PaymentOrderHolderDto paymentOrder = usecases.CreatePaymentInstruction(paymentOrderUID);
+
+        return new SingleObjectModel(this.Request, paymentOrder);
+      }
+    }
+
+
+
     [HttpDelete]
     [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]   // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]

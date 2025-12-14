@@ -36,6 +36,24 @@ namespace Empiria.Payments.UseCases {
 
     #region Use cases
 
+    public PaymentOrderHolderDto CreatePaymentInstruction(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var order = PaymentOrder.Parse(paymentOrderUID);
+
+      Assertion.Require(order.PaymentInstructions.CanCreateNewInstruction(),
+                        "La solicitud de pago ya tiene una instrucción de pago programada o en proceso.");
+
+      PaymentsBrokerConfigData brokerConfigData = PaymentsBrokerConfigData.GetPaymentsBroker(order);
+
+      order.PaymentInstructions.CreatePaymentInstruction(brokerConfigData);
+
+      order.Save();
+
+      return PaymentOrderMapper.Map(order);
+    }
+
+
     public PaymentOrderHolderDto CreatePaymentOrder(PaymentOrderFields fields) {
       Assertion.Require(fields, nameof(fields));
 
