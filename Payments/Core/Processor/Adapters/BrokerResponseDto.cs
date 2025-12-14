@@ -18,7 +18,7 @@ namespace Empiria.Payments.Processor.Adapters {
     } = string.Empty;
 
 
-    public string InstructionNo {
+    public string PaymentInstructionNo {
       get; set;
     } = string.Empty;
 

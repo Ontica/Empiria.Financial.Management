@@ -15,20 +15,112 @@ namespace Empiria.Payments.Processor.Adapters {
   /// <summary>Integration DTO used to send requests to payment broker providers.</summary>
   public class BrokerRequestDto {
 
-    public PaymentOrder PaymentOrder {
-      get; internal set;
+    private readonly PaymentInstruction _instruction;
+
+    internal BrokerRequestDto(PaymentInstruction instruction) {
+      Assertion.Require(instruction, nameof(instruction));
+      Assertion.Require(!instruction.IsEmptyInstance, nameof(instruction));
+      Assertion.Require(!instruction.IsNew, "Payment instruction must be stored.");
+
+      _instruction = instruction;
     }
 
-    public string RequestUniqueNo {
-      get; internal set;
+
+    public string PaymentInstructionNo {
+      get {
+        return _instruction.PaymentInstructionNo;
+      }
     }
 
-    public string ReferenceNo {
-      get; internal set;
+
+    public string BeneficiaryAccountNo {
+      get {
+        return _instruction.PaymentOrder.PaymentAccount.CLABE;
+      }
     }
 
-    public DateTime RequestedTime {
-      get; internal set;
+
+    public string BeneficiaryAccountTypeCode {
+      get {
+        return _instruction.PaymentOrder.PaymentMethod.BrokerCode;
+      }
+    }
+
+
+    public string BeneficiaryBankCode {
+      get {
+        return _instruction.PaymentOrder.PaymentAccount.Institution.BrokerCode;
+      }
+    }
+
+
+    public string BeneficiaryName {
+      get {
+        return _instruction.PaymentOrder.PaymentAccount.HolderName;
+      }
+    }
+
+
+    public string BeneficiaryTaxCode {
+      get {
+        return _instruction.PaymentOrder.PayTo.Code;
+      }
+    }
+
+
+    public int PaymentRequesterId {
+      get {
+        return 40;
+      }
+    }
+
+
+    public int PaymentWithdrawalAccountId {
+      get {
+        return 418;
+      }
+    }
+
+
+    public string PaymentReferenceNo {
+      get {
+        return _instruction.PaymentOrder.ReferenceNumber;
+      }
+    }
+
+
+    public string PaymentDescription {
+      get {
+        return "Pago Banobras, S.N.C.";
+      }
+    }
+
+
+    public decimal PaymentTotal {
+      get {
+        return _instruction.PaymentOrder.Total;
+      }
+    }
+
+
+    public string PaymentCurrencyCode {
+      get {
+        return _instruction.PaymentOrder.Currency.ISOCode;
+      }
+    }
+
+
+    public DateTime ProgrammedDate {
+      get {
+        return _instruction.ProgrammedDate;
+      }
+    }
+
+
+    public DateTime EffectiveDate {
+      get {
+        return _instruction.EffectiveDate;
+      }
     }
 
   }  // class BrokerRequestDto

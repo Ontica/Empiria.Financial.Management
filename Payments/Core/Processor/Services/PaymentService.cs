@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using System.Threading.Tasks;
 
 using Empiria.Services;
@@ -138,12 +137,7 @@ namespace Empiria.Payments.Processor {
     #region Helpers
 
     static private BrokerRequestDto MapToBrokerRequest(PaymentInstruction instruction) {
-      return new BrokerRequestDto {
-        RequestedTime = DateTime.Now,
-        RequestUniqueNo = instruction.PaymentInstructionNo,
-        ReferenceNo = instruction.PaymentOrder.ReferenceNumber,
-        PaymentOrder = instruction.PaymentOrder
-      };
+      return new BrokerRequestDto(instruction);
     }
 
 
