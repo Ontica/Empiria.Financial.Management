@@ -70,7 +70,7 @@ namespace Empiria.Payments.Processor {
 
       BrokerResponseDto brokerResponse = await paymentsService.SendPaymentInstruction(brokerRequest);
 
-      instruction.PaymentOrder.PaymentInstructions.UpdatePaymentInstruction(instruction, brokerResponse);
+      instruction.PaymentOrder.UpdatePaymentInstruction(instruction, brokerResponse);
 
       instruction.PaymentOrder.Save();
 
@@ -80,34 +80,14 @@ namespace Empiria.Payments.Processor {
     }
 
 
-    public async Task<int> ValidatePayment() {
-      var paymentInstructions = PaymentInstruction.GetInProgress();
-      int count = 0;
+    public async Task UpdateInProgressPaymentInstructions() {
+      var inProgressInstructions = PaymentInstruction.GetInProgress();
 
-      foreach (var paymentInstruction in paymentInstructions) {
-        await RefreshPaymentInstruction(paymentInstruction);
-        count++;
+      foreach (var instruction in inProgressInstructions) {
+        await RefreshPaymentInstruction(instruction);
       }
-
-      return count;
     }
 
-
-    public async Task<PaymentOrderHolderDto> ValidatePaymentOrderIsPayed(string paymentOrderUID) {
-      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
-
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-
-      PaymentsBrokerConfigData broker = PaymentsBrokerConfigData.GetPaymentsBroker(paymentOrder);
-
-      var currentInstruction = paymentOrder.PaymentInstructions.Current;
-
-      if (currentInstruction.Status == PaymentInstructionStatus.InProgress) {
-        await RefreshPaymentInstruction(currentInstruction);
-      }
-
-      return PaymentOrderMapper.Map(paymentOrder);
-    }
 
     #endregion Services
 

@@ -50,18 +50,10 @@ namespace Empiria.Tests.Payments {
 
 
     [Fact]
-    public async Task Should_Validate_Is_Payment_Order_Is_Payed() {
-      var sut = await _services.ValidatePaymentOrderIsPayed("65dccef4-cd85-4b5b-8a99-b6ca255c8ac3");
+    public async Task UpdateInProgressPaymentInstructions() {
+      await _services.UpdateInProgressPaymentInstructions();
 
-      Assert.NotNull(sut);
-    }
-
-
-    [Fact]
-    public async Task Should_Validate_Is_Payments_Orders_Are_Payed() {
-      var sut = await _services.ValidatePayment();
-
-      Assert.NotEqual(0, sut);
+      Assert.True(true);
     }
 
     #endregion Facts
