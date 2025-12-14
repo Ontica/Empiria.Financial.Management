@@ -319,23 +319,6 @@ namespace Empiria.Payments {
     }
 
 
-    internal void EventHandler(PaymentInstruction instruction,
-                               PaymentOrderStatus newStatus) {
-      Assertion.Require(instruction, nameof(instruction));
-
-      if (newStatus == PaymentOrderStatus.Payed) {
-        Assertion.Require(Status == PaymentOrderStatus.InProgress,
-                          $"No se puede cambiar el estado del pago debido " +
-                          $"a que tiene el estado {Status.GetName()}.");
-      }
-
-      // ToDo: control other state machine's status
-
-      Status = newStatus;
-
-      Save();
-    }
-
     protected override void OnSave() {
       if (base.IsNew) {
         PaymentOrderNo = GeneratePaymentOrderNo();

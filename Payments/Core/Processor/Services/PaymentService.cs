@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Empiria.Services;
 
 using Empiria.Payments.Adapters;
+
 using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Processor {
@@ -52,8 +53,6 @@ namespace Empiria.Payments.Processor {
       BrokerResponseDto response = await paymentsService.RequestPaymentStatus(brokerRequest);
 
       UpdatePaymentOrder(instruction, response);
-
-      UpdatePaymentLog(instruction, response);
     }
 
 
@@ -70,11 +69,7 @@ namespace Empiria.Payments.Processor {
 
       BrokerResponseDto brokerResponse = await paymentsService.SendPaymentInstruction(brokerRequest);
 
-      instruction.PaymentOrder.UpdatePaymentInstruction(instruction, brokerResponse);
-
-      instruction.PaymentOrder.Save();
-
-      UpdatePaymentLog(instruction, brokerResponse);
+      UpdatePaymentOrder(instruction, brokerResponse);
 
       return PaymentInstructionMapper.Map(instruction);
     }
@@ -102,22 +97,7 @@ namespace Empiria.Payments.Processor {
                                            BrokerResponseDto brokerResponse) {
       var paymentOrder = instruction.PaymentOrder;
 
-      if (brokerResponse.Status == PaymentInstructionStatus.Payed) {
-        paymentOrder.EventHandler(instruction, PaymentOrderStatus.Payed);
-
-      } else if (brokerResponse.Status == PaymentInstructionStatus.Failed) {
-        paymentOrder.EventHandler(instruction, PaymentOrderStatus.Failed);
-
-      }
-    }
-
-
-    static private void UpdatePaymentLog(PaymentInstruction instruction,
-                                         BrokerResponseDto brokerResponse) {
-
-      var logEntry = new PaymentInstructionLogEntry(instruction, brokerResponse);
-
-      logEntry.Save();
+      paymentOrder.UpdatePaymentInstruction(instruction, brokerResponse);
     }
 
     #endregion Helpers

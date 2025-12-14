@@ -22,6 +22,9 @@ namespace Empiria.Payments {
   /// <summary>Represents a payment instruction.</summary>
   public class PaymentInstruction : BaseObject {
 
+
+    private BrokerResponseDto _lastBrokerResponse;
+
     protected PaymentInstruction() {
       // Required by Empira Framework
     }
@@ -125,18 +128,34 @@ namespace Empiria.Payments {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        this.PostingTime = DateTime.Now;
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
       }
 
-      if (IsDirty) {
-        PaymentInstructionData.WritePaymentInstruction(this);
+      if (!IsDirty) {
+        return;
       }
+
+      PaymentInstructionData.WritePaymentInstruction(this);
+
+      if (_lastBrokerResponse == null) {
+        return;
+      }
+
+      var logEntry = new PaymentInstructionLogEntry(this, _lastBrokerResponse);
+
+      logEntry.Save();
+
+      _lastBrokerResponse = null;
     }
 
 
     internal void Update(BrokerResponseDto brokerResponse) {
       Assertion.Require(brokerResponse, nameof(brokerResponse));
+
+      if (brokerResponse.Status == Status) {
+        return;
+      }
 
       EnsureCanUpdateStatusTo(brokerResponse.Status);
 
@@ -144,6 +163,8 @@ namespace Empiria.Payments {
         BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
       }
       Status = brokerResponse.Status;
+
+      _lastBrokerResponse = brokerResponse;
 
       MarkAsDirty();
     }
