@@ -57,16 +57,26 @@ namespace Empiria.Payments.Processor {
     }
 
 
-    public async Task<PaymentOrderHolderDto> SendPaymentOrderToPay(string paymentOrderUID) {
-      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+    public async Task<PaymentInstructionHolderDto> SendPaymentInstruction(PaymentInstruction instruction) {
+      Assertion.Require(instruction, nameof(instruction));
+      Assertion.Require(!instruction.IsEmptyInstance, nameof(instruction));
+      Assertion.Require(!instruction.IsNew, "paymentInstruction must be stored.");
 
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+      IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
 
-      PaymentsBrokerConfigData broker = PaymentsBrokerConfigData.GetPaymentsBroker(paymentOrder);
+      Assertion.Require(instruction.BrokerInstructionNo.Length == 0, "BrokerInstructionNo must be empty.");
 
-      _ = await SendToPay(broker, paymentOrder);
+      BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
 
-      return PaymentOrderMapper.Map(paymentOrder);
+      BrokerResponseDto brokerResponse = await paymentsService.SendPaymentInstruction(brokerRequest);
+
+      instruction.PaymentOrder.PaymentInstructions.UpdatePaymentInstruction(instruction, brokerResponse);
+
+      instruction.PaymentOrder.Save();
+
+      UpdatePaymentLog(instruction, brokerResponse);
+
+      return PaymentInstructionMapper.Map(instruction);
     }
 
 
@@ -98,39 +108,6 @@ namespace Empiria.Payments.Processor {
 
       return PaymentOrderMapper.Map(paymentOrder);
     }
-
-
-    internal async Task<PaymentInstruction> SendToPay(PaymentsBrokerConfigData broker, PaymentOrder paymentOrder) {
-      Assertion.Require(broker, nameof(broker));
-      Assertion.Require(!broker.IsEmptyInstance, nameof(broker));
-      Assertion.Require(paymentOrder, nameof(paymentOrder));
-      Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
-
-      await Task.CompletedTask;
-
-      Assertion.Require(paymentOrder.PaymentInstructions.CanCreateNewInstruction(),
-                        $"No es posible crear la instrucción de pago debido a que " +
-                        $"la solicitud de pago está en estado {paymentOrder.Status.GetName()}.");
-
-      IPaymentsBrokerService brokerService = broker.GetService();
-
-      PaymentInstruction instruction = paymentOrder.PaymentInstructions.CreatePaymentInstruction(broker);
-
-      paymentOrder.Save();
-
-      BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
-
-      BrokerResponseDto brokerResponse = await brokerService.SendPaymentInstruction(brokerRequest);
-
-      paymentOrder.PaymentInstructions.UpdatePaymentInstruction(instruction, brokerResponse);
-
-      paymentOrder.Save();
-
-      UpdatePaymentLog(instruction, brokerResponse);
-
-      return instruction;
-    }
-
 
     #endregion Services
 

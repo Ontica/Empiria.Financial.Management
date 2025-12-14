@@ -13,6 +13,7 @@ using Xunit;
 using System.Threading.Tasks;
 
 using Empiria.Payments.Processor;
+using Empiria.Payments;
 
 namespace Empiria.Tests.Payments {
 
@@ -39,8 +40,10 @@ namespace Empiria.Tests.Payments {
     #region Facts
 
     [Fact]
-    public async Task Should_Send_Payment_Order_To_Pay() {
-      var sut = await _services.SendPaymentOrderToPay("fa3697b3-a42c-4753-b4bc-8d5f27737c4f");
+    public async Task Should_Send_Payment_Instruction() {
+      var instruction = PaymentInstruction.Parse("fa3697b3-a42c-4753-b4bc-8d5f27737c4f");
+
+      var sut = await _services.SendPaymentInstruction(instruction);
 
       Assert.NotNull(sut);
     }
