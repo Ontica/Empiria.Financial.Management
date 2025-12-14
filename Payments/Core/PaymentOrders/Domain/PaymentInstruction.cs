@@ -26,15 +26,15 @@ namespace Empiria.Payments {
       // Required by Empira Framework
     }
 
-    internal PaymentInstruction(PaymentsBrokerConfigData brokerConfigData,
-                                PaymentOrder paymentOrder) {
-      Assertion.Require(brokerConfigData, nameof(brokerConfigData));
-      Assertion.Require(!brokerConfigData.IsEmptyInstance, nameof(brokerConfigData));
+    internal PaymentInstruction(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
       Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
-      Assertion.Require(paymentOrder.PaymentInstructions.CanCreateNewInstruction(),
-                        $"Payment order has status {paymentOrder.Status}. " +
-                        $"Payment instruction can not be created.");
+
+      PaymentsBrokerConfigData brokerConfigData = PaymentsBrokerConfigData.GetPaymentsBroker(paymentOrder);
+
+      Assertion.Require(brokerConfigData, nameof(brokerConfigData));
+      Assertion.Require(!brokerConfigData.IsEmptyInstance, nameof(brokerConfigData));
+
       BrokerConfigData = brokerConfigData;
       PaymentOrder = paymentOrder;
       PaymentInstructionNo = GeneratePaymentInstructionNo();
@@ -45,6 +45,10 @@ namespace Empiria.Payments {
     static public PaymentInstruction Parse(string uid) => ParseKey<PaymentInstruction>(uid);
 
     static public PaymentInstruction Empty => ParseEmpty<PaymentInstruction>();
+
+    static internal FixedList<PaymentInstruction> GetInProgress() {
+      return PaymentInstructionData.GetInProgressPaymentInstructions();
+    }
 
     #region Properties
 
@@ -125,7 +129,9 @@ namespace Empiria.Payments {
         this.PostingTime = DateTime.Now;
       }
 
-      PaymentInstructionData.WritePaymentInstruction(this);
+      if (IsDirty) {
+        PaymentInstructionData.WritePaymentInstruction(this);
+      }
     }
 
 
@@ -138,11 +144,8 @@ namespace Empiria.Payments {
         BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
       }
       Status = brokerResponse.Status;
-    }
 
-
-    static internal FixedList<PaymentInstruction> GetInProgress() {
-      return PaymentInstructionData.GetPaymentInstructionsInProgress();
+      MarkAsDirty();
     }
 
     #endregion Methods
@@ -231,7 +234,7 @@ namespace Empiria.Payments {
     }
 
 
-    private string GeneratePaymentInstructionNo() {
+    static private string GeneratePaymentInstructionNo() {
       // ToDo: Implement a better way to generate unique payment instruction numbers
 
       return "PI-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();

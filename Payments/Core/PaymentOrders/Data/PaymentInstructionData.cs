@@ -45,7 +45,7 @@ namespace Empiria.Payments.Data {
     }
 
 
-    static internal FixedList<PaymentInstruction> GetPaymentInstructionsInProgress() {
+    static internal FixedList<PaymentInstruction> GetInProgressPaymentInstructions() {
 
       var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
                 $"WHERE PYMT_INSTRUCTION_STATUS = 'A' " +

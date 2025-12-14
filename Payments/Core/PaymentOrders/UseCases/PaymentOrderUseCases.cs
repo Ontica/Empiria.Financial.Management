@@ -41,12 +41,9 @@ namespace Empiria.Payments.UseCases {
 
       var order = PaymentOrder.Parse(paymentOrderUID);
 
-      Assertion.Require(order.PaymentInstructions.CanCreateNewInstruction(),
-                        "La solicitud de pago ya tiene una instrucción de pago programada o en proceso.");
+      order.EnsureCanCreateInstruction();
 
-      PaymentsBrokerConfigData brokerConfigData = PaymentsBrokerConfigData.GetPaymentsBroker(order);
-
-      order.PaymentInstructions.CreatePaymentInstruction(brokerConfigData);
+      order.CreatePaymentInstruction();
 
       order.Save();
 

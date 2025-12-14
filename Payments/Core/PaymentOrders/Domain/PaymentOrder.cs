@@ -9,10 +9,14 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
+
+using Empiria.Payments.Processor.Adapters;
 
 using Empiria.Payments.Data;
 
@@ -21,7 +25,7 @@ namespace Empiria.Payments {
   /// <summary>Represents a payment order that serves as an aggregate root of payment instructions.</summary>
   public class PaymentOrder : BaseObject {
 
-    private PaymentOrderInstructions _paymentInstructions;
+    private Lazy<List<PaymentInstruction>> _paymentInstructions;
 
     #region Constructors and parsers
 
@@ -36,7 +40,7 @@ namespace Empiria.Payments {
       _payableEntityTypeId = payableEntity.GetEmpiriaType().Id;
       _payableEntityId = payableEntity.Id;
 
-      _paymentInstructions = new PaymentOrderInstructions(this);
+      RefreshPaymentInstructions();
     }
 
     static internal PaymentOrder Parse(int id) => ParseId<PaymentOrder>(id);
@@ -52,7 +56,7 @@ namespace Empiria.Payments {
     }
 
     protected override void OnLoad() {
-      _paymentInstructions = new PaymentOrderInstructions(this);
+      RefreshPaymentInstructions();
     }
 
     #endregion Constructors and parsers
@@ -220,14 +224,81 @@ namespace Empiria.Payments {
       }
     }
 
+    #endregion Properties
 
-    public PaymentOrderInstructions PaymentInstructions {
+    #region Payment instructions aggregate root
+
+    public FixedList<PaymentInstruction> PaymentInstructions {
       get {
-        return _paymentInstructions;
+        return _paymentInstructions.Value.ToFixedList();
       }
     }
 
-    #endregion Properties
+
+    public PaymentInstruction LastPaymentInstruction {
+      get {
+        return _paymentInstructions.Value[_paymentInstructions.Value.Count - 1];
+      }
+    }
+
+
+    public void EnsureCanCreateInstruction() {
+      if (IsEmptyInstance) {
+        Assertion.RequireFail("No se puede crear una instrucción de pago " +
+                              "paa la instancia Empty.");
+      }
+      if (IsNew) {
+        Assertion.RequireFail("No se puede crear la instrucción de pago " +
+                              "debido a que la solicitud no ha sido guardada.");
+      }
+
+      if (!PaymentInstructions.All(x => x.Status.IsFinal())) {
+        Assertion.RequireFail("No se puede ejecutar la operación debido a que esta " +
+                              "solicitud de pago tiene una instrucción de pago " +
+                              "que está programada o en proceso.");
+      }
+
+      if (Status == PaymentOrderStatus.Pending ||
+          Status == PaymentOrderStatus.Failed) {
+        return;
+      }
+
+      Assertion.RequireFail($"No se puede crear la instrucción de pago debido " +
+                            $"a que tiene el estado {Status.GetName()}.");
+    }
+
+
+    internal PaymentInstruction CreatePaymentInstruction() {
+
+      EnsureCanCreateInstruction();
+
+      var instruction = new PaymentInstruction(this);
+
+      _paymentInstructions.Value.Add(instruction);
+
+      Status = PaymentOrderStatus.Programmed;
+
+      return instruction;
+    }
+
+
+    internal void UpdatePaymentInstruction(PaymentInstruction instruction,
+                                           BrokerResponseDto brokerResponse) {
+      Assertion.Require(instruction, nameof(instruction));
+      Assertion.Require(brokerResponse, nameof(brokerResponse));
+
+      instruction.Update(brokerResponse);
+
+      if (brokerResponse.Status == PaymentInstructionStatus.InProgress) {
+        Status = PaymentOrderStatus.InProgress;
+
+      } else if (brokerResponse.Status == PaymentInstructionStatus.Failed) {
+        Status = PaymentOrderStatus.Failed;
+      }
+    }
+
+
+    #endregion Payment instructions aggregate root
 
     #region Methods
 
@@ -273,6 +344,10 @@ namespace Empiria.Payments {
       }
 
       PaymentOrderData.WritePaymentOrder(this);
+
+      foreach (var instruction in _paymentInstructions.Value) {
+        instruction.Save();
+      }
     }
 
 
@@ -336,6 +411,12 @@ namespace Empiria.Payments {
       // ToDo: Generate real pament order number
 
       return "O-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
+    }
+
+
+    private void RefreshPaymentInstructions() {
+      _paymentInstructions = new Lazy<List<PaymentInstruction>>(() =>
+                                          PaymentInstructionData.GetPaymentOrderInstructions(this));
     }
 
     #endregion Helpers
