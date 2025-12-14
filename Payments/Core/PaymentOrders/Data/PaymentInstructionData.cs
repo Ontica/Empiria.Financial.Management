@@ -19,11 +19,11 @@ namespace Empiria.Payments.Data {
 
     #region Methods
 
-    static internal FixedList<PaymentInstructionLogEntry> GetPaymentInstructionLogs(PaymentInstruction paymentInstruction) {
-      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
+    static internal FixedList<PaymentInstructionLogEntry> GetPaymentInstructionLogs(PaymentInstruction instruction) {
+      Assertion.Require(instruction, nameof(instruction));
 
       var sql = $"SELECT * FROM FMS_PAYMENTS_LOG " +
-                $"WHERE PYMT_LOG_PYMT_INSTRUCTION_ID = {paymentInstruction.Id} " +
+                $"WHERE PYMT_LOG_PYMT_INSTRUCTION_ID = {instruction.Id} " +
                 $"ORDER BY PYMT_LOG_ID";
 
       var op = DataOperation.Parse(sql);
@@ -86,7 +86,7 @@ namespace Empiria.Payments.Data {
                      o.Id, o.UID, o.PaymentInstruction.Id, o.PaymentOrder.Id,
                      o.BrokerMessage, o.BrokerInstructionNo,
                      o.RequestTime, o.ApplicationTime, o.RecordingTime,
-                     o.ExtensionData.ToString(), (char) o.Status);
+                     o.ExtData.ToString(), (char) o.Status);
 
       DataWriter.Execute(op);
     }

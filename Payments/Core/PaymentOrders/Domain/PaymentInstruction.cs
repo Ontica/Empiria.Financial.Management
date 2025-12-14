@@ -101,6 +101,20 @@ namespace Empiria.Payments {
       get; private set;
     }
 
+
+    public DateTime EffectiveDate {
+      get {
+        return PostingTime;
+      }
+    }
+
+
+    public DateTime ProgrammedDate {
+      get {
+        return PostingTime;
+      }
+    }
+
     #endregion Properties
 
     #region Methods

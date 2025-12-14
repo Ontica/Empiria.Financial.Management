@@ -67,7 +67,8 @@ namespace Empiria.Payments.Data {
       var op = DataOperation.Parse("write_FMS_Payable_Item",
                      o.Id, o.UID, o.GetEmpiriaType().Id, o.PaymentOrder.Id, o.PayableTypeId, o.PayableId,
                      o.Currency.Id, o.DepositAmount, o.WithdrawAmount, o.ExchangeRate,
-                     o.SecurityExtData.ToString(), o.ExtData.ToString(), o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+                     o.SecurityExtData.ToString(), o.ExtData.ToString(), o.Keywords,
+                     o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
