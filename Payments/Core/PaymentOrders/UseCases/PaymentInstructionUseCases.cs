@@ -29,7 +29,7 @@ namespace Empiria.Payments.UseCases {
 
     #endregion Constructors and parsers
 
-    #region Use cases
+    #region Query use cases
 
     public PaymentInstructionHolderDto GetPaymentInstruction(string instructionUID) {
       Assertion.Require(instructionUID, nameof(instructionUID));
@@ -48,7 +48,51 @@ namespace Empiria.Payments.UseCases {
       return PaymentInstructionMapper.MapToDescriptor(instructions);
     }
 
-    #endregion Use cases
+    #endregion Query use cases
+
+    #region Command use cases
+
+    public PaymentInstructionHolderDto Cancel(string instructionUID) {
+
+      return ProcessEvent(instructionUID, PaymentInstructionEvent.Cancel);
+    }
+
+
+    public PaymentInstructionHolderDto CancelPaymentRequest(string instructionUID) {
+
+      return ProcessEvent(instructionUID, PaymentInstructionEvent.CancelPaymentRequest);
+    }
+
+
+    public PaymentInstructionHolderDto RequestPayment(string instructionUID) {
+
+      return ProcessEvent(instructionUID, PaymentInstructionEvent.RequestPayment);
+    }
+
+
+    public PaymentInstructionHolderDto Suspend(string instructionUID) {
+
+      return ProcessEvent(instructionUID, PaymentInstructionEvent.Suspend);
+    }
+
+    #endregion Command use cases
+
+    #region Helpers
+
+    private PaymentInstructionHolderDto ProcessEvent(string instructionUID,
+                                                     PaymentInstructionEvent instructionEvent) {
+      Assertion.Require(instructionUID, nameof(instructionUID));
+
+      var instruction = PaymentInstruction.Parse(instructionUID);
+
+      instruction.EventHandler(instructionEvent);
+
+      instruction.Save();
+
+      return PaymentInstructionMapper.Map(instruction);
+    }
+
+    #endregion Helpers
 
   }  // class PaymentInstructionUseCases
 

@@ -22,8 +22,11 @@ namespace Empiria.Payments {
   /// <summary>Represents a payment instruction.</summary>
   public class PaymentInstruction : BaseObject {
 
-
     private BrokerResponseDto _lastBrokerResponse;
+
+    private readonly object _locker = new object();
+
+    #region Constructors and parsers
 
     protected PaymentInstruction() {
       // Required by Empira Framework
@@ -52,6 +55,8 @@ namespace Empiria.Payments {
     static internal FixedList<PaymentInstruction> GetInProgress() {
       return PaymentInstructionData.GetInProgressPaymentInstructions();
     }
+
+    #endregion Constructors and parsers
 
     #region Properties
 
@@ -126,47 +131,24 @@ namespace Empiria.Payments {
 
     #region Methods
 
+    internal void EventHandler(PaymentInstructionEvent instructionEvent) {
+      lock (_locker) {
+        EventHandlerInternal(instructionEvent);
+      }
+    }
+
+
     protected override void OnSave() {
-      if (base.IsNew) {
-        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        PostingTime = DateTime.Now;
+      lock (_locker) {
+        SaveInternal();
       }
-
-      if (!IsDirty) {
-        return;
-      }
-
-      PaymentInstructionData.WritePaymentInstruction(this);
-
-      if (_lastBrokerResponse == null) {
-        return;
-      }
-
-      var logEntry = new PaymentInstructionLogEntry(this, _lastBrokerResponse);
-
-      logEntry.Save();
-
-      _lastBrokerResponse = null;
     }
 
 
     internal void Update(BrokerResponseDto brokerResponse) {
-      Assertion.Require(brokerResponse, nameof(brokerResponse));
-
-      if (brokerResponse.Status == Status) {
-        return;
+      lock (_locker) {
+        UpdateInternal(brokerResponse);
       }
-
-      EnsureCanUpdateStatusTo(brokerResponse.Status);
-
-      if (BrokerInstructionNo.Length == 0) {
-        BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
-      }
-      Status = brokerResponse.Status;
-
-      _lastBrokerResponse = brokerResponse;
-
-      MarkAsDirty();
     }
 
     #endregion Methods
@@ -195,7 +177,8 @@ namespace Empiria.Payments {
 
         case PaymentInstructionStatus.Suspended:
 
-          if (newStatus == PaymentInstructionStatus.Programmed) {
+          if (newStatus == PaymentInstructionStatus.Programmed ||
+              newStatus == PaymentInstructionStatus.Canceled) {
 
             return;
           }
@@ -204,7 +187,8 @@ namespace Empiria.Payments {
 
         case PaymentInstructionStatus.WaitingRequest:
 
-          if (newStatus == PaymentInstructionStatus.Requested) {
+          if (newStatus == PaymentInstructionStatus.Programmed ||
+              newStatus == PaymentInstructionStatus.Requested) {
 
             return;
           }
@@ -245,13 +229,45 @@ namespace Empiria.Payments {
 
         default:
 
-          throw Assertion.EnsureNoReachThisCode($"Unhandled payment instruction status change from " +
-                                                $"{this.Status.GetName()} to {newStatus.GetName()}.");
+          throw Assertion.EnsureNoReachThisCode($"Invalid payment instruction status change from " +
+                                                $"{Status.GetName()} to {newStatus.GetName()}.");
       }
 
 
       Assertion.RequireFail("No es posible cambiar el estado de la instrucción de pago " +
-                            $"del estado {this.Status.GetName()} al estado {newStatus.GetName()}.");
+                            $"del estado {Status.GetName()} al estado {newStatus.GetName()}.");
+    }
+
+
+
+    private void EventHandlerInternal(PaymentInstructionEvent instructionEvent) {
+      switch (instructionEvent) {
+        case PaymentInstructionEvent.Cancel:
+
+          EnsureCanUpdateStatusTo(PaymentInstructionStatus.Canceled);
+          Status = PaymentInstructionStatus.Canceled;
+          break;
+
+        case PaymentInstructionEvent.CancelPaymentRequest:
+          EnsureCanUpdateStatusTo(PaymentInstructionStatus.Programmed);
+          Status = PaymentInstructionStatus.Programmed;
+          break;
+
+        case PaymentInstructionEvent.RequestPayment:
+          EnsureCanUpdateStatusTo(PaymentInstructionStatus.WaitingRequest);
+          Status = PaymentInstructionStatus.WaitingRequest;
+          break;
+
+        case PaymentInstructionEvent.Suspend:
+          EnsureCanUpdateStatusTo(PaymentInstructionStatus.Suspended);
+          Status = PaymentInstructionStatus.Suspended;
+          break;
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unhandled payment instruction event: {instructionEvent}.");
+      }
+
+      MarkAsDirty();
     }
 
 
@@ -259,6 +275,51 @@ namespace Empiria.Payments {
       // ToDo: Implement a better way to generate unique payment instruction numbers
 
       return "PI-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
+    }
+
+
+    private void SaveInternal() {
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
+
+      if (!IsDirty) {
+        return;
+      }
+
+      PaymentInstructionData.WritePaymentInstruction(this);
+
+      if (_lastBrokerResponse == null) {
+        return;
+      }
+
+      var logEntry = new PaymentInstructionLogEntry(this, _lastBrokerResponse);
+
+      logEntry.Save();
+
+      _lastBrokerResponse = null;
+    }
+
+
+    private void UpdateInternal(BrokerResponseDto brokerResponse) {
+      Assertion.Require(brokerResponse, nameof(brokerResponse));
+
+      if (brokerResponse.Status == Status) {
+        return;
+      }
+
+      EnsureCanUpdateStatusTo(brokerResponse.Status);
+
+      if (BrokerInstructionNo.Length == 0) {
+        BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
+      }
+
+      Status = brokerResponse.Status;
+
+      _lastBrokerResponse = brokerResponse;
+
+      MarkAsDirty();
     }
 
     #endregion Helpers
