@@ -66,16 +66,34 @@ namespace Empiria.Payments.WebApi {
     }
 
 
-    [HttpDelete]
+
+    [HttpPost]
+    [Route("v8/payments-management/payables/{paymentOrderUID:guid}/send-to-pay")] // ToDo: Remove this deprecated route in future versions.
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/pay")]  //  // ToDo: Remove this deprecated route in future versions.
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/create-payment-instruction")]  //  // ToDo: Remove this deprecated route in future versions.
+    public SingleObjectModel CreatePaymentInstruction([FromUri] string paymentOrderUID) {
+
+      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
+
+        PaymentOrderHolderDto paymentOrder = usecases.CreatePaymentInstruction(paymentOrderUID);
+
+        return new SingleObjectModel(this.Request, paymentOrder);
+      }
+    }
+
+
+
+    [HttpPost, HttpDelete]
     [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]   // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
-    public NoDataModel DeletePaymentOrder([FromUri] string paymentOrderUID) {
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/cancel")]
+    public NoDataModel CancelPaymentOrder([FromUri] string paymentOrderUID) {
 
       base.RequireResource(paymentOrderUID, nameof(paymentOrderUID));
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-        usecases.DeletePaymentOrder(paymentOrderUID);
+        usecases.CancelPaymentOrder(paymentOrderUID);
 
         return new NoDataModel(this.Request);
       }

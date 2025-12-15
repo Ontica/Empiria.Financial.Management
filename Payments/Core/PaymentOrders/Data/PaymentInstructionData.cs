@@ -19,20 +19,20 @@ namespace Empiria.Payments.Data {
 
     #region Methods
 
-    static internal FixedList<PaymentInstructionLogEntry> GetPaymentInstructionLogs(PaymentInstruction paymentInstruction) {
-      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
+    static internal List<PaymentInstructionLogEntry> GetPaymentInstructionLog(PaymentInstruction instruction) {
+      Assertion.Require(instruction, nameof(instruction));
 
       var sql = $"SELECT * FROM FMS_PAYMENTS_LOG " +
-                $"WHERE PYMT_LOG_PYMT_INSTRUCTION_ID = {paymentInstruction.Id} " +
+                $"WHERE PYMT_LOG_PYMT_INSTRUCTION_ID = {instruction.Id} " +
                 $"ORDER BY PYMT_LOG_ID";
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<PaymentInstructionLogEntry>(op);
+      return DataReader.GetList<PaymentInstructionLogEntry>(op);
     }
 
 
-    static internal List<PaymentInstruction> GetPaymentOrderInstructions(PaymentOrder paymentOrder) {
+    static internal List<PaymentInstruction> GetPaymentInstructions(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
       var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
@@ -45,10 +45,10 @@ namespace Empiria.Payments.Data {
     }
 
 
-    static internal FixedList<PaymentInstruction> GetPaymentInstructionsInProgress() {
+    static internal FixedList<PaymentInstruction> GetInProgressPaymentInstructions() {
 
       var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
-                $"WHERE PYMT_INSTRUCTION_STATUS = 'A' " +
+                $"WHERE PYMT_INSTRUCTION_STATUS IN ('R', 'I', 'T') " +
                 $"ORDER BY PYMT_INSTRUCTION_ID";
 
       var op = DataOperation.Parse(sql);
@@ -57,36 +57,23 @@ namespace Empiria.Payments.Data {
     }
 
 
-    static internal FixedList<PaymentInstructionLogEntry> GetPaymentOrderInstructionLogs(PaymentOrder paymentOrder) {
-      Assertion.Require(paymentOrder, nameof(paymentOrder));
-
-      var sql = $"SELECT * FROM FMS_PAYMENTS_LOG " +
-                $"WHERE PYMT_LOG_PYMT_ORDER_ID = {paymentOrder.Id} " +
-                $"ORDER BY PYMT_LOG_ID";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<PaymentInstructionLogEntry>(op);
-    }
-
-
-    static internal void WritePaymentInstruction(PaymentInstruction o, string extensionData) {
+    static internal void WritePaymentInstruction(PaymentInstruction o) {
       var op = DataOperation.Parse("write_FMS_Payment_Instruction",
                      o.Id, o.UID, o.GetEmpiriaType().Id, o.PaymentInstructionNo,
                      o.PaymentOrder.Id, o.Description, o.BrokerConfigData.Id,
-                     o.ExternalRequestUniqueNo, extensionData,
+                     o.BrokerInstructionNo, o.ExtData.ToString(),
                      o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
 
 
-    static internal void WritePaymentLog(PaymentInstructionLogEntry o, string extensionData) {
+    static internal void WritePaymentLog(PaymentInstructionLogEntry o) {
       var op = DataOperation.Parse("apd_FMS_Payment_Log",
                      o.Id, o.UID, o.PaymentInstruction.Id, o.PaymentOrder.Id,
-                     o.ExternalResultText, o.ExternalRequestID,
+                     o.BrokerMessage, o.BrokerInstructionNo,
                      o.RequestTime, o.ApplicationTime, o.RecordingTime,
-                     extensionData, (char) o.Status);
+                     o.ExtData.ToString(), (char) o.Status);
 
       DataWriter.Execute(op);
     }

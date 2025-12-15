@@ -16,6 +16,7 @@ using Empiria.Services;
 
 using Empiria.Payments.Adapters;
 using Empiria.Payments.Data;
+using System.Linq;
 
 namespace Empiria.Payments.UseCases {
 
@@ -36,13 +37,34 @@ namespace Empiria.Payments.UseCases {
 
     #region Use cases
 
+    public PaymentOrderHolderDto CreatePaymentInstruction(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var order = PaymentOrder.Parse(paymentOrderUID);
+
+      Assertion.Require(order.Rules.CanGeneratePaymentInstruction(),
+                       "No se puede crear la instrucción de pago");
+
+      order.CreatePaymentInstruction();
+
+      order.Save();
+
+      return PaymentOrderMapper.Map(order);
+    }
+
+
     public PaymentOrderHolderDto CreatePaymentOrder(PaymentOrderFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
 
-
       var payableEntity = (IPayableEntity) BaseObject.Parse(fields.PayableEntityTypeUID, fields.PayableEntityUID);
+
+      var currentPaymentOrders = PaymentOrder.GetListFor(payableEntity);
+
+      Assertion.Require(currentPaymentOrders.All(x => x.Status == PaymentOrderStatus.Canceled ||
+                                                      x.Status == PaymentOrderStatus.Payed),
+                        "Existe una solicitud de pago en proceso o el pago correspondiente ya se efectuó.");
 
       var order = new PaymentOrder(payableEntity);
 
@@ -52,12 +74,12 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    public void DeletePaymentOrder(string paymentOrderUID) {
+    public void CancelPaymentOrder(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
       var order = PaymentOrder.Parse(paymentOrderUID);
 
-      order.Delete();
+      order.Cancel();
 
       order.Save();
     }

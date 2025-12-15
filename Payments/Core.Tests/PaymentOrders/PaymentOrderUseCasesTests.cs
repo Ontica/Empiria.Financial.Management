@@ -61,9 +61,10 @@ namespace Empiria.Tests.Payments {
 
 
     [Fact]
-    public void Should_Delete_Payment_Order() {
-      _usecases.DeletePaymentOrder("3c97430d-41e2-445e-81d2-2b6f9ef75207");
+    public void Should_Cancel_Payment_Order() {
+      _usecases.CancelPaymentOrder("3c97430d-41e2-445e-81d2-2b6f9ef75207");
     }
+
 
     [Fact]
     public void Should_Update_Payment_Order() {

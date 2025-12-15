@@ -48,13 +48,14 @@ namespace Empiria.Payments.Data {
       return DataReader.GetFixedList<PaymentOrder>(dataOperation);
     }
 
-    static internal void WritePaymentOrder(PaymentOrder o, string securityData, string extensionData) {
+
+    static internal void WritePaymentOrder(PaymentOrder o) {
 
       var op = DataOperation.Parse("write_FMS_Payment_Order",
                      o.Id, o.UID, o.GetEmpiriaType().Id, o.PaymentOrderNo, o.Description, o.Observations,
                      o.PayableEntity.GetEmpiriaType().Id, o.PayableEntity.Id, o.PayTo.Id,
                      o.PaymentMethod.Id, o.Currency.Id, o.PaymentAccount.Id, o.DueTime,
-                     securityData, extensionData, o.Keywords, o.RequestedBy.Id,
+                     o.SecurityExtData.ToString(), o.ExtData.ToString(), o.Keywords, o.RequestedBy.Id,
                      o.RequestedTime, o.AuthorizedBy.Id, o.AuthorizedTime, o.PayedBy.Id,
                      o.ClosingTime, o.ClosedBy.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
@@ -62,11 +63,12 @@ namespace Empiria.Payments.Data {
     }
 
 
-    static internal void WritePaymentOrderItem(PaymentOrderItem o, string securityData, string extensionData) {
+    static internal void WritePaymentOrderItem(PaymentOrderItem o) {
       var op = DataOperation.Parse("write_FMS_Payable_Item",
                      o.Id, o.UID, o.GetEmpiriaType().Id, o.PaymentOrder.Id, o.PayableTypeId, o.PayableId,
                      o.Currency.Id, o.DepositAmount, o.WithdrawAmount, o.ExchangeRate,
-                     securityData, extensionData, o.Keywords, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+                     o.SecurityExtData.ToString(), o.ExtData.ToString(), o.Keywords,
+                     o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }

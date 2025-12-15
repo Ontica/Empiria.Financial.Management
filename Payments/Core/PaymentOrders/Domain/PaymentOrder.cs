@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Empiria.Financial;
 using Empiria.Json;
@@ -21,7 +23,7 @@ namespace Empiria.Payments {
   /// <summary>Represents a payment order that serves as an aggregate root of payment instructions.</summary>
   public class PaymentOrder : BaseObject {
 
-    private PaymentOrderInstructions _paymentInstructions;
+    private Lazy<List<PaymentInstruction>> _paymentInstructions;
 
     #region Constructors and parsers
 
@@ -36,7 +38,7 @@ namespace Empiria.Payments {
       _payableEntityTypeId = payableEntity.GetEmpiriaType().Id;
       _payableEntityId = payableEntity.Id;
 
-      _paymentInstructions = new PaymentOrderInstructions(this);
+      RefreshPaymentInstructions();
     }
 
     static internal PaymentOrder Parse(int id) => ParseId<PaymentOrder>(id);
@@ -52,7 +54,7 @@ namespace Empiria.Payments {
     }
 
     protected override void OnLoad() {
-      _paymentInstructions = new PaymentOrderInstructions(this);
+      RefreshPaymentInstructions();
     }
 
     #endregion Constructors and parsers
@@ -127,16 +129,17 @@ namespace Empiria.Payments {
 
 
     [DataField("PYMT_ORD_EXT_DATA")]
-    private JsonObject ExtData {
-      get; set;
+    internal JsonObject ExtData {
+      get; private set;
     }
+
 
     internal string ReferenceNumber {
       get {
-        return this.ExtData.Get("referenceNumber", string.Empty);
+        return ExtData.Get("referenceNumber", string.Empty);
       }
       private set {
-        this.ExtData.SetIfValue("referenceNumber", value);
+        ExtData.SetIfValue("referenceNumber", value);
       }
     }
 
@@ -220,49 +223,102 @@ namespace Empiria.Payments {
     }
 
 
-    public PaymentOrderInstructions PaymentInstructions {
+    internal PaymentOrderRules Rules {
       get {
-        return _paymentInstructions;
+        return new PaymentOrderRules(this);
       }
     }
 
     #endregion Properties
 
+    #region Payment instructions aggregate root
+
+    public FixedList<PaymentInstruction> PaymentInstructions {
+      get {
+        return _paymentInstructions.Value.ToFixedList();
+      }
+    }
+
+
+    public PaymentInstruction LastPaymentInstruction {
+      get {
+        return _paymentInstructions.Value[_paymentInstructions.Value.Count - 1];
+      }
+    }
+
+
+    public void EnsureCanCreateInstruction() {
+      if (IsEmptyInstance) {
+        Assertion.RequireFail("No se puede crear una instrucción de pago " +
+                              "para la instancia Empty.");
+      }
+      if (IsNew) {
+        Assertion.RequireFail("No se puede crear la instrucción de pago " +
+                              "debido a que la solicitud no ha sido guardada.");
+      }
+
+      if (!PaymentInstructions.All(x => x.Status.IsFinal())) {
+        Assertion.RequireFail("No se puede ejecutar la operación debido a que esta " +
+                              "solicitud de pago tiene una instrucción de pago " +
+                              "que está programada o en proceso.");
+      }
+
+      if (Status == PaymentOrderStatus.Pending ||
+          Status == PaymentOrderStatus.Failed) {
+        return;
+      }
+
+      Assertion.RequireFail($"No se puede crear la instrucción de pago debido " +
+                            $"a que tiene el estado {Status.GetName()}.");
+    }
+
+
+    internal PaymentInstruction CreatePaymentInstruction() {
+      Assertion.Require(Rules.CanGeneratePaymentInstruction(),
+                       $"No se puede crear la instrucción de pago por falta de permisos o " +
+                       $"debido a que su estado es {Status.GetName()}.");
+
+      EnsureCanCreateInstruction();
+
+      var instruction = new PaymentInstruction(this);
+
+      _paymentInstructions.Value.Add(instruction);
+
+      Status = PaymentOrderStatus.Programmed;
+
+      return instruction;
+    }
+
+    #endregion Payment instructions aggregate root
+
     #region Methods
 
     internal void Cancel() {
-      Assertion.Require(Status == PaymentOrderStatus.Pending,
-               $"No se puede rechazar el pago debido " +
-               $"a que tiene el estado {Status.GetName()}.");
+      Assertion.Require(Rules.CanCancel(),
+                       $"No se puede cancelar la orden de pago por falta de permisos o " +
+                       $"debido a que su estado es {Status.GetName()}.");
+
       Status = PaymentOrderStatus.Canceled;
     }
 
 
-    internal void Delete() {
-      Assertion.Require(Status == PaymentOrderStatus.Pending,
-                  $"No se puede eliminar una orden de pago que " +
-                  $"está en estado {Status.GetName()}.");
+    internal void Reset() {
+      Assertion.Require(Rules.CanReset(),
+                       $"No se puede resetear la orden de pago por falta de permisos o " +
+                       $"debido a que su estado es {Status.GetName()}.");
 
-      Status = PaymentOrderStatus.Deleted;
+      Status = PaymentOrderStatus.Pending;
     }
 
 
-    internal void EventHandler(PaymentInstruction instruction,
-                               PaymentOrderStatus newStatus) {
-      Assertion.Require(instruction, nameof(instruction));
+    internal void Suspend() {
+      Assertion.Require(Rules.CanSuspend(),
+                       $"No se puede suspender la orden de pago por falta de permisos o " +
+                       $"debido a que su estado es {Status.GetName()}.");
 
-      if (newStatus == PaymentOrderStatus.Payed) {
-        Assertion.Require(Status == PaymentOrderStatus.InProgress,
-                          $"No se puede cambiar el estado del pago debido " +
-                          $"a que tiene el estado {Status.GetName()}.");
-      }
-
-      // ToDo: control other state machine's status
-
-      Status = newStatus;
-
-      Save();
+      Status = PaymentOrderStatus.Suspended;
     }
+
 
     protected override void OnSave() {
       if (base.IsNew) {
@@ -271,17 +327,11 @@ namespace Empiria.Payments {
         PostingTime = DateTime.Now;
       }
 
-      PaymentOrderData.WritePaymentOrder(this, SecurityExtData.ToString(), ExtData.ToString());
-    }
+      PaymentOrderData.WritePaymentOrder(this);
 
-
-    internal void SetAsPending() {
-      Assertion.Require(Status == PaymentOrderStatus.Suspended ||
-                        Status == PaymentOrderStatus.Programmed,
-                        $"No se puede cambiar el estado del pago debido " +
-                        $"a que tiene el estado {Status.GetName()}.");
-
-      Status = PaymentOrderStatus.Pending;
+      foreach (var instruction in _paymentInstructions.Value) {
+        instruction.Save();
+      }
     }
 
 
@@ -335,6 +385,12 @@ namespace Empiria.Payments {
       // ToDo: Generate real pament order number
 
       return "O-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
+    }
+
+
+    private void RefreshPaymentInstructions() {
+      _paymentInstructions = new Lazy<List<PaymentInstruction>>(() =>
+                                          PaymentInstructionData.GetPaymentInstructions(this));
     }
 
     #endregion Helpers

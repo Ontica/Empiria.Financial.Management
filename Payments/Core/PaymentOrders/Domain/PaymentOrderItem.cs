@@ -95,14 +95,14 @@ namespace Empiria.Payments {
 
 
     [DataField("PYMT_ORD_ITEM_SECURITY_EXT_DATA")]
-    private JsonObject SecurityExtData {
-      get; set;
+    internal JsonObject SecurityExtData {
+      get; private set;
     }
 
 
     [DataField("PYMT_ORD_ITEM_EXT_DATA")]
-    private JsonObject ExtData {
-      get; set;
+    internal JsonObject ExtData {
+      get; private set;
     }
 
 
@@ -144,7 +144,7 @@ namespace Empiria.Payments {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
-      PaymentOrderData.WritePaymentOrderItem(this, this.SecurityExtData.ToString(), this.ExtData.ToString());
+      PaymentOrderData.WritePaymentOrderItem(this);
     }
 
 

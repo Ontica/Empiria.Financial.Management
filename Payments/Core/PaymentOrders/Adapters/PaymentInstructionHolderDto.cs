@@ -39,7 +39,7 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public PaymentOrderActionsDto Actions {
+    public PaymentOrderActions Actions {
       get; internal set;
     }
 

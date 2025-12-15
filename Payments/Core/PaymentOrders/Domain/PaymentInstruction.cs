@@ -9,9 +9,12 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Json;
 using Empiria.Parties;
+
+using Empiria.Payments.Processor.Adapters;
 
 using Empiria.Payments.Data;
 
@@ -20,22 +23,32 @@ namespace Empiria.Payments {
   /// <summary>Represents a payment instruction.</summary>
   public class PaymentInstruction : BaseObject {
 
-    private PaymentInstruction() {
+    private Lazy<List<PaymentInstructionLogEntry>> _logEntries;
+
+    private BrokerResponseDto _lastBrokerResponse;
+
+    private readonly object _locker = new object();
+
+    #region Constructors and parsers
+
+    protected PaymentInstruction() {
       // Required by Empira Framework
     }
 
-    internal PaymentInstruction(PaymentsBrokerConfigData brokerConfigData,
-                                PaymentOrder paymentOrder) {
-      Assertion.Require(brokerConfigData, nameof(brokerConfigData));
-      Assertion.Require(!brokerConfigData.IsEmptyInstance, nameof(brokerConfigData));
+    internal PaymentInstruction(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
       Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
-      Assertion.Require(paymentOrder.PaymentInstructions.CanCreateNewInstruction(),
-                        $"Payment order has status {paymentOrder.Status}. " +
-                        $"Payment instruction can not be created.");
+
+      PaymentsBrokerConfigData brokerConfigData = PaymentsBrokerConfigData.GetPaymentsBroker(paymentOrder);
+
+      Assertion.Require(brokerConfigData, nameof(brokerConfigData));
+      Assertion.Require(!brokerConfigData.IsEmptyInstance, nameof(brokerConfigData));
+
       BrokerConfigData = brokerConfigData;
       PaymentOrder = paymentOrder;
       PaymentInstructionNo = GeneratePaymentInstructionNo();
+
+      LoadLogEntries();
     }
 
     static public PaymentInstruction Parse(int id) => ParseId<PaymentInstruction>(id);
@@ -43,6 +56,17 @@ namespace Empiria.Payments {
     static public PaymentInstruction Parse(string uid) => ParseKey<PaymentInstruction>(uid);
 
     static public PaymentInstruction Empty => ParseEmpty<PaymentInstruction>();
+
+    static internal FixedList<PaymentInstruction> GetInProgress() {
+      return PaymentInstructionData.GetInProgressPaymentInstructions();
+    }
+
+    protected override void OnLoad() {
+      LoadLogEntries();
+    }
+
+
+    #endregion Constructors and parsers
 
     #region Properties
 
@@ -71,15 +95,14 @@ namespace Empiria.Payments {
 
 
     [DataField("PYMT_INSTRUCTION_EXTERNAL_REQUEST_NO")]
-    public string ExternalRequestUniqueNo {
-      get;
-      private set;
+    public string BrokerInstructionNo {
+      get; private set;
     }
 
 
     [DataField("PYMT_INSTRUCTION_EXT_DATA")]
-    protected JsonObject ExtData {
-      get; set;
+    internal JsonObject ExtData {
+      get; private set;
     }
 
 
@@ -95,69 +118,147 @@ namespace Empiria.Payments {
     }
 
 
-    [DataField("PYMT_INSTRUCTION_STATUS", Default = PaymentInstructionStatus.Pending)]
+    [DataField("PYMT_INSTRUCTION_STATUS", Default = PaymentInstructionStatus.Programmed)]
     public PaymentInstructionStatus Status {
       get; private set;
+    }
+
+
+    public DateTime EffectiveDate {
+      get {
+        return PostingTime;
+      }
+    }
+
+
+    public DateTime ProgrammedDate {
+      get {
+        return PostingTime;
+      }
+    }
+
+    internal FixedList<PaymentInstructionLogEntry> LogEntries {
+      get {
+        return _logEntries.Value.ToFixedList();
+      }
     }
 
     #endregion Properties
 
     #region Methods
 
-    protected override void OnSave() {
-      if (base.IsNew) {
-        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        this.PostingTime = DateTime.Now;
+    internal void EventHandler(PaymentInstructionEvent instructionEvent) {
+      lock (_locker) {
+        EventHandlerInternal(instructionEvent);
       }
-
-      PaymentInstructionData.WritePaymentInstruction(this, ExtData.ToString());
     }
 
 
-    internal void SetExternalUniqueNo(string uniqueNo) {
-      Assertion.Require(uniqueNo, nameof(uniqueNo));
-      Assertion.Require(ExternalRequestUniqueNo.Length == 0,
-                        "ExternalRequestUniqueNo already assigned.");
-
-      ExternalRequestUniqueNo = uniqueNo;
+    protected override void OnSave() {
+      lock (_locker) {
+        SaveInternal();
+      }
     }
 
 
-    internal void UpdateStatus(PaymentInstructionStatus status) {
-      EnsureCanUpdateStatusTo(status);
-
-      this.Status = status;
-    }
-
-
-    static internal FixedList<PaymentInstruction> GetInProgress() {
-      return PaymentInstructionData.GetPaymentInstructionsInProgress();
+    internal void Update(BrokerResponseDto brokerResponse) {
+      lock (_locker) {
+        UpdateInternal(brokerResponse);
+      }
     }
 
     #endregion Methods
 
     #region Helpers
 
-    private void EnsureCanUpdateStatusTo(PaymentInstructionStatus newStatus) {
-      if (this.Status.IsFinal()) {
-        Assertion.RequireFail("La instrucción de pago no se puede modificar " +
-                              $"debido a que está en el estado final: {this.Status.GetName()}.");
+    private void EventHandlerInternal(PaymentInstructionEvent instructionEvent) {
+      switch (instructionEvent) {
+        case PaymentInstructionEvent.Cancel:
+
+          Status.EnsureCanUpdateTo(PaymentInstructionStatus.Canceled);
+          Status = PaymentInstructionStatus.Canceled;
+          break;
+
+        case PaymentInstructionEvent.CancelPaymentRequest:
+          Status.EnsureCanUpdateTo(PaymentInstructionStatus.Programmed);
+          Status = PaymentInstructionStatus.Programmed;
+          break;
+
+        case PaymentInstructionEvent.RequestPayment:
+          Status.EnsureCanUpdateTo(PaymentInstructionStatus.WaitingRequest);
+          Status = PaymentInstructionStatus.WaitingRequest;
+          break;
+
+        case PaymentInstructionEvent.Suspend:
+          Status.EnsureCanUpdateTo(PaymentInstructionStatus.Suspended);
+          Status = PaymentInstructionStatus.Suspended;
+          break;
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unhandled payment instruction event: {instructionEvent}.");
       }
-      if (!this.Status.IsFinal() && newStatus.IsFinal()) {
-        return;
-      }
-      if (this.Status == PaymentInstructionStatus.InProcess &&
-          newStatus == PaymentInstructionStatus.Pending) {
-        Assertion.RequireFail("No es posible cambiar el estado de la instrucción de pago " +
-                              "de en proceso a pendiente.");
-      }
+
+      MarkAsDirty();
     }
 
 
-    private string GeneratePaymentInstructionNo() {
+    static private string GeneratePaymentInstructionNo() {
       // ToDo: Implement a better way to generate unique payment instruction numbers
 
       return "PI-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
+    }
+
+
+    private void LoadLogEntries() {
+      _logEntries = new Lazy<List<PaymentInstructionLogEntry>>(() =>
+                                                  PaymentInstructionData.GetPaymentInstructionLog(this));
+    }
+
+    private void SaveInternal() {
+
+      if (!IsDirty) {
+        return;
+      }
+
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
+
+      PaymentInstructionData.WritePaymentInstruction(this);
+
+      if (_lastBrokerResponse == null) {
+        return;
+      }
+
+      var logEntry = new PaymentInstructionLogEntry(this, _lastBrokerResponse);
+
+      logEntry.Save();
+
+      _logEntries.Value.Add(logEntry);
+
+      _lastBrokerResponse = null;
+    }
+
+
+    private void UpdateInternal(BrokerResponseDto brokerResponse) {
+      Assertion.Require(brokerResponse, nameof(brokerResponse));
+
+      if (brokerResponse.Status == Status) {
+        return;
+      }
+
+      Status.EnsureCanUpdateTo(brokerResponse.Status);
+
+      if (BrokerInstructionNo.Length == 0) {
+        BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
+      }
+
+      Status = brokerResponse.Status;
+
+      _lastBrokerResponse = brokerResponse;
+
+      MarkAsDirty();
     }
 
     #endregion Helpers

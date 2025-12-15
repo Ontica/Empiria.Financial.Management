@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 using Empiria.Services;
 
-using Empiria.Payments.Adapters;
+using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Processor {
 
@@ -37,136 +37,55 @@ namespace Empiria.Payments.Processor {
       Assertion.Require(!instruction.IsEmptyInstance, nameof(instruction));
       Assertion.Require(!instruction.IsNew, "paymentInstruction must be stored.");
 
-
-      Assertion.Require(!instruction.Status.IsFinal(),
-                        $"La instrucción de pago está en un estado final: {instruction.Status.GetName()}");
-
+      if (instruction.Status.IsFinal()) {
+        return;
+      }
 
       IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
 
-      Assertion.Require(instruction.ExternalRequestUniqueNo, "ExternalRequestUniqueNo missed.");
+      Assertion.Require(instruction.BrokerInstructionNo, nameof(instruction.BrokerInstructionNo));
 
-      PaymentInstructionStatusDto newStatus = await paymentsService.GetPaymentInstructionStatus(instruction.ExternalRequestUniqueNo);
+      BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
 
-      UpdatePaymentOrder(instruction, newStatus);
+      BrokerResponseDto brokerResponse = await paymentsService.RequestPaymentStatus(brokerRequest);
 
-      UpdatePaymentLog(instruction, newStatus);
+      instruction.Update(brokerResponse);
     }
 
 
-    public async Task<PaymentOrderHolderDto> SendPaymentOrderToPay(string paymentOrderUID) {
-      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+    public async Task SendPaymentInstruction(PaymentInstruction instruction) {
+      Assertion.Require(instruction, nameof(instruction));
+      Assertion.Require(!instruction.IsEmptyInstance, nameof(instruction));
+      Assertion.Require(!instruction.IsNew, "paymentInstruction must be stored.");
+      Assertion.Require(instruction.BrokerInstructionNo.Length == 0, "BrokerInstructionNo must be empty.");
 
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+      Assertion.Require(instruction.Status == PaymentInstructionStatus.WaitingRequest,
+                        "PaymentInstruction status must be 'WaitingRequest'.");
 
-      PaymentsBrokerConfigData broker = PaymentsBrokerConfigData.GetPaymentsBroker(paymentOrder);
+      IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
 
-      _ = await SendToPay(broker, paymentOrder);
+      BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
 
-      return PaymentOrderMapper.Map(paymentOrder);
+      BrokerResponseDto brokerResponse = await paymentsService.SendPaymentInstruction(brokerRequest);
+
+      instruction.Update(brokerResponse);
     }
 
 
-    public async Task<int> ValidatePayment() {
-      var paymentInstructions = PaymentInstruction.GetInProgress();
-      int count = 0;
+    public async Task UpdateInProgressPaymentInstructions() {
+      var inProgressInstructions = PaymentInstruction.GetInProgress();
 
-      foreach (var paymentInstruction in paymentInstructions) {
-        await RefreshPaymentInstruction(paymentInstruction);
-        count++;
+      foreach (var instruction in inProgressInstructions) {
+        await RefreshPaymentInstruction(instruction);
       }
-
-      return count;
     }
-
-
-    public async Task<PaymentOrderHolderDto> ValidatePaymentOrderIsPayed(string paymentOrderUID) {
-      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
-
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-
-      PaymentsBrokerConfigData broker = PaymentsBrokerConfigData.GetPaymentsBroker(paymentOrder);
-
-      var currentInstruction = paymentOrder.PaymentInstructions.Current;
-
-      if (currentInstruction.Status == PaymentInstructionStatus.InProcess) {
-        await RefreshPaymentInstruction(currentInstruction);
-      }
-
-      return PaymentOrderMapper.Map(paymentOrder);
-    }
-
-
-    internal async Task<PaymentInstruction> SendToPay(PaymentsBrokerConfigData broker, PaymentOrder paymentOrder) {
-      Assertion.Require(broker, nameof(broker));
-      Assertion.Require(!broker.IsEmptyInstance, nameof(broker));
-      Assertion.Require(paymentOrder, nameof(paymentOrder));
-      Assertion.Require(!paymentOrder.IsEmptyInstance, nameof(paymentOrder));
-
-      await Task.CompletedTask;
-
-      Assertion.Require(paymentOrder.PaymentInstructions.CanCreateNewInstruction(),
-                        $"No es posible crear la instrucción de pago debido a que " +
-                        $"la solicitud de pago está en estado {paymentOrder.Status.GetName()}.");
-
-      IPaymentsBrokerService brokerService = broker.GetService();
-
-      PaymentInstruction instruction = paymentOrder.PaymentInstructions.CreatePaymentInstruction(broker);
-
-      paymentOrder.Save();
-
-      PaymentInstructionDto instructionDto = PaymentInstructionMapper.MapForBroker(instruction);
-
-      PaymentInstructionResultDto paymentResult = await brokerService.SendPaymentInstruction(instructionDto);
-
-      paymentOrder.PaymentInstructions.UpdatePaymentInstruction(instruction,
-                                            paymentResult.ExternalRequestID,
-                                            paymentResult.Status);
-
-      paymentOrder.Save();
-
-      UpdatePaymentLog(instruction, paymentResult);
-
-      return instruction;
-    }
-
 
     #endregion Services
 
     #region Helpers
 
-    static private void UpdatePaymentOrder(PaymentInstruction instruction,
-                                           PaymentInstructionStatusDto newStatus) {
-      var paymentOrder = instruction.PaymentOrder;
-
-      if (newStatus.Status == PaymentInstructionStatus.Payed) {
-        paymentOrder.EventHandler(instruction, PaymentOrderStatus.Payed);
-
-      } else if (newStatus.Status == PaymentInstructionStatus.Failed) {
-        paymentOrder.EventHandler(instruction, PaymentOrderStatus.Failed);
-
-      }
-    }
-
-
-    static private void UpdatePaymentLog(PaymentInstruction paymentInstruction,
-                                         PaymentInstructionResultDto paymentResultDto) {
-
-      var logEntry = new PaymentInstructionLogEntry(paymentInstruction, paymentResultDto);
-
-      logEntry.Save();
-    }
-
-    private void UpdatePaymentLog(PaymentInstruction paymentInstruction,
-                                  PaymentInstructionStatusDto newStatus) {
-      var logEntry = new PaymentInstructionLogEntry(paymentInstruction, newStatus);
-
-      if (paymentInstruction.Status != newStatus.Status) {
-        paymentInstruction.UpdateStatus(newStatus.Status);
-        paymentInstruction.Save();
-      }
-
-      logEntry.Save();
+    static private BrokerRequestDto MapToBrokerRequest(PaymentInstruction instruction) {
+      return new BrokerRequestDto(instruction);
     }
 
     #endregion Helpers

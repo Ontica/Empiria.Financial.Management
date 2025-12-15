@@ -12,29 +12,6 @@ using System;
 
 namespace Empiria.Payments.Adapters {
 
-  /// <summary>Output DTO that holds information about a payment instruction
-  /// to be sent to a payments broker.</summary>
-  public class PaymentInstructionDto {
-
-    public PaymentOrder PaymentOrder {
-      get; internal set;
-    }
-
-    public string ReferenceNo {
-      get; internal set;
-    }
-
-    public string RequestUniqueNo {
-      get; internal set;
-    }
-
-    public DateTime RequestedTime {
-      get; internal set;
-    }
-
-  }  // class PaymentInstructionDto
-
-
   /// <summary>Output DTO used to return minimal payment instruction's data for use in lists.</summary>
   public class PaymentInstructionDescriptor {
 

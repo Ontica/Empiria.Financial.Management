@@ -11,7 +11,8 @@
 using System;
 using Empiria.Json;
 
-using Empiria.Payments.Adapters;
+using Empiria.Payments.Processor.Adapters;
+
 using Empiria.Payments.Data;
 
 namespace Empiria.Payments {
@@ -27,27 +28,14 @@ namespace Empiria.Payments {
 
 
     internal PaymentInstructionLogEntry(PaymentInstruction paymentInstruction,
-                                        PaymentInstructionResultDto paymentResultDto) {
+                                        BrokerResponseDto brokerResponse) {
       Assertion.Require(paymentInstruction, nameof(paymentInstruction));
       Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
-      Assertion.Require(paymentResultDto, nameof(paymentResultDto));
+      Assertion.Require(brokerResponse, nameof(brokerResponse));
 
       PaymentInstruction = paymentInstruction;
       PaymentOrder = paymentInstruction.PaymentOrder;
-      Load(paymentResultDto);
-    }
-
-
-    internal PaymentInstructionLogEntry(PaymentInstruction paymentInstruction,
-                                        PaymentInstructionStatusDto newStatus) {
-      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
-      Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
-      Assertion.Require(newStatus, nameof(newStatus));
-
-      PaymentInstruction = paymentInstruction;
-      PaymentOrder = paymentInstruction.PaymentOrder;
-
-      Load(newStatus);
+      Load(brokerResponse);
     }
 
 
@@ -56,10 +44,6 @@ namespace Empiria.Payments {
     static public PaymentInstructionLogEntry Parse(string uid) => ParseKey<PaymentInstructionLogEntry>(uid);
 
     static public PaymentInstructionLogEntry Empty => ParseEmpty<PaymentInstructionLogEntry>();
-
-    static internal FixedList<PaymentInstructionLogEntry> GetListFor(PaymentInstruction instruction) {
-      return PaymentInstructionData.GetPaymentInstructionLogs(instruction);
-    }
 
     #endregion Constructors and parsers
 
@@ -79,7 +63,7 @@ namespace Empiria.Payments {
 
 
     [DataField("PYMT_LOG_REQUEST_CODE")]
-    public string ExternalRequestID {
+    public string BrokerInstructionNo {
       get; private set;
     } = string.Empty;
 
@@ -101,22 +85,33 @@ namespace Empiria.Payments {
       get; set;
     }
 
+
     [DataField("PYMT_LOG_TEXT")]
-    public string ExternalResultText {
+    public string BrokerMessage {
       get; private set;
     } = string.Empty;
 
 
+    public string BrokerStatusText {
+      get {
+        return ExtData.Get("brokerStatusText", string.Empty);
+      }
+      private set {
+        ExtData.SetIfValue("brokerStatusText", value);
+      }
+    }
+
+
     [DataField("PYMT_LOG_EXT_DATA")]
-    protected JsonObject ExtData {
-      get; set;
-    } = JsonObject.Empty;
+    internal JsonObject ExtData {
+      get; private set;
+    }
 
 
-    [DataField("PYMT_LOG_STATUS", Default = PaymentInstructionStatus.Pending)]
+    [DataField("PYMT_LOG_STATUS", Default = PaymentInstructionStatus.Programmed)]
     public PaymentInstructionStatus Status {
       get; set;
-    } = PaymentInstructionStatus.Pending;
+    } = PaymentInstructionStatus.Programmed;
 
 
     #endregion Properties
@@ -125,28 +120,17 @@ namespace Empiria.Payments {
 
     protected override void OnSave() {
       RecordingTime = DateTime.Now;
-      PaymentInstructionData.WritePaymentLog(this, ExtData.ToString());
+      PaymentInstructionData.WritePaymentLog(this);
     }
 
 
-    private void Load(PaymentInstructionResultDto dto) {
+    private void Load(BrokerResponseDto brokerResponse) {
       var time = DateTime.Now;
 
-      ExternalRequestID = dto.ExternalRequestID;
-      ExternalResultText = dto.ExternalResultText;
-      Status = PaymentInstruction.Status;
-
-      RequestTime = time;
-      ApplicationTime = time;
-    }
-
-
-    private void Load(PaymentInstructionStatusDto newStatus) {
-      var time = DateTime.Now;
-
-      ExternalRequestID = newStatus.ExternalRequestID;
-      ExternalResultText = newStatus.ExternalStatusName;
-      Status = newStatus.Status;
+      BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
+      BrokerMessage = brokerResponse.BrokerMessage;
+      BrokerStatusText = brokerResponse.BrokerStatusText;
+      Status = brokerResponse.Status;
 
       RequestTime = time;
       ApplicationTime = time;

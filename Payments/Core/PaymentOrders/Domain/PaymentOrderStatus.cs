@@ -15,9 +15,7 @@ namespace Empiria.Payments {
 
     Pending = 'P',
 
-    Canceled = 'L',
-
-    Deleted = 'X',
+    Canceled = 'X',
 
     Suspended = 'S',
 
@@ -46,9 +44,6 @@ namespace Empiria.Payments {
         case PaymentOrderStatus.Canceled:
           return "Cancelada";
 
-        case PaymentOrderStatus.Deleted:
-          return "Eliminada";
-
         case PaymentOrderStatus.Suspended:
           return "Suspendida";
 
@@ -56,17 +51,27 @@ namespace Empiria.Payments {
           return "Programada";
 
         case PaymentOrderStatus.InProgress:
-          return "En proceso";
+          return "En progreso";
 
         case PaymentOrderStatus.Payed:
           return "Pagada";
 
         case PaymentOrderStatus.Failed:
-          return "El pago falló";
+          return "Pago rechazado";
 
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled payment order status {status}.");
       }
+    }
+
+
+    static public bool IsFinal(this PaymentOrderStatus status) {
+      if (status == PaymentOrderStatus.Canceled ||
+          status == PaymentOrderStatus.Payed ||
+          status == PaymentOrderStatus.Failed) {
+        return true;
+      }
+      return false;
     }
 
 

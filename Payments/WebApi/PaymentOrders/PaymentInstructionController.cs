@@ -48,6 +48,57 @@ namespace Empiria.Payments.WebApi {
 
     #endregion Query web apis
 
+    #region Query web apis
+
+    [HttpPost]
+    [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/cancel")]
+    public SingleObjectModel Cancel([FromUri] string instructionUID) {
+
+      using (var usecases = PaymentInstructionUseCases.UseCaseInteractor()) {
+        PaymentInstructionHolderDto instruction = usecases.Cancel(instructionUID);
+
+        return new SingleObjectModel(base.Request, instruction);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/cancel-payment-request")]
+    public SingleObjectModel CancelPaymentRequest([FromUri] string instructionUID) {
+
+      using (var usecases = PaymentInstructionUseCases.UseCaseInteractor()) {
+        PaymentInstructionHolderDto instruction = usecases.CancelPaymentRequest(instructionUID);
+
+        return new SingleObjectModel(base.Request, instruction);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/request-payment")]
+    public SingleObjectModel RequestPayment([FromUri] string instructionUID) {
+
+      using (var usecases = PaymentInstructionUseCases.UseCaseInteractor()) {
+        PaymentInstructionHolderDto instruction = usecases.RequestPayment(instructionUID);
+
+        return new SingleObjectModel(base.Request, instruction);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/suspend")]
+    public SingleObjectModel Suspend([FromUri] string instructionUID) {
+
+      using (var usecases = PaymentInstructionUseCases.UseCaseInteractor()) {
+        PaymentInstructionHolderDto instruction = usecases.Suspend(instructionUID);
+
+        return new SingleObjectModel(base.Request, instruction);
+      }
+    }
+
+    #endregion Query web apis
+
   }  // class PaymentInstructionController
 
 }  // namespace Empiria.Payments.WebApi

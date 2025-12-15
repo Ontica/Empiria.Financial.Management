@@ -9,19 +9,18 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Threading.Tasks;
-
-using Empiria.Payments.Adapters;
+using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments.Processor {
 
   /// <summary>Interface to integrate payments broker service providers with Empiria Payments.</summary>
   public interface IPaymentsBrokerService {
 
-    Task<PaymentInstructionResultDto> CancelPaymentInstruction(PaymentInstructionDto instruction);
+    Task<BrokerResponseDto> CancelPaymentInstruction(BrokerRequestDto brokerRequest);
 
-    Task<PaymentInstructionStatusDto> GetPaymentInstructionStatus(string instructionUID);
+    Task<BrokerResponseDto> RequestPaymentStatus(BrokerRequestDto brokerRequest);
 
-    Task<PaymentInstructionResultDto> SendPaymentInstruction(PaymentInstructionDto instruction);
+    Task<BrokerResponseDto> SendPaymentInstruction(BrokerRequestDto brokerRequest);
 
   }  // interface IPaymentsBrokerService
 

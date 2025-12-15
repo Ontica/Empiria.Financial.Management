@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Documents;
 using Empiria.History;
 
@@ -20,18 +18,18 @@ namespace Empiria.Payments.Adapters {
 
   static internal class PaymentInstructionMapper {
 
-    static internal PaymentInstructionHolderDto Map(PaymentInstruction paymentInstruction) {
+    static internal PaymentInstructionHolderDto Map(PaymentInstruction instruction) {
 
-      var paymentOrder = paymentInstruction.PaymentOrder;
+      var paymentOrder = instruction.PaymentOrder;
       var bills = Bill.GetListFor(paymentOrder.PayableEntity);
 
       return new PaymentInstructionHolderDto {
         PaymentOrder = PaymentOrderMapper.MapPaymentOrder(paymentOrder),
-        Log = PaymentInstructionLogMapper.Map(paymentInstruction),
+        Log = PaymentInstructionLogMapper.Map(instruction),
         Bills = BillMapper.MapToBillDto(bills),
         Documents = DocumentServices.GetEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),
-        Actions = new PaymentOrderActionsDto()
+        Actions = new PaymentOrderActions()
       };
     }
 
@@ -41,35 +39,26 @@ namespace Empiria.Payments.Adapters {
     }
 
 
-    static internal PaymentInstructionDto MapForBroker(PaymentInstruction paymentInstruction) {
-      return new PaymentInstructionDto {
-        RequestedTime = DateTime.Now,
-        ReferenceNo = paymentInstruction.PaymentInstructionNo,
-        RequestUniqueNo = paymentInstruction.PaymentInstructionNo,
-        PaymentOrder = paymentInstruction.PaymentOrder,
-      };
-    }
-
     #region Helpers
 
-    static private PaymentInstructionDescriptor MapToDescriptor(PaymentInstruction x) {
+    static private PaymentInstructionDescriptor MapToDescriptor(PaymentInstruction instruction) {
       return new PaymentInstructionDescriptor {
-        UID = x.UID,
-        PaymentOrderTypeName = x.BrokerConfigData.Name,
-        PayTo = x.PaymentOrder.PayTo.Name,
-        PaymentOrderNo = x.PaymentInstructionNo,
-        PaymentAccount = $"{x.PaymentOrder.PaymentAccount.Institution.Name} {x.PaymentOrder.PaymentAccount.AccountNo}",
-        PaymentMethod = x.PaymentOrder.PaymentMethod.Name,
-        RequestedBy = x.ExternalRequestUniqueNo,
-        RequestedTime = x.PaymentOrder.RequestedTime,
-        RequestedDate = x.PaymentOrder.RequestedTime,
-        DueTime = x.PaymentOrder.DueTime,
-        Total = x.PaymentOrder.Total,
-        CurrencyCode = x.PaymentOrder.Currency.ISOCode,
-        BudgetTypeName = x.PaymentOrder.PayableEntity.Budget.Name,
-        PayableNo = x.PaymentOrder.PayableEntity.EntityNo,
-        PayableTypeName = x.BrokerConfigData.Name,
-        StatusName = x.Status.GetName()
+        UID = instruction.UID,
+        PaymentOrderTypeName = instruction.BrokerConfigData.Name,
+        PayTo = instruction.PaymentOrder.PayTo.Name,
+        PaymentOrderNo = instruction.PaymentInstructionNo,
+        PaymentAccount = $"{instruction.PaymentOrder.PaymentAccount.Institution.Name} {instruction.PaymentOrder.PaymentAccount.AccountNo}",
+        PaymentMethod = instruction.PaymentOrder.PaymentMethod.Name,
+        RequestedBy = instruction.BrokerInstructionNo,
+        RequestedTime = instruction.PaymentOrder.RequestedTime,
+        RequestedDate = instruction.PaymentOrder.RequestedTime,
+        DueTime = instruction.PaymentOrder.DueTime,
+        Total = instruction.PaymentOrder.Total,
+        CurrencyCode = instruction.PaymentOrder.Currency.ISOCode,
+        BudgetTypeName = instruction.PaymentOrder.PayableEntity.Budget.Name,
+        PayableNo = instruction.PaymentOrder.PayableEntity.EntityNo,
+        PayableTypeName = instruction.BrokerConfigData.Name,
+        StatusName = instruction.Status.GetName()
       };
     }
 
