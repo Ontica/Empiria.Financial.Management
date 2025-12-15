@@ -16,8 +16,6 @@ using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
 
-using Empiria.Payments.Processor.Adapters;
-
 using Empiria.Payments.Data;
 
 namespace Empiria.Payments {
@@ -280,23 +278,6 @@ namespace Empiria.Payments {
 
       return instruction;
     }
-
-
-    internal void UpdatePaymentInstruction(PaymentInstruction instruction,
-                                           BrokerResponseDto brokerResponse) {
-      Assertion.Require(instruction, nameof(instruction));
-      Assertion.Require(brokerResponse, nameof(brokerResponse));
-
-      instruction.Update(brokerResponse);
-
-      if (brokerResponse.Status == PaymentInstructionStatus.InProgress) {
-        Status = PaymentOrderStatus.InProgress;
-
-      } else if (brokerResponse.Status == PaymentInstructionStatus.Failed) {
-        Status = PaymentOrderStatus.Failed;
-      }
-    }
-
 
     #endregion Payment instructions aggregate root
 
