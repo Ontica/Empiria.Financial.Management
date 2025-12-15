@@ -171,111 +171,26 @@ namespace Empiria.Payments {
 
     #region Helpers
 
-    private void EnsureCanUpdateStatusTo(PaymentInstructionStatus newStatus) {
-
-      if (this.Status.IsFinal()) {
-        Assertion.RequireFail("El estado de la instrucción de pago no se puede modificar " +
-                               $"debido a que está en el estado final: {this.Status.GetName()}.");
-      }
-
-
-      switch (Status) {
-        case PaymentInstructionStatus.Programmed:
-
-          if (newStatus == PaymentInstructionStatus.WaitingRequest ||
-              newStatus == PaymentInstructionStatus.Canceled ||
-              newStatus == PaymentInstructionStatus.Suspended) {
-
-            return;
-          }
-
-          break;
-
-        case PaymentInstructionStatus.Suspended:
-
-          if (newStatus == PaymentInstructionStatus.Programmed ||
-              newStatus == PaymentInstructionStatus.Canceled) {
-
-            return;
-          }
-
-          break;
-
-        case PaymentInstructionStatus.WaitingRequest:
-
-          if (newStatus == PaymentInstructionStatus.Programmed ||
-              newStatus == PaymentInstructionStatus.Requested) {
-
-            return;
-          }
-
-          break;
-
-        case PaymentInstructionStatus.Requested:
-
-          if (newStatus == PaymentInstructionStatus.InProgress ||
-              newStatus == PaymentInstructionStatus.Failed) {
-
-            return;
-          }
-
-          break;
-
-        case PaymentInstructionStatus.InProgress:
-
-          if (newStatus == PaymentInstructionStatus.InProgress ||
-              newStatus == PaymentInstructionStatus.PaymentConfirmation ||
-              newStatus == PaymentInstructionStatus.Failed) {
-
-            return;
-          }
-
-          break;
-
-
-        case PaymentInstructionStatus.PaymentConfirmation:
-
-          if (newStatus == PaymentInstructionStatus.Payed ||
-              newStatus == PaymentInstructionStatus.Failed) {
-
-            return;
-          }
-
-          break;
-
-        default:
-
-          throw Assertion.EnsureNoReachThisCode($"Invalid payment instruction status change from " +
-                                                $"{Status.GetName()} to {newStatus.GetName()}.");
-      }
-
-
-      Assertion.RequireFail("No es posible cambiar el estado de la instrucción de pago " +
-                            $"del estado {Status.GetName()} al estado {newStatus.GetName()}.");
-    }
-
-
-
     private void EventHandlerInternal(PaymentInstructionEvent instructionEvent) {
       switch (instructionEvent) {
         case PaymentInstructionEvent.Cancel:
 
-          EnsureCanUpdateStatusTo(PaymentInstructionStatus.Canceled);
+          Status.EnsureCanUpdateTo(PaymentInstructionStatus.Canceled);
           Status = PaymentInstructionStatus.Canceled;
           break;
 
         case PaymentInstructionEvent.CancelPaymentRequest:
-          EnsureCanUpdateStatusTo(PaymentInstructionStatus.Programmed);
+          Status.EnsureCanUpdateTo(PaymentInstructionStatus.Programmed);
           Status = PaymentInstructionStatus.Programmed;
           break;
 
         case PaymentInstructionEvent.RequestPayment:
-          EnsureCanUpdateStatusTo(PaymentInstructionStatus.WaitingRequest);
+          Status.EnsureCanUpdateTo(PaymentInstructionStatus.WaitingRequest);
           Status = PaymentInstructionStatus.WaitingRequest;
           break;
 
         case PaymentInstructionEvent.Suspend:
-          EnsureCanUpdateStatusTo(PaymentInstructionStatus.Suspended);
+          Status.EnsureCanUpdateTo(PaymentInstructionStatus.Suspended);
           Status = PaymentInstructionStatus.Suspended;
           break;
 
@@ -333,7 +248,7 @@ namespace Empiria.Payments {
         return;
       }
 
-      EnsureCanUpdateStatusTo(brokerResponse.Status);
+      Status.EnsureCanUpdateTo(brokerResponse.Status);
 
       if (BrokerInstructionNo.Length == 0) {
         BrokerInstructionNo = brokerResponse.BrokerInstructionNo;

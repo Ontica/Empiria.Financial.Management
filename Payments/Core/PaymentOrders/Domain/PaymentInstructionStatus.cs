@@ -37,8 +37,92 @@ namespace Empiria.Payments {
 
 
 
-  /// <summary>Extension methods for PaymentInstructionStatus enumeration.</summary>
+  /// <summary>Extension methods for PaymentInstructionStatus.</summary>
   static public class PaymentInstructionStatusExtensions {
+
+    static internal void EnsureCanUpdateTo(this PaymentInstructionStatus currentStatus,
+                                           PaymentInstructionStatus newStatus) {
+
+      if (currentStatus.IsFinal()) {
+        Assertion.RequireFail("El estado de la instrucción de pago no se puede modificar " +
+                               $"debido a que está en el estado final: {currentStatus.GetName()}.");
+      }
+
+
+      switch (currentStatus) {
+        case PaymentInstructionStatus.Programmed:
+
+          if (newStatus == PaymentInstructionStatus.WaitingRequest ||
+              newStatus == PaymentInstructionStatus.Canceled ||
+              newStatus == PaymentInstructionStatus.Suspended) {
+
+            return;
+          }
+
+          break;
+
+        case PaymentInstructionStatus.Suspended:
+
+          if (newStatus == PaymentInstructionStatus.Programmed ||
+              newStatus == PaymentInstructionStatus.Canceled) {
+
+            return;
+          }
+
+          break;
+
+        case PaymentInstructionStatus.WaitingRequest:
+
+          if (newStatus == PaymentInstructionStatus.Programmed ||
+              newStatus == PaymentInstructionStatus.Requested) {
+
+            return;
+          }
+
+          break;
+
+        case PaymentInstructionStatus.Requested:
+
+          if (newStatus == PaymentInstructionStatus.InProgress ||
+              newStatus == PaymentInstructionStatus.Failed) {
+
+            return;
+          }
+
+          break;
+
+        case PaymentInstructionStatus.InProgress:
+
+          if (newStatus == PaymentInstructionStatus.InProgress ||
+              newStatus == PaymentInstructionStatus.PaymentConfirmation ||
+              newStatus == PaymentInstructionStatus.Failed) {
+
+            return;
+          }
+
+          break;
+
+        case PaymentInstructionStatus.PaymentConfirmation:
+
+          if (newStatus == PaymentInstructionStatus.Payed ||
+              newStatus == PaymentInstructionStatus.Failed) {
+
+            return;
+          }
+
+          break;
+
+        default:
+
+          throw Assertion.EnsureNoReachThisCode($"Unhandled payment instruction status change from " +
+                                                $"{currentStatus.GetName()} to {newStatus.GetName()}.");
+      }
+
+
+      Assertion.RequireFail($"No es posible cambiar el estado de la instrucción de pago " +
+                            $"del estado {currentStatus.GetName()} a {newStatus.GetName()}.");
+    }
+
 
     static public bool IsFinal(this PaymentInstructionStatus status) {
       if (status == PaymentInstructionStatus.Canceled ||

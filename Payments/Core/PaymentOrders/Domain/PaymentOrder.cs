@@ -380,7 +380,7 @@ namespace Empiria.Payments {
 
     private void RefreshPaymentInstructions() {
       _paymentInstructions = new Lazy<List<PaymentInstruction>>(() =>
-                                          PaymentInstructionData.GetPaymentOrderInstructions(this));
+                                          PaymentInstructionData.GetPaymentInstructions(this));
     }
 
     #endregion Helpers

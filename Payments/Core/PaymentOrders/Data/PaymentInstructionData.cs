@@ -32,7 +32,7 @@ namespace Empiria.Payments.Data {
     }
 
 
-    static internal List<PaymentInstruction> GetPaymentOrderInstructions(PaymentOrder paymentOrder) {
+    static internal List<PaymentInstruction> GetPaymentInstructions(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
 
       var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
@@ -48,25 +48,12 @@ namespace Empiria.Payments.Data {
     static internal FixedList<PaymentInstruction> GetInProgressPaymentInstructions() {
 
       var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
-                $"WHERE PYMT_INSTRUCTION_STATUS = 'A' " +
+                $"WHERE PYMT_INSTRUCTION_STATUS IN ('R', 'I', 'T') " +
                 $"ORDER BY PYMT_INSTRUCTION_ID";
 
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetFixedList<PaymentInstruction>(op);
-    }
-
-
-    static internal FixedList<PaymentInstructionLogEntry> GetPaymentOrderInstructionLogs(PaymentOrder paymentOrder) {
-      Assertion.Require(paymentOrder, nameof(paymentOrder));
-
-      var sql = $"SELECT * FROM FMS_PAYMENTS_LOG " +
-                $"WHERE PYMT_LOG_PYMT_ORDER_ID = {paymentOrder.Id} " +
-                $"ORDER BY PYMT_LOG_ID";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<PaymentInstructionLogEntry>(op);
     }
 
 
