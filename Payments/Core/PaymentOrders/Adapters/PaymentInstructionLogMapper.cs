@@ -16,7 +16,7 @@ namespace Empiria.Payments.Adapters {
     #region Methods
 
     static internal FixedList<PaymentInstructionLogDescriptorDto> Map(PaymentInstruction instruction) {
-      FixedList<PaymentInstructionLogEntry> log = PaymentInstructionLogEntry.GetListFor(instruction);
+      FixedList<PaymentInstructionLogEntry> log = instruction.LogEntries;
 
       return log.Select(x => Map(x))
                 .ToFixedList();
@@ -36,7 +36,6 @@ namespace Empiria.Payments.Adapters {
         Description = paymentInstructionLog.BrokerMessage,
         StatusName = paymentInstructionLog.Status.GetName(),
       };
-
     }
 
     #endregion Methods

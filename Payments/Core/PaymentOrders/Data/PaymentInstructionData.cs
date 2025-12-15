@@ -19,7 +19,7 @@ namespace Empiria.Payments.Data {
 
     #region Methods
 
-    static internal FixedList<PaymentInstructionLogEntry> GetPaymentInstructionLogs(PaymentInstruction instruction) {
+    static internal List<PaymentInstructionLogEntry> GetPaymentInstructionLog(PaymentInstruction instruction) {
       Assertion.Require(instruction, nameof(instruction));
 
       var sql = $"SELECT * FROM FMS_PAYMENTS_LOG " +
@@ -28,7 +28,7 @@ namespace Empiria.Payments.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetFixedList<PaymentInstructionLogEntry>(op);
+      return DataReader.GetList<PaymentInstructionLogEntry>(op);
     }
 
 

@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Json;
 using Empiria.Parties;
@@ -21,6 +22,8 @@ namespace Empiria.Payments {
 
   /// <summary>Represents a payment instruction.</summary>
   public class PaymentInstruction : BaseObject {
+
+    private Lazy<List<PaymentInstructionLogEntry>> _logEntries;
 
     private BrokerResponseDto _lastBrokerResponse;
 
@@ -44,6 +47,8 @@ namespace Empiria.Payments {
       BrokerConfigData = brokerConfigData;
       PaymentOrder = paymentOrder;
       PaymentInstructionNo = GeneratePaymentInstructionNo();
+
+      LoadLogEntries();
     }
 
     static public PaymentInstruction Parse(int id) => ParseId<PaymentInstruction>(id);
@@ -55,6 +60,11 @@ namespace Empiria.Payments {
     static internal FixedList<PaymentInstruction> GetInProgress() {
       return PaymentInstructionData.GetInProgressPaymentInstructions();
     }
+
+    protected override void OnLoad() {
+      LoadLogEntries();
+    }
+
 
     #endregion Constructors and parsers
 
@@ -124,6 +134,12 @@ namespace Empiria.Payments {
     public DateTime ProgrammedDate {
       get {
         return PostingTime;
+      }
+    }
+
+    internal FixedList<PaymentInstructionLogEntry> LogEntries {
+      get {
+        return _logEntries.Value.ToFixedList();
       }
     }
 
@@ -278,14 +294,20 @@ namespace Empiria.Payments {
     }
 
 
+    private void LoadLogEntries() {
+      _logEntries = new Lazy<List<PaymentInstructionLogEntry>>(() =>
+                                                  PaymentInstructionData.GetPaymentInstructionLog(this));
+    }
+
     private void SaveInternal() {
-      if (IsNew) {
-        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        PostingTime = DateTime.Now;
-      }
 
       if (!IsDirty) {
         return;
+      }
+
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
       }
 
       PaymentInstructionData.WritePaymentInstruction(this);
@@ -297,6 +319,8 @@ namespace Empiria.Payments {
       var logEntry = new PaymentInstructionLogEntry(this, _lastBrokerResponse);
 
       logEntry.Save();
+
+      _logEntries.Value.Add(logEntry);
 
       _lastBrokerResponse = null;
     }

@@ -45,10 +45,6 @@ namespace Empiria.Payments {
 
     static public PaymentInstructionLogEntry Empty => ParseEmpty<PaymentInstructionLogEntry>();
 
-    static internal FixedList<PaymentInstructionLogEntry> GetListFor(PaymentInstruction instruction) {
-      return PaymentInstructionData.GetPaymentInstructionLogs(instruction);
-    }
-
     #endregion Constructors and parsers
 
     #region Properties
