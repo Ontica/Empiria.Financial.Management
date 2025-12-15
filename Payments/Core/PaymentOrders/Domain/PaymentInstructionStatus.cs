@@ -169,6 +169,11 @@ namespace Empiria.Payments {
       }
     }
 
+
+    static internal NamedEntityDto MapToNamedEntityDto(this PaymentInstructionStatus status) {
+      return new NamedEntityDto(status.ToString(), GetName(status));
+    }
+
   }  // class PaymentInstructionStatusExtensions
 
 }  // namespace Empiria.Payments

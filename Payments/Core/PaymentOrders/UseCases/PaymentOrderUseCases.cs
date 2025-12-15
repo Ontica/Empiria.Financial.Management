@@ -94,6 +94,19 @@ namespace Empiria.Payments.UseCases {
     }
 
 
+    internal PaymentOrderHolderDto ResetPaymentOrder(string paymentOrderUID) {
+      Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
+
+      var order = PaymentOrder.Parse(paymentOrderUID);
+
+      order.Reset();
+
+      order.Save();
+
+      return PaymentOrderMapper.Map(order);
+    }
+
+
     public FixedList<PaymentOrderDescriptor> SearchPaymentOrders(PaymentOrdersQuery query) {
       Assertion.Require(query, nameof(query));
 

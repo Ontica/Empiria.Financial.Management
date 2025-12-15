@@ -24,7 +24,6 @@ namespace Empiria.Payments.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]  // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
     public SingleObjectModel GetPaymentOrder([FromUri] string paymentOrderUID) {
 
@@ -37,8 +36,7 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPost]
-    [Route("v2/payments-management/payables/search")]   // ToDo: Remove this endpoint in future versions.
-    // [Route("v2/payments-management/payment-orders/search")] // Activate this route on next version
+    [Route("v2/payments-management/payment-orders/search")]
     public CollectionModel SearchPaymentOrders([FromBody] PaymentOrdersQuery query) {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
@@ -68,9 +66,7 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPost]
-    [Route("v8/payments-management/payables/{paymentOrderUID:guid}/send-to-pay")] // ToDo: Remove this deprecated route in future versions.
-    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/pay")]  //  // ToDo: Remove this deprecated route in future versions.
-    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/create-payment-instruction")]  //  // ToDo: Remove this deprecated route in future versions.
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/payment-instruction")]
     public SingleObjectModel CreatePaymentInstruction([FromUri] string paymentOrderUID) {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
@@ -84,8 +80,6 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPost, HttpDelete]
-    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]   // ToDo: Remove this deprecated route in future versions.
-    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/cancel")]
     public NoDataModel CancelPaymentOrder([FromUri] string paymentOrderUID) {
 
@@ -98,6 +92,19 @@ namespace Empiria.Payments.WebApi {
         return new NoDataModel(this.Request);
       }
     }
+
+
+    [HttpPost]
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/reset")]
+    public SingleObjectModel ResetPaymentOrder([FromUri] string paymentOrderUID) {
+
+      using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
+        PaymentOrderHolderDto paymentOrder = usecases.ResetPaymentOrder(paymentOrderUID);
+
+        return new SingleObjectModel(base.Request, paymentOrder);
+      }
+    }
+
 
 
     [HttpPost]
@@ -120,7 +127,6 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPut]
-    [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]   // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
     public SingleObjectModel UpdatePaymentOrder([FromUri] string paymentOrderUID,
                                                 [FromBody] PaymentOrderFields fields) {

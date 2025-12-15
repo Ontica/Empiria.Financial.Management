@@ -9,11 +9,13 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Documents;
-using Empiria.Financial;
-using Empiria.Financial.Adapters;
 using Empiria.History;
 
+using Empiria.Financial;
+using Empiria.Financial.Adapters;
+
 using Empiria.Billing.Adapters;
+
 using Empiria.Budgeting.Transactions;
 using Empiria.Budgeting.Transactions.Adapters;
 
@@ -62,7 +64,7 @@ namespace Empiria.Payments.Adapters {
         Name = payableItem.Description,
         Unit = payableItem.Unit.Name,
         PayableEntityItemUID = payableItem.UID,
-        Total = payableItem.Subtotal,
+        Total = payableItem.Subtotal
       };
     }
 
@@ -78,15 +80,14 @@ namespace Empiria.Payments.Adapters {
         CurrencyCode = paymentOrder.PayableEntity.Currency.Name,
         Total = paymentOrder.Total,
         DueTime = paymentOrder.DueTime,
-
         PayableNo = paymentOrder.PayableEntity.EntityNo,
         PayableTypeName = paymentOrder.PayableEntity.GetEmpiriaType().DisplayName,
-        ContractNo = "No aplica",
-        BudgetTypeName = paymentOrder.PayableEntity.Budget.Name,
+        PayableName = paymentOrder.PayableEntity.Name,
+
+        BudgetName = paymentOrder.PayableEntity.Budget.Name,
 
         RequestedBy = paymentOrder.RequestedBy.Name,
         RequestedTime = paymentOrder.RequestedTime,
-        RequestedDate = paymentOrder.RequestedTime,
 
         StatusName = paymentOrder.Status.GetName()
       };
@@ -97,8 +98,8 @@ namespace Empiria.Payments.Adapters {
       return new PaymentOrderActions {
         CanDelete = false,
         CanCancel = paymentOrder.Rules.CanCancel(),
-        CanReset = paymentOrder.Rules.CanReset(),
         CanSuspend = paymentOrder.Rules.CanSuspend(),
+        CanReset = paymentOrder.Rules.CanReset(),
         CanUpdate = paymentOrder.Rules.CanUpdate(),
         CanEditDocuments = paymentOrder.Rules.CanEditDocuments(),
         CanApprovePayment = paymentOrder.Rules.CanApprovePayment(),
@@ -114,8 +115,8 @@ namespace Empiria.Payments.Adapters {
         PaymentOrderType = paymentOrder.GetEmpiriaType().MapToNamedEntity(),
         PaymentOrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.MapToNamedEntity(),
-        RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
         RequestedDate = paymentOrder.RequestedTime,
+        RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
         DueTime = paymentOrder.DueTime,
         Description = paymentOrder.Description,
         Budget = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),

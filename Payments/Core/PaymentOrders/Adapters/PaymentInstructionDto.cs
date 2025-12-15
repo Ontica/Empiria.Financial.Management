@@ -10,7 +10,152 @@
 
 using System;
 
+using Empiria.Documents;
+using Empiria.History;
+
+using Empiria.Billing.Adapters;
+
+using Empiria.Financial.Adapters;
+
 namespace Empiria.Payments.Adapters {
+
+  /// <summary>Output DTO with a payment instruction holder.</summary>
+  public class PaymentInstructionHolderDto {
+
+    public PaymentInstructionDto PaymentInstruction {
+      get; internal set;
+    }
+
+    public FixedList<PaymentInstructionLogDescriptorDto> Log {
+      get; internal set;
+    }
+
+    public FixedList<BillDto> Bills {
+      get; internal set;
+    }
+
+
+    public FixedList<DocumentDto> Documents {
+      get; internal set;
+    }
+
+    public FixedList<HistoryEntryDto> History {
+      get; internal set;
+    }
+
+    public PaymentInstructionActions Actions {
+      get; internal set;
+    }
+
+  } // class PaymentInstructionHolderDto
+
+
+  public class PaymentInstructionActions {
+
+    public bool CanUpdate {
+      get; internal set;
+    }
+
+    public bool CanCancel {
+      get; internal set;
+    }
+
+    public bool CanSuspend {
+      get; internal set;
+    }
+
+    public bool CanRequestPayment {
+      get; internal set;
+    }
+
+    public bool CanCancelPaymentRequest {
+      get; internal set;
+    }
+
+    public bool CanEditDocuments {
+      get; internal set;
+    }
+
+  }  // class PaymentInstructionActions
+
+
+
+  /// <summary>Output DTO used to return payment instruction.</summary>
+  public class PaymentInstructionDto {
+
+    public string UID {
+      get; internal set;
+    }
+
+    public NamedEntityDto PaymentInstructionType {
+      get; internal set;
+    }
+
+    public string PaymentInstructionNo {
+      get; internal set;
+    }
+
+
+    public string Description {
+      get; internal set;
+    }
+
+    public NamedEntityDto PayTo {
+      get; internal set;
+    }
+
+    public PaymentMethodDto PaymentMethod {
+      get; internal set;
+    }
+
+    public PaymentAccountDto PaymentAccount {
+      get; internal set;
+    }
+
+    public string ReferenceNumber {
+      get; internal set;
+    }
+
+    public decimal Total {
+      get; internal set;
+    }
+
+    public NamedEntityDto Currency {
+      get; internal set;
+    }
+
+    public DateTime DueTime {
+      get; internal set;
+    }
+
+    public NamedEntityDto RequestedBy {
+      get; internal set;
+    }
+
+    public DateTime RequestedTime {
+      get; internal set;
+    }
+
+    public DateTime ProgrammedDate {
+      get; internal set;
+    }
+
+    public DateTime LastUpdateTime {
+      get; internal set;
+    }
+
+    public NamedEntityDto Status {
+      get; internal set;
+    }
+
+    public string PaymentOrderNo {
+      get; internal set;
+    }
+
+  }  // class PaymentInstructionDto
+
+
+
 
   /// <summary>Output DTO used to return minimal payment instruction's data for use in lists.</summary>
   public class PaymentInstructionDescriptor {
@@ -19,13 +164,22 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public string PaymentOrderTypeName {
-      get; internal set;
-    }
-
     public string PaymentOrderNo {
       get; internal set;
     }
+
+    public string PaymentInstructionNo {
+      get; internal set;
+    }
+
+    public string PaymentInstructionTypeName {
+      get; internal set;
+    }
+
+    public string Description {
+      get; internal set;
+    }
+
 
     public string PayTo {
       get; internal set;
@@ -51,22 +205,6 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public string PayableNo {
-      get; internal set;
-    }
-
-    public string PayableTypeName {
-      get; internal set;
-    }
-
-    public string ContractNo {
-      get; internal set;
-    }
-
-    public string BudgetTypeName {
-      get; internal set;
-    }
-
     public string RequestedBy {
       get; internal set;
     }
@@ -75,11 +213,16 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public string StatusName {
+    public DateTime ProgrammedDate {
       get; internal set;
     }
 
-    public DateTime RequestedDate {
+
+    public DateTime LastUpdateTime {
+      get; internal set;
+    }
+
+    public string StatusName {
       get; internal set;
     }
 

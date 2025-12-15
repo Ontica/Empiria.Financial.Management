@@ -30,7 +30,22 @@ namespace Empiria.Payments.Adapters {
     } = string.Empty;
 
 
+    public string PayToUID {
+      get; set;
+    } = string.Empty;
+
+
     public string PaymentMethodUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string BudgetTypeUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string BudgetUID {
       get; set;
     } = string.Empty;
 
