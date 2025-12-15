@@ -16,6 +16,7 @@ using Empiria.Services;
 
 using Empiria.Payments.Adapters;
 using Empiria.Payments.Data;
+using System.Linq;
 
 namespace Empiria.Payments.UseCases {
 
@@ -41,7 +42,8 @@ namespace Empiria.Payments.UseCases {
 
       var order = PaymentOrder.Parse(paymentOrderUID);
 
-      order.EnsureCanCreateInstruction();
+      Assertion.Require(order.Rules.CanGeneratePaymentInstruction(),
+                       "No se puede crear la instrucción de pago");
 
       order.CreatePaymentInstruction();
 
@@ -57,6 +59,12 @@ namespace Empiria.Payments.UseCases {
       fields.EnsureValid();
 
       var payableEntity = (IPayableEntity) BaseObject.Parse(fields.PayableEntityTypeUID, fields.PayableEntityUID);
+
+      var currentPaymentOrders = PaymentOrder.GetListFor(payableEntity);
+
+      Assertion.Require(currentPaymentOrders.All(x => x.Status == PaymentOrderStatus.Canceled ||
+                                                      x.Status == PaymentOrderStatus.Payed),
+                        "Existe una solicitud de pago en proceso o el pago correspondiente ya se efectuó.");
 
       var order = new PaymentOrder(payableEntity);
 

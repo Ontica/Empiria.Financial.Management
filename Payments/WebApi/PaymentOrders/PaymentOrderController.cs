@@ -83,9 +83,10 @@ namespace Empiria.Payments.WebApi {
 
 
 
-    [HttpDelete]
+    [HttpPost, HttpDelete]
     [Route("v2/payments-management/payables/{paymentOrderUID:guid}")]   // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/cancel")]
     public NoDataModel CancelPaymentOrder([FromUri] string paymentOrderUID) {
 
       base.RequireResource(paymentOrderUID, nameof(paymentOrderUID));

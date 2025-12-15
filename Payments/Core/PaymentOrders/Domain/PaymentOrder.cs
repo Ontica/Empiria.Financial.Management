@@ -222,6 +222,13 @@ namespace Empiria.Payments {
       }
     }
 
+
+    internal PaymentOrderRules Rules {
+      get {
+        return new PaymentOrderRules(this);
+      }
+    }
+
     #endregion Properties
 
     #region Payment instructions aggregate root
@@ -243,7 +250,7 @@ namespace Empiria.Payments {
     public void EnsureCanCreateInstruction() {
       if (IsEmptyInstance) {
         Assertion.RequireFail("No se puede crear una instrucción de pago " +
-                              "paa la instancia Empty.");
+                              "para la instancia Empty.");
       }
       if (IsNew) {
         Assertion.RequireFail("No se puede crear la instrucción de pago " +
@@ -267,6 +274,9 @@ namespace Empiria.Payments {
 
 
     internal PaymentInstruction CreatePaymentInstruction() {
+      Assertion.Require(Rules.CanGeneratePaymentInstruction(),
+                       $"No se puede crear la instrucción de pago por falta de permisos o " +
+                       $"debido a que su estado es {Status.GetName()}.");
 
       EnsureCanCreateInstruction();
 
@@ -284,17 +294,27 @@ namespace Empiria.Payments {
     #region Methods
 
     internal void Cancel() {
-      Assertion.Require(Status == PaymentOrderStatus.Pending,
-               $"No se puede rechazar el pago debido " +
-               $"a que tiene el estado {Status.GetName()}.");
+      Assertion.Require(Rules.CanCancel(),
+                       $"No se puede cancelar la orden de pago por falta de permisos o " +
+                       $"debido a que su estado es {Status.GetName()}.");
+
       Status = PaymentOrderStatus.Canceled;
     }
 
 
+    internal void Reset() {
+      Assertion.Require(Rules.CanReset(),
+                       $"No se puede resetear la orden de pago por falta de permisos o " +
+                       $"debido a que su estado es {Status.GetName()}.");
+
+      Status = PaymentOrderStatus.Pending;
+    }
+
+
     internal void Suspend() {
-      Assertion.Require(Status == PaymentOrderStatus.Pending,
-                  $"No se puede suspender una orden de pago que " +
-                  $"está en estado {Status.GetName()}.");
+      Assertion.Require(Rules.CanSuspend(),
+                       $"No se puede suspender la orden de pago por falta de permisos o " +
+                       $"debido a que su estado es {Status.GetName()}.");
 
       Status = PaymentOrderStatus.Suspended;
     }
@@ -312,16 +332,6 @@ namespace Empiria.Payments {
       foreach (var instruction in _paymentInstructions.Value) {
         instruction.Save();
       }
-    }
-
-
-    internal void SetAsPending() {
-      Assertion.Require(Status == PaymentOrderStatus.Suspended ||
-                        Status == PaymentOrderStatus.Programmed,
-                        $"No se puede cambiar el estado del pago debido " +
-                        $"a que tiene el estado {Status.GetName()}.");
-
-      Status = PaymentOrderStatus.Pending;
     }
 
 

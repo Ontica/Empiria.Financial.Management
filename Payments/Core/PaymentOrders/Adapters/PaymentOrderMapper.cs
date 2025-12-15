@@ -93,19 +93,20 @@ namespace Empiria.Payments.Adapters {
     }
 
 
-    static private PaymentOrderActionsDto MapActions(PaymentOrder paymentOrder) {
-      var paymentOrderActions = PaymentOrderActions.SetActions(paymentOrder.Status);
-
-      return new PaymentOrderActionsDto {
-        CanDelete = paymentOrderActions.CanDelete,
-        CanEditDocuments = paymentOrderActions.CanEditDocuments,
-        CanGeneratePaymentInstruction = true,
-        CanUpdate = paymentOrderActions.CanUpdate,
-        CanApprovePayment = true,
-        CanExerciseBudget = true
+    static private PaymentOrderActions MapActions(PaymentOrder paymentOrder) {
+      return new PaymentOrderActions {
+        CanDelete = false,
+        CanCancel = paymentOrder.Rules.CanCancel(),
+        CanReset = paymentOrder.Rules.CanReset(),
+        CanSuspend = paymentOrder.Rules.CanSuspend(),
+        CanUpdate = paymentOrder.Rules.CanUpdate(),
+        CanEditDocuments = paymentOrder.Rules.CanEditDocuments(),
+        CanApprovePayment = paymentOrder.Rules.CanApprovePayment(),
+        CanGeneratePaymentInstruction = paymentOrder.Rules.CanGeneratePaymentInstruction(),
+        CanExerciseBudget = paymentOrder.Rules.CanExerciseBudget()
       };
-
     }
+
 
     static internal PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {

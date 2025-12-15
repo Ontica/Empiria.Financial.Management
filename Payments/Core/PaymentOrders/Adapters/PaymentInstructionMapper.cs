@@ -29,7 +29,7 @@ namespace Empiria.Payments.Adapters {
         Bills = BillMapper.MapToBillDto(bills),
         Documents = DocumentServices.GetEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),
-        Actions = new PaymentOrderActionsDto()
+        Actions = new PaymentOrderActions()
       };
     }
 
