@@ -20,7 +20,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal bool CanApprovePayment() {
+    internal bool CanApproveBudget() {
       if (_paymentOrder.Status == PaymentOrderStatus.Pending) {
         return true;
       }

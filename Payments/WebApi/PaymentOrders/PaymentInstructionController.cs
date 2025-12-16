@@ -35,7 +35,6 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPost]
-    [Route("v2/payments-management/payment-orders/search")]  // ToDo: Remove this deprecated route in future versions.
     [Route("v2/payments-management/payment-instructions/search")]
     public CollectionModel SearchPaymentInstructions([FromBody] PaymentOrdersQuery query) {
 
@@ -50,7 +49,7 @@ namespace Empiria.Payments.WebApi {
 
     #region Query web apis
 
-    [HttpPost]
+    [HttpPost, HttpDelete]
     [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/cancel")]
     public SingleObjectModel Cancel([FromUri] string instructionUID) {
 
@@ -62,7 +61,7 @@ namespace Empiria.Payments.WebApi {
     }
 
 
-    [HttpPost]
+    [HttpPost, HttpDelete]
     [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/cancel-payment-request")]
     public SingleObjectModel CancelPaymentRequest([FromUri] string instructionUID) {
 
@@ -80,6 +79,18 @@ namespace Empiria.Payments.WebApi {
 
       using (var usecases = PaymentInstructionUseCases.UseCaseInteractor()) {
         PaymentInstructionHolderDto instruction = usecases.RequestPayment(instructionUID);
+
+        return new SingleObjectModel(base.Request, instruction);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/reset")]
+    public SingleObjectModel Reset([FromUri] string instructionUID) {
+
+      using (var usecases = PaymentInstructionUseCases.UseCaseInteractor()) {
+        PaymentInstructionHolderDto instruction = usecases.Reset(instructionUID);
 
         return new SingleObjectModel(base.Request, instruction);
       }

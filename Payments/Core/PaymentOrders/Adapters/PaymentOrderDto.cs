@@ -23,7 +23,6 @@ namespace Empiria.Payments.Adapters {
   /// <summary>Output DTO used to return a complete payment order.</summary>
   public class PaymentOrderHolderDto {
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "Payable")]
     public PaymentOrderDto PaymentOrder {
       get; internal set;
     }
@@ -81,12 +80,12 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "CanSendToPay")]
-    public bool CanGeneratePaymentInstruction {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "CanApprovePayment")]
+    public bool CanApproveBudget {
       get; internal set;
     }
 
-    public bool CanApprovePayment {
+    public bool CanGeneratePaymentInstruction {
       get; internal set;
     }
 
@@ -105,12 +104,10 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "payableType")]
     public NamedEntityDto PaymentOrderType {
       get; internal set;
     }
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "payableNo")]
     public string PaymentOrderNo {
       get; internal set;
     }
@@ -126,7 +123,6 @@ namespace Empiria.Payments.Adapters {
     public NamedEntityDto Budget {
       get; internal set;
     }
-
 
     public NamedEntityDto PayTo {
       get; internal set;
@@ -211,22 +207,6 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public string PayableNo {
-      get; internal set;
-    }
-
-    public string PayableTypeName {
-      get; internal set;
-    }
-
-    public string ContractNo {
-      get; internal set;
-    }
-
-    public string BudgetTypeName {
-      get; internal set;
-    }
-
     public string RequestedBy {
       get; internal set;
     }
@@ -239,7 +219,19 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public DateTime RequestedDate {
+    public string PayableNo {
+      get; internal set;
+    }
+
+    public string PayableTypeName {
+      get; internal set;
+    }
+
+    public string PayableName {
+      get; internal set;
+    }
+
+    public string BudgetName {
       get; internal set;
     }
 

@@ -14,9 +14,13 @@ using Empiria.History;
 using Empiria.Billing;
 using Empiria.Billing.Adapters;
 
+using Empiria.Financial.Adapters;
+
 namespace Empiria.Payments.Adapters {
 
   static internal class PaymentInstructionMapper {
+
+    #region Mappers
 
     static internal PaymentInstructionHolderDto Map(PaymentInstruction instruction) {
 
@@ -24,40 +28,77 @@ namespace Empiria.Payments.Adapters {
       var bills = Bill.GetListFor(paymentOrder.PayableEntity);
 
       return new PaymentInstructionHolderDto {
-        PaymentOrder = PaymentOrderMapper.MapPaymentOrder(paymentOrder),
+        PaymentInstruction = MapToDto(instruction),
         Log = PaymentInstructionLogMapper.Map(instruction),
         Bills = BillMapper.MapToBillDto(bills),
         Documents = DocumentServices.GetEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),
-        Actions = new PaymentOrderActions()
+        Actions = MapActions(instruction.Rules)
       };
     }
+
 
     static internal FixedList<PaymentInstructionDescriptor> MapToDescriptor(FixedList<PaymentInstruction> instructions) {
       return instructions.Select(x => MapToDescriptor(x))
                          .ToFixedList();
     }
 
+    #endregion Mappers
 
     #region Helpers
+
+    static private PaymentInstructionActions MapActions(PaymentInstructionRules rules) {
+      return new PaymentInstructionActions {
+        CanUpdate = rules.CanUpdate(),
+        CanCancel = rules.CanCancel(),
+        CanSuspend = rules.CanSuspend(),
+        CanRequestPayment = rules.CanRequestPayment(),
+        CanCancelPaymentRequest = rules.CanCancelPaymentRequest(),
+        CanEditDocuments = rules.CanEditDocuments()
+      };
+    }
+
+
+    static private PaymentInstructionDto MapToDto(PaymentInstruction instruction) {
+      return new PaymentInstructionDto {
+        UID = instruction.UID,
+        Currency = instruction.PaymentOrder.Currency.MapToNamedEntity(),
+        DueTime = instruction.PaymentOrder.DueTime,
+        PaymentAccount = new PaymentAccountDto(instruction.PaymentOrder.PaymentAccount),
+        PayTo = instruction.PaymentOrder.PayTo.MapToNamedEntity(),
+        PaymentInstructionNo = instruction.PaymentInstructionNo,
+        PaymentMethod = new PaymentMethodDto(instruction.PaymentOrder.PaymentMethod),
+        PaymentInstructionType = instruction.PaymentOrder.PayableEntity.GetEmpiriaType().MapToNamedEntity(),
+        ProgrammedDate = instruction.ProgrammedDate,
+        ReferenceNumber = instruction.PaymentOrder.ReferenceNumber,
+        Status = instruction.Status.MapToNamedEntityDto(),
+        RequestedBy = instruction.PostedBy.MapToNamedEntity(),
+        RequestedTime = instruction.PostingTime,
+        Total = instruction.PaymentOrder.Total,
+        PaymentOrderNo = instruction.PaymentOrder.PaymentOrderNo,
+        Description = instruction.Description,
+        LastUpdateTime = instruction.PostingTime,
+      };
+    }
+
 
     static private PaymentInstructionDescriptor MapToDescriptor(PaymentInstruction instruction) {
       return new PaymentInstructionDescriptor {
         UID = instruction.UID,
-        PaymentOrderTypeName = instruction.BrokerConfigData.Name,
+        PaymentInstructionTypeName = instruction.BrokerConfigData.Name,
         PayTo = instruction.PaymentOrder.PayTo.Name,
-        PaymentOrderNo = instruction.PaymentInstructionNo,
+        Description = instruction.Description,
+        LastUpdateTime = instruction.PostingTime,
+        PaymentOrderNo = instruction.PaymentOrder.PaymentOrderNo,
+        ProgrammedDate = instruction.ProgrammedDate,
+        PaymentInstructionNo = instruction.PaymentInstructionNo,
         PaymentAccount = $"{instruction.PaymentOrder.PaymentAccount.Institution.Name} {instruction.PaymentOrder.PaymentAccount.AccountNo}",
         PaymentMethod = instruction.PaymentOrder.PaymentMethod.Name,
         RequestedBy = instruction.BrokerInstructionNo,
-        RequestedTime = instruction.PaymentOrder.RequestedTime,
-        RequestedDate = instruction.PaymentOrder.RequestedTime,
+        RequestedTime = instruction.PostingTime,
         DueTime = instruction.PaymentOrder.DueTime,
         Total = instruction.PaymentOrder.Total,
         CurrencyCode = instruction.PaymentOrder.Currency.ISOCode,
-        BudgetTypeName = instruction.PaymentOrder.PayableEntity.Budget.Name,
-        PayableNo = instruction.PaymentOrder.PayableEntity.EntityNo,
-        PayableTypeName = instruction.BrokerConfigData.Name,
         StatusName = instruction.Status.GetName()
       };
     }
