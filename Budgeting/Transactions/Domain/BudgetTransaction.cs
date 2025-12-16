@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
@@ -267,6 +268,7 @@ namespace Empiria.Budgeting.Transactions {
                TransactionNo != TO_ASSIGN_TRANSACTION_NO;
       }
     }
+
 
     internal BudgetTransactionRules Rules {
       get {
