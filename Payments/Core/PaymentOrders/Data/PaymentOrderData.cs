@@ -56,7 +56,7 @@ namespace Empiria.Payments.Data {
                      o.PayableEntity.GetEmpiriaType().Id, o.PayableEntity.Id, o.PayTo.Id,
                      o.PaymentMethod.Id, o.Currency.Id, o.PaymentAccount.Id, o.DueTime,
                      o.SecurityExtData.ToString(), o.ExtData.ToString(), o.Keywords, o.RequestedBy.Id,
-                     o.RequestedTime, o.AuthorizedBy.Id, o.AuthorizedTime, o.PayedBy.Id,
+                     o.PostingTime, o.AuthorizedBy.Id, o.AuthorizedTime, o.PayedBy.Id,
                      o.ClosingTime, o.ClosedBy.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);

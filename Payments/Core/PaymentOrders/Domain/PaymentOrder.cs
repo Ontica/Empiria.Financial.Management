@@ -158,12 +158,6 @@ namespace Empiria.Payments {
     }
 
 
-    [DataField("PYMT_ORD_REQUESTED_TIME")]
-    public DateTime RequestedTime {
-      get; private set;
-    }
-
-
     [DataField("PYMT_ORD_AUTHORIZED_BY_ID")]
     public Party AuthorizedBy {
       get; private set;
@@ -345,23 +339,24 @@ namespace Empiria.Payments {
 
 
     public void Update(PaymentOrderFields fields) {
+
+      Assertion.Require(Rules.CanUpdate(),
+                 $"No se puede actualizar la orden de pago por falta de permisos o " +
+                 $"debido a que su estado es {Status.GetName()}.");
+
       Assertion.Require(fields, nameof(fields));
-      Assertion.Require(Status == PaymentOrderStatus.Pending,
-                        $"No se pueden actualizar los datos de la orden de pago " +
-                        $"debido a que tiene el estado {Status.GetName()}.");
 
       fields.EnsureValid();
 
-      Description = fields.Description;
-      Observations = fields.Observations;
-      PayTo = Party.Parse(fields.PayToUID);
-      PaymentMethod = PaymentMethod.Parse(fields.PaymentMethodUID);
-      Currency = Currency.Parse(fields.CurrencyUID);
-      PaymentAccount = PaymentAccount.Parse(fields.PaymentAccountUID);
-      DueTime = fields.DueTime;
-      RequestedTime = fields.RequestedTime;
-      RequestedBy = OrganizationalUnit.Parse(fields.RequestedByUID);
-      ReferenceNumber = fields.ReferenceNumber;
+      PayTo = Patcher.Patch(fields.PayToUID, PayTo);
+      PaymentMethod = Patcher.Patch(fields.PaymentMethodUID, PaymentMethod);
+      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
+      PaymentAccount = Patcher.Patch(fields.PaymentAccountUID, PaymentAccount);
+      DueTime = Patcher.Patch(fields.DueTime, DueTime);
+      Description = EmpiriaString.Clean(fields.Description);
+      Observations = EmpiriaString.Clean(fields.Observations);
+      RequestedBy = Patcher.Patch(fields.RequestedByUID, RequestedBy);
+      ReferenceNumber = EmpiriaString.Clean(fields.ReferenceNumber);
       Total = fields.Total;
     }
 

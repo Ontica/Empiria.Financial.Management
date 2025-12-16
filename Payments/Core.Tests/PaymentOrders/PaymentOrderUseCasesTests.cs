@@ -50,7 +50,6 @@ namespace Empiria.Tests.Payments {
         Description = string.Empty,
         DueTime = DateTime.Today,
         RequestedByUID = "6bebca32-c14f-4996-8300-77ac86513a59",
-        RequestedTime = DateTime.Now,
         ReferenceNumber = "777-333-77"
       };
 
@@ -76,7 +75,6 @@ namespace Empiria.Tests.Payments {
         Description = "Updated by test",
         DueTime = DateTime.Today,
         RequestedByUID = "6bebca32-c14f-4996-8300-77ac86513a59",
-        RequestedTime = DateTime.Now,
         ReferenceNumber = "9999"
       };
 

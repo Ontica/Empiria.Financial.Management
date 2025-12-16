@@ -87,7 +87,7 @@ namespace Empiria.Payments.Adapters {
         BudgetName = paymentOrder.PayableEntity.Budget.Name,
 
         RequestedBy = paymentOrder.RequestedBy.Name,
-        RequestedTime = paymentOrder.RequestedTime,
+        RequestedTime = paymentOrder.PostingTime,
 
         StatusName = paymentOrder.Status.GetName()
       };
@@ -114,7 +114,7 @@ namespace Empiria.Payments.Adapters {
         PaymentOrderType = paymentOrder.GetEmpiriaType().MapToNamedEntity(),
         PaymentOrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.MapToNamedEntity(),
-        RequestedDate = paymentOrder.RequestedTime,
+        RequestedDate = paymentOrder.PostingTime,
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
         DueTime = paymentOrder.DueTime,
         Description = paymentOrder.Description,
