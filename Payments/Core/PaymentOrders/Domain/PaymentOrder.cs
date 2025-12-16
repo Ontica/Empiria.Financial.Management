@@ -125,6 +125,16 @@ namespace Empiria.Payments {
     }
 
 
+    public Priority Priority {
+      get {
+        return ExtData.Get("priority", Priority.Normal);
+      }
+      private set {
+        ExtData.SetIf("priority", value.ToString(), value != Priority.Normal);
+      }
+    }
+
+
     [DataField("PYMT_ORD_SECURITY_EXT_DATA")]
     public JsonObject SecurityExtData {
       get; private set;
@@ -387,10 +397,13 @@ namespace Empiria.Payments {
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       PaymentAccount = Patcher.Patch(fields.PaymentAccountUID, PaymentAccount);
       DueTime = Patcher.Patch(fields.DueTime, DueTime);
+      Priority = fields.Priority;
+
       Description = EmpiriaString.Clean(fields.Description);
       Observations = EmpiriaString.Clean(fields.Observations);
       RequestedBy = Patcher.Patch(fields.RequestedByUID, RequestedBy);
       ReferenceNumber = EmpiriaString.Clean(fields.ReferenceNumber);
+
       Total = fields.Total;
     }
 
