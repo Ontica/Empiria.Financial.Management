@@ -4,11 +4,10 @@
 *  Assembly : Empiria.Payments.WebApi.dll                  Pattern   : Web api Controller                    *
 *  Type     : PaymentOrderController                       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Web API used to retrieve and update payment orders and their catalogues.                       *
+*  Summary  : Web API used to retrieve and update payment orders.                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using System.Web.Http;
 
 using Empiria.WebApi;
@@ -18,7 +17,7 @@ using Empiria.Payments.UseCases;
 
 namespace Empiria.Payments.WebApi {
 
-  /// <summary>Web API used to retrieve and update payment orders and their catalogues.</summary>
+  /// <summary>Web API used to retrieve and update payment orders.</summary>
   public class PaymentOrderController : WebApiController {
 
     #region Query web apis
@@ -54,15 +53,12 @@ namespace Empiria.Payments.WebApi {
     [Route("v2/payments-management/payment-orders")]
     public SingleObjectModel CreatePaymentOrder([FromBody] PaymentOrderFields fields) {
 
-      base.RequireBody(fields);
-
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
         PaymentOrderHolderDto paymentOrder = usecases.CreatePaymentOrder(fields);
 
         return new SingleObjectModel(base.Request, paymentOrder);
       }
     }
-
 
 
     [HttpPost]
@@ -78,12 +74,9 @@ namespace Empiria.Payments.WebApi {
     }
 
 
-
     [HttpPost, HttpDelete]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/cancel")]
     public NoDataModel CancelPaymentOrder([FromUri] string paymentOrderUID) {
-
-      base.RequireResource(paymentOrderUID, nameof(paymentOrderUID));
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
@@ -99,6 +92,7 @@ namespace Empiria.Payments.WebApi {
     public SingleObjectModel ResetPaymentOrder([FromUri] string paymentOrderUID) {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
+
         PaymentOrderHolderDto paymentOrder = usecases.ResetPaymentOrder(paymentOrderUID);
 
         return new SingleObjectModel(base.Request, paymentOrder);
@@ -106,20 +100,13 @@ namespace Empiria.Payments.WebApi {
     }
 
 
-
     [HttpPost]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/suspend")]
-    public SingleObjectModel SuspendPaymentOrder([FromUri] string paymentOrderUID,
-                                                 [FromUri] string suspendedByUID,
-                                                 [FromUri] DateTime suspendedUntil) {
-
-      base.RequireResource(suspendedByUID, nameof(suspendedByUID));
+    public SingleObjectModel SuspendPaymentOrder([FromUri] string paymentOrderUID) {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-        PaymentOrderHolderDto paymentOrder = usecases.SuspendPaymentOrder(paymentOrderUID,
-                                                                          suspendedByUID,
-                                                                          suspendedUntil);
+        PaymentOrderHolderDto paymentOrder = usecases.SuspendPaymentOrder(paymentOrderUID);
 
         return new SingleObjectModel(this.Request, paymentOrder);
       }
@@ -131,12 +118,9 @@ namespace Empiria.Payments.WebApi {
     public SingleObjectModel UpdatePaymentOrder([FromUri] string paymentOrderUID,
                                                 [FromBody] PaymentOrderFields fields) {
 
-      base.RequireBody(fields);
-
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-        PaymentOrderHolderDto paymentOrder = usecases.UpdatePaymentOrder(paymentOrderUID,
-                                                                         fields);
+        PaymentOrderHolderDto paymentOrder = usecases.UpdatePaymentOrder(paymentOrderUID, fields);
 
         return new SingleObjectModel(this.Request, paymentOrder);
       }

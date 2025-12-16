@@ -80,11 +80,12 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public bool CanGeneratePaymentInstruction {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "CanApprovePayment")]
+    public bool CanApproveBudget {
       get; internal set;
     }
 
-    public bool CanApprovePayment {
+    public bool CanGeneratePaymentInstruction {
       get; internal set;
     }
 

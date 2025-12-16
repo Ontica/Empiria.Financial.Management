@@ -96,13 +96,12 @@ namespace Empiria.Payments.Adapters {
 
     static private PaymentOrderActions MapActions(PaymentOrder paymentOrder) {
       return new PaymentOrderActions {
-        CanDelete = false,
         CanCancel = paymentOrder.Rules.CanCancel(),
         CanSuspend = paymentOrder.Rules.CanSuspend(),
         CanReset = paymentOrder.Rules.CanReset(),
         CanUpdate = paymentOrder.Rules.CanUpdate(),
         CanEditDocuments = paymentOrder.Rules.CanEditDocuments(),
-        CanApprovePayment = paymentOrder.Rules.CanApprovePayment(),
+        CanApproveBudget = paymentOrder.Rules.CanApproveBudget(),
         CanGeneratePaymentInstruction = paymentOrder.Rules.CanGeneratePaymentInstruction(),
         CanExerciseBudget = paymentOrder.Rules.CanExerciseBudget()
       };

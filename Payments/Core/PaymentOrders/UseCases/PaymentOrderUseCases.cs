@@ -8,10 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Financial;
-using Empiria.Parties;
 using Empiria.Services;
 
 using Empiria.Payments.Adapters;
@@ -121,17 +118,12 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    public PaymentOrderHolderDto SuspendPaymentOrder(string paymentOrderUID,
-                                                     string suspendedByUID,
-                                                     DateTime suspendedUntil) {
+    public PaymentOrderHolderDto SuspendPaymentOrder(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
-      Assertion.Require(suspendedByUID, nameof(suspendedByUID));
 
       var order = PaymentOrder.Parse(paymentOrderUID);
 
-      var suspendedBy = Party.Parse(suspendedByUID);
-
-      order.Suspend(suspendedBy, suspendedUntil);
+      order.Suspend();
 
       order.Save();
 
