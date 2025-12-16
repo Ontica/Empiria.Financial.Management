@@ -26,7 +26,7 @@ namespace Empiria.Budgeting.Transactions {
 
   /// <summary>Partitioned type that represents a budget transaction with its entries.</summary>
   [PartitionedType(typeof(BudgetTransactionType))]
-  public class BudgetTransaction : BaseObject {
+  public class BudgetTransaction : BaseObject, INamedEntity {
 
     #region Fields
 
@@ -103,6 +103,7 @@ namespace Empiria.Budgeting.Transactions {
     public string TransactionNo {
       get; private set;
     }
+
 
     [DataField("BDG_TXN_DESCRIPTION")]
     public string Description {
@@ -291,6 +292,12 @@ namespace Empiria.Budgeting.Transactions {
       }
       private set {
         ExtensionData.SetIfValue("rejectedReason", value);
+      }
+    }
+
+    string INamedEntity.Name {
+      get {
+        return $"({TransactionNo}) {Description}";
       }
     }
 

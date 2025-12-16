@@ -15,6 +15,9 @@ using System.Linq;
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Parties;
+using Empiria.StateEnums;
+
+using Empiria.Budgeting.Transactions;
 
 using Empiria.Payments.Data;
 
@@ -227,6 +230,23 @@ namespace Empiria.Payments {
 
     #region Payment instructions aggregate root
 
+    public bool HasActivePaymentInstruction {
+      get {
+        return PaymentInstructions.Any(x => x.Status.IsActive());
+      }
+    }
+
+
+    public PaymentInstruction LastPaymentInstruction {
+      get {
+        if (_paymentInstructions.Value.Count == 0) {
+          return PaymentInstruction.Empty;
+        }
+        return _paymentInstructions.Value[_paymentInstructions.Value.Count - 1];
+      }
+    }
+
+
     public FixedList<PaymentInstruction> PaymentInstructions {
       get {
         return _paymentInstructions.Value.ToFixedList();
@@ -234,9 +254,18 @@ namespace Empiria.Payments {
     }
 
 
-    public PaymentInstruction LastPaymentInstruction {
+    public bool HasApprovedBudget {
       get {
-        return _paymentInstructions.Value[_paymentInstructions.Value.Count - 1];
+        var payableEntity = (IBudgetable) PayableEntity;
+
+        var transactions = payableEntity.BudgetTransactions
+                                        .Select(x => (BudgetTransaction) x)
+                                        .ToFixedList();
+
+        var approvedTransaction = transactions.Find(x => x.BudgetTransactionType == BudgetTransactionType.AutorizarPagoGastoCorriente &&
+                                                         x.Status == TransactionStatus.Closed);
+
+        return approvedTransaction != null;
       }
     }
 
@@ -251,8 +280,13 @@ namespace Empiria.Payments {
                               "debido a que la solicitud no ha sido guardada.");
       }
 
-      if (!PaymentInstructions.All(x => x.Status.IsFinal())) {
-        Assertion.RequireFail("No se puede ejecutar la operación debido a que esta " +
+      if (!HasApprovedBudget) {
+        Assertion.RequireFail("No se puede crear la instrucción de pago debido " +
+                              "a que la solicitud de pago no tiene el presupuesto aprobado.");
+      }
+
+      if (HasActivePaymentInstruction) {
+        Assertion.RequireFail("No se puede ejecutar la operación debido a que la " +
                               "solicitud de pago tiene una instrucción de pago " +
                               "que está programada o en proceso.");
       }
