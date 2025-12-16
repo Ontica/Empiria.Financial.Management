@@ -33,7 +33,7 @@ namespace Empiria.Payments.Adapters {
         Bills = BillMapper.MapToBillDto(bills),
         Documents = DocumentServices.GetEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),
-        Actions = MapActions(instruction)
+        Actions = MapActions(instruction.Rules)
       };
     }
 
@@ -47,14 +47,14 @@ namespace Empiria.Payments.Adapters {
 
     #region Helpers
 
-    static private PaymentInstructionActions MapActions(PaymentInstruction instruction) {
+    static private PaymentInstructionActions MapActions(PaymentInstructionRules rules) {
       return new PaymentInstructionActions {
-        CanUpdate = true,
-        CanCancel = true,
-        CanSuspend = true,
-        CanRequestPayment = true,
-        CanCancelPaymentRequest = true,
-        CanEditDocuments = true
+        CanUpdate = rules.CanUpdate(),
+        CanCancel = rules.CanCancel(),
+        CanSuspend = rules.CanSuspend(),
+        CanRequestPayment = rules.CanRequestPayment(),
+        CanCancelPaymentRequest = rules.CanCancelPaymentRequest(),
+        CanEditDocuments = rules.CanEditDocuments()
       };
     }
 
@@ -73,7 +73,7 @@ namespace Empiria.Payments.Adapters {
         ReferenceNumber = instruction.PaymentOrder.ReferenceNumber,
         Status = instruction.Status.MapToNamedEntityDto(),
         RequestedBy = instruction.PostedBy.MapToNamedEntity(),
-        RequestedTime = instruction.PaymentOrder.RequestedTime,
+        RequestedTime = instruction.PostingTime,
         Total = instruction.PaymentOrder.Total,
         PaymentOrderNo = instruction.PaymentOrder.PaymentOrderNo,
         Description = instruction.Description,
@@ -95,7 +95,7 @@ namespace Empiria.Payments.Adapters {
         PaymentAccount = $"{instruction.PaymentOrder.PaymentAccount.Institution.Name} {instruction.PaymentOrder.PaymentAccount.AccountNo}",
         PaymentMethod = instruction.PaymentOrder.PaymentMethod.Name,
         RequestedBy = instruction.BrokerInstructionNo,
-        RequestedTime = instruction.PaymentOrder.RequestedTime,
+        RequestedTime = instruction.PostingTime,
         DueTime = instruction.PaymentOrder.DueTime,
         Total = instruction.PaymentOrder.Total,
         CurrencyCode = instruction.PaymentOrder.Currency.ISOCode,

@@ -21,6 +21,9 @@ namespace Empiria.Payments {
     /// <summary>Requests the payment associated to the instruction.</summary>
     RequestPayment,
 
+    /// <summary>Resets the payment instruction returning it to Programmed status.</summary>
+    Reset,
+
     /// <summary>Suspends the payment instruction.</summary>
     Suspend,
 

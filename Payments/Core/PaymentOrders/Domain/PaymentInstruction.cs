@@ -137,9 +137,17 @@ namespace Empiria.Payments {
       }
     }
 
+
     internal FixedList<PaymentInstructionLogEntry> LogEntries {
       get {
         return _logEntries.Value.ToFixedList();
+      }
+    }
+
+
+    internal PaymentInstructionRules Rules {
+      get {
+        return new PaymentInstructionRules(this);
       }
     }
 
@@ -172,24 +180,47 @@ namespace Empiria.Payments {
     #region Helpers
 
     private void EventHandlerInternal(PaymentInstructionEvent instructionEvent) {
+
       switch (instructionEvent) {
+
         case PaymentInstructionEvent.Cancel:
+
+          Assertion.Require(Rules.CanCancel(), "La instrucción de pago no puede ser cancelada.");
 
           Status.EnsureCanUpdateTo(PaymentInstructionStatus.Canceled);
           Status = PaymentInstructionStatus.Canceled;
           break;
 
         case PaymentInstructionEvent.CancelPaymentRequest:
+
+          Assertion.Require(Rules.CanCancelPaymentRequest(),
+                            "La solicitud de pago de la instrucción no puede ser cancelada.");
+
           Status.EnsureCanUpdateTo(PaymentInstructionStatus.Programmed);
           Status = PaymentInstructionStatus.Programmed;
           break;
 
         case PaymentInstructionEvent.RequestPayment:
+
+          Assertion.Require(Rules.CanRequestPayment(),
+                            "No se puede solicitar el pago para la instrucción de pago.");
+
           Status.EnsureCanUpdateTo(PaymentInstructionStatus.WaitingRequest);
           Status = PaymentInstructionStatus.WaitingRequest;
           break;
 
+        case PaymentInstructionEvent.Reset:
+
+          Assertion.Require(Rules.CanReset(), "La instrucción de pago no puede ser reiniciada.");
+
+          Status.EnsureCanUpdateTo(PaymentInstructionStatus.Programmed);
+          Status = PaymentInstructionStatus.Programmed;
+          break;
+
         case PaymentInstructionEvent.Suspend:
+
+          Assertion.Require(Rules.CanSuspend(), "La instrucción de pago no puede ser suspendida.");
+
           Status.EnsureCanUpdateTo(PaymentInstructionStatus.Suspended);
           Status = PaymentInstructionStatus.Suspended;
           break;

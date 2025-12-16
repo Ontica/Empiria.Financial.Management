@@ -50,11 +50,9 @@ namespace Empiria.Payments.Adapters {
   } // class PaymentInstructionHolderDto
 
 
-  public class PaymentInstructionActions {
 
-    public bool CanUpdate {
-      get; internal set;
-    }
+  /// <summary>Output DTO used to return available actions for a payment instruction.</summary>
+  public class PaymentInstructionActions : BaseActions {
 
     public bool CanCancel {
       get; internal set;
@@ -69,10 +67,6 @@ namespace Empiria.Payments.Adapters {
     }
 
     public bool CanCancelPaymentRequest {
-      get; internal set;
-    }
-
-    public bool CanEditDocuments {
       get; internal set;
     }
 
