@@ -70,6 +70,12 @@ namespace Empiria.Payments.UseCases {
     }
 
 
+    public PaymentInstructionHolderDto Reset(string instructionUID) {
+
+      return ProcessEvent(instructionUID, PaymentInstructionEvent.Reset);
+    }
+
+
     public PaymentInstructionHolderDto Suspend(string instructionUID) {
 
       return ProcessEvent(instructionUID, PaymentInstructionEvent.Suspend);
@@ -84,6 +90,12 @@ namespace Empiria.Payments.UseCases {
       Assertion.Require(instructionUID, nameof(instructionUID));
 
       var instruction = PaymentInstruction.Parse(instructionUID);
+
+      Assertion.Require(!instruction.IsEmptyInstance,
+                        "Instruction can't be the empty instance");
+
+      Assertion.Require(!instruction.Status.IsFinal(),
+                        $"La instrucción de pago está en el estado final {instruction.Status.GetName()}.");
 
       instruction.EventHandler(instructionEvent);
 

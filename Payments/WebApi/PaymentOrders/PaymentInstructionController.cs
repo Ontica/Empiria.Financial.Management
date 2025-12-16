@@ -86,6 +86,18 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPost]
+    [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/reset")]
+    public SingleObjectModel Reset([FromUri] string instructionUID) {
+
+      using (var usecases = PaymentInstructionUseCases.UseCaseInteractor()) {
+        PaymentInstructionHolderDto instruction = usecases.Reset(instructionUID);
+
+        return new SingleObjectModel(base.Request, instruction);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/suspend")]
     public SingleObjectModel Suspend([FromUri] string instructionUID) {
 
