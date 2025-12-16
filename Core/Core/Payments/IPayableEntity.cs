@@ -15,11 +15,7 @@ namespace Empiria.Financial {
 
   /// <summary>Defines a payable entity. Payable entities are purchase orders,
   /// contract supply orders, invoices, paychecks, etc.</summary>
-  public interface IPayableEntity : INamedEntity {
-
-    int Id {
-      get;
-    }
+  public interface IPayableEntity : IIdentifiable, INamedEntity {
 
     ObjectTypeInfo GetEmpiriaType();
 
@@ -52,6 +48,7 @@ namespace Empiria.Financial {
     INamedEntity Budget {
       get;
     }
+
 
     INamedEntity Project {
       get;

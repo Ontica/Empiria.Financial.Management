@@ -13,6 +13,8 @@ using System.Collections.Generic;
 
 using Empiria.Data;
 
+using Empiria.Financial;
+
 namespace Empiria.Budgeting.Transactions.Data {
 
   /// <summary>Provides data access services for budget transactions.</summary>
@@ -198,8 +200,9 @@ namespace Empiria.Budgeting.Transactions.Data {
     static internal void WriteEntry(BudgetEntry o) {
       var op = DataOperation.Parse("write_FMS_Budget_Entry",
         o.Id, o.UID, o.Transaction.Id, o.BudgetEntryTypeId, o.Budget.Id,
-        o.BudgetAccount.Id, o.BudgetProgram.Id, o.ControlNo, o.Product.Id, o.ProductCode, o.ProductName,
-        o.ProductUnit.Id, o.ProductQty, o.Project.Id, o.Party.Id, o.EntityTypeId, o.EntityId, o.OperationNo,
+        o.BudgetAccount.Id, o.BudgetProgram.Id, o.ControlNo, o.Product.Id,
+        o.ProductCode, o.ProductName, o.ProductUnit.Id, o.ProductQty,
+        o.Project.Id, o.Party.Id, o.EntityTypeId, o.EntityId, o.OperationNo,
         o.Year, o.Month, o.Day, o.BalanceColumn.Id, o.Currency.Id, o.RequestedAmount,
         o.Deposit, o.Withdrawal, o.ExchangeRate, o.Description, o.Justification,
         o.Identificators, o.Tags, o.ExtensionData.ToString(), o.Keywords,
