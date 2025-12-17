@@ -76,13 +76,13 @@ namespace Empiria.Payments.WebApi {
 
     [HttpPost, HttpDelete]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/cancel")]
-    public NoDataModel CancelPaymentOrder([FromUri] string paymentOrderUID) {
+    public SingleObjectModel CancelPaymentOrder([FromUri] string paymentOrderUID) {
 
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-        usecases.CancelPaymentOrder(paymentOrderUID);
+        PaymentOrderHolderDto paymentOrder = usecases.CancelPaymentOrder(paymentOrderUID);
 
-        return new NoDataModel(this.Request);
+        return new SingleObjectModel(this.Request, paymentOrder);
       }
     }
 

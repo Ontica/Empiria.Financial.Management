@@ -71,7 +71,7 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    public void CancelPaymentOrder(string paymentOrderUID) {
+    public PaymentOrderHolderDto CancelPaymentOrder(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
       var order = PaymentOrder.Parse(paymentOrderUID);
@@ -79,6 +79,8 @@ namespace Empiria.Payments.UseCases {
       order.Cancel();
 
       order.Save();
+
+      return PaymentOrderMapper.Map(order);
     }
 
 
