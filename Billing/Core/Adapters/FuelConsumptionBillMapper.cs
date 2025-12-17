@@ -47,6 +47,8 @@ namespace Empiria.Billing.Adapters {
       foreach (var concept in complementConcepts) {
 
         var fields = new FuelConseptionComplementConceptDataFields {
+          SATProductUID = string.Empty,
+          ProductUID = string.Empty,
           Identificador = concept.Identificador,
           Rfc = concept.Rfc,
           ClaveEstacion = concept.ClaveEstacion,
@@ -144,6 +146,7 @@ namespace Empiria.Billing.Adapters {
         Moneda = dto.DatosGenerales.Moneda,
         Subtotal = dto.DatosGenerales.SubTotal,
         Total = dto.DatosGenerales.Total,
+        TipoCambio = dto.DatosGenerales.TipoCambio,
         TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
       };
     }

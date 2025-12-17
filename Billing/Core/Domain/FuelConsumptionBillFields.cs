@@ -87,6 +87,21 @@ namespace Empiria.Billing {
 
   public class FuelConseptionComplementConceptDataFields {
 
+    public string ProductUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string SATProductUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string SATProductServiceCode {
+      get; set;
+    } = string.Empty;
+
+
     public string Identificador {
       get; internal set;
     }
@@ -142,9 +157,19 @@ namespace Empiria.Billing {
     }
 
 
+    public string[] Tags {
+      get; set;
+    } = new string[0];
+
+
     public FixedList<BillTaxEntryFields> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntryFields>();
+
+
+    internal void EnsureIsValid() {
+      // ToDo
+    }
 
   } // class FuelConseptionComplementConceptDataFields
 

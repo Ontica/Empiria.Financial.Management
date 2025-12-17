@@ -154,6 +154,7 @@ namespace Empiria.Billing.SATMexicoImporter {
           Descripcion = generalDataReader.GetAttribute(concept, "Descripcion"),
           ValorUnitario = generalDataReader.GetAttribute<decimal>(concept, "ValorUnitario"),
           Importe = generalDataReader.GetAttribute<decimal>(concept, "Importe"),
+          Descuento = generalDataReader.GetAttribute<decimal>(concept, "Descuento"),
           ObjetoImp = generalDataReader.GetAttribute(concept, "ObjetoImp"),
         };
 

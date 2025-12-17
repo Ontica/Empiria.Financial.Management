@@ -49,7 +49,7 @@ namespace Empiria.Billing {
 
     static public BillCategory ComplementoPagoProveedores => Parse(703);
 
-    static public BillCategory FacturaConsumoCombustible => Parse(-2);
+    static public BillCategory FacturaConsumoCombustible => Parse(704);
 
     #endregion Constructors and parsers
 

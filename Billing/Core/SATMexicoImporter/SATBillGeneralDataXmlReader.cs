@@ -45,6 +45,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         Moneda = GetAttribute(generalDataNode, "Moneda"),
         Total = GetAttribute<decimal>(generalDataNode, "Total"),
 
+        TipoCambio = GetAttribute(generalDataNode, "TipoCambio"),
         TipoDeComprobante = GetAttribute(generalDataNode, "TipoDeComprobante"),
         Exportacion = GetAttribute(generalDataNode, "Exportacion"),
         MetodoPago = GetAttribute(generalDataNode, "MetodoPago"),

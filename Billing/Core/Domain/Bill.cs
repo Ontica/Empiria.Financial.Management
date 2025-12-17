@@ -381,7 +381,7 @@ namespace Empiria.Billing {
 
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
-      BillExtData.Update(fields.Addenda);
+      BillExtData.UpdateFuelConsumptionAddenda(fields.Addenda);
     }
 
 

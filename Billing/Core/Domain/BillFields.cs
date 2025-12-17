@@ -21,6 +21,7 @@ namespace Empiria.Billing {
 
   }
 
+
   /// <summary>Input fields DTO used to create and update bill.</summary>
   internal class BillFields : IBillFields {
 
@@ -292,7 +293,7 @@ namespace Empiria.Billing {
     public FixedList<BillTaxEntryFields> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntryFields>();
-    
+
   } // class BillConceptWithTaxFields
 
 
@@ -378,6 +379,11 @@ namespace Empiria.Billing {
     public DateTime Fecha {
       get; set;
     } = ExecutionServer.DateMaxValue;
+
+
+    public string TipoCambio {
+      get; internal set;
+    } = string.Empty;
 
 
     public string TipoComprobante {
@@ -595,7 +601,7 @@ namespace Empiria.Billing {
                         "no ha sido registrado en el sistema.");
     }
 
-    
+
     static internal void EnsureIsValidDocument(this BillPaymentComplementFields fields,
                                                BillCategory billCategory,
                                                int payableId,
