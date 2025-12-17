@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 using Empiria.Json;
 using Empiria.Parties;
+using Empiria.StateEnums;
 
 using Empiria.Payments.Processor.Adapters;
 
@@ -138,6 +139,13 @@ namespace Empiria.Payments {
     }
 
 
+    public bool IsUrgent {
+      get {
+        return PaymentOrder.Priority == Priority.Urgent;
+      }
+    }
+
+
     internal FixedList<PaymentInstructionLogEntry> LogEntries {
       get {
         return _logEntries.Value.ToFixedList();
@@ -148,6 +156,13 @@ namespace Empiria.Payments {
     internal PaymentInstructionRules Rules {
       get {
         return new PaymentInstructionRules(this);
+      }
+    }
+
+
+    internal PaymentsTimeControl TimeControl {
+      get {
+        return new PaymentsTimeControl(this);
       }
     }
 
@@ -203,7 +218,9 @@ namespace Empiria.Payments {
         case PaymentInstructionEvent.RequestPayment:
 
           Assertion.Require(Rules.CanRequestPayment(),
-                            "No se puede solicitar el pago para la instrucción de pago.");
+                            "No se puede enviar a pago esta instrucción de pago.");
+
+          TimeControl.EnsureCanRequestPayment();
 
           Status.EnsureCanUpdateTo(PaymentInstructionStatus.WaitingRequest);
           Status = PaymentInstructionStatus.WaitingRequest;

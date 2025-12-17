@@ -142,6 +142,16 @@ namespace Empiria.Payments {
 
     #region Methods
 
+    public bool IsInDefaultTimeWindow(DateTime date) {
+      return DEFAULT_START_TIME <= date.TimeOfDay && date.TimeOfDay <= DEFAULT_END_TIME;
+    }
+
+
+    public bool IsInUrgentTimeWindow(DateTime date) {
+      return StartTime <= date.TimeOfDay && date.TimeOfDay <= EndTime;
+    }
+
+
     public void Update(TimeSpan startTime, TimeSpan endTime) {
 
       Assertion.Require(startTime.Days == 0, "Unrecognized start time.");
