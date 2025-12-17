@@ -217,6 +217,11 @@ namespace Empiria.Payments {
 
         case PaymentInstructionEvent.RequestPayment:
 
+          if (!PaymentOrder.PaymentMethod.IsElectronic) {
+            Status = PaymentInstructionStatus.Payed;
+            break;
+          }
+
           Assertion.Require(Rules.CanRequestPayment(),
                             "No se puede enviar a pago esta instrucción de pago.");
 
