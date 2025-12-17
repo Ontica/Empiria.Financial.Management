@@ -336,12 +336,6 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private void CreateFuelConsumptionComplements(Bill bill,
-                                                  FuelConsumptionComplementDataFields complementData) {
-
-    }
-
-
     private Bill CreateFuelConsumptionTest(FuelConsumptionBillFields fields) {
 
       var billCategory = BillCategory.ComplementoPagoProveedores;
@@ -354,9 +348,32 @@ namespace Empiria.Billing.UseCases {
 
       CreateFuelConsumptionConcepts(bill, fields.Concepts);
 
-      CreateFuelConsumptionComplements(bill, fields.ComplementData);
+      CreateFuelConsumptionComplementConcepts(bill, fields.ComplementData.ComplementConcepts);
 
       return bill;
+    }
+
+
+    private FixedList<BillConcept> CreateFuelConsumptionComplementConcepts(Bill bill,
+                                  FixedList<FuelConseptionComplementConceptDataFields> complementConcepts) {
+
+      var concepts = new List<BillConcept>();
+      
+      foreach (var fields in complementConcepts) {
+
+        var billConcept = new BillConcept(bill, Product.Empty);
+
+        billConcept.UpdateComplementConcept(fields);
+
+        billConcept.Save();
+
+        CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
+
+        concepts.Add(billConcept);
+
+      }
+
+      return concepts.ToFixedList();
     }
 
 

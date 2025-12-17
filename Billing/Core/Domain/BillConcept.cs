@@ -174,6 +174,14 @@ namespace Empiria.Billing {
       }
     }
 
+
+    public BillConceptExtData ConceptExtData {
+      get {
+        return new BillConceptExtData(this.ExtData);
+      }
+    }
+
+
     public FixedList<BillTaxEntry> TaxEntries {
       get {
         return BillTaxEntry.GetListFor(this.Bill.BillType.Id, this.BillConceptId);
@@ -209,6 +217,17 @@ namespace Empiria.Billing {
       this.Discount = fields.Discount;
 
       SchemaData.Update(fields);
+    }
+
+
+    internal void UpdateComplementConcept(FuelConseptionComplementConceptDataFields fields) {
+
+      fields.EnsureIsValid();
+      this.SATProduct = Patcher.Patch(fields.SATProductUID, SATProducto.Empty);
+      this.SATProductCode = fields.SATProductServiceCode;
+      this.Product = Patcher.Patch(fields.ProductUID, Product);
+      _tags = EmpiriaString.Tagging(fields.Tags);
+      this.ConceptExtData.Update(fields);
     }
 
 
