@@ -301,6 +301,24 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+
+    public bool InProcess {
+      get {
+        return Status == TransactionStatus.Pending ||
+               Status == TransactionStatus.Suspended ||
+               Status == TransactionStatus.OnAuthorization ||
+               Status == TransactionStatus.Authorized ||
+               Status == TransactionStatus.Signed;
+      }
+    }
+
+
+    public bool IsClosed {
+      get {
+        return Status == TransactionStatus.Closed;
+      }
+    }
+
     #endregion Properties
 
     #region Methods
