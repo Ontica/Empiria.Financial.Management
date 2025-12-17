@@ -21,13 +21,22 @@ namespace Empiria.Payments {
 
 
     internal bool CanApproveBudget() {
-      if (_paymentOrder.Status == PaymentOrderStatus.Pending &&
-          !_paymentOrder.HasApprovedBudget &&
-          !_paymentOrder.HasActivePaymentInstruction) {
-        return true;
+
+      if (_paymentOrder.Status != PaymentOrderStatus.Pending) {
+        return false;
       }
 
-      return false;
+      if (_paymentOrder.HasActivePaymentInstruction) {
+        return false;
+      }
+
+      var budgetTxn = _paymentOrder.TryGetApprovedBudget();
+
+      if (budgetTxn != null && (budgetTxn.InProcess || budgetTxn.IsClosed)) {
+        return false;
+      }
+
+      return true;
     }
 
 
@@ -57,9 +66,11 @@ namespace Empiria.Payments {
 
 
     internal bool CanGeneratePaymentInstruction() {
+      var bdgTxn = _paymentOrder.TryGetApprovedBudget();
+
       if (_paymentOrder.Status == PaymentOrderStatus.Pending &&
-          _paymentOrder.HasApprovedBudget &&
-          !_paymentOrder.HasActivePaymentInstruction) {
+          !_paymentOrder.HasActivePaymentInstruction &&
+          bdgTxn != null && bdgTxn.IsClosed) {
         return true;
       }
 

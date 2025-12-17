@@ -264,22 +264,6 @@ namespace Empiria.Payments {
     }
 
 
-    public bool HasApprovedBudget {
-      get {
-        var payableEntity = (IBudgetable) PayableEntity;
-
-        var transactions = payableEntity.BudgetTransactions
-                                        .Select(x => (BudgetTransaction) x)
-                                        .ToFixedList();
-
-        var approvedTransaction = transactions.Find(x => x.BudgetTransactionType == BudgetTransactionType.AutorizarPagoGastoCorriente &&
-                                                         x.Status == TransactionStatus.Closed);
-
-        return approvedTransaction != null;
-      }
-    }
-
-
     public void EnsureCanCreateInstruction() {
       if (IsEmptyInstance) {
         Assertion.RequireFail("No se puede crear una instrucción de pago " +
@@ -290,7 +274,9 @@ namespace Empiria.Payments {
                               "debido a que la solicitud no ha sido guardada.");
       }
 
-      if (!HasApprovedBudget) {
+      var bdgTxn = TryGetApprovedBudget();
+
+      if (bdgTxn == null || bdgTxn.InProcess) {
         Assertion.RequireFail("No se puede crear la instrucción de pago debido " +
                               "a que la solicitud de pago no tiene el presupuesto aprobado.");
       }
@@ -379,6 +365,20 @@ namespace Empiria.Payments {
         this.ReferenceNumber = referenceNumber;
       }
 
+    }
+
+
+    public BudgetTransaction TryGetApprovedBudget() {
+      var payableEntity = (IBudgetable) PayableEntity;
+
+      var transactions = payableEntity.BudgetTransactions
+                                      .Select(x => (BudgetTransaction) x)
+                                      .ToFixedList()
+                                      .FindAll(x => x.BudgetTransactionType == BudgetTransactionType.AutorizarPagoGastoCorriente);
+
+      var approvedTransaction = transactions.Find(x => x.InProcess || x.IsClosed);
+
+      return approvedTransaction;
     }
 
 
