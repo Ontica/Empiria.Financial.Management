@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Financial;
+using Empiria.StateEnums;
 
 namespace Empiria.Payments {
 
@@ -76,6 +77,11 @@ namespace Empiria.Payments {
     } = ExecutionServer.DateMinValue;
 
 
+    public Priority Priority {
+      get; set;
+    } = Priority.Normal;
+
+
     public string RequestedByUID {
       get; set;
     } = string.Empty;
@@ -104,6 +110,5 @@ namespace Empiria.Payments {
     }
 
   }  // class PaymentOrderFields
-
 
 }  // namespace Empiria.Payments.Adapters

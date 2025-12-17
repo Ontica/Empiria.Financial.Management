@@ -13,6 +13,7 @@ using Empiria.History;
 
 using Empiria.Financial;
 using Empiria.Financial.Adapters;
+using Empiria.StateEnums;
 
 using Empiria.Billing.Adapters;
 
@@ -80,6 +81,7 @@ namespace Empiria.Payments.Adapters {
         CurrencyCode = paymentOrder.PayableEntity.Currency.Name,
         Total = paymentOrder.Total,
         DueTime = paymentOrder.DueTime,
+        PriorityName = paymentOrder.Priority.GetName(),
         PayableNo = paymentOrder.PayableEntity.EntityNo,
         PayableTypeName = paymentOrder.PayableEntity.GetEmpiriaType().DisplayName,
         PayableName = paymentOrder.PayableEntity.Name,
@@ -117,6 +119,7 @@ namespace Empiria.Payments.Adapters {
         RequestedDate = paymentOrder.PostingTime,
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
         DueTime = paymentOrder.DueTime,
+        Priority = paymentOrder.Priority,
         Description = paymentOrder.Description,
         Budget = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
         BudgetType = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),

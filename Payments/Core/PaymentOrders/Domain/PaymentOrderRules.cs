@@ -21,7 +21,9 @@ namespace Empiria.Payments {
 
 
     internal bool CanApproveBudget() {
-      if (_paymentOrder.Status == PaymentOrderStatus.Pending) {
+      if (_paymentOrder.Status == PaymentOrderStatus.Pending &&
+          !_paymentOrder.HasApprovedBudget &&
+          !_paymentOrder.HasActivePaymentInstruction) {
         return true;
       }
 
@@ -55,7 +57,9 @@ namespace Empiria.Payments {
 
 
     internal bool CanGeneratePaymentInstruction() {
-      if (_paymentOrder.Status == PaymentOrderStatus.Pending) {
+      if (_paymentOrder.Status == PaymentOrderStatus.Pending &&
+          _paymentOrder.HasApprovedBudget &&
+          !_paymentOrder.HasActivePaymentInstruction) {
         return true;
       }
 

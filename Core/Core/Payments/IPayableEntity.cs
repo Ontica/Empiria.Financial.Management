@@ -17,9 +17,6 @@ namespace Empiria.Financial {
   /// contract supply orders, invoices, paychecks, etc.</summary>
   public interface IPayableEntity : IIdentifiable, INamedEntity {
 
-    ObjectTypeInfo GetEmpiriaType();
-
-
     string EntityNo {
       get;
     }
@@ -57,6 +54,9 @@ namespace Empiria.Financial {
     FixedList<IPayableEntityItem> Items {
       get;
     }
+
+
+    ObjectTypeInfo GetEmpiriaType();
 
   }  // interface IPayableEntity
 

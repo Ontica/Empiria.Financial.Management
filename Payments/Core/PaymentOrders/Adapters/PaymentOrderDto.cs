@@ -12,6 +12,7 @@ using System;
 
 using Empiria.Documents;
 using Empiria.History;
+using Empiria.StateEnums;
 
 using Empiria.Financial.Adapters;
 using Empiria.Billing.Adapters;
@@ -140,6 +141,10 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public Priority Priority {
+      get; internal set;
+    }
+
     public PaymentMethodDto PaymentMethod {
       get; internal set;
     }
@@ -204,6 +209,10 @@ namespace Empiria.Payments.Adapters {
     }
 
     public DateTime DueTime {
+      get; internal set;
+    }
+
+    public string PriorityName {
       get; internal set;
     }
 

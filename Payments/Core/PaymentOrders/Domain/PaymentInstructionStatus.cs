@@ -118,9 +118,17 @@ namespace Empiria.Payments {
                                                 $"{currentStatus.GetName()} to {newStatus.GetName()}.");
       }
 
-
       Assertion.RequireFail($"No es posible cambiar el estado de la instrucción de pago " +
                             $"del estado {currentStatus.GetName()} a {newStatus.GetName()}.");
+    }
+
+
+    static public bool IsActive(this PaymentInstructionStatus status) {
+      if (status != PaymentInstructionStatus.Canceled &&
+          status != PaymentInstructionStatus.Failed) {
+        return true;
+      }
+      return false;
     }
 
 
@@ -147,7 +155,7 @@ namespace Empiria.Payments {
           return "Suspendida";
 
         case PaymentInstructionStatus.WaitingRequest:
-          return "Antes de enviar";
+          return "Envío en curso";
 
         case PaymentInstructionStatus.Requested:
           return "Enviada";

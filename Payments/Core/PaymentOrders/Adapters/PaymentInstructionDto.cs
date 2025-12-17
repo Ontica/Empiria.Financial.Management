@@ -58,6 +58,10 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public bool CanReset {
+      get; internal set;
+    }
+
     public bool CanSuspend {
       get; internal set;
     }
