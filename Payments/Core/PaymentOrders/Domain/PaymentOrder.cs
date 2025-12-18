@@ -371,12 +371,10 @@ namespace Empiria.Payments {
     public BudgetTransaction TryGetApprovedBudget() {
       var payableEntity = (IBudgetable) PayableEntity;
 
-      var transactions = payableEntity.BudgetTransactions
-                                      .Select(x => (BudgetTransaction) x)
-                                      .ToFixedList()
-                                      .FindAll(x => x.BudgetTransactionType == BudgetTransactionType.AutorizarPagoGastoCorriente);
+      var budgetTxns = BudgetTransaction.GetFor(payableEntity)
+                                        .FindAll(x => x.OperationType == BudgetOperationType.ApprovePayment);
 
-      var approvedTransaction = transactions.Find(x => x.InProcess || x.IsClosed);
+      var approvedTransaction = budgetTxns.Find(x => x.InProcess || x.IsClosed);
 
       return approvedTransaction;
     }

@@ -46,25 +46,28 @@ namespace Empiria.Budgeting.Transactions {
             .ToFixedList();
     }
 
+
+    static public BudgetTransactionType GetFor(BudgetType budgetType,
+                                               BudgetOperationType operationType) {
+      Assertion.Require(budgetType, nameof(budgetType));
+
+      var transactionType = GetList()
+                           .First(x => x.BudgetType.Equals(budgetType) &&
+                                       x.OperationType == operationType);
+
+      Assertion.Require(transactionType,
+                        $"Operation type '{operationType}' is not defined " +
+                        $"for budget type '{budgetType.Name}'.");
+
+      return transactionType;
+    }
+
+
     static public FixedList<BudgetTransactionType> GetList(BudgetType budgetType) {
       Assertion.Require(budgetType, nameof(budgetType));
 
       return GetList().FindAll(x => x.BudgetType.Equals(budgetType));
     }
-
-    static public BudgetTransactionType ApartarGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.ApartarGastoCorriente");
-
-    static public BudgetTransactionType ApartarCostoFinanciero => Parse("ObjectTypeInfo.BudgetTransaction.ApartarCostoFinanciero");
-
-    static public BudgetTransactionType ComprometerGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.ComprometerGastoCorriente");
-
-    static public BudgetTransactionType ComprometerCostoFinanciero => Parse("ObjectTypeInfo.BudgetTransaction.ComprometerCostoFinanciero");
-
-    static public BudgetTransactionType AutorizarPagoGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.AutorizarPagoGastoCorriente");
-
-    static public BudgetTransactionType EjercerGastoCorriente => Parse("ObjectTypeInfo.BudgetTransaction.EjercerGastoCorriente");
-
-    static public BudgetTransactionType EjercerCostoFinanciero => Parse("ObjectTypeInfo.BudgetTransaction.EjercerCostoFinanciero");
 
     static public BudgetTransactionType Empty => Parse("ObjectTypeInfo.BudgetTransaction");
 
@@ -115,6 +118,7 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+
     public FixedList<OperationSource> OperationSources {
       get {
         return ExtensionData.GetFixedList<OperationSource>("sources", false)
@@ -123,11 +127,12 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    public string OperationTypes {
+    public BudgetOperationType OperationType {
       get {
-        return ExtensionData.Get("operationTypes", string.Empty);
+        return ExtensionData.Get("operationType", BudgetOperationType.None);
       }
     }
+
 
     public string Prefix {
       get {

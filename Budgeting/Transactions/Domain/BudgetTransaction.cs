@@ -86,6 +86,12 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+    public BudgetOperationType OperationType {
+      get {
+        return BudgetTransactionType.OperationType;
+      }
+    }
+
 
     [DataField("BDG_TXN_BASE_BUDGET_ID")]
     public Budget BaseBudget {
@@ -543,14 +549,14 @@ namespace Empiria.Budgeting.Transactions {
     #region Helpers
 
     private void GenerateControlCodes() {
-      if (BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente)) {
+      if (OperationType == BudgetOperationType.Request) {
 
         BudgetTransactionDataService.GenerateAvailableControlCodes(this);
 
-      } else if (BudgetTransactionType.Equals(BudgetTransactionType.AutorizarPagoGastoCorriente)) {
+      } else if (OperationType == BudgetOperationType.ApprovePayment) {
 
         FixedList<BudgetEntry> entries = GetFor(GetEntity())
-                                        .FindAll(x => x.BudgetTransactionType.Equals(BudgetTransactionType.ApartarGastoCorriente))
+                                        .FindAll(x => x.OperationType == BudgetOperationType.Request)
                                         .SelectFlat(x => x.Entries)
                                         .FindAll(x => x.Deposit != 0);
 

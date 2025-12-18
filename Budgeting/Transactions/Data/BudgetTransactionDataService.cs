@@ -75,7 +75,7 @@ namespace Empiria.Budgeting.Transactions.Data {
                                                     FixedList<BudgetEntry> requestedEntries) {
 
       int counter = BudgetTransaction.GetFor(transaction.GetEntity())
-                                     .CountAll(x => x.BudgetTransactionType.Equals(BudgetTransactionType.ComprometerGastoCorriente));
+                                     .CountAll(x => x.OperationType == BudgetOperationType.Commit);
 
       string counterString = (counter + 1).ToString("00");
 
