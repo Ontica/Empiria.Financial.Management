@@ -45,13 +45,6 @@ namespace Empiria.Payments {
       }
     }
 
-
-    static internal FixedList<BillDto> GetPayableBills(IPayableEntity payable) {
-      Assertion.Require(payable, nameof(payable));
-
-      return new FixedList<BillDto>();
-    }
-
     #endregion Services
 
   }  // class ExternalServices

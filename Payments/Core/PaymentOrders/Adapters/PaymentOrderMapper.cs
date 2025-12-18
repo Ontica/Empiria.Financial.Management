@@ -15,6 +15,7 @@ using Empiria.Financial;
 using Empiria.Financial.Adapters;
 using Empiria.StateEnums;
 
+using Empiria.Billing;
 using Empiria.Billing.Adapters;
 
 using Empiria.Budgeting.Transactions;
@@ -26,7 +27,7 @@ namespace Empiria.Payments.Adapters {
   static public class PaymentOrderMapper {
 
     static internal PaymentOrderHolderDto Map(PaymentOrder paymentOrder) {
-      var bills = Billing.Bill.GetListFor(paymentOrder.PayableEntity);
+      var bills = Bill.GetListFor(paymentOrder.PayableEntity);
       var txns = BudgetTransaction.GetFor((IBudgetable) paymentOrder.PayableEntity);
       var instructions = paymentOrder.PaymentInstructions.ToFixedList();
 
