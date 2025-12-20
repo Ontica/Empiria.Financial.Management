@@ -277,6 +277,8 @@ namespace Empiria.Billing.SATMexicoImporter {
       taxDto.TasaOCuota = generalDataReader.GetAttribute<decimal>(taxNode, "TasaOCuota");
       taxDto.Importe = generalDataReader.GetAttribute<decimal>(taxNode, "Importe");
 
+      taxDto.TipoFactor = taxDto.TipoFactor != string.Empty ? taxDto.TipoFactor : "None";
+
       if (taxNode.Name.Contains("Traslado")) {
         taxDto.MetodoAplicacion = BillTaxMethod.Traslado;
 

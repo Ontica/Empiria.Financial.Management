@@ -116,12 +116,52 @@ namespace Empiria.Billing {
     }
 
 
-    public FixedList<BillConceptSchemaData> Concepts {
+    public string ComplementVersion {
       get {
-        return _extData.GetFixedList<BillConceptSchemaData>("concepts", false);
+        return _extData.Get("complementVersion", string.Empty);
       }
       private set {
-        _extData.SetIfValue("concepts", value);
+        _extData.SetIfValue("complementVersion", value);
+      }
+    }
+
+
+    public string TipoOperacion {
+      get {
+        return _extData.Get("tipoOperacion", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("tipoOperacion", value);
+      }
+    }
+
+
+    public string NumeroDeCuenta {
+      get {
+        return _extData.Get("numeroDeCuenta", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("numeroDeCuenta", value);
+      }
+    }
+
+
+    public decimal SubTotal {
+      get {
+        return _extData.Get("subTotal", 0);
+      }
+      private set {
+        _extData.SetIfValue("subTotal", value);
+      }
+    }
+
+
+    public decimal Total {
+      get {
+        return _extData.Get("total", 0);
+      }
+      private set {
+        _extData.SetIfValue("total", value);
       }
     }
 
@@ -148,24 +188,14 @@ namespace Empiria.Billing {
     }
 
 
-    internal void UpdateFuelConsumptionAddenda(FuelConsumptionBillAddendaFields addenda) {
-      Assertion.Require(addenda, nameof(addenda));
+    internal void UpdateFuelConsumptionAddenda(FuelConsumptionComplementDataFields complementDataFields) {
+      Assertion.Require(complementDataFields, nameof(complementDataFields));
 
-      if (addenda.Concepts.Count == 0) {
-        return;
-      }
-
-      var conceptsExtData = new List<BillConceptSchemaData>();
-
-      foreach (var conceptFields in addenda.Concepts) {
-
-        var billConceptExtData = new BillConceptSchemaData();
-
-        billConceptExtData.Update(conceptFields);
-
-        conceptsExtData.Add(billConceptExtData);
-      }
-      Concepts = conceptsExtData.ToFixedList();
+      ComplementVersion = complementDataFields.Version;
+      TipoOperacion = complementDataFields.TipoOperacion;
+      NumeroDeCuenta = complementDataFields.NumeroDeCuenta;
+      SubTotal = complementDataFields.SubTotal;
+      Total = complementDataFields.Total;
     }
 
   } // class BillExtData

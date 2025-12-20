@@ -45,7 +45,7 @@ namespace Empiria.Tests.Billing {
 
         var xmlText = System.IO.File.ReadAllText(xmlFilePath);
 
-        BillDto sut = usecases.CreateBillPaymentComplementTest(xmlText);
+        BillDto sut = usecases.CreateFuelConsumptionBillTest(xmlText);
 
         Assert.NotNull(sut);
       }
@@ -71,7 +71,7 @@ namespace Empiria.Tests.Billing {
     [Fact]
     public void Get_Bill_By_UID_Test() {
 
-      string billUID = "a8161e85-b760-42a4-a170-1a867e97392a";
+      string billUID = "217bfe41-c6a2-4e13-96a9-e2b440b8cf89";
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
@@ -85,7 +85,7 @@ namespace Empiria.Tests.Billing {
     [Fact]
     public void Get_Bill_Map_By_UID_Test() {
 
-      string billUID = "45010561-add4-46ca-a687-1ac4ed5885ca";
+      string billUID = "217bfe41-c6a2-4e13-96a9-e2b440b8cf89";
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 

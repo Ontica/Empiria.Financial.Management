@@ -143,7 +143,7 @@ namespace Empiria.Billing.Data {
 
 
     static internal void WriteBillConcept(BillConcept o, string extensionData) {
-
+      
       var op = DataOperation.Parse("write_FMS_Bill_Concept",
           o.Id, o.UID, o.GetEmpiriaType().Id, o.Bill.Id, o.Product.Id,
           o.SATProduct.Id, o.SATProductCode, o.Description,

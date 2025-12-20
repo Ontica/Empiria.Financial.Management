@@ -318,19 +318,6 @@ namespace Empiria.Billing {
 
     #region Methods
 
-    public void Delete() {
-      this.Status = BillStatus.Deleted;
-    }
-
-    protected override void OnSave() {
-      if (IsNew) {
-        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        PostingTime = DateTime.Now;
-      }
-      BillData.WriteBill(this, ExtData.ToString());
-    }
-
-
     internal void AssignBillRelatedBills() {
 
       this.BillRelatedBills = BillRelatedBill.GetListFor(this);
@@ -338,6 +325,27 @@ namespace Empiria.Billing {
       foreach (var relatedBill in BillRelatedBills) {
         relatedBill.TaxEntries = BillTaxEntry.GetListFor(this.BillType.Id, relatedBill.BillRelatedBillId);
       }
+    }
+
+
+    public void Delete() {
+      this.Status = BillStatus.Deleted;
+    }
+
+
+    private void GetTotals(FixedList<ComplementRelatedPayoutDataFields> payoutData) {
+
+      Subtotal = payoutData.Select(x => x.Taxes.Sum(y => y.BaseAmount)).Sum();
+      Total = payoutData.Sum(x => x.Monto);
+    }
+
+
+    protected override void OnSave() {
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
+      BillData.WriteBill(this, ExtData.ToString());
     }
 
 
@@ -381,7 +389,7 @@ namespace Empiria.Billing {
 
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
-      BillExtData.UpdateFuelConsumptionAddenda(fields.Addenda);
+      BillExtData.UpdateFuelConsumptionAddenda(fields.ComplementData);
     }
 
 
@@ -402,13 +410,6 @@ namespace Empiria.Billing {
 
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
-    }
-
-
-    private void GetTotals(FixedList<ComplementRelatedPayoutDataFields> payoutData) {
-
-      Subtotal = payoutData.Select(x => x.Taxes.Sum(y => y.BaseAmount)).Sum();
-      Total = payoutData.Sum(x => x.Monto);
     }
 
     #endregion Methods

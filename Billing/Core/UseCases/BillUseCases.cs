@@ -233,7 +233,6 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-
     private Bill CreateBillImplementation(IPayableEntity payable, BillFields fields) {
 
       return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
@@ -336,21 +335,10 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateFuelConsumptionTest(FuelConsumptionBillFields fields) {
+    private FixedList<BillConcept> CreateFuelConsumptionAddendaConcepts(Bill bill,
+                                                      FixedList<BillConceptWithTaxFields> conceptFields) {
 
-      var billCategory = BillCategory.ComplementoPagoProveedores;
-
-      var bill = new Bill(billCategory, fields.BillNo);
-
-      bill.UpdateFuelConsumptionBill(fields);
-
-      bill.Save();
-
-      CreateFuelConsumptionConcepts(bill, fields.Concepts);
-
-      CreateFuelConsumptionComplementConcepts(bill, fields.ComplementData.ComplementConcepts);
-
-      return bill;
+      return CreateBillConcepts(bill, conceptFields);
     }
 
 
@@ -380,21 +368,27 @@ namespace Empiria.Billing.UseCases {
     private FixedList<BillConcept> CreateFuelConsumptionConcepts(Bill bill,
                                     FixedList<BillConceptWithTaxFields> conceptFields) {
 
-      var concepts = new List<BillConcept>();
+      return CreateBillConcepts(bill, conceptFields);
+    }
 
-      foreach (BillConceptWithTaxFields fields in conceptFields) {
 
-        var billConcept = new BillConcept(bill, Product.Empty);
+    private Bill CreateFuelConsumptionTest(FuelConsumptionBillFields fields) {
 
-        billConcept.Update(fields);
+      var billCategory = BillCategory.FacturaConsumoCombustible;
 
-        billConcept.Save();
+      var bill = new Bill(billCategory, fields.BillNo);
 
-        CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
+      bill.UpdateFuelConsumptionBill(fields);
 
-        concepts.Add(billConcept);
-      }
-      return concepts.ToFixedList();
+      bill.Save();
+
+      CreateFuelConsumptionConcepts(bill, fields.Concepts);
+
+      CreateFuelConsumptionComplementConcepts(bill, fields.ComplementData.ComplementConcepts);
+
+      CreateFuelConsumptionAddendaConcepts(bill, fields.Addenda.Concepts);
+
+      return bill;
     }
 
     #endregion Private methods

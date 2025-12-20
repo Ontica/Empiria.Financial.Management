@@ -141,6 +141,15 @@ namespace Empiria.Billing {
     #endregion Properties
 
     #region Private methods
+    
+    protected override void OnSave() {
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
+      BillData.WriteBillTaxEntry(this, ExtData.ToString());
+    }
+
 
     internal void Update (BillTaxEntryFields fields) {
 
@@ -152,16 +161,6 @@ namespace Empiria.Billing {
       this.Total = fields.Total;
       this.BillTaxExtData.Update(fields);
     }
-
-
-    protected override void OnSave() {
-      if (IsNew) {
-        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        PostingTime = DateTime.Now;
-      }
-      BillData.WriteBillTaxEntry(this, ExtData.ToString());
-    }
-
 
     #endregion Private methods
 

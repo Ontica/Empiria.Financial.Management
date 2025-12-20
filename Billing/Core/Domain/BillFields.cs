@@ -350,6 +350,12 @@ namespace Empiria.Billing {
         case "Tasa":
           return BillTaxFactorType.Tasa;
 
+        case "Exento":
+          return BillTaxFactorType.Exento;
+
+        case "None":
+          return BillTaxFactorType.None;
+
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled bill tax factor type for '{tipoFactor}'.");
       }

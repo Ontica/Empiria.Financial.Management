@@ -19,6 +19,8 @@ namespace Empiria.Billing {
 
     Exento = 'E',
 
+    None = 'X'
+
   }  // enum BillTaxFactorType
 
 

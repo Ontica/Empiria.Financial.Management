@@ -137,6 +137,20 @@ namespace Empiria.Billing {
       NoIdentificacion = fields.IdentificationNo;
       ObjetoImp = fields.ObjectImp;
     }
+
+
+    internal void UpdateComplementConcept(FuelConseptionComplementConceptDataFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      ClaveProdServ = fields.SATProductServiceCode;
+      NoIdentificacion = fields.Identificador;
+      ClaveUnidad = fields.ClaveEstacion;
+      Unidad = fields.Unidad;
+      Cantidad = fields.Cantidad;
+      ValorUnitario = fields.ValorUnitario;
+      Importe = fields.Importe;
+    }
+
   }  // class BillConceptSchemaData
 
 

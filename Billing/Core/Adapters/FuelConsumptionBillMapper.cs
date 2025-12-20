@@ -10,6 +10,8 @@
 
 using System;
 using System.Collections.Generic;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Vml;
 using Empiria.Billing.SATMexicoImporter;
 using Empiria.Parties;
 using Empiria.Products.SATMexico;
@@ -72,7 +74,7 @@ namespace Empiria.Billing.Adapters {
     static private IBillFields MapToFuelConsumptionBillFields(SATFuelConsumptionBillDto dto) {
 
       return new FuelConsumptionBillFields {
-        BillCategoryUID = BillCategory.ComplementoPagoProveedores.UID,
+        BillCategoryUID = BillCategory.FacturaConsumoCombustible.UID,
         BillNo = dto.SATComplemento.UUID,
         CertificationNo = dto.DatosGenerales.NoCertificado,
         IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,

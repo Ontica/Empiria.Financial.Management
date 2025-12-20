@@ -200,6 +200,16 @@ namespace Empiria.Billing {
 
     #region Methods
 
+    protected override void OnSave() {
+      if (IsNew) {
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
+      }
+
+      BillData.WriteBillConcept(this, this.ExtData.ToString());
+    }
+
+
     internal void Update(BillConceptFields fields) {
 
       Assertion.Require(fields, nameof(fields));
@@ -226,18 +236,14 @@ namespace Empiria.Billing {
       this.SATProduct = Patcher.Patch(fields.SATProductUID, SATProducto.Empty);
       this.SATProductCode = fields.SATProductServiceCode;
       this.Product = Patcher.Patch(fields.ProductUID, Product);
+      this.QuantityUnit = Product.BaseUnit;
+      this.Quantity = fields.Cantidad;
+      this.UnitPrice = fields.ValorUnitario;
+      this.Subtotal = fields.Importe;
       _tags = EmpiriaString.Tagging(fields.Tags);
-      this.ConceptExtData.Update(fields);
-    }
 
-
-    protected override void OnSave() {
-      if (IsNew) {
-        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        PostingTime = DateTime.Now;
-      }
-
-      BillData.WriteBillConcept(this, this.ExtData.ToString());
+      SchemaData.UpdateComplementConcept(fields);
+      ConceptExtData.Update(fields);
     }
 
     #endregion Methods
