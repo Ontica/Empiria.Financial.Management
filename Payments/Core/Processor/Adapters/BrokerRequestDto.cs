@@ -26,6 +26,13 @@ namespace Empiria.Payments.Processor.Adapters {
     }
 
 
+    public string BrokerInstructionNo {
+      get {
+        return _instruction.BrokerInstructionNo;
+      }
+    }
+
+
     public string PaymentInstructionNo {
       get {
         return _instruction.PaymentInstructionNo;
@@ -35,7 +42,7 @@ namespace Empiria.Payments.Processor.Adapters {
 
     public string BeneficiaryAccountNo {
       get {
-        return _instruction.PaymentOrder.PaymentAccount.CLABE;
+        return _instruction.PaymentOrder.PaymentAccount.AccountNo;
       }
     }
 
