@@ -20,6 +20,8 @@ namespace Empiria.Payments {
 
     private PaymentsTimeWindow _timeWindow;
 
+    static private TimeSpan WAITING_REQUEST_SECONDS = TimeSpan.FromSeconds(60);
+
     internal PaymentsTimeControl(PaymentInstruction instruction) {
       Assertion.Require(instruction, nameof(instruction));
 
@@ -57,6 +59,20 @@ namespace Empiria.Payments {
       } else {
         throw Assertion.EnsureNoReachThisCode("Unhandled code condition.");
 
+      }
+    }
+
+
+    public bool WaitingRequestTimeElapsed {
+      get {
+        var waitingRequestEntry = _instruction.LogEntries
+                                              .FindLast(x => x.Status == PaymentInstructionStatus.WaitingRequest);
+
+        if (waitingRequestEntry == null) {
+          return false;
+        }
+
+        return waitingRequestEntry.ApplicationTime.Add(WAITING_REQUEST_SECONDS) <= DateTime.Now;
       }
     }
 

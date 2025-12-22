@@ -75,6 +75,16 @@ namespace Empiria.Payments {
       return false;
     }
 
+
+    public bool IsReadyToBeRequested {
+      get {
+        if (_instruction.Status != PaymentInstructionStatus.WaitingRequest) {
+          return false;
+        }
+        return _instruction.TimeControl.WaitingRequestTimeElapsed;
+      }
+    }
+
   }  // class PaymentInstructionRules
 
 }  // namespace Empiria.Payments

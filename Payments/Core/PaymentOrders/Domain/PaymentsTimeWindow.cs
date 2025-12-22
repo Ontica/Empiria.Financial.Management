@@ -50,7 +50,6 @@ namespace Empiria.Payments {
 
     #region Properties
 
-
     public TimeSpan DEFAULT_START_TIME {
       get {
         var value = _storedJson.Value.Get<string>("defaultStartTime");

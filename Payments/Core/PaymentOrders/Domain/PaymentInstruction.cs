@@ -195,6 +195,7 @@ namespace Empiria.Payments {
     internal void Update(BrokerResponseDto brokerResponse) {
       lock (_locker) {
         UpdateInternal(brokerResponse);
+        Save();
       }
     }
 
