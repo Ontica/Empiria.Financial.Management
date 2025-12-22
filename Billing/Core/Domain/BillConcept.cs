@@ -1,33 +1,42 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Billing                                    Component : Domain Layer                            *
-*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Empiria Plain Object                    *
+*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Partitioned Type                        *
 *  Type     : BillConcept                                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Represents a bill concept with its tax entries.                                                *
+*  Summary  : Partitioned type that represents a bill concept with its tax entries.                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using Empiria.Billing.Data;
+
 using Empiria.Json;
+using Empiria.Ontology;
 using Empiria.Parties;
+using Empiria.StateEnums;
+
 using Empiria.Products;
 using Empiria.Products.SATMexico;
-using Empiria.StateEnums;
+
+using Empiria.Billing.Data;
 
 namespace Empiria.Billing {
 
-  /// <summary>Represents a bill concept with its tax entries.</summary>
+  /// <summary>Partitioned type that represents a bill concept with its tax entries.</summary>
+  [PartitionedType(typeof(BillConceptType))]
   internal class BillConcept : BaseObject {
 
     #region Constructors and parsers
 
-    internal BillConcept() {
+    protected BillConcept(BillConceptType billConceptType) : base(billConceptType) {
       // Required by Empiria Framework.
     }
 
-    public BillConcept(Bill bill, Product product) {
+    public BillConcept(Bill bill, Product product) : this(BillConceptType.Normal, bill, product) {
+      // no-op
+    }
+
+    public BillConcept(BillConceptType billConceptType, Bill bill, Product product) : base(billConceptType) {
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
       Assertion.Require(product, nameof(product));
@@ -52,6 +61,13 @@ namespace Empiria.Billing {
     #endregion Constructors and parsers
 
     #region Properties
+
+    public BillConceptType BillConceptType {
+      get {
+        return (BillConceptType) base.GetEmpiriaType();
+      }
+    }
+
 
     [DataField("BILL_CONCEPT_ID")]
     public int BillConceptId {
