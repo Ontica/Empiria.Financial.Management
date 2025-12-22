@@ -48,14 +48,6 @@ namespace Empiria.Tests.Payments {
       Assert.True(true);
     }
 
-
-    [Fact]
-    public async Task UpdateInProgressPaymentInstructions() {
-      await _services.UpdateInProgressPaymentInstructions();
-
-      Assert.True(true);
-    }
-
     #endregion Facts
 
   }  // class PaymentServiceTests

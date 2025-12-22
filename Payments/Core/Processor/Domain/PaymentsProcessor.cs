@@ -14,7 +14,7 @@ using System.Threading;
 namespace Empiria.Payments.Processor {
 
   /// <summary>Provides services to process payment instructions.</summary>
-  internal class PaymentsProcessor {
+  public class PaymentsProcessor {
 
     private static bool isRunning = false;
     private static volatile Timer timer = null;
@@ -27,7 +27,6 @@ namespace Empiria.Payments.Processor {
       }
     }
 
-
     #endregion Properties
 
     #region Methods
@@ -35,16 +34,18 @@ namespace Empiria.Payments.Processor {
     /// <summary>Starts the execution engine for pending messages in asyncronous mode.</summary>
     static public void Start() {
       try {
+
         if (isRunning) {
           return;
         }
 
-        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 1);
-        timer = new Timer(RefreshPaymentInstructions, null,
-                          TimeSpan.FromMinutes(MESSAGE_ENGINE_EXECUTION_MINUTES),
-                          TimeSpan.FromMinutes(MESSAGE_ENGINE_EXECUTION_MINUTES));
-
         isRunning = true;
+
+        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 1);
+
+        timer = new Timer(ProcessPaymentInstructions, null,
+                          TimeSpan.FromSeconds(MESSAGE_ENGINE_EXECUTION_MINUTES),
+                          TimeSpan.FromMinutes(MESSAGE_ENGINE_EXECUTION_MINUTES));
 
         EmpiriaLog.Info("PaymentsProcessor was started.");
 
@@ -75,12 +76,19 @@ namespace Empiria.Payments.Processor {
 
     #region Helpers
 
-    static private async void RefreshPaymentInstructions(object stateInfo) {
-      var instructions = PaymentInstruction.GetInProgress();
+    static private async void ProcessPaymentInstructions(object stateInfo) {
+
+      var toBeRequested = PaymentInstruction.GetReadyToBeRequested();
+
+      var inProgress = PaymentInstruction.GetInProgress();
 
       using (var usecases = PaymentService.ServiceInteractor()) {
 
-        foreach (var instruction in instructions) {
+        foreach (var instruction in toBeRequested) {
+          await usecases.SendPaymentInstruction(instruction);
+        }
+
+        foreach (var instruction in inProgress) {
           await usecases.RefreshPaymentInstruction(instruction);
         }
       }

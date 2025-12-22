@@ -20,11 +20,11 @@ namespace Empiria.Payments.Processor {
 
     #region Constructors and parsers
 
-    protected PaymentService() {
-      PaymentsProcessor.Start();
+    private PaymentService() {
+      // Required by Empiria Framework.
     }
 
-    static public PaymentService ServiceInteractor() {
+    static internal PaymentService ServiceInteractor() {
       return CreateInstance<PaymentService>();
     }
 
@@ -43,8 +43,6 @@ namespace Empiria.Payments.Processor {
 
       IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
 
-      Assertion.Require(instruction.BrokerInstructionNo, nameof(instruction.BrokerInstructionNo));
-
       BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
 
       BrokerResponseDto brokerResponse = await paymentsService.RequestPaymentStatus(brokerRequest);
@@ -53,14 +51,14 @@ namespace Empiria.Payments.Processor {
     }
 
 
-    public async Task SendPaymentInstruction(PaymentInstruction instruction) {
+    internal async Task SendPaymentInstruction(PaymentInstruction instruction) {
       Assertion.Require(instruction, nameof(instruction));
       Assertion.Require(!instruction.IsEmptyInstance, nameof(instruction));
       Assertion.Require(!instruction.IsNew, "paymentInstruction must be stored.");
       Assertion.Require(instruction.BrokerInstructionNo.Length == 0, "BrokerInstructionNo must be empty.");
 
-      Assertion.Require(instruction.Status == PaymentInstructionStatus.WaitingRequest,
-                        "PaymentInstruction status must be 'WaitingRequest'.");
+      Assertion.Require(instruction.Rules.IsReadyToBeRequested,
+                        "PaymentInstruction is not ready to be requested.");
 
       IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
 
@@ -69,15 +67,6 @@ namespace Empiria.Payments.Processor {
       BrokerResponseDto brokerResponse = await paymentsService.SendPaymentInstruction(brokerRequest);
 
       instruction.Update(brokerResponse);
-    }
-
-
-    public async Task UpdateInProgressPaymentInstructions() {
-      var inProgressInstructions = PaymentInstruction.GetInProgress();
-
-      foreach (var instruction in inProgressInstructions) {
-        await RefreshPaymentInstruction(instruction);
-      }
     }
 
     #endregion Services
