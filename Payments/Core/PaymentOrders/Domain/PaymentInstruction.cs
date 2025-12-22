@@ -64,10 +64,16 @@ namespace Empiria.Payments {
     }
 
 
+    static internal FixedList<PaymentInstruction> GetReadyToBeRequested() {
+      FixedList<PaymentInstruction> instructions = PaymentInstructionData.GetWaitingRequestInstructions();
+
+      return instructions.FindAll(x => x.Rules.IsReadyToBeRequested);
+    }
+
+
     protected override void OnLoad() {
       LoadLogEntries();
     }
-
 
     #endregion Constructors and parsers
 

@@ -57,6 +57,17 @@ namespace Empiria.Payments.Data {
     }
 
 
+    static internal FixedList<PaymentInstruction> GetWaitingRequestInstructions() {
+      var sql = $"SELECT * FROM FMS_PAYMENT_INSTRUCTIONS " +
+                $"WHERE PYMT_INSTRUCTION_STATUS = 'W' " +
+                $"ORDER BY PYMT_INSTRUCTION_ID";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<PaymentInstruction>(op);
+    }
+
+
     static internal void WritePaymentInstruction(PaymentInstruction o) {
       var op = DataOperation.Parse("write_FMS_Payment_Instruction",
                      o.Id, o.UID, o.GetEmpiriaType().Id, o.PaymentInstructionNo,
