@@ -10,7 +10,7 @@
 
 namespace Empiria.Payments {
 
-  internal enum PaymentInstructionEvent {
+  public enum PaymentInstructionEvent {
 
     /// <summary>Cancels the whole payment instruction.</summary>
     Cancel,
@@ -27,6 +27,42 @@ namespace Empiria.Payments {
     /// <summary>Suspends the payment instruction.</summary>
     Suspend,
 
+    /// <summary>Represents an empty payment instruction event.</summary>
+    None,
+
   }  // enum PaymentInstructionEvent
+
+
+
+  /// <summary>Extension methods for PaymentInstructionEvent.</summary>
+  static public class PaymentInstructionEventExtMethods {
+
+    static public string GetDescription(this PaymentInstructionEvent instructionEvent) {
+
+      switch (instructionEvent) {
+        case PaymentInstructionEvent.Cancel:
+          return "La instrucción de pago fue cancelada.";
+
+        case PaymentInstructionEvent.CancelPaymentRequest:
+          return "El envío de la instrucción de pago fue cancelado.";
+
+        case PaymentInstructionEvent.RequestPayment:
+          return "La instrucción fue solicitada para su pago.";
+
+        case PaymentInstructionEvent.Reset:
+          return "Se activó la instrucción de pago.";
+
+        case PaymentInstructionEvent.Suspend:
+          return "Se suspendió la instrucción de pago.";
+
+        case PaymentInstructionEvent.None:
+          return "Evento de instrucción de pago no definido.";
+
+        default:
+          throw Assertion.EnsureNoReachThisCode("Unhandled PaymentInstructionEvent value.");
+      }
+    }
+
+  }  // class PaymentInstructionEventExtMethods
 
 }  // namespace Empiria.Payments

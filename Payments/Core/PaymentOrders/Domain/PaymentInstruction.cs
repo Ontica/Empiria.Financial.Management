@@ -27,6 +27,7 @@ namespace Empiria.Payments {
     private Lazy<List<PaymentInstructionLogEntry>> _logEntries;
 
     private BrokerResponseDto _lastBrokerResponse;
+    private PaymentInstructionEvent _lastEvent = PaymentInstructionEvent.None;
 
     private readonly object _locker = new object();
 
@@ -61,6 +62,7 @@ namespace Empiria.Payments {
     static internal FixedList<PaymentInstruction> GetInProgress() {
       return PaymentInstructionData.GetInProgressPaymentInstructions();
     }
+
 
     protected override void OnLoad() {
       LoadLogEntries();
@@ -204,6 +206,7 @@ namespace Empiria.Payments {
 
           Status.EnsureCanUpdateTo(PaymentInstructionStatus.Canceled);
           Status = PaymentInstructionStatus.Canceled;
+
           break;
 
         case PaymentInstructionEvent.CancelPaymentRequest:
@@ -251,6 +254,8 @@ namespace Empiria.Payments {
           throw Assertion.EnsureNoReachThisCode($"Unhandled payment instruction event: {instructionEvent}.");
       }
 
+      _lastEvent = instructionEvent;
+
       MarkAsDirty();
     }
 
@@ -280,10 +285,27 @@ namespace Empiria.Payments {
 
       PaymentInstructionData.WritePaymentInstruction(this);
 
-      if (_lastBrokerResponse == null) {
-        return;
+      if (_lastBrokerResponse != null) {
+        SaveBrokerResponseLogEntry();
+      }
+      if (_lastEvent != PaymentInstructionEvent.None) {
+        SaveEventLogEntry();
       }
 
+    }
+
+    private void SaveEventLogEntry() {
+      var logEntry = new PaymentInstructionLogEntry(this, _lastEvent);
+
+      logEntry.Save();
+
+      _logEntries.Value.Add(logEntry);
+
+      _lastEvent = PaymentInstructionEvent.None;
+    }
+
+
+    private void SaveBrokerResponseLogEntry() {
       var logEntry = new PaymentInstructionLogEntry(this, _lastBrokerResponse);
 
       logEntry.Save();
@@ -297,13 +319,9 @@ namespace Empiria.Payments {
     private void UpdateInternal(BrokerResponseDto brokerResponse) {
       Assertion.Require(brokerResponse, nameof(brokerResponse));
 
-      if (brokerResponse.Status == Status) {
-        return;
-      }
-
       Status.EnsureCanUpdateTo(brokerResponse.Status);
 
-      if (BrokerInstructionNo.Length == 0) {
+      if (BrokerInstructionNo.Length != 0) {
         BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
       }
 

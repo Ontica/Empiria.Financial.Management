@@ -28,7 +28,20 @@ namespace Empiria.Payments {
 
 
     internal PaymentInstructionLogEntry(PaymentInstruction paymentInstruction,
+                                        PaymentInstructionEvent instructionEvent) {
+      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
+      Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
+      Assertion.Require(instructionEvent != PaymentInstructionEvent.None, nameof(instructionEvent));
+
+      PaymentInstruction = paymentInstruction;
+      PaymentOrder = paymentInstruction.PaymentOrder;
+      Load(instructionEvent);
+    }
+
+
+    internal PaymentInstructionLogEntry(PaymentInstruction paymentInstruction,
                                         BrokerResponseDto brokerResponse) {
+
       Assertion.Require(paymentInstruction, nameof(paymentInstruction));
       Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
       Assertion.Require(brokerResponse, nameof(brokerResponse));
@@ -37,7 +50,6 @@ namespace Empiria.Payments {
       PaymentOrder = paymentInstruction.PaymentOrder;
       Load(brokerResponse);
     }
-
 
     static public PaymentInstructionLogEntry Parse(int id) => ParseId<PaymentInstructionLogEntry>(id);
 
@@ -121,6 +133,18 @@ namespace Empiria.Payments {
     protected override void OnSave() {
       RecordingTime = DateTime.Now;
       PaymentInstructionData.WritePaymentLog(this);
+    }
+
+
+    private void Load(PaymentInstructionEvent instructionEvent) {
+      var time = DateTime.Now;
+
+      BrokerInstructionNo = string.Empty;
+      BrokerMessage = instructionEvent.GetDescription();
+      BrokerStatusText = string.Empty;
+      Status = PaymentInstruction.Status;
+      RequestTime = time;
+      ApplicationTime = time;
     }
 
 
