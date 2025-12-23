@@ -25,7 +25,7 @@ namespace Empiria.Billing.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetPlainObjectFixedList<BillConcept>(op);
+      return DataReader.GetFixedList<BillConcept>(op);
     }
 
 
@@ -37,7 +37,7 @@ namespace Empiria.Billing.Data {
 
       var op = DataOperation.Parse(sql);
 
-      return DataReader.GetPlainObjectFixedList<BillRelatedBill>(op);
+      return DataReader.GetFixedList<BillRelatedBill>(op);
     }
 
 

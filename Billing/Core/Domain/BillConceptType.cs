@@ -28,18 +28,16 @@ namespace Empiria.Billing {
 
     static public new BillConceptType Parse(string typeName) => Parse<BillConceptType>(typeName);
 
-    static public BillConceptType Empty => Parse("ObjectTypeInfo.BillConcept");
-
-    static public BillConceptType Normal => Parse("ObjectTypeInfo.BillConcept");
+    static public BillConceptType Default => Parse("ObjectTypeInfo.BillConcept");
 
     static public BillConceptType Addenda => Parse("ObjectTypeInfo.BillConcept.Addenda");
 
     static public BillConceptType GasStation => Parse("ObjectTypeInfo.BillConcept.GasStation");
 
     static public FixedList<BillConceptType> GetList() {
-      return Empty.GetAllSubclasses()
-                  .Select(x => (BillConceptType) x)
-                  .ToFixedList();
+      return Default.GetAllSubclasses()
+                    .Select(x => (BillConceptType) x)
+                    .ToFixedList();
     }
 
     #endregion Constructors and parsers

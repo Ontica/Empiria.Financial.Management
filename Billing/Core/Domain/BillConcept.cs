@@ -28,11 +28,11 @@ namespace Empiria.Billing {
 
     #region Constructors and parsers
 
-    protected BillConcept(BillConceptType billConceptType) : base(billConceptType) {
-      // Required by Empiria Framework.
+    protected BillConcept(BillConceptType powertype) : base(powertype) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
-    public BillConcept(Bill bill, Product product) : this(BillConceptType.Normal, bill, product) {
+    public BillConcept(Bill bill, Product product) : this(BillConceptType.Default, bill, product) {
       // no-op
     }
 
