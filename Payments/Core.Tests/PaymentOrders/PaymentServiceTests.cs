@@ -22,12 +22,12 @@ namespace Empiria.Tests.Payments {
 
     #region Use cases initialization
 
-    private readonly PaymentService _services;
+    private readonly PaymentsBrokerInvoker _services;
 
     public PaymentServiceTests() {
       TestsCommonMethods.Authenticate();
 
-      _services = PaymentService.ServiceInteractor();
+      _services = PaymentsBrokerInvoker.ServiceInteractor();
     }
 
 

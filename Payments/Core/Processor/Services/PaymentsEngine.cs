@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Payments validator services                Component : payment notfication                     *
-*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Payment validator processor             *
-*  Type     : PaymentsProcessor                          License   : Please read LICENSE.txt file            *
+*  Module   : Payments validator services                Component : Service Layer                           *
+*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Engine                                  *
+*  Type     : PaymentsEngine                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Provides services to process payment instructions.                                             *
+*  Summary  : Engine that processes payment instructions.                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -13,8 +13,8 @@ using System.Threading;
 
 namespace Empiria.Payments.Processor {
 
-  /// <summary>Provides services to process payment instructions.</summary>
-  public class PaymentsProcessor {
+  /// <summary>Engine that processes payment instructions.</summary>
+  public class PaymentsEngine {
 
     private static bool isRunning = false;
     private static volatile Timer timer = null;
@@ -41,10 +41,10 @@ namespace Empiria.Payments.Processor {
 
         isRunning = true;
 
-        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 1);
+        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 2);
 
         timer = new Timer(ProcessPaymentInstructions, null,
-                          TimeSpan.FromSeconds(MESSAGE_ENGINE_EXECUTION_MINUTES),
+                          TimeSpan.FromMinutes(MESSAGE_ENGINE_EXECUTION_MINUTES),
                           TimeSpan.FromMinutes(MESSAGE_ENGINE_EXECUTION_MINUTES));
 
         EmpiriaLog.Info("PaymentsProcessor was started.");
@@ -82,20 +82,20 @@ namespace Empiria.Payments.Processor {
 
       var inProgress = PaymentInstruction.GetInProgress();
 
-      using (var usecases = PaymentService.ServiceInteractor()) {
+      using (var usecases = PaymentsBrokerInvoker.ServiceInteractor()) {
 
         foreach (var instruction in toBeRequested) {
           await usecases.SendPaymentInstruction(instruction);
         }
 
         foreach (var instruction in inProgress) {
-          await usecases.RefreshPaymentInstruction(instruction);
+          await usecases.RefreshPaymentStatus(instruction);
         }
       }
     }
 
     #endregion Helpers
 
-  }  // class PaymentsExecutor
+  }  // class PaymentsEngine
 
 } // namespace Empiria.Payments.Processor
