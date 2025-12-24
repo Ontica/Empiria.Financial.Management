@@ -30,7 +30,7 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public FixedList<BillDto> Bills {
+    public BillsStructureDto Bills {
       get; internal set;
     }
 

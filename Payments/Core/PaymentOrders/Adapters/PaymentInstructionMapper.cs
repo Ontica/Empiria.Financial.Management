@@ -30,7 +30,7 @@ namespace Empiria.Payments.Adapters {
       return new PaymentInstructionHolderDto {
         PaymentInstruction = MapToDto(instruction),
         Log = PaymentInstructionLogMapper.Map(instruction),
-        Bills = BillMapper.MapToBillDto(bills),
+        Bills = BillMapper.MapToBillStructure(bills),
         Documents = DocumentServices.GetEntityDocuments(paymentOrder),
         History = HistoryServices.GetEntityHistory(paymentOrder),
         Actions = MapActions(instruction.Rules)

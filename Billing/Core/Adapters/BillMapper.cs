@@ -8,10 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.StateEnums;
+using System.Linq;
 
 using Empiria.Documents;
 using Empiria.History;
+
+using Empiria.Financial;
+using Empiria.StateEnums;
 
 namespace Empiria.Billing.Adapters {
 
@@ -36,6 +39,15 @@ namespace Empiria.Billing.Adapters {
     static public FixedList<BillDto> MapToBillDto(FixedList<Bill> bills) {
       return bills.Select((x) => MapToBillDto(x))
                   .ToFixedList();
+
+    }
+
+    static public BillsStructureDto MapToBillStructure(FixedList<Bill> bills) {
+      return new BillsStructureDto {
+        Bills = MapToBillDto(bills),
+        Subtotal = bills.Sum(x => x.Subtotal),
+        Taxes = MapStructureTaxEntries(bills),
+      };
     }
 
 
@@ -106,6 +118,27 @@ namespace Empiria.Billing.Adapters {
 
       return billRelatedBills.Select((x) => MapToBillRelatedBillsDto(x))
                          .ToFixedList();
+    }
+
+
+    static private FixedList<BillsStructureTaxEntryDto> MapStructureTaxEntries(FixedList<Bill> bills) {
+      FixedList<BillTaxEntry> taxEntries = bills.SelectFlat(x => x.Concepts)
+                                                .SelectFlat(x => x.TaxEntries);
+
+      var taxTypeGroup = taxEntries.GroupBy(x => x.TaxType);
+
+      return taxTypeGroup.Select(x => MapStructureTaxEntry(x))
+                         .ToFixedList();
+    }
+
+
+    static private BillsStructureTaxEntryDto MapStructureTaxEntry(IGrouping<TaxType, BillTaxEntry> taxEntry) {
+      return new BillsStructureTaxEntryDto {
+        UID = taxEntry.Key.UID,
+        TaxType = taxEntry.Key.MapToNamedEntity(),
+        BaseAmount = taxEntry.Sum(x => x.BaseAmount),
+        Total = taxEntry.Sum(x => x.Total)
+      };
     }
 
 

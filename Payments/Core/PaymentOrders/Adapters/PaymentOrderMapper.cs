@@ -35,7 +35,7 @@ namespace Empiria.Payments.Adapters {
         PaymentOrder = MapPaymentOrder(paymentOrder),
         PayableEntity = PayableEntityMapper.Map(paymentOrder.PayableEntity),
         Items = MapItems(paymentOrder.PayableEntity.Items),
-        Bills = BillMapper.MapToBillDto(bills),
+        Bills = BillMapper.MapToBillStructure(bills),
         BudgetTransactions = BudgetTransactionMapper.MapToDescriptor(txns),
         PaymentInstructions = PaymentInstructionMapper.MapToDescriptor(instructions),
         Documents = DocumentServices.GetAllEntityDocuments((BaseObject) paymentOrder.PayableEntity),

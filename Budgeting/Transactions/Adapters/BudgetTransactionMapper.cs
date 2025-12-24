@@ -42,7 +42,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
         GroupedEntries = new BudgetEntriesByYearTableDto(byYearTransaction.GetEntries()),
         Taxes = MapTaxes(transaction),
-        Bills = BillMapper.MapToBillDto(bills),
+        Bills = BillMapper.MapToBillStructure(bills),
         Documents = DocumentServices.GetAllEntityDocuments(transaction),
         History = HistoryServices.GetEntityHistory(transaction),
         Actions = MapActions(transaction.Rules)
