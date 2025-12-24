@@ -44,7 +44,7 @@ namespace Empiria.Payments.Processor {
         int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 2);
 
         timer = new Timer(ProcessPaymentInstructions, null,
-                          TimeSpan.FromMinutes(MESSAGE_ENGINE_EXECUTION_MINUTES),
+                          TimeSpan.FromSeconds(10),
                           TimeSpan.FromMinutes(MESSAGE_ENGINE_EXECUTION_MINUTES));
 
         EmpiriaLog.Info("PaymentsProcessor was started.");
@@ -85,13 +85,26 @@ namespace Empiria.Payments.Processor {
       using (var usecases = PaymentsBrokerInvoker.ServiceInteractor()) {
 
         foreach (var instruction in toBeRequested) {
-          await usecases.SendPaymentInstruction(instruction);
+          try {
+
+            await usecases.SendPaymentInstruction(instruction);
+
+          } catch (Exception ex) {
+            EmpiriaLog.Critical(ex);
+          }
         }
 
         foreach (var instruction in inProgress) {
-          await usecases.RefreshPaymentStatus(instruction);
+          try {
+
+            await usecases.RefreshPaymentStatus(instruction);
+
+          } catch (Exception ex) {
+            EmpiriaLog.Critical(ex);
+          }
         }
-      }
+
+      }  // using
     }
 
     #endregion Helpers
