@@ -177,6 +177,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return new TransactionTypeEntriesRulesDto {
         BalanceColumns = txnType.BalanceColumns.MapToNamedEntityList(),
         SelectProduct = txnType.SelectProduct,
+        SelectParty = txnType.SelectParty,
         Years = txnType.AvailableYears
       };
     }

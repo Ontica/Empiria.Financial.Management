@@ -151,6 +151,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool SelectParty {
+      get {
+        return ExtensionData.Get("selectParty", false);
+      }
+    }
+
+
     public ThreeStateValue SelectProduct {
       get {
         return ExtensionData.Get("selectProduct", ThreeStateValue.False);

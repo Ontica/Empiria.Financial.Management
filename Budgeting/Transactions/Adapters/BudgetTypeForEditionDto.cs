@@ -88,6 +88,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public bool SelectParty {
+      get; internal set;
+    }
+
     public FixedList<int> Years {
       get; internal set;
     }
