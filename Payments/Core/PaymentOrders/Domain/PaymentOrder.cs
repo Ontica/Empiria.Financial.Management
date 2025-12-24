@@ -335,6 +335,16 @@ namespace Empiria.Payments {
     }
 
 
+    internal void SetAsPayed(PaymentInstruction instruction) {
+      Assertion.Require(instruction.Status == PaymentInstructionStatus.Payed,
+                       "La instrucción de pago debe estar en estado 'Pagada'.");
+
+      Status = PaymentOrderStatus.Payed;
+
+      Save();
+    }
+
+
     internal void Suspend() {
       Assertion.Require(Rules.CanSuspend(),
                        $"No se puede suspender la orden de pago por falta de permisos o " +
@@ -356,15 +366,6 @@ namespace Empiria.Payments {
       foreach (var instruction in _paymentInstructions.Value) {
         instruction.Save();
       }
-    }
-
-
-    internal void SetReferenceNumber(string referenceNumber) {
-
-      if ((referenceNumber != null) || (referenceNumber != string.Empty)) {
-        this.ReferenceNumber = referenceNumber;
-      }
-
     }
 
 

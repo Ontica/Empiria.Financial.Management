@@ -174,6 +174,13 @@ namespace Empiria.Payments {
       }
     }
 
+
+    public bool WasSent {
+      get {
+        return BrokerInstructionNo.Length != 0;
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -192,10 +199,25 @@ namespace Empiria.Payments {
     }
 
 
-    internal void Update(BrokerResponseDto brokerResponse) {
+
+    internal void Sent(BrokerResponseDto brokerResponse) {
       lock (_locker) {
-        UpdateInternal(brokerResponse);
-        Save();
+        SentInternal(brokerResponse);
+        SaveInternal();
+      }
+    }
+
+
+    internal void UpdateStatus(BrokerResponseDto brokerResponse) {
+      lock (_locker) {
+
+        UpdateStatusInternal(brokerResponse);
+
+        SaveInternal();
+
+        if (Status == PaymentInstructionStatus.Payed) {
+          PaymentOrder.SetAsPayed(this);
+        }
       }
     }
 
@@ -323,13 +345,27 @@ namespace Empiria.Payments {
     }
 
 
-    private void UpdateInternal(BrokerResponseDto brokerResponse) {
+    private void SentInternal(BrokerResponseDto brokerResponse) {
       Assertion.Require(brokerResponse, nameof(brokerResponse));
+      Assertion.Require(!WasSent, "PaymentInstruction was sent.");
+      Assertion.Require(brokerResponse.BrokerInstructionNo.Length != 0, nameof(brokerResponse.BrokerInstructionNo));
 
-      Status.EnsureCanUpdateTo(brokerResponse.Status);
+      BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
 
-      if (BrokerInstructionNo.Length != 0) {
-        BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
+      Status = brokerResponse.Status;
+
+      _lastBrokerResponse = brokerResponse;
+
+      MarkAsDirty();
+    }
+
+
+    private void UpdateStatusInternal(BrokerResponseDto brokerResponse) {
+      Assertion.Require(brokerResponse, nameof(brokerResponse));
+      Assertion.Require(WasSent, "PaymentInstruction was not sent.");
+
+      if (Status == brokerResponse.Status) {
+        return;
       }
 
       Status = brokerResponse.Status;
