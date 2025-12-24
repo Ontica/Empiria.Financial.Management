@@ -58,8 +58,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       }
 
       var transaction = BudgetTransaction.Parse(TransactionUID);
-      BaseBudgetUID = transaction.BaseBudget.UID;
-      BasePartyUID = transaction.BaseParty.UID;
+
+      if (BaseBudgetUID.Length == 0) {
+        BaseBudgetUID = transaction.BaseBudget.UID;
+      }
+
+      if (BasePartyUID.Length == 0) {
+        BasePartyUID = transaction.BaseParty.UID;
+      }
     }
 
 

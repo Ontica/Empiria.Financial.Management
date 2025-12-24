@@ -75,6 +75,13 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Properties
 
+    public bool AllowsMultiYearEntries {
+      get {
+        return ExtensionData.Get("allowsMultiYearEntries", false);
+      }
+    }
+
+
     public FixedList<int> AvailableYears {
       get {
         return ExtensionData.GetFixedList<int>("availableYears", false);

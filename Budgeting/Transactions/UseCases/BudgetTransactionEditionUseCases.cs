@@ -119,13 +119,12 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public BudgetEntryDto CreateBudgetEntry(string budgetTransactionUID, BudgetEntryFields fields) {
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
+    public BudgetEntryDto CreateBudgetEntry(BudgetEntryFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
 
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+      var transaction = BudgetTransaction.Parse(fields.TransactionUID);
 
       var entry = transaction.AddEntry(fields);
 
@@ -226,16 +225,14 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public BudgetEntryDto UpdateBudgetEntry(string budgetTransactionUID,
-                                            string budgetEntryUID,
+    public BudgetEntryDto UpdateBudgetEntry(string budgetEntryUID,
                                             BudgetEntryFields fields) {
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
       Assertion.Require(budgetEntryUID, nameof(budgetEntryUID));
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
 
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+      var transaction = BudgetTransaction.Parse(fields.TransactionUID);
 
       var budgetEntry = transaction.GetEntry(budgetEntryUID);
 
@@ -268,8 +265,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     private void AssertHasAllDocuments(BudgetTransaction transaction) {
       FixedList<DocumentDto> documents = DocumentServices.GetEntityDocuments(transaction);
 
-      Assertion.Require(documents.Count == 2, "Para poder cerrar la transacción es necesario subir " +
-                                              "todos los documentos que le correspondan.");
+      Assertion.Require(documents.Count <= 20, "Para poder cerrar la transacción es necesario subir " +
+                                               "todos los documentos que le correspondan.");
     }
 
 

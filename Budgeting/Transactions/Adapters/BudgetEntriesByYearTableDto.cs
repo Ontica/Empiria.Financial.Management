@@ -65,6 +65,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return columns.ToFixedList();
     }
 
+
     private FixedList<BudgetEntryByYearDynamicDto> BuildEntries() {
       return _entries.Select(x => new BudgetEntryByYearDynamicDto(x))
                     .ToFixedList()

@@ -32,6 +32,10 @@ namespace Empiria.Budgeting.Transactions {
 
     internal BudgetEntry(BudgetTransaction transaction, int year, int month) {
       Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(year >= transaction.BaseBudget.Year,
+                       "Year must be greater than or equal to the base budget year.");
+      Assertion.Require(0 <= month && month <= 12,
+                       "Month must be between 0 and 12 (0 means the whole year).");
 
       this.Transaction = transaction;
       this.Budget = transaction.BaseBudget;
@@ -321,6 +325,7 @@ namespace Empiria.Budgeting.Transactions {
 
       Product = Patcher.Patch(fields.ProductUID, Product.Empty);
       ProductCode = EmpiriaString.Clean(fields.ProductCode);
+
       ProductName = EmpiriaString.Clean(fields.ProductName);
       ProductUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
       ProductQty = fields.ProductQty;

@@ -23,12 +23,15 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     #region Web Apis
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries")]
-    public SingleObjectModel CreateBudgetEntry([FromUri] string budgetTransactionUID,
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/entries")]
+    public SingleObjectModel CreateBudgetEntry([FromUri] string transactionUID,
                                                [FromBody] BudgetEntryFields fields) {
 
+      fields.TransactionUID = transactionUID;
+
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        BudgetEntryDto budgetEntry = usecases.CreateBudgetEntry(budgetTransactionUID, fields);
+
+        BudgetEntryDto budgetEntry = usecases.CreateBudgetEntry(fields);
 
         return new SingleObjectModel(base.Request, budgetEntry);
       }
@@ -36,12 +39,13 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpGet]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{budgetEntryUID:guid}")]
-    public SingleObjectModel GetBudgetEntry([FromUri] string budgetTransactionUID,
-                                            [FromUri] string budgetEntryUID) {
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/entries/{entryUID:guid}")]
+    public SingleObjectModel GetBudgetEntry([FromUri] string transactionUID,
+                                            [FromUri] string entryUID) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
-        BudgetEntryDto budgetEntry = usecases.GetBudgetEntry(budgetTransactionUID, budgetEntryUID);
+
+        BudgetEntryDto budgetEntry = usecases.GetBudgetEntry(transactionUID, entryUID);
 
         return new SingleObjectModel(base.Request, budgetEntry);
       }
@@ -49,12 +53,12 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpDelete]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{budgetEntryUID:guid}")]
-    public NoDataModel RemoveBudgetEntry([FromUri] string budgetTransactionUID,
-                                         [FromUri] string budgetEntryUID) {
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/entries/{entryUID:guid}")]
+    public NoDataModel RemoveBudgetEntry([FromUri] string transactionUID,
+                                         [FromUri] string entryUID) {
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        _ = usecases.RemoveBudgetEntry(budgetTransactionUID, budgetEntryUID);
+        _ = usecases.RemoveBudgetEntry(transactionUID, entryUID);
 
         return new NoDataModel(base.Request);
       }
@@ -62,15 +66,16 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPut, HttpPatch]
-    [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/entries/{budgetEntryUID:guid}")]
-    public SingleObjectModel UpdateBudgetEntry([FromUri] string budgetTransactionUID,
-                                               [FromUri] string budgetEntryUID,
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/entries/{entryUID:guid}")]
+    public SingleObjectModel UpdateBudgetEntry([FromUri] string transactionUID,
+                                               [FromUri] string entryUID,
                                                [FromBody] BudgetEntryFields fields) {
 
+      fields.TransactionUID = transactionUID;
+
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        BudgetEntryDto budgetEntry = usecases.UpdateBudgetEntry(budgetTransactionUID,
-                                                                budgetEntryUID,
-                                                                fields);
+
+        BudgetEntryDto budgetEntry = usecases.UpdateBudgetEntry(entryUID, fields);
 
         return new SingleObjectModel(base.Request, budgetEntry);
       }

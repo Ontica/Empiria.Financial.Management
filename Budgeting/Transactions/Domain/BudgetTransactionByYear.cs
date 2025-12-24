@@ -267,7 +267,7 @@ namespace Empiria.Budgeting.Transactions {
     private FixedList<BudgetEntry> GetNewBudgetEntries(BudgetEntryByYearFields fields) {
       var list = new List<BudgetEntry>(12);
 
-      var currentEntries = GetBudgetEntries(fields);
+      FixedList<BudgetEntry> currentEntries = GetBudgetEntries(fields);
 
       FixedList<BudgetMonthEntryFields> amounts = fields.Amounts.ToFixedList();
 
@@ -291,8 +291,11 @@ namespace Empiria.Budgeting.Transactions {
     private BudgetEntryFields TransformToBudgetEntryFields(BudgetEntryByYearFields fields,
                                                            BudgetMonthEntryFields amount) {
       return new BudgetEntryFields {
+        TransactionUID = fields.TransactionUID,
         BalanceColumnUID = fields.BalanceColumnUID,
         BudgetAccountUID = fields.BudgetAccountUID,
+        Year = fields.Year,
+        Month = amount.Month,
         CurrencyUID = fields.CurrencyUID,
         ProjectUID = fields.ProjectUID,
         ProductUID = fields.ProductUID,

@@ -10,16 +10,20 @@
 
 using System;
 
+using Empiria.Financial;
 using Empiria.Parties;
 using Empiria.Products;
 using Empiria.Projects;
-
-using Empiria.Financial;
 
 namespace Empiria.Budgeting.Transactions {
 
   /// <summary>Input fields used to create and update budget entries.</summary>
   public class BudgetEntryFields {
+
+    public string TransactionUID {
+      get; set;
+    } = string.Empty;
+
 
     public string BudgetUID {
       get; set;
@@ -132,6 +136,7 @@ namespace Empiria.Budgeting.Transactions {
 
     static public void EnsureIsValid(this BudgetEntryFields fields) {
 
+      fields.TransactionUID = Patcher.CleanUID(fields.TransactionUID);
       fields.BudgetAccountUID = Patcher.CleanUID(fields.BudgetAccountUID);
       fields.BalanceColumnUID = Patcher.CleanUID(fields.BalanceColumnUID);
       fields.ProductUID = Patcher.CleanUID(fields.ProductUID);
@@ -143,8 +148,24 @@ namespace Empiria.Budgeting.Transactions {
       fields.Description = EmpiriaString.Clean(fields.Description);
       fields.Justification = EmpiriaString.Clean(fields.Justification);
 
+      var txn = BudgetTransaction.Parse(fields.TransactionUID);
       _ = BudgetAccount.Parse(fields.BudgetAccountUID);
       _ = BalanceColumn.Parse(fields.BalanceColumnUID);
+
+      if (txn.BudgetTransactionType.AllowsMultiYearEntries) {
+        Assertion.Require(fields.Year >= txn.BaseBudget.Year,
+                        $"El año debe ser mayor o igual a {txn.BaseBudget.Year}.");
+
+        Assertion.Require(txn.BudgetTransactionType.AvailableYears.Contains(fields.Year),
+                          $"El año debe estar en la lista de años disponibles.");
+
+      } else {
+        Assertion.Require(fields.Year == txn.BaseBudget.Year,
+                         $"El año debe ser igual a {txn.BaseBudget.Year}.");
+      }
+
+      Assertion.Require(0 <= fields.Month && fields.Month <= 12,
+                       "El mes debe estar entre 0 y 12 (0 significa todo el año).");
 
       Assertion.Require(fields.Amount != 0,
                         "El importe debe ser distinto a cero.");
