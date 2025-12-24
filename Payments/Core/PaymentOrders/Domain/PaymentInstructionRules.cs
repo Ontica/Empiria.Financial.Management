@@ -26,12 +26,23 @@ namespace Empiria.Payments {
         return true;
       }
 
+      if (_instruction.Status == PaymentInstructionStatus.Exception &&
+          _instruction.WasSent) {
+        return true;
+      }
+
       return false;
     }
 
 
     internal bool CanCancelPaymentRequest() {
-      if (_instruction.Status == PaymentInstructionStatus.WaitingRequest) {
+      if (_instruction.Status == PaymentInstructionStatus.WaitingRequest &&
+          !_instruction.WasSent) {
+        return true;
+      }
+
+      if (_instruction.Status == PaymentInstructionStatus.Exception &&
+          !_instruction.WasSent) {
         return true;
       }
 
@@ -45,7 +56,8 @@ namespace Empiria.Payments {
 
 
     internal bool CanRequestPayment() {
-      if (_instruction.Status == PaymentInstructionStatus.Programmed) {
+      if (_instruction.Status == PaymentInstructionStatus.Programmed &&
+          !_instruction.WasSent) {
         return true;
       }
 
@@ -54,7 +66,9 @@ namespace Empiria.Payments {
 
 
     internal bool CanReset() {
-      if (_instruction.Status == PaymentInstructionStatus.Suspended) {
+      if (!_instruction.WasSent &&
+         (_instruction.Status == PaymentInstructionStatus.Suspended ||
+          _instruction.Status == PaymentInstructionStatus.Exception)) {
         return true;
       }
 
@@ -63,7 +77,9 @@ namespace Empiria.Payments {
 
 
     internal bool CanSuspend() {
-      if (_instruction.Status == PaymentInstructionStatus.Programmed) {
+      if (!_instruction.WasSent &&
+          (_instruction.Status == PaymentInstructionStatus.Programmed ||
+          _instruction.Status == PaymentInstructionStatus.Exception)) {
         return true;
       }
 
@@ -78,7 +94,7 @@ namespace Empiria.Payments {
 
     public bool IsReadyToBeRequested {
       get {
-        if (_instruction.Status != PaymentInstructionStatus.WaitingRequest) {
+        if (_instruction.WasSent || _instruction.Status != PaymentInstructionStatus.WaitingRequest) {
           return false;
         }
         return _instruction.TimeControl.WaitingRequestTimeElapsed;

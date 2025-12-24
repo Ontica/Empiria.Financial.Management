@@ -47,6 +47,12 @@ namespace Empiria.Payments {
         return true;
       }
 
+      if (_paymentOrder.Status == PaymentOrderStatus.InProgress &&
+          (_paymentOrder.LastPaymentInstruction.Status == PaymentInstructionStatus.Canceled ||
+          _paymentOrder.LastPaymentInstruction.Status == PaymentInstructionStatus.Exception)) {
+        return true;
+      }
+
       return false;
     }
 
@@ -68,9 +74,19 @@ namespace Empiria.Payments {
     internal bool CanGeneratePaymentInstruction() {
       var bdgTxn = _paymentOrder.TryGetApprovedBudget();
 
+      if (bdgTxn == null || !bdgTxn.IsClosed) {
+        return false;
+      }
+
       if (_paymentOrder.Status == PaymentOrderStatus.Pending &&
-          !_paymentOrder.HasActivePaymentInstruction &&
-          bdgTxn != null && bdgTxn.IsClosed) {
+          !_paymentOrder.HasActivePaymentInstruction) {
+        return true;
+      }
+
+      if (_paymentOrder.Status == PaymentOrderStatus.InProgress &&
+          !_paymentOrder.LastPaymentInstruction.WasSent &&
+          (_paymentOrder.LastPaymentInstruction.Status == PaymentInstructionStatus.Canceled ||
+          _paymentOrder.LastPaymentInstruction.Status == PaymentInstructionStatus.Exception)) {
         return true;
       }
 
@@ -81,6 +97,12 @@ namespace Empiria.Payments {
     internal bool CanReset() {
       if (_paymentOrder.Status == PaymentOrderStatus.Suspended ||
           _paymentOrder.Status == PaymentOrderStatus.Programmed) {
+        return true;
+      }
+
+      if (_paymentOrder.Status == PaymentOrderStatus.InProgress &&
+          (_paymentOrder.LastPaymentInstruction.Status == PaymentInstructionStatus.Canceled ||
+          _paymentOrder.LastPaymentInstruction.Status == PaymentInstructionStatus.Exception)) {
         return true;
       }
 
