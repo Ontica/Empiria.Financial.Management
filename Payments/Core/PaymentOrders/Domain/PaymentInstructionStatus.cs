@@ -31,6 +31,8 @@ namespace Empiria.Payments {
 
     Failed = 'F',
 
+    Exception = 'E',
+
     All = '@',
 
   }  // enum  PaymentInstructionStatus
@@ -112,6 +114,9 @@ namespace Empiria.Payments {
 
           break;
 
+        case PaymentInstructionStatus.Exception:
+          return;
+
         default:
 
           throw Assertion.EnsureNoReachThisCode($"Unhandled payment instruction status change from " +
@@ -171,6 +176,9 @@ namespace Empiria.Payments {
 
         case PaymentInstructionStatus.Failed:
           return "Pago rechazado";
+
+        case PaymentInstructionStatus.Exception:
+          return "Tengo un problema";
 
         default:
           throw Assertion.EnsureNoReachThisCode($"Unhandled payment order status {status}.");

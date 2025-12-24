@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using System.Threading.Tasks;
 
 using Empiria.Services;
@@ -43,13 +44,23 @@ namespace Empiria.Payments.Processor {
         return;
       }
 
-      IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
+      try {
+        IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
 
-      BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
+        BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
 
-      BrokerResponseDto brokerResponse = await paymentsService.RequestPaymentStatus(brokerRequest);
+        BrokerResponseDto brokerResponse = await paymentsService.RequestPaymentStatus(brokerRequest);
 
-      instruction.UpdateStatus(brokerResponse);
+        instruction.UpdateStatus(brokerResponse);
+
+      } catch (Exception e) {
+
+        BrokerResponseDto exceptionResponse = MapToBrokerResponse(instruction, e);
+
+        instruction.UpdateStatus(exceptionResponse);
+
+        throw;
+      }
     }
 
 
@@ -58,17 +69,26 @@ namespace Empiria.Payments.Processor {
       Assertion.Require(!instruction.IsEmptyInstance, nameof(instruction));
       Assertion.Require(!instruction.IsNew, "Payment instruction must be stored.");
       Assertion.Require(!instruction.WasSent, "Payment instruction already sent.");
-
       Assertion.Require(instruction.Rules.IsReadyToBeRequested,
                         "PaymentInstruction is not ready to be requested.");
 
-      IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
+      try {
+        IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
 
-      BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
+        BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
 
-      BrokerResponseDto brokerResponse = await paymentsService.SendPaymentInstruction(brokerRequest);
+        BrokerResponseDto brokerResponse = await paymentsService.SendPaymentInstruction(brokerRequest);
 
-      instruction.Sent(brokerResponse);
+        instruction.Sent(brokerResponse);
+
+      } catch (Exception e) {
+
+        BrokerResponseDto exceptionResponse = MapToBrokerResponse(instruction, e);
+
+        instruction.UpdateStatus(exceptionResponse);
+
+        throw;
+      }
     }
 
     #endregion Services
@@ -77,6 +97,17 @@ namespace Empiria.Payments.Processor {
 
     static private BrokerRequestDto MapToBrokerRequest(PaymentInstruction instruction) {
       return new BrokerRequestDto(instruction);
+    }
+
+
+    static private BrokerResponseDto MapToBrokerResponse(PaymentInstruction instruction, Exception exception) {
+      return new BrokerResponseDto {
+        BrokerInstructionNo = instruction.BrokerInstructionNo,
+        PaymentInstructionNo = instruction.PaymentInstructionNo,
+        BrokerMessage = exception.Message,
+        BrokerStatusText = exception.Message,
+        Status = PaymentInstructionStatus.Exception
+      };
     }
 
     #endregion Helpers
