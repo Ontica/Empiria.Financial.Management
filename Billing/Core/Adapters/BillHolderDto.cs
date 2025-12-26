@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Billing                                    Component : Adapters Layer                          *
-*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Mapping class                           *
+*  Assembly : Empiria.Billing.Core.dll                   Pattern   : Output DTO                              *
 *  Type     : BillDto                                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO used to return bill data.                                                           *
+*  Summary  : Output DTOs used to return bills data.                                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -16,7 +16,7 @@ using Empiria.Storage;
 
 namespace Empiria.Billing.Adapters {
 
-  /// <summary>Output DTO used to return bill data.</summary>
+  /// <summary>Output DTOs used to return bills data.</summary>
   public class BillHolderDto {
 
     public BillDto Bill {
@@ -43,8 +43,8 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
-
   } // class BillHolderDto
+
 
 
   /// <summary>Output DTO used to return bill entry data.</summary>
@@ -54,7 +54,6 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
-
     public string BillNo {
       get; internal set;
     }
@@ -63,76 +62,61 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
-
     public string Description {
       get; internal set;
     }
-
 
     public NamedEntityDto Category {
       get; internal set;
     }
 
-
     public NamedEntityDto BillType {
       get; internal set;
     }
-
 
     public NamedEntityDto ManagedBy {
       get; internal set;
     }
 
-
     public DateTime IssueDate {
       get; internal set;
     }
-
 
     public NamedEntityDto IssuedBy {
       get; internal set;
     }
 
-
     public NamedEntityDto IssuedTo {
       get; internal set;
     }
-
 
     public string CurrencyCode {
       get; internal set;
     }
 
-
     public decimal Subtotal {
       get; internal set;
     }
-
 
     public decimal Discount {
       get; internal set;
     }
 
-
     public decimal Taxes {
       get; internal set;
     }
-
 
     public decimal Total {
       get; internal set;
     }
 
-
     public NamedEntityDto PostedBy {
       get; internal set;
     }
 
-
     public DateTime PostingTime {
       get; internal set;
     }
-
 
     public NamedEntityDto Status {
       get; internal set;
@@ -145,6 +129,7 @@ namespace Empiria.Billing.Adapters {
   } // Class BillEntryDto
 
 
+
   /// <summary>Output DTO used to return bill concept entry data.</summary>
   public class BillWithConceptsDto {
 
@@ -152,11 +137,9 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
-
     public FixedList<BillConceptDto> Concepts {
       get; internal set;
-    } = new FixedList<BillConceptDto>();
-
+    }
 
     public FixedList<BillRelatedBillDto> BillRelatedBills {
       get; internal set;
@@ -168,62 +151,45 @@ namespace Empiria.Billing.Adapters {
   /// <summary>Output DTO used to return bill entry data.</summary>
   public class BillConceptDto {
 
-
     public string UID {
       get; set;
     }
-
-
-    //public string BillUID {
-    //  get; set;
-    //}
-
 
     public NamedEntityDto Product {
       get; internal set;
     }
 
-
     public string Description {
       get; internal set;
     }
-
 
     public decimal Quantity {
       get; internal set;
     }
 
-
     public decimal UnitPrice {
       get; set;
     }
-
 
     public decimal Subtotal {
       get; internal set;
     }
 
-
     public decimal Discount {
       get; internal set;
     }
-
 
     public NamedEntityDto PostedBy {
       get; internal set;
     }
 
-
     public DateTime PostingTime {
       get; internal set;
     }
 
-
     public FixedList<BillTaxEntryDto> TaxEntries {
       get; internal set;
-    } = new FixedList<BillTaxEntryDto>();
-
-
+    }
 
   } // class BillConceptDto
 
@@ -235,77 +201,65 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
-
     public string RelatedDocument {
       get; internal set;
     }
-
 
     public NamedEntityDto PostedBy {
       get; internal set;
     }
 
-
     public DateTime PostingTime {
       get; internal set;
     }
 
-
     public FixedList<BillTaxEntryDto> TaxEntries {
       get; internal set;
-    } = new FixedList<BillTaxEntryDto>();
-  }
+    }
+
+  }  // class BillRelatedBillDto
+
 
 
   /// <summary>Output DTO used to return bill tax entry data.</summary>
   public class BillTaxEntryDto {
 
-
     public string UID {
       get; set;
     }
-
 
     public NamedEntityDto TaxMethod {
       get; internal set;
     }
 
-
     public NamedEntityDto TaxFactorType {
       get; internal set;
     }
-
 
     public decimal Factor {
       get; internal set;
     }
 
-
     public decimal BaseAmount {
       get; internal set;
     }
-
 
     public decimal Total {
       get; internal set;
     }
 
-
     public NamedEntityDto PostedBy {
       get; internal set;
     }
 
-
     public DateTime PostingTime {
       get; internal set;
     }
-
 
     public NamedEntityDto Status {
       get; internal set;
     }
 
   } // class BillTaxEntryDto
-
 
 } // namespace Empiria.Billing.Adapters

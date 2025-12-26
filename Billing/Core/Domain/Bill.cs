@@ -42,8 +42,8 @@ namespace Empiria.Billing {
     static public FixedList<Bill> GetListFor(IPayableEntity payableEntity) {
       Assertion.Require(payableEntity, nameof(payableEntity));
 
-      return GetList<Bill>($"BILL_PAYABLE_ENTITY_ID = {payableEntity.Id} " +
-                           $"AND BILL_STATUS <> 'X'")
+      return GetFullList<Bill>($"BILL_PAYABLE_ENTITY_ID = {payableEntity.Id} " +
+                               $"AND BILL_STATUS <> 'X'", "BILL_ID")
             .ToFixedList();
     }
 
@@ -55,9 +55,9 @@ namespace Empiria.Billing {
         return FixedList<Bill>.Empty;
       }
 
-      return GetList<Bill>($"BILL_PAYABLE_ENTITY_ID IN " +
-                           $"({string.Join(",", payableEntities.Select(x => x.Id))}) " +
-                           $"AND BILL_STATUS <> 'X'")
+      return GetFullList<Bill>($"BILL_PAYABLE_ENTITY_ID IN " +
+                               $"({string.Join(",", payableEntities.Select(x => x.Id))}) " +
+                               $"AND BILL_STATUS <> 'X'", "BILL_ID")
             .ToFixedList();
     }
 
