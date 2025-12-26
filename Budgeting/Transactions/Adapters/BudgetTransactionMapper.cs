@@ -31,10 +31,18 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
       FixedList<Bill> bills = FixedList<Bill>.Empty;
 
+      FixedList<DocumentDto> documents = DocumentServices.GetAllEntityDocuments(transaction);
+
       if (transaction.HasEntity) {
         var payableEntities = transaction.GetEntity().GetPayableEntities();
 
         bills = Bill.GetListFor(payableEntities);
+
+        var payableDocs = DocumentServices.GetAllEntityDocuments((BaseObject) transaction.GetEntity());
+
+        if (payableDocs.Count != 0) {
+          documents = FixedList<DocumentDto>.Merge(documents, payableDocs);
+        }
       }
 
       return new BudgetTransactionHolderDto {
@@ -43,7 +51,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         GroupedEntries = new BudgetEntriesByYearTableDto(byYearTransaction.GetEntries()),
         Taxes = MapTaxes(transaction),
         Bills = BillMapper.MapToBillStructure(bills),
-        Documents = DocumentServices.GetAllEntityDocuments(transaction),
+        Documents = documents,
         History = HistoryServices.GetEntityHistory(transaction),
         Actions = MapActions(transaction.Rules)
       };
