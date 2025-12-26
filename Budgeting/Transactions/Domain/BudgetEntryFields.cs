@@ -148,24 +148,11 @@ namespace Empiria.Budgeting.Transactions {
       fields.Description = EmpiriaString.Clean(fields.Description);
       fields.Justification = EmpiriaString.Clean(fields.Justification);
 
-      var txn = BudgetTransaction.Parse(fields.TransactionUID);
       _ = BudgetAccount.Parse(fields.BudgetAccountUID);
       _ = BalanceColumn.Parse(fields.BalanceColumnUID);
 
-      if (txn.BudgetTransactionType.AllowsMultiYearEntries) {
-        Assertion.Require(fields.Year >= txn.BaseBudget.Year,
-                        $"El año debe ser mayor o igual a {txn.BaseBudget.Year}.");
-
-        Assertion.Require(txn.BudgetTransactionType.AvailableYears.Contains(fields.Year),
-                          $"El año debe estar en la lista de años disponibles.");
-
-      } else {
-        Assertion.Require(fields.Year == txn.BaseBudget.Year,
-                         $"El año debe ser igual a {txn.BaseBudget.Year}.");
-      }
-
-      Assertion.Require(0 <= fields.Month && fields.Month <= 12,
-                       "El mes debe estar entre 0 y 12 (0 significa todo el año).");
+      Assertion.Require(1 <= fields.Month && fields.Month <= 12,
+                       "El mes debe estar entre 1 y 12.");
 
       Assertion.Require(fields.Amount != 0,
                         "El importe debe ser distinto a cero.");
@@ -204,6 +191,23 @@ namespace Empiria.Budgeting.Transactions {
         fields.ExchangeRate = 1;
       }
 
+      if (fields.TransactionUID.Length == 0) {
+        return;
+      }
+
+      var txn = BudgetTransaction.Parse(fields.TransactionUID);
+
+      if (txn.BudgetTransactionType.AllowsMultiYearEntries) {
+        Assertion.Require(fields.Year >= txn.BaseBudget.Year,
+                        $"El año debe ser mayor o igual a {txn.BaseBudget.Year}.");
+
+        Assertion.Require(txn.BudgetTransactionType.AvailableYears.Contains(fields.Year),
+                          $"El año debe estar en la lista de años disponibles.");
+
+      } else {
+        Assertion.Require(fields.Year == txn.BaseBudget.Year,
+                         $"El año debe ser igual a {txn.BaseBudget.Year}.");
+      }
     }
 
   }  // class BudgetEntryFieldsExtensions
