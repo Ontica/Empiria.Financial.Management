@@ -10,6 +10,7 @@
 
 using System.Collections.Generic;
 
+using Empiria.Documents;
 using Empiria.Financial;
 using Empiria.Products;
 using Empiria.Services;
@@ -18,7 +19,6 @@ using Empiria.Billing.SATMexicoImporter;
 
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
-using System;
 
 namespace Empiria.Billing.UseCases {
 
@@ -38,6 +38,25 @@ namespace Empiria.Billing.UseCases {
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public BillDto Create(string xmlString, IPayableEntity payable, DocumentProduct billProduct) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+      Assertion.Require(billProduct, nameof(billProduct));
+
+      string billType = billProduct.ApplicationContentType;
+
+      if (billType == "factura-electronica-sat") {
+        return CreateBill(xmlString, payable);
+
+      } else if (billType == "nota-credito-sat") {
+        return CreateCreditNote(xmlString, payable);
+
+      } else {
+        throw Assertion.EnsureNoReachThisCode($"Unrecognized applicationContentType '{billType}'.");
+      }
+    }
+
 
     public BillDto CreateBill(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
@@ -63,6 +82,7 @@ namespace Empiria.Billing.UseCases {
       ISATBillDto satDto = reader.ReadAsBillDto();
 
       IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
+
       Bill bill = CreateBillTest((BillFields) fields);
 
       return BillMapper.MapToBillDto(bill);
@@ -346,7 +366,7 @@ namespace Empiria.Billing.UseCases {
                                   FixedList<FuelConseptionComplementConceptDataFields> complementConcepts) {
 
       var concepts = new List<BillConcept>();
-      
+
       foreach (var fields in complementConcepts) {
 
         var billConcept = new BillConcept(bill, Product.Empty);
