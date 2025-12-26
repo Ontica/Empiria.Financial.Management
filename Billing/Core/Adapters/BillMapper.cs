@@ -43,9 +43,13 @@ namespace Empiria.Billing.Adapters {
     }
 
     static public BillsStructureDto MapToBillStructure(FixedList<Bill> bills) {
+
+      var subTotalBilled = bills.Sum(x => x.BillType.Name.Contains("CreditNote") ?
+                                                            -1 * x.Subtotal : x.Subtotal);
+
       return new BillsStructureDto {
         Bills = MapToBillDto(bills),
-        Subtotal = bills.Sum(x => x.Subtotal),
+        Subtotal = subTotalBilled,
         Taxes = MapStructureTaxEntries(bills),
       };
     }
@@ -71,7 +75,7 @@ namespace Empiria.Billing.Adapters {
         Subtotal = bill.Subtotal,
         Discount = bill.Discount,
         Taxes = bill.Taxes,
-        Total = bill.Total,
+        Total = bill.Subtotal - bill.Discount,
         IssueDate = bill.IssueDate,
         PostedBy = bill.PostedBy.MapToNamedEntity(),
         PostingTime = bill.PostingTime,
@@ -133,11 +137,20 @@ namespace Empiria.Billing.Adapters {
 
 
     static private BillsStructureTaxEntryDto MapStructureTaxEntry(IGrouping<TaxType, BillTaxEntry> taxEntry) {
+
+      var taxes = taxEntry.ToFixedList()
+                          .FindAll(x => !x.Bill.BillType.Name.Contains("CreditNote"))
+                          .Sum(x => x.Total);
+
+      var creditNoteTaxes = taxEntry.ToFixedList()
+                                    .FindAll(x => x.Bill.BillType.Name.Contains("CreditNote"))
+                                    .Sum(x => x.Total);
+
       return new BillsStructureTaxEntryDto {
         UID = taxEntry.Key.UID,
         TaxType = taxEntry.Key.MapToNamedEntity(),
         BaseAmount = taxEntry.Sum(x => x.BaseAmount),
-        Total = taxEntry.Sum(x => x.Total)
+        Total = taxes - creditNoteTaxes
       };
     }
 
