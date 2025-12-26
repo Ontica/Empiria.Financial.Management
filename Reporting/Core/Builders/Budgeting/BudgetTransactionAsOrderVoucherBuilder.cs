@@ -13,6 +13,7 @@ using System.IO;
 using System.Text;
 
 using Empiria.Office;
+using Empiria.StateEnums;
 using Empiria.Storage;
 
 using Empiria.Orders;
@@ -132,15 +133,20 @@ namespace Empiria.Budgeting.Reporting {
 
     private StringBuilder BuildHeader(StringBuilder html) {
 
-      string title = _templateConfig.Title;
+      string title = _txn.BudgetTransactionType.DisplayName;
 
       if (_txn.IsMultiYear) {
         title = $"{title} (plurianual)";
       }
-      if (_txn.AuthorizedBy.IsEmptyInstance) {
+
+      bool isClosed = _txn.Status == TransactionStatus.Authorized ||
+                      _txn.Status == TransactionStatus.Closed;
+      if (!isClosed) {
+        title = $"{title} [{_txn.Status.GetName()}])";
+      }
+      if (!isClosed) {
         title = $"<span class='warning'>{title}</span>";
       }
-
 
       html.Replace("{{SYSTEM.DATETIME}}", $"Impresión: {DateTime.Now.ToString("dd/MMM/yyyy HH:mm")}");
       html.Replace("{{REPORT.TITLE}}", title);

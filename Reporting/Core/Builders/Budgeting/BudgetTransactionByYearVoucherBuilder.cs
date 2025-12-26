@@ -95,11 +95,11 @@ namespace Empiria.Budgeting.Reporting {
 
 
     private StringBuilder BuildHeader(StringBuilder html, BudgetTransaction txn) {
-      const string NO_VALID = "<span class='warning'> CÉDULA PRESUPUESTAL PENDIENTE DE AUTORIZAR </span>";
+      string NO_VALID = $"<span class='warning'> {txn.BudgetTransactionType.DisplayName} PENDIENTE DE AUTORIZAR </span>";
 
       html.Replace("{{SYSTEM.DATETIME}}", $"Impresión: {DateTime.Now.ToString("dd/MMM/yyyy HH:mm")}");
       html.Replace("{{REPORT.TITLE}}",
-                    txn.AuthorizedBy.IsEmptyInstance ? NO_VALID : _templateConfig.Title);
+                    txn.AuthorizedBy.IsEmptyInstance ? NO_VALID : $"{txn.BudgetTransactionType.DisplayName} {txn.BaseBudget.Year}");
       html.Replace("{{TRANSACTION_NUMBER}}", txn.TransactionNo);
       html.Replace("{{TRANSACTION_TYPE.NAME}}", txn.BudgetTransactionType.DisplayName);
       html.Replace("{{BASE_PARTY.NAME}}", txn.BaseParty.Name);
