@@ -19,7 +19,6 @@ namespace Empiria.Financial.Adapters {
 
       FixedList<FinancialAccount> accounts;
 
-
       if (stdAccount.StandardAccountType.IsOperationRelated) {
         accounts = stdAccount.GetNonOperationAccounts();
       } else {

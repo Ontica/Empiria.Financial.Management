@@ -113,6 +113,13 @@ namespace Empiria.Financial {
       }
     }
 
+
+    public FixedList<FinancialAccountType> FinancialAccountTypes {
+      get {
+        return ExtData.GetFixedList<FinancialAccountType>("financialAccountTypes");
+      }
+    }
+
     #endregion Properties
 
     #region Methods

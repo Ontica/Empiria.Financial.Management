@@ -25,6 +25,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public FixedList<NamedEntityDto> AccountTypes {
+      get; internal set;
+    }
+
     public FixedList<StandardAccountDescriptor> Accounts {
       get; internal set;
     }
@@ -41,6 +45,11 @@ namespace Empiria.Financial.Adapters {
 
 
     public string Name {
+      get; internal set;
+    }
+
+
+    public FixedList<NamedEntityDto> AccountTypes {
       get; internal set;
     }
 

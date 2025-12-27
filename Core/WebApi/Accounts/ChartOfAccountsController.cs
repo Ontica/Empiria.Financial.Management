@@ -56,19 +56,6 @@ namespace Empiria.Financial.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v3/charts-of-accounts/{chartOfAccountsUID:guid}")]
-    public SingleObjectModel GetStandardAccountByCategory([FromUri] string chartOfAccountsUID) {
-
-      using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
-
-        ChartOfAccountsDto chartOfAccounts = usecases.GetChartOfAccounts(chartOfAccountsUID);
-
-        return new SingleObjectModel(base.Request, chartOfAccounts);
-      }
-    }
-
-
-    [HttpGet]
     [Route("v3/charts-of-accounts")]
     public CollectionModel GetChartsOfAccounts() {
 
@@ -77,6 +64,19 @@ namespace Empiria.Financial.WebApi {
         FixedList<ChartOfAccountsDefinitionDto> chartsOfAccounts = usecases.GetChartsOfAccountsList();
 
         return new CollectionModel(base.Request, chartsOfAccounts);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v3/charts-of-accounts/{chartOfAccountsUID:guid}")]
+    public SingleObjectModel GetChartOfAccounts([FromUri] string chartOfAccountsUID) {
+
+      using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
+
+        ChartOfAccountsDto chartOfAccounts = usecases.GetChartOfAccounts(chartOfAccountsUID);
+
+        return new SingleObjectModel(base.Request, chartOfAccounts);
       }
     }
 

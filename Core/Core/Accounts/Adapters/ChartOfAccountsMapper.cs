@@ -17,6 +17,7 @@ namespace Empiria.Financial.Adapters {
       return new ChartOfAccountsDto {
         UID = chartOfAccounts.UID,
         Name = chartOfAccounts.Name,
+        AccountTypes = chartOfAccounts.FinancialAccountTypes.MapToNamedEntityList(),
         Accounts = StandardAccountMapper.MapToDescriptor(chartOfAccounts.GetStandardAccounts())
       };
     }
@@ -27,6 +28,7 @@ namespace Empiria.Financial.Adapters {
       return new ChartOfAccountsDto {
         UID = chartOfAccounts.UID,
         Name = chartOfAccounts.Name,
+        AccountTypes = chartOfAccounts.FinancialAccountTypes.MapToNamedEntityList(),
         Accounts = StandardAccountMapper.MapToDescriptor(stdAccounts)
       };
     }
@@ -39,19 +41,20 @@ namespace Empiria.Financial.Adapters {
     }
 
 
-    static private ChartOfAccountsDefinitionDto MapToDefinition(ChartOfAccounts chartOfAccount) {
-      AutoGrouping autoGroupingConfig = chartOfAccount.AutoGrouping;
+    static private ChartOfAccountsDefinitionDto MapToDefinition(ChartOfAccounts chartOfAccounts) {
+      AutoGrouping autoGroupingConfig = chartOfAccounts.AutoGrouping;
 
       return new ChartOfAccountsDefinitionDto {
-        UID = chartOfAccount.UID,
-        Name = chartOfAccount.Name,
+        UID = chartOfAccounts.UID,
+        Name = chartOfAccounts.Name,
+        AccountTypes = chartOfAccounts.FinancialAccountTypes.MapToNamedEntityList(),
         AutoGrouping = new AutoGroupingDto {
           Applies = !autoGroupingConfig.IsEmptyInstance,
           FinancialConceptGroup = autoGroupingConfig.FinancialConceptGroup.MapToNamedEntity(),
           StandardAccountCategories = autoGroupingConfig.StandardAccountCategories.MapToNamedEntityList(),
         },
-        ShowAccounts = chartOfAccount.ShowAccounts,
-        ShowOrgUnits = chartOfAccount.ShowOrgUnits,
+        ShowAccounts = chartOfAccounts.ShowAccounts,
+        ShowOrgUnits = chartOfAccounts.ShowOrgUnits,
       };
     }
 
