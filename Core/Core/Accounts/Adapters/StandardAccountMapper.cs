@@ -16,7 +16,15 @@ namespace Empiria.Financial.Adapters {
   static public class StandardAccountMapper {
 
     static internal StandardAccountHolder Map(StandardAccount stdAccount) {
-      FixedList<FinancialAccount> accounts = stdAccount.GetNonOperationAccounts();
+
+      FixedList<FinancialAccount> accounts;
+
+
+      if (stdAccount.StandardAccountType.IsOperationRelated) {
+        accounts = stdAccount.GetNonOperationAccounts();
+      } else {
+        accounts = stdAccount.GetLeafAccounts();
+      }
 
       return new StandardAccountHolder {
         StandardAccount = MapStdAccount(stdAccount),
@@ -57,6 +65,8 @@ namespace Empiria.Financial.Adapters {
         CanActivate = stdAccount.Status == EntityStatus.Suspended,
         CanSuspend = stdAccount.Status == EntityStatus.Active,
         CanUpdate = true,
+        ShowOperations = stdAccount.StandardAccountType.IsOperationRelated,
+        CanEditOperations = stdAccount.StandardAccountType.IsOperationRelated
       };
     }
 

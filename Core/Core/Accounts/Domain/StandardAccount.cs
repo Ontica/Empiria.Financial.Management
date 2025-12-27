@@ -261,10 +261,22 @@ namespace Empiria.Financial {
     }
 
 
+    public FixedList<FinancialAccount> GetLeafAccounts() {
+      FixedList<int> ids = FixedList<int>.Merge(new[] { this }, GetAllChildren())
+                         .Select(x => x.Id)
+                         .ToFixedList();
+
+      return FinancialAccount.GetList()
+        .FindAll(x => ids.Contains(x.StandardAccount.Id))
+        .Sort((x, y) => $"{x.AccountNo.PadRight(32)}|{x.OrganizationalUnit.Code.PadRight(32)}|{x.Project.ProjectNo.PadRight(32)}"
+             .CompareTo($"{y.AccountNo.PadRight(32)}|{y.OrganizationalUnit.Code.PadRight(32)}|{y.Project.ProjectNo.PadRight(32)}"));
+    }
+
+
     internal FixedList<FinancialAccount> GetNonOperationAccounts() {
-      FixedList<int> ids = this.GetAllChildren()
-                               .Select(x => x.Id)
-                               .ToFixedList();
+      FixedList<int> ids = FixedList<int>.Merge(new[] { this }, GetAllChildren())
+                                         .Select(x => x.Id)
+                                         .ToFixedList();
 
       return FinancialAccount.GetList()
         .FindAll(x => ids.Contains(x.StandardAccount.Id) && !x.IsOperationAccount)

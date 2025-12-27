@@ -38,9 +38,15 @@ namespace Empiria.Financial {
 
     #endregion Constructors and parsers
 
+    public bool IsOperationRelated {
+      get {
+        return ExtensionData.Get("isOperationRelated", false);
+      }
+    }
+
     public bool IsProjectRelated {
       get {
-        return base.ExtensionData.Get("isProjectRelated", false);
+        return ExtensionData.Get("isProjectRelated", false);
       }
     }
 

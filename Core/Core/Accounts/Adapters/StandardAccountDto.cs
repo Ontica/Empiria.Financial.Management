@@ -45,7 +45,16 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public bool CanEditOperations {
+      get; internal set;
+    }
+
+    public bool ShowOperations {
+      get; internal set;
+    }
+
   }  // class StandardAccountActions
+
 
 
   /// <summary>Output DTO with an standard account data.</summary>
