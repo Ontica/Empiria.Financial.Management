@@ -28,8 +28,8 @@ namespace Empiria.Budgeting.WebApi {
                                                           [FromUri] string keywords = "") {
 
       using (var usecases = BudgetAccountSegmentUseCases.UseCaseInteractor()) {
-        FixedList<BudgetAccountSegmentDto> segments = usecases.GetBudgetAccountSegmentsByType(segmentTypeUID,
-                                                                                              keywords);
+        FixedList<BudgetAccountSegmentDto> segments = usecases.GetBudgetStandardAccounts(segmentTypeUID,
+                                                                                         keywords);
 
         return new CollectionModel(base.Request, segments);
       }

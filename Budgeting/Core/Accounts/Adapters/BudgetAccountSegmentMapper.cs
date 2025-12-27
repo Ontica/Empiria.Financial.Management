@@ -8,35 +8,38 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
+
 namespace Empiria.Budgeting.Adapters {
 
   /// <summary>Mapping methods for budget account segments.</summary>
   static internal class BudgetAccountSegmentMapper {
 
-    static internal FixedList<BudgetAccountSegmentDto> Map(FixedList<FormerBudgetAcctSegment> accountSegments) {
-      return accountSegments.Select(x => Map(x)).ToFixedList();
+    static internal FixedList<BudgetAccountSegmentDto> Map(FixedList<StandardAccount> stdAccounts) {
+      return stdAccounts.Select(x => Map(x)).ToFixedList();
     }
 
-    static private BudgetAccountSegmentDto Map(FormerBudgetAcctSegment accountSegment) {
-      BudgetAccountSegmentDto dto = MapWithoutStructure(accountSegment);
 
-      if (accountSegment.HasParent) {
-        dto.Parent = MapWithoutStructure(accountSegment.Parent);
+    static private BudgetAccountSegmentDto Map(StandardAccount stdAccount) {
+      BudgetAccountSegmentDto dto = MapWithoutStructure(stdAccount);
+
+      if (!stdAccount.Parent.IsEmptyInstance) {
+        dto.Parent = MapWithoutStructure(stdAccount.Parent);
       }
 
-      dto.Children = accountSegment.Children.Select(x => MapWithoutStructure(x))
-                                         .ToFixedList();
-
+      dto.Children = stdAccount.GetChildren()
+                               .Select(x => MapWithoutStructure(x))
+                               .ToFixedList();
       return dto;
     }
 
-    static private BudgetAccountSegmentDto MapWithoutStructure(FormerBudgetAcctSegment accountSegment) {
+    static private BudgetAccountSegmentDto MapWithoutStructure(StandardAccount stdAccount) {
       return new BudgetAccountSegmentDto {
-        UID = accountSegment.UID,
-        Code = accountSegment.Code,
-        Name = accountSegment.Name,
-        Description = accountSegment.Description,
-        Type = BudgetSegmentTypesMapper.MapWithoutStructure(accountSegment.BudgetSegmentType)
+        UID = stdAccount.UID,
+        Code = stdAccount.StdAcctNo,
+        Name = stdAccount.Name,
+        Description = stdAccount.Description,
+        Type = BudgetSegmentTypesMapper.MapWithoutStructure(stdAccount.Category)
       };
     }
 

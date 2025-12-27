@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
+
 namespace Empiria.Budgeting.Adapters {
 
   /// <summary>Maps BudgetSegmentType instances to data transfer objects.</summary>
@@ -15,31 +17,31 @@ namespace Empiria.Budgeting.Adapters {
 
     #region Mappers
 
-    static internal FixedList<BudgetSegmentTypeDto> Map(FixedList<FormerBudgetAcctSegmentType> segmentTypes) {
-      return segmentTypes.Select(x => Map(x)).ToFixedList();
+    static internal FixedList<BudgetSegmentTypeDto> Map(FixedList<StandardAccountCategory> categories) {
+      return categories.Select(x => Map(x)).ToFixedList();
     }
 
 
-    static internal BudgetSegmentTypeDto Map(FormerBudgetAcctSegmentType segmentType) {
-      var dto = MapWithoutStructure(segmentType);
+    static internal BudgetSegmentTypeDto Map(StandardAccountCategory category) {
+      var dto = MapWithoutStructure(category);
 
-      if (segmentType.HasParentSegmentType) {
-        dto.ParentSegmentType = MapWithoutStructure(segmentType.ParentSegmentType);
-        dto.ParentSegmentType.Name = segmentType.ParentSegmentType.AsParentName;
+      if (!category.Parent.IsEmptyInstance) {
+        dto.ParentSegmentType = MapWithoutStructure(category.Parent);
+        dto.ParentSegmentType.Name = category.Parent.Name;
       }
 
-      if (segmentType.HasChildrenSegmentType) {
-        dto.ChildrenSegmentType = MapWithoutStructure(segmentType.ChildrenSegmentType);
-        dto.ChildrenSegmentType.Name = segmentType.ChildrenSegmentType.AsChildrenName;
+      if (category.HasChild) {
+        dto.ChildrenSegmentType = MapWithoutStructure(category.Child);
+        dto.ChildrenSegmentType.Name = category.Child.Name;
       }
 
       return dto;
     }
 
-    static internal BudgetSegmentTypeDto MapWithoutStructure(FormerBudgetAcctSegmentType segmentType) {
+    static internal BudgetSegmentTypeDto MapWithoutStructure(StandardAccountCategory category) {
       return new BudgetSegmentTypeDto {
-        UID = segmentType.UID,
-        Name = segmentType.DisplayName
+        UID = category.UID,
+        Name = category.Name
       };
     }
 

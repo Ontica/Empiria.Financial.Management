@@ -133,7 +133,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Year = budget.Year,
         Type = budget.BudgetType.MapToNamedEntity(),
         TransactionTypes = MapTransactionTypes(budget),
-        SegmentTypes = BudgetSegmentTypesMapper.Map(budget.BudgetType.SegmentTypes),
+        SegmentTypes = BudgetSegmentTypesMapper.Map(budget.BudgetType.StdAccountCategories),
       };
     }
 

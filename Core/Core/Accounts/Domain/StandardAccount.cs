@@ -232,7 +232,7 @@ namespace Empiria.Financial {
     #region Methods
 
     private List<StandardAccount> _allChildren = null;
-    internal FixedList<StandardAccount> GetAllChildren() {
+    public FixedList<StandardAccount> GetAllChildren() {
       if (_allChildren != null) {
         return _allChildren.ToFixedList();
       }
@@ -248,7 +248,7 @@ namespace Empiria.Financial {
 
 
     private FixedList<StandardAccount> _children = null;
-    internal FixedList<StandardAccount> GetChildren() {
+    public FixedList<StandardAccount> GetChildren() {
       if (this.IsEmptyInstance) {
         return new FixedList<StandardAccount>();
       }

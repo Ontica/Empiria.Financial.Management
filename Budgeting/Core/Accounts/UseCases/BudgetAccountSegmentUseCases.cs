@@ -11,6 +11,7 @@
 using Empiria.Services;
 
 using Empiria.Budgeting.Adapters;
+using Empiria.Financial;
 
 namespace Empiria.Budgeting.UseCases {
 
@@ -31,16 +32,16 @@ namespace Empiria.Budgeting.UseCases {
 
     #region Use cases
 
-    public FixedList<BudgetAccountSegmentDto> GetBudgetAccountSegmentsByType(string segmentTypeUID,
-                                                                             string keywords) {
-      Assertion.Require(segmentTypeUID, nameof(segmentTypeUID));
+    public FixedList<BudgetAccountSegmentDto> GetBudgetStandardAccounts(string stdAccountCategoryUID,
+                                                                        string keywords) {
+      Assertion.Require(stdAccountCategoryUID, nameof(stdAccountCategoryUID));
       keywords = keywords ?? string.Empty;
 
-      var segmentType = FormerBudgetAcctSegmentType.Parse(segmentTypeUID);
+      var category = StandardAccountCategory.Parse(stdAccountCategoryUID);
 
-      FixedList<FormerBudgetAcctSegment> segments = segmentType.SearchInstances(string.Empty, keywords);
+      FixedList<StandardAccount> stdAccounts = category.GetStandardAccounts(keywords);
 
-      return BudgetAccountSegmentMapper.Map(segments);
+      return BudgetAccountSegmentMapper.Map(stdAccounts);
     }
 
     #endregion Use cases

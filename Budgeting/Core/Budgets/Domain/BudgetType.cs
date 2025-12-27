@@ -34,7 +34,7 @@ namespace Empiria.Budgeting {
 
     static private ObjectTypeInfo BaseBudgetType => Powertype.Parse("ObjectTypeInfo.PowerType.BudgetType");
 
-    static public BudgetType Empty => Parse("ObjectTypeInfo.Budget.Empty");
+    static public BudgetType Empty => Parse("ObjectTypeInfo.Budget");
 
     #endregion Constructors and parsers
 
@@ -59,18 +59,12 @@ namespace Empiria.Budgeting {
     }
 
 
-    public FormerBudgetAcctSegmentType ProductProcurementSegmentType {
+    public FixedList<StandardAccountCategory> StdAccountCategories {
       get {
-        return ExtensionData.Get("productProcurementSegmentTypeId", FormerBudgetAcctSegmentType.Empty);
+        return base.ExtensionData.GetFixedList<StandardAccountCategory>("stdAccountCategories");
       }
     }
 
-
-    public FixedList<FormerBudgetAcctSegmentType> SegmentTypes {
-      get {
-        return base.ExtensionData.GetFixedList<FormerBudgetAcctSegmentType>("segmentTypes");
-      }
-    }
 
     public StandardAccountType StandardAccountType {
       get {

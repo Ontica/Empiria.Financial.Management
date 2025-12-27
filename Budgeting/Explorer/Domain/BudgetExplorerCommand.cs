@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
+
 namespace Empiria.Budgeting.Explorer {
 
   /// <summary>Command information used by the BudgetExplorer.</summary>
@@ -17,7 +19,7 @@ namespace Empiria.Budgeting.Explorer {
       get; set;
     }
 
-    internal FixedList<FormerBudgetAcctSegmentType> GroupBy {
+    internal FixedList<StandardAccountCategory> GroupBy {
       get; set;
     }
 
@@ -32,11 +34,11 @@ namespace Empiria.Budgeting.Explorer {
   /// <summary>Specifies a filter for budget segments.</summary>
   internal class BudgetSegmentFilter {
 
-    internal FormerBudgetAcctSegmentType SegmentType {
+    internal StandardAccountCategory SegmentType {
       get; set;
     }
 
-    internal FixedList<FormerBudgetAcctSegment> SegmentItems {
+    internal FixedList<StandardAccount> SegmentItems {
       get; set;
     }
 

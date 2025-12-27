@@ -11,6 +11,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Empiria.Financial;
+
 namespace Empiria.Budgeting.Explorer.Adapters {
 
   /// <summary>Maps BudgetExplorerQuery DTO structures to BudgetExplorerCommand instances.</summary>
@@ -31,8 +33,8 @@ namespace Empiria.Budgeting.Explorer.Adapters {
 
       foreach (var item in segmentFilter) {
         var filter = new BudgetSegmentFilter {
-           SegmentType = FormerBudgetAcctSegmentType.Parse(item.SegmentTypeUID),
-           SegmentItems = item.SegmentItems.Select(x => FormerBudgetAcctSegment.Parse(x))
+          SegmentType = StandardAccountCategory.Parse(item.SegmentTypeUID),
+          SegmentItems = item.SegmentItems.Select(x => StandardAccount.Parse(x))
                                            .ToFixedList()
         };
       }
@@ -41,11 +43,11 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     }
 
 
-    static private FixedList<FormerBudgetAcctSegmentType> MapToGroupBy(string[] segmentTypes) {
-      var list = new List<FormerBudgetAcctSegmentType>(segmentTypes.Length);
+    static private FixedList<StandardAccountCategory> MapToGroupBy(string[] segmentTypes) {
+      var list = new List<StandardAccountCategory>(segmentTypes.Length);
 
       foreach (var segmentTypeUID in segmentTypes) {
-        var segmentType = FormerBudgetAcctSegmentType.Parse(segmentTypeUID);
+        var segmentType = StandardAccountCategory.Parse(segmentTypeUID);
 
         list.Add(segmentType);
       }
