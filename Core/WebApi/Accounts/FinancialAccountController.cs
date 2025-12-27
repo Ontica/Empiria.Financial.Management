@@ -63,13 +63,26 @@ namespace Empiria.Financial.Accounts.WebApi {
     #region Command web apis
 
     [HttpPost]
+    [Route("v2/financial-accounts/{accountUID:guid}/activate")]
+    public SingleObjectModel ActivateAccount([FromUri] string accountUID) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+
+        FinancialAccountDto account = usecases.ActivateAccount(accountUID);
+
+        return new SingleObjectModel(base.Request, account);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v2/financial-accounts")]
     public SingleObjectModel CreateAccount([FromBody] FinancialAccountFields fields) {
 
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
-        FinancialAccountDto createAccount = usecases.CreateAccount(fields);
+        FinancialAccountDto account = usecases.CreateAccount(fields);
 
-        return new SingleObjectModel(base.Request, createAccount);
+        return new SingleObjectModel(base.Request, account);
       }
     }
 
@@ -87,6 +100,19 @@ namespace Empiria.Financial.Accounts.WebApi {
     }
 
 
+    [HttpPost]
+    [Route("v2/financial-accounts/{accountUID:guid}/suspend")]
+    public SingleObjectModel SuspendAccount([FromUri] string accountUID) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+
+        FinancialAccountDto account = usecases.SuspendAccount(accountUID);
+
+        return new SingleObjectModel(base.Request, account);
+      }
+    }
+
+
     [HttpPut]
     [Route("v2/financial-accounts/{accountUID:guid}")]
     public SingleObjectModel UpdateAccount([FromUri] string accountUID,
@@ -94,9 +120,9 @@ namespace Empiria.Financial.Accounts.WebApi {
 
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
 
-        FinancialAccountDto paymentOrder = usecases.UpdateAccount(accountUID, fields);
+        FinancialAccountDto account = usecases.UpdateAccount(accountUID, fields);
 
-        return new SingleObjectModel(this.Request, paymentOrder);
+        return new SingleObjectModel(this.Request, account);
       }
     }
 

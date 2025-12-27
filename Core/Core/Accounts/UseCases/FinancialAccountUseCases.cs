@@ -35,6 +35,19 @@ namespace Empiria.Financial.UseCases {
 
     #region Use cases
 
+    public FinancialAccountDto ActivateAccount(string accountUID) {
+      Assertion.Require(accountUID, nameof(accountUID));
+
+      var account = FinancialAccount.Parse(accountUID);
+
+      account.Activate();
+
+      account.Save();
+
+      return FinancialAccountMapper.Map(account);
+    }
+
+
     public FinancialAccountDto CreateAccount(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -100,6 +113,19 @@ namespace Empiria.Financial.UseCases {
     }
 
 
+    public FinancialAccountDto SuspendAccount(string accountUID) {
+      Assertion.Require(accountUID, nameof(accountUID));
+
+      var account = FinancialAccount.Parse(accountUID);
+
+      account.Suspend();
+
+      account.Save();
+
+      return FinancialAccountMapper.Map(account);
+    }
+
+
     public FinancialAccountDto UpdateAccount(string accountUID, FinancialAccountFields fields) {
       Assertion.Require(accountUID, nameof(accountUID));
       Assertion.Require(fields, nameof(fields));
@@ -114,6 +140,7 @@ namespace Empiria.Financial.UseCases {
 
       return FinancialAccountMapper.Map(account);
     }
+
 
     #endregion Use cases
 

@@ -371,6 +371,11 @@ namespace Empiria.Financial {
 
     #region Methods
 
+    internal void Activate() {
+      SetStatus(EntityStatus.Active);
+    }
+
+
     internal FinancialAccount AddOperation(OperationAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -476,6 +481,11 @@ namespace Empiria.Financial {
       Status = newStatus;
 
       MarkAsDirty();
+    }
+
+
+    internal void Suspend() {
+      SetStatus(EntityStatus.Suspended);
     }
 
 
