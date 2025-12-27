@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial.Data;
+
 namespace Empiria.Financial {
 
   /// <summary>Represents an standard account category.</summary>
@@ -78,12 +80,45 @@ namespace Empiria.Financial {
       }
     }
 
+    public bool HasChild {
+      get {
+        return !Child.IsEmptyInstance;
+      }
+    }
+
+    private StandardAccountCategory _child = null;
+    public StandardAccountCategory Child {
+      get {
+        if (IsEmptyInstance) {
+          return this;
+        }
+
+        if (_child != null) {
+          return _child;
+        }
+
+        var child = GetList().Find(x => x.Parent.Equals(this));
+
+        _child = child ?? Empty;
+
+        return _child;
+      }
+    }
+
     #endregion Properties
 
     #region Methods
 
     public FixedList<StandardAccount> GetStandardAccounts() {
       return ChartOfAccounts.GetStandardAccounts(this);
+    }
+
+
+    public FixedList<StandardAccount> GetStandardAccounts(string keywords) {
+
+      keywords = keywords ?? string.Empty;
+
+      return StandardAccountDataService.GetStandardAccounts(this, keywords);
     }
 
 

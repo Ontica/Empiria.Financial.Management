@@ -62,6 +62,27 @@ namespace Empiria.Financial.Data {
     }
 
 
+    static internal FixedList<StandardAccount> GetStandardAccounts(StandardAccountCategory category,
+                                                                   string keywords) {
+      var filter = SearchExpression.ParseOrLikeKeywords("STD_ACCT_KEYWORDS", keywords);
+
+      if (filter.Length != 0) {
+        filter = $"(STD_ACCT_CATEGORY_ID = {category.Id}) AND {filter}";
+      } else {
+        filter = $"STD_ACCT_CATEGORY_ID = {category.Id}";
+      }
+
+      var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
+               $"WHERE {filter} " +
+               $"STD_ACCT_STATUS <> 'X' " +
+               $"ORDER BY STD_ACCT_NUMBER";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<StandardAccount>(op);
+    }
+
+
     static internal FixedList<StandardAccount> SearchStandardAccounts(string filter, string sortBy) {
 
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS";
