@@ -65,6 +65,7 @@
     <PackageReference Include="Empiria.Services" Version="1.0.0" />
     <PackageReference Include="Empiria.Workflow" Version="4.0.0" />
     <PackageReference Include="Empiria.Financial.Core" Version="2.0.0" />
+    <PackageReference Include="Empiria.Billing.Core" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\core\Core\Empiria.Core.csproj" />
@@ -72,5 +73,6 @@
     <ProjectReference Include="..\..\..\extensions\Services\Empiria.Services.csproj" />
     <ProjectReference Include="..\..\..\workflow\Workflow\Empiria.Workflow.csproj" />
     <ProjectReference Include="..\..\Core\Core\Empiria.Financial.Core.csproj" />
+    <ProjectReference Include="..\..\Billing\Core\Empiria.Billing.Core.csproj" />
   </ItemGroup>
 </Project>

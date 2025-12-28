@@ -65,14 +65,12 @@
     <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
     <PackageReference Include="Empiria.Budgeting.Core" Version="2.0.0" />
     <PackageReference Include="Empiria.Budgeting.Explorer" Version="2.0.0" />
-    <PackageReference Include="Empiria.Budgeting.Transactions" Version="2.0.0" />
     <PackageReference Include="Empiria.Financial.Reporting.Core" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\extensions\WebApi\Empiria.WebApi.csproj" />
     <ProjectReference Include="..\Core\Empiria.Budgeting.Core.csproj" />
     <ProjectReference Include="..\Explorer\Empiria.Budgeting.Explorer.csproj" />
-    <ProjectReference Include="..\Transactions\Empiria.Budgeting.Transactions.csproj" />
     <ProjectReference Include="..\..\Reporting\Core\Empiria.Financial.Reporting.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

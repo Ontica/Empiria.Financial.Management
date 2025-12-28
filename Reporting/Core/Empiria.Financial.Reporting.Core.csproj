@@ -61,7 +61,7 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Services" Version="1.0.0" />
     <PackageReference Include="Empiria.Office" Version="2.0.0" />
-    <PackageReference Include="Empiria.Budgeting.Transactions" Version="2.0.0" />
+    <PackageReference Include="Empiria.Budgeting.Core" Version="2.0.0" />
     <PackageReference Include="Empiria.CashFlow.CashLedger" Version="1.0.0" />
     <PackageReference Include="Empiria.CashFlow.Explorer" Version="1.0.0" />
     <PackageReference Include="Empiria.Orders.Core" Version="8.0.0" />
@@ -69,7 +69,7 @@
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\extensions\Services\Empiria.Services.csproj" />
     <ProjectReference Include="..\..\..\extensions\Office\Empiria.Office.csproj" />
-    <ProjectReference Include="..\..\Budgeting\Transactions\Empiria.Budgeting.Transactions.csproj" />
+    <ProjectReference Include="..\..\Budgeting\Core\Empiria.Budgeting.Core.csproj" />
     <ProjectReference Include="..\..\Cashflow\CashLedger\Empiria.CashFlow.CashLedger.csproj" />
     <ProjectReference Include="..\..\CashFlow\Explorer\Empiria.CashFlow.Explorer.csproj" />
     <ProjectReference Include="..\..\..\operations.management\Orders\Core\Empiria.Orders.Core.csproj" />
