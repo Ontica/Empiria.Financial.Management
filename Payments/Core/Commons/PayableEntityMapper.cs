@@ -36,7 +36,7 @@ namespace Empiria.Payments.Adapters {
         Currency = payableEntity.Currency.MapToNamedEntity(),
         Total = payableEntity.Total,
         PayTo = payableEntity.PayTo.MapToNamedEntity(),
-        PaymentAccounts = PaymentAccountServices.GetPaymentAccounts(payableEntity.PayTo.UID),
+        PaymentAccounts = PaymentAccountServices.GetPaymentAccounts(payableEntity.PayTo),
         Items = MapItems(payableEntity.Items)
       };
     }
