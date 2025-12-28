@@ -35,9 +35,12 @@ namespace Empiria.Payments {
     }
 
 
-    public PaymentOrder(IPayableEntity payableEntity) {
+    public PaymentOrder(PaymentType paymentType, IPayableEntity payableEntity) {
+      Assertion.Require(paymentType, nameof(paymentType));
+      Assertion.Require(!paymentType.IsEmptyInstance, nameof(paymentType));
       Assertion.Require(payableEntity, nameof(payableEntity));
 
+      PaymentType = paymentType;
       _payableEntityTypeId = payableEntity.GetEmpiriaType().Id;
       _payableEntityId = payableEntity.Id;
 
@@ -63,6 +66,12 @@ namespace Empiria.Payments {
     #endregion Constructors and parsers
 
     #region Properties
+
+    [DataField("PYMT_ORD_PAYMENT_TYPE_ID")]
+    public PaymentType PaymentType {
+      get; private set;
+    }
+
 
     [DataField("PYMT_ORD_NO")]
     public string PaymentOrderNo {

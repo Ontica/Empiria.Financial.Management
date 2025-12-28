@@ -52,7 +52,7 @@ namespace Empiria.Payments.Data {
     static internal void WritePaymentOrder(PaymentOrder o) {
 
       var op = DataOperation.Parse("write_FMS_Payment_Order",
-                     o.Id, o.UID, o.GetEmpiriaType().Id, o.PaymentOrderNo, o.Description, o.Observations,
+                     o.Id, o.UID, o.PaymentType.Id, o.PaymentOrderNo, o.Description, o.Observations,
                      o.PayableEntity.GetEmpiriaType().Id, o.PayableEntity.Id, o.PayTo.Id,
                      o.PaymentMethod.Id, o.Currency.Id, o.PaymentAccount.Id, o.DueTime,
                      o.SecurityExtData.ToString(), o.ExtData.ToString(), o.Keywords, o.RequestedBy.Id,

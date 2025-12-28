@@ -9,11 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Web.Http;
-
-using Empiria.WebApi;
-
 using Empiria.Payments.Adapters;
 using Empiria.Payments.UseCases;
+using Empiria.WebApi;
 
 namespace Empiria.Payments.WebApi {
 
@@ -31,6 +29,16 @@ namespace Empiria.Payments.WebApi {
 
         return new SingleObjectModel(base.Request, paymentOrder);
       }
+    }
+
+
+    [HttpGet]
+    [Route("v2/payments-management/payment-types")]
+    public CollectionModel GetPaymentTypes() {
+
+      FixedList<PaymentType> paymentTypes = PaymentType.GetList();
+
+      return new CollectionModel(base.Request, paymentTypes.MapToNamedEntityList());
     }
 
 

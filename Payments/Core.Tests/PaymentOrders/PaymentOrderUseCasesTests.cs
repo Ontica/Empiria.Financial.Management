@@ -42,7 +42,7 @@ namespace Empiria.Tests.Payments {
     [Fact]
     public void Should_Add_Payment_Order() {
       var fields = new PaymentOrderFields {
-        PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c",
+        PaymentTypeUID = PaymentType.Parse(1561).UID,
         PayToUID = "cea608fb-c327-4ba2-8cc1-ecc6cc482636",
         PaymentMethodUID = "ff779080-f58c-41ac-a48d-c1a00a2c5232",
         CurrencyUID = "358626ea-3c2c-44dd-80b5-18017fe3927e",

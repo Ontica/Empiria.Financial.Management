@@ -74,7 +74,7 @@ namespace Empiria.Payments.Adapters {
     static private PaymentOrderDescriptor MapToDescriptor(PaymentOrder paymentOrder) {
       return new PaymentOrderDescriptor {
         UID = paymentOrder.UID,
-        PaymentOrderTypeName = paymentOrder.GetEmpiriaType().DisplayName,
+        PaymentTypeName = paymentOrder.PaymentType.Name,
         PaymentOrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.Name,
         PaymentMethod = paymentOrder.PaymentMethod.Name,
@@ -114,7 +114,7 @@ namespace Empiria.Payments.Adapters {
     static internal PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
       return new PaymentOrderDto {
         UID = paymentOrder.UID,
-        PaymentOrderType = paymentOrder.GetEmpiriaType().MapToNamedEntity(),
+        PaymentType = paymentOrder.PaymentType.MapToNamedEntity(),
         PaymentOrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.MapToNamedEntity(),
         RequestedDate = paymentOrder.PostingTime,

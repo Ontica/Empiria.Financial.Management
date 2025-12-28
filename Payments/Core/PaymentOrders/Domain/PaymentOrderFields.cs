@@ -18,7 +18,7 @@ namespace Empiria.Payments {
   /// <summary>Fields structure used for create and update payment orders.</summary>
   public class PaymentOrderFields {
 
-    public string PaymentOrderTypeUID {
+    public string PaymentTypeUID {
       get; set;
     } = string.Empty;
 
@@ -94,19 +94,22 @@ namespace Empiria.Payments {
 
     internal void EnsureValid() {
 
+      PaymentTypeUID = Patcher.CleanUID(PaymentTypeUID);
+      PaymentMethodUID = Patcher.CleanUID(PaymentMethodUID);
+
+      Assertion.Require(PaymentTypeUID, "Necesito el tipo de pago.");
       Assertion.Require(PaymentMethodUID, "Necesito el método de pago.");
+
       var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);
 
-      if (paymentMethod.AccountRelated == true) {
+      if (paymentMethod.AccountRelated) {
         Assertion.Require(PaymentAccountUID, "Necesito el número de cuenta.");
+
         _ = PaymentAccount.Parse(PaymentAccountUID);
+
       } else {
-        PaymentAccountUID = "Empty";
+        PaymentAccountUID = Patcher.CleanUID("Empty");
       }
-
-      Assertion.Require(CurrencyUID, "Necesito la moneda.");
-      _ = Currency.Parse(CurrencyUID);
-
     }
 
   }  // class PaymentOrderFields

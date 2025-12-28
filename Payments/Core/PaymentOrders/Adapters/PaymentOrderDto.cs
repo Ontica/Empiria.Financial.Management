@@ -105,11 +105,12 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto PaymentOrderType {
+    public string PaymentOrderNo {
       get; internal set;
     }
 
-    public string PaymentOrderNo {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "PaymentOrderType")]
+    public NamedEntityDto PaymentType {
       get; internal set;
     }
 
@@ -180,11 +181,12 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public string PaymentOrderTypeName {
+    public string PaymentOrderNo {
       get; internal set;
     }
 
-    public string PaymentOrderNo {
+    [Newtonsoft.Json.JsonProperty(PropertyName = "PaymentOrderTypeName")]
+    public string PaymentTypeName {
       get; internal set;
     }
 

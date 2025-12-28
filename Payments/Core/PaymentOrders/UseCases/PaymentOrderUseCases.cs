@@ -8,12 +8,13 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
+
 using Empiria.Financial;
 using Empiria.Services;
 
 using Empiria.Payments.Adapters;
 using Empiria.Payments.Data;
-using System.Linq;
 
 namespace Empiria.Payments.UseCases {
 
@@ -63,7 +64,9 @@ namespace Empiria.Payments.UseCases {
                                                       x.Status == PaymentOrderStatus.Payed),
                         "Existe una solicitud de pago en proceso o el pago correspondiente ya se efectuó.");
 
-      var order = new PaymentOrder(payableEntity);
+      var paymentType = PaymentType.Parse(fields.PaymentTypeUID);
+
+      var order = new PaymentOrder(paymentType, payableEntity);
 
       order.Save();
 
@@ -137,8 +140,6 @@ namespace Empiria.Payments.UseCases {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
-
-      fields.PaymentOrderTypeUID = "fe85b014-9929-4339-b56f-5e650d3bd42c";
 
       var order = PaymentOrder.Parse(uid);
 
