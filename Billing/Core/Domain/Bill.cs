@@ -85,7 +85,7 @@ namespace Empiria.Billing {
       PayableEntityTypeId = payable.GetEmpiriaType().Id;
       PayableEntityId = payable.Id;
       PayableId = payable.Id;
-      ManagedBy = Party.Parse(payable.OrganizationalUnit.UID);
+      ManagedBy = payable.OrganizationalUnit;
       BillCategory = billCategory;
       BillNo = billNo;
       PayableTotal = payable.Total;

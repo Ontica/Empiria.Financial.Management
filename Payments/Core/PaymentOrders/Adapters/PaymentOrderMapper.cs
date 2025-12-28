@@ -79,7 +79,7 @@ namespace Empiria.Payments.Adapters {
         PayTo = paymentOrder.PayTo.Name,
         PaymentMethod = paymentOrder.PaymentMethod.Name,
         PaymentAccount = paymentOrder.PaymentAccount.AccountNo,
-        CurrencyCode = paymentOrder.PayableEntity.Currency.Name,
+        CurrencyCode = paymentOrder.PayableEntity.Currency.ISOCode,
         Total = paymentOrder.Total,
         DueTime = paymentOrder.DueTime,
         PriorityName = paymentOrder.Priority.GetName(),

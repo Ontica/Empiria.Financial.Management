@@ -10,6 +10,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Ontology;
+using Empiria.Parties;
 
 namespace Empiria.Financial {
 
@@ -26,15 +27,15 @@ namespace Empiria.Financial {
       get;
     }
 
-    INamedEntity OrganizationalUnit {
+    OrganizationalUnit OrganizationalUnit {
       get;
     }
 
-    INamedEntity PayTo {
+    Party PayTo {
       get;
     }
 
-    INamedEntity Currency {
+    Currency Currency {
       get;
     }
 
