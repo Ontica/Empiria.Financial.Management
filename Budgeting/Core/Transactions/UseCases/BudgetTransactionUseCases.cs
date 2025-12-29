@@ -49,7 +49,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
     public FixedList<BudgetTypeForEditionDto> GetBudgetTypesForTransactionEdition() {
       FixedList<Budget> budgets = Budget.GetList()
-                                        .FindAll(x => x.EditionAllowed);
+                                        .FindAll(x => x.EditionAllowed)
+                                        .FindAll(x => x.AvailableTransactionTypes.Contains(y => y.ManualEdition));
 
       return BudgetTransactionMapper.MapBudgetTypesForEdition(budgets.SelectDistinct(x => x.BudgetType));
     }

@@ -111,11 +111,15 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static private BudgetTypeForEditionDto MapBudgetTypeForEdition(BudgetType budgetType) {
+
+      var budgets = Budget.GetList(budgetType)
+                          .FindAll(x => x.AvailableTransactionTypes.Contains(y => y.ManualEdition));
+
       return new BudgetTypeForEditionDto {
         UID = budgetType.UID,
         Name = budgetType.DisplayName,
         Multiyear = budgetType.Multiyear,
-        Budgets = MapBudgetsForEdition(Budget.GetList(budgetType).FindAll(x => x.EditionAllowed))
+        Budgets = MapBudgetsForEdition(budgets)
       };
     }
 
@@ -162,6 +166,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
       return budget.AvailableTransactionTypes.Select(x => BudgetTransactionType.Parse(x.UID))
                                              .ToFixedList()
+                                             .FindAll(x => x.ManualEdition)
                                              .FindAll(x => !x.IsProtected ||
                                                            principal.IsInRole("budget-manager") ||
                                                            principal.IsInRole("budget-authorizer"))
@@ -174,6 +179,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return new TransactionTypeForEditionDto {
         UID = txnType.UID,
         Name = txnType.DisplayName,
+        ManualEdition = txnType.ManualEdition,
         OperationSources = txnType.OperationSources.MapToNamedEntityList(),
         RelatedDocumentTypes = txnType.RelatedDocumentTypes.MapToNamedEntityList(),
         EntriesRules = MapTransactionTypeEntriesRules(txnType)
@@ -205,7 +211,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         BaseEntityType = transaction.HasEntity ?
             transaction.GetEntity().GetEmpiriaType().MapToNamedEntity() : NamedEntityDto.Empty,
         BaseEntity = transaction.HasEntity ?
-            ((INamedEntity) transaction.GetEntity()).MapToNamedEntity() : NamedEntityDto.Empty,
+            transaction.GetEntity().MapToNamedEntity() : NamedEntityDto.Empty,
         Total = transaction.GetTotal(),
         RecordingDate = transaction.RequestedDate,
         RecordedBy = transaction.RecordedBy.MapToNamedEntity(),

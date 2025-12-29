@@ -119,6 +119,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool ManualEdition {
+      get {
+        return ExtensionData.Get("manualEdition", false);
+      }
+    }
+
+
     public MultiplicityRule MultiplicityRule {
       get {
         return ExtensionData.Get("multiplicityRule", MultiplicityRule.None);

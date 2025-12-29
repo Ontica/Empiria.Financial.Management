@@ -10,6 +10,8 @@
 
 using Empiria.Ontology;
 
+using Empiria.Budgeting.Transactions;
+
 namespace Empiria.Budgeting {
 
   /// <summary>Partitioned type that represents a budget.</summary>
@@ -45,11 +47,11 @@ namespace Empiria.Budgeting {
 
     #region Properties
 
-    public FixedList<INamedEntity> AvailableTransactionTypes {
+    public FixedList<BudgetTransactionType> AvailableTransactionTypes {
       get {
         FixedList<int> ids = base.ExtData.GetFixedList<int>("availableTransactionTypes", false);
 
-        return ids.Select(x => (INamedEntity) ObjectTypeInfo.Parse(x))
+        return ids.Select(x => BudgetTransactionType.Parse(x))
                   .ToFixedList()
                   .Sort((x, y) => x.Name.CompareTo(y.Name));
       }
