@@ -21,6 +21,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         TransactionUID = entry.Transaction.UID,
         BalanceColumn = entry.BalanceColumn.MapToNamedEntity(),
         BudgetAccount = entry.BudgetAccount.MapToNamedEntity(),
+        Party = entry.BudgetAccount.OrganizationalUnit.MapToNamedEntity(),
         Product = entry.Product.MapToNamedEntity(),
         Description = entry.Description,
         ProductUnit = entry.ProductUnit.MapToNamedEntity(),

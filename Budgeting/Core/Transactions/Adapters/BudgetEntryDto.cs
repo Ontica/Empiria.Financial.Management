@@ -113,6 +113,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public string PartyName {
+      get; internal set;
+    }
+
     public string Program {
       get; internal set;
     }

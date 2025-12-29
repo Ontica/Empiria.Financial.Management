@@ -26,9 +26,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto Party {
+      get; internal set;
+    }
+
     public NamedEntityDto BalanceColumn {
       get; internal set;
     }
+
 
     public NamedEntityDto BudgetAccount {
       get; internal set;
