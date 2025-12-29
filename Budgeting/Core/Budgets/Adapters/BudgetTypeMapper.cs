@@ -28,7 +28,7 @@ namespace Empiria.Budgeting.Adapters {
         Multiyear = budgetType.Multiyear,
         SegmentTypes = BudgetSegmentTypesMapper.Map(budgetType.StdAccountCategories),
         Budgets = BudgetMapper.Map(budgets.FindAll(x => x.BudgetType.Equals(budgetType))),
-        TransactionTypes = budgetType.GetTransactionTypes()
+        TransactionTypes = budgetType.TransactionTypes.MapToNamedEntityList(),
       };
     }
 

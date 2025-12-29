@@ -8,9 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using Empiria.Financial;
 using Empiria.Ontology;
+
+using Empiria.Budgeting.Transactions;
 
 namespace Empiria.Budgeting {
 
@@ -72,44 +73,17 @@ namespace Empiria.Budgeting {
       }
     }
 
+
+    internal FixedList<BudgetTransactionType> TransactionTypes {
+      get {
+        FixedList<int> ids = base.ExtensionData.GetFixedList<int>("transactionTypes");
+
+        return ids.Select(x => BudgetTransactionType.Parse(x))
+                  .ToFixedList();
+      }
+    }
+
     #endregion Properties
-
-    #region Methods
-
-    public FixedList<Budget> GetBudgets(DateTime fromDate, DateTime toDate) {
-      return Budget.GetFullList<Budget>()
-                   .FindAll(x => x.BudgetType.Equals(this) &&
-                                 fromDate.Year <= x.Year && x.Year <= toDate.Year);
-    }
-
-
-    public FixedList<Budget> GetBudgets(DateTime fromDate, DateTime toDate,
-                                        Predicate<Budget> predicate) {
-      return Budget.GetFullList<Budget>()
-                   .FindAll(x => x.BudgetType.Equals(this) &&
-                                 fromDate.Year <= x.Year && x.Year <= toDate.Year &&
-                                 predicate.Invoke(x));
-    }
-
-
-    public Budget GetCurrentBudget() {
-      var budget = Budget.GetFullList<Budget>()
-                         .Find(x => x.BudgetType.Equals(this) && x.Year == DateTime.Today.Year);
-
-      Assertion.Require(budget, $"No hay presupuestos registrados para el año {DateTime.Today.Year}");
-
-      return budget;
-    }
-
-
-    internal FixedList<NamedEntityDto> GetTransactionTypes() {
-      FixedList<int> ids = base.ExtensionData.GetFixedList<int>("transactionTypes");
-
-      return ids.Select(x => ObjectTypeInfo.Parse(x))
-                .MapToNamedEntityList();
-    }
-
-    #endregion Methods
 
   }  // class BudgetType
 
