@@ -41,8 +41,13 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     private FixedList<DataTableColumn> BuildColumns() {
       var columns = new List<DataTableColumn> {
         new DataTableColumn("itemDescription", "Partida presupuestal", "text-italic"),
-        new DataTableColumn("budgetProgram", "Programa", "text-no-wrap"),
       };
+
+      if (_entries.SelectDistinctFlat(x => x.Entries.Select(y => y.BudgetAccount.OrganizationalUnit)).Count() >= 2) {
+        columns.Add(new DataTableColumn("party", "Área", "text-no-wrap"));
+      }
+
+      columns.Add(new DataTableColumn("budgetProgram", "Programa", "text-no-wrap"));
 
       if (_entries.SelectDistinctFlat(x => x.Entries.Select(y => y.Year)).Count() >= 2) {
         columns.Add(new DataTableColumn("year", "Año", "text-nowrap"));
@@ -142,6 +147,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       TransactionUID = entry.Transaction.UID;
       BalanceColumn = entry.BalanceColumn.Name;
       BudgetAccount = entry.BudgetAccount.Name;
+      Party = entry.BudgetAccount.OrganizationalUnit.Code;
       BudgetProgram = entry.BudgetProgram.Code;
       Product = entry.Product.Name;
       Description = entry.Description;
@@ -182,6 +188,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     public string BudgetAccount {
+      get;
+    } = string.Empty;
+
+
+    public string Party {
       get;
     } = string.Empty;
 
@@ -242,6 +253,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         "ItemType",
         "ItemDescription",
         "BudgetAccount",
+        "Party",
         "BudgetProgram",
         "BalanceColumn",
         "Product",
