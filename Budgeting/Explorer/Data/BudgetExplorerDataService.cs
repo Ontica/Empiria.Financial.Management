@@ -27,10 +27,10 @@ namespace Empiria.Budgeting.Explorer.Data {
     }
 
 
-    static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumns(string filter) {
+    static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumnsByMonth(string filter) {
       Assertion.Require(filter, nameof(filter));
 
-      var sql = "SELECT * FROM vw_Budget_Multicolumn " +
+      var sql = "SELECT * FROM vw_Budget_Multicolumn_By_Month " +
                 $"WHERE {filter}";
 
       var op = DataOperation.Parse(sql);

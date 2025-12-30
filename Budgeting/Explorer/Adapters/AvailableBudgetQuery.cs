@@ -22,6 +22,9 @@ namespace Empiria.Budgeting.Explorer.Adapters {
       get; set;
     }
 
+    public int Month {
+      get; set;
+    }
 
     public FixedList<BudgetAccount> Accounts {
       get; set;

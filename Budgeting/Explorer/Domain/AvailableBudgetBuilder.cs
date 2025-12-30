@@ -27,7 +27,7 @@ namespace Empiria.Budgeting.Explorer {
 
       string filter = BuildFilter();
 
-      return BudgetExplorerDataService.GetBudgetDataInMultipleColumns(filter);
+      return BudgetExplorerDataService.GetBudgetDataInMultipleColumnsByMonth(filter);
     }
 
     #region Helpers
@@ -35,11 +35,13 @@ namespace Empiria.Budgeting.Explorer {
     private string BuildFilter() {
       string budgetFilter = BuildBudgetFilter();
       string yearFilter = BuildYearFilter();
+      string monthFilter = BuildMonthFilter();
       string accountsFilter = BuildAccountsFilter();
 
       var filter = new Filter(budgetFilter);
 
       filter.AppendAnd(yearFilter);
+      filter.AppendAnd(monthFilter);
       filter.AppendAnd(accountsFilter);
 
       return filter.ToString();
@@ -69,6 +71,15 @@ namespace Empiria.Budgeting.Explorer {
       }
 
       return $"BUDGET_YEAR = {_query.Year}";
+    }
+
+
+    private string BuildMonthFilter() {
+      if (_query.Month == 0) {
+        return string.Empty;
+      }
+
+      return $"BUDGET_MONTH <= {_query.Month}";
     }
 
     #endregion Helpers
