@@ -118,6 +118,10 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public string Observations {
+      get; internal set;
+    }
+
     public NamedEntityDto BudgetType {
       get; internal set;
     }

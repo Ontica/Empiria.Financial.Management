@@ -11,6 +11,7 @@
 using System.Linq;
 
 using Empiria.Financial;
+using Empiria.Parties;
 using Empiria.Services;
 
 using Empiria.Payments.Adapters;
@@ -65,8 +66,9 @@ namespace Empiria.Payments.UseCases {
                         "Existe una solicitud de pago en proceso o el pago correspondiente ya se efectuó.");
 
       var paymentType = PaymentType.Parse(fields.PaymentTypeUID);
+      var payTo = Party.Parse(fields.PayToUID);
 
-      var order = new PaymentOrder(paymentType, payableEntity);
+      var order = new PaymentOrder(paymentType, payTo, payableEntity, fields.Total);
 
       order.Save();
 
@@ -136,12 +138,12 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    public PaymentOrderHolderDto UpdatePaymentOrder(string uid, PaymentOrderFields fields) {
+    public PaymentOrderHolderDto UpdatePaymentOrder(PaymentOrderFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();
 
-      var order = PaymentOrder.Parse(uid);
+      var order = PaymentOrder.Parse(fields.UID);
 
       order.Update(fields);
 

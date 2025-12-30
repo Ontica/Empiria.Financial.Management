@@ -35,12 +35,18 @@ namespace Empiria.Payments {
     }
 
 
-    public PaymentOrder(PaymentType paymentType, IPayableEntity payableEntity) {
+    public PaymentOrder(PaymentType paymentType, Party payTo, IPayableEntity payableEntity, decimal total) {
       Assertion.Require(paymentType, nameof(paymentType));
       Assertion.Require(!paymentType.IsEmptyInstance, nameof(paymentType));
+      Assertion.Require(payTo, nameof(payTo));
+      Assertion.Require(!payTo.IsEmptyInstance, nameof(payTo));
       Assertion.Require(payableEntity, nameof(payableEntity));
+      Assertion.Require(total > 0, "total must be a positive number");
 
       PaymentType = paymentType;
+      PayTo = payTo;
+      Total = total;
+
       _payableEntityTypeId = payableEntity.GetEmpiriaType().Id;
       _payableEntityId = payableEntity.Id;
 
@@ -122,6 +128,12 @@ namespace Empiria.Payments {
     }
 
 
+    [DataField("PYMT_ORD_TOTAL")]
+    public decimal Total {
+      get; private set;
+    }
+
+
     [DataField("PYMT_ORD_PAYMENT_ACCOUNT_ID")]
     public PaymentAccount PaymentAccount {
       get; private set;
@@ -141,12 +153,6 @@ namespace Empiria.Payments {
       private set {
         ExtData.SetIf("priority", value.ToString(), value != Priority.Normal);
       }
-    }
-
-
-    [DataField("PYMT_ORD_SECURITY_EXT_DATA")]
-    public JsonObject SecurityExtData {
-      get; private set;
     }
 
 
@@ -192,12 +198,6 @@ namespace Empiria.Payments {
     }
 
 
-    [DataField("PYMT_ORD_PAYED_BY_ID")]
-    public OrganizationalUnit PayedBy {
-      get; private set;
-    }
-
-
     [DataField("PYMT_ORD_CLOSING_TIME")]
     public DateTime ClosingTime {
       get; private set;
@@ -226,17 +226,6 @@ namespace Empiria.Payments {
     public PaymentOrderStatus Status {
       get; private set;
     } = PaymentOrderStatus.Pending;
-
-
-    // ToDo: How to deal with this
-    public decimal Total {
-      get {
-        return ExtData.Get("total", 0m);
-      }
-      private set {
-        ExtData.Set("total", value);
-      }
-    }
 
 
     internal PaymentOrderRules Rules {
@@ -400,7 +389,6 @@ namespace Empiria.Payments {
 
       fields.EnsureValid();
 
-      PayTo = Patcher.Patch(fields.PayToUID, PayTo);
       PaymentMethod = Patcher.Patch(fields.PaymentMethodUID, PaymentMethod);
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       PaymentAccount = Patcher.Patch(fields.PaymentAccountUID, PaymentAccount);
@@ -411,8 +399,6 @@ namespace Empiria.Payments {
       Observations = EmpiriaString.Clean(fields.Observations);
       RequestedBy = Patcher.Patch(fields.RequestedByUID, RequestedBy);
       ReferenceNumber = EmpiriaString.Clean(fields.ReferenceNumber);
-
-      Total = fields.Total;
     }
 
     #endregion Methods

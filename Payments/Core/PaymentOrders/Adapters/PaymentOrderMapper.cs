@@ -122,6 +122,7 @@ namespace Empiria.Payments.Adapters {
         DueTime = paymentOrder.DueTime,
         Priority = paymentOrder.Priority,
         Description = paymentOrder.Description,
+        Observations = paymentOrder.Observations,
         Budget = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
         BudgetType = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
         PaymentMethod = new PaymentMethodDto(paymentOrder.PaymentMethod),

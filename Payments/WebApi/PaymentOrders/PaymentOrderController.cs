@@ -126,9 +126,11 @@ namespace Empiria.Payments.WebApi {
     public SingleObjectModel UpdatePaymentOrder([FromUri] string paymentOrderUID,
                                                 [FromBody] PaymentOrderFields fields) {
 
+      fields.UID = paymentOrderUID;
+
       using (var usecases = PaymentOrderUseCases.UseCaseInteractor()) {
 
-        PaymentOrderHolderDto paymentOrder = usecases.UpdatePaymentOrder(paymentOrderUID, fields);
+        PaymentOrderHolderDto paymentOrder = usecases.UpdatePaymentOrder(fields);
 
         return new SingleObjectModel(this.Request, paymentOrder);
       }
