@@ -250,6 +250,7 @@ namespace Empiria.Payments {
 
           if (!PaymentOrder.PaymentMethod.IsElectronic) {
             Status = PaymentInstructionStatus.Payed;
+            PaymentOrder.SetAsPayed(this);
             break;
           }
 
