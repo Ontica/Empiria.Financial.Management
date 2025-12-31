@@ -17,6 +17,7 @@ using Empiria.Ontology;
 using Empiria.Parties;
 
 using Empiria.Billing.Data;
+using Empiria.Documents;
 
 namespace Empiria.Billing {
 
@@ -96,13 +97,14 @@ namespace Empiria.Billing {
 
 
     public Bill(IPayableEntity payable, BillCategory billCategory,
-                            string billNo, decimal total) : this(payable, billCategory, billNo) {
+                DocumentFields fields) : this(payable, billCategory, fields.DocumentNumber) {
 
-      Assertion.Require(total > 0, "Total must be positive.");
+      Assertion.Require(fields.Total > 0, "Total must be positive.");
 
       Currency = payable.Currency;
-      Subtotal = total;
-      Total = total;
+      Description = fields.Name;
+      Subtotal = fields.Total;
+      Total = fields.Total;
     }
 
 
@@ -132,6 +134,16 @@ namespace Empiria.Billing {
     [DataField("BILL_NO")]
     public string BillNo {
       get; private set;
+    }
+
+
+    public string Description {
+      get {
+        return ExtData.Get("description", string.Empty);
+      }
+      private set {
+        ExtData.SetIfValue("description", value);
+      }
     }
 
 

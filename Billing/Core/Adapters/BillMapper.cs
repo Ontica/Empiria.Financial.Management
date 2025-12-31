@@ -64,7 +64,7 @@ namespace Empiria.Billing.Adapters {
       string name;
 
       if (bill.BillType.Name.Contains("Voucher")) {
-        name = bill.BillNo;
+        name = bill.Description;
       } else if (concepts.Count != 0) {
         name = concepts[0].Description;
       } else {

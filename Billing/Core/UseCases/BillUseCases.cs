@@ -58,14 +58,15 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public Bill CreateVoucherBill(IPayableEntity payable, BillCategory billCategory,
-                                  string documentNo, decimal total) {
-
+    public Bill CreateVoucherBill(IPayableEntity payable, DocumentFields fields) {
       Assertion.Require(payable, nameof(payable));
-      Assertion.Require(billCategory, nameof(billCategory));
-      Assertion.Require(documentNo, nameof(documentNo));
+      Assertion.Require(fields, nameof(fields));
 
-      var bill = new Bill(payable, billCategory, documentNo, total);
+      Assertion.Require(fields.DocumentNumber, "Requiero el número de oficio o documento que ampara al comprobante.");
+      Assertion.Require(fields.Name, "Requiero la descripción del oficio o documento que ampara al comprobante.");
+      Assertion.Require(fields.Total, "Requiero el total del comprobante");
+
+      var bill = new Bill(payable, BillCategory.Parse(705), fields);
 
       bill.Save();
 
