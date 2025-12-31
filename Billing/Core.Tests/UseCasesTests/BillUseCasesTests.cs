@@ -18,52 +18,52 @@ namespace Empiria.Tests.Billing {
   public class BillUseCasesTests {
 
 
-    [Fact]
-    public void Create_Bill_Test() {
+    //[Fact]
+    //public void Create_Bill_Test() {
 
-      using (var usecases = BillUseCases.UseCaseInteractor()) {
+    //  using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-        string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
+    //    string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
 
-        var xmlText = System.IO.File.ReadAllText(xmlFilePath);
+    //    var xmlText = System.IO.File.ReadAllText(xmlFilePath);
 
-        BillDto sut = usecases.CreateBillTest(xmlText);
+    //    BillDto sut = usecases.CreateBillTest(xmlText);
 
-        Assert.NotNull(sut);
-      }
-    }
-
-
-    [Fact]
-    public void Create_Fuel_Consumption_Bill_Test() {
-
-      using (var usecases = BillUseCases.UseCaseInteractor()) {
-
-        string xmlFilePath = TestingConstants.XML_FUEL_CONSUMPTION_BILL_FILE_PATH;
-
-        var xmlText = System.IO.File.ReadAllText(xmlFilePath);
-
-        BillDto sut = usecases.CreateFuelConsumptionBillTest(xmlText);
-
-        Assert.NotNull(sut);
-      }
-    }
+    //    Assert.NotNull(sut);
+    //  }
+    //}
 
 
-    [Fact]
-    public void Create_Payment_Complement_Test() {
+    //[Fact]
+    //public void Create_Fuel_Consumption_Bill_Test() {
 
-      using (var usecases = BillUseCases.UseCaseInteractor()) {
+    //  using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-        string xmlFilePath = TestingConstants.XML_PAYMENT_COMPLEMENT_FILE_PATH;
+    //    string xmlFilePath = TestingConstants.XML_FUEL_CONSUMPTION_BILL_FILE_PATH;
 
-        var xmlText = System.IO.File.ReadAllText(xmlFilePath);
+    //    var xmlText = System.IO.File.ReadAllText(xmlFilePath);
 
-        BillDto sut = usecases.CreateBillPaymentComplementTest(xmlText);
+    //    BillDto sut = usecases.CreateFuelConsumptionBillTest(xmlText);
 
-        Assert.NotNull(sut);
-      }
-    }
+    //    Assert.NotNull(sut);
+    //  }
+    //}
+
+
+    //[Fact]
+    //public void Create_Payment_Complement_Test() {
+
+    //  using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+    //    string xmlFilePath = TestingConstants.XML_PAYMENT_COMPLEMENT_FILE_PATH;
+
+    //    var xmlText = System.IO.File.ReadAllText(xmlFilePath);
+
+    //    BillDto sut = usecases.CreateBillPaymentComplementTest(xmlText);
+
+    //    Assert.NotNull(sut);
+    //  }
+    //}
 
 
     [Fact]

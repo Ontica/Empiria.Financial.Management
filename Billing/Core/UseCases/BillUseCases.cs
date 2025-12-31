@@ -66,7 +66,7 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(fields.Name, "Requiero la descripción del oficio o documento que ampara al comprobante.");
       Assertion.Require(fields.Total, "Requiero el total del comprobante");
 
-      var bill = new Bill(payable, BillCategory.Parse(705), fields);
+      var bill = new Bill(payable, BillCategory.Parse(97), fields);
 
       bill.Save();
 
@@ -101,21 +101,6 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    internal BillDto CreateBillTest(string xmlString) {
-      Assertion.Require(xmlString, nameof(xmlString));
-
-      var reader = new SATBillXmlReader(xmlString);
-
-      ISATBillDto satDto = reader.ReadAsBillDto();
-
-      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
-
-      Bill bill = CreateBillTest((BillFields) fields);
-
-      return BillMapper.MapToBillDto(bill);
-    }
-
-
     private BillDto CreateBillPaymentComplement(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
@@ -125,19 +110,6 @@ namespace Empiria.Billing.UseCases {
 
       IBillFields fields = BillPaymentComplementFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
       Bill bill = CreatePaymentComplementImplementation(payable, (BillPaymentComplementFields) fields);
-
-      return BillMapper.MapToBillDto(bill);
-    }
-
-
-    internal BillDto CreateBillPaymentComplementTest(string xmlString) {
-      Assertion.Require(xmlString, nameof(xmlString));
-
-      var reader = new SATPaymentComplementXmlReader(xmlString);
-      ISATBillDto satDto = reader.ReadAsPaymentComplementDto();
-
-      IBillFields fields = BillPaymentComplementFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
-      Bill bill = CreatePaymentComplementTest((BillPaymentComplementFields) fields);
 
       return BillMapper.MapToBillDto(bill);
     }
@@ -159,27 +131,10 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    internal BillDto CreateFuelConsumptionBillTest(string xmlString) {
-      Assertion.Require(xmlString, nameof(xmlString));
-
-      var reader = new SATFuelConsumptionBillXmlReader(xmlString);
-
-      ISATBillDto satDto = reader.ReadAsFuelConsumptionBillDto();
-
-      IBillFields fields = FuelConsumptionBillMapper.Map((SATFuelConsumptionBillDto) satDto);
-
-      Bill bill = CreateFuelConsumptionTest((FuelConsumptionBillFields) fields);
-
-      return BillMapper.MapToBillDto(bill);
-    }
-
-
     public BillHolderDto GetBill(string billUID) {
       Assertion.Require(billUID, nameof(billUID));
 
       Bill bill = Bill.Parse(billUID);
-
-      bill.AssignBillRelatedBills();
 
       return BillMapper.Map(bill);
     }
@@ -189,8 +144,6 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(billUID, nameof(billUID));
 
       Bill bill = Bill.Parse(billUID);
-
-      bill.AssignBillRelatedBills();
 
       return BillMapper.MapToBillWithConcepts(bill);
     }
@@ -246,22 +199,6 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateBillTest(BillFields fields) {
-
-      var billCategory = BillCategory.FacturaProveedores;
-
-      var bill = new Bill(billCategory, fields.BillNo);
-
-      bill.Update(fields);
-
-      bill.Save();
-
-      CreateBillConcepts(bill, fields.Concepts);
-
-      return bill;
-    }
-
-
     private Bill CreateBillImplementation(IPayableEntity payable, BillFields fields) {
 
       return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
@@ -297,7 +234,8 @@ namespace Empiria.Billing.UseCases {
         billRelated.Update(relatedPayoutFields);
         billRelated.Save();
 
-        billRelated.TaxEntries = CreateBillTaxEntries(bill, billRelated.Id, relatedPayoutFields.Taxes);
+        CreateBillTaxEntries(bill, billRelated.Id, relatedPayoutFields.Taxes);
+
         relatedList.Add(billRelated);
       }
       return relatedList.ToFixedList();
@@ -340,25 +278,7 @@ namespace Empiria.Billing.UseCases {
 
       CreatePaymentComplementConcepts(bill, fields.Concepts);
 
-      bill.BillRelatedBills = CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
-
-      return bill;
-    }
-
-
-    private Bill CreatePaymentComplementTest(BillPaymentComplementFields fields) {
-
-      var billCategory = BillCategory.ComplementoPagoProveedores;
-
-      var bill = new Bill(billCategory, fields.BillNo);
-
-      bill.UpdatePaymentComplement(fields);
-
-      bill.Save();
-
-      CreatePaymentComplementConcepts(bill, fields.Concepts);
-
-      bill.BillRelatedBills = CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
+      CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
 
       return bill;
     }
@@ -400,25 +320,6 @@ namespace Empiria.Billing.UseCases {
       return CreateBillConcepts(bill, conceptFields);
     }
 
-
-    private Bill CreateFuelConsumptionTest(FuelConsumptionBillFields fields) {
-
-      var billCategory = BillCategory.FacturaConsumoCombustible;
-
-      var bill = new Bill(billCategory, fields.BillNo);
-
-      bill.UpdateFuelConsumptionBill(fields);
-
-      bill.Save();
-
-      CreateFuelConsumptionConcepts(bill, fields.Concepts);
-
-      CreateFuelConsumptionComplementConcepts(bill, fields.ComplementData.ComplementConcepts);
-
-      CreateFuelConsumptionAddendaConcepts(bill, fields.Addenda.Concepts);
-
-      return bill;
-    }
 
     #endregion Private methods
 
