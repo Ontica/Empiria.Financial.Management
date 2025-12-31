@@ -274,7 +274,7 @@ namespace Empiria.Payments {
 
       var bdgTxn = TryGetApprovedBudget();
 
-      if (bdgTxn == null || bdgTxn.InProcess) {
+      if (PaymentType.NeedsBudgetApproval && (bdgTxn == null || bdgTxn.InProcess)) {
         Assertion.RequireFail("No se puede crear la instrucción de pago debido " +
                               "a que la solicitud de pago no tiene el presupuesto aprobado.");
       }

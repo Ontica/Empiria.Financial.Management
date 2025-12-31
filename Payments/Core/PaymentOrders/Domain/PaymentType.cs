@@ -27,6 +27,16 @@ namespace Empiria.Payments {
 
     #endregion Constructors and parsers
 
+    #region Properties
+
+    public bool NeedsBudgetApproval {
+      get {
+        return ExtData.Get("needsBudgetApproval", true);
+      }
+    }
+
+    #endregion Properties
+
   }  // class PaymentType
 
 }  // namespace Empiria.Payments

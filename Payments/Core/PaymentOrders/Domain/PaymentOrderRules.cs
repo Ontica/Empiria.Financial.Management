@@ -30,6 +30,10 @@ namespace Empiria.Payments {
         return false;
       }
 
+      if (!_paymentOrder.PaymentType.NeedsBudgetApproval) {
+        return false;
+      }
+
       var budgetTxn = _paymentOrder.TryGetApprovedBudget();
 
       if (budgetTxn != null && (budgetTxn.InProcess || budgetTxn.IsClosed)) {
@@ -72,9 +76,10 @@ namespace Empiria.Payments {
 
 
     internal bool CanGeneratePaymentInstruction() {
+
       var bdgTxn = _paymentOrder.TryGetApprovedBudget();
 
-      if (bdgTxn == null || !bdgTxn.IsClosed) {
+      if (_paymentOrder.PaymentType.NeedsBudgetApproval && (bdgTxn == null || !bdgTxn.IsClosed)) {
         return false;
       }
 
