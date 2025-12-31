@@ -51,6 +51,17 @@ namespace Empiria.Payments.Processor {
 
         BrokerResponseDto brokerResponse = await paymentsService.RequestPaymentStatus(brokerRequest);
 
+        if (brokerResponse.Status == PaymentInstructionStatus.Payed &&
+            instruction.Rules.IsReadyToBeMarkedAsPayed) {
+
+          brokerResponse.Status = PaymentInstructionStatus.Payed;
+
+        } else if (brokerResponse.Status == PaymentInstructionStatus.Payed &&
+                   instruction.Status == PaymentInstructionStatus.Requested) {
+
+          brokerResponse.Status = PaymentInstructionStatus.PaymentConfirmation;
+        }
+
         instruction.UpdateStatus(brokerResponse);
 
       } catch (Exception e) {
@@ -73,11 +84,26 @@ namespace Empiria.Payments.Processor {
                         "PaymentInstruction is not ready to be requested.");
 
       try {
-        IPaymentsBrokerService paymentsService = instruction.BrokerConfigData.GetService();
+
+        var brokerData = instruction.BrokerConfigData;
+
+        IPaymentsBrokerService paymentsService = brokerData.GetService();
 
         BrokerRequestDto brokerRequest = MapToBrokerRequest(instruction);
 
         BrokerResponseDto brokerResponse = await paymentsService.SendPaymentInstruction(brokerRequest);
+
+        Assertion.Require(brokerResponse,
+                          $"La resupuesta de {brokerData.Name} regresó vacía.");
+
+        if (brokerResponse.Status == PaymentInstructionStatus.Failed) {
+          throw new ApplicationException(
+            $"{brokerData.Name} regresó un estatus 'Fallido' al recibir la instrucción de pago: " +
+            $"{brokerResponse.BrokerMessage}");
+        }
+
+        Assertion.Require(brokerResponse.BrokerInstructionNo,
+                          $"{brokerData.Name} regresó un Id de solicitud vacío.");
 
         instruction.Sent(brokerResponse);
 

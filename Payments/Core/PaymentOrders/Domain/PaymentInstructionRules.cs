@@ -101,6 +101,16 @@ namespace Empiria.Payments {
       }
     }
 
+
+    public bool IsReadyToBeMarkedAsPayed {
+      get {
+        if (!_instruction.WasSent || _instruction.Status != PaymentInstructionStatus.PaymentConfirmation) {
+          return false;
+        }
+        return _instruction.TimeControl.PaymentRequestTimeElapsed;
+      }
+    }
+
   }  // class PaymentInstructionRules
 
 }  // namespace Empiria.Payments

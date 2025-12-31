@@ -41,7 +41,7 @@ namespace Empiria.Payments.Processor {
 
         isRunning = true;
 
-        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 2);
+        int MESSAGE_ENGINE_EXECUTION_MINUTES = ConfigurationData.Get("MessageEngine.Execution.Minutes", 1);
 
         timer = new Timer(ProcessPaymentInstructions, null,
                           TimeSpan.FromSeconds(10),
