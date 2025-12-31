@@ -39,7 +39,7 @@ namespace Empiria.Billing.UseCases {
 
     #region Use cases
 
-    public BillDto Create(string xmlString, IPayableEntity payable, DocumentProduct billProduct) {
+    public BillDto CreateCFDI(string xmlString, IPayableEntity payable, DocumentProduct billProduct) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(billProduct, nameof(billProduct));
@@ -58,7 +58,33 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public BillDto CreateBill(string xmlString, IPayableEntity payable) {
+    public Bill CreateVoucherBill(IPayableEntity payable, BillCategory billCategory,
+                                  string documentNo, decimal total) {
+
+      Assertion.Require(payable, nameof(payable));
+      Assertion.Require(billCategory, nameof(billCategory));
+      Assertion.Require(documentNo, nameof(documentNo));
+
+      var bill = new Bill(payable, billCategory, documentNo, total);
+
+      bill.Save();
+
+      return bill;
+    }
+
+
+    public string ExtractCFDINo(string xmlString) {
+      Assertion.Require(xmlString, nameof(xmlString));
+
+      var reader = new SATBillXmlReader(xmlString);
+
+      SATBillDto satDto = reader.ReadAsBillDto();
+
+      return satDto.SATComplemento.UUID;
+    }
+
+
+    private BillDto CreateBill(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
 
@@ -74,7 +100,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public BillDto CreateBillTest(string xmlString) {
+    internal BillDto CreateBillTest(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
       var reader = new SATBillXmlReader(xmlString);
@@ -89,7 +115,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public BillDto CreateBillPaymentComplement(string xmlString, IPayableEntity payable) {
+    private BillDto CreateBillPaymentComplement(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
 
@@ -103,7 +129,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public BillDto CreateBillPaymentComplementTest(string xmlString) {
+    internal BillDto CreateBillPaymentComplementTest(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
       var reader = new SATPaymentComplementXmlReader(xmlString);
@@ -116,7 +142,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public BillDto CreateCreditNote(string xmlString, IPayableEntity payable) {
+    private BillDto CreateCreditNote(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
 
@@ -132,7 +158,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public BillDto CreateFuelConsumptionBillTest(string xmlString) {
+    internal BillDto CreateFuelConsumptionBillTest(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 
       var reader = new SATFuelConsumptionBillXmlReader(xmlString);
@@ -158,18 +184,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public string ExtractBillNo(string xmlString) {
-      Assertion.Require(xmlString, nameof(xmlString));
-
-      var reader = new SATBillXmlReader(xmlString);
-
-      SATBillDto satDto = reader.ReadAsBillDto();
-
-      return satDto.SATComplemento.UUID;
-    }
-
-
-    public BillWithConceptsDto GetBillWithConceptsDto(string billUID) {
+    internal BillWithConceptsDto GetBillWithConceptsDtoTests(string billUID) {
       Assertion.Require(billUID, nameof(billUID));
 
       Bill bill = Bill.Parse(billUID);
@@ -191,16 +206,9 @@ namespace Empiria.Billing.UseCases {
       return BillMapper.MapToBillListDto(bills);
     }
 
-
-    public void SetBillAsPayed(string billUID) {
-
-      BillData.SetBillAsPayed(billUID);
-    }
-
     #endregion Use cases
 
     #region Private methods
-
 
     private Bill CreateBillByCategory(IPayableEntity payable, BillFields fields, BillCategory billCategory) {
 

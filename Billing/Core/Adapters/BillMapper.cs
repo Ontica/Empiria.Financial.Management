@@ -61,13 +61,22 @@ namespace Empiria.Billing.Adapters {
 
       var concepts = bill.Concepts;
 
+      string name;
+
+      if (bill.BillType.Name.Contains("Voucher")) {
+        name = bill.BillNo;
+      } else if (concepts.Count != 0) {
+        name = concepts[0].Description;
+      } else {
+        name = "La factura no tiene conceptos";
+      }
+
       return new BillDto {
         UID = bill.UID,
         BillNo = bill.BillNo,
-        Name = concepts.Count != 0 ? concepts[0].Description : "La factura no tiene conceptos",
-        //Description = Set file name
+        Name = name,
         Category = bill.BillCategory.MapToNamedEntity(),
-        BillType = bill.BillType.MapToNamedEntity(),
+        BillType = bill.BillCategory.MapToNamedEntity(),
         ManagedBy = bill.ManagedBy.MapToNamedEntity(),
         IssuedBy = bill.IssuedBy.MapToNamedEntity(),
         IssuedTo = bill.IssuedTo.MapToNamedEntity(),
@@ -81,7 +90,7 @@ namespace Empiria.Billing.Adapters {
         PostingTime = bill.PostingTime,
         Status = bill.Status.MapToDto(),
         Files = files.Select(x => x.File)
-                      .ToFixedList(),
+                     .ToFixedList(),
       };
     }
 

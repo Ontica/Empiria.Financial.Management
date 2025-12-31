@@ -62,22 +62,23 @@ namespace Empiria.Billing {
     }
 
 
-    public Bill(BillCategory billCategory,
-                string billNo) : base(billCategory.BillType) {
+    public Bill(BillCategory billCategory, string billNo) : base(billCategory.BillType) {
 
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
 
       PayableId = 1;
+      Currency = Currency.Default;
       ManagedBy = Party.Empty;
       BillCategory = billCategory;
       BillNo = billNo;
       PayableTotal = 2170128.00M;
     }
 
-    public Bill(IPayableEntity payable,
-                BillCategory billCategory,
-                string billNo) : base(billCategory.BillType) {
+
+    public Bill(IPayableEntity payable, BillCategory billCategory,
+                            string billNo) : base(billCategory.BillType) {
+
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
@@ -86,10 +87,24 @@ namespace Empiria.Billing {
       PayableEntityId = payable.Id;
       PayableId = payable.Id;
       ManagedBy = payable.OrganizationalUnit;
+      Currency = payable.Currency;
+
       BillCategory = billCategory;
       BillNo = billNo;
       PayableTotal = payable.Total;
     }
+
+
+    public Bill(IPayableEntity payable, BillCategory billCategory,
+                            string billNo, decimal total) : this(payable, billCategory, billNo) {
+
+      Assertion.Require(total > 0, "Total must be positive.");
+
+      Currency = payable.Currency;
+      Subtotal = total;
+      Total = total;
+    }
+
 
     static public FixedList<Bill> GetListFor(Party party) {
       return GetList<Bill>($"BILL_ISSUED_BY_ID = {party.Id} " +

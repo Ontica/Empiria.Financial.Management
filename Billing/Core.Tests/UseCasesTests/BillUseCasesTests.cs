@@ -7,8 +7,6 @@
 *  Summary  : Unit tests for BillUseCases.                                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 using Xunit;
 
 using Empiria.Billing.Adapters;
@@ -89,7 +87,7 @@ namespace Empiria.Tests.Billing {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-        BillWithConceptsDto sut = usecases.GetBillWithConceptsDto(billUID);
+        BillWithConceptsDto sut = usecases.GetBillWithConceptsDtoTests(billUID);
         Assert.NotNull(sut);
       }
     }
