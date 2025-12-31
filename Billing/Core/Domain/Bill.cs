@@ -63,22 +63,8 @@ namespace Empiria.Billing {
     }
 
 
-    public Bill(BillCategory billCategory, string billNo) : base(billCategory.BillType) {
-
-      Assertion.Require(billCategory, nameof(billCategory));
-      Assertion.Require(billNo, nameof(billNo));
-
-      PayableId = 1;
-      Currency = Currency.Default;
-      ManagedBy = Party.Empty;
-      BillCategory = billCategory;
-      BillNo = billNo;
-      PayableTotal = 2170128.00M;
-    }
-
-
     public Bill(IPayableEntity payable, BillCategory billCategory,
-                            string billNo) : base(billCategory.BillType) {
+                string billNo) : base(billCategory.BillType) {
 
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(billCategory, nameof(billCategory));
@@ -325,8 +311,10 @@ namespace Empiria.Billing {
 
 
     internal FixedList<BillRelatedBill> BillRelatedBills {
-      get; set;
-    } = new FixedList<BillRelatedBill>();
+      get {
+        return BillRelatedBill.GetListFor(this);
+      }
+    }
 
 
     public string Keywords {
@@ -344,16 +332,6 @@ namespace Empiria.Billing {
     #endregion Properties
 
     #region Methods
-
-    internal void AssignBillRelatedBills() {
-
-      this.BillRelatedBills = BillRelatedBill.GetListFor(this);
-
-      foreach (var relatedBill in BillRelatedBills) {
-        relatedBill.TaxEntries = BillTaxEntry.GetListFor(this.BillType.Id, relatedBill.BillRelatedBillId);
-      }
-    }
-
 
     public void Delete() {
       this.Status = BillStatus.Deleted;

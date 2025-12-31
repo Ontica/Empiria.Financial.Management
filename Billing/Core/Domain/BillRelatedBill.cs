@@ -9,17 +9,18 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using Empiria.Billing.Data;
-using Empiria.Financial;
+
 using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
+
+using Empiria.Billing.Data;
 
 namespace Empiria.Billing {
 
   /// <summary>Represents a payment complement related bill for an invoice.</summary>
   internal class BillRelatedBill : BaseObject {
-    
+
 
     #region Constructors and parsers
 
@@ -109,8 +110,10 @@ namespace Empiria.Billing {
 
 
     internal FixedList<BillTaxEntry> TaxEntries {
-      get; set;
-    } = new FixedList<BillTaxEntry>();
+      get {
+        return BillTaxEntry.GetListFor(this.Bill.BillType.Id, this.BillRelatedBillId);
+      }
+    }
 
 
     #endregion Properties

@@ -35,6 +35,7 @@ namespace Empiria.Billing {
 
       this.Bill = bill;
       this.BillTaxRelatedObjectId = BillTaxRelatedObjectId;
+      this.TaxType = TaxType.Parse(101);  // ToDo: Fix hardcoded tax type id.
     }
 
     static internal BillTaxEntry Parse(int id) => ParseId<BillTaxEntry>(id);
@@ -141,7 +142,7 @@ namespace Empiria.Billing {
     #endregion Properties
 
     #region Private methods
-    
+
     protected override void OnSave() {
       if (IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
@@ -151,7 +152,7 @@ namespace Empiria.Billing {
     }
 
 
-    internal void Update (BillTaxEntryFields fields) {
+    internal void Update(BillTaxEntryFields fields) {
 
       this.BillTaxRelatedObjectTypeId = Bill.BillType.Id;
       this.TaxMethod = fields.TaxMethod;

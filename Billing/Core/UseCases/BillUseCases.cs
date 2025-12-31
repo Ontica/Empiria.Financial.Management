@@ -39,7 +39,7 @@ namespace Empiria.Billing.UseCases {
 
     #region Use cases
 
-    public BillDto CreateCFDI(string xmlString, IPayableEntity payable, DocumentProduct billProduct) {
+    public Bill CreateCFDI(string xmlString, IPayableEntity payable, DocumentProduct billProduct) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(billProduct, nameof(billProduct));
@@ -85,7 +85,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private BillDto CreateBill(string xmlString, IPayableEntity payable) {
+    private Bill CreateBill(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
 
@@ -95,9 +95,7 @@ namespace Empiria.Billing.UseCases {
 
       IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
 
-      Bill bill = CreateBillImplementation(payable, (BillFields) fields);
-
-      return BillMapper.MapToBillDto(bill);
+      return CreateBillImplementation(payable, (BillFields) fields);
     }
 
 
@@ -115,7 +113,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private BillDto CreateCreditNote(string xmlString, IPayableEntity payable) {
+    private Bill CreateCreditNote(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
 
@@ -125,9 +123,7 @@ namespace Empiria.Billing.UseCases {
 
       IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
 
-      Bill bill = CreateCreditNoteImplementation(payable, (BillFields) fields);
-
-      return BillMapper.MapToBillDto(bill);
+      return CreateCreditNoteImplementation(payable, (BillFields) fields);
     }
 
 
@@ -205,11 +201,8 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private FixedList<BillTaxEntry> CreateBillTaxEntries(Bill bill,
-                                                         int billRelatedDocumentId,
-                                                         FixedList<BillTaxEntryFields> allTaxesFields) {
-
-      var taxesList = new List<BillTaxEntry>(allTaxesFields.Count);
+    private void CreateBillTaxEntries(Bill bill, int billRelatedDocumentId,
+                                      FixedList<BillTaxEntryFields> allTaxesFields) {
 
       foreach (BillTaxEntryFields taxFields in allTaxesFields) {
 
@@ -217,16 +210,13 @@ namespace Empiria.Billing.UseCases {
 
         billTaxEntry.Update(taxFields);
         billTaxEntry.Save();
-        taxesList.Add(billTaxEntry);
       }
-      return taxesList.ToFixedList();
     }
 
 
-    private FixedList<BillRelatedBill> CreateBillRelatedBills(Bill bill,
-              FixedList<ComplementRelatedPayoutDataFields> complementRelatedPayoutData) {
+    private void CreateBillRelatedBills(Bill bill,
+                                        FixedList<ComplementRelatedPayoutDataFields> complementRelatedPayoutData) {
 
-      var relatedList = new List<BillRelatedBill>();
       foreach (var relatedPayoutFields in complementRelatedPayoutData) {
 
         var billRelated = new BillRelatedBill(bill);
@@ -235,10 +225,7 @@ namespace Empiria.Billing.UseCases {
         billRelated.Save();
 
         CreateBillTaxEntries(bill, billRelated.Id, relatedPayoutFields.Taxes);
-
-        relatedList.Add(billRelated);
       }
-      return relatedList.ToFixedList();
     }
 
 
@@ -248,9 +235,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private FixedList<BillConcept> CreatePaymentComplementConcepts(Bill bill,
-                                    FixedList<BillConceptFields> conceptFields) {
-      var concepts = new List<BillConcept>();
+    private void CreatePaymentComplementConcepts(Bill bill, FixedList<BillConceptFields> conceptFields) {
 
       foreach (BillConceptFields fields in conceptFields) {
 
@@ -259,10 +244,7 @@ namespace Empiria.Billing.UseCases {
         billConcept.Update(fields);
 
         billConcept.Save();
-
-        concepts.Add(billConcept);
       }
-      return concepts.ToFixedList();
     }
 
 
@@ -285,16 +267,14 @@ namespace Empiria.Billing.UseCases {
 
 
     private FixedList<BillConcept> CreateFuelConsumptionAddendaConcepts(Bill bill,
-                                                      FixedList<BillConceptWithTaxFields> conceptFields) {
+                                                                        FixedList<BillConceptWithTaxFields> conceptFields) {
 
       return CreateBillConcepts(bill, conceptFields);
     }
 
 
-    private FixedList<BillConcept> CreateFuelConsumptionComplementConcepts(Bill bill,
-                                  FixedList<FuelConseptionComplementConceptDataFields> complementConcepts) {
-
-      var concepts = new List<BillConcept>();
+    private void CreateFuelConsumptionComplementConcepts(Bill bill,
+                                                         FixedList<FuelConseptionComplementConceptDataFields> complementConcepts) {
 
       foreach (var fields in complementConcepts) {
 
@@ -306,11 +286,7 @@ namespace Empiria.Billing.UseCases {
 
         CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
 
-        concepts.Add(billConcept);
-
       }
-
-      return concepts.ToFixedList();
     }
 
 

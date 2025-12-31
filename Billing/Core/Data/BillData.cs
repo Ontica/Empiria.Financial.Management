@@ -172,7 +172,7 @@ namespace Empiria.Billing.Data {
     static internal void WriteBillTaxEntry(BillTaxEntry o, string extensionData) {
 
       var op = DataOperation.Parse("write_FMS_Bill_Tax",
-          o.Id, o.UID, 101, o.Bill.Id, o.BillTaxRelatedObjectTypeId,
+          o.Id, o.UID, o.TaxType.Id, o.Bill.Id, o.BillTaxRelatedObjectTypeId,
           o.BillTaxRelatedObjectId, (char) o.TaxMethod, (char) o.TaxFactorType,
           o.Factor, o.BaseAmount, o.Total, extensionData,
           o.PostedBy.Id, o.PostingTime, (char) o.Status);
