@@ -8,14 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.IO;
-
-using Empiria.Documents;
-using Empiria.Financial;
-
-using Empiria.Billing;
-using Empiria.Billing.Adapters;
-using Empiria.Billing.UseCases;
+using Empiria.Budgeting.Transactions;
+using Empiria.Budgeting.Transactions.Adapters;
 
 namespace Empiria.Payments {
 
@@ -24,25 +18,29 @@ namespace Empiria.Payments {
 
     #region Services
 
-    static internal Bill GenerateBill(IPayableEntity payable, DocumentDto billDocument) {
-      Assertion.Require(billDocument, nameof(billDocument));
+    static public BudgetTransactionDescriptorDto ExerciseBudget(PaymentOrder paymentOrder) {
+      Assertion.Require(paymentOrder, nameof(paymentOrder));
+      Assertion.Require(paymentOrder.TryGetApprovedBudget(), nameof(paymentOrder.TryGetApprovedBudget));
 
-      using (var usecases = BillUseCases.UseCaseInteractor()) {
+      var approvedBudget = paymentOrder.TryGetApprovedBudget();
 
-        BillDto returnedValue;
+      Assertion.Require(approvedBudget, "Payment order must have an approved budget.");
 
-        string billType = billDocument.ApplicationContentType;
+      var exerciseTransaction = BudgetTransaction.CreateWith(approvedBudget, BudgetOperationType.Exercise);
 
-        if (billType == "factura-electronica-sat") {
-          returnedValue = usecases.CreateBill(File.ReadAllText(billDocument.FullLocalName), payable);
-        } else if (billType == "nota-credito-sat") {
-          returnedValue = usecases.CreateCreditNote(File.ReadAllText(billDocument.FullLocalName), payable);
-        } else {
-          throw Assertion.EnsureNoReachThisCode($"Unrecognized applicationContentType '{billType}'.");
-        }
+      exerciseTransaction.SendToAuthorization();
 
-        return Bill.Parse(returnedValue.UID);
-      }
+      exerciseTransaction.Save();
+
+      exerciseTransaction.Authorize();
+
+      exerciseTransaction.Save();
+
+      exerciseTransaction.Close();
+
+      exerciseTransaction.Save();
+
+      return BudgetTransactionMapper.MapToDescriptor(exerciseTransaction);
     }
 
     #endregion Services

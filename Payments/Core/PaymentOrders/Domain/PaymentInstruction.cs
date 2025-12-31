@@ -199,7 +199,6 @@ namespace Empiria.Payments {
     }
 
 
-
     internal void Sent(BrokerResponseDto brokerResponse) {
       lock (_locker) {
         SentInternal(brokerResponse);
@@ -362,7 +361,8 @@ namespace Empiria.Payments {
 
     private void UpdateStatusInternal(BrokerResponseDto brokerResponse) {
       Assertion.Require(brokerResponse, nameof(brokerResponse));
-      Assertion.Require(WasSent, "PaymentInstruction was not sent.");
+      Assertion.Require(WasSent || brokerResponse.Status == PaymentInstructionStatus.Exception,
+                        "PaymentInstruction was not sent.");
 
       if (Status == brokerResponse.Status) {
         return;

@@ -121,7 +121,8 @@ namespace Empiria.Payments {
 
 
     internal bool CanUpdate() {
-      if (_paymentOrder.Status == PaymentOrderStatus.Pending) {
+      if (_paymentOrder.Status == PaymentOrderStatus.Pending ||
+        _paymentOrder.Status == PaymentOrderStatus.Programmed) {
         return true;
       }
 

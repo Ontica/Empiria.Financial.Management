@@ -66,6 +66,7 @@ namespace Empiria.Payments.Adapters {
         Currency = instruction.PaymentOrder.Currency.MapToNamedEntity(),
         DueTime = instruction.PaymentOrder.DueTime,
         PaymentAccount = new PaymentAccountDto(instruction.PaymentOrder.PaymentAccount),
+        RequestedBy = instruction.PaymentOrder.RequestedBy.MapToNamedEntity(),
         PayTo = instruction.PaymentOrder.PayTo.MapToNamedEntity(),
         PaymentInstructionNo = instruction.PaymentInstructionNo,
         PaymentMethod = new PaymentMethodDto(instruction.PaymentOrder.PaymentMethod),
@@ -73,11 +74,10 @@ namespace Empiria.Payments.Adapters {
         ProgrammedDate = instruction.ProgrammedDate,
         ReferenceNumber = instruction.PaymentOrder.ReferenceNumber,
         Status = instruction.Status.MapToNamedEntityDto(),
-        RequestedBy = instruction.PostedBy.MapToNamedEntity(),
         RequestedTime = instruction.PostingTime,
         Total = instruction.PaymentOrder.Total,
         PaymentOrderNo = instruction.PaymentOrder.PaymentOrderNo,
-        Description = instruction.Description,
+        Description = instruction.PaymentOrder.Description,
         LastUpdateTime = instruction.PostingTime,
       };
     }
