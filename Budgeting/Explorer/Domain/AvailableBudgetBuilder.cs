@@ -79,7 +79,7 @@ namespace Empiria.Budgeting.Explorer {
         return string.Empty;
       }
 
-      return $"BUDGET_MONTH <= {_query.Month}";
+      return $"BUDGET_MONTH = {_query.Month}";
     }
 
     #endregion Helpers
