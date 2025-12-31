@@ -59,6 +59,21 @@ namespace Empiria.Financial.UseCases {
     }
 
 
+    public FixedList<NamedEntityDto> GetStandardAccounts(string chartOfAccountsUID, string stdAccountTypeUID) {
+      Assertion.Require(chartOfAccountsUID, nameof(chartOfAccountsUID));
+      Assertion.Require(stdAccountTypeUID, nameof(stdAccountTypeUID));
+
+      var chartOfAccounts = ChartOfAccounts.Parse(chartOfAccountsUID);
+
+      StandardAccountType stdAccountType = StandardAccountType.Parse(stdAccountTypeUID);
+
+      FixedList<StandardAccount> stdAccounts = chartOfAccounts.GetStandardAccounts()
+                                                              .FindAll(x => x.StandardAccountType.Equals(stdAccountType));
+
+      return stdAccounts.MapToNamedEntityList();
+    }
+
+
     public ChartOfAccountsDto SearchChartOfAccounts(ChartOfAccountsQuery query) {
       Assertion.Require(query, nameof(query));
 
@@ -68,6 +83,7 @@ namespace Empiria.Financial.UseCases {
 
       return ChartOfAccountsMapper.Map(chartOfAccounts, stdAccounts);
     }
+
 
     #endregion Use cases
 

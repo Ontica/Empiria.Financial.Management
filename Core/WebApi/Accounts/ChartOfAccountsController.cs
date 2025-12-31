@@ -12,13 +12,12 @@ using System.Web.Http;
 
 using Empiria.WebApi;
 
+using Empiria.Financial.Adapters;
 using Empiria.Financial.Data;
+using Empiria.Financial.UseCases;
 
 using Empiria.Financial.Projects;
 using Empiria.Financial.Projects.Data;
-
-using Empiria.Financial.Adapters;
-using Empiria.Financial.UseCases;
 
 namespace Empiria.Financial.WebApi {
 
@@ -91,6 +90,20 @@ namespace Empiria.Financial.WebApi {
         StandardAccountHolder stdAccount = usecases.GetStandardAccount(chartOfAccountsUID, stdAccountUID);
 
         return new SingleObjectModel(base.Request, stdAccount);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v3/charts-of-accounts/{chartOfAccountsUID:guid}/standard-accounts/types/{stdAccountTypeUID}")]
+    public CollectionModel GetStandardAccounts([FromUri] string chartOfAccountsUID,
+                                               [FromUri] string stdAccountTypeUID) {
+
+      using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
+
+        FixedList<NamedEntityDto> stdAccounts = usecases.GetStandardAccounts(chartOfAccountsUID, stdAccountTypeUID);
+
+        return new CollectionModel(base.Request, stdAccounts);
       }
     }
 

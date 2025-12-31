@@ -22,6 +22,12 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+
+    public FixedList<NamedEntityDto> StandardAccountTypes {
+      get; internal set;
+    }
+
+
     public StandardAccountActions Actions {
       get; internal set;
     }

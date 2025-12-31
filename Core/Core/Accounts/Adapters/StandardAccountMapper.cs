@@ -28,6 +28,7 @@ namespace Empiria.Financial.Adapters {
       return new StandardAccountHolder {
         StandardAccount = MapStdAccount(stdAccount),
         Accounts = FinancialAccountMapper.MapToDescriptor(accounts),
+        StandardAccountTypes = stdAccount.ChartOfAccounts.FinancialAccountTypes.MapToNamedEntityList(),
         Actions = MapActions(stdAccount)
       };
     }
