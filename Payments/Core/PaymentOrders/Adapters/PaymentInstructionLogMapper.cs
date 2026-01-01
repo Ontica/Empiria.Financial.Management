@@ -32,8 +32,7 @@ namespace Empiria.Payments.Adapters {
         Total = paymentInstructionLog.PaymentOrder.Total,
         Currency = paymentInstructionLog.PaymentOrder.Currency.Name,
         RequestTime = paymentInstructionLog.RequestTime,
-        RequestCode = paymentInstructionLog.BrokerInstructionNo,
-        Description = paymentInstructionLog.BrokerMessage,
+        Description = paymentInstructionLog.LogText,
         StatusName = paymentInstructionLog.Status.GetName(),
       };
     }

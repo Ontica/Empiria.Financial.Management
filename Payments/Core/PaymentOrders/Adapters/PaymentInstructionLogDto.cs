@@ -19,11 +19,9 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-
     public string PaymentOrdeNo {
       get; internal set;
     }
-
 
     public string PaymentMethod {
       get; internal set;
@@ -39,10 +37,6 @@ namespace Empiria.Payments.Adapters {
 
     public DateTime RequestTime {
       get; set;
-    }
-
-    public string RequestCode {
-      get; internal set;
     }
 
     public string Description {

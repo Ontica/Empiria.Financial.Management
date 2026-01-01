@@ -74,8 +74,14 @@ namespace Empiria.Payments {
     }
 
 
-    [DataField("PYMT_LOG_REQUEST_CODE")]
-    public string BrokerInstructionNo {
+    [DataField("PYMT_LOG_TEXT")]
+    public string LogText {
+      get; private set;
+    } = string.Empty;
+
+
+    [DataField("PYMT_LOG_BROKER_RESPONSE")]
+    public string BrokerResponse {
       get; private set;
     } = string.Empty;
 
@@ -95,22 +101,6 @@ namespace Empiria.Payments {
     [DataField("PYMT_LOG_RECORDING_TIME")]
     public DateTime RecordingTime {
       get; set;
-    }
-
-
-    [DataField("PYMT_LOG_TEXT")]
-    public string BrokerMessage {
-      get; private set;
-    } = string.Empty;
-
-
-    public string BrokerStatusText {
-      get {
-        return ExtData.Get("brokerStatusText", string.Empty);
-      }
-      private set {
-        ExtData.SetIfValue("brokerStatusText", value);
-      }
     }
 
 
@@ -139,9 +129,8 @@ namespace Empiria.Payments {
     private void Load(PaymentInstructionEvent instructionEvent) {
       var time = DateTime.Now;
 
-      BrokerInstructionNo = string.Empty;
-      BrokerMessage = instructionEvent.GetDescription();
-      BrokerStatusText = string.Empty;
+      LogText = instructionEvent.GetDescription();
+      BrokerResponse = string.Empty;
       Status = PaymentInstruction.Status;
       RequestTime = time;
       ApplicationTime = time;
@@ -151,9 +140,17 @@ namespace Empiria.Payments {
     private void Load(BrokerResponseDto brokerResponse) {
       var time = DateTime.Now;
 
-      BrokerInstructionNo = brokerResponse.BrokerInstructionNo;
-      BrokerMessage = brokerResponse.BrokerMessage;
-      BrokerStatusText = brokerResponse.BrokerStatusText;
+      var brokerName = PaymentInstruction.BrokerConfigData.Name;
+      var brokerInstructionNo = PaymentInstruction.BrokerInstructionNo;
+
+      LogText = $"Solicitud {brokerName} {brokerInstructionNo}. ";
+
+      if (brokerResponse.BrokerMessage.Length != 0) {
+        LogText += brokerResponse.BrokerMessage;
+      } else {
+        LogText += brokerResponse.BrokerStatusText;
+      }
+      BrokerResponse = brokerResponse.BrokerStatusText;
       Status = brokerResponse.Status;
 
       RequestTime = time;

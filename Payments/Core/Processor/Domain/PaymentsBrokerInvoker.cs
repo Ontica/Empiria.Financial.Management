@@ -98,12 +98,12 @@ namespace Empiria.Payments.Processor {
 
         if (brokerResponse.Status == PaymentInstructionStatus.Failed) {
           throw new ApplicationException(
-            $"{brokerData.Name} regresó un estatus 'Fallido' al recibir la instrucción de pago: " +
+            $"Ocurrió un problema en {brokerData.Name} al recibir la instrucción de pago: " +
             $"{brokerResponse.BrokerMessage}");
         }
 
         Assertion.Require(brokerResponse.BrokerInstructionNo,
-                          $"{brokerData.Name} regresó un Id de solicitud vacío.");
+                          $"Ocurrió un problema: {brokerData.Name} regresó un Id de solicitud vacío.");
 
         instruction.Sent(brokerResponse);
 
