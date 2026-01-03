@@ -8,17 +8,14 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using System.Collections.Generic;
-
-using Empiria.Documents;
-using Empiria.Financial;
-using Empiria.Products;
-using Empiria.Services;
-
-using Empiria.Billing.SATMexicoImporter;
-
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
+using Empiria.Billing.SATMexicoImporter;
+using Empiria.Documents;
+using Empiria.Financial;
+using Empiria.Services;
 
 namespace Empiria.Billing.UseCases {
 
@@ -180,9 +177,7 @@ namespace Empiria.Billing.UseCases {
 
       foreach (BillConceptWithTaxFields fields in conceptFields) {
 
-        var billConcept = new BillConcept(bill, Product.Empty);
-
-        billConcept.Update(fields);
+        var billConcept = new BillConcept(bill, fields);
 
         billConcept.Save();
 
@@ -206,9 +201,8 @@ namespace Empiria.Billing.UseCases {
 
       foreach (BillTaxEntryFields taxFields in allTaxesFields) {
 
-        var billTaxEntry = new BillTaxEntry(bill, billRelatedDocumentId);
+        var billTaxEntry = new BillTaxEntry(bill, billRelatedDocumentId, taxFields);
 
-        billTaxEntry.Update(taxFields);
         billTaxEntry.Save();
       }
     }
@@ -239,9 +233,7 @@ namespace Empiria.Billing.UseCases {
 
       foreach (BillConceptFields fields in conceptFields) {
 
-        var billConcept = new BillConcept(bill, Product.Empty);
-
-        billConcept.Update(fields);
+        var billConcept = new BillConcept(bill, fields);
 
         billConcept.Save();
       }
@@ -276,17 +268,19 @@ namespace Empiria.Billing.UseCases {
     private void CreateFuelConsumptionComplementConcepts(Bill bill,
                                                          FixedList<FuelConseptionComplementConceptDataFields> complementConcepts) {
 
-      foreach (var fields in complementConcepts) {
+      throw new NotImplementedException();
 
-        var billConcept = new BillConcept(bill, Product.Empty);
+      //foreach (var fields in complementConcepts) {
 
-        billConcept.UpdateComplementConcept(fields);
+      //  var billConcept = new BillConcept(bill, fields);
 
-        billConcept.Save();
+      //  billConcept.UpdateComplementConcept(fields);
 
-        CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
+      //  billConcept.Save();
 
-      }
+      //  CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
+
+      // }
     }
 
 

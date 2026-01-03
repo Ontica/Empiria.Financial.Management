@@ -32,17 +32,30 @@ namespace Empiria.Billing {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    public BillConcept(Bill bill, Product product) : this(BillConceptType.Default, bill, product) {
+    public BillConcept(Bill bill, BillConceptFields fields) : this(BillConceptType.Default, bill, fields) {
       // no-op
     }
 
-    public BillConcept(BillConceptType billConceptType, Bill bill, Product product) : base(billConceptType) {
+    public BillConcept(BillConceptType billConceptType, Bill bill, BillConceptFields fields) : base(billConceptType) {
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
-      Assertion.Require(product, nameof(product));
 
-      this.Bill = bill;
-      this.Product = product;
+      fields.EnsureIsValid();
+
+      Bill = bill;
+      Product = Product.Empty;
+      SATProduct = Patcher.Patch(fields.SATProductUID, SATProducto.Empty);
+      SATProductCode = fields.SATProductServiceCode;
+      Product = Patcher.Patch(fields.ProductUID, Product);
+      Description = Patcher.Patch(fields.Description, Description);
+      _tags = EmpiriaString.Tagging(fields.Tags);
+      Quantity = fields.Quantity;
+      QuantityUnit = Product.BaseUnit;
+      UnitPrice = fields.UnitPrice;
+      Subtotal = fields.Subtotal;
+      Discount = fields.Discount;
+
+      SchemaData.Update(fields);
     }
 
 
@@ -200,7 +213,7 @@ namespace Empiria.Billing {
 
     public FixedList<BillTaxEntry> TaxEntries {
       get {
-        return BillTaxEntry.GetListFor(this.Bill.BillType.Id, this.BillConceptId);
+        return BillTaxEntry.GetListFor(Bill.BillType.Id, BillConceptId);
       }
     }
 
@@ -223,26 +236,6 @@ namespace Empiria.Billing {
       }
 
       BillData.WriteBillConcept(this, this.ExtData.ToString());
-    }
-
-
-    internal void Update(BillConceptFields fields) {
-
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureIsValid();
-      this.SATProduct = Patcher.Patch(fields.SATProductUID, SATProducto.Empty);
-      this.SATProductCode = fields.SATProductServiceCode;
-      this.Product = Patcher.Patch(fields.ProductUID, Product);
-      this.Description = Patcher.Patch(fields.Description, Description);
-      _tags = EmpiriaString.Tagging(fields.Tags);
-      this.Quantity = fields.Quantity;
-      this.QuantityUnit = Product.BaseUnit;
-      this.UnitPrice = fields.UnitPrice;
-      this.Subtotal = fields.Subtotal;
-      this.Discount = fields.Discount;
-
-      SchemaData.Update(fields);
     }
 
 

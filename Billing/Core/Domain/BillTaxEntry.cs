@@ -28,14 +28,22 @@ namespace Empiria.Billing {
       // Required by Empiria Framework.
     }
 
-    public BillTaxEntry(Bill bill, int BillTaxRelatedObjectId) {
+    public BillTaxEntry(Bill bill, int billTaxRelatedObjectId, BillTaxEntryFields fields) {
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
-      Assertion.Require(BillTaxRelatedObjectId, nameof(BillTaxRelatedObjectId));
+      Assertion.Require(billTaxRelatedObjectId, nameof(billTaxRelatedObjectId));
 
-      this.Bill = bill;
-      this.BillTaxRelatedObjectId = BillTaxRelatedObjectId;
-      this.TaxType = TaxType.Parse(101);  // ToDo: Fix hardcoded tax type id.
+      Bill = bill;
+      BillTaxRelatedObjectTypeId = Bill.BillType.Id;
+      BillTaxRelatedObjectId = billTaxRelatedObjectId;
+      TaxType = TaxType.Parse(101);  // ToDo: Fix hardcoded tax type id.
+
+      TaxMethod = fields.TaxMethod;
+      TaxFactorType = fields.TaxFactorType;
+      Factor = fields.Factor;
+      BaseAmount = fields.BaseAmount;
+      Total = fields.Total;
+      BillTaxExtData.Update(fields);
     }
 
     static internal BillTaxEntry Parse(int id) => ParseId<BillTaxEntry>(id);
@@ -149,18 +157,6 @@ namespace Empiria.Billing {
         PostingTime = DateTime.Now;
       }
       BillData.WriteBillTaxEntry(this, ExtData.ToString());
-    }
-
-
-    internal void Update(BillTaxEntryFields fields) {
-
-      this.BillTaxRelatedObjectTypeId = Bill.BillType.Id;
-      this.TaxMethod = fields.TaxMethod;
-      this.TaxFactorType = fields.TaxFactorType;
-      this.Factor = fields.Factor;
-      this.BaseAmount = fields.BaseAmount;
-      this.Total = fields.Total;
-      this.BillTaxExtData.Update(fields);
     }
 
     #endregion Private methods
