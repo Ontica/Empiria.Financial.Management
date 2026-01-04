@@ -48,12 +48,6 @@ namespace Empiria.Billing {
 
     #region Properties
 
-    [DataField("BILL_RELATED_BILL_UID")]
-    public string BillRelatedBillUID {
-      get; private set;
-    }
-
-
     [DataField("BILL_RELATED_BILL_BILL_ID")]
     public Bill Bill {
       get; private set;

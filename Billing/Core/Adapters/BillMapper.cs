@@ -204,7 +204,7 @@ namespace Empiria.Billing.Adapters {
     static private BillRelatedBillDto MapToBillRelatedBillsDto(BillRelatedBill x) {
 
       return new BillRelatedBillDto {
-        UID = x.BillRelatedBillUID,
+        UID = x.UID,
         RelatedDocument = x.RelatedDocument,
         PostedBy = x.PostedBy.MapToNamedEntity(),
         PostingTime = x.PostingTime,
