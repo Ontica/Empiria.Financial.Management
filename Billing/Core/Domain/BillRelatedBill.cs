@@ -48,12 +48,6 @@ namespace Empiria.Billing {
 
     #region Properties
 
-    [DataField("BILL_RELATED_BILL_ID")]
-    public int BillRelatedBillId {
-      get; private set;
-    }
-
-
     [DataField("BILL_RELATED_BILL_UID")]
     public string BillRelatedBillUID {
       get; private set;
@@ -111,7 +105,7 @@ namespace Empiria.Billing {
 
     internal FixedList<BillTaxEntry> TaxEntries {
       get {
-        return BillTaxEntry.GetListFor(this.Bill.BillType.Id, this.BillRelatedBillId);
+        return BillTaxEntry.GetListFor(this.Bill.BillType.Id, this.Id);
       }
     }
 
