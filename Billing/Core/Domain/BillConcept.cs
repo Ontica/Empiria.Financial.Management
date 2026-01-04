@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using DocumentFormat.OpenXml.Drawing;
+
 using DocumentFormat.OpenXml.Spreadsheet;
 using Empiria.Billing.Data;
 using Empiria.Json;
@@ -79,12 +79,6 @@ namespace Empiria.Billing {
         return (BillConceptType) base.GetEmpiriaType();
       }
     }
-
-
-    [DataField("BILL_CONCEPT_ID")]
-    public int BillConceptId {
-      get; private set;
-    } = -1;
 
 
     [DataField("BILL_CONCEPT_BILL_ID")]
