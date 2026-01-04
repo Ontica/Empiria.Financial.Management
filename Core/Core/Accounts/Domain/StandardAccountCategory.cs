@@ -121,13 +121,6 @@ namespace Empiria.Financial {
       return StandardAccountDataService.GetStandardAccounts(this, keywords);
     }
 
-
-    public bool PlaysRole(string role) {
-      Assertion.Require(role, nameof(role));
-
-      return Roles.Contains(role);
-    }
-
     #endregion Methods
 
   } // class StandardAccountCategory
