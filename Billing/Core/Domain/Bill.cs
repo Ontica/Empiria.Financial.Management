@@ -333,16 +333,20 @@ namespace Empiria.Billing {
 
     #region Methods
 
-
-    public void AddConcept(BillConceptFields fields) {
+    public void AddConcept(BillConceptWithTaxFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
 
-      BillConcept concept = new BillConcept(this, fields);
+      BillConcept billConcept = new BillConcept(this, fields);
 
+      billConcept.Save();
 
+      foreach (var taxFields in fields.TaxEntries) {
+        billConcept.AddConceptTaxes(taxFields);
+      }
     }
+
 
     public void Delete() {
       this.Status = BillStatus.Deleted;

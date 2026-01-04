@@ -165,7 +165,9 @@ namespace Empiria.Billing.UseCases {
 
       bill.Save();
 
-      CreateBillConcepts(bill, fields.Concepts);
+      foreach (var fieldsConcept in fields.Concepts) {
+        bill.AddConcept(fieldsConcept);
+      }
 
       return bill;
     }

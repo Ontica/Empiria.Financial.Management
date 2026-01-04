@@ -9,16 +9,15 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Empiria.Billing.Data;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
-using Empiria.StateEnums;
-
 using Empiria.Products;
 using Empiria.Products.SATMexico;
-
-using Empiria.Billing.Data;
+using Empiria.StateEnums;
 
 namespace Empiria.Billing {
 
@@ -213,7 +212,7 @@ namespace Empiria.Billing {
 
     public FixedList<BillTaxEntry> TaxEntries {
       get {
-        return BillTaxEntry.GetListFor(Bill.BillType.Id, BillConceptId);
+        return BillTaxEntry.GetListFor(Bill.BillType.Id, this.Id);
       }
     }
 
@@ -236,6 +235,14 @@ namespace Empiria.Billing {
       }
 
       BillData.WriteBillConcept(this, this.ExtData.ToString());
+    }
+
+
+    public void AddConceptTaxes(BillTaxEntryFields taxFields) {
+      Assertion.Require(taxFields, nameof(taxFields));
+
+      BillTaxEntry taxEntry = new BillTaxEntry(this.Bill, this.Id, taxFields);
+      taxEntry.Save();
     }
 
 
