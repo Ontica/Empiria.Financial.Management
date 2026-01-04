@@ -36,7 +36,7 @@ namespace Empiria.Billing {
       Bill = bill;
       BillTaxRelatedObjectTypeId = Bill.BillType.Id;
       BillTaxRelatedObjectId = billTaxRelatedObjectId;
-      TaxType = TaxType.Parse(101);  // ToDo: Fix hardcoded tax type id.
+      TaxType = AssignTaxType(fields);  // ToDo: Fix hardcoded tax type id.
 
       TaxMethod = fields.TaxMethod;
       TaxFactorType = fields.TaxFactorType;
@@ -150,6 +150,27 @@ namespace Empiria.Billing {
     #endregion Properties
 
     #region Private methods
+
+    private TaxType AssignTaxType(BillTaxEntryFields fields) {
+
+      if (fields.Impuesto == "001") {
+
+        return TaxType.Parse(102);
+
+      } else if (fields.Impuesto == "002") {
+
+        return TaxType.Parse(101);
+
+      } else if (fields.Impuesto == "003" && fields.TaxMethod == BillTaxMethod.Retencion) {
+
+        return TaxType.Parse(103);
+
+      } else {
+
+        throw Assertion.EnsureNoReachThisCode($"Unrecognized field '{fields.Impuesto}'");
+      }
+    }
+
 
     protected override void OnSave() {
       if (IsNew) {
