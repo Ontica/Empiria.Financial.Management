@@ -188,7 +188,7 @@ namespace Empiria.Billing {
     }
 
 
-    internal void UpdateFuelConsumptionAddenda(FuelConsumptionComplementDataFields complementDataFields) {
+    internal void UpdateFuelConsumptionComplementData(FuelConsumptionComplementDataFields complementDataFields) {
       Assertion.Require(complementDataFields, nameof(complementDataFields));
 
       ComplementVersion = complementDataFields.Version;

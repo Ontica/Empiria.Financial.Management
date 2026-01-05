@@ -32,6 +32,8 @@ namespace Empiria.Billing {
 
     static public BillConceptType Addenda => Parse("ObjectTypeInfo.BillConcept.Addenda");
 
+    static public BillConceptType Complement => Parse("ObjectTypeInfo.BillConcept.Complement");
+
     static public BillConceptType GasStation => Parse("ObjectTypeInfo.BillConcept.GasStation");
 
     static public FixedList<BillConceptType> GetList() {

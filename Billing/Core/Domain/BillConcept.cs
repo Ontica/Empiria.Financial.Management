@@ -44,7 +44,7 @@ namespace Empiria.Billing {
       Bill = bill;
       Product = Product.Empty;
       SATProduct = Patcher.Patch(fields.SATProductUID, SATProducto.Empty);
-      SATProductCode = fields.SATProductServiceCode;
+      SATProductCode = Patcher.Patch(fields.SATProductServiceCode, "ND");
       Product = Patcher.Patch(fields.ProductUID, Product);
       Description = Patcher.Patch(fields.Description, Description);
       _tags = EmpiriaString.Tagging(fields.Tags);
@@ -55,6 +55,27 @@ namespace Empiria.Billing {
       Discount = fields.Discount;
 
       SchemaData.Update(fields);
+    }
+
+
+    public BillConcept(BillConceptType billConceptType, Bill bill, FuelConsumptionComplementConceptDataFields fields) {
+      Assertion.Require(bill, nameof(bill));
+      Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureIsValid();
+      Bill = bill;
+      SATProduct = Patcher.Patch(fields.SATProductUID, SATProducto.Empty);
+      SATProductCode = Patcher.Patch(fields.SATProductServiceCode, "ND");
+      Product = Patcher.Patch(fields.ProductUID, Product);
+      QuantityUnit = Product.BaseUnit;
+      Quantity = fields.Cantidad;
+      UnitPrice = fields.ValorUnitario;
+      Subtotal = fields.Importe;
+      _tags = EmpiriaString.Tagging(fields.Tags);
+
+      SchemaData.UpdateComplementConcept(fields);
+      ConceptExtData.Update(fields);
     }
 
 
@@ -237,23 +258,6 @@ namespace Empiria.Billing {
 
       BillTaxEntry taxEntry = new BillTaxEntry(this.Bill, this.Id, taxFields);
       taxEntry.Save();
-    }
-
-
-    internal void UpdateComplementConcept(FuelConseptionComplementConceptDataFields fields) {
-
-      fields.EnsureIsValid();
-      this.SATProduct = Patcher.Patch(fields.SATProductUID, SATProducto.Empty);
-      this.SATProductCode = fields.SATProductServiceCode;
-      this.Product = Patcher.Patch(fields.ProductUID, Product);
-      this.QuantityUnit = Product.BaseUnit;
-      this.Quantity = fields.Cantidad;
-      this.UnitPrice = fields.ValorUnitario;
-      this.Subtotal = fields.Importe;
-      _tags = EmpiriaString.Tagging(fields.Tags);
-
-      SchemaData.UpdateComplementConcept(fields);
-      ConceptExtData.Update(fields);
     }
 
     #endregion Methods

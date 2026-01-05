@@ -333,12 +333,27 @@ namespace Empiria.Billing {
 
     #region Methods
 
-    public void AddConcept(BillConceptWithTaxFields fields) {
+    internal void AddComplementConcepts(FuelConsumptionComplementConceptDataFields fields) {
+      Assertion.Require(fields, nameof(fields));
+      
+      fields.EnsureIsValid();
+
+      BillConcept billConcept = new BillConcept(BillConceptType.Complement, this, fields);
+
+      billConcept.Save();
+
+      foreach (var taxFields in fields.TaxEntries) {
+        billConcept.AddConceptTaxes(taxFields);
+      }
+    }
+
+
+    public void AddConcept(BillConceptType billConceptType, BillConceptWithTaxFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
 
-      BillConcept billConcept = new BillConcept(this, fields);
+      BillConcept billConcept = new BillConcept(billConceptType, this, fields);
 
       billConcept.Save();
 
@@ -409,7 +424,7 @@ namespace Empiria.Billing {
 
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
-      BillExtData.UpdateFuelConsumptionAddenda(fields.ComplementData);
+      BillExtData.UpdateFuelConsumptionComplementData(fields.ComplementData);
     }
 
 
