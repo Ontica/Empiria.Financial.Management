@@ -15,9 +15,9 @@ namespace Empiria.Billing {
   /// <summary></summary>
   internal class FuelConsumptionBillFields : BillGeneralDataFields, IBillFields {
 
-    public FixedList<BillConceptWithTaxFields> Concepts {
+    public FixedList<BillConceptFields> Concepts {
       get; set;
-    } = new FixedList<BillConceptWithTaxFields>();
+    } = new FixedList<BillConceptFields>();
 
 
     public BillSchemaDataFields SchemaData {
@@ -49,9 +49,9 @@ namespace Empiria.Billing {
     } = new FixedList<string>();
 
 
-    public FixedList<BillConceptWithTaxFields> Concepts {
+    public FixedList<BillConceptFields> Concepts {
       get; set;
-    } = new FixedList<BillConceptWithTaxFields>();
+    } = new FixedList<BillConceptFields>();
 
   } // class BillAddendaFields
 

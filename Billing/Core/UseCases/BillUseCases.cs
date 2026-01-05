@@ -115,9 +115,11 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(payable, nameof(payable));
 
       var reader = new SATPaymentComplementXmlReader(xmlString);
+
       ISATBillDto satDto = reader.ReadAsPaymentComplementDto();
 
       IBillFields fields = BillPaymentComplementFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
+
       Bill bill = CreatePaymentComplementImplementation(payable, (BillPaymentComplementFields) fields);
 
       return BillMapper.MapToBillDto(bill);

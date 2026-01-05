@@ -348,7 +348,7 @@ namespace Empiria.Billing {
     }
 
 
-    public void AddConcept(BillConceptType billConceptType, BillConceptWithTaxFields fields) {
+    public void AddConcept(BillConceptType billConceptType, BillConceptFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();

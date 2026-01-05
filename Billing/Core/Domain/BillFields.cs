@@ -86,9 +86,9 @@ namespace Empiria.Billing {
     }
 
 
-    public FixedList<BillConceptWithTaxFields> Concepts {
+    public FixedList<BillConceptFields> Concepts {
       get; set;
-    } = new FixedList<BillConceptWithTaxFields>();
+    } = new FixedList<BillConceptFields>();
 
 
     public BillSchemaDataFields SchemaData {
@@ -280,21 +280,16 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public FixedList<BillTaxEntryFields> TaxEntries {
+      get; set;
+    } = new FixedList<BillTaxEntryFields>();
+
+
     internal void EnsureIsValid() {
       // ToDo
     }
 
   } // class BillConceptFields
-
-
-  /// <summary>Input fields DTO used to create and update bill concept with tax.</summary>
-  public class BillConceptWithTaxFields : BillConceptFields {
-
-    public FixedList<BillTaxEntryFields> TaxEntries {
-      get; set;
-    } = new FixedList<BillTaxEntryFields>();
-
-  } // class BillConceptWithTaxFields
 
 
   /// <summary>Input fields DTO used to create and update bill tax entry.</summary>
