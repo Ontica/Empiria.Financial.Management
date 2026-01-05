@@ -41,14 +41,14 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    private static FixedList<FuelConseptionComplementConceptDataFields> MapToComplementConcepts(
+    private static FixedList<FuelConsumptionComplementConceptDataFields> MapToComplementConcepts(
                                     FixedList<FuelConsumptionComplementConceptDataDto> complementConcepts) {
 
-      var conceptsListFields = new List<FuelConseptionComplementConceptDataFields>();
+      var conceptsListFields = new List<FuelConsumptionComplementConceptDataFields>();
 
       foreach (var concept in complementConcepts) {
 
-        var fields = new FuelConseptionComplementConceptDataFields {
+        var fields = new FuelConsumptionComplementConceptDataFields {
           SATProductUID = string.Empty,
           ProductUID = string.Empty,
           Identificador = concept.Identificador,

@@ -139,10 +139,10 @@ namespace Empiria.Billing {
     }
 
 
-    internal void UpdateComplementConcept(FuelConseptionComplementConceptDataFields fields) {
+    internal void UpdateComplementConcept(FuelConsumptionComplementConceptDataFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      ClaveProdServ = fields.SATProductServiceCode;
+      ClaveProdServ = Patcher.Patch(fields.SATProductServiceCode, "ND");
       NoIdentificacion = fields.Identificador;
       ClaveUnidad = fields.ClaveEstacion;
       Unidad = fields.Unidad;
@@ -286,7 +286,7 @@ namespace Empiria.Billing {
     }
 
 
-    internal void Update(FuelConseptionComplementConceptDataFields fields) {
+    internal void Update(FuelConsumptionComplementConceptDataFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       Identificador = fields.Identificador;

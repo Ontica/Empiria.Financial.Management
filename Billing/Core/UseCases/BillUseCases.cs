@@ -55,6 +55,20 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    public Bill CreateFuelConsumptionBill(string xmlString, IPayableEntity payable) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+
+      var reader = new SATFuelConsumptionBillXmlReader(xmlString);
+
+      ISATBillDto satDto = reader.ReadAsFuelConsumptionBillDto();
+
+      IBillFields fields = FuelConsumptionBillMapper.Map((SATFuelConsumptionBillDto) satDto);
+
+      return CreateFuelConsumptionImplementation(payable, (FuelConsumptionBillFields) fields);
+    }
+
+
     public Bill CreateVoucherBill(IPayableEntity payable, DocumentFields fields) {
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(fields, nameof(fields));
@@ -166,35 +180,42 @@ namespace Empiria.Billing.UseCases {
       bill.Save();
 
       foreach (var fieldsConcept in fields.Concepts) {
-        bill.AddConcept(fieldsConcept);
+        bill.AddConcept(BillConceptType.Default, fieldsConcept);
       }
 
       return bill;
     }
 
 
-    private FixedList<BillConcept> CreateBillConcepts(Bill bill,
-                                                      FixedList<BillConceptWithTaxFields> conceptFields) {
-      var concepts = new List<BillConcept>();
-
-      foreach (BillConceptWithTaxFields fields in conceptFields) {
-
-        var billConcept = new BillConcept(bill, fields);
-
-        billConcept.Save();
-
-        CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
-
-        concepts.Add(billConcept);
-      }
-
-      return concepts.ToFixedList();
-    }
-
-
     private Bill CreateBillImplementation(IPayableEntity payable, BillFields fields) {
 
       return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
+    }
+
+
+    private Bill CreateFuelConsumptionImplementation(IPayableEntity payable, FuelConsumptionBillFields fields) {
+
+      var billCategory = BillCategory.FacturaConsumoCombustible;
+
+      var bill = new Bill(payable, billCategory, fields.BillNo);
+
+      bill.UpdateFuelConsumptionBill(fields);
+
+      bill.Save();
+
+      foreach (var fieldsConcept in fields.Concepts) {
+        bill.AddConcept(BillConceptType.Default, fieldsConcept);
+      }
+
+      foreach (var fieldsConcept in fields.ComplementData.ComplementConcepts) {
+        bill.AddComplementConcepts(fieldsConcept);
+      }
+
+      foreach (var fieldsConcept in fields.Addenda.Concepts) {
+        bill.AddConcept(BillConceptType.Addenda, fieldsConcept);
+      }
+
+      return bill;
     }
 
 
@@ -258,40 +279,6 @@ namespace Empiria.Billing.UseCases {
 
       return bill;
     }
-
-
-    private FixedList<BillConcept> CreateFuelConsumptionAddendaConcepts(Bill bill,
-                                                                        FixedList<BillConceptWithTaxFields> conceptFields) {
-
-      return CreateBillConcepts(bill, conceptFields);
-    }
-
-
-    private void CreateFuelConsumptionComplementConcepts(Bill bill,
-                                                         FixedList<FuelConseptionComplementConceptDataFields> complementConcepts) {
-
-      throw new NotImplementedException();
-
-      //foreach (var fields in complementConcepts) {
-
-      //  var billConcept = new BillConcept(bill, fields);
-
-      //  billConcept.UpdateComplementConcept(fields);
-
-      //  billConcept.Save();
-
-      //  CreateBillTaxEntries(bill, billConcept.Id, fields.TaxEntries);
-
-      // }
-    }
-
-
-    private FixedList<BillConcept> CreateFuelConsumptionConcepts(Bill bill,
-                                    FixedList<BillConceptWithTaxFields> conceptFields) {
-
-      return CreateBillConcepts(bill, conceptFields);
-    }
-
 
     #endregion Private methods
 

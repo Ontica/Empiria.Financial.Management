@@ -78,14 +78,14 @@ namespace Empiria.Billing {
     }
 
 
-    public FixedList<FuelConseptionComplementConceptDataFields> ComplementConcepts {
+    public FixedList<FuelConsumptionComplementConceptDataFields> ComplementConcepts {
       get; internal set;
-    } = new FixedList<FuelConseptionComplementConceptDataFields>();
+    } = new FixedList<FuelConsumptionComplementConceptDataFields>();
 
   } // class FuelConsumptionComplementDataFields
 
 
-  public class FuelConseptionComplementConceptDataFields {
+  public class FuelConsumptionComplementConceptDataFields {
 
     public string ProductUID {
       get; set;
