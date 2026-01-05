@@ -153,15 +153,16 @@ namespace Empiria.Billing {
 
     private TaxType AssignTaxType(BillTaxEntryFields fields) {
 
-      if (fields.Impuesto == "001") {
+      if (fields.Impuesto == "001" || fields.Impuesto.ToUpper().Equals("ISR")) {
 
         return TaxType.Parse(102);
 
-      } else if (fields.Impuesto == "002") {
+      } else if (fields.Impuesto == "002" || fields.Impuesto.ToUpper().Equals("IVA")) {
 
         return TaxType.Parse(101);
 
-      } else if (fields.Impuesto == "003" && fields.TaxMethod == BillTaxMethod.Retencion) {
+      } else if ((fields.Impuesto == "003" || fields.Impuesto.ToUpper().Equals("IEPS")) &&
+                 fields.TaxMethod == BillTaxMethod.Retencion) {
 
         return TaxType.Parse(103);
 
