@@ -234,6 +234,22 @@ namespace Empiria.Payments {
       }
     }
 
+
+    public bool InProgress {
+      get {
+        return Status != PaymentOrderStatus.Canceled &&
+               Status != PaymentOrderStatus.Failed &&
+               Status != PaymentOrderStatus.Payed;
+      }
+    }
+
+
+    public bool Payed {
+      get {
+        return Status == PaymentOrderStatus.Payed;
+      }
+    }
+
     #endregion Properties
 
     #region Payment instructions aggregate root
