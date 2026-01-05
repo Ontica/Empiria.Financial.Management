@@ -114,7 +114,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private void GenerateConceptsList(XmlNode conceptsNode) {
 
-      var conceptosDto = new List<SATBillConceptWithTaxDto>();
+      var conceptosDto = new List<SATBillConceptDto>();
 
       foreach (XmlNode conceptItem in conceptsNode.ChildNodes) {
 
@@ -185,7 +185,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private void GetAddendaConcepts(XmlNode node) {
 
-      List<SATBillConceptWithTaxDto> conceptsDto = new List<SATBillConceptWithTaxDto>();
+      List<SATBillConceptDto> conceptsDto = new List<SATBillConceptDto>();
 
       XmlNodeList conceptsNodes = node.ChildNodes;
 
@@ -250,9 +250,9 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    private SATBillConceptWithTaxDto GetConceptItemData(XmlNode conceptItem) {
+    private SATBillConceptDto GetConceptItemData(XmlNode conceptItem) {
       
-      return new SATBillConceptWithTaxDto() {
+      return new SATBillConceptDto() {
         ClaveProdServ = generalDataReader.GetAttribute(conceptItem, "ClaveProdServ"),
         ClaveUnidad = generalDataReader.GetAttribute(conceptItem, "ClaveUnidad"),
         Cantidad = generalDataReader.GetAttribute<decimal>(conceptItem, "Cantidad"),

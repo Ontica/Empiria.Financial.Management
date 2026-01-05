@@ -35,9 +35,9 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = new SATBillOrganizationDto();
 
 
-    public FixedList<SATBillConceptWithTaxDto> Conceptos {
+    public FixedList<SATBillConceptDto> Conceptos {
       get; internal set;
-    } = new FixedList<SATBillConceptWithTaxDto>();
+    } = new FixedList<SATBillConceptDto>();
 
 
     public SATBillComplementDto SATComplemento {
@@ -104,16 +104,12 @@ namespace Empiria.Billing.SATMexicoImporter {
       get; set;
     }
 
-  }  // class SATBillConceptDto
-
-
-  public class SATBillConceptWithTaxDto : SATBillConceptDto {
 
     public FixedList<SATBillTaxDto> Impuestos {
       get; set;
     } = new FixedList<SATBillTaxDto>();
 
-  } // SATBillConceptWithTaxDto
+  }  // class SATBillConceptDto
 
 
   public class SATBillGeneralDataDto {

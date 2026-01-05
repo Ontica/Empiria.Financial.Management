@@ -53,13 +53,13 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private FixedList<BillConceptWithTaxFields> MapToBillConceptFields(
-                                                FixedList<SATBillConceptWithTaxDto> conceptos) {
-      List<BillConceptWithTaxFields> fields = new List<BillConceptWithTaxFields>();
+    static private FixedList<BillConceptFields> MapToBillConceptFields(
+                                                FixedList<SATBillConceptDto> conceptos) {
+      List<BillConceptFields> fields = new List<BillConceptFields>();
 
       foreach (var concepto in conceptos) {
 
-        var field = new BillConceptWithTaxFields {
+        var field = new BillConceptFields {
           ProductUID = string.Empty,
           SATProductUID = string.Empty,
           SATProductServiceCode = concepto.ClaveProdServ,
