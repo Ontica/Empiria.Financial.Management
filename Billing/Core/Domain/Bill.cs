@@ -424,7 +424,7 @@ namespace Empiria.Billing {
 
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
-      BillExtData.UpdateFuelConsumptionComplementData(fields.ComplementData);
+      BillExtData.UpdateFuelConsumptionComplementData(fields.ComplementData, fields.Addenda.Labels);
     }
 
 

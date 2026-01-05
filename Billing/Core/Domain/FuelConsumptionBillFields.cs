@@ -44,6 +44,11 @@ namespace Empiria.Billing {
 
   public class FuelConsumptionBillAddendaFields {
 
+    public FixedList<string> Labels {
+      get; internal set;
+    } = new FixedList<string>();
+
+
     public FixedList<BillConceptWithTaxFields> Concepts {
       get; set;
     } = new FixedList<BillConceptWithTaxFields>();

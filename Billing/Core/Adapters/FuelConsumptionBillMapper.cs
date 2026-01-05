@@ -36,6 +36,7 @@ namespace Empiria.Billing.Adapters {
     static private FuelConsumptionBillAddendaFields MapToAddendaData(SATFuelConsumptionAddendaDto addenda) {
 
       return new FuelConsumptionBillAddendaFields {
+        Labels = new FixedList<string>(addenda.AddendaLeyendas),
         Concepts = MapToFuelConsumptionConceptFields(addenda.AddendaConceptos)
       };
     }

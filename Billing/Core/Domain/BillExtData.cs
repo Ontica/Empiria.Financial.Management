@@ -146,6 +146,16 @@ namespace Empiria.Billing {
     }
 
 
+    public string AddendaLeyendas {
+      get {
+        return _extData.Get("addendaLeyendas", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("addendaLeyendas", value);
+      }
+    }
+
+
     public decimal SubTotal {
       get {
         return _extData.Get("subTotal", 0);
@@ -188,14 +198,23 @@ namespace Empiria.Billing {
     }
 
 
-    internal void UpdateFuelConsumptionComplementData(FuelConsumptionComplementDataFields complementDataFields) {
+    internal void UpdateFuelConsumptionComplementData(FuelConsumptionComplementDataFields complementDataFields,
+                                                      FixedList<string> addendaLabels) {
       Assertion.Require(complementDataFields, nameof(complementDataFields));
+      Assertion.Require(addendaLabels, nameof(addendaLabels));
+
+      string addendaLeyendas = string.Empty; 
+      foreach (var addendaLabel in addendaLabels) {
+
+        addendaLeyendas += $"{addendaLabel}.. ";
+      }
 
       ComplementVersion = complementDataFields.Version;
       TipoOperacion = complementDataFields.TipoOperacion;
       NumeroDeCuenta = complementDataFields.NumeroDeCuenta;
       SubTotal = complementDataFields.SubTotal;
       Total = complementDataFields.Total;
+      AddendaLeyendas = addendaLeyendas;
     }
 
   } // class BillExtData
