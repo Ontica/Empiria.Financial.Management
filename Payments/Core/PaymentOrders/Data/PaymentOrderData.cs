@@ -10,6 +10,7 @@
 
 using Empiria.Data;
 
+using Empiria.Budgeting;
 using Empiria.Financial;
 
 namespace Empiria.Payments.Data {
@@ -18,6 +19,29 @@ namespace Empiria.Payments.Data {
   static internal class PaymentOrderData {
 
     #region Methods
+
+    static internal string GeneratePaymentOrderNo(PaymentOrder paymentOrder) {
+      int year = ((Budget) paymentOrder.PayableEntity.Budget).Year;
+
+      string prefix = $"{year}-{paymentOrder.PaymentType.Prefix}";
+
+      string sql = "SELECT MAX(PYMT_ORD_NO) " +
+                   "FROM FMS_PAYMENT_ORDERS " +
+                  $"WHERE PYMT_ORD_NO LIKE '{prefix}-%'";
+
+      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), string.Empty);
+
+      if (lastUniqueID.Length != 0) {
+
+        int consecutive = int.Parse(lastUniqueID.Split('-')[2]) + 1;
+
+        return $"{prefix}-{consecutive:00000}";
+
+      } else {
+        return $"{prefix}-00001";
+      }
+    }
+
 
     static internal FixedList<PaymentOrder> GetPaymentOrders(IPayableEntity payableEntity) {
       var sql = "SELECT * FROM FMS_PAYMENT_ORDERS " +

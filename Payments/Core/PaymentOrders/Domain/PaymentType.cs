@@ -35,6 +35,13 @@ namespace Empiria.Payments {
       }
     }
 
+
+    public string Prefix {
+      get {
+        return ExtData.Get("prefix", "PG");
+      }
+    }
+
     #endregion Properties
 
   }  // class PaymentType

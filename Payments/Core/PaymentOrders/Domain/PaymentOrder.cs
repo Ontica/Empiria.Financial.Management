@@ -370,7 +370,7 @@ namespace Empiria.Payments {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        PaymentOrderNo = GeneratePaymentOrderNo();
+        PaymentOrderNo = PaymentOrderData.GeneratePaymentOrderNo(this);
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
@@ -420,13 +420,6 @@ namespace Empiria.Payments {
     #endregion Methods
 
     #region Helpers
-
-    private string GeneratePaymentOrderNo() {
-      // ToDo: Generate real pament order number
-
-      return "O-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
-    }
-
 
     private void RefreshPaymentInstructions() {
       _paymentInstructions = new Lazy<List<PaymentInstruction>>(() =>
