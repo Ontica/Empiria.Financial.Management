@@ -53,6 +53,11 @@ namespace Empiria.Billing.SATMexicoImporter {
 
   internal class SATFuelConsumptionAddendaDto {
 
+    public FixedList<string> AddendaLeyendas {
+      get; internal set;
+    } = new FixedList<string>();
+
+
     public FixedList<SATBillConceptWithTaxDto> AddendaConceptos {
       get; internal set;
     } = new FixedList<SATBillConceptWithTaxDto>();

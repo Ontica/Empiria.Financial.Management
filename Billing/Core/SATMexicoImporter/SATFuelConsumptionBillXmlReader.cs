@@ -78,22 +78,24 @@ namespace Empiria.Billing.SATMexicoImporter {
     private void GenerateAddendaConsumptionData(XmlNode addendaNode) {
 
       _satBillDto.Addenda = new SATFuelConsumptionAddendaDto();
-      List<SATBillConceptWithTaxDto> conceptsDto = new List<SATBillConceptWithTaxDto>();
 
-      XmlNodeList conceptsNodes = addendaNode.FirstChild.FirstChild.ChildNodes;
+      XmlNodeList addendaNodes = addendaNode.FirstChild.ChildNodes;
 
-      foreach (XmlNode conceptItem in conceptsNodes) {
+      foreach (XmlNode node in addendaNodes) {
 
-        if (!conceptItem.Name.Equals("edr:Concepto"))
-          Assertion.EnsureFailed("The 'edr:Concepto' payment complement node it doesnt exist.");
+        if (node.Name.Equals("edr:Conceptos")) {
 
-        conceptsDto.Add(GetConceptItemData(conceptItem));
+          GetAddendaConcepts(node);
+
+        } else if (node.Name.Equals("edr:LeyendasOtros")) {
+
+          GetAddendaLabels(node);
+
+        }
       }
-
-      _satBillDto.Addenda.AddendaConceptos = conceptsDto.ToFixedList();
     }
 
-
+    
     private void GenerateComplementData(XmlNode complementNode) {
 
       foreach (XmlNode complementChild in complementNode.ChildNodes) {
@@ -178,6 +180,41 @@ namespace Empiria.Billing.SATMexicoImporter {
         SubTotal = generalDataReader.GetAttribute<decimal>(complementChild, "SubTotal"),
         Total = generalDataReader.GetAttribute<decimal>(complementChild, "Total")
       };
+    }
+
+
+    private void GetAddendaConcepts(XmlNode node) {
+
+      List<SATBillConceptWithTaxDto> conceptsDto = new List<SATBillConceptWithTaxDto>();
+
+      XmlNodeList conceptsNodes = node.ChildNodes;
+
+      foreach (XmlNode conceptItem in conceptsNodes) {
+
+        if (!conceptItem.Name.Equals("edr:Concepto"))
+          Assertion.EnsureFailed("The 'edr:Concepto' payment complement node it doesnt exist.");
+
+        conceptsDto.Add(GetConceptItemData(conceptItem));
+      }
+
+      _satBillDto.Addenda.AddendaConceptos = conceptsDto.ToFixedList();
+    }
+
+
+    private void GetAddendaLabels(XmlNode node) {
+
+      List<string> labels = new List<string>();
+
+      XmlNodeList labelNodes = node.ChildNodes;
+
+      foreach (XmlNode label in labelNodes) {
+
+        if (!label.Name.Equals("edr:Leyenda"))
+          Assertion.EnsureFailed("The 'edr:Leyenda' payment complement node it doesnt exist.");
+
+        labels.Add(label.InnerText);
+      }
+      _satBillDto.Addenda.AddendaLeyendas = labels.ToFixedList();
     }
 
 
