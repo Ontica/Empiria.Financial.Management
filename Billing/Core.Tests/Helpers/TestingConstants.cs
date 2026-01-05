@@ -16,11 +16,20 @@ namespace Empiria.Tests.Billing {
   /// <summary>Provides testing constants for Empiria Billing Management core module.</summary>
   static public class TestingConstants {
 
+    static public string XML_AIR_TRANSPORT_BILL_FILE_PATH {
+      get {
+        var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+
+        return Path.Combine(directory.Parent.FullName, @"Resources\AVOLAT_Factura.xml");
+      }
+    }
+
+
     static public string XML_BILL_FILE_PATH {
       get {
         var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
-        return Path.Combine(directory.Parent.FullName, @"Resources\factura_nov24.xml");
+        return Path.Combine(directory.Parent.FullName, @"Resources\factura2.xml");
       }
     }
 

@@ -21,9 +21,11 @@ namespace Empiria.Tests.Billing {
     //[Fact]
     //public void Create_Bill_Test() {
 
+    //  TestsCommonMethods.Authenticate();
+
     //  using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-    //    string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
+    //    string xmlFilePath = TestingConstants.XML_AIR_TRANSPORT_BILL_FILE_PATH;
 
     //    var xmlText = System.IO.File.ReadAllText(xmlFilePath);
 
@@ -36,6 +38,8 @@ namespace Empiria.Tests.Billing {
 
     //[Fact]
     //public void Create_Fuel_Consumption_Bill_Test() {
+
+    //  TestsCommonMethods.Authenticate();
 
     //  using (var usecases = BillUseCases.UseCaseInteractor()) {
 
@@ -69,7 +73,9 @@ namespace Empiria.Tests.Billing {
     [Fact]
     public void Get_Bill_By_UID_Test() {
 
-      string billUID = "217bfe41-c6a2-4e13-96a9-e2b440b8cf89";
+      TestsCommonMethods.Authenticate();
+
+      string billUID = "cd7224f2-9ee7-44dd-aaae-55b775eca289";
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
@@ -83,7 +89,7 @@ namespace Empiria.Tests.Billing {
     [Fact]
     public void Get_Bill_Map_By_UID_Test() {
 
-      string billUID = "217bfe41-c6a2-4e13-96a9-e2b440b8cf89";
+      string billUID = "536baff0-2038-4ec1-93f8-ecf2d87e0560";
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 

@@ -19,4 +19,16 @@
 			<cfdi:Traslado Base="165.29" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="26.45"/>
 		</cfdi:Traslados>
 	</cfdi:Impuestos>
-	<cfdi:Complemento><tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" SelloSAT="P6MwW2sFVywX7vZVL7eIfHzhvUu+tJfALUYihMLxno2LL6lG0VqEg04JkTzk6dqNpWSc6dnh2tA7uLa3z6y/JKjdtmWbZJnNx5brRzQH+OcpMVLs8GR8vwe3COMSMG2f2LE8jmK+Mf4fkRi5VhzXH56o7mFie+IZ0VL10HVg874uM38cBPQ+c+cqZYnqgGSaede5Ra/Tc9FVrsJ6K/X7m+wDOjpOG3iGuebBkPYz0gCansDRk44ImQE1aY4TYElgBGrMGyOdPujpfm7CdG8UTllVpnWH5uguGkcj1v0+Ezy5hny6Xn+phbVidEdVKku/9Iu5L8bG5y7NrE56wk+sPw==" NoCertificadoSAT="00001000000702501858" SelloCFD="f1AkyPcroXNYGVXeHFgPza5Foji7zXIM4/TZs7FnKjowjrxHLovEHl2+euHqZywuvLW8Y/BHG94XUzM3VJZbnVAz0leW+Q8EK24r4V+MAa09WimkvVNl9apqbg6HDZV4DYkU015LvquH4Wyw1HRaKrVABrCut6bzoe81Ep3uUKJEX4oq/Rwdq6+kJtwQEaJs4ypnmnuHwxfVP+JeD3IbkKahwLngCxGjsbA/D6ayrCtPI30ivl5P8+/vs5vp3VwhO0ZHoCVFeUHt6WWPEm/xrQBwiYtU1yJYHnjlDia8NJbnc8s+wBs40tAI9t1cFhsrjzHauCY+oxlvfOY/gBhu1w==" RfcProvCertif="SCD110105654" FechaTimbrado="2025-07-07T16:36:34" UUID="8C42F604-2AE3-CB4E-9009-00600925AB8D" Version="1.1"/></cfdi:Complemento></cfdi:Comprobante>
+	<cfdi:Complemento>
+    <tfd:TimbreFiscalDigital 
+      xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" 
+      xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" 
+      SelloSAT="P6MwW2sFVywX7vZVL7eIfHzhvUu+tJfALUYihMLxno2LL6lG0VqEg04JkTzk6dqNpWSc6dnh2tA7uLa3z6y/JKjdtmWbZJnNx5brRzQH+OcpMVLs8GR8vwe3COMSMG2f2LE8jmK+Mf4fkRi5VhzXH56o7mFie+IZ0VL10HVg874uM38cBPQ+c+cqZYnqgGSaede5Ra/Tc9FVrsJ6K/X7m+wDOjpOG3iGuebBkPYz0gCansDRk44ImQE1aY4TYElgBGrMGyOdPujpfm7CdG8UTllVpnWH5uguGkcj1v0+Ezy5hny6Xn+phbVidEdVKku/9Iu5L8bG5y7NrE56wk+sPw==" 
+      NoCertificadoSAT="00001000000702501858" 
+      SelloCFD="f1AkyPcroXNYGVXeHFgPza5Foji7zXIM4/TZs7FnKjowjrxHLovEHl2+euHqZywuvLW8Y/BHG94XUzM3VJZbnVAz0leW+Q8EK24r4V+MAa09WimkvVNl9apqbg6HDZV4DYkU015LvquH4Wyw1HRaKrVABrCut6bzoe81Ep3uUKJEX4oq/Rwdq6+kJtwQEaJs4ypnmnuHwxfVP+JeD3IbkKahwLngCxGjsbA/D6ayrCtPI30ivl5P8+/vs5vp3VwhO0ZHoCVFeUHt6WWPEm/xrQBwiYtU1yJYHnjlDia8NJbnc8s+wBs40tAI9t1cFhsrjzHauCY+oxlvfOY/gBhu1w==" 
+      RfcProvCertif="SCD110105654" 
+      FechaTimbrado="2025-07-07T16:36:34" 
+      UUID="8C42F604-2AE3-CB4E-9009-00600925AB8D" 
+      Version="1.1"/>
+  </cfdi:Complemento>
+</cfdi:Comprobante>

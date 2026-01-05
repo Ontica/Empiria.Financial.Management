@@ -23,8 +23,7 @@
   <cfdi:Emisor Rfc="ASE930924SS7" Nombre="EDENRED MEXICO" RegimenFiscal="601" />
   <cfdi:Receptor Rfc="BNO670315CD0" Nombre="BANCO NACIONAL DE OBRAS Y SERVICIOS PUBLICOS SOCIEDAD NACIONAL DE CREDITO INSTITUCION DE BANCA DE DESARROLLO" DomicilioFiscalReceptor="01219" RegimenFiscalReceptor="601" UsoCFDI="G03" />
   <cfdi:Conceptos>
-    <cfdi:Concepto ClaveProdServ="84141602" ClaveUnidad="E48" Unidad="SERVICIO" Descripcion="NO EXISTE COMISION POR RAZONES COMERCIALES" 
-                   ObjetoImp="02" Cantidad="1.00" ValorUnitario="1.000000" Importe="1.00" Descuento="1.00">
+    <cfdi:Concepto ClaveProdServ="84141602" ClaveUnidad="E48" Unidad="SERVICIO" Descripcion="NO EXISTE COMISION POR RAZONES COMERCIALES" ObjetoImp="02" Cantidad="1.00" ValorUnitario="1.000000" Importe="1.00" Descuento="1.00">
       <cfdi:Impuestos>
         <cfdi:Traslados>
           <cfdi:Traslado Impuesto="002" TipoFactor="Tasa" Base="0.01" TasaOCuota="0.160000" Importe="0.00" />
@@ -501,7 +500,7 @@
       RfcProvCertif="SCD110105654" 
       SelloCFD="ZXSLmKTE9rCU3bzIaDSnQY0Bw4BrhwgqvMRw5JKTwP9Ujj17ndnJgNtsNeQHhQvdxUX11BZU0o7ZcyYgi1W/oqtl9TStNm7DhO+MZafkpWHFEdtUMLw2vw7EKCEewknj2ViugcoQ9nKJF9dsXQlB2Ug329kLIbzg2gDsOVRrQzMw1zhajSRBteQTl7uEjsniyFSqniSCBDeOZigBW8rUbucJXuyD+AFJqUa7PUJox5zWs+SeOnx788pdSgBPqWR+oCZIm8KRoU1fg+1j0SNbKLA/VnAXi4Pwno+otUtCHa/oMxaC2/BhxKD/TfK40zQuzXuZm8jwyZ9LUOWE39Yi3g==" 
       SelloSAT="rE3SQ5aAUQwLzGnHz9kjqhfj/pJCBfmFxH0S5C1B7Vgt6jBkaGl+tWBrROv9HgEw53d1lsuTzObxg/zcR7rx3CbFHztFXcfh5vbY6LuynsyZwO5qifPbNCt9QLPuqvs/cQc5G68Tu+/pgSiGUAfFmSVDwCrdJilMxUlVK2kTZMjoUcJM5760vrEwZ42WKaEBuVT2BK/lyGz/SAvdjComVVg5HH6CSL2frKh92mgym7PcdTyrKarK035VdXk0kTk3WbLkfbkV/HGry66z0/phNlQQCKoyKS89n3oHSOBmfUbgxdFnnHNwOQQccupcU+X7TdHT3YE7Rp65b2ZBAKE0jw==" 
-      UUID="A6750351-11EB-AD4B-9D85-6C9718CB0B4A" 
+      UUID="A6750351-11EB-AD4B-9D85-6C9718CB0B4D" 
       Version="1.1" 
       xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" 
       xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" />
