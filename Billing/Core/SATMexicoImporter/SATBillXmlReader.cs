@@ -77,15 +77,30 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private void GenerateAddendaEcoComplementData(XmlNode complementNode) {
 
-      XmlNode ecoComplement = complementNode.FirstChild;
+      foreach (XmlNode child in complementNode.ChildNodes) {
 
-      if (ecoComplement.Name.Equals("eco:Complementaria")) {
+        if (child.Name.Equals("eco:Complementaria")) {
 
-        _satBillDto.Addenda = new SATBillAddenda {
-          NoEstacion = generalDataReader.GetAttribute(ecoComplement, "noEstacion"),
-          ClavePemex = generalDataReader.GetAttribute(ecoComplement, "clavePemex"),
-          EcoConcepts = GenerateAddendaEcoConcepts(ecoComplement.ChildNodes)
-        };
+          _satBillDto.Addenda = new SATBillAddenda {
+            NoEstacion = generalDataReader.GetAttribute(child, "noEstacion"),
+            ClavePemex = generalDataReader.GetAttribute(child, "clavePemex"),
+            EcoConcepts = GenerateAddendaEcoConcepts(child.ChildNodes)
+          };
+
+        } else if (child.Name.Equals("TOKA")) {
+
+          _satBillDto.Addenda = new SATBillAddenda();
+
+          if (child.FirstChild.Name.Equals("Concepto")) {
+
+            _satBillDto.Addenda.Concepto = new SATBillConceptDto {
+              Cantidad = generalDataReader.GetAttribute<decimal>(child.FirstChild, "Cantidad"),
+              Descripcion = generalDataReader.GetAttribute(child.FirstChild, "Descripcion"),
+              Importe = generalDataReader.GetAttribute<decimal>(child.FirstChild, "Importe")
+
+            };
+          }
+        }
       }
     }
 

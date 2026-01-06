@@ -340,6 +340,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = string.Empty;
 
 
+    public SATBillConceptDto Concepto {
+      get; set;
+    } = new SATBillConceptDto();
+
+
     public FixedList<SATBillAddendaConcept> EcoConcepts {
       get; set;
     } = new FixedList<SATBillAddendaConcept>();
