@@ -234,6 +234,8 @@ namespace Empiria.Payments {
           Status.EnsureCanUpdateTo(PaymentInstructionStatus.Canceled);
           Status = PaymentInstructionStatus.Canceled;
 
+          PaymentOrder.Reset();
+
           break;
 
         case PaymentInstructionEvent.CancelPaymentRequest:

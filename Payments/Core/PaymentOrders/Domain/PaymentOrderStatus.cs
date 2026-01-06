@@ -15,7 +15,7 @@ namespace Empiria.Payments {
 
     Pending = 'P',
 
-    Canceled = 'X',
+    Canceled = 'L',
 
     Suspended = 'S',
 

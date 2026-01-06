@@ -15,7 +15,7 @@ namespace Empiria.Payments {
 
     Programmed = 'G',
 
-    Canceled = 'X',
+    Canceled = 'L',
 
     Suspended = 'S',
 
@@ -181,7 +181,7 @@ namespace Empiria.Payments {
           return "Tengo un problema";
 
         default:
-          throw Assertion.EnsureNoReachThisCode($"Unhandled payment order status {status}.");
+          throw Assertion.EnsureNoReachThisCode($"Unhandled payment instruction status {status}.");
       }
     }
 
