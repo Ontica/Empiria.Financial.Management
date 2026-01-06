@@ -185,6 +185,10 @@ namespace Empiria.Billing.UseCases {
         bill.AddConcept(BillConceptType.Default, fieldsConcept);
       }
 
+      foreach (var addendaConcept in fields.Addenda.Concepts) {
+        bill.AddConcept(BillConceptType.Addenda, addendaConcept);
+      }
+
       return bill;
     }
 

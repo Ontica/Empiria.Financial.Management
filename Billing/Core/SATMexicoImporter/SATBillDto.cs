@@ -47,7 +47,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     public SATBillAddenda Addenda {
       get; internal set;
-    } = new SATBillAddenda();
+    }
 
 
   } // class SATBillDto
@@ -331,18 +331,33 @@ namespace Empiria.Billing.SATMexicoImporter {
   public class SATBillAddenda {
 
     public string NoEstacion {
-      get; set;
+      get; internal set;
     } = string.Empty;
 
 
     public string ClavePemex {
-      get; set;
+      get; internal set;
     } = string.Empty;
+
+
+    public string Serie {
+      get; internal set;
+    } = string.Empty;
+
+
+    public string Folio {
+      get; internal set;
+    } = string.Empty;
+
+
+    public DateTime FechaEmision {
+      get; internal set;
+    }
 
 
     public SATBillConceptDto Concepto {
       get; set;
-    } = new SATBillConceptDto();
+    }
 
 
     public FixedList<SATBillAddendaConcept> EcoConcepts {
@@ -374,9 +389,9 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    public decimal NoIdentificacion {
+    public string NoIdentificacion {
       get; set;
-    }
+    } = string.Empty;
 
 
     public decimal TasaAIEPS {

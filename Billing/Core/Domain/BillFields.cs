@@ -9,11 +9,11 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
-
-using Empiria.Parties;
-
 using Empiria.Billing.Data;
+using Empiria.Billing.SATMexicoImporter;
+using Empiria.Parties;
 
 namespace Empiria.Billing {
 
@@ -517,38 +517,38 @@ namespace Empiria.Billing {
   public class BillAddendaFields {
 
     public string NoEstacion {
-      get; set;
+      get; internal set;
     } = string.Empty;
 
 
     public string ClavePemex {
-      get; set;
+      get; internal set;
     } = string.Empty;
 
 
     public decimal TasaIEPS {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal IEPS {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal TasaIVA {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal IVA {
-      get; set;
+      get; internal set;
     }
 
 
-    public decimal NoIdentificacion {
-      get; set;
-    }
+    public string NoIdentificacion {
+      get; internal set;
+    } = string.Empty;
 
 
     public decimal TasaAIEPS {
@@ -557,7 +557,42 @@ namespace Empiria.Billing {
 
 
     public decimal AIEPS {
-      get; set;
+      get; internal set;
+    }
+
+    public string Folio {
+      get; internal set;
+    }
+
+
+    public string Serie {
+      get; internal set;
+    }
+
+
+    public DateTime FechaEmision {
+      get; internal set;
+    }
+
+
+    public FixedList<BillConceptFields> Concepts {
+      get; internal set;
+    } = new FixedList<BillConceptFields>();
+    
+    
+    internal void MapEcoConceptFields(SATBillAddenda addenda) {
+      
+      if (addenda.EcoConcepts.Count > 0) {
+        NoEstacion = addenda.NoEstacion;
+        ClavePemex = addenda.ClavePemex;
+        TasaIEPS = addenda.EcoConcepts[0].TasaIEPS;
+        IEPS = addenda.EcoConcepts[0].IEPS;
+        TasaIVA = addenda.EcoConcepts[0].TasaIVA;
+        IVA = addenda.EcoConcepts[0].IVA;
+        NoIdentificacion = addenda.EcoConcepts[0].NoIdentificacion;
+        TasaAIEPS = addenda.EcoConcepts[0].TasaAIEPS;
+        AIEPS = addenda.EcoConcepts[0].AIEPS;
+      }
     }
 
   } // class BillAddendaFields

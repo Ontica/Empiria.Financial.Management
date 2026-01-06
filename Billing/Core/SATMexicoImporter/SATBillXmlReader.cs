@@ -89,7 +89,11 @@ namespace Empiria.Billing.SATMexicoImporter {
 
         } else if (child.Name.Equals("TOKA")) {
 
-          _satBillDto.Addenda = new SATBillAddenda();
+          _satBillDto.Addenda = new SATBillAddenda {
+            Serie = generalDataReader.GetAttribute(child, "Serie"),
+            Folio = generalDataReader.GetAttribute(child, "Folio"),
+            FechaEmision = generalDataReader.GetAttribute<DateTime>(child, "FechaEmision"),
+          };
 
           if (child.FirstChild.Name.Equals("Concepto")) {
 
@@ -123,7 +127,7 @@ namespace Empiria.Billing.SATMexicoImporter {
                 IEPS = generalDataReader.GetAttribute<decimal>(ecoConcept, "ieps"),
                 TasaIVA = generalDataReader.GetAttribute<decimal>(ecoConcept, "tasaIva"),
                 IVA = generalDataReader.GetAttribute<decimal>(ecoConcept, "iva"),
-                NoIdentificacion = generalDataReader.GetAttribute<decimal>(ecoConcept, "noIdentificacion"),
+                NoIdentificacion = generalDataReader.GetAttribute(ecoConcept, "noIdentificacion"),
                 TasaAIEPS = generalDataReader.GetAttribute<decimal>(ecoConcept, "tasaAieps"),
                 AIEPS = generalDataReader.GetAttribute<decimal>(ecoConcept, "aIeps")
               }

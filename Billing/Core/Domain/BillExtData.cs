@@ -86,9 +86,9 @@ namespace Empiria.Billing {
     }
 
 
-    public decimal NoIdentificacion {
+    public string NoIdentificacion {
       get {
-        return _extData.Get("noIdentificacion", 0);
+        return _extData.Get("noIdentificacion", string.Empty);
       }
       private set {
         _extData.SetIfValue("noIdentificacion", value);
@@ -176,6 +176,36 @@ namespace Empiria.Billing {
     }
 
 
+    public string Folio {
+      get {
+        return _extData.Get("folio", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("folio", value);
+      }
+    }
+
+
+    public string Serie {
+      get {
+        return _extData.Get("serie", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("serie", value);
+      }
+    }
+
+
+    public DateTime FechaEmision {
+      get {
+        return _extData.Get("fechaEmision", DateTime.MaxValue);
+      }
+      private set {
+        _extData.SetIfValue("fechaEmision", value);
+      }
+    }
+
+
     internal string ToJsonString() {
       return _extData.ToString();
     }
@@ -194,6 +224,11 @@ namespace Empiria.Billing {
         NoIdentificacion = addendaFields.NoIdentificacion;
         TasaAIEPS = addendaFields.TasaAIEPS;
         AIEPS = addendaFields.AIEPS;
+      }
+      if (addendaFields.Concepts.Count > 0) {
+        Folio = addendaFields.Folio;
+        Serie = addendaFields.Serie;
+        FechaEmision = addendaFields.FechaEmision;
       }
     }
 

@@ -8,14 +8,14 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Empiria.Billing.SATMexicoImporter;
+
 using Empiria.Parties;
 using Empiria.Products.SATMexico;
-
-using Empiria.Billing.SATMexicoImporter;
-using System;
 
 namespace Empiria.Billing.Adapters {
 
@@ -35,44 +35,57 @@ namespace Empiria.Billing.Adapters {
 
     static private BillAddendaFields MapToAddendaData(SATBillAddenda addenda) {
 
-      if (addenda != null && addenda.EcoConcepts.Count > 0) {
+      BillAddendaFields addendaFields = new BillAddendaFields();
 
-        return new BillAddendaFields() {
-          NoEstacion = addenda.NoEstacion,
-          ClavePemex = addenda.ClavePemex,
-          TasaIEPS = addenda.EcoConcepts[0].TasaIEPS,
-          IEPS = addenda.EcoConcepts[0].IEPS,
-          TasaIVA = addenda.EcoConcepts[0].TasaIVA,
-          IVA = addenda.EcoConcepts[0].IVA,
-          NoIdentificacion = addenda.EcoConcepts[0].NoIdentificacion,
-          TasaAIEPS = addenda.EcoConcepts[0].TasaAIEPS,
-          AIEPS = addenda.EcoConcepts[0].AIEPS
-        };
+      if (addenda != null) {
+
+        addendaFields.MapEcoConceptFields(addenda);
+
+        if (addenda.Concepto != null) {
+
+          addendaFields.Folio = addenda.Folio;
+          addendaFields.Serie = addenda.Serie;
+          addendaFields.FechaEmision = addenda.FechaEmision;
+
+          List<BillConceptFields> conceptFields = new List<BillConceptFields>();
+
+          conceptFields.Add(MapToBillConceptFields(addenda.Concepto, true));
+          addendaFields.Concepts = conceptFields.ToFixedList();
+        }
       }
-      return new BillAddendaFields();
+
+      return addendaFields;
     }
 
 
-    static private FixedList<BillConceptFields> MapToBillConceptFields(
+    static private BillConceptFields MapToBillConceptFields(SATBillConceptDto concepto,
+                                                            bool addendaConcept = false) {
+
+      return new BillConceptFields {
+        ProductUID = string.Empty,
+        SATProductUID = string.Empty,
+        SATProductServiceCode = concepto.ClaveProdServ,
+        UnitKey = concepto.ClaveUnidad,
+        Unit = concepto.Unidad,
+        IdentificationNo = concepto.NoIdentificacion,
+        ObjectImp = concepto.ObjetoImp,
+        Description = concepto.Descripcion,
+        Quantity = concepto.Cantidad,
+        UnitPrice = addendaConcept ? concepto.Cantidad * concepto.Importe : concepto.ValorUnitario,
+        Subtotal = concepto.Importe,
+        TaxEntries = MapToBillTaxFields(concepto.Impuestos)
+      };
+    }
+
+
+    static private FixedList<BillConceptFields> MapToBillConceptFieldsList(
                                                 FixedList<SATBillConceptDto> conceptos) {
       List<BillConceptFields> fields = new List<BillConceptFields>();
 
       foreach (var concepto in conceptos) {
 
-        var field = new BillConceptFields {
-          ProductUID = string.Empty,
-          SATProductUID = string.Empty,
-          SATProductServiceCode = concepto.ClaveProdServ,
-          UnitKey = concepto.ClaveUnidad,
-          Unit = concepto.Unidad,
-          IdentificationNo = concepto.NoIdentificacion,
-          ObjectImp = concepto.ObjetoImp,
-          Description = concepto.Descripcion,
-          Quantity = concepto.Cantidad,
-          UnitPrice = concepto.ValorUnitario,
-          Subtotal = concepto.Importe,
-          TaxEntries = MapToBillTaxFields(concepto.Impuestos)
-        };
+        var field = MapToBillConceptFields(concepto);
+
         fields.Add(field);
       }
       return fields.ToFixedList();
@@ -91,7 +104,7 @@ namespace Empiria.Billing.Adapters {
         Subtotal = dto.DatosGenerales.SubTotal,
         Total = dto.DatosGenerales.Total,
         CFDIRelated = MapToCfdiRelated(dto.DatosGenerales.CfdiRelacionados),
-        Concepts = MapToBillConceptFields(dto.Conceptos),
+        Concepts = MapToBillConceptFieldsList(dto.Conceptos),
         SchemaData = MapToSchemaData(dto),
         SecurityData = MapToSecurityData(dto),
         Addenda = MapToAddendaData(dto.Addenda)
