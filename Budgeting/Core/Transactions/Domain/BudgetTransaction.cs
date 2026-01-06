@@ -11,7 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Empiria.Budgeting.Transactions.Data;
+
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
@@ -19,6 +19,8 @@ using Empiria.Parties;
 using Empiria.Products;
 using Empiria.Projects;
 using Empiria.StateEnums;
+
+using Empiria.Budgeting.Transactions.Data;
 
 namespace Empiria.Budgeting.Transactions {
 
@@ -60,84 +62,6 @@ namespace Empiria.Budgeting.Transactions {
       EntityId = budgetable.Id;
     }
 
-
-    static public BudgetTransaction CreateWith(BudgetTransaction approvedBudget,
-                                               BudgetOperationType exercise) {
-      Assertion.Require(approvedBudget, nameof(approvedBudget));
-
-      var txnType = BudgetTransactionType.GetFor(approvedBudget.BaseBudget.BudgetType, exercise);
-
-      return approvedBudget.CloneFor(txnType, exercise);
-    }
-
-
-    private BudgetTransaction CloneFor(BudgetTransactionType txnType, BudgetOperationType operationType) {
-      var transaction = new BudgetTransaction(txnType, this.BaseBudget, this.GetEntity());
-
-      transaction.BaseParty = BaseParty;
-      transaction.Justification = Justification;
-      transaction.Description = Description;
-      transaction.OperationSource = txnType.OperationSources[0];
-
-      // Clone entries
-      foreach (var x in Entries.FindAll(x => x.Withdrawal != 0)) {
-        BudgetEntryFields entryFields = new BudgetEntryFields {
-          BudgetUID = x.Budget.UID,
-          EntityId = x.EntityId,
-          EntityTypeId = x.EntityTypeId,
-          PartyUID = x.Party.UID,
-          BudgetAccountUID = x.BudgetAccount.UID,
-          Description = x.Description,
-          Justification = x.Justification,
-          OperationNo = x.OperationNo,
-          //ControlNo = x.ControlNo,
-          ProductUnitUID = x.ProductUnit.UID,
-          ProductUID = x.Product.UID,
-          ProductCode = x.ProductCode,
-          ProductName = x.ProductName,
-          ProductQty = x.ProductQty,
-          ProjectUID = x.Project.UID,
-          CurrencyUID = x.Currency.UID,
-          BalanceColumnUID = x.BalanceColumn.UID,
-          Year = x.Year,
-          Month = x.Month,
-          Day = x.Day,
-          OriginalAmount = x.Amount * -1,
-          Amount = x.Amount * -1,
-          ExchangeRate = x.ExchangeRate,
-        };
-
-        transaction.AddEntry(entryFields);
-
-        entryFields = new BudgetEntryFields {
-          BudgetUID = x.Budget.UID,
-          EntityId = x.EntityId,
-          EntityTypeId = x.EntityTypeId,
-          PartyUID = x.Party.UID,
-          BudgetAccountUID = x.BudgetAccount.UID,
-          Description = x.Description,
-          Justification = x.Justification,
-          OperationNo = x.OperationNo,
-          //ControlNo = x.ControlNo,
-          ProductUnitUID = x.ProductUnit.UID,
-          ProductUID = x.Product.UID,
-          ProductCode = x.ProductCode,
-          ProductName = x.ProductName,
-          ProductQty = x.ProductQty,
-          ProjectUID = x.Project.UID,
-          CurrencyUID = x.Currency.UID,
-          BalanceColumnUID = transaction.BudgetTransactionType.BalanceColumns[0].UID,
-          Year = x.Year,
-          Month = x.Month,
-          Day = x.Day,
-          OriginalAmount = x.Amount,
-          Amount = x.Amount,
-          ExchangeRate = x.ExchangeRate,
-        };
-        transaction.AddEntry(entryFields);
-      }
-      return transaction;
-    }
 
     static public BudgetTransaction Parse(int id) => ParseId<BudgetTransaction>(id);
 

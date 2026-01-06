@@ -25,7 +25,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     } = string.Empty;
 
 
-    [Newtonsoft.Json.JsonProperty(PropertyName = "BaseParty")]
     public string BasePartyUID {
       get; set;
     } = string.Empty;
