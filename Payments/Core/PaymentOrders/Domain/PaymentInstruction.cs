@@ -48,7 +48,6 @@ namespace Empiria.Payments {
 
       BrokerConfigData = brokerConfigData;
       PaymentOrder = paymentOrder;
-      PaymentInstructionNo = GeneratePaymentInstructionNo();
 
       LoadLogEntries();
     }
@@ -289,13 +288,6 @@ namespace Empiria.Payments {
     }
 
 
-    static private string GeneratePaymentInstructionNo() {
-      // ToDo: Implement a better way to generate unique payment instruction numbers
-
-      return "PI-" + EmpiriaString.BuildRandomString(10).ToUpperInvariant();
-    }
-
-
     private void LoadLogEntries() {
       _logEntries = new Lazy<List<PaymentInstructionLogEntry>>(() =>
                                                   PaymentInstructionData.GetPaymentInstructionLog(this));
@@ -308,6 +300,7 @@ namespace Empiria.Payments {
       }
 
       if (IsNew) {
+        PaymentInstructionNo = PaymentInstructionData.GeneratePaymentInstructionNo(this);
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }

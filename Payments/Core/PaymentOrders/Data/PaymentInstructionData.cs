@@ -19,6 +19,28 @@ namespace Empiria.Payments.Data {
 
     #region Methods
 
+    static internal string GeneratePaymentInstructionNo(PaymentInstruction instruction) {
+
+      string prefix = $"{instruction.PaymentOrder.PaymentOrderNo}";
+
+      string sql = "SELECT MAX(PYMT_INSTRUCTION_NO) " +
+                   "FROM FMS_PAYMENT_INSTRUCTIONS " +
+                  $"WHERE PYMT_INSTRUCTION_PYMT_ORDER_ID = {instruction.PaymentOrder.Id} AND " +
+                  $"PYMT_INSTRUCTION_NO LIKE '{prefix}-%'";
+
+      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), string.Empty);
+
+      if (lastUniqueID.Length != 0) {
+
+        int consecutive = int.Parse(lastUniqueID.Split('-')[3]) + 1;
+
+        return $"{prefix}-{consecutive}";
+
+      } else {
+        return $"{prefix}-1";
+      }
+    }
+
     static internal List<PaymentInstructionLogEntry> GetPaymentInstructionLog(PaymentInstruction instruction) {
       Assertion.Require(instruction, nameof(instruction));
 
