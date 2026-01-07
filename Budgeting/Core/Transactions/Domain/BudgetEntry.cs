@@ -346,6 +346,9 @@ namespace Empiria.Budgeting.Transactions {
       Withdrawal = fields.Amount < 0 ? Math.Abs(fields.Amount) : 0m;
       ExchangeRate = fields.ExchangeRate;
 
+      if (fields.RelatedEntryUID.Length != 0) {
+        RelatedEntryId = Parse(fields.RelatedEntryUID).Id;
+      }
       MarkAsDirty();
     }
 

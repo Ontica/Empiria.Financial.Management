@@ -128,6 +128,11 @@ namespace Empiria.Budgeting.Transactions {
       get; set;
     } = 1m;
 
+
+    public string RelatedEntryUID {
+      get; set;
+    } = string.Empty;
+
   }  // class BudgetEntryFields
 
 
