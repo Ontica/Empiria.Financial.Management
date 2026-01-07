@@ -53,6 +53,12 @@ namespace Empiria.Budgeting {
       }
     }
 
+    public int PaymentsWithdrawalAccountId {
+      get {
+        return ExtensionData.Get<int>("paymentsWithdrawalAccountId");
+      }
+    }
+
     public string Prefix {
       get {
         return ExtensionData.Get("prefix", string.Empty);

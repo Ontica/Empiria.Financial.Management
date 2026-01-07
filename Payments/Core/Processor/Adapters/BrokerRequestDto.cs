@@ -10,6 +10,8 @@
 
 using System;
 
+using Empiria.Budgeting;
+
 namespace Empiria.Payments.Processor.Adapters {
 
   /// <summary>Integration DTO used to send requests to payment broker providers.</summary>
@@ -84,7 +86,9 @@ namespace Empiria.Payments.Processor.Adapters {
 
     public int PaymentWithdrawalAccountId {
       get {
-        return 418;
+        var budget = (Budget) _instruction.PaymentOrder.PayableEntity.Budget;
+
+        return budget.BudgetType.PaymentsWithdrawalAccountId;
       }
     }
 
