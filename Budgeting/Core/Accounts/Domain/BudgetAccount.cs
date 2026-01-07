@@ -8,10 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
 using Empiria.Parties;
 using Empiria.StateEnums;
-
-using Empiria.Financial;
 
 namespace Empiria.Budgeting {
 
@@ -39,6 +38,17 @@ namespace Empiria.Budgeting {
     static public BudgetAccount TryParse(string accountNo) => TryParse<BudgetAccount>($"ACCT_NUMBER = '{accountNo}'");
 
     static public new BudgetAccount Empty => ParseEmpty<BudgetAccount>();
+
+    static public FixedList<BudgetAccount> GetList(BudgetType budgetType, OrganizationalUnit orgUnit) {
+      Assertion.Require(budgetType, nameof(budgetType));
+      Assertion.Require(orgUnit, nameof(orgUnit));
+
+      return GetList().FindAll(x => x is BudgetAccount account &&
+                                    account.BudgetType.Equals(budgetType) &&
+                                    account.OrganizationalUnit.Equals(orgUnit))
+                   .Select(x => (BudgetAccount) x)
+                   .ToFixedList();
+    }
 
     #endregion Constructors and parsers
 
