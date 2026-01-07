@@ -57,7 +57,7 @@ namespace Empiria.Payments {
 
     internal bool CanRequestPayment() {
       if (_instruction.Status == PaymentInstructionStatus.Programmed &&
-          !_instruction.WasSent && _instruction.PaymentOrder.PaymentMethod.IsElectronic) {
+          !_instruction.WasSent) {
         return true;
       }
 
