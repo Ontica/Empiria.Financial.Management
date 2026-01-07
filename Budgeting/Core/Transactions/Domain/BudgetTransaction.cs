@@ -561,16 +561,21 @@ namespace Empiria.Budgeting.Transactions {
 
       if (OperationType == BudgetOperationType.Request) {
 
-        BudgetTransactionDataService.GenerateAvailableControlCodes(this);
+        BudgetTransactionDataService.GenerateRequestControlCodes(this);
+
+
+      } else if (OperationType == BudgetOperationType.Commit) {
+
+        BudgetTransactionDataService.GenerateCommitControlCodes(this);
 
       } else if (OperationType == BudgetOperationType.ApprovePayment) {
 
-        FixedList<BudgetEntry> entries = GetFor(GetEntity())
-                                        .FindAll(x => x.OperationType == BudgetOperationType.Request)
-                                        .SelectFlat(x => x.Entries)
-                                        .FindAll(x => x.Deposit != 0);
+        BudgetTransactionDataService.GenerateApprovedPaymentControlCodes(this);
 
-        BudgetTransactionDataService.GenerateCommitControlCodes(this, entries);
+      } else if (OperationType == BudgetOperationType.Exercise) {
+
+        BudgetTransactionDataService.GenerateExerciseControlCodes(this);
+
       }
     }
 

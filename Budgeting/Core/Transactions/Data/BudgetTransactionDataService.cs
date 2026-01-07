@@ -50,7 +50,51 @@ namespace Empiria.Budgeting.Transactions.Data {
     }
 
 
-    static internal void GenerateAvailableControlCodes(BudgetTransaction transaction) {
+    static internal void GenerateApprovedPaymentControlCodes(BudgetTransaction transaction) {
+
+      int counter = BudgetTransaction.GetFor(transaction.GetEntity())
+                                     .CountAll(x => x.OperationType == BudgetOperationType.Commit);
+
+      string paymentNoString = (counter + 1).ToString("00");
+
+      foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
+
+        var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
+
+        entry.ControlNo = $"{relatedEntry.ControlNo}/{paymentNoString}";
+
+        entry.Save();
+      }
+    }
+
+
+    static internal void GenerateCommitControlCodes(BudgetTransaction transaction) {
+
+      foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
+
+        var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
+
+        entry.ControlNo = relatedEntry.ControlNo;
+
+        entry.Save();
+      }
+    }
+
+
+    static internal void GenerateExerciseControlCodes(BudgetTransaction transaction) {
+
+      foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
+
+        var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
+
+        entry.ControlNo = relatedEntry.ControlNo;
+
+        entry.Save();
+      }
+    }
+
+
+    static internal void GenerateRequestControlCodes(BudgetTransaction transaction) {
 
       foreach (var year in transaction.Entries.SelectDistinct(x => x.Year)) {
 
@@ -66,26 +110,6 @@ namespace Empiria.Budgeting.Transactions.Data {
             entry.ControlNo = controlNo;
             entry.Save();
           }
-        }
-      }
-    }
-
-
-    static internal void GenerateCommitControlCodes(BudgetTransaction transaction,
-                                                    FixedList<BudgetEntry> requestedEntries) {
-
-      int counter = BudgetTransaction.GetFor(transaction.GetEntity())
-                                     .CountAll(x => x.OperationType == BudgetOperationType.Commit);
-
-      string counterString = (counter + 1).ToString("00");
-
-      foreach (var entry in transaction.Entries) {
-        var requestEntry = requestedEntries.Find(x => x.BudgetAccount.Equals(entry.BudgetAccount) &&
-                                                      x.Year == entry.Year);
-
-        if (requestEntry != null) {
-          entry.ControlNo = $"{requestEntry.ControlNo}/{counterString}";
-          entry.Save();
         }
       }
     }
