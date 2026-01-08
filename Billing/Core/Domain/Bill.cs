@@ -387,8 +387,7 @@ namespace Empiria.Billing {
     internal void Update(BillFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      fields.EnsureIsValid();
-
+      fields.EnsureIsValidDocument();
       fields.EnsureIsValidCreditNote(BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;
@@ -410,6 +409,7 @@ namespace Empiria.Billing {
     internal void UpdateFuelConsumptionBill(FuelConsumptionBillFields fields) {
       Assertion.Require(fields, nameof(fields));
 
+      fields.EnsureIsValidDocument();
       fields.EnsureIsValidFuelConsumption(BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;
@@ -431,8 +431,8 @@ namespace Empiria.Billing {
     internal void UpdatePaymentComplement(BillPaymentComplementFields fields) {
       Assertion.Require(fields, nameof(fields));
 
-      fields.EnsureIsValidDocument(BillCategory, PayableId, PayableTotal);
-      fields.EnsureIsValidPaymentComplement(BillCategory);
+      fields.EnsureIsValidDocument();
+      fields.EnsureIsValidPaymentComplement(BillCategory, PayableId, PayableTotal);
 
       RelatedBillNo = fields.CFDIRelated;
       IssueDate = Patcher.Patch(fields.SchemaData.Fecha, IssueDate);

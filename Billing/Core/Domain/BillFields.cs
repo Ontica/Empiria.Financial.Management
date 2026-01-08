@@ -601,22 +601,20 @@ namespace Empiria.Billing {
   /// <summary>Extension methods for BillFields type.</summary>
   static internal class BillFieldsExtensions {
 
-    static internal void EnsureIsValid(this BillFields fields) {
+    static private void EnsureIsValid(string billNo, string issuedToUID, DateTime documentDate) {
 
-      Assertion.Require(fields.IssuedToUID != string.Empty,
-                        "El receptor del CFDI no se encuentra registrado.");
-
-      Assertion.Require(BillData.TryGetBillWithBillNo(fields.BillNo) == null,
+      Assertion.Require(BillData.TryGetBillWithBillNo(billNo) == null,
                         "El documento que intenta guardar ya está registrado.");
 
-      var issuedTo = Party.Parse(fields.IssuedToUID);
+      Assertion.Require(issuedToUID != string.Empty,
+                        "El receptor del CFDI no se encuentra registrado.");
 
-      var banobras = Organization.Primary;
+      var issuedTo = Party.Parse(issuedToUID);
 
       Assertion.Require(Organization.Primary.Equals(issuedTo),
                         $"El receptor del CFDI no es {Organization.Primary.Name}");
 
-      Assertion.Require(fields.SchemaData.Fecha <= DateTime.Now,
+      Assertion.Require(documentDate <= DateTime.Now,
                         "La fecha del documento no debe de ser mayor a la fecha actual.");
     }
 
@@ -638,28 +636,56 @@ namespace Empiria.Billing {
     }
 
 
-    static internal void EnsureIsValidDocument(this BillPaymentComplementFields fields,
+    static internal void EnsureIsValidDocument(this BillFields fields) {
+
+      EnsureIsValid(fields.BillNo, fields.IssuedToUID, fields.SchemaData.Fecha);
+    }
+
+
+    static internal void EnsureIsValidDocument(this BillPaymentComplementFields fields) {
+
+      EnsureIsValid(fields.BillNo, fields.IssuedToUID, fields.SchemaData.Fecha);
+    }
+
+
+    static internal void EnsureIsValidDocument(this FuelConsumptionBillFields fields) {
+
+      EnsureIsValid(fields.BillNo, fields.IssuedToUID, fields.SchemaData.Fecha);
+    }
+
+
+    static internal void EnsureIsValidFuelConsumption(this FuelConsumptionBillFields fields,
+                                                      BillCategory billCategory) {
+
+      Assertion.Require(billCategory == BillCategory.FacturaConsumoCombustible,
+                        "El documento que intenta guardar no es una factura de consumo de combustible.");
+    }
+
+
+    static internal void EnsureIsValidPaymentComplement(this BillPaymentComplementFields fields,
                                                BillCategory billCategory,
                                                int payableId,
                                                decimal payableTotal) {
 
+      Assertion.Require(billCategory == BillCategory.ComplementoPagoProveedores,
+                        "El documento que intenta guardar no es un complemento de pago.");
+
       Assertion.Require(fields.ComplementRelatedPayoutData.Count > 0,
-                        $"El documento {billCategory.Name} " +
-                        $"con folio fiscal {fields.BillNo} " +
+                        $"El documento con folio fiscal {fields.BillNo} " +
                         $"no contiene información de un complemento de pago");
+
       decimal fieldsTotal = 0;
+
       foreach (var relatedDataFields in fields.ComplementRelatedPayoutData) {
 
         Assertion.Require(relatedDataFields.IdDocumento != string.Empty,
-                          $"El documento {billCategory.Name} " +
-                          $"con folio fiscal {fields.BillNo} " +
+                          $"El documento con folio fiscal {fields.BillNo} " +
                           $"que intenta guardar no tiene referencia a un CFDI relacionado.");
 
         Bill relatedBill = BillData.TryGetBillWithBillNo(relatedDataFields.IdDocumento);
 
         Assertion.Require(relatedBill,
-                          $"El documento {billCategory.Name} " +
-                          $"con folio fiscal {fields.BillNo} " +
+                          $"El documento con folio fiscal {fields.BillNo} " +
                           $"hace referencia a un CFDI que no ha sido registrado en el sistema.");
         fieldsTotal += relatedDataFields.ImpPagado;
       }
@@ -669,40 +695,6 @@ namespace Empiria.Billing {
       Assertion.Require((billsByPayable.Sum(x => x.Total) + fieldsTotal) <= payableTotal,
                           "El monto total de las facturas registradas y/o " +
                           "la factura que intenta guardar es mayor al monto total del contrato.");
-    }
-
-
-    static internal void EnsureIsValidFuelConsumption(this FuelConsumptionBillFields fields,
-                                                      BillCategory billCategory) {
-
-      Assertion.Require(billCategory == BillCategory.FacturaConsumoCombustible,
-                        "El documento que intenta guardar no es una factura de consumo de combustible.");
-
-      Assertion.Require(BillData.TryGetBillWithBillNo(fields.BillNo) == null,
-                        "El documento que intenta guardar ya está registrado.");
-
-      Assertion.Require(fields.SchemaData.Fecha <= DateTime.Now,
-                        "La fecha del documento no debe de ser mayor a la fecha actual.");
-
-      Assertion.Require(fields.IssuedToUID != string.Empty,
-                        "El receptor del CFDI no se encuentra registrado.");
-    }
-
-
-    static internal void EnsureIsValidPaymentComplement(this BillPaymentComplementFields fields,
-                                                        BillCategory billCategory) {
-
-      Assertion.Require(billCategory == BillCategory.ComplementoPagoProveedores,
-                        "El documento que intenta guardar no es un complemento de pago.");
-
-      Assertion.Require(BillData.TryGetBillWithBillNo(fields.BillNo) == null,
-                        "El documento que intenta guardar ya está registrado.");
-
-      Assertion.Require(fields.SchemaData.Fecha <= DateTime.Now,
-                        "La fecha del documento no debe de ser mayor a la fecha actual.");
-
-      Assertion.Require(fields.IssuedToUID != string.Empty,
-                        "El receptor del CFDI no se encuentra registrado.");
     }
 
   } // class BillFieldsExtensions
