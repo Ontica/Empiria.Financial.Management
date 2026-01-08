@@ -35,6 +35,36 @@ namespace Empiria.Budgeting.Reporting {
 
     #region Services
 
+    public FileDto ExportGroupedEntriesToExcel(FixedList<BudgetTransactionByYear> transactions) {
+      Assertion.Require(transactions, nameof(transactions));
+
+      var templateUID = $"{GetType().Name}.ExportGroupedEntriesToExcel";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new BudgetGroupedEntriesToExcelBuilder(templateConfig);
+
+      ExcelFile excelFile = exporter.CreateExcelFile(transactions);
+
+      return excelFile.ToFileDto();
+    }
+
+
+    public FileDto ExportUngroupedEntriesToExcel(FixedList<BudgetTransaction> transactions) {
+      Assertion.Require(transactions, nameof(transactions));
+
+      var templateUID = $"{GetType().Name}.ExportUngroupedEntriesToExcel";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new BudgetUngroupedEntriesToExcelBuilder(templateConfig);
+
+      ExcelFile excelFile = exporter.CreateExcelFile(transactions);
+
+      return excelFile.ToFileDto();
+    }
+
+
     public FileDto ExportTransactionVoucherToPdf(BudgetTransaction transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
@@ -44,21 +74,6 @@ namespace Empiria.Budgeting.Reporting {
 
         return ExportTransactionByYearToPdf(transaction);
       }
-    }
-
-
-    public FileDto ExportTransactionEntriesToExcel(FixedList<BudgetTransactionByYear> transactions) {
-      Assertion.Require(transactions, nameof(transactions));
-
-      var templateUID = $"{GetType().Name}.ExportTransactionEntriesToExcel";
-
-      var templateConfig = FileTemplateConfig.Parse(templateUID);
-
-      var exporter = new BudgetTransactionEntriesToExcelBuilder(templateConfig);
-
-      ExcelFile excelFile = exporter.CreateExcelFile(transactions);
-
-      return excelFile.ToFileDto();
     }
 
     #endregion Services

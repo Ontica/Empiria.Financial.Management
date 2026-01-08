@@ -78,8 +78,8 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/bulk-operation/export-entries")]
-    public SingleObjectModel ExportBudgetTransactionEntriesToExcel([FromBody] BulkOperationCommand command) {
+    [Route("v2/budgeting/transactions/bulk-operation/export-entries-grouped")]
+    public SingleObjectModel ExportGroupedEntriesToExcel([FromBody] BulkOperationCommand command) {
 
       FixedList<BudgetTransactionByYear> transactions =
             command.Items.Select(x => new BudgetTransactionByYear(BudgetTransaction.Parse(x)))
@@ -89,16 +89,38 @@ namespace Empiria.Budgeting.Transactions.WebApi {
       using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
 
         var result = new FileResultDto(
-            reportingService.ExportTransactionEntriesToExcel(transactions),
+            reportingService.ExportGroupedEntriesToExcel(transactions),
             $"Se exportaron {transactions.Count} transacciones presupuestales a Excel."
         );
 
-        base.SetOperation(result.Message);
+        SetOperation(result.Message);
 
         return new SingleObjectModel(base.Request, result);
       }
     }
 
+
+    [HttpPost]
+    [Route("v2/budgeting/transactions/bulk-operation/export-entries-ungrouped")]
+    public SingleObjectModel ExportUngroupedEntriesToExcel([FromBody] BulkOperationCommand command) {
+
+      FixedList<BudgetTransaction> transactions =
+            command.Items.Select(x => BudgetTransaction.Parse(x))
+                         .ToFixedList()
+                         .Sort((x, y) => x.TransactionNo.CompareTo(y.TransactionNo));
+
+      using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
+
+        var result = new FileResultDto(
+            reportingService.ExportUngroupedEntriesToExcel(transactions),
+            $"Se exportaron {transactions.Count} transacciones presupuestales a Excel."
+        );
+
+        SetOperation(result.Message);
+
+        return new SingleObjectModel(base.Request, result);
+      }
+    }
 
     [HttpPost]
     [Route("v2/budgeting/transactions/planning/generate")]

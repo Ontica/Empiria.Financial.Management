@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Budget Management                             Component : Reporting Services                   *
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Report builder                       *
-*  Type     : BudgetTransactionEntriesToExcelBuilder        License   : Please read LICENSE.txt file         *
+*  Type     : BudgetGroupedEntriesToExcelBuilder            License   : Please read LICENSE.txt file         *
 *                                                                                                            *
-*  Summary  : Builds an Excel file with all budget transaction entries.                                      *
+*  Summary  : Builds an Excel file with budget transaction entries grouped by year.                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -19,14 +19,14 @@ using Empiria.Budgeting.Transactions;
 
 namespace Empiria.Budgeting.Reporting {
 
-  /// <summary>Builds an Excel file with all budget transaction entries.</summary>
-  internal class BudgetTransactionEntriesToExcelBuilder {
+  /// <summary>Builds an Excel file with budget transaction entries grouped by year.</summary>
+  internal class BudgetGroupedEntriesToExcelBuilder {
 
     private readonly FileTemplateConfig _templateConfig;
 
     private ExcelFile _excelFile;
 
-    public BudgetTransactionEntriesToExcelBuilder(FileTemplateConfig templateConfig) {
+    public BudgetGroupedEntriesToExcelBuilder(FileTemplateConfig templateConfig) {
       Assertion.Require(templateConfig, nameof(templateConfig));
 
       _templateConfig = templateConfig;
@@ -94,6 +94,6 @@ namespace Empiria.Budgeting.Reporting {
       } // foreach txn
     }
 
-  } // class BudgetTransactionEntriesToExcelBuilder
+  } // class BudgetGroupedEntriesToExcelBuilder
 
 } // namespace Empiria.Budgeting.Reporting
