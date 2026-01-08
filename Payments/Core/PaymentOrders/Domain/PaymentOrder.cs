@@ -116,6 +116,12 @@ namespace Empiria.Payments {
     }
 
 
+    [DataField("PYMT_ORD_DEBTOR_ID")]
+    public Party Debtor {
+      get; private set;
+    }
+
+
     [DataField("PYMT_ORD_PAYMENT_METHOD_ID")]
     public PaymentMethod PaymentMethod {
       get; private set;
@@ -405,6 +411,7 @@ namespace Empiria.Payments {
 
       fields.EnsureValid();
 
+      Debtor = Patcher.Patch(fields.DebtorUID, Debtor);
       PaymentMethod = Patcher.Patch(fields.PaymentMethodUID, PaymentMethod);
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       PaymentAccount = Patcher.Patch(fields.PaymentAccountUID, PaymentAccount);

@@ -31,6 +31,8 @@ namespace Empiria.Payments.Adapters {
       var txns = BudgetTransaction.GetFor((IBudgetable) paymentOrder.PayableEntity);
       var instructions = paymentOrder.PaymentInstructions.ToFixedList();
 
+      var documents = DocumentServices.GetAllEntityDocuments(paymentOrder);
+
       return new PaymentOrderHolderDto {
         PaymentOrder = MapPaymentOrder(paymentOrder),
         PayableEntity = PayableEntityMapper.Map(paymentOrder.PayableEntity),
@@ -38,7 +40,7 @@ namespace Empiria.Payments.Adapters {
         Bills = BillMapper.MapToBillStructure(bills),
         BudgetTransactions = BudgetTransactionMapper.MapToDescriptor(txns),
         PaymentInstructions = PaymentInstructionMapper.MapToDescriptor(instructions),
-        Documents = DocumentServices.GetAllEntityDocuments((BaseObject) paymentOrder.PayableEntity),
+        Documents = documents,
         History = HistoryServices.GetEntityHistory(paymentOrder),
         Actions = MapActions(paymentOrder)
       };
@@ -77,6 +79,7 @@ namespace Empiria.Payments.Adapters {
         PaymentTypeName = paymentOrder.PaymentType.Name,
         PaymentOrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.Name,
+        Debtor = paymentOrder.Debtor.Name,
         PaymentMethod = paymentOrder.PaymentMethod.Name,
         PaymentAccount = paymentOrder.PaymentAccount.AccountNo,
         CurrencyCode = paymentOrder.PayableEntity.Currency.ISOCode,
@@ -117,6 +120,7 @@ namespace Empiria.Payments.Adapters {
         PaymentType = paymentOrder.PaymentType.MapToNamedEntity(),
         PaymentOrderNo = paymentOrder.PaymentOrderNo,
         PayTo = paymentOrder.PayTo.MapToNamedEntity(),
+        Debtor = paymentOrder.Debtor.MapToNamedEntity(),
         RequestedDate = paymentOrder.PostingTime,
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
         DueTime = paymentOrder.DueTime,

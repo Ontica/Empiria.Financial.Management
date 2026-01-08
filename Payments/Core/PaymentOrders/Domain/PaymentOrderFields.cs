@@ -48,6 +48,11 @@ namespace Empiria.Payments {
     } = string.Empty;
 
 
+    public string DebtorUID {
+      get; set;
+    } = string.Empty;
+
+
     public string PaymentMethodUID {
       get; set;
     } = string.Empty;
@@ -100,7 +105,12 @@ namespace Empiria.Payments {
     internal void EnsureValid() {
 
       UID = Patcher.CleanUID(UID);
+
       PaymentTypeUID = Patcher.CleanUID(PaymentTypeUID);
+
+      PayToUID = Patcher.CleanUID(PayToUID);
+      DebtorUID = Patcher.CleanUID(DebtorUID);
+
       PaymentMethodUID = Patcher.CleanUID(PaymentMethodUID);
 
       if (UID.Length != 0) {

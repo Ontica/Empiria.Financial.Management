@@ -134,6 +134,10 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto Debtor {
+      get; internal set;
+    }
+
     public NamedEntityDto RequestedBy {
       get; internal set;
     }
@@ -195,6 +199,10 @@ namespace Empiria.Payments.Adapters {
     }
 
     public string PayTo {
+      get; internal set;
+    }
+
+    public string Debtor {
       get; internal set;
     }
 
