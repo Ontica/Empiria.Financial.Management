@@ -28,10 +28,13 @@ namespace Empiria.Billing {
       // Required by Empiria Framework
     }
 
-    public BillRelatedBill(Bill bill) {
+    public BillRelatedBill(Bill bill, ComplementRelatedPayoutDataFields fields) {
       Assertion.Require(bill, nameof(bill));
+      Assertion.Require(fields, nameof(fields));
 
       this.Bill = bill;
+      this.RelatedDocument = fields.IdDocumento;
+      this.BillRelatedSchemaExtData.Update(fields);
     }
 
     static public BillRelatedBill Parse(int id) => ParseId<BillRelatedBill>(id);
@@ -106,11 +109,13 @@ namespace Empiria.Billing {
 
     #endregion Properties
 
-    #region Private methods
+    #region Methods
 
-    internal void Update(ComplementRelatedPayoutDataFields fields) {
-      this.RelatedDocument = fields.IdDocumento;
-      this.BillRelatedSchemaExtData.Update(fields);
+    internal void AddBillRelatedTaxes(Bill bill, BillTaxEntryFields taxFields) {
+      
+      var billTaxEntry = new BillTaxEntry(bill, this.Id, taxFields);
+
+      billTaxEntry.Save();
     }
 
 
@@ -122,8 +127,7 @@ namespace Empiria.Billing {
       BillData.WriteBillRelatedBillEntry(this, ExtData.ToString());
     }
 
-
-    #endregion Private methods
+    #endregion Methods
 
   }
 }

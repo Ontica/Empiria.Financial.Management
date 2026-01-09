@@ -49,6 +49,12 @@ namespace Empiria.Billing.UseCases {
       } else if (billType == "nota-credito-sat") {
         return CreateCreditNote(xmlString, payable);
 
+      } else if (billType == "complemento-pago-sat") {
+        return CreateBillPaymentComplement(xmlString, payable);
+
+      } else if (billType == "factura-consumo-combustible-sat") {
+        return CreateFuelConsumptionBill(xmlString, payable);
+
       } else {
         throw Assertion.EnsureNoReachThisCode($"Unrecognized applicationContentType '{billType}'.");
       }
@@ -96,50 +102,6 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateBill(string xmlString, IPayableEntity payable) {
-      Assertion.Require(xmlString, nameof(xmlString));
-      Assertion.Require(payable, nameof(payable));
-
-      var reader = new SATBillXmlReader(xmlString);
-
-      ISATBillDto satDto = reader.ReadAsBillDto();
-
-      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
-
-      return CreateBillImplementation(payable, (BillFields) fields);
-    }
-
-
-    private BillDto CreateBillPaymentComplement(string xmlString, IPayableEntity payable) {
-      Assertion.Require(xmlString, nameof(xmlString));
-      Assertion.Require(payable, nameof(payable));
-
-      var reader = new SATPaymentComplementXmlReader(xmlString);
-
-      ISATBillDto satDto = reader.ReadAsPaymentComplementDto();
-
-      IBillFields fields = BillPaymentComplementFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
-
-      Bill bill = CreatePaymentComplementImplementation(payable, (BillPaymentComplementFields) fields);
-
-      return BillMapper.MapToBillDto(bill);
-    }
-
-
-    private Bill CreateCreditNote(string xmlString, IPayableEntity payable) {
-      Assertion.Require(xmlString, nameof(xmlString));
-      Assertion.Require(payable, nameof(payable));
-
-      var reader = new SATCreditNoteXmlReader(xmlString);
-
-      ISATBillDto satDto = reader.ReadAsCreditNoteDto();
-
-      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
-
-      return CreateCreditNoteImplementation(payable, (BillFields) fields);
-    }
-
-
     public BillHolderDto GetBill(string billUID) {
       Assertion.Require(billUID, nameof(billUID));
 
@@ -173,6 +135,20 @@ namespace Empiria.Billing.UseCases {
 
     #region Private methods
 
+    private Bill CreateBill(string xmlString, IPayableEntity payable) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+
+      var reader = new SATBillXmlReader(xmlString);
+
+      ISATBillDto satDto = reader.ReadAsBillDto();
+
+      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
+
+      return CreateBillImplementation(payable, (BillFields) fields);
+    }
+
+
     private Bill CreateBillByCategory(IPayableEntity payable, BillFields fields, BillCategory billCategory) {
 
       var bill = new Bill(payable, billCategory, fields.BillNo);
@@ -196,6 +172,40 @@ namespace Empiria.Billing.UseCases {
     private Bill CreateBillImplementation(IPayableEntity payable, BillFields fields) {
 
       return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
+    }
+
+
+    private Bill CreateBillPaymentComplement(string xmlString, IPayableEntity payable) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+
+      var reader = new SATPaymentComplementXmlReader(xmlString);
+
+      ISATBillDto satDto = reader.ReadAsPaymentComplementDto();
+
+      IBillFields fields = BillPaymentComplementFieldsMapper.Map((SatBillPaymentComplementDto) satDto);
+
+      return CreatePaymentComplementImplementation(payable, (BillPaymentComplementFields) fields);
+    }
+
+
+    private Bill CreateCreditNote(string xmlString, IPayableEntity payable) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+
+      var reader = new SATCreditNoteXmlReader(xmlString);
+
+      ISATBillDto satDto = reader.ReadAsCreditNoteDto();
+
+      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
+
+      return CreateCreditNoteImplementation(payable, (BillFields) fields);
+    }
+
+
+    private Bill CreateCreditNoteImplementation(IPayableEntity payable, BillFields fields) {
+
+      return CreateBillByCategory(payable, fields, BillCategory.NotaDeCreditoProveedores);
     }
 
 
@@ -225,50 +235,6 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private void CreateBillTaxEntries(Bill bill, int billRelatedDocumentId,
-                                      FixedList<BillTaxEntryFields> allTaxesFields) {
-
-      foreach (BillTaxEntryFields taxFields in allTaxesFields) {
-
-        var billTaxEntry = new BillTaxEntry(bill, billRelatedDocumentId, taxFields);
-
-        billTaxEntry.Save();
-      }
-    }
-
-
-    private void CreateBillRelatedBills(Bill bill,
-                                        FixedList<ComplementRelatedPayoutDataFields> complementRelatedPayoutData) {
-
-      foreach (var relatedPayoutFields in complementRelatedPayoutData) {
-
-        var billRelated = new BillRelatedBill(bill);
-
-        billRelated.Update(relatedPayoutFields);
-        billRelated.Save();
-
-        CreateBillTaxEntries(bill, billRelated.Id, relatedPayoutFields.Taxes);
-      }
-    }
-
-
-    private Bill CreateCreditNoteImplementation(IPayableEntity payable, BillFields fields) {
-
-      return CreateBillByCategory(payable, fields, BillCategory.NotaDeCreditoProveedores);
-    }
-
-
-    private void CreatePaymentComplementConcepts(Bill bill, FixedList<BillConceptFields> conceptFields) {
-
-      foreach (BillConceptFields fields in conceptFields) {
-
-        var billConcept = new BillConcept(bill, fields);
-
-        billConcept.Save();
-      }
-    }
-
-
     private Bill CreatePaymentComplementImplementation(IPayableEntity payable, BillPaymentComplementFields fields) {
 
       var billCategory = BillCategory.ComplementoPagoProveedores;
@@ -279,9 +245,13 @@ namespace Empiria.Billing.UseCases {
 
       bill.Save();
 
-      CreatePaymentComplementConcepts(bill, fields.Concepts);
+      foreach (var fieldsConcept in fields.Concepts) {
+        bill.AddConcept(BillConceptType.Default, fieldsConcept);
+      }
 
-      CreateBillRelatedBills(bill, fields.ComplementRelatedPayoutData);
+      foreach (var relatedPayoutFields in fields.ComplementRelatedPayoutData) {
+        bill.AddBillRelatedBill(relatedPayoutFields);
+      }
 
       return bill;
     }

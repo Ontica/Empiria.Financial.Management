@@ -333,6 +333,19 @@ namespace Empiria.Billing {
 
     #region Methods
 
+    internal void AddBillRelatedBill(ComplementRelatedPayoutDataFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      var billRelated = new BillRelatedBill(this, fields);
+
+      billRelated.Save();
+
+      foreach (var taxFields in fields.Taxes) {
+        billRelated.AddBillRelatedTaxes(this, taxFields);
+      }
+    }
+
+
     internal void AddComplementConcepts(FuelConsumptionComplementConceptDataFields fields) {
       Assertion.Require(fields, nameof(fields));
       
@@ -440,8 +453,8 @@ namespace Empiria.Billing {
       IssuedTo = Patcher.Patch(fields.IssuedToUID, IssuedTo);
       _tags = EmpiriaString.Tagging(fields.Tags);
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
-      GetTotals(fields.ComplementRelatedPayoutData);
       Discount = fields.Discount;
+      GetTotals(fields.ComplementRelatedPayoutData);
 
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
