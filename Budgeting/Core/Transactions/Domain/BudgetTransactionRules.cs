@@ -25,6 +25,7 @@ namespace Empiria.Budgeting.Transactions {
 
     private readonly BudgetTransaction _transaction;
     private readonly Party _currentUser;
+    private readonly FixedList<string> _securityRoles;
     private readonly FixedList<string> _userRoles;
     private readonly FixedList<OrganizationalUnit> _acquisitionOrgUnits;
 
@@ -38,6 +39,9 @@ namespace Empiria.Budgeting.Transactions {
       _transaction = transaction;
 
       _currentUser = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      _securityRoles = _currentUser.GetSecurityRoles()
+                                   .SelectDistinct(x => x.NamedKey);
 
       _userRoles = Accountability.GetResponsibleRoles(_currentUser);
 
@@ -62,8 +66,7 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Status != TransactionStatus.OnAuthorization) {
           return false;
         }
-        if (_userRoles.Contains(BUDGET_MANAGER) ||
-            _userRoles.Contains(BUDGET_AUTHORIZER)) {
+        if (_securityRoles.Contains(BUDGET_AUTHORIZER)) {
           return true;
         }
         return false;
@@ -76,8 +79,7 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Status != TransactionStatus.Authorized) {
           return false;
         }
-        if (_userRoles.Contains(BUDGET_MANAGER) ||
-            _userRoles.Contains(BUDGET_AUTHORIZER)) {
+        if (_securityRoles.Contains(BUDGET_AUTHORIZER)) {
           return true;
         }
         return false;
@@ -98,6 +100,9 @@ namespace Empiria.Budgeting.Transactions {
         if (_currentUser.Equals(_transaction.PostedBy) || _currentUser.Equals(_transaction.RecordedBy)) {
           return true;
         }
+        if (_securityRoles.Contains(BUDGET_MANAGER)) {
+          return true;
+        }
         return false;
       }
     }
@@ -105,14 +110,15 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanEditDocuments {
       get {
-        if (_transaction.Status != TransactionStatus.Authorized) {
-          return false;
-        }
         if (_userRoles.Contains(ACQUISITION_MANAGER) &&
             _acquisitionOrgUnits.Contains(x => x.Equals(_transaction.BaseParty))) {
           return true;
         }
         if (_currentUser.Equals(_transaction.PostedBy) || _currentUser.Equals(_transaction.RecordedBy)) {
+          return true;
+        }
+        if (_securityRoles.Contains(BUDGET_MANAGER) ||
+          _securityRoles.Contains(BUDGET_AUTHORIZER)) {
           return true;
         }
         return false;
@@ -122,12 +128,12 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanReject {
       get {
-        if (_transaction.Status != TransactionStatus.OnAuthorization &&
-            _transaction.Status != TransactionStatus.Authorized) {
-          return false;
+        if (_transaction.Status == TransactionStatus.OnAuthorization &&
+            _userRoles.Contains(BUDGET_MANAGER)) {
+          return true;
         }
-        if (_userRoles.Contains(BUDGET_MANAGER) ||
-            _userRoles.Contains(BUDGET_AUTHORIZER)) {
+        if (_transaction.Status == TransactionStatus.Authorized &&
+          _userRoles.Contains(BUDGET_AUTHORIZER)) {
           return true;
         }
         return false;
@@ -145,8 +151,7 @@ namespace Empiria.Budgeting.Transactions {
           return false;
         }
         if (_transaction.BudgetTransactionType.IsProtected &&
-           (_userRoles.Contains(BUDGET_MANAGER) ||
-            _userRoles.Contains(BUDGET_AUTHORIZER))) {
+            _userRoles.Contains(BUDGET_MANAGER)) {
           return true;
         }
         if (_userRoles.Contains(ACQUISITION_MANAGER) &&
@@ -171,8 +176,7 @@ namespace Empiria.Budgeting.Transactions {
           return false;
         }
         if (_transaction.BudgetTransactionType.IsProtected &&
-            (_userRoles.Contains(BUDGET_MANAGER) ||
-             _userRoles.Contains(BUDGET_AUTHORIZER))) {
+            _userRoles.Contains(BUDGET_MANAGER)) {
           return true;
         }
         if (_userRoles.Contains(ACQUISITION_MANAGER) &&
