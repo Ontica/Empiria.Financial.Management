@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.HumanResources;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
@@ -70,7 +69,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       if (query.OrderBy.Length != 0) {
         return query.OrderBy;
       } else {
-        return "BDG_TXN_NUMBER, BDG_TXN_APPLICATION_DATE, BDG_TXN_REQUESTED_TIME";
+        return "BDG_TXN_NUMBER DESC, BDG_TXN_POSTING_TIME ASC";
       }
     }
 
@@ -127,21 +126,12 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static private string BuildTransactionStageFilter(TransactionStage stage, FixedList<string> userRoles) {
       int userId = ExecutionServer.CurrentUserId;
 
+
       if (stage == TransactionStage.MyInbox) {
 
         if (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
             userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER)) {
           return string.Empty;
-        }
-
-        if (userRoles.Contains(BudgetTransactionRules.ACQUISITION_MANAGER)) {
-          var orgUnits = BudgetTransactionRules.GetUserAcquisitionOrgUnits();
-
-          if (orgUnits.Count == 0) {
-            return SearchExpression.NoRecordsFilter;
-          }
-
-          return SearchExpression.ParseInSet("BDG_TXN_BASE_PARTY_ID", orgUnits.Select(x => x.Id));
         }
 
         return $"(BDG_TXN_POSTED_BY_ID = {userId} OR " +
@@ -200,9 +190,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static private FixedList<string> GetCurrentUserRoles() {
+
       var currentUser = Party.ParseWithContact(ExecutionServer.CurrentContact);
 
-      return Accountability.GetResponsibleRoles(currentUser);
+      return currentUser.GetSecurityRoles()
+                        .SelectDistinct(x => x.NamedKey);
     }
 
     #endregion Helpers
