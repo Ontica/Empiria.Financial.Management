@@ -335,12 +335,6 @@ namespace Empiria.Budgeting.Transactions {
 
       Assertion.Require(entryFields, nameof(entryFields));
 
-
-      if (TryGetEntry(entryFields) != null) {
-        Assertion.RequireFail("Ya existe un movimiento con la misma información para el " +
-                              "mismo mes y año en esta transacción presupuestal.");
-      }
-
       var entry = new BudgetEntry(this, entryFields.Year, entryFields.Month);
 
       entry.Update(entryFields);
@@ -526,11 +520,6 @@ namespace Empiria.Budgeting.Transactions {
 
     internal void UpdateEntry(BudgetEntry budgetEntry, BudgetEntryFields fields) {
       var currentEntry = TryGetEntry(fields);
-
-      if (currentEntry != null && !budgetEntry.Equals(currentEntry)) {
-        Assertion.RequireFail("Ya existe un movimiento con la misma información para el mismo mes y año " +
-                              "en esta transacción presupuestal.");
-      }
 
       budgetEntry.Update(fields);
     }
