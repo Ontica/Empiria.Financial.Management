@@ -83,6 +83,7 @@ namespace Empiria.Budgeting.Reporting {
           continue;
         }
 
+        entryHtml.Replace("{{BUDGET_ACCOUNT_PARTY}}", orderEntry.BudgetAccount.OrganizationalUnit.Code);
         entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", orderEntry.BudgetAccount.Code);
         entryHtml.Replace("{{PRODUCT_CODE}}", orderEntry.ProductCode);
         entryHtml.Replace("{{DESCRIPTION}}", orderEntry.Description);
