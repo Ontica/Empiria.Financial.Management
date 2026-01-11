@@ -86,6 +86,7 @@ namespace Empiria.Payments.Adapters {
         Total = paymentOrder.Total,
         DueTime = paymentOrder.DueTime,
         PriorityName = paymentOrder.Priority.GetName(),
+
         PayableNo = paymentOrder.PayableEntity.EntityNo,
         PayableTypeName = paymentOrder.PayableEntity.GetEmpiriaType().DisplayName,
         PayableName = paymentOrder.PayableEntity.Name,
@@ -94,6 +95,10 @@ namespace Empiria.Payments.Adapters {
 
         RequestedBy = paymentOrder.RequestedBy.Name,
         RequestedTime = paymentOrder.PostingTime,
+
+        RecordedBy = paymentOrder.PostedBy.Name,
+
+        PaymentDescription = paymentOrder.PaymentAccount.AccountNo,
 
         StatusName = paymentOrder.Status.GetName()
       };
@@ -123,6 +128,7 @@ namespace Empiria.Payments.Adapters {
         Debtor = paymentOrder.Debtor.MapToNamedEntity(),
         RequestedDate = paymentOrder.PostingTime,
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
+        RecordedBy = paymentOrder.PostedBy.MapToNamedEntity(),
         DueTime = paymentOrder.DueTime,
         Priority = paymentOrder.Priority,
         Description = paymentOrder.Description,

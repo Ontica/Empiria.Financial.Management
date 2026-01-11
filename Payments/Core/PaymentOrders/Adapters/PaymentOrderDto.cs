@@ -146,6 +146,10 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public NamedEntityDto RecordedBy {
+      get; internal set;
+    }
+
     public DateTime DueTime {
       get; internal set;
     }
@@ -235,6 +239,14 @@ namespace Empiria.Payments.Adapters {
     }
 
     public DateTime RequestedTime {
+      get; internal set;
+    }
+
+    public string RecordedBy {
+      get; internal set;
+    }
+
+    public string PaymentDescription {
       get; internal set;
     }
 
