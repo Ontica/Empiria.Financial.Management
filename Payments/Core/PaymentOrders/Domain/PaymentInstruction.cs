@@ -180,6 +180,15 @@ namespace Empiria.Payments {
       }
     }
 
+    public DateTime LastUpdateTime {
+      get {
+        if (_logEntries.Value.Count == 0) {
+          return PostingTime;
+        }
+        return _logEntries.Value[_logEntries.Value.Count - 1].TimeStamp;
+      }
+    }
+
     #endregion Properties
 
     #region Methods

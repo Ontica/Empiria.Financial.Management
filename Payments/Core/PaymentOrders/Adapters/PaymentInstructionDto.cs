@@ -85,14 +85,21 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto PaymentInstructionType {
-      get; internal set;
-    }
-
     public string PaymentInstructionNo {
       get; internal set;
     }
 
+    public NamedEntityDto PaymentOrderType {
+      get; internal set;
+    }
+
+    public string PaymentOrderNo {
+      get; internal set;
+    }
+
+    public NamedEntityDto PaymentInstructionType {
+      get; internal set;
+    }
 
     public string Description {
       get; internal set;
@@ -138,7 +145,27 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public string PayableNo {
+      get; internal set;
+    }
+
+    public NamedEntityDto PayableType {
+      get; internal set;
+    }
+
+    public NamedEntityDto Payable {
+      get; internal set;
+    }
+
     public DateTime LastUpdateTime {
+      get; internal set;
+    }
+
+    public string OperationNo {
+      get; internal set;
+    }
+
+    public NamedEntityDto Priority {
       get; internal set;
     }
 
@@ -146,12 +173,7 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public string PaymentOrderNo {
-      get; internal set;
-    }
-
   }  // class PaymentInstructionDto
-
 
 
 
@@ -162,11 +184,15 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public string PaymentOrderNo {
+    public string PaymentInstructionNo {
       get; internal set;
     }
 
-    public string PaymentInstructionNo {
+    public string PaymentOrderType {
+      get; internal set;
+    }
+
+    public string PaymentOrderNo {
       get; internal set;
     }
 
@@ -177,7 +203,6 @@ namespace Empiria.Payments.Adapters {
     public string Description {
       get; internal set;
     }
-
 
     public string PayTo {
       get; internal set;
@@ -215,8 +240,31 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-
     public DateTime LastUpdateTime {
+      get; internal set;
+    }
+
+    public string PayableNo {
+      get; internal set;
+    }
+
+    public string PayableTypeName {
+      get; internal set;
+    }
+
+    public string PayableName {
+      get; internal set;
+    }
+
+    public string RecordedBy {
+      get; internal set;
+    }
+
+    public string OperationNo {
+      get; internal set;
+    }
+
+    public string PriorityName {
       get; internal set;
     }
 
