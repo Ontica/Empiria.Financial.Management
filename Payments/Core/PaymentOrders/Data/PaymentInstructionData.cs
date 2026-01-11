@@ -105,7 +105,7 @@ namespace Empiria.Payments.Data {
       var op = DataOperation.Parse("apd_FMS_Payment_Log",
                      o.Id, o.UID, o.PaymentInstruction.Id, o.PaymentOrder.Id,
                      o.LogText, o.BrokerResponse,
-                     o.RequestTime, o.ApplicationTime, o.RecordingTime,
+                     o.TimeStamp, o.TimeStamp, o.TimeStamp,
                      o.ExtData.ToString(), (char) o.Status);
 
       DataWriter.Execute(op);

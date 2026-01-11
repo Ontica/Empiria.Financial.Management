@@ -73,7 +73,7 @@ namespace Empiria.Payments {
           return false;
         }
 
-        return paymentRequestEntry.ApplicationTime.Add(WAITING_PAYMENT_MINUTES) <= DateTime.Now;
+        return paymentRequestEntry.TimeStamp.Add(WAITING_PAYMENT_MINUTES) <= DateTime.Now;
       }
     }
 
@@ -87,7 +87,7 @@ namespace Empiria.Payments {
           return false;
         }
 
-        return waitingRequestEntry.ApplicationTime.Add(WAITING_REQUEST_SECONDS) <= DateTime.Now;
+        return waitingRequestEntry.TimeStamp.Add(WAITING_REQUEST_SECONDS) <= DateTime.Now;
       }
     }
 

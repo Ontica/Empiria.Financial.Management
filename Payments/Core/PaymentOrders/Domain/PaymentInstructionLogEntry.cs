@@ -33,6 +33,7 @@ namespace Empiria.Payments {
       Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
       Assertion.Require(instructionEvent != PaymentInstructionEvent.None, nameof(instructionEvent));
 
+      TimeStamp = DateTime.Now;
       PaymentInstruction = paymentInstruction;
       PaymentOrder = paymentInstruction.PaymentOrder;
       Load(instructionEvent);
@@ -46,6 +47,7 @@ namespace Empiria.Payments {
       Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
       Assertion.Require(brokerResponse, nameof(brokerResponse));
 
+      TimeStamp = DateTime.Now;
       PaymentInstruction = paymentInstruction;
       PaymentOrder = paymentInstruction.PaymentOrder;
       Load(brokerResponse);
@@ -69,38 +71,25 @@ namespace Empiria.Payments {
 
     [DataField("PYMT_LOG_PYMT_ORDER_ID")]
     public PaymentOrder PaymentOrder {
-      get;
-      private set;
+      get; private set;
     }
 
 
     [DataField("PYMT_LOG_TEXT")]
     public string LogText {
       get; private set;
-    } = string.Empty;
+    }
 
 
     [DataField("PYMT_LOG_BROKER_RESPONSE")]
     public string BrokerResponse {
       get; private set;
-    } = string.Empty;
-
-
-    [DataField("PYMT_LOG_REQUEST_TIME")]
-    public DateTime RequestTime {
-      get; set;
-    }
-
-
-    [DataField("PYMT_LOG_APPLICATION_TIME")]
-    public DateTime ApplicationTime {
-      get; set;
     }
 
 
     [DataField("PYMT_LOG_RECORDING_TIME")]
-    public DateTime RecordingTime {
-      get; set;
+    public DateTime TimeStamp {
+      get; private set;
     }
 
 
@@ -121,25 +110,18 @@ namespace Empiria.Payments {
     #region Methods
 
     protected override void OnSave() {
-      RecordingTime = DateTime.Now;
       PaymentInstructionData.WritePaymentLog(this);
     }
 
 
     private void Load(PaymentInstructionEvent instructionEvent) {
-      var time = DateTime.Now;
-
       LogText = instructionEvent.GetDescription();
       BrokerResponse = string.Empty;
       Status = PaymentInstruction.Status;
-      RequestTime = time;
-      ApplicationTime = time;
     }
 
 
     private void Load(BrokerResponseDto brokerResponse) {
-      var time = DateTime.Now;
-
       var brokerName = PaymentInstruction.BrokerConfigData.Name;
       var brokerInstructionNo = PaymentInstruction.BrokerInstructionNo;
 
@@ -152,9 +134,6 @@ namespace Empiria.Payments {
       }
       BrokerResponse = brokerResponse.BrokerStatusText;
       Status = brokerResponse.Status;
-
-      RequestTime = time;
-      ApplicationTime = time;
     }
 
     #endregion Methods

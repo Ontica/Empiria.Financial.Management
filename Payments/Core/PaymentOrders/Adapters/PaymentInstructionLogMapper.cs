@@ -31,7 +31,7 @@ namespace Empiria.Payments.Adapters {
         PaymentMethod = paymentInstructionLog.PaymentOrder.PaymentMethod.Name,
         Total = paymentInstructionLog.PaymentOrder.Total,
         Currency = paymentInstructionLog.PaymentOrder.Currency.Name,
-        RequestTime = paymentInstructionLog.RequestTime,
+        TimeStamp = paymentInstructionLog.TimeStamp,
         Description = paymentInstructionLog.LogText,
         StatusName = paymentInstructionLog.Status.GetName(),
       };

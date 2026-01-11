@@ -35,8 +35,9 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public DateTime RequestTime {
-      get; set;
+    [Newtonsoft.Json.JsonProperty(PropertyName = "RequestTime")]
+    public DateTime TimeStamp {
+      get; internal set;
     }
 
     public string Description {
