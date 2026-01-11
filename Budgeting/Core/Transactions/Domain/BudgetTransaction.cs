@@ -412,6 +412,8 @@ namespace Empiria.Budgeting.Transactions {
     protected override void OnSave() {
       if (IsNew) {
         TransactionNo = TO_ASSIGN_TRANSACTION_NO;
+        RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        RecordingDate = DateTime.Now;
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
 
@@ -421,6 +423,9 @@ namespace Empiria.Budgeting.Transactions {
       }
 
       if (OperationType == BudgetOperationType.Exercise) {
+        if (!HasTransactionNo) {
+          TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
+        }
         PostedBy = Party.Parse(145);
         RecordedBy = Party.Parse(145);
         AuthorizedBy = Party.Parse(145);
