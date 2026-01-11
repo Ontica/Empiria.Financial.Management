@@ -13,9 +13,9 @@ using System.Web.Http;
 using Empiria.WebApi;
 
 using Empiria.Budgeting.Adapters;
-
 using Empiria.Budgeting.UseCases;
 
+using Empiria.Budgeting.Transactions;
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.UseCases;
 
@@ -60,6 +60,17 @@ namespace Empiria.Budgeting.WebApi {
 
         return new CollectionModel(base.Request, list);
       }
+    }
+
+
+    [HttpGet]
+    [Route("v2/budgeting/transaction-types")]
+    public CollectionModel GetTransactionTypes() {
+
+      var list = BudgetTransactionType.GetList()
+                                      .FindAll(x => x.OperationType != BudgetOperationType.None);
+
+      return new CollectionModel(base.Request, list.MapToNamedEntityList());
     }
 
 

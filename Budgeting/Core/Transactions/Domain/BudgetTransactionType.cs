@@ -91,7 +91,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public FixedList<BalanceColumn> BalanceColumns {
       get {
-        return ExtensionData.GetFixedList<BalanceColumn>("balanceColumns");
+        return ExtensionData.GetFixedList<BalanceColumn>("balanceColumns", false);
       }
     }
 
