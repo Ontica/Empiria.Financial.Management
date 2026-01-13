@@ -56,6 +56,7 @@ namespace Empiria.Financial {
       return _service.TryGetEmployeeNo(employeeNo);
     }
 
+
     public FixedList<ISialOrganizationUnitEmployeesData> GetOrganizationUnitEmployeesEntries() {
 
 

@@ -57,7 +57,8 @@ namespace Empiria.Payments.UseCases {
 
       fields.EnsureValid();
 
-      var payableEntity = (IPayableEntity) BaseObject.Parse(fields.PayableEntityTypeUID, fields.PayableEntityUID);
+      var payableEntity = (IPayableEntity) BaseObject.Parse(fields.PayableEntityTypeUID,
+                                                            fields.PayableEntityUID);
 
       var currentPaymentOrders = PaymentOrder.GetListFor(payableEntity);
 

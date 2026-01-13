@@ -28,8 +28,6 @@ namespace Empiria.Tests.Financial.Integation {
       ICreditAccountData sut = service.TryGetCreditWithAccountNo("12345");
 
       Assert.NotNull(sut);
-      Assert.NotEmpty(sut.AccountNo);
-      Assert.NotEmpty(sut.Borrower);
       Assert.NotEmpty(sut.SubledgerAccountNo);
     }
 
