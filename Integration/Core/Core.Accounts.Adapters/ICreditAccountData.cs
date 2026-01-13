@@ -17,11 +17,7 @@ namespace Empiria.Financial.Adapters {
   /// <summary>Interface with credit account data coming from external systems.</summary>
   public interface ICreditAccountData {
 
-    string AccountNo {
-      get;
-    }
-
-    string Borrower {
+    string CreditNo {
       get;
     }
 
@@ -29,19 +25,15 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    string CreditStage {
+    string BaseInterestRate {
       get;
     }
 
-    string CreditType {
+    string BaseMorInterestRate {
       get;
     }
 
-    string ExternalCreditNo {
-      get;
-    }
-
-    OrganizationalUnit OrganizationalUnit {
+    string PreviousCredits {
       get;
     }
 
@@ -49,8 +41,68 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
+    string FederalTaxPayersReg {
+      get;
+     }
+
+    int FederalTaxPayersRegNo {
+      get;
+    }
+
+    string CustomerType { 
+      get; 
+    }
+
+    string CustomerName {
+      get;
+    }
+
+    OrganizationalUnit OrganizationalUnit {
+      get;
+    }
+
+    string CreditType {
+      get;
+    }
+
+    string CreditStage {
+      get;
+    }
+
     string StandardAccount {
       get;
+    }
+
+    string ExternalCreditNo {
+      get;
+    }
+
+    DateTime MaxAvailabilityDate { 
+      get; 
+    }
+
+    DateTime MaxRefinancingDate {
+      get;
+    }
+
+    int LineCreditNo {
+      get;
+    }
+
+    decimal NetFinancedAmount {
+      get;
+    }
+
+    string ConstructionBuilding {
+      get;
+    }
+
+    decimal ConstructionBuildingCost { 
+      get; 
+    }
+
+    decimal LoanAmount { 
+      get; 
     }
 
     decimal CurrentBalance {
@@ -61,7 +113,11 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    int GracePeriod {
+    int DisbursementPeriod { 
+      get; 
+    }
+
+    DateTime DisbursementDate {
       get;
     }
 
@@ -73,7 +129,11 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    decimal InterestRate {
+    int InterestRate { 
+      get; 
+    }
+
+    int InterestGracePeriod {
       get;
     }
 
@@ -88,6 +148,7 @@ namespace Empiria.Financial.Adapters {
     decimal InterestRateCeiling {
       get;
     }
+
 
   }  // interface ICreditAccountData
 

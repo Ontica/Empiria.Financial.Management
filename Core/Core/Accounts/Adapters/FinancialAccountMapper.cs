@@ -62,9 +62,9 @@ namespace Empiria.Financial.Adapters {
 
       return new FinancialAccountDto {
         UID = string.Empty,
-        AccountNo = account.AccountNo,
+        AccountNo = account.CreditNo,
         SubledgerAccountNo = account.SubledgerAccountNo,
-        Description = account.Borrower,
+        Description = account.CustomerName,
         Currency = account.Currency.MapToNamedEntity(),
         OrganizationalUnit = account.OrganizationalUnit.MapToNamedEntity(),
         Attributes = new CreditAttributes(account),

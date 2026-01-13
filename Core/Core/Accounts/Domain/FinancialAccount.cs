@@ -512,8 +512,8 @@ namespace Empiria.Financial {
     internal void Update(ICreditAccountData accountData) {
       Assertion.Require(accountData, nameof(accountData));
 
-      AccountNo = accountData.AccountNo;
-      Description = accountData.Borrower;
+      AccountNo = accountData.CreditNo;
+      Description = accountData.CustomerName;
       StandardAccount = StandardAccount.TryParseAccountNo(accountData.StandardAccount) ?? StandardAccount;
       Currency = accountData.Currency;
       OrganizationalUnit = accountData.OrganizationalUnit;
