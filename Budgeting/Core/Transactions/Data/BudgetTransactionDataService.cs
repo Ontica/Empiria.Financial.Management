@@ -121,7 +121,8 @@ namespace Empiria.Budgeting.Transactions.Data {
 
       string sql = "SELECT MAX(BDG_ENTRY_CONTROL_NO) " +
                    "FROM FMS_BUDGET_ENTRIES " +
-                   $"WHERE BDG_ENTRY_CONTROL_NO LIKE '{prefix}-%'";
+                   $"WHERE BDG_ENTRY_CONTROL_NO LIKE '{prefix}-%' AND " +
+                   $"BDG_ENTRY_CONTROL_NO NOT LIKE '{prefix}-%/%'";
 
       string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), string.Empty);
 
