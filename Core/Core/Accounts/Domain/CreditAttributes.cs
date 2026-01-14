@@ -27,7 +27,7 @@ namespace Empiria.Financial {
 
     public CreditAttributes(ICreditAccountData account) {
 
-      Borrower = account.Borrower;
+      Borrower = account.CustomerName;
       //CreditStage = CreditStage.ParseNamedKey<CreditStage>(account.CreditStage);
       //CreditType = CreditType.ParseNamedKey<CreditType>(account.CreditType);
       ExternalCreditNo = account.ExternalCreditNo;

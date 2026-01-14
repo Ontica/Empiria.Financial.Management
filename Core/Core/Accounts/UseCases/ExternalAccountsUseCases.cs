@@ -77,10 +77,10 @@ namespace Empiria.Financial.UseCases {
       }
 
       var current = FinancialAccount.TryParseWithAccountNo(FinancialAccountType.CreditAccount,
-                                                           externalAccount.AccountNo);
+                                                           externalAccount.CreditNo);
 
       Assertion.Require(current == null,
-                        $"La cuenta de crédito '{externalAccount.AccountNo} {externalAccount.Borrower}' " +
+                        $"La cuenta de crédito '{externalAccount.CreditNo} {externalAccount.CustomerName}' " +
                         $"ya está registrada en el sistema.");
 
       return externalAccount;
