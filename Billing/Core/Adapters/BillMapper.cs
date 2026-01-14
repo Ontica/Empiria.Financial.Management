@@ -8,12 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Linq;
-
 using Empiria.Documents;
 using Empiria.History;
-
-using Empiria.Financial;
 using Empiria.StateEnums;
 
 namespace Empiria.Billing.Adapters {
@@ -43,14 +39,14 @@ namespace Empiria.Billing.Adapters {
     }
 
     static public BillsStructureDto MapToBillStructure(FixedList<Bill> bills) {
-
-      var subTotalBilled = bills.Sum(x => x.BillType.Name.Contains("CreditNote") ?
-                                                            -1 * x.Subtotal : x.Subtotal);
+      var billsTotals = new BillsTotals(bills);
 
       return new BillsStructureDto {
         Bills = MapToBillDto(bills),
-        Subtotal = subTotalBilled,
-        Taxes = MapStructureTaxEntries(bills),
+        Subtotal = billsTotals.Subtotal,
+        Discounts = billsTotals.Discounts,
+        Taxes = MapStructureTaxEntries(billsTotals.TaxItems),
+        Total = billsTotals.Total
       };
     }
 
@@ -134,32 +130,18 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private FixedList<BillsStructureTaxEntryDto> MapStructureTaxEntries(FixedList<Bill> bills) {
-      FixedList<BillTaxEntry> taxEntries = bills.SelectFlat(x => x.Concepts)
-                                                .SelectFlat(x => x.TaxEntries);
-
-      var taxTypeGroup = taxEntries.GroupBy(x => x.TaxType);
-
-      return taxTypeGroup.Select(x => MapStructureTaxEntry(x))
-                         .ToFixedList();
+    static private FixedList<BillsStructureTaxEntryDto> MapStructureTaxEntries(FixedList<BillTaxItemTotal> taxItemsTotals) {
+      return taxItemsTotals.Select(x => MapStructureTaxEntry(x))
+                           .ToFixedList();
     }
 
 
-    static private BillsStructureTaxEntryDto MapStructureTaxEntry(IGrouping<TaxType, BillTaxEntry> taxEntry) {
-
-      var taxes = taxEntry.ToFixedList()
-                          .FindAll(x => !x.Bill.BillType.Name.Contains("CreditNote"))
-                          .Sum(x => x.Total);
-
-      var creditNoteTaxes = taxEntry.ToFixedList()
-                                    .FindAll(x => x.Bill.BillType.Name.Contains("CreditNote"))
-                                    .Sum(x => x.Total);
-
+    static private BillsStructureTaxEntryDto MapStructureTaxEntry(BillTaxItemTotal taxItemTotal) {
       return new BillsStructureTaxEntryDto {
-        UID = taxEntry.Key.UID,
-        TaxType = taxEntry.Key.MapToNamedEntity(),
-        BaseAmount = taxEntry.Sum(x => x.BaseAmount),
-        Total = taxes - creditNoteTaxes
+        UID = taxItemTotal.UID,
+        TaxType = new NamedEntityDto(taxItemTotal.TaxType.UID, taxItemTotal.TaxName),
+        BaseAmount = taxItemTotal.BaseAmount,
+        Total = taxItemTotal.Total
       };
     }
 
