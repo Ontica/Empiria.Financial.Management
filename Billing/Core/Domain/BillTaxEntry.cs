@@ -161,8 +161,7 @@ namespace Empiria.Billing {
 
         return TaxType.Parse(101);
 
-      } else if ((fields.Impuesto == "003" || fields.Impuesto.ToUpper().Equals("IEPS")) &&
-                 fields.TaxMethod == BillTaxMethod.Retencion) {
+      } else if ((fields.Impuesto == "003" || fields.Impuesto.ToUpper().Equals("IEPS"))) {
 
         return TaxType.Parse(103);
 
