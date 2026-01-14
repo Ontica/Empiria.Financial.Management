@@ -205,6 +205,16 @@ namespace Empiria.Billing {
     }
 
 
+    public decimal Descuento {
+      get {
+        return _schemaData.Get<decimal>("descuento", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("descuento", value);
+      }
+    }
+
+
     public decimal Total {
       get {
         return _schemaData.Get<decimal>("total", 0);
@@ -249,6 +259,7 @@ namespace Empiria.Billing {
       LugarExpedicion = schemaData.LugarExpedicion;
       Moneda = schemaData.Moneda;
       SubTotal = schemaData.Subtotal;
+      Descuento = schemaData.Descuento;
       Total = schemaData.Total;
       TipoComprobante = schemaData.TipoComprobante;
     }

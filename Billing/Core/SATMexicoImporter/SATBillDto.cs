@@ -159,6 +159,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
+    public string CondicionesPago {
+      get; internal set;
+    }
+
+
     public string Moneda {
       get; internal set;
     }
@@ -185,6 +190,11 @@ namespace Empiria.Billing.SATMexicoImporter {
 
 
     public decimal SubTotal {
+      get; internal set;
+    }
+
+
+    public decimal Descuento {
       get; internal set;
     }
 

@@ -99,6 +99,16 @@ namespace Empiria.Billing {
     }
 
 
+    public decimal Descuento {
+      get {
+        return _conceptSchemaData.Get<decimal>("descuento", 0);
+      }
+      private set {
+        _conceptSchemaData.SetIfValue("descuento", value);
+      }
+    }
+
+
     public string NoIdentificacion {
       get {
         return _conceptSchemaData.Get("noIdentificacion", string.Empty);
@@ -134,6 +144,7 @@ namespace Empiria.Billing {
       Descripcion = fields.Description;
       ValorUnitario = fields.UnitPrice;
       Importe = fields.Subtotal;
+      Descuento = fields.Discount;
       NoIdentificacion = fields.IdentificationNo;
       ObjetoImp = fields.ObjectImp;
     }

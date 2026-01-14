@@ -172,6 +172,7 @@ namespace Empiria.Billing.Adapters {
         LugarExpedicion = dto.DatosGenerales.LugarExpedicion,
         Moneda = dto.DatosGenerales.Moneda,
         Subtotal = dto.DatosGenerales.SubTotal,
+        Descuento = dto.DatosGenerales.Descuento,
         Total = dto.DatosGenerales.Total,
         TipoCambio = dto.DatosGenerales.TipoCambio,
         TipoComprobante = dto.DatosGenerales.TipoDeComprobante,

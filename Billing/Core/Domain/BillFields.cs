@@ -412,6 +412,11 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public string CondicionesPago {
+      get; set;
+    } = string.Empty;
+
+
     public string Exportacion {
       get; set;
     } = string.Empty;
@@ -432,7 +437,7 @@ namespace Empiria.Billing {
     }
 
 
-    public decimal Discount {
+    public decimal Descuento {
       get; set;
     }
 

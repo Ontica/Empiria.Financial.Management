@@ -39,10 +39,12 @@ namespace Empiria.Billing.SATMexicoImporter {
         Sello = GetAttribute(generalDataNode, "Sello"),
         Serie = GetAttribute(generalDataNode, "Serie"),
         FormaPago = GetAttribute(generalDataNode, "FormaPago"),
+        CondicionesPago = GetAttribute(generalDataNode, "CondicionesDePago"),
         NoCertificado = GetAttribute(generalDataNode, "NoCertificado"),
         Certificado = GetAttribute(generalDataNode, "Certificado"),
-        SubTotal = GetAttribute<decimal>(generalDataNode, "SubTotal"),
         Moneda = GetAttribute(generalDataNode, "Moneda"),
+        SubTotal = GetAttribute<decimal>(generalDataNode, "SubTotal"),
+        Descuento = GetAttribute<decimal>(generalDataNode, "Descuento"),
         Total = GetAttribute<decimal>(generalDataNode, "Total"),
 
         TipoCambio = GetAttribute(generalDataNode, "TipoCambio"),

@@ -73,6 +73,7 @@ namespace Empiria.Billing.Adapters {
         Quantity = concepto.Cantidad,
         UnitPrice = addendaConcept ? concepto.Cantidad * concepto.Importe : concepto.ValorUnitario,
         Subtotal = concepto.Importe,
+        Discount = concepto.Descuento,
         TaxEntries = MapToBillTaxFields(concepto.Impuestos)
       };
     }
@@ -102,6 +103,7 @@ namespace Empiria.Billing.Adapters {
         IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
         CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
         Subtotal = dto.DatosGenerales.SubTotal,
+        Discount = dto.DatosGenerales.Descuento,
         Total = dto.DatosGenerales.Total,
         CFDIRelated = MapToCfdiRelated(dto.DatosGenerales.CfdiRelacionados),
         Concepts = MapToBillConceptFieldsList(dto.Conceptos),
@@ -176,10 +178,12 @@ namespace Empiria.Billing.Adapters {
         Serie = dto.DatosGenerales.Serie,
         MetodoPago = dto.DatosGenerales.MetodoPago,
         FormaPago = dto.DatosGenerales.FormaPago,
+        CondicionesPago = dto.DatosGenerales.CondicionesPago,
         Exportacion = dto.DatosGenerales.Exportacion,
         LugarExpedicion = dto.DatosGenerales.LugarExpedicion,
         Moneda = dto.DatosGenerales.Moneda,
         Subtotal = dto.DatosGenerales.SubTotal,
+        Descuento = dto.DatosGenerales.Descuento,
         Total = dto.DatosGenerales.Total,
         TipoCambio = dto.DatosGenerales.TipoCambio,
         TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
