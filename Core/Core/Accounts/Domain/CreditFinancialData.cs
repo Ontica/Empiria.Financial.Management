@@ -33,8 +33,8 @@ namespace Empiria.Financial {
       Assertion.Require(account, nameof(account));
 
       CurrentBalance = account.CurrentBalance;
-      GracePeriod = account.GracePeriod;
-      InterestRate = account.InterestRate;
+      GracePeriod = account.InterestGracePeriod;
+      //InterestRate = account.InterestRate;
       InvestmentTerm = account.InvestmentTerm;
       InterestRateCeiling = account.InterestRateCeiling;
       InterestRateFactor = account.InterestRateFactor;
