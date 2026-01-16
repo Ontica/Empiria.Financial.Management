@@ -105,6 +105,11 @@ namespace Empiria.Billing {
       get; set;
     }
 
+
+    public BillFiscalLegendFields FiscalLegendsData {
+      get; set;
+    }
+
   } // class BillFields
 
 
@@ -359,7 +364,6 @@ namespace Empiria.Billing {
   } // class BillTaxEntryFields
 
 
-
   public class BillSchemaDataFields {
 
     public BillOrganizationFields IssuedBy {
@@ -601,6 +605,25 @@ namespace Empiria.Billing {
     }
 
   } // class BillAddendaFields
+
+
+  public class BillFiscalLegendFields {
+
+    public string DisposicionFiscal {
+      get; internal set;
+    } = string.Empty;
+
+
+    public string Norma {
+      get; internal set;
+    } = string.Empty;
+
+
+    public string TextoLeyenda {
+      get; internal set;
+    } = string.Empty;
+
+  } // class BillFiscalLegendFields
 
 
   /// <summary>Extension methods for BillFields type.</summary>
