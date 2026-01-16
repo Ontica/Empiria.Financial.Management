@@ -23,23 +23,15 @@ namespace Empiria.Payments.Data {
 
       string prefix = $"{instruction.PaymentOrder.PaymentOrderNo}";
 
-      string sql = "SELECT MAX(PYMT_INSTRUCTION_NO) " +
+      string sql = "SELECT * " +
                    "FROM FMS_PAYMENT_INSTRUCTIONS " +
-                  $"WHERE PYMT_INSTRUCTION_PYMT_ORDER_ID = {instruction.PaymentOrder.Id} AND " +
-                  $"PYMT_INSTRUCTION_NO LIKE '{prefix}-%'";
+                  $"WHERE PYMT_INSTRUCTION_PYMT_ORDER_ID = {instruction.PaymentOrder.Id}";
 
-      string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), string.Empty);
+      int count = DataReader.Count(DataOperation.Parse(sql));
 
-      if (lastUniqueID.Length != 0) {
-
-        int consecutive = int.Parse(lastUniqueID.Split('-')[3]) + 1;
-
-        return $"{prefix}-{consecutive}";
-
-      } else {
-        return $"{prefix}-1";
-      }
+      return $"{prefix}-{count + 1}";
     }
+
 
     static internal List<PaymentInstructionLogEntry> GetPaymentInstructionLog(PaymentInstruction instruction) {
       Assertion.Require(instruction, nameof(instruction));
