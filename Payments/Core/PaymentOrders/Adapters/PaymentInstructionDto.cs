@@ -97,10 +97,6 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto PaymentInstructionType {
-      get; internal set;
-    }
-
     public string Description {
       get; internal set;
     }
@@ -162,6 +158,10 @@ namespace Empiria.Payments.Adapters {
     }
 
     public string OperationNo {
+      get; internal set;
+    }
+
+    public NamedEntityDto RecordedBy {
       get; internal set;
     }
 

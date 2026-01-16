@@ -70,7 +70,7 @@ namespace Empiria.Payments.Adapters {
         DueTime = paymentOrder.DueTime,
         PaymentAccount = new PaymentAccountDto(paymentOrder.PaymentAccount),
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
-
+        RecordedBy = paymentOrder.PostedBy.MapToNamedEntity(),
         OperationNo = instruction.BrokerInstructionNo,
         PayTo = instruction.PaymentOrder.PayTo.MapToNamedEntity(),
         PaymentInstructionNo = instruction.PaymentInstructionNo,
