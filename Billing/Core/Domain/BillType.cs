@@ -40,6 +40,16 @@ namespace Empiria.Billing {
 
     #endregion Constructors and parsers
 
+    #region Properties
+
+    public bool IsCreditNote {
+      get {
+        return this.Name.Contains("CreditNote");
+      }
+    }
+
+    #endregion Properties
+
   }  // class BillType
 
 }  // namespace Empiria.Billing

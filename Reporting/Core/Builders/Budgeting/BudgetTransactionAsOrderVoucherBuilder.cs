@@ -154,8 +154,9 @@ namespace Empiria.Budgeting.Reporting {
       html.Replace("{{TRANSACTION_NO}}", _txn.TransactionNo);
       html.Replace("{{ORDER_NAME}}", _order.Name);
       html.Replace("{{ORDER_NO}}", $"{_order.OrderNo} {(_txn.IsMultiYear ? "(Plurianual)" : string.Empty)}");
-      html.Replace("{{REQUESTED_BY}}", ((INamedEntity) _order.RequestedBy).Name);
       html.Replace("{{RECORDING_TIME}}", _order.RequestedTime.ToString("dd/MMM/yyyy"));
+      html.Replace("{{REQUESTED_BY}}", ((INamedEntity) _order.RequestedBy).Name);
+      html.Replace("{{IS_FOR_MULTIPLE_BENEFICIARIES}}", _order.IsForMultipleBeneficiaries ? "Sí" : "No");
 
       if (ExecutionServer.IsMinOrMaxDate(_order.StartDate)) {
         html.Replace("{{REQUIRED_TIME}}", _order.RequestedTime.ToString("dd/MMM/yyyy"));

@@ -25,7 +25,7 @@ namespace Empiria.Tests.Billing {
 
     //  using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-    //    string xmlFilePath = TestingConstants.XML_AIR_TRANSPORT_BILL_FILE_PATH;
+    //    string xmlFilePath = TestingConstants.XML_BILL_FILE_PATH;
 
     //    var xmlText = System.IO.File.ReadAllText(xmlFilePath);
 
@@ -56,6 +56,8 @@ namespace Empiria.Tests.Billing {
 
     //[Fact]
     //public void Create_Payment_Complement_Test() {
+
+    //  TestsCommonMethods.Authenticate();
 
     //  using (var usecases = BillUseCases.UseCaseInteractor()) {
 

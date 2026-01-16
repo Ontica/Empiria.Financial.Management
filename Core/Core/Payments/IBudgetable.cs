@@ -19,6 +19,10 @@ namespace Empiria.Financial {
   /// transaction that affects a budget.</summary>
   public interface IBudgetable : IIdentifiable, INamedEntity {
 
+    string EntityNo {
+      get;
+    }
+
     FixedList<ITaxEntry> Taxes {
       get;
     }

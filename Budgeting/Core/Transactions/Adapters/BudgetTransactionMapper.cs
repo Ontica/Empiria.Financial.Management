@@ -73,6 +73,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         TransactionNo = transaction.TransactionNo,
         Description = transaction.Description,
         Total = transaction.GetTotal(),
+        BaseEntityNo = transaction.HasEntity ? transaction.GetEntity().EntityNo : string.Empty,
         OperationSourceName = transaction.OperationSource.Name,
         BasePartyName = transaction.BaseParty.Name,
         RecordingDate = transaction.RecordingDate,
@@ -90,7 +91,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static public FixedList<BudgetTransactionDescriptorDto> MapToDescriptor(FixedList<BudgetTransaction> transactions) {
-      return transactions.Select(x => MapToDescriptor(x)).ToFixedList();
+      return transactions.Select(x => MapToDescriptor(x))
+                         .ToFixedList();
     }
 
     #endregion Public mappers
@@ -212,6 +214,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
             transaction.GetEntity().GetEmpiriaType().MapToNamedEntity() : NamedEntityDto.Empty,
         BaseEntity = transaction.HasEntity ?
             transaction.GetEntity().MapToNamedEntity() : NamedEntityDto.Empty,
+        BaseEntityNo = transaction.HasEntity ? transaction.GetEntity().EntityNo : string.Empty,
         Total = transaction.GetTotal(),
         RecordingDate = transaction.RequestedDate,
         RecordedBy = transaction.RecordedBy.MapToNamedEntity(),

@@ -211,25 +211,65 @@ namespace Empiria.Billing {
     }
 
 
-    internal void Update(BillAddendaFields addendaFields) {
-      Assertion.Require(addendaFields, nameof(addendaFields));
+    public string DisposicionFiscal {
+      get {
+        return _extData.Get("disposicionFiscal", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("disposicionFiscal", value);
+      }
+    }
 
-      if (addendaFields.NoEstacion != string.Empty) {
-        NoEstacion = addendaFields.NoEstacion;
-        ClavePemex = addendaFields.ClavePemex;
-        TasaIEPS = addendaFields.TasaIEPS;
-        IEPS = addendaFields.IEPS;
-        TasaIVA = addendaFields.TasaIVA;
-        IVA = addendaFields.IVA;
-        NoIdentificacion = addendaFields.NoIdentificacion;
-        TasaAIEPS = addendaFields.TasaAIEPS;
-        AIEPS = addendaFields.AIEPS;
+
+    public string Norma {
+      get {
+        return _extData.Get("norma", string.Empty);
       }
-      if (addendaFields.Concepts.Count > 0) {
-        Folio = addendaFields.Folio;
-        Serie = addendaFields.Serie;
-        FechaEmision = addendaFields.FechaEmision;
+      private set {
+        _extData.SetIfValue("norma", value);
       }
+    }
+
+
+    public string TextoLeyenda {
+      get {
+        return _extData.Get("textoLeyenda", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("textoLeyenda", value);
+      }
+    }
+
+
+    internal void Update(BillFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      if (fields.Addenda.NoEstacion != string.Empty) {
+        NoEstacion = fields.Addenda.NoEstacion;
+        ClavePemex = fields.Addenda.ClavePemex;
+        TasaIEPS = fields.Addenda.TasaIEPS;
+        IEPS = fields.Addenda.IEPS;
+        TasaIVA = fields.Addenda.TasaIVA;
+        IVA = fields.Addenda.IVA;
+        NoIdentificacion = fields.Addenda.NoIdentificacion;
+        TasaAIEPS = fields.Addenda.TasaAIEPS;
+        AIEPS = fields.Addenda.AIEPS;
+      }
+      if (fields.Addenda.Concepts.Count > 0) {
+        Folio = fields.Addenda.Folio;
+        Serie = fields.Addenda.Serie;
+        FechaEmision = fields.Addenda.FechaEmision;
+      }
+      if (fields.FiscalLegendsData.DisposicionFiscal != string.Empty) {
+        DisposicionFiscal = fields.FiscalLegendsData.DisposicionFiscal;
+      }
+      if (fields.FiscalLegendsData.Norma != string.Empty) {
+        Norma = fields.FiscalLegendsData.Norma;
+      }
+      if (fields.FiscalLegendsData.TextoLeyenda != string.Empty) {
+        TextoLeyenda = fields.FiscalLegendsData.TextoLeyenda;
+      }
+
     }
 
 

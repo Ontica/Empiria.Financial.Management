@@ -109,10 +109,24 @@ namespace Empiria.Billing.Adapters {
         Concepts = MapToBillConceptFieldsList(dto.Conceptos),
         SchemaData = MapToSchemaData(dto),
         SecurityData = MapToSecurityData(dto),
-        Addenda = MapToAddendaData(dto.Addenda)
+        Addenda = MapToAddendaData(dto.Addenda),
+        FiscalLegendsData = MapToFiscalLegendsData(dto.LeyendasFiscales)
       };
     }
 
+
+    private static BillFiscalLegendFields MapToFiscalLegendsData(
+                                            FixedList<BillComplementFiscalLegend> fields) {
+      if (fields.Count == 0) {
+        return new BillFiscalLegendFields();
+      }
+
+      return new BillFiscalLegendFields {
+        DisposicionFiscal = fields.First().DisposicionFiscal,
+        Norma = fields.First().Norma,
+        TextoLeyenda = fields.First().TextoLeyenda
+      };
+    }
 
     static private FixedList<BillTaxEntryFields> MapToBillTaxFields(FixedList<SATBillTaxDto> impuestos) {
 

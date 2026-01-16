@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Budget Transactions                        Component : Adapters Layer                          *
-*  Assembly : Empiria.Budgeting.Transactions.dll         Pattern   : Dynamic Output DTO                      *
+*  Module   : CashFlow Management                        Component : Adapters Layer                          *
+*  Assembly : Empiria.CashFlow.Core.dll                  Pattern   : Dynamic Output DTO                      *
 *  Type     : CashFlowProjectionEntriesByYearTableDto    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Dynamic table output DTO with cash flow projection's entries grouped by year.                  *

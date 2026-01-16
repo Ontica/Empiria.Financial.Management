@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Linq;
-
 namespace Empiria.Billing.Adapters {
 
   ///<summary>Output DTO with a list of bills with the sums of subtotal and total, and a taxes list.</summary>
@@ -23,14 +21,16 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
+    public decimal Discounts {
+      get; internal set;
+    }
+
     public FixedList<BillsStructureTaxEntryDto> Taxes {
       get; internal set;
     }
 
     public decimal Total {
-      get {
-        return Subtotal + Taxes.Sum(x => x.Total);
-      }
+      get; internal set;
     }
 
   }  // class BillsStructureDto

@@ -119,6 +119,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public string BaseEntityNo {
+      get; internal set;
+    }
+
     public string Description {
       get; internal set;
     }
@@ -199,6 +203,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
     public string OperationSourceName {
+      get; internal set;
+    }
+
+    public string BaseEntityNo {
       get; internal set;
     }
 
