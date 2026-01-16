@@ -20,6 +20,8 @@ namespace Empiria.Financial.Adapters {
                                                   DateTime toDate);
 
 
+    ICreditSicData TryGetCreditSic(string creditNo);
+
     ICreditAccountData TryGetCredit(string creditNo);
 
   }  // ICreditAccountService

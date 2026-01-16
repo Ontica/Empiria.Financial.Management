@@ -2,20 +2,18 @@
 *                                                                                                            *
 *  Module   : Integration services                       Component : Adapters Layer                          *
 *  Assembly : Empiria.Financial.Integration.Core.dll     Pattern   : Adaptation Interface                    *
-*  Type     : ICreditAccountData                         License   : Please read LICENSE.txt file            *
+*  Type     : ICreditSicData                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Interface with credit account data coming from external systems.                               *
+*  Summary  : Interface with credit data coming from external systems.                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 
-using Empiria.Parties;
-
 namespace Empiria.Financial.Adapters {
 
-  /// <summary>Interface with credit account data coming from external systems.</summary>
-  public interface ICreditAccountData {
+  /// <summary>Interface with credit data coming from external systems.</summary>
+  public interface ICreditSicData {
 
     string CreditNo {
       get;
@@ -37,9 +35,15 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    Currency Currency {
+    string CurrencyNo {
       get;
     }
+
+
+    string Currency{
+      get;
+    }
+
 
     string FederalTaxPayersReg {
       get;
@@ -58,7 +62,12 @@ namespace Empiria.Financial.Adapters {
     }
 
 
-    OrganizationalUnit OrganizationalUnit {
+    string OrganizationUnitNo {
+      get;
+    }
+
+
+    string OrganizationUnit {
       get;
     }
 
@@ -152,6 +161,6 @@ namespace Empiria.Financial.Adapters {
     }
 
 
-  }  // interface ICreditAccountData
+  }  // interface ICreditSictData
 
 } // namespace Empiria.Financial.Adapters

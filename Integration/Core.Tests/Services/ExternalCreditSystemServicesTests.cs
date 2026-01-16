@@ -28,10 +28,24 @@ namespace Empiria.Tests.Financial.Integation {
       ICreditAccountData sut = service.TryGetCreditWithAccountNo("12345");
 
       Assert.NotNull(sut);
-      Assert.NotEmpty(sut.AccountNo);
-      Assert.NotEmpty(sut.Borrower);
+      Assert.NotEmpty(sut.CreditNo);
+      Assert.NotEmpty(sut.CustomerName);
       Assert.NotEmpty(sut.SubledgerAccountNo);
     }
+
+    [Fact]
+    public void Should_Execute_TryGetCreditNo() {
+
+      var service = new ExternalCreditSystemServices();
+
+      ICreditAccountData sut = service.TryGetCreditWithAccountNo("12345");
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut.CreditNo);
+      Assert.NotEmpty(sut.CustomerName);
+      Assert.NotEmpty(sut.SubledgerAccountNo);
+    }
+
 
     #endregion Facts
 
