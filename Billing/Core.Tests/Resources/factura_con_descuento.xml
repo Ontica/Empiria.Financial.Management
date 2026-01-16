@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante 
+  xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" 
+  Moneda="MXN"
+  Version="4.0" 
+  Serie="A" 
+  Folio="82152" 
+  Fecha="2025-07-10T13:17:44" 
+  NoCertificado="00001000000716583964" 
+  Certificado="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" 
+  CondicionesDePago="60 DIAS RECEPCION FACTURA" 
+  Total="23940.06" 
+  TipoDeComprobante="I" 
+  MetodoPago="PPD" 
+  FormaPago="99" 
+  LugarExpedicion="06500" 
+  Exportacion="01" 
+  SubTotal="21724.18" 
+  Descuento="1086.20" 
+  Sello="TLdXAp3ph/ZlrEn4ejaFpBq6w1JvwcafYdSZPfqW8g1OxjavnZ25Yst84+x4ZslGCpWoSHvUL14i89pegib0mXzCFvw+/1knN6B52zXddl2QlgnROmdeQ5+MKff7RIWXzevx2Y+vnjAVh628NdnwCrhkzmNEsuYMo1qjuc7Rw7+/0Y2NUJ6YdXvqY42NbfHf/Rl5E2heW0U52yuvnRx4mu7qtDY6JY3N2XFhPpRuP9X+qDprlOHlUFTtXpp7CNtPB4zO4bdQP7F6v3BaqPVi8yGEe1BYg9XaC36/GxL4HqUg9ze+/FYyMORfUGY6ruGx5jSOVcadZrnbDe8sF2wdsg==" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <cfdi:Emisor Rfc="BMV760203JD4" Nombre="BOLSA MEXICANA DE VALORES" RegimenFiscal="601" />
+  <cfdi:Receptor Rfc="BNO670315CD0" Nombre="BANCO NACIONAL DE OBRAS Y SERVICIOS PUBLICOS SOCIEDAD NACIONAL DE CREDITO INSTITUCION DE BANCA DE DESARROLLO" UsoCFDI="G03" DomicilioFiscalReceptor="01219" RegimenFiscalReceptor="601" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="84121705" NoIdentificacion="SIBOLSA_SBO000157" Cantidad="1" ClaveUnidad="E48" Unidad="SRV" 
+                   Descripcion="SIBOLSA PRECIO UNITARIO 840.00 USD AL TIPO DE CAMBIO 19.0563 SIBOLSA BASIC DESDE 01-07-2025 HASTA 31-12-2025" 
+                   ValorUnitario="16007.29" Importe="16007.29" Descuento="800.36" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="15206.93" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="2433.11" />
+        </cfdi:Traslados>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
+    <cfdi:Concepto ClaveProdServ="84121705" NoIdentificacion="SIBOLSA_SBO000157" Cantidad="1" ClaveUnidad="E48" Unidad="SRV" Descripcion="SIBOLSA PRECIO UNITARIO 300.00 USD AL TIPO DE CAMBIO 19.0563 EXCHANGE FEE PROFESSIONAL DESDE 01-07-2025 HASTA 31-12-2025" ValorUnitario="5716.89" Importe="5716.89" Descuento="285.84" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="5431.05" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="868.97" />
+        </cfdi:Traslados>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
+  </cfdi:Conceptos>
+  <cfdi:Impuestos TotalImpuestosTrasladados="3302.08">
+    <cfdi:Traslados>
+      <cfdi:Traslado Base="20637.98" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="3302.08" />
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+  <cfdi:Complemento>
+    <tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                             xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" 
+                             FechaTimbrado="2025-07-10T13:18:44" RfcProvCertif="EDI101020E99" 
+                             UUID="e48a915d-ce37-47cd-8131-abca35b085f3" 
+                             NoCertificadoSAT="00001000000709609813" SelloCFD="TLdXAp3ph/ZlrEn4ejaFpBq6w1JvwcafYdSZPfqW8g1OxjavnZ25Yst84+x4ZslGCpWoSHvUL14i89pegib0mXzCFvw+/1knN6B52zXddl2QlgnROmdeQ5+MKff7RIWXzevx2Y+vnjAVh628NdnwCrhkzmNEsuYMo1qjuc7Rw7+/0Y2NUJ6YdXvqY42NbfHf/Rl5E2heW0U52yuvnRx4mu7qtDY6JY3N2XFhPpRuP9X+qDprlOHlUFTtXpp7CNtPB4zO4bdQP7F6v3BaqPVi8yGEe1BYg9XaC36/GxL4HqUg9ze+/FYyMORfUGY6ruGx5jSOVcadZrnbDe8sF2wdsg==" SelloSAT="aYsG4IGpHFyBCjApPXuOnlmq/FRwEAjENixNHqTrZH0t7uv/yHzelWOwIk8Zd5BcooxGcpLfLRtMlaRvRLoKPXfwfDhx9pbriMo89kDxHxGOKnR0XHc6tMFCnt8BxIGQhh7jYNsR7H2JyF1IWbsqwES3wcMlqFQsPEHjhjOI9ICmv+nR25JL6CvFxJa/Ox9nHiIQIbczOvPuZQK7nu9DT2xq7P3vjBMi2gx+m7l9oUQvE1CC8vBNpEqtgTt3gn48dybroA+q2k+Y8/9MSedV00/M9HTxgaPDVqiZQucI+yhQGheg+2L3c1YFfjhn7yqAQP5Bvnzoq5hPmb3HyD4+/A==" Version="1.1" />
+  </cfdi:Complemento>
+</cfdi:Comprobante>
