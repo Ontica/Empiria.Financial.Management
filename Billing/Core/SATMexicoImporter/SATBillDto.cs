@@ -45,6 +45,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = new SATBillComplementDto();
 
 
+    public FixedList<BillComplementFiscalLegend> LeyendasFiscales {
+      get; internal set;
+    } = new FixedList<BillComplementFiscalLegend>();
+
+
     public SATBillAddenda Addenda {
       get; internal set;
     }
@@ -207,7 +212,7 @@ namespace Empiria.Billing.SATMexicoImporter {
     public FixedList<SATBillCFDIRelatedDataDto> CfdiRelacionados {
       get; internal set;
     } = new FixedList<SATBillCFDIRelatedDataDto>();
-    
+
   }  // class SATBillGeneralDataDto
 
 
@@ -281,6 +286,26 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
   }  // class SATBillTaxDto
+
+
+  /// <summary>BillComplementFiscalLegend</summary>
+  public class BillComplementFiscalLegend {
+
+    public string DisposicionFiscal {
+      get; set;
+    }
+
+
+    public string Norma {
+      get; set;
+    }
+
+
+    public string TextoLeyenda {
+      get; set;
+    }
+
+  } // BillComplementFiscalLegend
 
 
   public class SATBillComplementDto {

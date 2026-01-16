@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Empiria.Billing.SATMexicoImporter {
 
@@ -24,7 +25,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     #region Public methods
 
-    public SATBillGeneralDataDto GenerateGeneralData(XmlElement generalDataNode) {
+    internal SATBillGeneralDataDto GenerateGeneralData(XmlElement generalDataNode) {
 
       if (!generalDataNode.Name.Equals("cfdi:Comprobante")) {
         Assertion.EnsureFailed("The xml file is not a valid CFDI document.");
@@ -56,10 +57,6 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     }
 
-    #endregion Public methods
-
-
-    #region Services
 
     internal SATBillOrganizationDto GenerateReceiverData(XmlNode receiverNode) {
 
@@ -73,6 +70,28 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
+    internal SATBillComplementDto GenerateSATComplementData(XmlNode timbre) {
+
+      if (timbre.Name.Equals("tfd:TimbreFiscalDigital")) {
+
+        return new SATBillComplementDto {
+          Xmlns_Tfd = GetAttribute(timbre, "xmlns:tfd"),
+          Xmlns_Xsi = GetAttribute(timbre, "xmlns:xsi"),
+          Xsi_SchemaLocation = GetAttribute(timbre, "xsi:schemaLocation"),
+          Tfd_Version = GetAttribute(timbre, "Version"),
+          UUID = GetAttribute(timbre, "UUID"),
+          FechaTimbrado = GetAttribute<DateTime>(timbre, "FechaTimbrado"),
+          RfcProvCertif = GetAttribute(timbre, "RfcProvCertif"),
+          SelloCFD = GetAttribute(timbre, "SelloCFD"),
+          NoCertificadoSAT = GetAttribute(timbre, "NoCertificadoSAT"),
+          SelloSAT = GetAttribute(timbre, "SelloSAT")
+        };
+      } else {
+        return new SATBillComplementDto();
+      }
+    }
+
+
     internal SATBillOrganizationDto GenerateSenderData(XmlNode senderNode) {
 
       return new SATBillOrganizationDto {
@@ -82,6 +101,72 @@ namespace Empiria.Billing.SATMexicoImporter {
       };
     }
 
+
+    internal FixedList<BillComplementFiscalLegend> GenerateLeyendasFiscales(XmlNode leyendasFisc) {
+
+      if (leyendasFisc.Name.Equals("leyendasFisc:LeyendasFiscales")) {
+
+        var leyendas = new List<BillComplementFiscalLegend>();
+
+        foreach (XmlNode leyendaFisc in leyendasFisc.ChildNodes) {
+
+          if (leyendaFisc.Name.Equals("leyendasFisc:Leyenda")) {
+
+            BillComplementFiscalLegend leyenda = new BillComplementFiscalLegend {
+              DisposicionFiscal = GetAttribute(leyendaFisc, "disposicionFiscal"),
+              Norma = GetAttribute(leyendaFisc, "norma"),
+              TextoLeyenda = GetAttribute(leyendaFisc, "textoLeyenda")
+            };
+            leyendas.Add(leyenda);
+          }
+        }
+        return new FixedList<BillComplementFiscalLegend>(leyendas);
+      }
+      return new FixedList<BillComplementFiscalLegend>();
+    }
+
+
+    internal SATBillTaxDto GetTaxItem(XmlNode taxItem) {
+
+      var taxDto = new SATBillTaxDto();
+
+      taxDto.Base = GetAttribute<decimal>(taxItem, "Base");
+      taxDto.Impuesto = GetAttribute(taxItem, "Impuesto");
+      taxDto.TipoFactor = GetAttribute(taxItem, "TipoFactor");
+      taxDto.TasaOCuota = GetAttribute<decimal>(taxItem, "TasaOCuota");
+      taxDto.Importe = GetAttribute<decimal>(taxItem, "Importe");
+
+      taxDto.TipoFactor = taxDto.TipoFactor != string.Empty ? taxDto.TipoFactor : "None";
+
+      if (taxItem.Name.Contains(":Traslado")) {
+        taxDto.MetodoAplicacion = BillTaxMethod.Traslado;
+
+      } else if (taxItem.Name.Contains(":Retencion")) {
+        taxDto.MetodoAplicacion = BillTaxMethod.Retencion;
+
+      } else {
+
+        throw Assertion.EnsureNoReachThisCode($"Unhandled SAT tax type: {taxItem.Name}");
+      }
+      return taxDto;
+    }
+
+
+    internal IEnumerable<SATBillTaxDto> GetTaxItems(XmlNode taxNode) {
+      var taxesByConceptDto = new List<SATBillTaxDto>();
+
+      foreach (XmlNode taxItem in taxNode.ChildNodes) {
+
+        taxesByConceptDto.Add(GetTaxItem(taxItem));
+      }
+
+      return taxesByConceptDto;
+    }
+
+    #endregion Public methods
+
+
+    #region Services
 
     internal string GetAttribute(XmlNode concept, string attributeName) {
       return Patcher.Patch(concept.Attributes[attributeName]?.Value, string.Empty);
@@ -97,32 +182,53 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    internal IEnumerable<SATBillTaxDto> GetTaxItems(XmlNode taxNode) {
+    internal FixedList<SATBillConceptDto> GenerateConceptsList(XmlNode conceptsNode) {
+
+      var conceptosDto = new List<SATBillConceptDto>();
+
+      foreach (XmlNode concept in conceptsNode.ChildNodes) {
+
+        if (!concept.Name.Equals("cfdi:Concepto") && !concept.Name.Equals("edr:Concepto")) {
+          Assertion.EnsureFailed("The concepts node must contain only concepts.");
+        }
+
+        var conceptoDto = new SATBillConceptDto() {
+          ClaveProdServ = GetAttribute(concept, "ClaveProdServ"),
+          ClaveUnidad = GetAttribute(concept, "ClaveUnidad"),
+          Cantidad = GetAttribute<decimal>(concept, "Cantidad"),
+          Unidad = GetAttribute(concept, "Unidad"),
+          NoIdentificacion = GetAttribute(concept, "NoIdentificacion"),
+          Descripcion = GetAttribute(concept, "Descripcion"),
+          ValorUnitario = GetAttribute<decimal>(concept, "ValorUnitario"),
+          Importe = GetAttribute<decimal>(concept, "Importe"),
+          Descuento = GetAttribute<decimal>(concept, "Descuento"),
+          ObjetoImp = GetAttribute(concept, "ObjetoImp"),
+          Impuestos = GenerateTaxesByConcept(concept.ChildNodes)
+        };
+
+        conceptosDto.Add(conceptoDto);
+
+      }
+      return conceptosDto.ToFixedList();
+
+    }
+
+
+    private FixedList<SATBillTaxDto> GenerateTaxesByConcept(XmlNodeList childNodes) {
+
       var taxesByConceptDto = new List<SATBillTaxDto>();
 
-      foreach (XmlNode taxItem in taxNode.ChildNodes) {
-        var taxDto = new SATBillTaxDto();
+      foreach (XmlNode taxesNode in childNodes) {
 
-        taxDto.Base = GetAttribute<decimal>(taxItem, "Base");
-        taxDto.Impuesto = GetAttribute(taxItem, "Impuesto");
-        taxDto.TipoFactor = GetAttribute(taxItem, "TipoFactor");
-        taxDto.TasaOCuota = GetAttribute<decimal>(taxItem, "TasaOCuota");
-        taxDto.Importe = GetAttribute<decimal>(taxItem, "Importe");
+        if (taxesNode.Name.Equals("cfdi:Impuestos") || taxesNode.Name.Equals("edr:Impuestos")) {
 
-        if (taxItem.Name == "cfdi:Traslado") {
-          taxDto.MetodoAplicacion = BillTaxMethod.Traslado;
+          foreach (XmlNode taxNode in taxesNode.ChildNodes) {
 
-        } else if (taxItem.Name == "cfdi:Retencion") {
-          taxDto.MetodoAplicacion = BillTaxMethod.Retencion;
-
-        } else {
-
-          throw Assertion.EnsureNoReachThisCode($"Unhandled SAT tax type: {taxNode.Name}");
+            taxesByConceptDto.AddRange(GetTaxItems(taxNode));
+          }
         }
-        taxesByConceptDto.Add(taxDto);
       }
-
-      return taxesByConceptDto;
+      return taxesByConceptDto.ToFixedList();
     }
 
     #endregion Services

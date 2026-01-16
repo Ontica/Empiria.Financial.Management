@@ -59,7 +59,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         }
         if (node.Name == "cfdi:Conceptos") {
 
-          GenerateConceptsList(node);
+          _satCreditNoteDto.Conceptos = generalDataReader.GenerateConceptsList(node);
         }
         if (node.Name == "cfdi:Complemento") {
 
@@ -97,66 +97,15 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     private void GenerateComplementData(XmlNode complementNode) {
 
-      XmlNode timbre = complementNode.FirstChild;
+      foreach (XmlNode childNode in complementNode.ChildNodes) {
 
-      if (!timbre.Name.Equals("tfd:TimbreFiscalDigital"))
-        Assertion.EnsureFailed("The 'tfd:TimbreFiscalDigital' it doesnt exist.");
+        _satCreditNoteDto.SATComplemento = generalDataReader.GenerateSATComplementData(childNode);
 
-      _satCreditNoteDto.SATComplemento = new SATBillComplementDto {
-        Xmlns_Tfd = generalDataReader.GetAttribute(timbre, "xmlns:tfd"),
-        Xmlns_Xsi = generalDataReader.GetAttribute(timbre, "xmlns:xsi"),
-        Xsi_SchemaLocation = generalDataReader.GetAttribute(timbre, "xsi:schemaLocation"),
-        Tfd_Version = generalDataReader.GetAttribute(timbre, "Version"),
-        UUID = generalDataReader.GetAttribute(timbre, "UUID"),
-        FechaTimbrado = generalDataReader.GetAttribute<DateTime>(timbre, "FechaTimbrado"),
-        RfcProvCertif = generalDataReader.GetAttribute(timbre, "RfcProvCertif"),
-        SelloCFD = generalDataReader.GetAttribute(timbre, "SelloCFD"),
-        NoCertificadoSAT = generalDataReader.GetAttribute(timbre, "NoCertificadoSAT"),
-        SelloSAT = generalDataReader.GetAttribute(timbre, "SelloSAT")
-      };
-    }
+        if (childNode.Name.Equals("leyendasFisc:LeyendasFiscales")) {
 
-
-    private void GenerateConceptsList(XmlNode conceptsNode) {
-
-      var conceptosDto = new List<SATBillConceptDto>();
-
-      foreach (XmlNode concept in conceptsNode.ChildNodes) {
-
-        if (!concept.Name.Equals("cfdi:Concepto")) {
-          Assertion.EnsureFailed("The concepts node must contain only concepts.");
+          _satCreditNoteDto.LeyendasFiscales = generalDataReader.GenerateLeyendasFiscales(childNode);
         }
-
-        var conceptoDto = new SATBillConceptDto() {
-          ClaveProdServ = generalDataReader.GetAttribute(concept, "ClaveProdServ"),
-          ClaveUnidad = generalDataReader.GetAttribute(concept, "ClaveUnidad"),
-          Cantidad = generalDataReader.GetAttribute<decimal>(concept, "Cantidad"),
-          Unidad = generalDataReader.GetAttribute(concept, "Unidad"),
-          NoIdentificacion = generalDataReader.GetAttribute(concept, "NoIdentificacion"),
-          Descripcion = generalDataReader.GetAttribute(concept, "Descripcion"),
-          ValorUnitario = generalDataReader.GetAttribute<decimal>(concept, "ValorUnitario"),
-          Importe = generalDataReader.GetAttribute<decimal>(concept, "Importe"),
-          Descuento = generalDataReader.GetAttribute<decimal>(concept, "Descuento"),
-          ObjetoImp = generalDataReader.GetAttribute(concept, "ObjetoImp"),
-          Impuestos = GenerateTaxesByConcept(concept.ChildNodes.Item(0))
-        };
-
-        conceptosDto.Add(conceptoDto);
-
       }
-      _satCreditNoteDto.Conceptos = conceptosDto.ToFixedList();
-    }
-
-
-    private FixedList<SATBillTaxDto> GenerateTaxesByConcept(XmlNode taxesNode) {
-
-      var taxesByConceptDto = new List<SATBillTaxDto>();
-
-      foreach (XmlNode taxNode in taxesNode.ChildNodes) {
-
-        taxesByConceptDto.AddRange(generalDataReader.GetTaxItems(taxNode));
-      }
-      return taxesByConceptDto.ToFixedList();
     }
 
     #endregion Helpers

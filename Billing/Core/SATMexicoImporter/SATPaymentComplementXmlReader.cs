@@ -58,7 +58,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         }
         if (node.Name == "cfdi:Conceptos") {
 
-          GenerateConceptsList(node);
+          _satPaymentComplementDto.Conceptos = generalDataReader.GenerateConceptsList(node);
         }
         if (node.Name == "cfdi:Complemento") {
 
@@ -81,6 +81,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         if (complementChild.Name.Equals("pago20:Pagos")) {
 
           GetPaymentData(complementChild);
+
         } else if (complementChild.Name.Equals("tfd:TimbreFiscalDigital")) {
 
           GetDigitalTaxStampData(complementChild);
@@ -133,35 +134,6 @@ namespace Empiria.Billing.SATMexicoImporter {
       _satPaymentComplementDto.DatosComplemento.SaldosTotales = balancesDataList.ToFixedList();
       _satPaymentComplementDto.DatosComplemento.DatosComplementoPago = payoutDataList.ToFixedList();
 
-    }
-
-    private void GenerateConceptsList(XmlNode conceptsNode) {
-
-      var conceptosDto = new List<SATBillConceptDto>();
-
-      foreach (XmlNode concept in conceptsNode.ChildNodes) {
-
-        if (!concept.Name.Equals("cfdi:Concepto")) {
-          Assertion.EnsureFailed("The concepts node must contain only concepts.");
-        }
-
-        var conceptoDto = new SATBillConceptDto() {
-          ClaveProdServ = generalDataReader.GetAttribute(concept, "ClaveProdServ"),
-          ClaveUnidad = generalDataReader.GetAttribute(concept, "ClaveUnidad"),
-          Cantidad = generalDataReader.GetAttribute<decimal>(concept, "Cantidad"),
-          Unidad = generalDataReader.GetAttribute(concept, "Unidad"),
-          NoIdentificacion = generalDataReader.GetAttribute(concept, "NoIdentificacion"),
-          Descripcion = generalDataReader.GetAttribute(concept, "Descripcion"),
-          ValorUnitario = generalDataReader.GetAttribute<decimal>(concept, "ValorUnitario"),
-          Importe = generalDataReader.GetAttribute<decimal>(concept, "Importe"),
-          Descuento = generalDataReader.GetAttribute<decimal>(concept, "Descuento"),
-          ObjetoImp = generalDataReader.GetAttribute(concept, "ObjetoImp"),
-        };
-
-        conceptosDto.Add(conceptoDto);
-
-      }
-      _satPaymentComplementDto.Conceptos = conceptosDto.ToFixedList();
     }
 
 
