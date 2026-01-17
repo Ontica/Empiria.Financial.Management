@@ -401,7 +401,7 @@ namespace Empiria.Billing {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValidDocument();
-      fields.EnsureIsValidCreditNote(BillCategory);
+      fields.EnsureIsValidNote(BillCategory);
 
       RelatedBillNo = fields.CFDIRelated;
       IssueDate = Patcher.Patch(fields.SchemaData.Fecha, IssueDate);

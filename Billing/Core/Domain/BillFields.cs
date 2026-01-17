@@ -587,10 +587,10 @@ namespace Empiria.Billing {
     public FixedList<BillConceptFields> Concepts {
       get; internal set;
     } = new FixedList<BillConceptFields>();
-    
-    
+
+
     internal void MapEcoConceptFields(SATBillAddenda addenda) {
-      
+
       if (addenda.EcoConcepts.Count > 0) {
         NoEstacion = addenda.NoEstacion;
         ClavePemex = addenda.ClavePemex;
@@ -647,20 +647,23 @@ namespace Empiria.Billing {
     }
 
 
-    static internal void EnsureIsValidCreditNote(this BillFields fields, BillCategory billCategory) {
+    static internal void EnsureIsValidNote(this BillFields fields, BillCategory billCategory) {
 
-      if (billCategory != BillCategory.NotaDeCreditoProveedores) {
-        return;
+      if (billCategory == BillCategory.NotaDeCreditoProveedores) {
+        
+        Assertion.Require(fields.CFDIRelated != string.Empty,
+                        "La nota de crédito que intenta guardar " +
+                        "no tiene referencia a un CFDI relacionado.");
       }
 
-      Assertion.Require(fields.CFDIRelated != string.Empty,
-                      "La nota de crédito que intenta guardar no tiene referencia a un CFDI relacionado.");
+      if (fields.CFDIRelated != string.Empty) {
 
-      Bill relatedBill = BillData.TryGetBillWithBillNo(fields.CFDIRelated);
+        Bill relatedBill = BillData.TryGetBillWithBillNo(fields.CFDIRelated);
 
-      Assertion.Require(relatedBill,
-                        "El CFDI al que hace referencia la nota de crédito, " +
-                        "no ha sido registrado en el sistema.");
+        Assertion.Require(relatedBill,
+                         $"El CFDI ({fields.CFDIRelated}) al que hace referencia el documento, " +
+                          "no ha sido registrado en el sistema.");
+      }
     }
 
 
