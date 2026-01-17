@@ -56,6 +56,7 @@ namespace Empiria.Payments.Adapters {
         CanSuspend = rules.CanSuspend(),
         CanRequestPayment = rules.CanRequestPayment(),
         CanCancelPaymentRequest = rules.CanCancelPaymentRequest(),
+        CanSetAsPayed = rules.CanSetAsPayed(),
         CanEditDocuments = rules.CanEditDocuments()
       };
     }

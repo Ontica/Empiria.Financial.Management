@@ -76,6 +76,12 @@ namespace Empiria.Payments.UseCases {
     }
 
 
+    public PaymentInstructionHolderDto SetAsPayed(string instructionUID, string message) {
+
+      return ProcessEvent(instructionUID, PaymentInstructionEvent.SetAsPayed, message);
+    }
+
+
     public PaymentInstructionHolderDto Suspend(string instructionUID) {
 
       return ProcessEvent(instructionUID, PaymentInstructionEvent.Suspend);
@@ -87,7 +93,16 @@ namespace Empiria.Payments.UseCases {
 
     private PaymentInstructionHolderDto ProcessEvent(string instructionUID,
                                                      PaymentInstructionEvent instructionEvent) {
+      return ProcessEvent(instructionUID, instructionEvent, string.Empty);
+    }
+
+
+    private PaymentInstructionHolderDto ProcessEvent(string instructionUID,
+                                                     PaymentInstructionEvent instructionEvent,
+                                                     string userMessage) {
       Assertion.Require(instructionUID, nameof(instructionUID));
+
+      userMessage = userMessage ?? string.Empty;
 
       var instruction = PaymentInstruction.Parse(instructionUID);
 
@@ -97,7 +112,7 @@ namespace Empiria.Payments.UseCases {
       Assertion.Require(!instruction.Status.IsFinal(),
                         $"La instrucción de pago está en el estado final {instruction.Status.GetName()}.");
 
-      instruction.EventHandler(instructionEvent);
+      instruction.EventHandler(instructionEvent, userMessage);
 
       instruction.Save();
 

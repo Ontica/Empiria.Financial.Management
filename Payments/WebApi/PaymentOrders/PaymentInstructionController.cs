@@ -98,6 +98,19 @@ namespace Empiria.Payments.WebApi {
 
 
     [HttpPost]
+    [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/close-payment")]  // ToDo: Obsolete
+    [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/set-as-payed")]
+    public SingleObjectModel SetAsPayed([FromUri] string instructionUID, [FromBody] MessageFields fields) {
+
+      using (var usecases = PaymentInstructionUseCases.UseCaseInteractor()) {
+        PaymentInstructionHolderDto instruction = usecases.SetAsPayed(instructionUID, fields.Message);
+
+        return new SingleObjectModel(base.Request, instruction);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v2/payments-management/payment-instructions/{instructionUID:guid}/suspend")]
     public SingleObjectModel Suspend([FromUri] string instructionUID) {
 
@@ -111,5 +124,12 @@ namespace Empiria.Payments.WebApi {
     #endregion Query web apis
 
   }  // class PaymentInstructionController
+
+  public class MessageFields {
+
+    public string Message {
+      get; set;
+    } = string.Empty;
+  }
 
 }  // namespace Empiria.Payments.WebApi

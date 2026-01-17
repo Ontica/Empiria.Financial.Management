@@ -13,6 +13,8 @@ namespace Empiria.Payments {
   /// <summary>Provides services to control payment instruction's rules.</summary>
   internal class PaymentInstructionRules {
 
+    static internal readonly string CAN_SET_AS_PAYED_PERMISSION = "feature-cierre-manual-pagos";
+
     private PaymentInstruction _instruction;
 
     internal PaymentInstructionRules(PaymentInstruction instruction) {
@@ -47,6 +49,16 @@ namespace Empiria.Payments {
       }
 
       return false;
+    }
+
+
+    internal bool CanSetAsPayed() {
+      if (_instruction.Status != PaymentInstructionStatus.Exception ||
+          !_instruction.PaymentOrder.PaymentMethod.IsElectronic) {
+        return false;
+      }
+
+      return ExecutionServer.CurrentPrincipal.HasPermission(CAN_SET_AS_PAYED_PERMISSION);
     }
 
 

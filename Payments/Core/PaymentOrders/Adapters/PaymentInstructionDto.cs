@@ -74,6 +74,11 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    [Newtonsoft.Json.JsonProperty(PropertyName = "canClosePayment")]
+    public bool CanSetAsPayed {
+      get; internal set;
+    }
+
   }  // class PaymentInstructionActions
 
 

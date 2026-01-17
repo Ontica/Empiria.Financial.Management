@@ -21,6 +21,9 @@ namespace Empiria.Payments {
     /// <summary>Requests the payment associated to the instruction.</summary>
     RequestPayment,
 
+    /// <summary>Sets a failed electronic payment as payed.</summary>
+    SetAsPayed,
+
     /// <summary>Resets the payment instruction returning it to Programmed status.</summary>
     Reset,
 
@@ -51,6 +54,9 @@ namespace Empiria.Payments {
 
         case PaymentInstructionEvent.Reset:
           return "Se activó la instrucción de pago.";
+
+        case PaymentInstructionEvent.SetAsPayed:
+          return "La instrucción de pago fue marcada manualmente como pagada.";
 
         case PaymentInstructionEvent.Suspend:
           return "Se suspendió la instrucción de pago.";
