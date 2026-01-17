@@ -109,6 +109,13 @@ namespace Empiria.Billing {
       }
     }
 
+    public decimal BudgetableTaxesTotal {
+      get {
+        return TaxItems.FindAll(x => x.TaxType.IsBudgetable)
+                       .Sum(x => x.Total);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
