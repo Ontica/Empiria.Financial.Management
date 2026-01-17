@@ -47,7 +47,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
         if (node.Name == "cfdi:CfdiRelacionados") {
 
-          GenerateCfdiRelatedData(node);
+          _satCreditNoteDto.DatosGenerales.CfdiRelacionados = generalDataReader.GenerateRelatedCfdiData(node);
         }
         if (node.Name == "cfdi:Emisor") {
 
@@ -75,26 +75,6 @@ namespace Empiria.Billing.SATMexicoImporter {
     #region Helpers
 
     
-    private void GenerateCfdiRelatedData(XmlNode cfdiRelatedNode) {
-
-      var cfdiRelatedListDto = new List<SATBillCFDIRelatedDataDto>();
-
-      foreach (XmlNode cfdiRelated in cfdiRelatedNode.ChildNodes) {
-
-        if (!cfdiRelated.Name.Equals("cfdi:CfdiRelacionado")) {
-          Assertion.EnsureFailed("The node name must be cfdi:CfdiRelacionado.");
-        }
-
-        var cfdiRelatedDto = new SATBillCFDIRelatedDataDto() {
-          UUID = generalDataReader.GetAttribute(cfdiRelated, "UUID"),
-        };
-
-        cfdiRelatedListDto.Add(cfdiRelatedDto);
-      }
-      _satCreditNoteDto.DatosGenerales.CfdiRelacionados = cfdiRelatedListDto.ToFixedList();
-    }
-
-
     private void GenerateComplementData(XmlNode complementNode) {
 
       foreach (XmlNode childNode in complementNode.ChildNodes) {

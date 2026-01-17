@@ -46,6 +46,10 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode node in nodes) {
 
+        if (node.Name == "cfdi:CfdiRelacionados") {
+
+          _satBillDto.DatosGenerales.CfdiRelacionados = generalDataReader.GenerateRelatedCfdiData(node);
+        }
         if (node.Name == "cfdi:Emisor") {
 
           _satBillDto.Emisor = generalDataReader.GenerateSenderData(node);

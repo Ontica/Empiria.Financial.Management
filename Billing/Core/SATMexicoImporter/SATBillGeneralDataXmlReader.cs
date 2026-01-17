@@ -25,6 +25,26 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     #region Public methods
 
+    internal FixedList<SATBillCFDIRelatedDataDto> GenerateRelatedCfdiData(XmlNode cfdiRelatedNode) {
+
+      var cfdiRelatedListDto = new List<SATBillCFDIRelatedDataDto>();
+
+      foreach (XmlNode cfdiRelated in cfdiRelatedNode.ChildNodes) {
+
+        if (!cfdiRelated.Name.Equals("cfdi:CfdiRelacionado")) {
+          Assertion.EnsureFailed("The node name must be cfdi:CfdiRelacionado.");
+        }
+
+        var cfdiRelatedDto = new SATBillCFDIRelatedDataDto() {
+          UUID = GetAttribute(cfdiRelated, "UUID"),
+        };
+
+        cfdiRelatedListDto.Add(cfdiRelatedDto);
+      }
+      return cfdiRelatedListDto.ToFixedList();
+    }
+
+
     internal SATBillGeneralDataDto GenerateGeneralData(XmlElement generalDataNode) {
 
       if (!generalDataNode.Name.Equals("cfdi:Comprobante")) {
