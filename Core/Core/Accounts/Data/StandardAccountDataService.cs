@@ -73,7 +73,7 @@ namespace Empiria.Financial.Data {
       }
 
       var sql = "SELECT * FROM FMS_STD_ACCOUNTS " +
-               $"WHERE {filter} " +
+               $"WHERE {filter} AND " +
                $"STD_ACCT_STATUS <> 'X' " +
                $"ORDER BY STD_ACCT_NUMBER";
 
