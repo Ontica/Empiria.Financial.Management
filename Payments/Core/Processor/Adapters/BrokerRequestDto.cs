@@ -35,6 +35,13 @@ namespace Empiria.Payments.Processor.Adapters {
     }
 
 
+    public int PaymentInstructionId {
+      get {
+        return _instruction.Id;
+      }
+    }
+
+
     public string PaymentInstructionNo {
       get {
         return _instruction.PaymentInstructionNo;
