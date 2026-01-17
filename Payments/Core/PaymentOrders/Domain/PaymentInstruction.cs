@@ -28,6 +28,7 @@ namespace Empiria.Payments {
 
     private BrokerResponseDto _lastBrokerResponse;
     private PaymentInstructionEvent _lastEvent = PaymentInstructionEvent.None;
+    private string _userMessageText = string.Empty;
 
     private readonly object _locker = new object();
 
@@ -193,8 +194,12 @@ namespace Empiria.Payments {
 
     #region Methods
 
-    internal void EventHandler(PaymentInstructionEvent instructionEvent) {
+    internal void EventHandler(PaymentInstructionEvent instructionEvent, string userMessage) {
       lock (_locker) {
+        userMessage = userMessage ?? string.Empty;
+
+        _userMessageText = userMessage;
+
         EventHandlerInternal(instructionEvent);
       }
     }
@@ -254,6 +259,16 @@ namespace Empiria.Payments {
 
           Status.EnsureCanUpdateTo(PaymentInstructionStatus.Programmed);
           Status = PaymentInstructionStatus.Programmed;
+          break;
+
+        case PaymentInstructionEvent.SetAsPayed:
+
+          Assertion.Require(Rules.CanSetAsPayed(),
+                            "No se puede marcar como pagada esta instrucción de pago.");
+
+          Status = PaymentInstructionStatus.Payed;
+          PaymentOrder.SetAsPayed(this);
+
           break;
 
         case PaymentInstructionEvent.RequestPayment:
@@ -328,7 +343,7 @@ namespace Empiria.Payments {
     }
 
     private void SaveEventLogEntry() {
-      var logEntry = new PaymentInstructionLogEntry(this, _lastEvent);
+      var logEntry = new PaymentInstructionLogEntry(this, _lastEvent, _userMessageText);
 
       logEntry.Save();
 

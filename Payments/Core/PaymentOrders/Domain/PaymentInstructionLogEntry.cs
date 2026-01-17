@@ -28,15 +28,18 @@ namespace Empiria.Payments {
 
 
     internal PaymentInstructionLogEntry(PaymentInstruction paymentInstruction,
-                                        PaymentInstructionEvent instructionEvent) {
+                                        PaymentInstructionEvent instructionEvent,
+                                        string userMessage) {
       Assertion.Require(paymentInstruction, nameof(paymentInstruction));
       Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
       Assertion.Require(instructionEvent != PaymentInstructionEvent.None, nameof(instructionEvent));
 
+      userMessage = userMessage ?? string.Empty;
+
       TimeStamp = DateTime.Now;
       PaymentInstruction = paymentInstruction;
       PaymentOrder = paymentInstruction.PaymentOrder;
-      Load(instructionEvent);
+      Load(instructionEvent, userMessage);
     }
 
 
@@ -114,8 +117,13 @@ namespace Empiria.Payments {
     }
 
 
-    private void Load(PaymentInstructionEvent instructionEvent) {
+    private void Load(PaymentInstructionEvent instructionEvent, string userMessage) {
       LogText = instructionEvent.GetDescription();
+
+      if (userMessage.Length != 0) {
+        LogText += $" {userMessage}";
+      }
+
       BrokerResponse = string.Empty;
       Status = PaymentInstruction.Status;
     }
