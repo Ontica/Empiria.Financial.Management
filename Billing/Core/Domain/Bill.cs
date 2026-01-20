@@ -403,7 +403,7 @@ namespace Empiria.Billing {
       fields.EnsureIsValidDocument();
       fields.EnsureIsValidNote(BillCategory);
 
-      RelatedBillNo = fields.CFDIRelated;
+      RelatedBillNo = fields.BillRelatedDocument.RelatedCFDI;
       IssueDate = Patcher.Patch(fields.SchemaData.Fecha, IssueDate);
       IssuedBy = Patcher.Patch(fields.IssuedByUID, IssuedBy);
       IssuedTo = Patcher.Patch(fields.IssuedToUID, IssuedTo);

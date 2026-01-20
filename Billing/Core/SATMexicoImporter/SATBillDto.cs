@@ -247,9 +247,14 @@ namespace Empiria.Billing.SATMexicoImporter {
 
   public class SATBillCFDIRelatedDataDto {
 
+    public string TipoRelacion {
+      get; internal set;
+    } = string.Empty;
+
+
     public string UUID {
       get; internal set;
-    }
+    } = string.Empty;
 
   } // class SATBillRelatedDataDto
 

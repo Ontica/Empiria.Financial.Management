@@ -36,6 +36,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         }
 
         var cfdiRelatedDto = new SATBillCFDIRelatedDataDto() {
+          TipoRelacion = GetAttribute(cfdiRelatedNode, "TipoRelacion"),
           UUID = GetAttribute(cfdiRelated, "UUID"),
         };
 

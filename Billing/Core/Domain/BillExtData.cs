@@ -26,6 +26,36 @@ namespace Empiria.Billing {
     }
 
 
+    public string CfdiRelacionado {
+      get {
+        return _extData.Get("cfdiRelacionado", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("cfdiRelacionado", value);
+      }
+    }
+
+
+    public string TipoRelacion {
+      get {
+        return _extData.Get("tipoRelacion", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("tipoRelacion", value);
+      }
+    }
+
+
+    public string TipoRelacionNombre {
+      get {
+        return _extData.Get("tipoRelacionNombre", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("tipoRelacionNombre", value);
+      }
+    }
+
+
     public string NoEstacion {
       get {
         return _extData.Get("noEstacion", string.Empty);
@@ -244,6 +274,11 @@ namespace Empiria.Billing {
     internal void Update(BillFields fields) {
       Assertion.Require(fields, nameof(fields));
 
+      if (fields.BillRelatedDocument.RelatedCFDI != string.Empty) {
+        CfdiRelacionado = fields.BillRelatedDocument.RelatedCFDI;
+        TipoRelacion = fields.BillRelatedDocument.TipoRelacion;
+        TipoRelacionNombre = fields.BillRelatedDocument.TipoRelacionNombre.ToString();
+      }
       if (fields.Addenda.NoEstacion != string.Empty) {
         NoEstacion = fields.Addenda.NoEstacion;
         ClavePemex = fields.Addenda.ClavePemex;
@@ -278,7 +313,7 @@ namespace Empiria.Billing {
       Assertion.Require(complementDataFields, nameof(complementDataFields));
       Assertion.Require(addendaLabels, nameof(addendaLabels));
 
-      string addendaLeyendas = string.Empty; 
+      string addendaLeyendas = string.Empty;
       foreach (var addendaLabel in addendaLabels) {
 
         addendaLeyendas += $"{addendaLabel}.. ";

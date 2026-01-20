@@ -40,12 +40,6 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public string CFDIRelated {
-      get;
-      internal set;
-    } = string.Empty;
-
-
     public string IssuedByUID {
       get; set;
     } = string.Empty;
@@ -86,6 +80,11 @@ namespace Empiria.Billing {
     }
 
 
+    public BillRelatedDocumentData BillRelatedDocument {
+      get; internal set;
+    } = new BillRelatedDocumentData();
+
+
     public FixedList<BillConceptFields> Concepts {
       get; set;
     } = new FixedList<BillConceptFields>();
@@ -102,15 +101,35 @@ namespace Empiria.Billing {
 
 
     public BillAddendaFields Addenda {
-      get; set;
+      get; internal set;
     }
 
 
     public BillFiscalLegendFields FiscalLegendsData {
-      get; set;
+      get; internal set;
     }
 
   } // class BillFields
+
+
+  internal class BillRelatedDocumentData {
+
+    public string RelatedCFDI {
+      get;
+      internal set;
+    } = string.Empty;
+
+
+    public string TipoRelacion {
+      get; internal set;
+    } = string.Empty;
+
+
+    public BillRelatedDocumentType TipoRelacionNombre {
+      get; internal set;
+    } = BillRelatedDocumentType.Ninguno;
+
+  } // class BillRelatedDocumentData
 
 
   internal class BillGeneralDataFields {
@@ -649,19 +668,25 @@ namespace Empiria.Billing {
 
     static internal void EnsureIsValidNote(this BillFields fields, BillCategory billCategory) {
 
+      if (fields.SchemaData.TipoComprobante == "I" &&
+          (fields.BillRelatedDocument.TipoRelacion == "02" ||
+           fields.BillRelatedDocument.TipoRelacion == "04")) {
+        return;
+      }
+
       if (billCategory == BillCategory.NotaDeCreditoProveedores) {
         
-        Assertion.Require(fields.CFDIRelated != string.Empty,
+        Assertion.Require(fields.BillRelatedDocument.RelatedCFDI != string.Empty,
                         "La nota de crédito que intenta guardar " +
                         "no tiene referencia a un CFDI relacionado.");
       }
 
-      if (fields.CFDIRelated != string.Empty) {
+      if (fields.BillRelatedDocument.RelatedCFDI != string.Empty) {
 
-        Bill relatedBill = BillData.TryGetBillWithBillNo(fields.CFDIRelated);
+        Bill relatedBill = BillData.TryGetBillWithBillNo(fields.BillRelatedDocument.RelatedCFDI);
 
         Assertion.Require(relatedBill,
-                         $"El CFDI ({fields.CFDIRelated}) al que hace referencia el documento, " +
+                         $"El CFDI ({fields.BillRelatedDocument.RelatedCFDI}) al que hace referencia el documento, " +
                           "no ha sido registrado en el sistema.");
       }
     }

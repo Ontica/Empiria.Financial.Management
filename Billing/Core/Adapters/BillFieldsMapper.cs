@@ -105,12 +105,12 @@ namespace Empiria.Billing.Adapters {
         Subtotal = dto.DatosGenerales.SubTotal,
         Discount = dto.DatosGenerales.Descuento,
         Total = dto.DatosGenerales.Total,
-        CFDIRelated = MapToCfdiRelated(dto.DatosGenerales.CfdiRelacionados),
         Concepts = MapToBillConceptFieldsList(dto.Conceptos),
         SchemaData = MapToSchemaData(dto),
         SecurityData = MapToSecurityData(dto),
         Addenda = MapToAddendaData(dto.Addenda),
-        FiscalLegendsData = MapToFiscalLegendsData(dto.LeyendasFiscales)
+        FiscalLegendsData = MapToFiscalLegendsData(dto.LeyendasFiscales),
+        BillRelatedDocument = MapToRelatedCfdi(dto.DatosGenerales.CfdiRelacionados)
       };
     }
 
@@ -149,16 +149,20 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private string MapToCfdiRelated(FixedList<SATBillCFDIRelatedDataDto> cfdiRelacionados) {
+    static private BillRelatedDocumentData MapToRelatedCfdi(FixedList<SATBillCFDIRelatedDataDto> cfdiRelacionados) {
 
       if (cfdiRelacionados.Count == 0) {
-        return string.Empty;
+        return new BillRelatedDocumentData();
       }
 
-      return cfdiRelacionados.First().UUID;
+      return new BillRelatedDocumentData {
+        RelatedCFDI = cfdiRelacionados.First().UUID,
+        TipoRelacion = cfdiRelacionados.First().TipoRelacion,
+        TipoRelacionNombre = MapToRelatedCfdiTypeName(cfdiRelacionados.First().TipoRelacion),
+      };
     }
 
-
+    
     static private BillOrganizationFields MapToIssuedBy(SATBillOrganizationDto emisor) {
 
       return new BillOrganizationFields() {
@@ -178,6 +182,30 @@ namespace Empiria.Billing.Adapters {
         DomicilioFiscal = receptor.DomicilioFiscal,
         UsoCFDI = receptor.UsoCFDI
       };
+    }
+
+
+    static private BillRelatedDocumentType MapToRelatedCfdiTypeName(string tipoRelacion) {
+
+      switch (tipoRelacion) {
+        case "01":
+          return BillRelatedDocumentType.NotaDeCredito;
+        case "02":
+          return BillRelatedDocumentType.NotaDeDebito;
+        case "03":
+          return BillRelatedDocumentType.DevolucionDeMercancia;
+        case "04":
+          return BillRelatedDocumentType.SustituciónDeCFDIPrevios;
+        case "05":
+          return BillRelatedDocumentType.TrasladoDeMercanciasFacturadasPreviamente;
+        case "06":
+          return BillRelatedDocumentType.FacturaGeneradaPorTrasladosPrevios;
+        case "07":
+          return BillRelatedDocumentType.AplicacionDeAnticipo;
+        default:
+          break;
+      }
+      return BillRelatedDocumentType.Ninguno;
     }
 
 
