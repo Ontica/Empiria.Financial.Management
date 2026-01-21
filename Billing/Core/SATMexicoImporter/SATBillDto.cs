@@ -50,6 +50,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = new FixedList<BillComplementFiscalLegend>();
 
 
+    public FixedList<BillComplementLocalTax> ImpuestosLocales {
+      get; internal set;
+    } = new FixedList<BillComplementLocalTax>();
+    
+
     public SATBillAddenda Addenda {
       get; internal set;
     }
@@ -291,6 +296,25 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
   }  // class SATBillTaxDto
+
+
+  public class BillComplementLocalTax {
+
+    public string ImpLocTrasladado {
+      get; set;
+    }
+
+
+    public string TasadeTraslado {
+      get; set;
+    }
+
+
+    public decimal Importe {
+      get; set;
+    }
+
+  } // class BillComplementLocalTax
 
 
   /// <summary>BillComplementFiscalLegend</summary>

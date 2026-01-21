@@ -53,7 +53,7 @@ namespace Empiria.Billing.SATMexicoImporter {
       } else if (!generalDataNode.GetAttribute("Version").Equals("4.0")) {
         Assertion.EnsureFailed("The CFDI version is not correct.");
       }
-      
+
       return new SATBillGeneralDataDto {
         CFDIVersion = GetAttribute(generalDataNode, "Version"),
         Folio = GetAttribute(generalDataNode, "Folio"),
@@ -93,18 +93,18 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     internal SATBillComplementDto GenerateSATComplementData(XmlNode timbre) {
 
-        return new SATBillComplementDto {
-          Xmlns_Tfd = GetAttribute(timbre, "xmlns:tfd"),
-          Xmlns_Xsi = GetAttribute(timbre, "xmlns:xsi"),
-          Xsi_SchemaLocation = GetAttribute(timbre, "xsi:schemaLocation"),
-          Tfd_Version = GetAttribute(timbre, "Version"),
-          UUID = GetAttribute(timbre, "UUID"),
-          FechaTimbrado = GetAttribute<DateTime>(timbre, "FechaTimbrado"),
-          RfcProvCertif = GetAttribute(timbre, "RfcProvCertif"),
-          SelloCFD = GetAttribute(timbre, "SelloCFD"),
-          NoCertificadoSAT = GetAttribute(timbre, "NoCertificadoSAT"),
-          SelloSAT = GetAttribute(timbre, "SelloSAT")
-        };
+      return new SATBillComplementDto {
+        Xmlns_Tfd = GetAttribute(timbre, "xmlns:tfd"),
+        Xmlns_Xsi = GetAttribute(timbre, "xmlns:xsi"),
+        Xsi_SchemaLocation = GetAttribute(timbre, "xsi:schemaLocation"),
+        Tfd_Version = GetAttribute(timbre, "Version"),
+        UUID = GetAttribute(timbre, "UUID"),
+        FechaTimbrado = GetAttribute<DateTime>(timbre, "FechaTimbrado"),
+        RfcProvCertif = GetAttribute(timbre, "RfcProvCertif"),
+        SelloCFD = GetAttribute(timbre, "SelloCFD"),
+        NoCertificadoSAT = GetAttribute(timbre, "NoCertificadoSAT"),
+        SelloSAT = GetAttribute(timbre, "SelloSAT")
+      };
     }
 
 
@@ -118,27 +118,43 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
+    internal FixedList<BillComplementLocalTax> GenerateImpuestosLocales(XmlNode impuestosLocalesNode) {
+
+      var impuestosLocales = new List<BillComplementLocalTax>();
+
+      foreach (XmlNode impuestoLocal in impuestosLocalesNode.ChildNodes) {
+
+        if (impuestoLocal.Name.Equals("implocal:TrasladosLocales")) {
+
+          BillComplementLocalTax impuesto = new BillComplementLocalTax {
+            ImpLocTrasladado = GetAttribute(impuestoLocal, "ImpLocTrasladado"),
+            TasadeTraslado = GetAttribute(impuestoLocal, "TasadeTraslado"),
+            Importe = GetAttribute<decimal>(impuestoLocal, "Importe")
+          };
+          impuestosLocales.Add(impuesto);
+        }
+      }
+      return new FixedList<BillComplementLocalTax>(impuestosLocales);
+    }
+
+
     internal FixedList<BillComplementFiscalLegend> GenerateLeyendasFiscales(XmlNode leyendasFisc) {
 
-      if (leyendasFisc.Name.Equals("leyendasFisc:LeyendasFiscales")) {
+      var leyendas = new List<BillComplementFiscalLegend>();
 
-        var leyendas = new List<BillComplementFiscalLegend>();
+      foreach (XmlNode leyendaFisc in leyendasFisc.ChildNodes) {
 
-        foreach (XmlNode leyendaFisc in leyendasFisc.ChildNodes) {
+        if (leyendaFisc.Name.Equals("leyendasFisc:Leyenda")) {
 
-          if (leyendaFisc.Name.Equals("leyendasFisc:Leyenda")) {
-
-            BillComplementFiscalLegend leyenda = new BillComplementFiscalLegend {
-              DisposicionFiscal = GetAttribute(leyendaFisc, "disposicionFiscal"),
-              Norma = GetAttribute(leyendaFisc, "norma"),
-              TextoLeyenda = GetAttribute(leyendaFisc, "textoLeyenda")
-            };
-            leyendas.Add(leyenda);
-          }
+          BillComplementFiscalLegend leyenda = new BillComplementFiscalLegend {
+            DisposicionFiscal = GetAttribute(leyendaFisc, "disposicionFiscal"),
+            Norma = GetAttribute(leyendaFisc, "norma"),
+            TextoLeyenda = GetAttribute(leyendaFisc, "textoLeyenda")
+          };
+          leyendas.Add(leyenda);
         }
-        return new FixedList<BillComplementFiscalLegend>(leyendas);
       }
-      return new FixedList<BillComplementFiscalLegend>();
+      return new FixedList<BillComplementFiscalLegend>(leyendas);
     }
 
 

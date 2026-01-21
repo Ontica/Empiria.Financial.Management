@@ -155,6 +155,10 @@ namespace Empiria.Billing.SATMexicoImporter {
 
           _satBillDto.LeyendasFiscales = generalDataReader.GenerateLeyendasFiscales(childNode);
         }
+        if (childNode.Name.Equals("implocal:ImpuestosLocales")) {
+
+          _satBillDto.ImpuestosLocales = generalDataReader.GenerateImpuestosLocales(childNode);
+        }
       }
     }
 
