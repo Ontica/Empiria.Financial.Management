@@ -147,8 +147,10 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode childNode in complementNode.ChildNodes) {
 
-        _satBillDto.SATComplemento = generalDataReader.GenerateSATComplementData(childNode);
+        if (childNode.Name.Equals("tfd:TimbreFiscalDigital")) {
 
+          _satBillDto.SATComplemento = generalDataReader.GenerateSATComplementData(childNode);
+        }
         if (childNode.Name.Equals("leyendasFisc:LeyendasFiscales")) {
 
           _satBillDto.LeyendasFiscales = generalDataReader.GenerateLeyendasFiscales(childNode);

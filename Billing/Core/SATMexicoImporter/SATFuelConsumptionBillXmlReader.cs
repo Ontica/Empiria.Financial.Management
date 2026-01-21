@@ -98,8 +98,10 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode complementChild in complementNode.ChildNodes) {
 
-        _satBillDto.SATComplemento = generalDataReader.GenerateSATComplementData(complementChild);
+        if (complementChild.Name.Equals("tfd:TimbreFiscalDigital")) {
 
+          _satBillDto.SATComplemento = generalDataReader.GenerateSATComplementData(complementChild);
+        }
         if (complementChild.Name.Equals("ecc12:EstadoDeCuentaCombustible")) {
 
           GetAccountStatementData(complementChild);

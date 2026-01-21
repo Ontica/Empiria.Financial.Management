@@ -93,8 +93,6 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     internal SATBillComplementDto GenerateSATComplementData(XmlNode timbre) {
 
-      if (timbre.Name.Equals("tfd:TimbreFiscalDigital")) {
-
         return new SATBillComplementDto {
           Xmlns_Tfd = GetAttribute(timbre, "xmlns:tfd"),
           Xmlns_Xsi = GetAttribute(timbre, "xmlns:xsi"),
@@ -107,9 +105,6 @@ namespace Empiria.Billing.SATMexicoImporter {
           NoCertificadoSAT = GetAttribute(timbre, "NoCertificadoSAT"),
           SelloSAT = GetAttribute(timbre, "SelloSAT")
         };
-      } else {
-        return new SATBillComplementDto();
-      }
     }
 
 
