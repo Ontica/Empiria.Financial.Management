@@ -93,6 +93,25 @@ namespace Empiria.Payments.Data {
     }
 
 
+    static internal FixedList<PaymentInstruction> SearchPaymentInstructions(string filter, string sort) {
+      var sql = "SELECT FMS_PAYMENT_INSTRUCTIONS.* " +
+                "FROM FMS_PAYMENT_INSTRUCTIONS INNER JOIN FMS_PAYMENT_ORDERS " +
+                "ON FMS_PAYMENT_INSTRUCTIONS.PYMT_INSTRUCTION_PYMT_ORDER_ID = FMS_PAYMENT_ORDERS.PYMT_ORD_ID";
+
+      if (!string.IsNullOrWhiteSpace(filter)) {
+        sql += $" WHERE {filter}";
+      }
+
+      if (!string.IsNullOrWhiteSpace(sort)) {
+        sql += $" ORDER BY {sort}";
+      }
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<PaymentInstruction>(op);
+    }
+
+
     static internal void WritePaymentLog(PaymentInstructionLogEntry o) {
       var op = DataOperation.Parse("apd_FMS_Payment_Log",
                      o.Id, o.UID, o.PaymentInstruction.Id, o.PaymentOrder.Id,

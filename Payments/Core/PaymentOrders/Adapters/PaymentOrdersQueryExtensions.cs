@@ -26,16 +26,17 @@ namespace Empiria.Payments.Adapters {
     }
 
     static internal string MapToFilterString(this PaymentOrdersQuery query) {
-      string statusFilter = BuildRequestStatusFilter(query.Status);
+      string statusFilter = BuildStatusFilter(query.SearchPaymentInstructions, query.Status);
       string requesterOrgUnitFilter = BuildRequesterOrgUnitFilter(query.RequesterOrgUnitUID);
-      string paymentOrderTypeFilter = BuildPaymentOrderTypeFilter(query.PaymentOrderTypeUID);
+      string paymentTypeFilter = BuildPaymentTypeFilter(query.PaymentTypeUID);
       string paymentMethodFilter = BuildPaymentMethodFilter(query.PaymentMethodUID);
-      string dateRangeFilter = BuildDueTimeRangeFilter(query.FromDate, query.ToDate);
+      string dateRangeFilter = BuildDateRangeFilter(query.SearchPaymentInstructions,
+                                                    query.FromDate, query.ToDate);
       string keywordsFilter = BuildKeywordsFilter(query.Keywords);
 
       var filter = new Filter(statusFilter);
       filter.AppendAnd(requesterOrgUnitFilter);
-      filter.AppendAnd(paymentOrderTypeFilter);
+      filter.AppendAnd(paymentTypeFilter);
       filter.AppendAnd(paymentMethodFilter);
       filter.AppendAnd(dateRangeFilter);
       filter.AppendAnd(keywordsFilter);
@@ -56,9 +57,17 @@ namespace Empiria.Payments.Adapters {
 
     #region Helpers
 
-    static private string BuildDueTimeRangeFilter(DateTime fromDueTime, DateTime toDueTime) {
-      return $"{DataCommonMethods.FormatSqlDbDate(fromDueTime)} <= PYMT_ORD_DUETIME AND " +
-             $"PYMT_ORD_DUETIME < {DataCommonMethods.FormatSqlDbDate(toDueTime.Date.AddDays(1))}";
+    static private string BuildDateRangeFilter(bool searchPaymentInstructions,
+                                               DateTime fromDueTime, DateTime toDueTime) {
+
+      if (searchPaymentInstructions) {
+        return $"{DataCommonMethods.FormatSqlDbDate(fromDueTime)} <= PYMT_ORD_POSTING_TIME AND " +
+               $"PYMT_INSTRUCTION_POSTING_TIME < {DataCommonMethods.FormatSqlDbDate(toDueTime.Date.AddDays(1))}";
+
+      }
+
+      return $"{DataCommonMethods.FormatSqlDbDate(fromDueTime)} <= PYMT_ORD_POSTING_TIME AND " +
+             $"PYMT_ORD_POSTING_TIME < {DataCommonMethods.FormatSqlDbDate(toDueTime.Date.AddDays(1))}";
     }
 
 
@@ -81,16 +90,23 @@ namespace Empiria.Payments.Adapters {
     }
 
 
-    static private string BuildPaymentOrderTypeFilter(string paymentOrderTypeUID) {
-      if (paymentOrderTypeUID.Length == 0) {
+    static private string BuildPaymentTypeFilter(string paymentTypeUID) {
+      if (paymentTypeUID.Length == 0) {
         return string.Empty;
       }
 
-      return string.Empty;
+      var paymentType = PaymentType.Parse(paymentTypeUID);
+
+      return $"PYMT_ORD_PAYMENT_TYPE_ID = {paymentType.Id}";
     }
 
 
-    static private string BuildRequestStatusFilter(PaymentOrderStatus status) {
+    static private string BuildStatusFilter(bool searchPaymentInstructions,
+                                            PaymentOrderStatus status) {
+      if (searchPaymentInstructions) {
+        return BuildPaymentInstructionStatusFilter(status);
+      }
+
       if (status == PaymentOrderStatus.All) {
         return $"PYMT_ORD_STATUS <> 'X'";
       }
@@ -98,6 +114,22 @@ namespace Empiria.Payments.Adapters {
       return $"PYMT_ORD_STATUS = '{(char) status}'";
     }
 
+    static private string BuildPaymentInstructionStatusFilter(PaymentOrderStatus status) {
+      if (status == PaymentOrderStatus.All) {
+        return $"PYMT_INSTRUCTION_STATUS <> 'X'";
+      }
+
+      switch (status) {
+        case PaymentOrderStatus.Programmed:
+          return "PYMT_INSTRUCTION_STATUS IN ('G', 'S')";
+        case PaymentOrderStatus.InProgress:
+          return "PYMT_INSTRUCTION_STATUS IN ('W', 'R', 'I', 'T')";
+        case PaymentOrderStatus.Failed:
+          return "PYMT_INSTRUCTION_STATUS IN ('F', 'E')";
+        default:
+          return $"PYMT_INSTRUCTION_STATUS = '{(char) status}'";
+      }
+    }
 
     static private string BuildRequesterOrgUnitFilter(string requesterOrgUnitUID) {
       if (requesterOrgUnitUID.Length == 0) {
