@@ -15,6 +15,8 @@ using Empiria.WebApi;
 using Empiria.Financial.Adapters;
 using Empiria.Financial.UseCases;
 
+using Empiria.Budgeting.UseCases;
+
 namespace Empiria.Financial.Accounts.WebApi {
 
   /// <summary>Web API used to retrieve and update financial accounts.</summary>
@@ -78,6 +80,17 @@ namespace Empiria.Financial.Accounts.WebApi {
     [HttpPost]
     [Route("v2/financial-accounts")]
     public SingleObjectModel CreateAccount([FromBody] FinancialAccountFields fields) {
+
+      var stdAccount = StandardAccount.Parse(fields.StandardAccountUID);
+
+      if (stdAccount.ChartOfAccounts.ShowOrgUnits) {
+        using (var usecases = BudgetAccountUseCases.UseCaseInteractor()) {
+          StandardAccountHolder account = usecases.CreateAccount(fields);
+
+          return new SingleObjectModel(base.Request, account);
+        }
+      }
+
 
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
         FinancialAccountDto account = usecases.CreateAccount(fields);

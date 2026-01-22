@@ -27,9 +27,8 @@ namespace Empiria.Budgeting {
     public BudgetAccount(FinancialAccountType accountType,
                          StandardAccount standardAccount,
                          OrganizationalUnit orgUnit) : base(accountType, standardAccount, orgUnit) {
-      // no-op
+      BudgetProgram = BudgetProgram.ParseWithCode(orgUnit.ExtendedData.Get<string>("budgetProgram"));
     }
-
 
     static public new BudgetAccount Parse(int id) => ParseId<BudgetAccount>(id);
 

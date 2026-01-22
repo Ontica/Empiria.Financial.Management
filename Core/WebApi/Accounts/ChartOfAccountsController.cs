@@ -101,7 +101,8 @@ namespace Empiria.Financial.WebApi {
 
       using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
 
-        FixedList<NamedEntityDto> stdAccounts = usecases.GetStandardAccounts(chartOfAccountsUID, stdAccountTypeUID);
+        FixedList<NamedEntityDto> stdAccounts = usecases.GetStandardAccounts(chartOfAccountsUID,
+                                                                             stdAccountTypeUID);
 
         return new CollectionModel(base.Request, stdAccounts);
       }

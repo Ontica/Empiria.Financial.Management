@@ -15,7 +15,7 @@ namespace Empiria.Financial.Adapters {
   /// <summary>Mapping methods for standard accounts.</summary>
   static public class StandardAccountMapper {
 
-    static internal StandardAccountHolder Map(StandardAccount stdAccount) {
+    static public StandardAccountHolder Map(StandardAccount stdAccount) {
 
       FixedList<FinancialAccount> accounts;
 
@@ -28,7 +28,7 @@ namespace Empiria.Financial.Adapters {
       return new StandardAccountHolder {
         StandardAccount = MapStdAccount(stdAccount),
         Accounts = FinancialAccountMapper.MapToDescriptor(accounts),
-        StandardAccountTypes = stdAccount.ChartOfAccounts.FinancialAccountTypes.MapToNamedEntityList(),
+        StandardAccountTypes = (new[] { stdAccount.StandardAccountType }).MapToNamedEntityList(),
         Actions = MapActions(stdAccount)
       };
     }
