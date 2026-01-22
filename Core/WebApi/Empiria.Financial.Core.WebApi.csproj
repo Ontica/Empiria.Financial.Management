@@ -63,10 +63,12 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.WebApi" Version="2.0.0" />
     <PackageReference Include="Empiria.Financial.Core" Version="2.0.0" />
+    <PackageReference Include="Empiria.Budgeting.Core" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\extensions\WebApi\Empiria.WebApi.csproj" />
     <ProjectReference Include="..\Core\Empiria.Financial.Core.csproj" />
+    <ProjectReference Include="..\..\Budgeting\Core\Empiria.Budgeting.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">

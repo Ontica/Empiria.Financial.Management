@@ -11,6 +11,7 @@
 using Empiria.Services;
 
 using Empiria.Payments.Adapters;
+using Empiria.Payments.Data;
 
 namespace Empiria.Payments.UseCases {
 
@@ -43,7 +44,14 @@ namespace Empiria.Payments.UseCases {
     public FixedList<PaymentInstructionDescriptor> SearchPaymentInstructions(PaymentOrdersQuery query) {
       Assertion.Require(query, nameof(query));
 
-      var instructions = BaseObject.GetFullList<PaymentInstruction>("PYMT_INSTRUCTION_STATUS <> 'X'");
+      query.EnsureIsValid();
+
+      query.SearchPaymentInstructions = true;
+
+      string filter = query.MapToFilterString();
+      string sort = query.MapToSortString();
+
+      FixedList<PaymentInstruction> instructions = PaymentInstructionData.SearchPaymentInstructions(filter, sort);
 
       return PaymentInstructionMapper.MapToDescriptor(instructions);
     }

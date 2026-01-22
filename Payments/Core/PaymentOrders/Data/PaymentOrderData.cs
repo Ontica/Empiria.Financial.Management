@@ -56,7 +56,7 @@ namespace Empiria.Payments.Data {
     }
 
 
-    static internal FixedList<PaymentOrder> GetPaymentOrders(string filter, string sortBy) {
+    static internal FixedList<PaymentOrder> SearchPaymentOrders(string filter, string sortBy) {
       var sql = "SELECT * FROM FMS_PAYMENT_ORDERS";
 
       if (!string.IsNullOrWhiteSpace(filter)) {

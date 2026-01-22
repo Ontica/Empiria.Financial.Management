@@ -68,7 +68,9 @@ namespace Empiria.Financial.UseCases {
       StandardAccountType stdAccountType = StandardAccountType.Parse(stdAccountTypeUID);
 
       FixedList<StandardAccount> stdAccounts = chartOfAccounts.GetStandardAccounts()
-                                                              .FindAll(x => x.StandardAccountType.Equals(stdAccountType));
+                                                              .FindAll(x => x.StandardAccountType.Equals(stdAccountType) &&
+                                                                       x.RoleType == AccountRoleType.Detalle &&
+                                                                       x.Status != StateEnums.EntityStatus.Suspended);
 
       return stdAccounts.MapToNamedEntityList();
     }

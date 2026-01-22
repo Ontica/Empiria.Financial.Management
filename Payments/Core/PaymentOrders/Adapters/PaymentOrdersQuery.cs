@@ -15,6 +15,11 @@ namespace Empiria.Payments.Adapters {
   /// <summary>Query DTO used to search payment orders.</summary>
   public class PaymentOrdersQuery {
 
+    internal bool SearchPaymentInstructions {
+      get; set;
+    } = false;
+
+
     public PaymentOrderStatus Status {
       get; set;
     } = PaymentOrderStatus.All;
@@ -25,7 +30,8 @@ namespace Empiria.Payments.Adapters {
     } = string.Empty;
 
 
-    public string PaymentOrderTypeUID {
+    [Newtonsoft.Json.JsonProperty("PaymentOrderTypeUID")]
+    public string PaymentTypeUID {
       get; set;
     } = string.Empty;
 
