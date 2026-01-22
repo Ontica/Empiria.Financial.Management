@@ -300,12 +300,17 @@ namespace Empiria.Billing.SATMexicoImporter {
 
   public class BillComplementLocalTax {
 
-    public string ImpLocTrasladado {
+    public BillTaxMethod MetodoAplicacion {
       get; set;
     }
 
 
-    public string TasadeTraslado {
+    public string ImpLocalDescripcion {
+      get; set;
+    }
+
+
+    public decimal TasaDe {
       get; set;
     }
 

@@ -127,11 +127,14 @@ namespace Empiria.Billing.SATMexicoImporter {
         if (impuestoLocal.Name.Equals("implocal:TrasladosLocales")) {
 
           BillComplementLocalTax impuesto = new BillComplementLocalTax {
-            ImpLocTrasladado = GetAttribute(impuestoLocal, "ImpLocTrasladado"),
-            TasadeTraslado = GetAttribute(impuestoLocal, "TasadeTraslado"),
+            MetodoAplicacion = AssignBillTaxMethod(impuestoLocal),
+            ImpLocalDescripcion = GetAttribute(impuestoLocal, "ImpLocTrasladado"),
+            TasaDe = GetAttribute<decimal>(impuestoLocal, "TasadeTraslado"),
             Importe = GetAttribute<decimal>(impuestoLocal, "Importe")
           };
           impuestosLocales.Add(impuesto);
+        } else {
+          throw Assertion.EnsureNoReachThisCode($"Unhandled Xml node SAT tax method: {impuestoLocal.Name}");
         }
       }
       return new FixedList<BillComplementLocalTax>(impuestosLocales);
@@ -167,19 +170,9 @@ namespace Empiria.Billing.SATMexicoImporter {
       taxDto.TipoFactor = GetAttribute(taxItem, "TipoFactor");
       taxDto.TasaOCuota = GetAttribute<decimal>(taxItem, "TasaOCuota");
       taxDto.Importe = GetAttribute<decimal>(taxItem, "Importe");
-
       taxDto.TipoFactor = taxDto.TipoFactor != string.Empty ? taxDto.TipoFactor : "None";
-
-      if (taxItem.Name.Contains(":Traslado")) {
-        taxDto.MetodoAplicacion = BillTaxMethod.Traslado;
-
-      } else if (taxItem.Name.Contains(":Retencion")) {
-        taxDto.MetodoAplicacion = BillTaxMethod.Retencion;
-
-      } else {
-
-        throw Assertion.EnsureNoReachThisCode($"Unhandled SAT tax type: {taxItem.Name}");
-      }
+      taxDto.MetodoAplicacion = AssignBillTaxMethod(taxItem);
+      
       return taxDto;
     }
 
@@ -199,6 +192,21 @@ namespace Empiria.Billing.SATMexicoImporter {
 
 
     #region Services
+
+    private BillTaxMethod AssignBillTaxMethod(XmlNode taxItem) {
+
+      if (taxItem.Name.Contains(":Traslado")) {
+        return BillTaxMethod.Traslado;
+
+      } else if (taxItem.Name.Contains(":Retencion")) {
+        return BillTaxMethod.Retencion;
+
+      } else {
+
+        throw Assertion.EnsureNoReachThisCode($"Unhandled SAT tax type: {taxItem.Name}");
+      }
+    }
+
 
     internal string GetAttribute(XmlNode concept, string attributeName) {
       return Patcher.Patch(concept.Attributes[attributeName]?.Value, string.Empty);
