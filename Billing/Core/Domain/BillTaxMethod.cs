@@ -15,7 +15,9 @@ namespace Empiria.Billing {
 
     Traslado = 'T',
 
-    Retencion = 'R'
+    Retencion = 'R',
+
+    None = 'X'
 
   }  // enum BillTaxMethod
 
@@ -30,6 +32,9 @@ namespace Empiria.Billing {
 
         case BillTaxMethod.Retencion:
           return "Retencion";
+
+        case BillTaxMethod.None:
+          return "Ninguno";
 
         default:
           throw Assertion.EnsureNoReachThisCode($"Unrecognized status {status}");

@@ -252,14 +252,6 @@ namespace Empiria.Billing {
       BillData.WriteBillConcept(this, this.ExtData.ToString());
     }
 
-
-    public void AddConceptTaxes(BillTaxEntryFields taxFields) {
-      Assertion.Require(taxFields, nameof(taxFields));
-
-      BillTaxEntry taxEntry = new BillTaxEntry(this.Bill, this.Id, taxFields);
-      taxEntry.Save();
-    }
-
     #endregion Methods
 
   } // class BillConcept

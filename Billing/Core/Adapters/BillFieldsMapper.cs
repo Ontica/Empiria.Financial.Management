@@ -79,7 +79,7 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private FixedList<BillConceptFields> MapToBillConceptFieldsList(
+    static private FixedList<BillConceptFields> MapToBillConceptsFieldsList(
                                                 FixedList<SATBillConceptDto> conceptos) {
       List<BillConceptFields> fields = new List<BillConceptFields>();
 
@@ -105,15 +105,35 @@ namespace Empiria.Billing.Adapters {
         Subtotal = dto.DatosGenerales.SubTotal,
         Discount = dto.DatosGenerales.Descuento,
         Total = dto.DatosGenerales.Total,
-        Concepts = MapToBillConceptFieldsList(dto.Conceptos),
+        Concepts = MapToBillConceptsFieldsList(dto.Conceptos),
         SchemaData = MapToSchemaData(dto),
         SecurityData = MapToSecurityData(dto),
         Addenda = MapToAddendaData(dto.Addenda),
         FiscalLegendsData = MapToFiscalLegendsData(dto.LeyendasFiscales),
-        BillRelatedDocument = MapToRelatedCfdi(dto.DatosGenerales.CfdiRelacionados)
+        BillTaxes = MapLocalTaxesToBillTaxes(dto.ImpuestosLocales),
+        BillRelatedDocument = MapToRelatedCfdi(dto.DatosGenerales.CfdiRelacionados),
       };
     }
 
+    private static FixedList<BillTaxEntryFields> MapLocalTaxesToBillTaxes(
+                                                  FixedList<BillComplementLocalTax> impuestosLocales) {
+      List<BillTaxEntryFields> fields = new List<BillTaxEntryFields>();
+
+      foreach (BillComplementLocalTax tax in impuestosLocales) {
+
+        var field = new BillTaxEntryFields {
+          TaxMethod = tax.MetodoAplicacion,
+          TaxFactorType = BillTaxFactorType.None,
+          Impuesto = string.Empty,
+          Description = tax.ImpLocalDescripcion,
+          Factor = tax.TasaDe,
+          Total = tax.Importe
+        };
+
+        fields.Add(field);
+      }
+      return fields.ToFixedList();
+    }
 
     private static BillFiscalLegendFields MapToFiscalLegendsData(
                                             FixedList<BillComplementFiscalLegend> fields) {
@@ -149,7 +169,8 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private BillRelatedDocumentData MapToRelatedCfdi(FixedList<SATBillCFDIRelatedDataDto> cfdiRelacionados) {
+    static private BillRelatedDocumentData MapToRelatedCfdi(
+                                            FixedList<SATBillCFDIRelatedDataDto> cfdiRelacionados) {
 
       if (cfdiRelacionados.Count == 0) {
         return new BillRelatedDocumentData();

@@ -57,6 +57,11 @@ namespace Empiria.Billing {
       return BillData.GetBillTaxEntriesByRelatedObject(relatedObjectTypeId, relatedObjectId);
     }
 
+    static internal FixedList<BillTaxEntry> GetListByBill(Bill bill) {
+
+      return BillData.GetBillTaxEntriesByBill(bill);
+    }
+
     static public BillTaxEntry Empty => ParseEmpty<BillTaxEntry>();
 
     #endregion Constructors and parsers
@@ -166,8 +171,8 @@ namespace Empiria.Billing {
         return TaxType.Parse(103);
 
       } else {
-
-        throw Assertion.EnsureNoReachThisCode($"Unrecognized field '{fields.Impuesto}'");
+        return TaxType.Parse(-1);
+        //throw Assertion.EnsureNoReachThisCode($"Unrecognized field '{fields.Impuesto}'");
       }
     }
 

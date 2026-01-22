@@ -109,6 +109,11 @@ namespace Empiria.Billing {
       get; internal set;
     }
 
+
+    public FixedList<BillTaxEntryFields> BillTaxes {
+      get; internal set;
+    } = new FixedList<BillTaxEntryFields>();
+
   } // class BillFields
 
 
@@ -355,6 +360,11 @@ namespace Empiria.Billing {
 
 
     public string Impuesto {
+      get; set;
+    }
+
+
+    public string Description {
       get; set;
     }
 

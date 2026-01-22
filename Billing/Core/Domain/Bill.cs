@@ -198,11 +198,15 @@ namespace Empiria.Billing {
       get; private set;
     }
 
+
     public decimal Taxes {
       get {
-        return Concepts.SelectFlat(x => x.TaxEntries).Sum(x => x.Total);
+        return Concepts.SelectFlat(x => x.TaxEntries).Sum(x => x.Total) +
+               BillTaxes.Sum(x => x.Total);
+        ;
       }
     }
+
 
     [DataField("BILL_TOTAL")]
     public decimal Total {
@@ -317,6 +321,13 @@ namespace Empiria.Billing {
     }
 
 
+    internal FixedList<BillTaxEntry> BillTaxes {
+      get {
+        return BillTaxEntry.GetListByBill(this);
+      }
+    }
+
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(BillNo, RelatedBillNo, BillCategory.Keywords,
@@ -356,7 +367,7 @@ namespace Empiria.Billing {
       billConcept.Save();
 
       foreach (var taxFields in fields.TaxEntries) {
-        billConcept.AddConceptTaxes(taxFields);
+        AddBillTaxes(taxFields, billConcept.Id);
       }
     }
 
@@ -371,8 +382,16 @@ namespace Empiria.Billing {
       billConcept.Save();
 
       foreach (var taxFields in fields.TaxEntries) {
-        billConcept.AddConceptTaxes(taxFields);
+        AddBillTaxes(taxFields, billConcept.Id);
       }
+    }
+
+
+    public void AddBillTaxes(BillTaxEntryFields taxFields, int billTaxRelatedObjectId) {
+      Assertion.Require(taxFields, nameof(taxFields));
+
+      BillTaxEntry taxEntry = new BillTaxEntry(this, billTaxRelatedObjectId, taxFields);
+      taxEntry.Save();
     }
 
 

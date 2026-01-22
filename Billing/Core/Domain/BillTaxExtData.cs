@@ -25,6 +25,16 @@ namespace Empiria.Billing {
     }
 
 
+    public string ImpuestoMetodo {
+      get {
+        return _extData.Get("impuestoMetodo", string.Empty);
+      }
+      private set {
+        _extData.SetIfValue("impuestoMetodo", value);
+      }
+    }
+
+
     public decimal Base {
       get {
         return _extData.Get<decimal>("base", 0);
@@ -51,6 +61,16 @@ namespace Empiria.Billing {
       }
       private set {
         _extData.SetIfValue("tipoFactor", value);
+      }
+    }
+
+
+    public decimal Factor {
+      get {
+        return _extData.Get<decimal>("factor", 0);
+      }
+      private set {
+        _extData.SetIfValue("factor", value);
       }
     }
 
@@ -83,10 +103,11 @@ namespace Empiria.Billing {
     internal void Update(BillTaxEntryFields fields) {
       Assertion.Require(fields, nameof(fields));
 
+      ImpuestoMetodo = fields.TaxMethod.ToString();
+      TipoFactor = fields.TaxFactorType.ToString();
+      Factor = fields.Factor;
       Base = fields.BaseAmount;
       Impuesto = fields.Impuesto;
-      TipoFactor = fields.TaxFactorType.ToString();
-      TasaOCuota = fields.Factor;
       Importe = fields.Total;
     }
   } // class BillTaxExtData
