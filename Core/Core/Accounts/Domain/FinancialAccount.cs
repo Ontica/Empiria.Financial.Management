@@ -334,10 +334,10 @@ namespace Empiria.Financial {
     }
 
 
-    [DataField("ACCT_STATUS", Default = EntityStatus.Pending)]
+    [DataField("ACCT_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get; private set;
-    } = EntityStatus.Pending;
+    } = EntityStatus.Active;
 
 
     public bool IsInflowAccount {
