@@ -120,7 +120,7 @@ namespace Empiria.Payments.UseCases {
       string filter = query.MapToFilterString();
       string sort = query.MapToSortString();
 
-      FixedList<PaymentOrder> paymentOrders = PaymentOrderData.GetPaymentOrders(filter, sort);
+      FixedList<PaymentOrder> paymentOrders = PaymentOrderData.SearchPaymentOrders(filter, sort);
 
       return PaymentOrderMapper.MapToDescriptor(paymentOrders);
     }
