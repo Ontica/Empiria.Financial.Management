@@ -1,0 +1,35 @@
+<cfdi:Comprobante xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    Version="4.0" Serie="B" Folio="7298808" Fecha="2026-01-14T15:46:05" 
+    FormaPago="99" SubTotal="801563.78" Moneda="MXN" Total="801563.78" 
+    TipoDeComprobante="I" Exportacion="01" MetodoPago="PPD" LugarExpedicion="78210" 
+    xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" 
+    Sello="DBwOQ4xxHItpLAFxsb6BEXXgSS18ryy+Xt4gM9+mZrucPd9QwI75C0hRLbR1CcVU/DGA1kdzQhE4YNv73VhAS8S+c/2S9xHGqNG6ZKDFfY8C3pF3nW1xsIbUDZqXpNztF/Fbk9B5aFfLdP0em+ks1gFtJdQlp2Njm4Ee9PIEgNattL/ImU3NkfV24ssPydVcNyvQu8omIQt9udFtpVFB/6IdNMaQT15JoaJKB7tz7c+TNHKxX8rtl6HVeTF8ohZU0Hf7zregZNuepp5TD874CMuM3uE32f9kiB3lyVusvAC0H7n7i5sy64Yck7zTWqAn9F+YeB44qhtjnLE2Uc1ckg==" 
+    NoCertificado="00001000000714641750" 
+    Certificado="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">
+  <cfdi:Emisor Rfc="SPO830427DQ1" Nombre="SEGUROS EL POTOSI" RegimenFiscal="601" />
+  <cfdi:Receptor Rfc="BNO670315CD0" Nombre="BANCO NACIONAL DE OBRAS Y SERVICIOS PUBLICOS SOCIEDAD NACIONAL DE CREDITO INSTITUCION DE BANCA DE DESARROLLO" DomicilioFiscalReceptor="01219" RegimenFiscalReceptor="601" UsoCFDI="G03" />
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="84131601" NoIdentificacion="9525671" Cantidad="1.0" ClaveUnidad="E48" Unidad="SERVICIO" Descripcion="PRIMA NETA" ValorUnitario="801563.78" Importe="801563.78" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="801563.78" Impuesto="002" TipoFactor="Exento" />
+        </cfdi:Traslados>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
+  </cfdi:Conceptos>
+  <cfdi:Impuestos>
+    <cfdi:Traslados>
+      <cfdi:Traslado Base="801563.78" Impuesto="002" TipoFactor="Exento" />
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+  <cfdi:Complemento>
+    <tfd:TimbreFiscalDigital 
+      xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" 
+      UUID="d9b2f958-923f-4a88-a95f-9e35ec293bd0" 
+      FechaTimbrado="2026-01-14T16:00:31" RfcProvCertif="LSO1306189R5" 
+      SelloCFD="DBwOQ4xxHItpLAFxsb6BEXXgSS18ryy+Xt4gM9+mZrucPd9QwI75C0hRLbR1CcVU/DGA1kdzQhE4YNv73VhAS8S+c/2S9xHGqNG6ZKDFfY8C3pF3nW1xsIbUDZqXpNztF/Fbk9B5aFfLdP0em+ks1gFtJdQlp2Njm4Ee9PIEgNattL/ImU3NkfV24ssPydVcNyvQu8omIQt9udFtpVFB/6IdNMaQT15JoaJKB7tz7c+TNHKxX8rtl6HVeTF8ohZU0Hf7zregZNuepp5TD874CMuM3uE32f9kiB3lyVusvAC0H7n7i5sy64Yck7zTWqAn9F+YeB44qhtjnLE2Uc1ckg==" 
+      NoCertificadoSAT="00001000000719545303" 
+      SelloSAT="Hu+jYJLWr7fF0GDVa7pYdFFADVGlEJgCfspaxmTEBCGH45eFSixapGgkVVfvvK8hquovt0Zrl75vr6xsbJrmYW+Ng68H5lwEqZ+xeLBxvPcb5tnahhZuRoVlW7oCuX37pMhNGCPJUKKXhzajW4WNJLaBjhF6YzKFFeRv5uFEWniUKe9awjGN4wdmnLvb1JjI269iTxuWbEfBmn84cJohgiIeUPum33q3YJJJ0g6UpKrlrVw/3O8uVvINuVjCwoJJjqU0Rpwz6sUL/Gp4pR97yZke1lzyR3Jl3uTw/rmPAcdVgixyccuPvohph04gHhBCK7vL1RCE/9g4m8GYG8Ht2w==" 
+      xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+  </cfdi:Complemento>
+</cfdi:Comprobante>

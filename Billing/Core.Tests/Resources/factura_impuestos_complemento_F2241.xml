@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante 
+  xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:implocal="http://www.sat.gob.mx/implocal" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/implocal http://www.sat.gob.mx/sitio_internet/cfd/implocal/implocal.xsd" 
+  Version="4.0" 
+  Folio="2241" 
+  Fecha="2025-03-27T11:41:17" 
+  Sello="dX3TezNbBKeaewzj9rIsQYoc88pjTiuzRRiAwGCb0r6ul2q0yOo1WQK/DrV1o9isanPpWAO0lgOH3xPF8FCNw+BUWlu9BisHGrrdL9OWu+6YJ+ujDp1UQQrQxtfzo1uBPzCxceEMtw7ACC6feYYSYDLnXyLxyS0pq2LpdURgK1c79+xzlMYXMBsFG+HgsC3oo7MxMjs/UxxDonyCFYK6Q9Sdxitw3qWrWG8DE2hv0sjbekxxPmSMRRka3kUrBhp/VrB6pAJxNyNj5dAnGcE+g0S+ONBat6wz0DznrdLydfRFPQg0BqhMbSkKi7oQaJ5sDeBOGJh87dSq9cTmDgd0UA==" 
+  FormaPago="04" 
+  NoCertificado="00001000000508744541" 
+  Certificado="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" 
+  SubTotal="1468.34" Moneda="MXN" Total="1800.00" 
+  TipoDeComprobante="I" 
+  Exportacion="01" 
+  MetodoPago="PUE" 
+  LugarExpedicion="23400">
+  <cfdi:Emisor RegimenFiscal="626" Rfc="HCO060324D52" Nombre="HOTEL COLLI"></cfdi:Emisor>
+  <cfdi:Receptor Rfc="BNO670315CD0" Nombre="BANCO NACIONAL DE OBRAS Y SERVICIOS PUBLICOS SOCIEDAD NACIONAL DE CREDITO INSTITUCION DE BANCA DE DESARROLLO" DomicilioFiscalReceptor="01219" RegimenFiscalReceptor="601" UsoCFDI="G03"></cfdi:Receptor>
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="90111801" ClaveUnidad="E48" Cantidad="1.00" Unidad="SERVICIO" NoIdentificacion="SM" 
+                   Descripcion="HOSPEDAJE HABITACION SENCILLA" ValorUnitario="1468.34" Importe="1468.34" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="1468.34" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="234.93"/>
+        </cfdi:Traslados>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
+  </cfdi:Conceptos>
+  <cfdi:Impuestos TotalImpuestosTrasladados="234.93">
+    <cfdi:Traslados>
+      <cfdi:Traslado Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="234.93" Base="1468.34"/>
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+  <cfdi:Complemento>
+    <tfd:TimbreFiscalDigital xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      Version="1.1" 
+      UUID="2653EC31-59CA-4E62-B5DE-E3804BD44083" 
+      FechaTimbrado="2025-03-27T12:41:19" 
+      RfcProvCertif="MAS0810247C0" 
+      SelloCFD="dX3TezNbBKeaewzj9rIsQYoc88pjTiuzRRiAwGCb0r6ul2q0yOo1WQK/DrV1o9isanPpWAO0lgOH3xPF8FCNw+BUWlu9BisHGrrdL9OWu+6YJ+ujDp1UQQrQxtfzo1uBPzCxceEMtw7ACC6feYYSYDLnXyLxyS0pq2LpdURgK1c79+xzlMYXMBsFG+HgsC3oo7MxMjs/UxxDonyCFYK6Q9Sdxitw3qWrWG8DE2hv0sjbekxxPmSMRRka3kUrBhp/VrB6pAJxNyNj5dAnGcE+g0S+ONBat6wz0DznrdLydfRFPQg0BqhMbSkKi7oQaJ5sDeBOGJh87dSq9cTmDgd0UA==" 
+      NoCertificadoSAT="00001000000709182898" 
+      SelloSAT="KyD0F5beTcWsmd0HjwxewdstlHf+mkeXaYCHBuoU9eiTcGfd082uuyQ9BhEquGYZdrvoZ2jLz1Rfuq/WJaoej2G/fUtt59XGPRvCeE5965WoI0h9RYfRr//3Ii4/vNMHz+N0us3POJvLsa09pl8TF4rdvqG9kGxfb13PmU8M5I652f9KqZecgS8+KBUDw9RSEXBScbMd8Sqt+6nJdsQJXnmXLJtmAu/eW6UqWREv3kw47ZA1Vn7NH3CBXr/mQCwENZGQtPXUqYhN/fdwIzEUBVXur6kKtFBgjz/L5Evuwib15ZGmAFmBAl6umjlvfqVpappOc1QOtGyEBQcDvRFEcQ=="/>
+    <implocal:ImpuestosLocales version="1.0" TotaldeRetenciones="0.00" TotaldeTraslados="96.73">
+      <implocal:TrasladosLocales ImpLocTrasladado="Imp. S/Hospedaje" TasadeTraslado="4.00" Importe="58.74"/>
+      <implocal:TrasladosLocales ImpLocTrasladado="Derecho de Saneamiento Ambiental (35% UMA)" TasadeTraslado="0.00" Importe="37.99"/>
+    </implocal:ImpuestosLocales>
+  </cfdi:Complemento>
+</cfdi:Comprobante>
