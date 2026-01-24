@@ -89,6 +89,7 @@ namespace Empiria.Billing {
 
       Currency = payable.Currency;
       Description = fields.Name;
+      IssueDate = DateTime.Now;
       Subtotal = fields.Total;
       Total = fields.Total;
     }
@@ -128,7 +129,7 @@ namespace Empiria.Billing {
         if (BillType.Name.Contains("Voucher")) {
           return Description;
         } else if (Concepts.Count != 0) {
-          return Concepts[0].Description;
+          return EmpiriaString.DivideLongString(Concepts[0].Description, 95, " ");
         } else {
           return "La factura no tiene conceptos";
         }
