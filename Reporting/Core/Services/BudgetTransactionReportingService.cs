@@ -12,8 +12,6 @@ using Empiria.Services;
 using Empiria.Storage;
 using Empiria.Office;
 
-using Empiria.Financial;
-
 using Empiria.Budgeting.Transactions;
 
 namespace Empiria.Budgeting.Reporting {
@@ -68,11 +66,25 @@ namespace Empiria.Budgeting.Reporting {
     public FileDto ExportTransactionVoucherToPdf(BudgetTransaction transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
-      if (transaction.HasEntity && transaction.GetEntity() is IBudgetable budgetable) {
-        return ExportTransactionAsOrderToPdf(transaction);
-      } else {
+      switch (transaction.BudgetTransactionType.OperationType) {
 
-        return ExportTransactionByYearToPdf(transaction);
+        case BudgetOperationType.Authorize:
+        case BudgetOperationType.Expand:
+        case BudgetOperationType.Modify:
+        case BudgetOperationType.Plan:
+          return ExportTransactionByYearToPdf(transaction);
+
+        case BudgetOperationType.Request:
+        case BudgetOperationType.Commit:
+          return ExportBudgetRequestToPdf(transaction);
+
+        case BudgetOperationType.ApprovePayment:
+        case BudgetOperationType.Exercise:
+          return ExportBudgetRequestToPdf(transaction);
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unsupported budget operation type: " +
+                                                $"{transaction.BudgetTransactionType.OperationType}");
       }
     }
 
@@ -80,12 +92,12 @@ namespace Empiria.Budgeting.Reporting {
 
     #region Helpers
 
-    private FileDto ExportTransactionAsOrderToPdf(BudgetTransaction transaction) {
-      var templateUID = $"{GetType().Name}.ExportTransactionAsOrderToPdf";
+    private FileDto ExportBudgetRequestToPdf(BudgetTransaction transaction) {
+      var templateUID = $"{GetType().Name}.ExportBudgetRequestToPdf";
 
       var templateConfig = FileTemplateConfig.Parse(templateUID);
 
-      var exporter = new BudgetTransactionAsOrderVoucherBuilder(transaction, templateConfig);
+      var exporter = new BudgetRequestVoucherBuilder(transaction, templateConfig);
 
       return exporter.CreateVoucher();
     }

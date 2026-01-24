@@ -2,9 +2,9 @@
 *                                                                                                            *
 *  Module   : Budget Management                             Component : Reporting Services                   *
 *  Assembly : Empiria.Financial.Reporting.Core.dll          Pattern   : Service provider                     *
-*  Type     : BudgetTransactionAsOrderVoucherBuilder        License   : Please read LICENSE.txt file         *
+*  Type     : BudgetRequestVoucherBuilder                   License   : Please read LICENSE.txt file         *
 *                                                                                                            *
-*  Summary  : Builds a PDF file with a budget transaction with its associated order data.                    *
+*  Summary  : Builds a PDF file with a budget request transaction with its associated order data.            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -22,7 +22,8 @@ using Empiria.Budgeting.Transactions;
 
 namespace Empiria.Budgeting.Reporting {
 
-  internal class BudgetTransactionAsOrderVoucherBuilder {
+  /// <summary>Builds a PDF file with a budget request transaction with its associated order data.</summary>
+  internal class BudgetRequestVoucherBuilder {
 
     private readonly BudgetTransaction _txn;
     private readonly Order _order;
@@ -30,7 +31,7 @@ namespace Empiria.Budgeting.Reporting {
     private readonly FileTemplateConfig _templateConfig;
     private readonly string _htmlTemplate;
 
-    public BudgetTransactionAsOrderVoucherBuilder(BudgetTransaction transaction,
+    public BudgetRequestVoucherBuilder(BudgetTransaction transaction,
                                                   FileTemplateConfig templateConfig) {
       Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(templateConfig, nameof(templateConfig));
@@ -92,9 +93,9 @@ namespace Empiria.Budgeting.Reporting {
         entryHtml.Replace("{{PROGRAM}}", budgetEntry.BudgetProgram.Code);
         entryHtml.Replace("{{YEAR}}", orderEntry.Budget.Year.ToString());
         entryHtml.Replace("{{PRODUCT_UNIT}}", orderEntry.ProductUnit.Name);
-        entryHtml.Replace("{{QUANTITY}}", orderEntry.Quantity.ToString("C2"));
-        entryHtml.Replace("{{UNIT_PRICE}}", orderEntry.UnitPrice.ToString("C2"));
-        entryHtml.Replace("{{TOTAL}}", orderEntry.Subtotal.ToString("C2"));
+        entryHtml.Replace("{{QUANTITY}}", budgetEntry.Currency.ISOCode);
+        entryHtml.Replace("{{UNIT_PRICE}}", budgetEntry.RequestedAmount.ToString("C2"));
+        entryHtml.Replace("{{TOTAL}}", budgetEntry.Amount.ToString("C2"));
 
         entriesHtml.Append(entryHtml);
       }
@@ -169,6 +170,9 @@ namespace Empiria.Budgeting.Reporting {
 
       html.Replace("{{ESTIMATED_MONTHS}}", _order.EstimatedMonths.ToString("00"));
 
+      html.Replace("{{STATUS}}", _txn.Status.GetName());
+      html.Replace("{{REJECTED_REASON}}", _txn.RejectedReason);
+
       return html;
     }
 
@@ -179,6 +183,7 @@ namespace Empiria.Budgeting.Reporting {
       var totalsHtml = new StringBuilder();
 
       foreach (var entry in _order.Taxes.GetList()) {
+
         var totalHtml = new StringBuilder(TEMPLATE.Replace("{{TOTAL_TYPE}}", entry.TaxType.Name));
 
         totalHtml.Replace("{{TOTAL}}", entry.Total.ToString("C2"));
@@ -270,6 +275,6 @@ namespace Empiria.Budgeting.Reporting {
 
     #endregion Helpers
 
-  }  // class BudgetTransactionAsOrderVoucherBuilder
+  }  // class BudgetRequestVoucherBuilder
 
 }  // namespace Empiria.Budgeting.Reporting 
