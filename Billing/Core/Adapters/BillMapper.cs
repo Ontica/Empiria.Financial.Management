@@ -57,20 +57,10 @@ namespace Empiria.Billing.Adapters {
 
       var concepts = bill.Concepts;
 
-      string name;
-
-      if (bill.BillType.Name.Contains("Voucher")) {
-        name = bill.Description;
-      } else if (concepts.Count != 0) {
-        name = concepts[0].Description;
-      } else {
-        name = "La factura no tiene conceptos";
-      }
-
       return new BillDto {
         UID = bill.UID,
         BillNo = bill.BillNo,
-        Name = name,
+        Name = bill.Name,
         Category = bill.BillCategory.MapToNamedEntity(),
         BillType = bill.BillCategory.MapToNamedEntity(),
         ManagedBy = bill.ManagedBy.MapToNamedEntity(),

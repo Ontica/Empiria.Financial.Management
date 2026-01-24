@@ -11,13 +11,13 @@
 using System;
 using System.Linq;
 
+using Empiria.Documents;
 using Empiria.Financial;
 using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
 
 using Empiria.Billing.Data;
-using Empiria.Documents;
 
 namespace Empiria.Billing {
 
@@ -120,6 +120,19 @@ namespace Empiria.Billing {
     [DataField("BILL_NO")]
     public string BillNo {
       get; private set;
+    }
+
+
+    public string Name {
+      get {
+        if (BillType.Name.Contains("Voucher")) {
+          return Description;
+        } else if (Concepts.Count != 0) {
+          return Concepts[0].Description;
+        } else {
+          return "La factura no tiene conceptos";
+        }
+      }
     }
 
 
@@ -359,7 +372,7 @@ namespace Empiria.Billing {
 
     internal void AddComplementConcepts(FuelConsumptionComplementConceptDataFields fields) {
       Assertion.Require(fields, nameof(fields));
-      
+
       fields.EnsureIsValid();
 
       BillConcept billConcept = new BillConcept(BillConceptType.Complement, this, fields);
