@@ -14,13 +14,12 @@ using System.Text;
 
 using Empiria.Office;
 using Empiria.Storage;
-
-using Empiria.Financial;
 using Empiria.Billing;
 
 using Empiria.Orders;
 
 using Empiria.Budgeting.Transactions;
+using Empiria.Budgeting;
 
 namespace Empiria.Payments.Reporting {
 
@@ -42,24 +41,18 @@ namespace Empiria.Payments.Reporting {
 
       _paymentOrder = paymentOrder;
 
-      _budgetTxn = paymentOrder.TryGetApprovedBudget();
+      _order = _paymentOrder.PayableEntity as Order;
 
-      if (_budgetTxn == null) {
-        Assertion.RequireFail("La solicitud de pago no cuenta con la autorización presupuestal de pago.");
-        return;
-      }
+      _bills = Bill.GetListFor(_paymentOrder.PayableEntity);
 
-      _order = _budgetTxn.GetEntity() as Order;
-
-      _bills = Bill.GetListFor((IPayableEntity) _order);
+      _budgetTxn = GetApplicableBudgetTransaction();
 
       _templateConfig = templateConfig;
       _htmlTemplate = File.ReadAllText(_templateConfig.TemplateFullPath);
     }
 
-
     internal FileDto CreateVoucher() {
-      string filename = GetVoucherPdfFileName();
+      string filename = GetPdfFileName();
 
       string html = BuildVoucherHtml();
 
@@ -106,6 +99,32 @@ namespace Empiria.Payments.Reporting {
 
 
     private StringBuilder BuildEntries(StringBuilder html) {
+
+      if (_order.BudgetType == BudgetType.None) {
+
+        html.Replace("{{BUDGET_ENTRIES_TABLE_TITLE}}",
+                      "ESTE PAGO NO ESTÁ RELACIONADO CON EL CONTROL PRESUPUESTAL");
+        html.Replace("{{CLASS_HIDE_BUDGET_CONCEPTS}}", "hide");
+        return html;
+
+      } else if (_budgetTxn.IsEmptyInstance) {
+
+        html.Replace("{{BUDGET_ENTRIES_TABLE_TITLE}}",
+                      "<span class='warning'>ESTE PAGO AÚN NO CUENTA CON APROBACIÓN PRESUPUESTAL</span>");
+        html.Replace("{{CLASS_HIDE_BUDGET_CONCEPTS}}", "hide");
+        return html;
+
+      }
+
+      if (_budgetTxn.IsClosed) {
+        html.Replace("{{BUDGET_ENTRIES_TABLE_TITLE}}", $"CONTROL PRESUPUESTAL [{_budgetTxn.TransactionNo}]");
+      } else {
+        html.Replace("{{BUDGET_ENTRIES_TABLE_TITLE}}",
+                      $"<span class='warning'>LA APROBACIÓN PRESUPUESTAL ESTÁ EN PROCESO</span>");
+      }
+
+      html.Replace("{{CLASS_HIDE_BUDGET_CONCEPTS}}", string.Empty);
+
       string TEMPLATE = GetEntriesTemplate();
 
       var entriesHtml = new StringBuilder();
@@ -123,15 +142,14 @@ namespace Empiria.Payments.Reporting {
 
         entryHtml.Replace("{{BUDGET_ACCOUNT_PARTY}}", orderEntry.BudgetAccount.OrganizationalUnit.Code);
         entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", orderEntry.BudgetAccount.Code);
-        entryHtml.Replace("{{PRODUCT_CODE}}", orderEntry.ProductCode);
         entryHtml.Replace("{{DESCRIPTION}}", orderEntry.Description);
         entryHtml.Replace("{{ORIGIN_COUNTRY}}", orderEntry.OriginCountry.CountryISOCode);
         entryHtml.Replace("{{CONTROL_NO}}", budgetEntry.ControlNo);
         entryHtml.Replace("{{PROGRAM}}", budgetEntry.BudgetProgram.Code);
-        entryHtml.Replace("{{YEAR}}", orderEntry.Budget.Year.ToString());
         entryHtml.Replace("{{PRODUCT_UNIT}}", orderEntry.ProductUnit.Name);
-        entryHtml.Replace("{{QUANTITY}}", budgetEntry.Currency.ISOCode);
-        entryHtml.Replace("{{UNIT_PRICE}}", budgetEntry.RequestedAmount.ToString("C2"));
+        entryHtml.Replace("{{SUBTOTAL}}", (orderEntry.Subtotal + orderEntry.DiscountsTotal).ToString("C2"));
+        entryHtml.Replace("{{DISCOUNT}}", orderEntry.Discount.ToString("C2"));
+        entryHtml.Replace("{{PENALTIES}}", orderEntry.PenaltyDiscount.ToString("C2"));
         entryHtml.Replace("{{TOTAL}}", budgetEntry.Amount.ToString("C2"));
 
         entriesHtml.Append(entryHtml);
@@ -144,7 +162,9 @@ namespace Empiria.Payments.Reporting {
     private StringBuilder BuildFooter(StringBuilder html) {
       var footerHtml = new StringBuilder();
 
-      if (_budgetTxn.AuthorizedBy.IsEmptyInstance) {
+      html.Replace("{{CLASS_HIDE_SIGN}}", _paymentOrder.Total <= 4000000m ? "hide" : string.Empty);
+
+      if (!_paymentOrder.Payed) {
         html.Replace("{{SECURITY_CODE}}", "<span class='warning'>PENDIENTE DE AUTORIZAR</span>");
         html.Replace("{{SECURITY_SEAL}}", "<span class='warning'>ESTE DOCUMENTO NO TIENE VALIDEZ OFICIAL</span>");
 
@@ -170,12 +190,10 @@ namespace Empiria.Payments.Reporting {
 
       string title = _paymentOrder.PaymentType.Name;
 
-      bool isClosed = _paymentOrder.Status == PaymentOrderStatus.Payed;
-
-      if (!isClosed) {
+      if (!_paymentOrder.Payed) {
         title = $"{title} [{_paymentOrder.Status.GetName()}])";
       }
-      if (!isClosed) {
+      if (!_paymentOrder.Payed) {
         title = $"<span class='warning'>{title}</span>";
       }
 
@@ -186,7 +204,16 @@ namespace Empiria.Payments.Reporting {
       html.Replace("{{PAYMENT.PAYMENT_ORDER_TYPE}}", _paymentOrder.RequestedBy.Name);
 
       html.Replace("{{PAYMENT.PAY_TO}}", _paymentOrder.PayTo.Name);
-      html.Replace("{{PAYMENT.PAYMENT_METHOD}}", _paymentOrder.PaymentMethod.Name);
+
+      if (_paymentOrder.Payed) {
+        html.Replace("{{PAYMENT.PAYMENT_METHOD}}",
+                     $"{_paymentOrder.PaymentMethod.Name} &nbsp; &nbsp; &nbsp; &nbsp; <span> Fecha y hora </span>: " +
+                     $"{_paymentOrder.LastPaymentInstruction.LastUpdateTime.ToString("dd/MMM/yyyy HH:mm")}" +
+                     $"&nbsp; &nbsp; &nbsp;{_paymentOrder.LastPaymentInstruction.BrokerInstructionNo}" +
+                     $"");
+      } else {
+        html.Replace("{{PAYMENT.PAYMENT_METHOD}}", $"{_paymentOrder.PaymentMethod.Name}");
+      }
       html.Replace("{{PAYMENT.BUDGET}}", _paymentOrder.PayableEntity.Budget.Name);
       html.Replace("{{PAYMENT.DESCRIPTION}}", _paymentOrder.Description);
 
@@ -195,9 +222,9 @@ namespace Empiria.Payments.Reporting {
 
       if (!_paymentOrder.PaymentAccount.IsEmptyInstance) {
         html.Replace("{{PAYMENT.INSTITUTION}}", _paymentOrder.PaymentAccount.Institution.Name);
-        html.Replace("{{PAYMENT.ACCOUNT_NO}}", $"Cuenta: {_paymentOrder.PaymentAccount.AccountNo}");
+        html.Replace("{{PAYMENT.ACCOUNT_NO}}", $" &nbsp; &nbsp; No. cuenta: {_paymentOrder.PaymentAccount.AccountNo}");
         html.Replace("{{PAYMENT.REFERENCE_NUMBER}}", _paymentOrder.ReferenceNumber.Length == 0 ?
-                                                          string.Empty : $"Referencia: {_paymentOrder.ReferenceNumber}");
+                                                          string.Empty : $" &nbsp; Referencia: {_paymentOrder.ReferenceNumber}");
       } else {
         html.Replace("{{PAYMENT.INSTITUTION}}", "No aplica");
         html.Replace("{{PAYMENT.ACCOUNT_NO}}", string.Empty);
@@ -205,13 +232,28 @@ namespace Empiria.Payments.Reporting {
       }
 
       html.Replace("{{PAYMENT.DEBTOR}}", _paymentOrder.Debtor.IsEmptyInstance ? "No aplica" : _paymentOrder.Debtor.Name);
-
       html.Replace("{{PAYMENT.OBSERVATIONS}}", _paymentOrder.Observations);
 
-      html.Replace("{{ORDER.ORDER_NO}}", _order.OrderNo);
-      html.Replace("{{ORDER.IS_FOR_MULTIPLE_BENEFICIARIES}}", _order.IsForMultipleBeneficiaries ? "Sí" : "No");
-      html.Replace("{{ORDER.REQUESTED_BY}}", _paymentOrder.PostedBy.Name);
-      html.Replace("{{ORDER.JUSTIFICATION}}", _order.Justification);
+      if (!_budgetTxn.IsEmptyInstance) {
+        var bdgRequests = BudgetTransaction.GetRelatedTo(_budgetTxn)
+                                           .FindAll(x => x.BudgetTransactionType.OperationType == BudgetOperationType.Request)
+                                           .Select(x => x.TransactionNo);
+
+        html.Replace("{{PAYMENT.BUDGET_REQUESTS}}", string.Join(", ", bdgRequests));
+      } else {
+
+        html.Replace("{{PAYMENT.BUDGET_REQUESTS}}", "No aplica");
+      }
+
+      html.Replace("{{PAYMENT.ACCOUNTING_VOUCHER}}", _paymentOrder.AccountingVoucher);
+
+      html.Replace("{{ORDER.ORDER_NO}}", $"{_order.OrderNo} ({_order.OrderType.DisplayName})");
+      html.Replace("{{ORDER.DESCRIPTION}}", _order.Name);
+
+
+      if (!_paymentOrder.Payed) {
+        html.Replace("Total pagado", "Total a pagar");
+      }
 
       return html;
     }
@@ -219,7 +261,10 @@ namespace Empiria.Payments.Reporting {
 
     private StringBuilder BuildTotals(StringBuilder html) {
 
-      html.Replace("{{ORDER.SUBTOTAL}}", _order.Subtotal.ToString("C2"));
+      html.Replace("{{ORDER.SUBTOTAL}}", (_order.Subtotal + _order.Items.DiscountsTotal).ToString("C2"));
+      html.Replace("{{ORDER.DISCOUNT}}", _order.Items.Discount.ToString("C2"));
+      html.Replace("{{ORDER.PENALTIES}}", _order.Items.Penalties.ToString("C2"));
+      html.Replace("{{ORDER.TOTAL}}", _order.Subtotal.ToString("C2"));
 
       var billsTotals = new BillsTotals(_bills);
 
@@ -309,12 +354,35 @@ namespace Empiria.Payments.Reporting {
 
     #region Helpers
 
+    private BudgetTransaction GetApplicableBudgetTransaction() {
+
+      if (_order.BudgetType == BudgetType.None) {
+        return BudgetTransaction.Empty;
+      }
+
+      BudgetTransaction txn = _paymentOrder.TryGetApprovedBudget();
+
+      if (txn != null) {
+        return txn;
+      }
+
+      txn = BudgetTransaction.GetFor(_order)
+                             .FindLast(x => x.BudgetTransactionType.OperationType == BudgetOperationType.Commit);
+
+      if (txn != null) {
+        return txn;
+      }
+
+      return BudgetTransaction.Empty;
+    }
+
+
     private string GetFileName(string filename) {
       return Path.Combine(FileTemplateConfig.GenerationStoragePath + "/payment.transactions/", filename);
     }
 
 
-    private string GetVoucherPdfFileName() {
+    private string GetPdfFileName() {
       return $"cedula.pago.{_paymentOrder.PaymentOrderNo}.{DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss")}.pdf";
     }
 

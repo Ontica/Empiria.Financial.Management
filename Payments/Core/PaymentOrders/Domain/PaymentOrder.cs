@@ -178,6 +178,16 @@ namespace Empiria.Payments {
     }
 
 
+    public string AccountingVoucher {
+      get {
+        return ExtData.Get("accountingVoucher", "Pendiente de registrar");
+      }
+      private set {
+        ExtData.SetIfValue("accountingVoucher", value);
+      }
+    }
+
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(PaymentOrderNo, PayTo.Keywords,
