@@ -71,6 +71,16 @@ namespace Empiria.Budgeting.Transactions {
       return BudgetTransactionDataService.GetTransactions(budgetable);
     }
 
+    static public FixedList<BudgetTransaction> GetRelatedTo(BudgetTransaction transaction) {
+      var txns = BudgetTransactionDataService.GetRelatedTransactions(transaction);
+
+      if (transaction.HasEntity) {
+        txns = FixedList<BudgetTransaction>.MergeDistinct(GetFor(transaction.GetEntity()), txns);
+      }
+
+      return txns.Sort((x, y) => x.PostingTime.CompareTo(y.PostingTime));
+    }
+
     static public BudgetTransaction Empty => ParseEmpty<BudgetTransaction>();
 
     protected override void OnLoad() {

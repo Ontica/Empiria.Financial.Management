@@ -40,6 +40,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public FixedList<BudgetTransactionDescriptorDto> RelatedTransactions {
+      get; internal set;
+    }
+
     public FixedList<DocumentDto> Documents {
       get; internal set;
     }

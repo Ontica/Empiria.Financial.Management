@@ -170,6 +170,32 @@ namespace Empiria.Budgeting.Transactions.Data {
     }
 
 
+    static internal FixedList<BudgetTransaction> GetRelatedTransactions(BudgetTransaction transaction) {
+      FixedList<int> entryIds;
+
+      if (transaction.BudgetTransactionType.OperationType == BudgetOperationType.Request) {
+        entryIds = transaction.Entries.SelectDistinct(x => x.Id);
+
+      } else {
+        entryIds = transaction.Entries.SelectDistinct(x => x.RelatedEntryId)
+                                      .FindAll(x => x > 0);
+
+      }
+
+      if (entryIds.Count == 0) {
+        return FixedList<BudgetTransaction>.Empty;
+      }
+
+      string filter = "BDG_TXN_ID IN (SELECT DISTINCT BDG_ENTRY_TXN_ID " +
+                               "FROM FMS_BUDGET_ENTRIES WHERE " +
+                               $"(BDG_ENTRY_ID IN ({string.Join(",", entryIds)}) OR " +
+                                $"BDG_ENTRY_RELATED_ENTRY_ID IN ({string.Join(",", entryIds)})) AND " +
+                               $"BDG_ENTRY_STATUS NOT IN ('J', 'X'))";
+
+      return SearchTransactions(filter, "BDG_TXN_POSTING_TIME");
+    }
+
+
     static internal FixedList<BudgetTransaction> GetTransactions(IBudgetable budgetable) {
       Assertion.Require(budgetable, nameof(budgetable));
 

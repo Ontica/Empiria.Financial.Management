@@ -9,10 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Documents;
+using Empiria.Financial;
 using Empiria.History;
 using Empiria.StateEnums;
-
-using Empiria.Financial;
 
 using Empiria.Billing;
 using Empiria.Billing.Adapters;
@@ -45,12 +44,15 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         }
       }
 
+      var relatedTxns = BudgetTransaction.GetRelatedTo(transaction);
+
       return new BudgetTransactionHolderDto {
         Transaction = MapTransaction(transaction),
         Entries = BudgetEntryMapper.MapToDescriptor(transaction.Entries),
         GroupedEntries = new BudgetEntriesByYearTableDto(byYearTransaction.GetEntries()),
         Taxes = MapTaxes(transaction),
         Bills = BillMapper.MapToBillStructure(bills),
+        RelatedTransactions = MapToDescriptor(relatedTxns),
         Documents = documents,
         History = HistoryServices.GetEntityHistory(transaction),
         Actions = MapActions(transaction.Rules)
