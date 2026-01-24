@@ -37,6 +37,8 @@ namespace Empiria.Budgeting {
 
     static public BudgetType Empty => Parse("ObjectTypeInfo.Budget");
 
+    static public BudgetType None => Parse("ObjectTypeInfo.Budget.NotAppliable");
+
     #endregion Constructors and parsers
 
     #region Properties
