@@ -34,6 +34,8 @@ namespace Empiria.Billing {
 
     static public BillCategory FacturaProveedores => Parse(100);
 
+    static public BillCategory NotaDeCreditoPenalizacion => Parse(95);
+
     static public BillCategory NotaDeCreditoProveedores => Parse(101);
 
     static public BillCategory ComplementoPagoProveedores => Parse(102);

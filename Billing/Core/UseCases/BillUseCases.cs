@@ -8,14 +8,14 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-using System.Collections.Generic;
-using Empiria.Billing.Adapters;
-using Empiria.Billing.Data;
-using Empiria.Billing.SATMexicoImporter;
 using Empiria.Documents;
 using Empiria.Financial;
 using Empiria.Services;
+
+using Empiria.Billing.SATMexicoImporter;
+
+using Empiria.Billing.Adapters;
+using Empiria.Billing.Data;
 
 namespace Empiria.Billing.UseCases {
 
@@ -47,7 +47,10 @@ namespace Empiria.Billing.UseCases {
         return CreateBill(xmlString, payable);
 
       } else if (billType == "nota-credito-sat") {
-        return CreateCreditNote(xmlString, payable);
+        return CreateCreditNote(xmlString, payable, false);
+
+      } else if (billType == "nota-credito-penalizacion-sat") {
+        return CreateCreditNote(xmlString, payable, true);
 
       } else if (billType == "complemento-pago-sat") {
         return CreateBillPaymentComplement(xmlString, payable);
@@ -143,9 +146,9 @@ namespace Empiria.Billing.UseCases {
 
       ISATBillDto satDto = reader.ReadAsBillDto();
 
-      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
+      BillFields fields = (BillFields) BillFieldsMapper.Map((SATBillDto) satDto);
 
-      return CreateBillImplementation(payable, (BillFields) fields);
+      return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
     }
 
 
@@ -169,12 +172,6 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateBillImplementation(IPayableEntity payable, BillFields fields) {
-
-      return CreateBillByCategory(payable, fields, BillCategory.FacturaProveedores);
-    }
-
-
     private Bill CreateBillPaymentComplement(string xmlString, IPayableEntity payable) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
@@ -189,7 +186,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    private Bill CreateCreditNote(string xmlString, IPayableEntity payable) {
+    private Bill CreateCreditNote(string xmlString, IPayableEntity payable, bool isForPenalty) {
       Assertion.Require(xmlString, nameof(xmlString));
       Assertion.Require(payable, nameof(payable));
 
@@ -197,15 +194,13 @@ namespace Empiria.Billing.UseCases {
 
       ISATBillDto satDto = reader.ReadAsCreditNoteDto();
 
-      IBillFields fields = BillFieldsMapper.Map((SATBillDto) satDto);
+      BillFields fields = (BillFields) BillFieldsMapper.Map((SATBillDto) satDto);
 
-      return CreateCreditNoteImplementation(payable, (BillFields) fields);
-    }
-
-
-    private Bill CreateCreditNoteImplementation(IPayableEntity payable, BillFields fields) {
-
-      return CreateBillByCategory(payable, fields, BillCategory.NotaDeCreditoProveedores);
+      if (isForPenalty) {
+        return CreateBillByCategory(payable, fields, BillCategory.NotaDeCreditoPenalizacion);
+      } else {
+        return CreateBillByCategory(payable, fields, BillCategory.NotaDeCreditoProveedores);
+      }
     }
 
 
