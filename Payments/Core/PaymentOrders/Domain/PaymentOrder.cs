@@ -168,7 +168,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal string ReferenceNumber {
+    public string ReferenceNumber {
       get {
         return ExtData.Get("referenceNumber", string.Empty);
       }

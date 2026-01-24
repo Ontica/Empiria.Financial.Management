@@ -9,9 +9,14 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Web.Http;
+
+using Empiria.Storage;
+using Empiria.WebApi;
+
+using Empiria.Payments.Reporting;
+
 using Empiria.Payments.Adapters;
 using Empiria.Payments.UseCases;
-using Empiria.WebApi;
 
 namespace Empiria.Payments.WebApi {
 
@@ -91,6 +96,21 @@ namespace Empiria.Payments.WebApi {
         PaymentOrderHolderDto paymentOrder = usecases.CancelPaymentOrder(paymentOrderUID);
 
         return new SingleObjectModel(this.Request, paymentOrder);
+      }
+    }
+
+
+    [HttpGet]
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/print")]
+    public SingleObjectModel PrintPaymentOrder([FromUri] string paymentOrderUID) {
+
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+
+      using (var reportingService = PaymentsReportingService.ServiceInteractor()) {
+
+        FileDto file = reportingService.ExportPaymentOrderToPdf(paymentOrder);
+
+        return new SingleObjectModel(base.Request, file);
       }
     }
 
