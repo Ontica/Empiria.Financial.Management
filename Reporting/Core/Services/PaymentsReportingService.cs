@@ -39,7 +39,7 @@ namespace Empiria.Payments.Reporting {
 
       var exporter = new PaymentOrderVoucherBuilder(paymentOrder, templateConfig);
 
-      return exporter.CreateVoucher();
+      return exporter.CreatePdf("payment.transactions", paymentOrder.PaymentOrderNo);
     }
 
     #endregion Services
