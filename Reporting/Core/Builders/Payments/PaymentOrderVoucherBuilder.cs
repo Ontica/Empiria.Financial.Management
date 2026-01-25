@@ -17,6 +17,7 @@ using Empiria.Billing;
 using Empiria.Budgeting;
 using Empiria.Budgeting.Transactions;
 using Empiria.Orders;
+using Empiria.Procurement.Suppliers;
 
 namespace Empiria.Payments.Reporting {
 
@@ -60,11 +61,13 @@ namespace Empiria.Payments.Reporting {
       var entriesHtml = new StringBuilder();
 
       foreach (var bill in _bills) {
-        var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BILL_NO}}", bill.BillNo));
+        var entryHtml = new StringBuilder(TEMPLATE);
 
-        entryHtml.Replace("{{BILL_TYPE}}", bill.BillCategory.Name);
+        entryHtml.Replace("{{BILL_NO}}", BuildBillNumber(bill));
+        entryHtml.Replace("{{BILL_TYPE}}", BuildBillType(bill));
         entryHtml.Replace("{{DESCRIPTION}}", bill.Name);
         entryHtml.Replace("{{ISSUE_DATE}}", bill.IssueDate.ToString("dd/MMM/yyyy"));
+        entryHtml.Replace("{{POSTING_DATE}}", bill.PostingTime.ToString("dd/MMM/yyyy"));
         entryHtml.Replace("{{SUBTOTAL}}", bill.Subtotal.ToString("C2"));
         entryHtml.Replace("{{DISCOUNT}}", bill.Discount.ToString("C2"));
         entryHtml.Replace("{{TOTAL}}", (bill.Subtotal - bill.Discount).ToString("C2"));
@@ -94,11 +97,9 @@ namespace Empiria.Payments.Reporting {
 
       }
 
-      if (_budgetTxn.IsClosed) {
-        Set("{{BUDGET_ENTRIES_TABLE_TITLE}}", $"CONTROL PRESUPUESTAL [{_budgetTxn.TransactionNo}]");
-      } else {
-        SetWarning("{{BUDGET_ENTRIES_TABLE_TITLE}}", "LA APROBACIÓN PRESUPUESTAL ESTÁ EN PROCESO");
-      }
+      SetIf("{{BUDGET_ENTRIES_TABLE_TITLE}}", _budgetTxn.IsClosed,
+                                              $"CONTROL PRESUPUESTAL [{_budgetTxn.TransactionNo}]",
+                                              Warning("LA APROBACIÓN PRESUPUESTAL ESTÁ EN PROCESO"));
 
       Remove("{{CLASS_HIDE_BUDGET_CONCEPTS}}");
 
@@ -106,20 +107,23 @@ namespace Empiria.Payments.Reporting {
 
       var entriesHtml = new StringBuilder();
 
-      foreach (var orderEntry in _order.GetItems<OrderItem>()) {
+      FixedList<OrderItem> orderItems = _order.GetItems<OrderItem>()
+                                              .Sort((x, y) => $"{x.BudgetAccount.Code}{x.BudgetAccount.OrganizationalUnit.Code}"
+                                                             .CompareTo($"{y.BudgetAccount.Code}{y.BudgetAccount.OrganizationalUnit.Code}"));
 
-        var budgetEntry = _budgetTxn.Entries.Find(x => orderEntry.Id == x.EntityId &&
-                                                       orderEntry.GetEmpiriaType().Id == x.EntityTypeId);
+      foreach (var orderEntry in orderItems) {
+
+        var budgetEntry = _budgetTxn.Entries.Find(x => orderEntry.BudgetEntry.Id == x.Id);
 
         if (budgetEntry == null) {
           continue;
         }
 
-        var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT_CODE}}",
-                                          orderEntry.BudgetAccount.Code));
+        var entryHtml = new StringBuilder(TEMPLATE);
 
-        entryHtml.Replace("{{BUDGET_ACCOUNT_PARTY}}", orderEntry.BudgetAccount.OrganizationalUnit.Code);
-        entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", orderEntry.BudgetAccount.Code);
+        entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", budgetEntry.BudgetAccount.Code);
+        entryHtml.Replace("{{BUDGET_ACCOUNT_PARTY}}", budgetEntry.BudgetAccount.OrganizationalUnit.Code);
+
         entryHtml.Replace("{{DESCRIPTION}}", orderEntry.Description);
         entryHtml.Replace("{{ORIGIN_COUNTRY}}", orderEntry.OriginCountry.CountryISOCode);
         entryHtml.Replace("{{CONTROL_NO}}", budgetEntry.ControlNo);
@@ -144,10 +148,10 @@ namespace Empiria.Payments.Reporting {
 
     private void BuildHeader() {
 
-      string title = _paymentOrder.PaymentType.Name;
+      string title = "Relación de pagos";
 
       if (!_paymentOrder.Payed) {
-        title = $"{title} [{_paymentOrder.Status.GetName()}])";
+        title = $"{title} [{_paymentOrder.Status.GetName()}]";
       }
       if (!_paymentOrder.Payed) {
         title = Warning(title);
@@ -156,18 +160,22 @@ namespace Empiria.Payments.Reporting {
       Set("{{REPORT.TITLE}}", title);
 
       Set("{{PAYMENT.PAYMENT_ORDER_NO}}", _paymentOrder.PaymentOrderNo);
-      Set("{{PAYMENT.PAYMENT_ORDER_TYPE}}", _paymentOrder.RequestedBy.Name);
+      Set("{{PAYMENT.REQUESTED_BY}}", $"({_paymentOrder.RequestedBy.Code}) {_paymentOrder.RequestedBy.Name}");
 
-      Set("{{PAYMENT.PAY_TO}}", _paymentOrder.PayTo.Name);
+      Set("{{PAYMENT.PAYMENT_TYPE}}", BuildPaymentType());
+
+      var payTo = (Supplier) _paymentOrder.PayTo;
+
+      Set("{{PAYMENT.PAY_TO}}", $"{payTo.Name} ({payTo.SubledgerAccount})");
 
       if (_paymentOrder.Payed) {
         Set("{{PAYMENT.PAYMENT_METHOD}}",
                 $"{_paymentOrder.PaymentMethod.Name} {Space(4)} {Normal("Fecha y hora:")} " +
                 $"{_paymentOrder.LastPaymentInstruction.LastUpdateTime.ToString("dd/MMM/yyyy HH:mm")}" +
-                $"{Space(3)}{_paymentOrder.LastPaymentInstruction.BrokerInstructionNo}" +
-                $"");
+                $"{Space(3)}{_paymentOrder.LastPaymentInstruction.BrokerInstructionNo}");
       } else {
         Set("{{PAYMENT.PAYMENT_METHOD}}", $"{_paymentOrder.PaymentMethod.Name}");
+        Set("Total pagado", "Total a pagar");
       }
 
       Set("{{PAYMENT.BUDGET}}", _paymentOrder.PayableEntity.Budget.Name);
@@ -187,29 +195,75 @@ namespace Empiria.Payments.Reporting {
         Remove("{{PAYMENT.REFERENCE_NUMBER}}");
       }
 
-      Set("{{PAYMENT.DEBTOR}}", _paymentOrder.Debtor.IsEmptyInstance ? "No aplica" : _paymentOrder.Debtor.Name);
-      Set("{{PAYMENT.OBSERVATIONS}}", _paymentOrder.Observations);
+      Set("{{REQUISITION.NO}}", _order.Requisition.OrderNo);
+      Set("{{REQUISITION.TOTAL}}", _order.Requisition.Total);
+      Set("{{REQUISITION.BALANCE}}", _order.Requisition.Total - _order.Total);
+
+      if (!_order.Contract.IsEmptyInstance) {
+        Set("{{CONTRACT.NO}}", _order.Contract.OrderNo);
+        Set("{{CONTRACT.PERIOD}}", _order.Contract.StartDate.ToString("dd/MMM/yyyy") + " - " +
+                                   _order.Contract.EndDate.ToString("dd/MMM/yyyy"));
+        Set("{{CONTRACT.TOTAL}}", _order.Contract.Total);
+        Set("{{CONTRACT.BALANCE}}", _order.Contract.Total - _order.Total);
+      } else {
+        Set("{{CONTRACT.NO}}", "No aplica");
+        Set("{{CONTRACT.PERIOD}}", "N/A");
+        Set("{{CONTRACT.TOTAL}}", "N/A");
+        Set("{{CONTRACT.BALANCE}}", "N/A");
+      }
+
+      if (!_paymentOrder.Debtor.IsEmptyInstance) {
+        var debtor = (Supplier) _paymentOrder.Debtor;
+
+        Set("{{PAYMENT.DEBTOR}}", $"{debtor.Name} ({debtor.SubledgerAccount})");
+      } else {
+        Set("{{PAYMENT.DEBTOR}}", "No aplica");
+      }
 
       if (!_budgetTxn.IsEmptyInstance) {
         var bdgRequests = BudgetTransaction.GetRelatedTo(_budgetTxn)
                                            .FindAll(x => x.OperationType == BudgetOperationType.Request)
-                                           .Select(x => x.TransactionNo);
+                                           .Select(x => x.TransactionNo)
+                                           .ToFixedList();
 
         Set("{{PAYMENT.BUDGET_REQUESTS}}", string.Join(", ", bdgRequests));
+
+        bdgRequests = BudgetTransaction.GetRelatedTo(_budgetTxn)
+                                       .FindAll(x => x.OperationType == BudgetOperationType.Exercise)
+                                       .Select(x => x.TransactionNo)
+                                       .ToFixedList();
+
+
+        SetIf("{{PAYMENT.BUDGET_EXCERCISE}}", bdgRequests.Count == 0,
+                                              Warning("Pendiente de registrar"), bdgRequests[0]);
+
       } else {
 
         Set("{{PAYMENT.BUDGET_REQUESTS}}", "No aplica");
+        Set("{{PAYMENT.BUDGET_EXCERCISE}}", "No aplica");
       }
 
-      Set("{{PAYMENT.ACCOUNTING_VOUCHER}}", _paymentOrder.AccountingVoucher);
+      SetIf("{{PAYMENT.ACCOUNTING_VOUCHER}}", _paymentOrder.AccountingVoucher.Length == 0,
+                                              Warning("Pendiente de registrar"), _paymentOrder.AccountingVoucher);
 
-      Set("{{ORDER.ORDER_NO}}", $"{_order.OrderNo} ({_order.OrderType.DisplayName})");
-      Set("{{ORDER.DESCRIPTION}}", _order.Name);
+      Set("{{ORDER.ORDER_NO}}", _order.OrderNo);
+      Set("{{ORDER.NAME}}", _order.Name);
+      Set("{{ORDER.JUSTIFICATION}}", _order.Justification);
+    }
 
 
-      if (!_paymentOrder.Payed) {
-        Set("Total pagado", "Total a pagar");
+    private string BuildPaymentType() {
+      string paymentType = _paymentOrder.PaymentType.Name;
+
+      if (!_order.Category.IsEmptyInstance) {
+        paymentType += $" &nbsp; / {_order.Category.Name}";
+      } else if (!_order.Contract.IsEmptyInstance) {
+        paymentType += $" con contrato &nbsp; / {_order.Contract.Category.Name}";
+      } else {
+        paymentType += $" &nbsp; / {_order.Requisition.Category.Name}";
       }
+
+      return paymentType;
     }
 
     private void BuildTotals() {
@@ -244,6 +298,38 @@ namespace Empiria.Payments.Reporting {
     #endregion Builders
 
     #region Helpers
+
+    private string BuildBillNumber(Bill bill) {
+      string serial = string.Empty;
+
+      if (bill.SchemaData.Serie.Length != 0) {
+        serial = Normal("Serie: ") + bill.SchemaData.Serie;
+      }
+      if (bill.SchemaData.Folio.Length != 0) {
+        if (serial.Length != 0) {
+          serial += Space(2);
+        }
+        serial += Normal("Folio: ") + bill.SchemaData.Folio;
+      }
+
+      if (serial.Length != 0) {
+        serial = $"<br />{serial}";
+      }
+
+      return $"{bill.BillNo}{serial}";
+    }
+
+
+    private string BuildBillType(Bill bill) {
+      string billType = bill.BillCategory.Name;
+
+      if (bill.BillCategory.IsCFDI && bill.PaymentMethod.Length != 0) {
+        billType += $"<br/>{Strong(bill.PaymentMethod)}";
+      }
+
+      return billType;
+    }
+
 
     private BudgetTransaction GetApplicableBudgetTransaction() {
 
