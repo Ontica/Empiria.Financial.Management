@@ -83,7 +83,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       if (TransactionUID.Length != 0) {
         var transaction = BudgetTransaction.Parse(TransactionUID);
 
-        return transaction.BudgetTransactionType;
+        return transaction.TransactionType;
       }
 
       var budget = GetBaseBudget();

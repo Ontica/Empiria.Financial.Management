@@ -65,7 +65,7 @@ namespace Empiria.Budgeting.Reporting {
         foreach (var entry in txn.Entries) {
           _excelFile.SetCell($"A{i}", txn.BaseBudget.Name);
           _excelFile.SetCell($"B{i}", txn.TransactionNo);
-          _excelFile.SetCell($"C{i}", txn.BudgetTransactionType.DisplayName);
+          _excelFile.SetCell($"C{i}", txn.TransactionType.DisplayName);
           _excelFile.SetCell($"D{i}", txn.Status.GetName());
           _excelFile.SetCell($"E{i}", entry.BudgetAccount.OrganizationalUnit.Code);
           _excelFile.SetCell($"F{i}", entry.BudgetAccount.OrganizationalUnit.Name);

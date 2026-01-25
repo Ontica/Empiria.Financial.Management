@@ -145,7 +145,7 @@ namespace Empiria.Budgeting.Transactions.Data {
         return transaction.TransactionNo;
       }
 
-      string transactionPrefix = transaction.BudgetTransactionType.Prefix;
+      string transactionPrefix = transaction.TransactionType.Prefix;
       string budgetPrefix = transaction.BaseBudget.BudgetType.Prefix;
 
       int year = transaction.BaseBudget.Year;
@@ -173,7 +173,7 @@ namespace Empiria.Budgeting.Transactions.Data {
     static internal FixedList<BudgetTransaction> GetRelatedTransactions(BudgetTransaction transaction) {
       FixedList<int> entryIds;
 
-      if (transaction.BudgetTransactionType.OperationType == BudgetOperationType.Request) {
+      if (transaction.OperationType == BudgetOperationType.Request) {
         entryIds = transaction.Entries.SelectDistinct(x => x.Id);
 
       } else {
@@ -265,7 +265,7 @@ namespace Empiria.Budgeting.Transactions.Data {
 
     static internal void WriteTransaction(BudgetTransaction o) {
       var op = DataOperation.Parse("write_FMS_Budget_Transaction",
-          o.Id, o.UID, o.BudgetTransactionType.Id, o.OperationSource.Id, o.BaseBudget.Id,
+          o.Id, o.UID, o.TransactionType.Id, o.OperationSource.Id, o.BaseBudget.Id,
           o.BaseParty.Id, o.TransactionNo, o.Description, o.Justification,
           EmpiriaString.Tagging(o.Identificators), EmpiriaString.Tagging(o.Tags), -1,
           o.HasEntity ? o.GetEntity().GetEmpiriaType().Id : -1,

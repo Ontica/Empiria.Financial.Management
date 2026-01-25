@@ -202,11 +202,11 @@ namespace Empiria.Budgeting.Transactions {
 
       var txn = BudgetTransaction.Parse(fields.TransactionUID);
 
-      if (txn.BudgetTransactionType.AllowsMultiYearEntries) {
+      if (txn.TransactionType.AllowsMultiYearEntries) {
         Assertion.Require(fields.Year >= txn.BaseBudget.Year,
                         $"El año debe ser mayor o igual a {txn.BaseBudget.Year}.");
 
-        Assertion.Require(txn.BudgetTransactionType.AvailableYears.Contains(fields.Year),
+        Assertion.Require(txn.TransactionType.AvailableYears.Contains(fields.Year),
                           $"El año debe estar en la lista de años disponibles.");
 
       } else {

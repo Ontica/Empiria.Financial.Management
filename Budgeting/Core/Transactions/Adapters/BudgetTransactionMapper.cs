@@ -69,7 +69,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static public BudgetTransactionDescriptorDto MapToDescriptor(BudgetTransaction transaction) {
       return new BudgetTransactionDescriptorDto {
         UID = transaction.UID,
-        TransactionTypeName = transaction.BudgetTransactionType.DisplayName,
+        TransactionTypeName = transaction.TransactionType.DisplayName,
         BudgetTypeName = transaction.BaseBudget.BudgetType.DisplayName,
         BudgetName = transaction.BaseBudget.Name,
         TransactionNo = transaction.TransactionNo,
@@ -204,7 +204,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static private BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
       return new BudgetTransactionDto {
         UID = transaction.UID,
-        TransactionType = MapTransactionTypeForEdition(transaction.BudgetTransactionType),
+        TransactionType = MapTransactionTypeForEdition(transaction.TransactionType),
         TransactionNo = transaction.TransactionNo,
         BudgetType = transaction.BaseBudget.BudgetType.MapToNamedEntity(),
         Budget = transaction.BaseBudget.MapToNamedEntity(),

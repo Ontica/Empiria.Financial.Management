@@ -107,8 +107,6 @@ namespace Empiria.Payments.Reporting {
       var entriesHtml = new StringBuilder();
 
       foreach (var orderEntry in _order.GetItems<OrderItem>()) {
-        var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT_CODE}}",
-                                          orderEntry.BudgetAccount.Code));
 
         var budgetEntry = _budgetTxn.Entries.Find(x => orderEntry.Id == x.EntityId &&
                                                        orderEntry.GetEmpiriaType().Id == x.EntityTypeId);
@@ -116,6 +114,9 @@ namespace Empiria.Payments.Reporting {
         if (budgetEntry == null) {
           continue;
         }
+
+        var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT_CODE}}",
+                                          orderEntry.BudgetAccount.Code));
 
         entryHtml.Replace("{{BUDGET_ACCOUNT_PARTY}}", orderEntry.BudgetAccount.OrganizationalUnit.Code);
         entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", orderEntry.BudgetAccount.Code);
@@ -191,7 +192,7 @@ namespace Empiria.Payments.Reporting {
 
       if (!_budgetTxn.IsEmptyInstance) {
         var bdgRequests = BudgetTransaction.GetRelatedTo(_budgetTxn)
-                                           .FindAll(x => x.BudgetTransactionType.OperationType == BudgetOperationType.Request)
+                                           .FindAll(x => x.OperationType == BudgetOperationType.Request)
                                            .Select(x => x.TransactionNo);
 
         Set("{{PAYMENT.BUDGET_REQUESTS}}", string.Join(", ", bdgRequests));
@@ -257,7 +258,7 @@ namespace Empiria.Payments.Reporting {
       }
 
       txn = BudgetTransaction.GetFor(_order)
-                             .FindLast(x => x.BudgetTransactionType.OperationType == BudgetOperationType.Commit);
+                             .FindLast(x => x.OperationType == BudgetOperationType.Commit);
 
       if (txn != null) {
         return txn;

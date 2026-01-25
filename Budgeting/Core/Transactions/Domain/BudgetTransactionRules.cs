@@ -150,7 +150,7 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Entries.Count == 0) {
           return false;
         }
-        if (_transaction.BudgetTransactionType.IsProtected &&
+        if (_transaction.TransactionType.IsProtected &&
             _userRoles.Contains(BUDGET_MANAGER)) {
           return true;
         }
@@ -175,7 +175,7 @@ namespace Empiria.Budgeting.Transactions {
         if (_transaction.Status != TransactionStatus.Pending) {
           return false;
         }
-        if (_transaction.BudgetTransactionType.IsProtected &&
+        if (_transaction.TransactionType.IsProtected &&
             _userRoles.Contains(BUDGET_MANAGER)) {
           return true;
         }

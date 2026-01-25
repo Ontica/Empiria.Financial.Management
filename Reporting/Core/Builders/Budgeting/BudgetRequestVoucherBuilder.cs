@@ -135,7 +135,7 @@ namespace Empiria.Budgeting.Reporting {
 
     private StringBuilder BuildHeader(StringBuilder html) {
 
-      string title = _txn.BudgetTransactionType.DisplayName;
+      string title = _txn.TransactionType.DisplayName;
 
       if (_txn.IsMultiYear) {
         title = $"{title} (plurianual)";

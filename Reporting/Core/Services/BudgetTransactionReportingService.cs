@@ -66,7 +66,7 @@ namespace Empiria.Budgeting.Reporting {
     public FileDto ExportTransactionVoucherToPdf(BudgetTransaction transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
-      switch (transaction.BudgetTransactionType.OperationType) {
+      switch (transaction.OperationType) {
 
         case BudgetOperationType.Authorize:
         case BudgetOperationType.Expand:
@@ -84,7 +84,7 @@ namespace Empiria.Budgeting.Reporting {
 
         default:
           throw Assertion.EnsureNoReachThisCode($"Unsupported budget operation type: " +
-                                                $"{transaction.BudgetTransactionType.OperationType}");
+                                                $"{transaction.OperationType}");
       }
     }
 

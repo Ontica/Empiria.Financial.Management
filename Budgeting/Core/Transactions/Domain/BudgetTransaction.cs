@@ -91,15 +91,16 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Properties
 
-    public BudgetTransactionType BudgetTransactionType {
+    public BudgetTransactionType TransactionType {
       get {
         return (BudgetTransactionType) base.GetEmpiriaType();
       }
     }
 
+
     public BudgetOperationType OperationType {
       get {
-        return BudgetTransactionType.OperationType;
+        return TransactionType.OperationType;
       }
     }
 
@@ -267,7 +268,7 @@ namespace Empiria.Budgeting.Transactions {
     public virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(TransactionNo, Description, _identificators, _tags,
-                                           BudgetTransactionType.DisplayName,
+                                           TransactionType.DisplayName,
                                            BaseBudget.Keywords, BaseParty.Keywords);
       }
     }
