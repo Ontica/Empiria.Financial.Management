@@ -153,11 +153,8 @@ namespace Empiria.Payments.Reporting {
       if (!_paymentOrder.Payed) {
         title = $"{title} [{_paymentOrder.Status.GetName()}]";
       }
-      if (!_paymentOrder.Payed) {
-        title = Warning(title);
-      }
 
-      Set("{{REPORT.TITLE}}", title);
+      SetIf("{{REPORT.TITLE}}", _paymentOrder.Payed, title, Warning(title));
 
       Set("{{PAYMENT.PAYMENT_ORDER_NO}}", _paymentOrder.PaymentOrderNo);
       Set("{{PAYMENT.REQUESTED_BY}}", $"({_paymentOrder.RequestedBy.Code}) {_paymentOrder.RequestedBy.Name}");
@@ -220,28 +217,8 @@ namespace Empiria.Payments.Reporting {
         Set("{{PAYMENT.DEBTOR}}", "No aplica");
       }
 
-      if (!_budgetTxn.IsEmptyInstance) {
-        var bdgRequests = BudgetTransaction.GetRelatedTo(_budgetTxn)
-                                           .FindAll(x => x.OperationType == BudgetOperationType.Request)
-                                           .Select(x => x.TransactionNo)
-                                           .ToFixedList();
+      BuildBudgetRequests();
 
-        Set("{{PAYMENT.BUDGET_REQUESTS}}", string.Join(", ", bdgRequests));
-
-        bdgRequests = BudgetTransaction.GetRelatedTo(_budgetTxn)
-                                       .FindAll(x => x.OperationType == BudgetOperationType.Exercise)
-                                       .Select(x => x.TransactionNo)
-                                       .ToFixedList();
-
-
-        SetIf("{{PAYMENT.BUDGET_EXCERCISE}}", bdgRequests.Count == 0,
-                                              Warning("Pendiente de registrar"), bdgRequests[0]);
-
-      } else {
-
-        Set("{{PAYMENT.BUDGET_REQUESTS}}", "No aplica");
-        Set("{{PAYMENT.BUDGET_EXCERCISE}}", "No aplica");
-      }
 
       SetIf("{{PAYMENT.ACCOUNTING_VOUCHER}}", _paymentOrder.AccountingVoucher.Length == 0,
                                               Warning("Pendiente de registrar"), _paymentOrder.AccountingVoucher);
@@ -251,20 +228,6 @@ namespace Empiria.Payments.Reporting {
       Set("{{ORDER.JUSTIFICATION}}", _order.Justification);
     }
 
-
-    private string BuildPaymentType() {
-      string paymentType = _paymentOrder.PaymentType.Name;
-
-      if (!_order.Category.IsEmptyInstance) {
-        paymentType += $" &nbsp; / {_order.Category.Name}";
-      } else if (!_order.Contract.IsEmptyInstance) {
-        paymentType += $" con contrato &nbsp; / {_order.Contract.Category.Name}";
-      } else {
-        paymentType += $" &nbsp; / {_order.Requisition.Category.Name}";
-      }
-
-      return paymentType;
-    }
 
     private void BuildTotals() {
 
@@ -330,6 +293,44 @@ namespace Empiria.Payments.Reporting {
       return billType;
     }
 
+
+    private void BuildBudgetRequests() {
+      if (_budgetTxn.IsEmptyInstance) {
+        Set("{{PAYMENT.BUDGET_REQUESTS}}", "No aplica");
+        Set("{{PAYMENT.BUDGET_EXCERCISE}}", "No aplica");
+      }
+
+      var bdgRequests = BudgetTransaction.GetRelatedTo(_budgetTxn)
+                                         .FindAll(x => x.OperationType == BudgetOperationType.Request)
+                                         .Select(x => x.TransactionNo)
+                                         .ToFixedList();
+
+      Set("{{PAYMENT.BUDGET_REQUESTS}}", string.Join(", ", bdgRequests));
+
+      bdgRequests = BudgetTransaction.GetRelatedTo(_budgetTxn)
+                                     .FindAll(x => x.OperationType == BudgetOperationType.Exercise)
+                                     .Select(x => x.TransactionNo)
+                                     .ToFixedList();
+
+
+      Set("{{PAYMENT.BUDGET_EXCERCISE}}", bdgRequests.Count == 0 ?
+                                          Warning("Pendiente de registrar") : bdgRequests[0]);
+    }
+
+
+    private string BuildPaymentType() {
+      string paymentType = _paymentOrder.PaymentType.Name;
+
+      if (!_order.Category.IsEmptyInstance) {
+        paymentType += $" &nbsp; / {_order.Category.Name}";
+      } else if (!_order.Contract.IsEmptyInstance) {
+        paymentType += $" &nbsp; / {_order.Contract.Category.Name}";
+      } else {
+        paymentType += $" &nbsp; / {_order.Requisition.Category.Name}";
+      }
+
+      return paymentType;
+    }
 
     private BudgetTransaction GetApplicableBudgetTransaction() {
 

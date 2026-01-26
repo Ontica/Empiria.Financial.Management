@@ -180,7 +180,7 @@ namespace Empiria.Payments {
 
     public string AccountingVoucher {
       get {
-        return ExtData.Get("accountingVoucher", "Pendiente de registrar");
+        return ExtData.Get("accountingVoucher", string.Empty);
       }
       private set {
         ExtData.SetIfValue("accountingVoucher", value);
