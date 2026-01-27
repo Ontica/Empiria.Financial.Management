@@ -8,14 +8,14 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
 using System.Web.Http;
 
 using Empiria.Storage;
 using Empiria.WebApi;
 
-using Empiria.Payments.Reporting;
-
 using Empiria.Payments.Adapters;
+using Empiria.Payments.Reporting;
 using Empiria.Payments.UseCases;
 
 namespace Empiria.Payments.WebApi {
@@ -24,6 +24,27 @@ namespace Empiria.Payments.WebApi {
   public class PaymentOrderController : WebApiController {
 
     #region Query web apis
+
+    [HttpPost]
+    [Route("v2/payments-management/payment-orders/bulk-operation/export")]
+    public SingleObjectModel ExportPaymentOrdersToExcel([FromBody] BulkOperationCommand command) {
+
+      FixedList<PaymentOrder> paymentOrders = command.Items.Select(x => PaymentOrder.Parse(x))
+                                                           .ToFixedList();
+
+      using (var reportingService = PaymentsReportingService.ServiceInteractor()) {
+
+        var result = new FileResultDto(
+            reportingService.ExportPaymentOrdersToExcel(paymentOrders),
+            $"Se exportaron {paymentOrders.Count} solicitudes de pago a Excel."
+        );
+
+        SetOperation(result.Message);
+
+        return new SingleObjectModel(base.Request, result);
+      }
+    }
+
 
     [HttpGet]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}")]
@@ -39,11 +60,27 @@ namespace Empiria.Payments.WebApi {
 
     [HttpGet]
     [Route("v2/payments-management/payment-types")]
+    [Route("v2/payments-management/payment-order-types")]
     public CollectionModel GetPaymentTypes() {
 
       FixedList<PaymentType> paymentTypes = PaymentType.GetList();
 
       return new CollectionModel(base.Request, paymentTypes.MapToNamedEntityList());
+    }
+
+
+    [HttpGet]
+    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/print")]
+    public SingleObjectModel PrintPaymentOrder([FromUri] string paymentOrderUID) {
+
+      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
+
+      using (var reportingService = PaymentsReportingService.ServiceInteractor()) {
+
+        FileDto file = reportingService.ExportPaymentOrderToPdf(paymentOrder);
+
+        return new SingleObjectModel(base.Request, file);
+      }
     }
 
 
@@ -100,21 +137,6 @@ namespace Empiria.Payments.WebApi {
     }
 
 
-    [HttpGet]
-    [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/print")]
-    public SingleObjectModel PrintPaymentOrder([FromUri] string paymentOrderUID) {
-
-      var paymentOrder = PaymentOrder.Parse(paymentOrderUID);
-
-      using (var reportingService = PaymentsReportingService.ServiceInteractor()) {
-
-        FileDto file = reportingService.ExportPaymentOrderToPdf(paymentOrder);
-
-        return new SingleObjectModel(base.Request, file);
-      }
-    }
-
-
     [HttpPost]
     [Route("v2/payments-management/payment-orders/{paymentOrderUID:guid}/reset")]
     public SingleObjectModel ResetPaymentOrder([FromUri] string paymentOrderUID) {
@@ -159,5 +181,16 @@ namespace Empiria.Payments.WebApi {
     #endregion Command web apis
 
   }  // class PaymentOrderController
+
+
+
+  public class BulkOperationCommand {
+
+    public string[] Items {
+      get; set;
+    }
+
+  }  // class BulkOperationCommand
+
 
 }  // namespace Empiria.Payments.WebApi

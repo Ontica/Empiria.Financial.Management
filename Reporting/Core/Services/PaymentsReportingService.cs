@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Office;
 using Empiria.Services;
 using Empiria.Storage;
 
@@ -40,6 +41,20 @@ namespace Empiria.Payments.Reporting {
       var exporter = new PaymentOrderVoucherBuilder(paymentOrder, templateConfig);
 
       return exporter.CreatePdf("payment.transactions", paymentOrder.PaymentOrderNo);
+    }
+
+
+    public FileDto ExportPaymentOrdersToExcel(FixedList<PaymentOrder> paymentOrders) {
+
+      var templateUID = $"{GetType().Name}.ExportPaymentOrdersToExcel";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new PaymentOrdersToExcelBuilder(templateConfig);
+
+      ExcelFile excelFile = exporter.CreateExcelFile(paymentOrders);
+
+      return excelFile.ToFileDto();
     }
 
     #endregion Services
