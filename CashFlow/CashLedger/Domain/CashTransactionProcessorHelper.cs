@@ -236,19 +236,13 @@ namespace Empiria.CashFlow.CashLedger {
         return _entries.FindAll(x => !x.Processed &&
                                       x.Credit > 0 &&
                                       x.CurrencyId == entry.CurrencyId &&
-                                      MatchesAccountNumber(x.AccountNumber, rule.CreditAccount, rule) &&
-                                      MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber,
-                                                                    entry.SubledgerAccountNumber, rule) &&
-                                      MatchesSector(x.SectorCode, entry.SectorCode, rule));
+                                      MatchesAccountNumber(x.AccountNumber, rule.CreditAccount, rule));
 
       } else {
         return _entries.FindAll(x => !x.Processed &&
                                       x.Debit > 0 &&
                                       x.CurrencyId == entry.CurrencyId &&
-                                      MatchesAccountNumber(x.AccountNumber, rule.DebitAccount, rule) &&
-                                      MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber,
-                                                                    entry.SubledgerAccountNumber, rule) &&
-                                      MatchesSector(x.SectorCode, entry.SectorCode, rule));
+                                      MatchesAccountNumber(x.AccountNumber, rule.DebitAccount, rule));
       }
     }
 
@@ -259,16 +253,12 @@ namespace Empiria.CashFlow.CashLedger {
         return _entries.Find(x => !x.Processed &&
                                   x.Credit == entry.Debit &&
                                   x.CurrencyId == entry.CurrencyId &&
-                                  MatchesAccountNumber(x.AccountNumber, entry.AccountNumber) &&
-                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber) &&
-                                  MatchesSector(x.SectorCode, entry.SectorCode));
+                                  MatchesAccountNumber(x.AccountNumber, entry.AccountNumber));
       } else {
         return _entries.Find(x => !x.Processed &&
                                   x.Debit == entry.Credit &&
                                   x.CurrencyId == entry.CurrencyId &&
-                                  MatchesAccountNumber(x.AccountNumber, entry.AccountNumber) &&
-                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber, entry.SubledgerAccountNumber) &&
-                                  MatchesSector(x.SectorCode, entry.SectorCode));
+                                  MatchesAccountNumber(x.AccountNumber, entry.AccountNumber));
       }
     }
 
@@ -281,20 +271,13 @@ namespace Empiria.CashFlow.CashLedger {
                                   x.Credit == entry.Debit &&
                                   x.CurrencyId == entry.CurrencyId &&
                                   MatchesAccountNumber(x.AccountNumber,
-                                                       swapRule ? rule.DebitAccount : rule.CreditAccount, rule) &&
-                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber,
-                                                                entry.SubledgerAccountNumber, rule) &&
-                                  MatchesSector(x.SectorCode, entry.SectorCode, rule));
-
+                                                       swapRule ? rule.DebitAccount : rule.CreditAccount, rule));
       } else {
         return _entries.Find(x => !x.Processed &&
                                   x.Debit == entry.Credit &&
                                   x.CurrencyId == entry.CurrencyId &&
                                   MatchesAccountNumber(x.AccountNumber,
-                                                       swapRule ? rule.CreditAccount : rule.DebitAccount, rule) &&
-                                  MatchesSubLedgerAccountNumber(x.SubledgerAccountNumber,
-                                                                entry.SubledgerAccountNumber, rule) &&
-                                  MatchesSector(x.SectorCode, entry.SectorCode, rule));
+                                                       swapRule ? rule.CreditAccount : rule.DebitAccount, rule));
       }
     }
 
@@ -323,35 +306,6 @@ namespace Empiria.CashFlow.CashLedger {
       } else {
         return accountNo.StartsWith(patternAccountNo);
       }
-    }
-
-
-    static private bool MatchesSector(string sectorCode1, string sectorCode2,
-                                      FinancialRule rule = null) {
-
-      rule = rule ?? FinancialRule.Empty;
-
-      if (rule.Conditions.Get("skipSectorCodeMatch", true)) {
-        return true;
-      }
-
-      return (sectorCode1 == sectorCode2 || sectorCode1 == "00" || sectorCode2 == "00");
-    }
-
-
-    static private bool MatchesSubLedgerAccountNumber(string subledgerAcctNo1,
-                                                      string subledgerAcctNo2,
-                                                      FinancialRule rule = null) {
-
-      rule = rule ?? FinancialRule.Empty;
-
-      if (rule.Conditions.Get("skipSubledgerAccountMatch", false)) {
-        return true;
-      }
-
-      return subledgerAcctNo1 == subledgerAcctNo2 ||
-            (string.IsNullOrWhiteSpace(subledgerAcctNo1) && !string.IsNullOrWhiteSpace(subledgerAcctNo2)) ||
-            (!string.IsNullOrWhiteSpace(subledgerAcctNo1) && string.IsNullOrWhiteSpace(subledgerAcctNo2));
     }
 
 

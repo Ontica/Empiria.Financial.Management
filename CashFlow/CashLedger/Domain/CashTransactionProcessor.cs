@@ -79,11 +79,22 @@ namespace Empiria.CashFlow.CashLedger {
                                                             x.CreditConcept.Length != 0);
 
       foreach (var entry in entries) {
+
         FixedList<FinancialRule> applicableRules = _helper.GetApplicableRules(rules, entry);
 
-        if (applicableRules.Count == 1) {
-          _helper.AddCashFlowEntry(applicableRules[0], entry,
-            "Regla con flujo directo");
+        if (applicableRules.Count == 0) {
+          continue;
+        }
+
+        FinancialRule rule = applicableRules[0];
+
+        if (entry.Debit > 0 && rule.DebitConcept.Length != 0) {
+          _helper.AddCashFlowEntry(rule, entry,
+                                   "Regla con flujo directo");
+
+        } else if (entry.Credit > 0 && rule.CreditConcept.Length != 0) {
+          _helper.AddCashFlowEntry(rule, entry,
+                                   "Regla con flujo directo");
         }
       }
     }
