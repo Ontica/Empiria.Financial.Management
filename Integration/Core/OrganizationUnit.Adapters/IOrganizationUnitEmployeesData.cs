@@ -17,6 +17,10 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
+    string FedTaxpayersReg {
+      get;
+    }
+
     string Name {
       get;
     }
