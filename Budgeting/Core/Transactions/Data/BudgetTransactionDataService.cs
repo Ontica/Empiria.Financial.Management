@@ -52,14 +52,17 @@ namespace Empiria.Budgeting.Transactions.Data {
 
     static internal void GenerateApprovedPaymentControlCodes(BudgetTransaction transaction) {
 
-      int counter = BudgetTransaction.GetFor(transaction.GetEntity())
-                                     .CountAll(x => x.OperationType == BudgetOperationType.Commit);
+      int counter = BudgetTransaction.GetRelatedTo(transaction)
+                                     .CountAll(x => x.OperationType == BudgetOperationType.ApprovePayment &&
+                                                    x.IsClosed);
 
-      string paymentNoString = (counter + 1).ToString("00");
+      counter++;
 
       foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
 
         var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
+
+        string paymentNoString = counter.ToString("00");
 
         entry.ControlNo = $"{relatedEntry.ControlNo}/{paymentNoString}";
 
