@@ -86,7 +86,9 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(fields.Name, "Requiero la descripción del oficio o documento que ampara al comprobante.");
       Assertion.Require(fields.Total, "Requiero el total del comprobante");
 
-      var bill = new Bill(payable, BillCategory.Parse(97), fields);
+      var billCategory = BillCategory.Parse(fields.DocumentProductUID);
+
+      var bill = new Bill(payable, billCategory, fields);
 
       bill.Save();
 
