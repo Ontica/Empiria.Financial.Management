@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Budgeting;
+
 namespace Empiria.Payments {
 
   /// <summary>Provides services to control payment order's rules.</summary>
@@ -30,7 +32,9 @@ namespace Empiria.Payments {
         return false;
       }
 
-      if (!_paymentOrder.PaymentType.NeedsBudgetApproval) {
+      Budget budget = (Budget) _paymentOrder.PayableEntity.Budget;
+
+      if (budget.BudgetType.Equals(BudgetType.None)) {
         return false;
       }
 
@@ -77,10 +81,15 @@ namespace Empiria.Payments {
 
     internal bool CanGeneratePaymentInstruction() {
 
-      var bdgTxn = _paymentOrder.TryGetApprovedBudget();
+      Budget budget = (Budget) _paymentOrder.PayableEntity.Budget;
 
-      if (_paymentOrder.PaymentType.NeedsBudgetApproval && (bdgTxn == null || !bdgTxn.IsClosed)) {
-        return false;
+      if (!budget.BudgetType.Equals(BudgetType.None)) {
+
+        var bdgTxn = _paymentOrder.TryGetApprovedBudget();
+
+        if (bdgTxn == null || !bdgTxn.IsClosed) {
+          return false;
+        }
       }
 
       if (_paymentOrder.Status == PaymentOrderStatus.Pending &&

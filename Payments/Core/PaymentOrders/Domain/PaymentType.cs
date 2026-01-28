@@ -29,13 +29,6 @@ namespace Empiria.Payments {
 
     #region Properties
 
-    public bool NeedsBudgetApproval {
-      get {
-        return ExtData.Get("needsBudgetApproval", true);
-      }
-    }
-
-
     public string Prefix {
       get {
         return ExtData.Get("prefix", "PG");

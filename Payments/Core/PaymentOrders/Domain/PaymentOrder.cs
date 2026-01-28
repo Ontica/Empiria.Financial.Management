@@ -20,6 +20,7 @@ using Empiria.StateEnums;
 using Empiria.Budgeting.Transactions;
 
 using Empiria.Payments.Data;
+using Empiria.Budgeting;
 
 namespace Empiria.Payments {
 
@@ -307,11 +308,17 @@ namespace Empiria.Payments {
                               "debido a que la solicitud no ha sido guardada.");
       }
 
-      var bdgTxn = TryGetApprovedBudget();
+      Budget budget = (Budget) PayableEntity.Budget;
 
-      if (PaymentType.NeedsBudgetApproval && (bdgTxn == null || bdgTxn.InProcess)) {
-        Assertion.RequireFail("No se puede crear la instrucción de pago debido " +
-                              "a que la solicitud de pago no tiene el presupuesto aprobado.");
+      if (!budget.BudgetType.Equals(BudgetType.None)) {
+
+        var bdgTxn = TryGetApprovedBudget();
+
+        if (bdgTxn == null || bdgTxn.InProcess) {
+          Assertion.RequireFail("No se puede crear la instrucción de pago debido " +
+                                "a que la solicitud de pago no tiene el presupuesto aprobado.");
+        }
+
       }
 
       if (HasActivePaymentInstruction) {
