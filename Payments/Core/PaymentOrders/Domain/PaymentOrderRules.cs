@@ -49,6 +49,18 @@ namespace Empiria.Payments {
 
 
     internal bool CanCancel() {
+
+      Budget budget = (Budget) _paymentOrder.PayableEntity.Budget;
+
+      if (!budget.BudgetType.Equals(BudgetType.None)) {
+
+        var bdgTxn = _paymentOrder.TryGetApprovedBudget();
+
+        if (bdgTxn != null) {
+          return false;
+        }
+      }
+
       if (_paymentOrder.Status == PaymentOrderStatus.Pending ||
           _paymentOrder.Status == PaymentOrderStatus.Suspended ||
           _paymentOrder.Status == PaymentOrderStatus.Programmed) {
