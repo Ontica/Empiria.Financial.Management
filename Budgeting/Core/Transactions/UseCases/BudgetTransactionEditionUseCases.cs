@@ -70,6 +70,25 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       return counter;
     }
 
+
+    public BudgetTransactionHolderDto CancelTransaction(BudgetTransaction transaction,
+                                                        string reason) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      reason = EmpiriaString.Clean(reason);
+
+      transaction.Cancel(reason);
+
+      transaction.Save();
+
+      RemoveDocumentsIfNeeded(transaction);
+
+      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Cancelada", reason));
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public BudgetTransactionHolderDto CloseTransaction(string budgetTransactionUID) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
 
@@ -172,11 +191,9 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public BudgetTransactionHolderDto RejectTransaction(string budgetTransactionUID,
+    public BudgetTransactionHolderDto RejectTransaction(BudgetTransaction transaction,
                                                         string reason) {
-      Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
-
-      var transaction = BudgetTransaction.Parse(budgetTransactionUID);
+      Assertion.Require(transaction, nameof(transaction));
 
       reason = EmpiriaString.Clean(reason);
 
@@ -192,7 +209,6 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       return BudgetTransactionMapper.Map(transaction);
     }
-
 
     public BudgetEntryDto RemoveBudgetEntry(string budgetTransactionUID, string budgetEntryUID) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));

@@ -198,11 +198,19 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     public SingleObjectModel RejectTransaction([FromUri] string transactionUID,
                                                [FromBody] RejectFields fields) {
 
-      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-        BudgetTransactionHolderDto transaction = usecases.RejectTransaction(transactionUID,
-                                                                            fields.Message);
+      var transaction = BudgetTransaction.Parse(transactionUID);
 
-        return new SingleObjectModel(base.Request, transaction);
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+
+        BudgetTransactionHolderDto txnHolder;
+
+        if (transaction.Status != TransactionStatus.Closed) {
+          txnHolder = usecases.RejectTransaction(transaction, fields.Message);
+        } else {
+          txnHolder = usecases.CancelTransaction(transaction, fields.Message);
+        }
+
+        return new SingleObjectModel(base.Request, txnHolder);
       }
     }
 

@@ -56,7 +56,6 @@ namespace Empiria.Budgeting.Transactions {
       return Accountability.GetCommissionersFor<OrganizationalUnit>(currentUser, "budgeting", ACQUISITION_MANAGER);
     }
 
-
     #endregion Constructors and parsers
 
     #region Properties
@@ -139,6 +138,14 @@ namespace Empiria.Budgeting.Transactions {
         }
         if (_transaction.Status == TransactionStatus.Authorized &&
           _securityRoles.Contains(BUDGET_MANAGER)) {
+          return true;
+        }
+
+        if (_transaction.Status == TransactionStatus.Closed &&
+            _transaction.OperationType != BudgetOperationType.Plan &&
+            _transaction.OperationType != BudgetOperationType.Authorize &&
+            _transaction.OperationType != BudgetOperationType.Exercise &&
+            _securityRoles.Contains(BUDGET_MANAGER)) {
           return true;
         }
         return false;

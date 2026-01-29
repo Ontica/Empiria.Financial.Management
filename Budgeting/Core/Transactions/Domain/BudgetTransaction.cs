@@ -371,6 +371,32 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public void Cancel(string reason) {
+      Assertion.Require(reason, nameof(reason));
+
+      Assertion.Require(Rules.CanReject,
+                        $"Can not cancel this budget transaction. Its status is {Status.GetName()}.");
+
+      var txns = GetRelatedTo(this)
+                 .FindAll(x => x.ApplicationDate >= this.ApplicationDate &&
+                               x.Id != this.Id &&
+                               x.Status != TransactionStatus.Canceled &&
+                               x.Status != TransactionStatus.Rejected);
+
+      if (txns.Count != 0) {
+        Assertion.RequireFail("Para cancelar esta transacción se requiere cancelar " +
+                              $"rechazar primero la transacción {txns.Last().TransactionNo}.");
+      }
+
+      RejectedReason = EmpiriaString.Clean(reason);
+
+      Status = TransactionStatus.Canceled;
+
+      Entries.ToList()
+             .ForEach(x => x.Reject());
+    }
+
+
     public void Close() {
       Assertion.Require(Rules.CanClose, "Current user can not close this transaction.");
 
@@ -468,7 +494,8 @@ namespace Empiria.Budgeting.Transactions {
 
       Status = TransactionStatus.Rejected;
 
-      this.Entries.ToList().ForEach(x => x.Reject());
+      Entries.ToList()
+             .ForEach(x => x.Reject());
     }
 
 
