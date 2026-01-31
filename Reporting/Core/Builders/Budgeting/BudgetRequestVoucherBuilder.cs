@@ -73,26 +73,19 @@ namespace Empiria.Budgeting.Reporting {
 
       var entriesHtml = new StringBuilder();
 
-      foreach (var orderEntry in _order.GetItems<OrderItem>()) {
-        var entryHtml = new StringBuilder(TEMPLATE.Replace("{{BUDGET_ACCOUNT_CODE}}",
-                                          orderEntry.BudgetAccount.Code));
+      foreach (var budgetEntry in _txn.Entries.FindAll(x => x.Deposit > 0)) {
+        var entryHtml = new StringBuilder(TEMPLATE);
 
-        var budgetEntry = _txn.Entries.Find(x => orderEntry.Id == x.EntityId &&
-                                                 orderEntry.GetEmpiriaType().Id == x.EntityTypeId);
-
-        if (budgetEntry == null) {
-          continue;
-        }
-
-        entryHtml.Replace("{{BUDGET_ACCOUNT_PARTY}}", orderEntry.BudgetAccount.OrganizationalUnit.Code);
-        entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", orderEntry.BudgetAccount.Code);
-        entryHtml.Replace("{{PRODUCT_CODE}}", orderEntry.ProductCode);
-        entryHtml.Replace("{{DESCRIPTION}}", orderEntry.Description);
-        entryHtml.Replace("{{ORIGIN_COUNTRY}}", orderEntry.OriginCountry.CountryISOCode);
+        entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", budgetEntry.BudgetAccount.Code);
+        entryHtml.Replace("{{BUDGET_ACCOUNT_PARTY}}", budgetEntry.BudgetAccount.OrganizationalUnit.Code);
+        entryHtml.Replace("{{BUDGET_ACCOUNT_CODE}}", budgetEntry.BudgetAccount.Code);
+        entryHtml.Replace("{{PRODUCT_CODE}}", budgetEntry.ProductCode);
+        entryHtml.Replace("{{DESCRIPTION}}", budgetEntry.ProductName);
+        entryHtml.Replace("{{ORIGIN_COUNTRY}}", budgetEntry.OriginCountry.CountryISOCode);
         entryHtml.Replace("{{CONTROL_NO}}", budgetEntry.ControlNo);
         entryHtml.Replace("{{PROGRAM}}", budgetEntry.BudgetProgram.Code);
-        entryHtml.Replace("{{YEAR}}", orderEntry.Budget.Year.ToString());
-        entryHtml.Replace("{{PRODUCT_UNIT}}", orderEntry.ProductUnit.Name);
+        entryHtml.Replace("{{YEAR}}", budgetEntry.Budget.Year.ToString());
+        entryHtml.Replace("{{PRODUCT_UNIT}}", budgetEntry.ProductUnit.Name);
         entryHtml.Replace("{{QUANTITY}}", budgetEntry.Currency.ISOCode);
         entryHtml.Replace("{{UNIT_PRICE}}", budgetEntry.RequestedAmount.ToString("C2"));
         entryHtml.Replace("{{TOTAL}}", budgetEntry.Amount.ToString("C2"));
