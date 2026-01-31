@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Financial;
+using Empiria.Locations;
 using Empiria.Parties;
 using Empiria.Products;
 using Empiria.Projects;
@@ -66,6 +67,11 @@ namespace Empiria.Budgeting.Transactions {
 
 
     public string ProductUnitUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string OriginCountryUID {
       get; set;
     } = string.Empty;
 
@@ -145,6 +151,7 @@ namespace Empiria.Budgeting.Transactions {
       fields.BudgetAccountUID = Patcher.CleanUID(fields.BudgetAccountUID);
       fields.BalanceColumnUID = Patcher.CleanUID(fields.BalanceColumnUID);
       fields.ProductUID = Patcher.CleanUID(fields.ProductUID);
+      fields.OriginCountryUID = Patcher.CleanUID(fields.OriginCountryUID);
       fields.ProductUnitUID = Patcher.CleanUID(fields.ProductUnitUID);
       fields.PartyUID = Patcher.CleanUID(fields.PartyUID);
       fields.ProjectUID = Patcher.CleanUID(fields.ProjectUID);
@@ -178,6 +185,10 @@ namespace Empiria.Budgeting.Transactions {
 
       if (fields.ProductUnitUID.Length != 0) {
         _ = ProductUnit.Parse(fields.ProductUnitUID);
+      }
+
+      if (fields.OriginCountryUID.Length != 0) {
+        _ = Country.Parse(fields.OriginCountryUID);
       }
 
       if (fields.ProjectUID.Length != 0) {

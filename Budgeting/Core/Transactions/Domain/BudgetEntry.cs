@@ -12,6 +12,7 @@ using System;
 
 using Empiria.Financial;
 using Empiria.Json;
+using Empiria.Locations;
 using Empiria.Parties;
 using Empiria.Products;
 using Empiria.Projects;
@@ -117,6 +118,16 @@ namespace Empiria.Budgeting.Transactions {
     [DataField("BDG_ENTRY_PRODUCT_QTY")]
     public decimal ProductQty {
       get; private set;
+    }
+
+
+    public Country OriginCountry {
+      get {
+        return ExtensionData.Get("orderItem/originCountryId", Country.Default);
+      }
+      private set {
+        ExtensionData.SetIf("orderItem/originCountryId", value, value.Distinct(Country.Default));
+      }
     }
 
 
@@ -329,6 +340,7 @@ namespace Empiria.Budgeting.Transactions {
       ProductName = EmpiriaString.Clean(fields.ProductName);
       ProductUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
       ProductQty = fields.ProductQty;
+      OriginCountry = Patcher.Patch(fields.OriginCountryUID, Country.Default);
       Project = Patcher.Patch(fields.ProjectUID, Project.Empty);
       Party = Patcher.Patch(fields.PartyUID, Party.Empty);
       EntityTypeId = fields.EntityTypeId;
