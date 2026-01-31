@@ -297,6 +297,13 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
+    public bool NoRejected {
+      get {
+        return Status != TransactionStatus.Rejected &&
+               Status != TransactionStatus.Deleted;
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -349,7 +356,7 @@ namespace Empiria.Budgeting.Transactions {
       BalanceColumn = Patcher.Patch(fields.BalanceColumnUID, BalanceColumn);
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
-      Year = fields.Year;
+      Year = Budget.Year;
       Month = fields.Month;
       Day = fields.Day;
       Currency = Patcher.Patch(fields.CurrencyUID, Budget.BudgetType.Currency);
