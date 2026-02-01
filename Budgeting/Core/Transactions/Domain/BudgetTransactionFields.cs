@@ -9,7 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-
+using Empiria.Financial;
 using Empiria.Parties;
 
 namespace Empiria.Budgeting.Transactions {
@@ -30,6 +30,16 @@ namespace Empiria.Budgeting.Transactions {
     public string BasePartyUID {
       get; set;
     } = string.Empty;
+
+
+    public string CurrencyUID {
+      get; set;
+    } = string.Empty;
+
+
+    public decimal ExchangeRate {
+      get; set;
+    } = decimal.One;
 
 
     public string Description {
@@ -92,17 +102,29 @@ namespace Empiria.Budgeting.Transactions {
         _ = Budget.Parse(fields.BaseBudgetUID);
       }
 
-      if (fields.OperationSourceUID.Length != 0) {
-        _ = OperationSource.Parse(fields.OperationSourceUID);
+      if (fields.CurrencyUID.Length == 0) {
+        fields.CurrencyUID = Currency.Default.UID;
+        fields.ExchangeRate = decimal.One;
+      }
+
+      var currency = Currency.Parse(fields.CurrencyUID);
+      if (currency.Distinct(Currency.Default)) {
+        Assertion.Require(fields.ExchangeRate > 0 && fields.ExchangeRate != decimal.One,
+                          "Requiero se proporcione el tipo de cambio.");
       }
 
       if (fields.BasePartyUID.Length != 0) {
         _ = Party.Parse(fields.BasePartyUID);
       }
 
+      if (fields.OperationSourceUID.Length != 0) {
+        _ = OperationSource.Parse(fields.OperationSourceUID);
+      }
+
       if (fields.RequestedByUID.Length != 0) {
         _ = Party.Parse(fields.RequestedByUID);
       }
+
     }
 
   }  // class BudgetTransactionFieldsExtensions

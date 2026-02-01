@@ -203,7 +203,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_ENTRY_REQUESTED_AMOUNT")]
-    public decimal RequestedAmount {
+    public decimal CurrencyAmount {
       get; private set;
     }
 
@@ -360,10 +360,10 @@ namespace Empiria.Budgeting.Transactions {
       Month = fields.Month;
       Day = fields.Day;
       Currency = Patcher.Patch(fields.CurrencyUID, Budget.BudgetType.Currency);
-      RequestedAmount = fields.OriginalAmount != 0 ? fields.OriginalAmount : Math.Abs(fields.Amount);
+      ExchangeRate = fields.ExchangeRate;
+      CurrencyAmount = fields.CurrencyAmount != 0 ? fields.CurrencyAmount : Math.Abs(fields.Amount);
       Deposit = fields.Amount > 0 ? fields.Amount : 0m;
       Withdrawal = fields.Amount < 0 ? Math.Abs(fields.Amount) : 0m;
-      ExchangeRate = fields.ExchangeRate;
 
       if (fields.RelatedEntryUID.Length != 0) {
         RelatedEntryId = Parse(fields.RelatedEntryUID).Id;

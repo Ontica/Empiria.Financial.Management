@@ -122,7 +122,7 @@ namespace Empiria.Budgeting.Transactions {
       get; set;
     }
 
-    public decimal OriginalAmount {
+    public decimal CurrencyAmount {
       get; set;
     }
 
@@ -169,8 +169,8 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(fields.Amount != 0,
                         "El importe debe ser distinto a cero.");
 
-      if (fields.OriginalAmount == 0) {
-        fields.OriginalAmount = Math.Abs(fields.Amount);
+      if (fields.CurrencyAmount == 0) {
+        fields.CurrencyAmount = Math.Abs(fields.Amount);
       }
 
       if (fields.ProductUID.Length != 0) {

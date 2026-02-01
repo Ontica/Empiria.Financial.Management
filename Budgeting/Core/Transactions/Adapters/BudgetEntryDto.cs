@@ -78,7 +78,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public decimal RequestedAmount {
+    public decimal CurrencyAmount {
       get; internal set;
     }
 

@@ -303,7 +303,7 @@ namespace Empiria.Budgeting.Transactions {
         Description = fields.Description,
         Justification = fields.Justification,
         Amount = amount.Amount,
-        OriginalAmount = amount.Amount,
+        CurrencyAmount = amount.Amount,
         ProductQty = amount.ProductQty,
       };
     }

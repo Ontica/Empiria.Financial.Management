@@ -55,7 +55,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Day = entry.Day,
         Currency = entry.Currency.MapToNamedEntity(),
         BalanceColumn = entry.BalanceColumn.MapToNamedEntity(),
-        RequestedAmount = entry.RequestedAmount,
+        CurrencyAmount = entry.CurrencyAmount,
         Amount = entry.Amount,
         ExchangeRate = entry.ExchangeRate,
         Status = entry.Status.MapToNamedEntity()

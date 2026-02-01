@@ -135,6 +135,26 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public Currency Currency {
+      get {
+        return ExtensionData.Get("currencyId", Currency.Default);
+      }
+      private set {
+        ExtensionData.SetIf("currencyId", value.Id, value != Currency.Default && value != Currency.Empty);
+      }
+    }
+
+
+    public decimal ExchangeRate {
+      get {
+        return ExtensionData.Get("exchangeRate", decimal.One);
+      }
+      private set {
+        ExtensionData.SetIf("exchangeRate", value, value != decimal.Zero && value != decimal.One);
+      }
+    }
+
+
     [DataField("BDG_TXN_IDENTIFICATORS")]
     private string _identificators = string.Empty;
 
@@ -554,6 +574,8 @@ namespace Empiria.Budgeting.Transactions {
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
       BaseParty = Patcher.Patch(fields.BasePartyUID, BaseParty);
+      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
+      ExchangeRate = Patcher.Patch(fields.ExchangeRate, ExchangeRate);
       RequestedBy = Patcher.Patch(fields.RequestedByUID, RequestedBy);
       PayableId = fields.PayableId;
       OperationSource = Patcher.Patch(fields.OperationSourceUID, OperationSource);

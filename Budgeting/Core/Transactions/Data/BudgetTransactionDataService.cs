@@ -257,7 +257,7 @@ namespace Empiria.Budgeting.Transactions.Data {
         o.BudgetAccount.Id, o.BudgetProgram.Id, o.ControlNo, o.Product.Id,
         o.ProductCode, o.ProductName, o.ProductUnit.Id, o.ProductQty,
         o.Project.Id, o.Party.Id, o.EntityTypeId, o.EntityId, o.OperationNo,
-        o.Year, o.Month, o.Day, o.BalanceColumn.Id, o.Currency.Id, o.RequestedAmount,
+        o.Year, o.Month, o.Day, o.BalanceColumn.Id, o.Currency.Id, o.CurrencyAmount,
         o.Deposit, o.Withdrawal, o.ExchangeRate, o.Description, o.Justification,
         o.Identificators, o.Tags, o.ExtensionData.ToString(), o.Keywords,
         o.RelatedEntryId, o.Position, o.PostedBy.Id, o.PostingTime, (char) o.Status);
