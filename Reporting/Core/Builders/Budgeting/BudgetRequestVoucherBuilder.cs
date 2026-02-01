@@ -63,10 +63,9 @@ namespace Empiria.Budgeting.Reporting {
       html = BuildEntries(html);
       html = BuildTotals(html);
       html = BuildFooter(html);
-
+      html = HideCurrencyColumn(html);
       return html.ToString();
     }
-
 
     private StringBuilder BuildEntries(StringBuilder html) {
       string TEMPLATE = GetEntriesTemplate();
@@ -86,9 +85,8 @@ namespace Empiria.Budgeting.Reporting {
         entryHtml.Replace("{{PROGRAM}}", budgetEntry.BudgetProgram.Code);
         entryHtml.Replace("{{YEAR}}", budgetEntry.Budget.Year.ToString());
         entryHtml.Replace("{{PRODUCT_UNIT}}", budgetEntry.ProductUnit.Name);
-        entryHtml.Replace("{{QUANTITY}}", budgetEntry.Currency.ISOCode);
-        entryHtml.Replace("{{UNIT_PRICE}}", budgetEntry.RequestedAmount.ToString("C2"));
-        entryHtml.Replace("{{TOTAL}}", budgetEntry.Amount.ToString("C2"));
+        entryHtml.Replace("{{CURRENCY_AMOUNT}}", budgetEntry.CurrencyAmount.ToString("C2"));
+        entryHtml.Replace("{{AMOUNT}}", budgetEntry.Amount.ToString("C2"));
 
         entriesHtml.Append(entryHtml);
       }
@@ -161,7 +159,16 @@ namespace Empiria.Budgeting.Reporting {
                                           $"al {EmpiriaString.DateLongString(_order.EndDate)}");
       }
 
-      html.Replace("{{ESTIMATED_MONTHS}}", _order.EstimatedMonths.ToString("00"));
+      html.Replace("{{CURRENCY_CODE}}", _txn.Currency.ISOCode);
+
+      if (_txn.ExchangeRate != decimal.One) {
+        html.Replace("{{ESTIMATED_MONTHS}}", $"{_order.EstimatedMonths:00} meses " +
+                      $" &nbsp; &nbsp; &nbsp; &nbsp; <span class='normal'>Tipo de cambio estimado:</span> &nbsp;" +
+                      $"{_txn.ExchangeRate:C2}");
+      } else {
+        html.Replace("{{ESTIMATED_MONTHS}}", $"{_order.EstimatedMonths:00} meses ");
+      }
+
 
       html.Replace("{{STATUS}}", _txn.Status.GetName());
       html.Replace("{{REJECTED_REASON}}", _txn.RejectedReason);
@@ -173,20 +180,38 @@ namespace Empiria.Budgeting.Reporting {
     private StringBuilder BuildTotals(StringBuilder html) {
       string TEMPLATE = GetTotalsTemplate();
 
+      decimal exchangeRate = _txn.ExchangeRate;
+
       var totalsHtml = new StringBuilder();
+
+      if (_txn.Entries.Count > 1 && _order.Taxes.GetList().Count != 0) {
+
+        var subtotalHtml = new StringBuilder(TEMPLATE);
+
+        subtotalHtml.Replace("{{TOTAL_TYPE}}", "Subtotal");
+        subtotalHtml.Replace("{{CURRENCY_TOTAL}}", _order.Subtotal.ToString("C2"));
+        subtotalHtml.Replace("{{TOTAL}}", (_order.Subtotal * exchangeRate).ToString("C2"));
+
+        totalsHtml.Append(subtotalHtml);
+      }
+
 
       foreach (var entry in _order.Taxes.GetList()) {
 
-        var totalHtml = new StringBuilder(TEMPLATE.Replace("{{TOTAL_TYPE}}", entry.TaxType.Name));
+        var totalHtml = new StringBuilder(TEMPLATE);
 
-        totalHtml.Replace("{{TOTAL}}", entry.Total.ToString("C2"));
+        totalHtml.Replace("{{TOTAL_TYPE}}", entry.TaxType.Name);
+        totalHtml.Replace("{{CURRENCY_TOTAL}}", entry.Total.ToString("C2"));
+        totalHtml.Replace("{{TOTAL}}", (entry.Total * exchangeRate).ToString("C2"));
 
         totalsHtml.Append(totalHtml);
       }
 
-      var orderTotallHtml = new StringBuilder(TEMPLATE.Replace("{{TOTAL_TYPE}}", "Total"));
+      var orderTotallHtml = new StringBuilder(TEMPLATE);
 
-      orderTotallHtml.Replace("{{TOTAL}}", _order.GetTotal().ToString("C2"));
+      orderTotallHtml.Replace("{{TOTAL_TYPE}}", "Total");
+      orderTotallHtml.Replace("{{CURRENCY_TOTAL}}", _order.GetTotal().ToString("C2"));
+      orderTotallHtml.Replace("{{TOTAL}}", (_order.GetTotal() * exchangeRate).ToString("C2"));
 
       totalsHtml.Append(orderTotallHtml);
 
@@ -245,6 +270,17 @@ namespace Empiria.Budgeting.Reporting {
 
     private string GetVoucherPdfFileName() {
       return $"suficiencia.presupuestal.{_txn.TransactionNo}.{DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss")}.pdf";
+    }
+
+
+    private StringBuilder HideCurrencyColumn(StringBuilder html) {
+      if (_txn.ExchangeRate != decimal.One) {
+        html.Replace("{{HIDE_CURRENCY_COLUMN}}", string.Empty);
+      } else {
+        html.Replace("{{HIDE_CURRENCY_COLUMN}}", "hide");
+      }
+
+      return html;
     }
 
 
