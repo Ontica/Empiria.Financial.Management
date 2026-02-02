@@ -10,6 +10,8 @@
 
 using Empiria.Services;
 
+using Empiria.Parties;
+
 using Empiria.Budgeting.Explorer.Adapters;
 
 namespace Empiria.Budgeting.Explorer.UseCases {
@@ -30,6 +32,24 @@ namespace Empiria.Budgeting.Explorer.UseCases {
     #endregion Constructors and parsers
 
     #region Use cases
+
+    public BudgetExplorerResultDto BreakdownBudget(BudgetExplorerQuery query, string uid) {
+      Assertion.Require(uid, nameof(uid));
+
+      string[] parts = uid.Split('|');
+
+      OrganizationalUnit orgUnit = OrganizationalUnit.Parse(int.Parse(parts[0]));
+      BudgetAccount budgetAccount = BudgetAccount.Parse(int.Parse(parts[1]));
+
+      BudgetExplorerCommand command = BudgetExplorerQueryMapper.Map(query);
+
+      var explorer = new BudgetBreakdown(command);
+
+      BudgetExplorerResult result = explorer.Execute(orgUnit, budgetAccount);
+
+      return BudgetExplorerResultMapper.Map(query, result);
+    }
+
 
     public FixedList<BudgetDataInColumns> GetAvailableBudget(AvailableBudgetQuery query) {
       Assertion.Require(query, nameof(query));

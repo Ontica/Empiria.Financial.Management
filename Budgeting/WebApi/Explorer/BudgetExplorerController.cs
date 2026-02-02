@@ -23,8 +23,32 @@ namespace Empiria.Budgeting.Explorer.WebApi {
     #region Web Apis
 
     [HttpPost]
-    [Route("v2/budgeting/budget-explorer/planning")]
-    public SingleObjectModel ExplorePlannedBudget([FromBody] BudgetExplorerQuery query) {
+    [Route("v2/budgeting/budget-explorer/breakdown")]
+    public SingleObjectModel Breakdown([FromBody] ExplorerBreakdownQuery query) {
+
+      using (var usecases = BudgetExplorerUseCases.UseCaseInteractor()) {
+        BudgetExplorerResultDto result = usecases.BreakdownBudget(query.Query, query.Entry.UID);
+
+        return new SingleObjectModel(base.Request, result);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/budgeting/budget-explorer/export")]
+    public SingleObjectModel ExportBudget([FromBody] BudgetExplorerQuery query) {
+
+      using (var usecases = BudgetExplorerUseCases.UseCaseInteractor()) {
+        BudgetExplorerResultDto result = usecases.ExploreBudget(query);
+
+        return new SingleObjectModel(base.Request, result);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/budgeting/budget-explorer/search")]
+    public SingleObjectModel SearchBudget([FromBody] BudgetExplorerQuery query) {
 
       using (var usecases = BudgetExplorerUseCases.UseCaseInteractor()) {
         BudgetExplorerResultDto result = usecases.ExploreBudget(query);
@@ -36,5 +60,27 @@ namespace Empiria.Budgeting.Explorer.WebApi {
     #endregion Web Apis
 
   }  // class BudgetExplorerController
+
+
+  public class ExplorerBreakdownQuery {
+
+    public BudgetExplorerQuery Query {
+      get; set;
+    }
+
+    public BreakdownEntry Entry {
+      get; set;
+    }
+  }
+
+
+  public class BreakdownEntry {
+
+    public string UID {
+      get; set;
+    }
+
+  }
+
 
 }  // namespace Empiria.Budgeting.Explorer.WebApi

@@ -27,6 +27,18 @@ namespace Empiria.Budgeting.Explorer.Data {
     }
 
 
+    static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumnsByMonth(Budget budget) {
+      Assertion.Require(budget, nameof(budget));
+
+      var sql = "SELECT * FROM vw_Budget_Multicolumn_By_Month " +
+                $"WHERE BUDGET_ID = {budget.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetPlainObjectFixedList<BudgetDataInColumns>(op);
+    }
+
+
     static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumnsByMonth(string filter) {
       Assertion.Require(filter, nameof(filter));
 

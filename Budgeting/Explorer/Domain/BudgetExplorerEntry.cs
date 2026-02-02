@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
 using Empiria.Parties;
 
 namespace Empiria.Budgeting.Explorer {
@@ -17,14 +16,28 @@ namespace Empiria.Budgeting.Explorer {
 
     internal BudgetExplorerEntry(BudgetExplorerEntry sourceData) {
       Sum(sourceData);
-      ////Currency = sourceData.Currency;
-      ////OrganizationalUnit = OrganizationalUnit.Parse(sourceData.BudgetAccount.Segment_1.Id);
+
       Year = sourceData.Year;
       Month = sourceData.Month;
+
+      ClickableEntry = true;
+      ItemType = "Entry";
+      Title = sourceData.OrganizationalUnit.FullName;
+      Description = sourceData.BudgetAccount.Name;
+      UID = $"{sourceData.OrganizationalUnit.Id}|{sourceData.BudgetAccount.Id}";
     }
 
 
     internal BudgetExplorerEntry(BudgetDataInColumns sourceData, bool fullLoad) {
+
+      if (fullLoad) {
+        BudgetAccount = sourceData.BudgetAccount;
+        OrganizationalUnit = sourceData.BudgetAccount.OrganizationalUnit;
+        Year = sourceData.Year;
+        Month = sourceData.Month;
+        UID = $"{OrganizationalUnit.Id}|{BudgetAccount.Id}";
+      }
+
       Planned = sourceData.Planned;
       Authorized = sourceData.Authorized;
       Expanded = sourceData.Expanded;
@@ -32,21 +45,37 @@ namespace Empiria.Budgeting.Explorer {
       Modified = sourceData.Modified;
       Requested = sourceData.Requested;
       Commited = sourceData.Commited;
-      Provisioned = sourceData.Provisioned;
       ToPay = sourceData.ToPay;
       Excercised = sourceData.Excercised;
       ToExercise = sourceData.ToExercise;
       Available = sourceData.Available;
 
-      if (fullLoad) {
-        BudgetAccount = sourceData.BudgetAccount;
-        Currency = sourceData.Currency;
-        OrganizationalUnit = OrganizationalUnit.Parse(sourceData.BudgetAccount.OrganizationalUnit.Id);
-        Year = sourceData.Year;
-        Month = sourceData.Month;
-      }
+      ClickableEntry = true;
+      ItemType = "Entry";
+      Title = OrganizationalUnit.FullName;
+      Description = BudgetAccount.Name;
     }
 
+
+    public string UID {
+      get;
+    }
+
+    public bool ClickableEntry {
+      get;
+    }
+
+    public string ItemType {
+      get;
+    }
+
+    public string Title {
+      get;
+    }
+
+    public string Description {
+      get;
+    }
 
     public BudgetAccount BudgetAccount {
       get; private set;
@@ -64,9 +93,15 @@ namespace Empiria.Budgeting.Explorer {
       get; private set;
     }
 
-    public Currency Currency {
-      get; private set;
-    } = Currency.Empty;
+
+    public string MonthName {
+      get {
+        if (Month == 0) {
+          return Year.ToString();
+        }
+        return EmpiriaString.MonthName(Month);
+      }
+    }
 
 
     public decimal Planned {
@@ -97,10 +132,6 @@ namespace Empiria.Budgeting.Explorer {
       get; private set;
     }
 
-    public decimal Provisioned {
-      get; private set;
-    }
-
     public decimal ToPay {
       get; private set;
     }
@@ -117,6 +148,7 @@ namespace Empiria.Budgeting.Explorer {
       get; private set;
     }
 
+
     internal void Sum(BudgetExplorerEntry entry) {
       Planned += entry.Planned;
       Authorized += entry.Authorized;
@@ -125,7 +157,6 @@ namespace Empiria.Budgeting.Explorer {
       Modified += entry.Modified;
       Requested += entry.Requested;
       Commited += entry.Commited;
-      Provisioned += entry.Provisioned;
       ToPay += entry.ToPay;
       Excercised += entry.Excercised;
       ToExercise += entry.ToExercise;
