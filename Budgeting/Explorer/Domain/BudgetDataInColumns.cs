@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
-
 namespace Empiria.Budgeting.Explorer {
 
   /// <summary>Value type that holds budget data in columns.</summary>
@@ -30,13 +28,18 @@ namespace Empiria.Budgeting.Explorer {
       get; private set;
     }
 
-    [DataField("BUDGET_ACCT_ID")]
-    public BudgetAccount BudgetAccount {
-      get; private set;
+    public string MonthName {
+      get {
+        if (Month == 0) {
+          return Year.ToString();
+        }
+        return EmpiriaString.MonthName(Month);
+      }
     }
 
-    [DataField("CURRENCY_ID")]
-    public Currency Currency {
+
+    [DataField("BUDGET_ACCT_ID")]
+    public BudgetAccount BudgetAccount {
       get; private set;
     }
 

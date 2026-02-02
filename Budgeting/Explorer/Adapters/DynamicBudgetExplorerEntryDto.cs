@@ -17,23 +17,18 @@ namespace Empiria.Budgeting.Explorer.Adapters {
       OrganizationalUnitName = entry.OrganizationalUnit.FullName;
       BudgetAccountName = entry.BudgetAccount.Name;
       Capitulo = entry.BudgetAccount.StandardAccount.Parent.FullName;
-      CurrencyCode = entry.Currency.ISOCode;
     }
 
     public string OrganizationalUnitName {
-      get; private set;
+      get;
     }
 
     public string BudgetAccountName {
-      get; private set;
-    }
-
-    public string CurrencyCode {
-      get; private set;
+      get;
     }
 
     public string Capitulo {
-      get; private set;
+      get;
     }
 
   } // class DynamicBudgetExplorerEntryDto

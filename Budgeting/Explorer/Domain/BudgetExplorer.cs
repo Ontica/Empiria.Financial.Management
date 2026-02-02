@@ -83,7 +83,6 @@ namespace Empiria.Budgeting.Explorer {
       columns.Add(new DataTableColumn("modified", "Modificado", "decimal"));
       columns.Add(new DataTableColumn("requested", "Apartado", "decimal"));
       columns.Add(new DataTableColumn("commited", "Comprometido", "decimal"));
-      columns.Add(new DataTableColumn("provisioned", "Provisionado", "decimal"));
       columns.Add(new DataTableColumn("toPay", "Por pagar", "decimal"));
       columns.Add(new DataTableColumn("excercised", "Ejercido", "decimal"));
       columns.Add(new DataTableColumn("toExercise", "Por ejercer", "decimal"));
