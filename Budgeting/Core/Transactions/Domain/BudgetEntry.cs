@@ -190,6 +190,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public DateTime Date {
+      get {
+        return new DateTime(Year, Month == 0 ? 1 : Month, Day == 0 ? 1 : Day);
+      }
+    }
+
+
     [DataField("BDG_ENTRY_BALANCE_COLUMN_ID")]
     public BalanceColumn BalanceColumn {
       get; private set;
