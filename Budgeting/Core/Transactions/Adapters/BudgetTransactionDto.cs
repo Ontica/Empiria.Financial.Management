@@ -68,6 +68,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public bool CanCancel {
+      get; internal set;
+    }
+
     public bool CanClose {
       get; internal set;
     }

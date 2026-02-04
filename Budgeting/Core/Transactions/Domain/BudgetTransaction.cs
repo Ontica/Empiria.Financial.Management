@@ -394,7 +394,7 @@ namespace Empiria.Budgeting.Transactions {
     public void Cancel(string reason) {
       Assertion.Require(reason, nameof(reason));
 
-      Assertion.Require(Rules.CanReject,
+      Assertion.Require(Rules.CanCancel,
                         $"Can not cancel this budget transaction. Its status is {Status.GetName()}.");
 
       var txns = GetRelatedTo(this)

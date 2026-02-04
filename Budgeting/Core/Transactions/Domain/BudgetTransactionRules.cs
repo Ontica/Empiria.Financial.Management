@@ -130,6 +130,27 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool CanCancel {
+      get {
+        if (_transaction.Status != TransactionStatus.Closed) {
+          return false;
+        }
+
+        if (!_securityRoles.Contains(BUDGET_MANAGER)) {
+          return false;
+        }
+
+        if (_transaction.OperationType != BudgetOperationType.Plan &&
+            _transaction.OperationType != BudgetOperationType.Authorize &&
+            _transaction.OperationType != BudgetOperationType.Exercise) {
+          return true;
+        }
+
+        return false;
+      }
+    }
+
+
     public bool CanReject {
       get {
         if (_transaction.Status == TransactionStatus.OnAuthorization &&
@@ -141,13 +162,6 @@ namespace Empiria.Budgeting.Transactions {
           return true;
         }
 
-        if (_transaction.Status == TransactionStatus.Closed &&
-            _transaction.OperationType != BudgetOperationType.Plan &&
-            _transaction.OperationType != BudgetOperationType.Authorize &&
-            _transaction.OperationType != BudgetOperationType.Exercise &&
-            _securityRoles.Contains(BUDGET_MANAGER)) {
-          return true;
-        }
         return false;
       }
     }

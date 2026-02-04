@@ -182,9 +182,10 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     [Route("v2/budgeting/transactions/{transactionUID:guid}/print")]
     public SingleObjectModel PrintTransaction([FromUri] string transactionUID) {
 
-      var transaction = BudgetTransaction.Parse(transactionUID);
-
       using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
+
+
+        var transaction = BudgetTransaction.Parse(transactionUID);
 
         FileDto file = reportingService.ExportTransactionVoucherToPdf(transaction);
 
@@ -194,21 +195,32 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/{transactionUID:guid}/reject")]
-    public SingleObjectModel RejectTransaction([FromUri] string transactionUID,
-                                               [FromBody] RejectFields fields) {
-
-      var transaction = BudgetTransaction.Parse(transactionUID);
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/cancel")]
+    public SingleObjectModel CancelTransaction([FromUri] string transactionUID,
+                                               [FromBody] MessageFields fields) {
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
 
-        BudgetTransactionHolderDto txnHolder;
+        var transaction = BudgetTransaction.Parse(transactionUID);
 
-        if (transaction.Status != TransactionStatus.Closed) {
-          txnHolder = usecases.RejectTransaction(transaction, fields.Message);
-        } else {
-          txnHolder = usecases.CancelTransaction(transaction, fields.Message);
-        }
+        BudgetTransactionHolderDto txnHolder = usecases.CancelTransaction(transaction, fields.Message);
+
+        return new SingleObjectModel(base.Request, txnHolder);
+      }
+    }
+
+
+
+    [HttpPost]
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/reject")]
+    public SingleObjectModel RejectTransaction([FromUri] string transactionUID,
+                                               [FromBody] MessageFields fields) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+
+        var transaction = BudgetTransaction.Parse(transactionUID);
+
+        BudgetTransactionHolderDto txnHolder = usecases.RejectTransaction(transaction, fields.Message);
 
         return new SingleObjectModel(base.Request, txnHolder);
       }
@@ -281,13 +293,13 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
 
-  public class RejectFields {
+  public class MessageFields {
 
     public string Message {
       get; set;
     } = "No se indicó el motivo.";
 
-  }  // class RejectFields
+  }  // class MessageFields
 
 
   public class BulkOperationCommand {
