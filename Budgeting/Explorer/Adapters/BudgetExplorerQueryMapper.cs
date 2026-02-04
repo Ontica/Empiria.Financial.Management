@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.Financial;
+using Empiria.Parties;
 
 namespace Empiria.Budgeting.Explorer.Adapters {
 
@@ -21,6 +22,7 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     static internal BudgetExplorerCommand Map(BudgetExplorerQuery query) {
       return new BudgetExplorerCommand {
         Budget = Budget.Parse(query.BudgetUID),
+        OrganizationalUnit = MapToOrganizationalUnit(query.BasePartyUID),
         GroupBy = MapToGroupBy(query.GroupBy),
         FilteredBy = MapToFilteredBy(query.FilteredBy),
       };
@@ -53,6 +55,14 @@ namespace Empiria.Budgeting.Explorer.Adapters {
       }
 
       return list.ToFixedList();
+    }
+
+
+    static private OrganizationalUnit MapToOrganizationalUnit(string basePartyUID) {
+      if (basePartyUID.Length == 0) {
+        return OrganizationalUnit.Empty;
+      }
+      return OrganizationalUnit.Parse(basePartyUID);
     }
 
     #endregion Helpers

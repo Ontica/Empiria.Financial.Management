@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Financial;
+using Empiria.Parties;
 
 namespace Empiria.Budgeting.Explorer {
 
@@ -16,6 +17,10 @@ namespace Empiria.Budgeting.Explorer {
   internal class BudgetExplorerCommand {
 
     internal Budget Budget {
+      get; set;
+    }
+
+    internal OrganizationalUnit OrganizationalUnit {
       get; set;
     }
 

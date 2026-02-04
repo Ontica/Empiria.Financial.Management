@@ -43,9 +43,6 @@ namespace Empiria.Budgeting.Explorer {
     private FixedList<BudgetExplorerEntry> BuildEntries() {
       FixedList<BudgetDataInColumns> budgetData = GetBudgetData();
 
-      if (_command.GroupBy.Contains(x => x.Id == 3520)) {
-        return UngroupedBudgetData(budgetData);
-      }
       return GroupBudgetData(budgetData);
     }
 
@@ -93,14 +90,13 @@ namespace Empiria.Budgeting.Explorer {
 
 
     private FixedList<BudgetDataInColumns> GetBudgetData() {
-      return BudgetExplorerDataService.GetBudgetDataInMultipleColumns(_command.Budget);
-    }
+      FixedList<BudgetDataInColumns> data = BudgetExplorerDataService.GetBudgetDataInMultipleColumns(_command.Budget);
 
-
-    private FixedList<BudgetExplorerEntry> UngroupedBudgetData(FixedList<BudgetDataInColumns> budgetData) {
-      return budgetData.Select(x => TransformToFullEntry(x))
-                       .OrderBy(x => SortByFunction(x))
-                       .ToFixedList();
+      if (_command.OrganizationalUnit.IsEmptyInstance) {
+        return data;
+      } else {
+        return data.FindAll(x => x.BudgetAccount.OrganizationalUnit.Equals(_command.OrganizationalUnit));
+      }
     }
 
 
@@ -248,13 +244,9 @@ namespace Empiria.Budgeting.Explorer {
       return entry;
     }
 
+
     private BudgetExplorerEntry TransformToEntry(BudgetDataInColumns sourceData) {
       return new BudgetExplorerEntry(sourceData, false);
-    }
-
-
-    private BudgetExplorerEntry TransformToFullEntry(BudgetDataInColumns sourceData) {
-      return new BudgetExplorerEntry(sourceData, true);
     }
 
     #endregion Helpers

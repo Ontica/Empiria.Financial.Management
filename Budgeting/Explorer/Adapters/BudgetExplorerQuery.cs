@@ -10,10 +10,33 @@
 
 namespace Empiria.Budgeting.Explorer.Adapters {
 
+  /// <summary>Enumeration values that describe budget reports.</summary>
+  public enum BudgetReportType {
+
+    ByColumn,
+
+    MonthlyAvailability,
+
+    ScheduledByArea,
+
+  }  // enum BudgetReportType
+
+
+
   /// <summary>Input query DTO used to explore budget information.</summary>
   public class BudgetExplorerQuery {
 
+    public BudgetReportType ReportTypeUID {
+      get; set;
+    } = BudgetReportType.ByColumn;
+
+
     public string BudgetUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string BasePartyUID {
       get; set;
     } = string.Empty;
 
