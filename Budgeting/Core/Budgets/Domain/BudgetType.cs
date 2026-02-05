@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.DataTypes;
 using Empiria.Financial;
 using Empiria.Ontology;
 
@@ -48,6 +49,15 @@ namespace Empiria.Budgeting {
         return ExtensionData.Get("currencyId", Currency.Default);
       }
     }
+
+    public FixedList<NamedEntityDto> GroupByColumns {
+      get {
+        var columns = ExtensionData.GetFixedList<KeyValue>("groupByColumns", false);
+
+        return columns.MapToNamedEntityList(false);
+      }
+    }
+
 
     public bool Multiyear {
       get {

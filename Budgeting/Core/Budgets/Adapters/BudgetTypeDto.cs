@@ -33,6 +33,10 @@ namespace Empiria.Budgeting.Adapters {
       get; internal set;
     }
 
+    public FixedList<NamedEntityDto> GroupByColumns {
+      get; internal set;
+    }
+
     public FixedList<NamedEntityDto> TransactionTypes {
       get; internal set;
     }
