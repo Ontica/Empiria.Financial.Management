@@ -48,42 +48,21 @@ namespace Empiria.Budgeting.Explorer {
 
 
     private FixedList<DataTableColumn> BuildColumns() {
-      var columns = new List<DataTableColumn>();
-
-      if (AREA) {
-        columns.Add(new DataTableColumn("organizationalUnitName", "Área", "text"));
-      } else if (AREA_CAPITULO) {
-        columns.Add(new DataTableColumn("organizationalUnitName", "Área", "text"));
-        columns.Add(new DataTableColumn("capitulo", "Capítulo", "text"));
-      } else if (AREA_PARTIDA) {
-        columns.Add(new DataTableColumn("organizationalUnitName", "Área", "text"));
-        columns.Add(new DataTableColumn("budgetAccountName", "Partida", "text"));
-      } else if (CAPITULO) {
-        columns.Add(new DataTableColumn("capitulo", "Capítulo", "text"));
-      } else if (CAPITULO_AREA) {
-        columns.Add(new DataTableColumn("capitulo", "Capítulo", "text"));
-        columns.Add(new DataTableColumn("organizationalUnitName", "Área", "text"));
-      } else if (PARTIDA) {
-        columns.Add(new DataTableColumn("budgetAccountName", "Partida", "text"));
-      } else if (PARTIDA_AREA) {
-        columns.Add(new DataTableColumn("budgetAccountName", "Partida", "text"));
-        columns.Add(new DataTableColumn("organizationalUnitName", "Área", "text"));
-      } else {
-        columns.Add(new DataTableColumn("organizationalUnitName", "Área", "text"));
-        columns.Add(new DataTableColumn("budgetAccountName", "Partida", "text"));
-      }
-
-      columns.Add(new DataTableColumn("planned", "Planeado", "decimal"));
-      columns.Add(new DataTableColumn("authorized", "Autorizado", "decimal"));
-      columns.Add(new DataTableColumn("expanded", "Ampliaciones", "decimal"));
-      columns.Add(new DataTableColumn("reduced", "Reducciones", "decimal"));
-      columns.Add(new DataTableColumn("modified", "Modificado", "decimal"));
-      columns.Add(new DataTableColumn("requested", "Apartado", "decimal"));
-      columns.Add(new DataTableColumn("commited", "Comprometido", "decimal"));
-      columns.Add(new DataTableColumn("toPay", "Por pagar", "decimal"));
-      columns.Add(new DataTableColumn("excercised", "Ejercido", "decimal"));
-      columns.Add(new DataTableColumn("toExercise", "Por ejercer", "decimal"));
-      columns.Add(new DataTableColumn("available", "Disponible", "decimal"));
+      var columns = new List<DataTableColumn> {
+        new DataTableColumn("organizationalUnitName", "Área", "text"),
+        new DataTableColumn("budgetAccountName", "Partida", "text"),
+        new DataTableColumn("planned", "Planeado", "decimal"),
+        new DataTableColumn("authorized", "Autorizado", "decimal"),
+        new DataTableColumn("expanded", "Ampliaciones", "decimal"),
+        new DataTableColumn("reduced", "Reducciones", "decimal"),
+        new DataTableColumn("modified", "Modificado", "decimal"),
+        new DataTableColumn("requested", "Apartado", "decimal"),
+        new DataTableColumn("commited", "Comprometido", "decimal"),
+        new DataTableColumn("toPay", "Por pagar", "decimal"),
+        new DataTableColumn("excercised", "Ejercido", "decimal"),
+        new DataTableColumn("toExercise", "Por ejercer", "decimal"),
+        new DataTableColumn("available", "Disponible", "decimal")
+      };
 
       return columns.ToFixedList();
     }
@@ -92,10 +71,11 @@ namespace Empiria.Budgeting.Explorer {
     private FixedList<BudgetDataInColumns> GetBudgetData() {
       FixedList<BudgetDataInColumns> data = BudgetExplorerDataService.GetBudgetDataInMultipleColumns(_command.Budget);
 
-      if (_command.OrganizationalUnit.IsEmptyInstance) {
+      if (_command.OrganizationalUnits.Count == 0) {
         return data;
+
       } else {
-        return data.FindAll(x => x.BudgetAccount.OrganizationalUnit.Equals(_command.OrganizationalUnit));
+        return data.FindAll(x => _command.OrganizationalUnits.Contains(x.BudgetAccount.OrganizationalUnit));
       }
     }
 
@@ -109,126 +89,13 @@ namespace Empiria.Budgeting.Explorer {
 
 
     private string SortByFunction(BudgetExplorerEntry entry) {
-      if (AREA) {
-        return entry.BudgetAccount.OrganizationalUnit.Code;
-      }
-      if (AREA_CAPITULO) {
-        return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.StandardAccount.Parent.StdAcctNo}";
-      }
-      if (AREA_PARTIDA) {
-        return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.StandardAccount.StdAcctNo}";
-      }
-      if (CAPITULO) {
-        return entry.BudgetAccount.StandardAccount.Parent.StdAcctNo;
-      }
-      if (CAPITULO_AREA) {
-        return $"{entry.BudgetAccount.StandardAccount.Parent.StdAcctNo}{entry.BudgetAccount.OrganizationalUnit.Code}";
-      }
-      if (PARTIDA) {
-        return entry.BudgetAccount.StandardAccount.StdAcctNo;
-      }
-      if (PARTIDA_AREA) {
-        return $"{entry.BudgetAccount.StandardAccount.StdAcctNo}{entry.BudgetAccount.OrganizationalUnit.Code}";
-      }
-
       return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.StandardAccount.StdAcctNo}";
     }
 
 
     private Func<BudgetDataInColumns, object> GroupByFunction() {
-      if (AREA) {
-        return x => new { x.BudgetAccount.OrganizationalUnit };
-      }
-      if (AREA_CAPITULO) {
-        return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.StandardAccount.Parent };
-      }
-      if (AREA_PARTIDA) {
-        return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.StandardAccount };
-      }
-      if (CAPITULO) {
-        return x => new { x.BudgetAccount.StandardAccount.Parent };
-      }
-      if (CAPITULO_AREA) {
-        return x => new { x.BudgetAccount.StandardAccount.Parent, x.BudgetAccount.OrganizationalUnit };
-      }
-      if (PARTIDA) {
-        return x => new { x.BudgetAccount.StandardAccount };
-      }
-      if (PARTIDA_AREA) {
-        return x => new { x.BudgetAccount.StandardAccount, x.BudgetAccount.OrganizationalUnit };
-      }
-
       return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.StandardAccount };
     }
-
-
-    private bool AREA {
-      get {
-        if (_command.GroupBy.Count == 1 && _command.GroupBy[0].Id == 3523) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-
-    private bool AREA_PARTIDA {
-      get {
-        if (_command.GroupBy.Count == 2 && _command.GroupBy[0].Id == 3523 && _command.GroupBy[1].Id == 3526) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-
-    private bool AREA_CAPITULO {
-      get {
-        if (_command.GroupBy.Count == 2 && _command.GroupBy[0].Id == 3523 && _command.GroupBy[1].Id == 3524) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-
-    private bool CAPITULO {
-      get {
-        if (_command.GroupBy.Count == 1 && _command.GroupBy[0].Id == 3524) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-    private bool PARTIDA {
-      get {
-        if (_command.GroupBy.Count == 1 && _command.GroupBy[0].Id == 3526) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-    private bool PARTIDA_AREA {
-      get {
-        if (_command.GroupBy.Count == 2 && _command.GroupBy[0].Id == 3526 && _command.GroupBy[1].Id == 3523) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-
-    private bool CAPITULO_AREA {
-      get {
-        if (_command.GroupBy.Count == 2 && _command.GroupBy[0].Id == 3524 && _command.GroupBy[1].Id == 3523) {
-          return true;
-        }
-        return false;
-      }
-    }
-
 
     private BudgetExplorerEntry TransformToEntry(FixedList<BudgetDataInColumns> groupedEntries) {
       BudgetDataInColumns baseData = groupedEntries[0];

@@ -36,37 +36,20 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     } = string.Empty;
 
 
-    public string BasePartyUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string[] GroupBy {
+    public string[] BaseParties {
       get; set;
     } = new string[0];
 
 
-    public BudgetSegmentQuery[] FilteredBy {
+    public string[] BudgetAccounts {
       get; set;
-    } = new BudgetSegmentQuery[0];
+    } = new string[0];
+
+
+    public string GroupBy {
+      get; set;
+    } = string.Empty;
 
   }  // class BudgetExplorerQuery
-
-
-
-  /// <summary>Input query DTO used to filter budget segments.</summary>
-  public class BudgetSegmentQuery {
-
-    [Newtonsoft.Json.JsonProperty(PropertyName = "SegmentUID")]
-    public string SegmentTypeUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string[] SegmentItems {
-      get; set;
-    } = new string[0];
-
-  }  // class BudgetSegmentQuery
 
 }  // namespace Empiria.Budgeting.Explorer.Adapters

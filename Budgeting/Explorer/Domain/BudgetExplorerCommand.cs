@@ -20,11 +20,11 @@ namespace Empiria.Budgeting.Explorer {
       get; set;
     }
 
-    internal OrganizationalUnit OrganizationalUnit {
+    internal FixedList<OrganizationalUnit> OrganizationalUnits {
       get; set;
     }
 
-    internal FixedList<StandardAccountCategory> GroupBy {
+    internal string GroupBy {
       get; set;
     }
 
