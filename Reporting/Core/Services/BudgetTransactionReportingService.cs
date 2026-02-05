@@ -8,11 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Office;
 using Empiria.Services;
 using Empiria.Storage;
-using Empiria.Office;
 
 using Empiria.Budgeting.Transactions;
+using Empiria.Budgeting.Explorer.Adapters;
 
 namespace Empiria.Budgeting.Reporting {
 
@@ -91,6 +92,19 @@ namespace Empiria.Budgeting.Reporting {
     #endregion Services
 
     #region Helpers
+
+    public FileDto ExportBudgetExplorerResultToExcel(BudgetExplorerResultDto budgetExplorerResult) {
+      var templateUID = $"{GetType().Name}.ExportBudgetExplorerResultToExcel";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var exporter = new BudgetExplorerResultBuilder(templateConfig);
+
+      ExcelFile excelFile = exporter.CreateExcelFile(budgetExplorerResult);
+
+      return excelFile.ToFileDto();
+    }
+
 
     private FileDto ExportBudgetRequestToPdf(BudgetTransaction transaction) {
       var templateUID = $"{GetType().Name}.ExportBudgetRequestToPdf";

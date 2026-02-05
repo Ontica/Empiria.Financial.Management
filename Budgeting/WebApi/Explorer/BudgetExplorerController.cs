@@ -10,7 +10,10 @@
 
 using System.Web.Http;
 
+using Empiria.Storage;
 using Empiria.WebApi;
+
+using Empiria.Budgeting.Reporting;
 
 using Empiria.Budgeting.Explorer.Adapters;
 using Empiria.Budgeting.Explorer.UseCases;
@@ -39,9 +42,17 @@ namespace Empiria.Budgeting.Explorer.WebApi {
     public SingleObjectModel ExportBudget([FromBody] BudgetExplorerQuery query) {
 
       using (var usecases = BudgetExplorerUseCases.UseCaseInteractor()) {
-        BudgetExplorerResultDto result = usecases.ExploreBudget(query);
+        BudgetExplorerResultDto budgetExplorerResult = usecases.ExploreBudget(query);
 
-        return new SingleObjectModel(base.Request, result);
+
+        using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
+
+          FileDto fileDto = reportingService.ExportBudgetExplorerResultToExcel(budgetExplorerResult);
+
+          SetOperation($"Se exportó el explorador de presupuestos con {budgetExplorerResult.Entries.Count} entradas a Excel.");
+
+          return new SingleObjectModel(base.Request, fileDto);
+        }
       }
     }
 
