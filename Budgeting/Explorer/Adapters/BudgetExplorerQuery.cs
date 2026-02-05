@@ -26,7 +26,7 @@ namespace Empiria.Budgeting.Explorer.Adapters {
   /// <summary>Input query DTO used to explore budget information.</summary>
   public class BudgetExplorerQuery {
 
-    public BudgetReportType ReportTypeUID {
+    public BudgetReportType ReportType {
       get; set;
     } = BudgetReportType.ByColumn;
 
@@ -46,9 +46,9 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     } = new string[0];
 
 
-    public string GroupBy {
+    public BudgetExplorerGroupBy GroupByColumn {
       get; set;
-    } = string.Empty;
+    } = BudgetExplorerGroupBy.AREA_PARTIDA;
 
   }  // class BudgetExplorerQuery
 

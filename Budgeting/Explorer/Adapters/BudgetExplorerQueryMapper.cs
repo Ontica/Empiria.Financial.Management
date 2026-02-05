@@ -17,9 +17,11 @@ namespace Empiria.Budgeting.Explorer.Adapters {
 
     static internal BudgetExplorerCommand Map(BudgetExplorerQuery query) {
       return new BudgetExplorerCommand {
+        ReportType = query.ReportType,
         Budget = Budget.Parse(query.BudgetUID),
         OrganizationalUnits = MapToOrganizationalUnits(query.BaseParties),
-        GroupBy = query.GroupBy,
+        BudgetAccounts = query.BudgetAccounts,
+        GroupBy = query.GroupByColumn
       };
     }
 

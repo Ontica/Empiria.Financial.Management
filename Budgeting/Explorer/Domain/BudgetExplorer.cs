@@ -18,6 +18,16 @@ using Empiria.Budgeting.Explorer.Data;
 
 namespace Empiria.Budgeting.Explorer {
 
+  public enum BudgetExplorerGroupBy {
+
+    AREA_PARTIDA,
+
+    PARTIDA
+
+  } // enum BudgetExplorerGroupBy
+
+
+
   /// <summary>Retrieves budget information bases on a query returning a dynamic result data structure.</summary>
   internal class BudgetExplorer {
 
@@ -49,8 +59,6 @@ namespace Empiria.Budgeting.Explorer {
 
     private FixedList<DataTableColumn> BuildColumns() {
       var columns = new List<DataTableColumn> {
-        new DataTableColumn("organizationalUnitName", "Área", "text"),
-        new DataTableColumn("budgetAccountName", "Partida", "text"),
         new DataTableColumn("planned", "Planeado", "decimal"),
         new DataTableColumn("authorized", "Autorizado", "decimal"),
         new DataTableColumn("expanded", "Ampliaciones", "decimal"),
@@ -63,6 +71,14 @@ namespace Empiria.Budgeting.Explorer {
         new DataTableColumn("toExercise", "Por ejercer", "decimal"),
         new DataTableColumn("available", "Disponible", "decimal")
       };
+
+      if (_command.GroupBy == BudgetExplorerGroupBy.AREA_PARTIDA) {
+        columns.Insert(0, new DataTableColumn("organizationalUnitName", "Área", "string"));
+        columns.Insert(1, new DataTableColumn("budgetAccountName", "Partida", "string"));
+
+      } else if (_command.GroupBy == BudgetExplorerGroupBy.PARTIDA) {
+        columns.Insert(0, new DataTableColumn("budgetAccountName", "Partida", "string"));
+      }
 
       return columns.ToFixedList();
     }
@@ -89,13 +105,32 @@ namespace Empiria.Budgeting.Explorer {
 
 
     private string SortByFunction(BudgetExplorerEntry entry) {
-      return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.StandardAccount.StdAcctNo}";
+      switch (_command.GroupBy) {
+        case BudgetExplorerGroupBy.AREA_PARTIDA:
+          return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.StandardAccount.StdAcctNo}";
+        case BudgetExplorerGroupBy.PARTIDA:
+          return $"{entry.BudgetAccount.StandardAccount.StdAcctNo}";
+
+        default:
+          return $"{entry.BudgetAccount.OrganizationalUnit.Code}{entry.BudgetAccount.StandardAccount.StdAcctNo}";
+      }
     }
 
 
     private Func<BudgetDataInColumns, object> GroupByFunction() {
-      return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.StandardAccount };
+      switch (_command.GroupBy) {
+        case BudgetExplorerGroupBy.AREA_PARTIDA:
+          return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.StandardAccount };
+
+        case BudgetExplorerGroupBy.PARTIDA:
+          return x => new { x.BudgetAccount.StandardAccount };
+
+        default:
+          return x => new { x.BudgetAccount.OrganizationalUnit, x.BudgetAccount.StandardAccount };
+      }
+
     }
+
 
     private BudgetExplorerEntry TransformToEntry(FixedList<BudgetDataInColumns> groupedEntries) {
       BudgetDataInColumns baseData = groupedEntries[0];

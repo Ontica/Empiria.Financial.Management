@@ -8,13 +8,19 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
 using Empiria.Parties;
+
+using Empiria.Budgeting.Explorer.Adapters;
 
 namespace Empiria.Budgeting.Explorer {
 
   /// <summary>Command information used by the BudgetExplorer.</summary>
   internal class BudgetExplorerCommand {
+
+    public BudgetReportType ReportType {
+      get; set;
+    } = BudgetReportType.ByColumn;
+
 
     internal Budget Budget {
       get; set;
@@ -24,29 +30,15 @@ namespace Empiria.Budgeting.Explorer {
       get; set;
     }
 
-    internal string GroupBy {
+    internal BudgetExplorerGroupBy GroupBy {
       get; set;
     }
 
-    internal FixedList<BudgetSegmentFilter> FilteredBy {
+    internal string[] BudgetAccounts {
       get; set;
     }
 
   }  // class BudgetExplorerCommand
 
-
-
-  /// <summary>Specifies a filter for budget segments.</summary>
-  internal class BudgetSegmentFilter {
-
-    internal StandardAccountCategory SegmentType {
-      get; set;
-    }
-
-    internal FixedList<StandardAccount> SegmentItems {
-      get; set;
-    }
-
-  }  // class BudgetSegmentFilter
 
 }  // namespace Empiria.Budgeting.Explorer
