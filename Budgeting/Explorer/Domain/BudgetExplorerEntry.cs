@@ -36,6 +36,8 @@ namespace Empiria.Budgeting.Explorer {
         Year = sourceData.Year;
         Month = sourceData.Month;
         UID = $"{OrganizationalUnit.Id}|{BudgetAccount.Id}";
+        Title = OrganizationalUnit.FullName;
+        Description = BudgetAccount.Name;
       }
 
       Planned = sourceData.Planned;
@@ -52,8 +54,6 @@ namespace Empiria.Budgeting.Explorer {
 
       ClickableEntry = true;
       ItemType = "Entry";
-      Title = OrganizationalUnit.FullName;
-      Description = BudgetAccount.Name;
     }
 
 
