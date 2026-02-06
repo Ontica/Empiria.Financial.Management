@@ -71,8 +71,8 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     #endregion Services
 
-    #region Helpers
 
+    #region Helpers
 
     private void GenerateComplementData(XmlNode complementNode) {
 
@@ -87,6 +87,17 @@ namespace Empiria.Billing.SATMexicoImporter {
           GetDigitalTaxStampData(complementChild);
         }
       }
+    }
+
+
+    private ComplementBalanceDataDto GetBalancesData(XmlNode concept) {
+
+      var returnedBalance = new ComplementBalanceDataDto {
+        TotalTrasladosBaseIVA16 = Convert.ToDecimal(concept.Attributes["TotalTrasladosBaseIVA16"].Value),
+        TotalTrasladosImpuestoIVA16 = Convert.ToDecimal(concept.Attributes["TotalTrasladosImpuestoIVA16"].Value),
+        MontoTotalPagos = Convert.ToDecimal(concept.Attributes["MontoTotalPagos"].Value),
+      };
+      return returnedBalance;
     }
 
 
@@ -134,17 +145,6 @@ namespace Empiria.Billing.SATMexicoImporter {
       _satPaymentComplementDto.DatosComplemento.SaldosTotales = balancesDataList.ToFixedList();
       _satPaymentComplementDto.DatosComplemento.DatosComplementoPago = payoutDataList.ToFixedList();
 
-    }
-
-
-    private ComplementBalanceDataDto GetBalancesData(XmlNode concept) {
-
-      var returnedBalance = new ComplementBalanceDataDto {
-        TotalTrasladosBaseIVA16 = Convert.ToDecimal(concept.Attributes["TotalTrasladosBaseIVA16"].Value),
-        TotalTrasladosImpuestoIVA16 = Convert.ToDecimal(concept.Attributes["TotalTrasladosImpuestoIVA16"].Value),
-        MontoTotalPagos = Convert.ToDecimal(concept.Attributes["MontoTotalPagos"].Value),
-      };
-      return returnedBalance;
     }
 
 
@@ -235,7 +235,6 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       return taxesByRelatedDoc;
     }
-
 
     #endregion Helpers
   }

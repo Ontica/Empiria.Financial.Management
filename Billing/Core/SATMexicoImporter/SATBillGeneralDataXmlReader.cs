@@ -163,17 +163,17 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     internal SATBillTaxDto GetTaxItem(XmlNode taxItem) {
 
-      var taxDto = new SATBillTaxDto();
+      string tipoFactor = GetAttribute(taxItem, "TipoFactor") == string.Empty ? "None" :
+                          GetAttribute(taxItem, "TipoFactor");
 
-      taxDto.Base = GetAttribute<decimal>(taxItem, "Base");
-      taxDto.Impuesto = GetAttribute(taxItem, "Impuesto");
-      taxDto.TipoFactor = GetAttribute(taxItem, "TipoFactor");
-      taxDto.TasaOCuota = GetAttribute<decimal>(taxItem, "TasaOCuota");
-      taxDto.Importe = GetAttribute<decimal>(taxItem, "Importe");
-      taxDto.TipoFactor = taxDto.TipoFactor != string.Empty ? taxDto.TipoFactor : "None";
-      taxDto.MetodoAplicacion = AssignBillTaxMethod(taxItem);
-      
-      return taxDto;
+      return new SATBillTaxDto {
+        Base = GetAttribute<decimal>(taxItem, "Base"),
+        Impuesto = GetAttribute(taxItem, "Impuesto"),
+        TipoFactor = tipoFactor,
+        TasaOCuota = GetAttribute<decimal>(taxItem, "TasaOCuota"),
+        Importe = GetAttribute<decimal>(taxItem, "Importe"),
+        MetodoAplicacion = AssignBillTaxMethod(taxItem)
+      };
     }
 
 

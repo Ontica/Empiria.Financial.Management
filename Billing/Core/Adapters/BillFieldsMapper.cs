@@ -33,6 +33,27 @@ namespace Empiria.Billing.Adapters {
 
     #region Private methods
 
+    private static FixedList<BillTaxEntryFields> MapLocalTaxesToBillTaxes(
+                                                  FixedList<BillComplementLocalTax> impuestosLocales) {
+      List<BillTaxEntryFields> fields = new List<BillTaxEntryFields>();
+
+      foreach (BillComplementLocalTax tax in impuestosLocales) {
+
+        var field = new BillTaxEntryFields {
+          TaxMethod = tax.MetodoAplicacion,
+          TaxFactorType = BillTaxFactorType.None,
+          Impuesto = string.Empty,
+          Description = tax.ImpLocalDescripcion,
+          Factor = tax.TasaDe,
+          Total = tax.Importe
+        };
+
+        fields.Add(field);
+      }
+      return fields.ToFixedList();
+    }
+
+
     static private BillAddendaFields MapToAddendaData(SATBillAddenda addenda) {
 
       BillAddendaFields addendaFields = new BillAddendaFields();
@@ -115,38 +136,6 @@ namespace Empiria.Billing.Adapters {
       };
     }
 
-    private static FixedList<BillTaxEntryFields> MapLocalTaxesToBillTaxes(
-                                                  FixedList<BillComplementLocalTax> impuestosLocales) {
-      List<BillTaxEntryFields> fields = new List<BillTaxEntryFields>();
-
-      foreach (BillComplementLocalTax tax in impuestosLocales) {
-
-        var field = new BillTaxEntryFields {
-          TaxMethod = tax.MetodoAplicacion,
-          TaxFactorType = BillTaxFactorType.None,
-          Impuesto = string.Empty,
-          Description = tax.ImpLocalDescripcion,
-          Factor = tax.TasaDe,
-          Total = tax.Importe
-        };
-
-        fields.Add(field);
-      }
-      return fields.ToFixedList();
-    }
-
-    private static BillFiscalLegendFields MapToFiscalLegendsData(
-                                            FixedList<BillComplementFiscalLegend> fields) {
-      if (fields.Count == 0) {
-        return new BillFiscalLegendFields();
-      }
-
-      return new BillFiscalLegendFields {
-        DisposicionFiscal = fields.First().DisposicionFiscal,
-        Norma = fields.First().Norma,
-        TextoLeyenda = fields.First().TextoLeyenda
-      };
-    }
 
     static private FixedList<BillTaxEntryFields> MapToBillTaxFields(FixedList<SATBillTaxDto> impuestos) {
 
@@ -169,21 +158,20 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private BillRelatedDocumentData MapToRelatedCfdi(
-                                            FixedList<SATBillCFDIRelatedDataDto> cfdiRelacionados) {
-
-      if (cfdiRelacionados.Count == 0) {
-        return new BillRelatedDocumentData();
+    private static BillFiscalLegendFields MapToFiscalLegendsData(
+                                            FixedList<BillComplementFiscalLegend> fields) {
+      if (fields.Count == 0) {
+        return new BillFiscalLegendFields();
       }
 
-      return new BillRelatedDocumentData {
-        RelatedCFDI = cfdiRelacionados.First().UUID,
-        TipoRelacion = cfdiRelacionados.First().TipoRelacion,
-        TipoRelacionNombre = MapToRelatedCfdiTypeName(cfdiRelacionados.First().TipoRelacion),
+      return new BillFiscalLegendFields {
+        DisposicionFiscal = fields.First().DisposicionFiscal,
+        Norma = fields.First().Norma,
+        TextoLeyenda = fields.First().TextoLeyenda
       };
     }
 
-    
+
     static private BillOrganizationFields MapToIssuedBy(SATBillOrganizationDto emisor) {
 
       return new BillOrganizationFields() {
@@ -206,27 +194,18 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private BillRelatedDocumentType MapToRelatedCfdiTypeName(string tipoRelacion) {
+    static private BillRelatedDocumentData MapToRelatedCfdi(
+                                            FixedList<SATBillCFDIRelatedDataDto> cfdiRelacionados) {
 
-      switch (tipoRelacion) {
-        case "01":
-          return BillRelatedDocumentType.NotaDeCredito;
-        case "02":
-          return BillRelatedDocumentType.NotaDeDebito;
-        case "03":
-          return BillRelatedDocumentType.DevolucionDeMercancia;
-        case "04":
-          return BillRelatedDocumentType.SustituciónDeCFDIPrevios;
-        case "05":
-          return BillRelatedDocumentType.TrasladoDeMercanciasFacturadasPreviamente;
-        case "06":
-          return BillRelatedDocumentType.FacturaGeneradaPorTrasladosPrevios;
-        case "07":
-          return BillRelatedDocumentType.AplicacionDeAnticipo;
-        default:
-          break;
+      if (cfdiRelacionados.Count == 0) {
+        return new BillRelatedDocumentData();
       }
-      return BillRelatedDocumentType.Ninguno;
+
+      return new BillRelatedDocumentData {
+        RelatedCFDI = cfdiRelacionados.First().UUID,
+        TipoRelacion = cfdiRelacionados.First().TipoRelacion,
+        TipoRelacionNombre = MapToRelatedCfdiTypeName(cfdiRelacionados.First().TipoRelacion),
+      };
     }
 
 
@@ -275,12 +254,33 @@ namespace Empiria.Billing.Adapters {
       };
     }
 
-
     #endregion Private methods
 
     #region Helpers
 
+    static private BillRelatedDocumentType MapToRelatedCfdiTypeName(string tipoRelacion) {
 
+      switch (tipoRelacion) {
+        case "01":
+          return BillRelatedDocumentType.NotaDeCredito;
+        case "02":
+          return BillRelatedDocumentType.NotaDeDebito;
+        case "03":
+          return BillRelatedDocumentType.DevolucionDeMercancia;
+        case "04":
+          return BillRelatedDocumentType.SustituciónDeCFDIPrevios;
+        case "05":
+          return BillRelatedDocumentType.TrasladoDeMercanciasFacturadasPreviamente;
+        case "06":
+          return BillRelatedDocumentType.FacturaGeneradaPorTrasladosPrevios;
+        case "07":
+          return BillRelatedDocumentType.AplicacionDeAnticipo;
+        default:
+          break;
+      }
+      return BillRelatedDocumentType.Ninguno;
+    }
+    
     #endregion Helpers
 
   } // class BillFieldsMapper

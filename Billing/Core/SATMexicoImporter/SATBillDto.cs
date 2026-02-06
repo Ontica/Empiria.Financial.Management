@@ -66,57 +66,57 @@ namespace Empiria.Billing.SATMexicoImporter {
   public class SATBillConceptDto {
 
     public string ClaveProdServ {
-      get; set;
+      get; internal set;
     }
 
 
     public string ClaveUnidad {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Cantidad {
-      get; set;
+      get; internal set;
     }
 
 
     public string Unidad {
-      get; set;
+      get; internal set;
     }
 
 
     public string NoIdentificacion {
-      get; set;
+      get; internal set;
     }
 
 
     public string Descripcion {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal ValorUnitario {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Importe {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Descuento {
-      get; set;
+      get; internal set;
     }
 
 
     public string ObjetoImp {
-      get; set;
+      get; internal set;
     }
 
 
     public FixedList<SATBillTaxDto> Impuestos {
-      get; set;
+      get; internal set;
     } = new FixedList<SATBillTaxDto>();
 
   }  // class SATBillConceptDto
@@ -267,32 +267,32 @@ namespace Empiria.Billing.SATMexicoImporter {
   public class SATBillTaxDto {
 
     public BillTaxMethod MetodoAplicacion {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Base {
-      get; set;
+      get; internal set;
     }
 
 
     public string Impuesto {
-      get; set;
+      get; internal set;
     }
 
 
     public string TipoFactor {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal TasaOCuota {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Importe {
-      get; set;
+      get; internal set;
     }
 
   }  // class SATBillTaxDto
@@ -301,22 +301,22 @@ namespace Empiria.Billing.SATMexicoImporter {
   public class BillComplementLocalTax {
 
     public BillTaxMethod MetodoAplicacion {
-      get; set;
+      get; internal set;
     }
 
 
     public string ImpLocalDescripcion {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal TasaDe {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Importe {
-      get; set;
+      get; internal set;
     }
 
   } // class BillComplementLocalTax
@@ -326,17 +326,17 @@ namespace Empiria.Billing.SATMexicoImporter {
   public class BillComplementFiscalLegend {
 
     public string DisposicionFiscal {
-      get; set;
+      get; internal set;
     }
 
 
     public string Norma {
-      get; set;
+      get; internal set;
     }
 
 
     public string TextoLeyenda {
-      get; set;
+      get; internal set;
     }
 
   } // BillComplementFiscalLegend
@@ -346,22 +346,22 @@ namespace Empiria.Billing.SATMexicoImporter {
 
 
     public string Xmlns_Tfd {
-      get; set;
+      get; internal set;
     }
 
 
     public string Xmlns_Xsi {
-      get; set;
+      get; internal set;
     }
 
 
     public string Xsi_SchemaLocation {
-      get; set;
+      get; internal set;
     }
 
 
     public string Tfd_Version {
-      get; set;
+      get; internal set;
     }
 
 
@@ -425,12 +425,12 @@ namespace Empiria.Billing.SATMexicoImporter {
 
 
     public SATBillConceptDto Concepto {
-      get; set;
+      get; internal set;
     }
 
 
     public FixedList<SATBillAddendaConcept> EcoConcepts {
-      get; set;
+      get; internal set;
     } = new FixedList<SATBillAddendaConcept>();
 
   } // class SATBillAddenda
@@ -439,37 +439,37 @@ namespace Empiria.Billing.SATMexicoImporter {
   public class SATBillAddendaConcept {
 
     public decimal TasaIEPS {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal IEPS {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal TasaIVA {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal IVA {
-      get; set;
+      get; internal set;
     }
 
 
     public string NoIdentificacion {
-      get; set;
+      get; internal set;
     } = string.Empty;
 
 
     public decimal TasaAIEPS {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal AIEPS {
-      get; set;
+      get; internal set;
     }
 
   }
