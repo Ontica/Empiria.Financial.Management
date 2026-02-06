@@ -31,60 +31,9 @@ namespace Empiria.Billing.Adapters {
 
     #region Private methods
 
-    static private string MapToCfdiRelated(ComplementRelatedPayoutDataDto datosComplementoPago) {
-
-      if (datosComplementoPago.RelatedDocumentData.Count == 0) {
-        return string.Empty;
-      }
-
-      return datosComplementoPago.RelatedDocumentData.First().IdDocumento;
-    }
-
-
-    static private BillOrganizationFields MapToIssuedBy(SATBillOrganizationDto emisor) {
-
-      return new BillOrganizationFields() {
-        Nombre = emisor.Nombre,
-        RFC = emisor.RFC,
-        RegimenFiscal = emisor.RegimenFiscal
-      };
-    }
-
-
-    static private BillOrganizationFields MapToIssuedTo(SATBillOrganizationDto receptor) {
-
-      return new BillOrganizationFields() {
-        Nombre = receptor.Nombre,
-        RFC = receptor.RFC,
-        RegimenFiscal = receptor.RegimenFiscal,
-        DomicilioFiscal = receptor.DomicilioFiscal,
-        UsoCFDI = receptor.UsoCFDI
-      };
-    }
-
-
-    static private IBillFields MapToPaymentComplementFields(SatBillPaymentComplementDto dto) {
-
-      return new BillPaymentComplementFields {
-        BillCategoryUID = BillCategory.ComplementoPagoProveedores.UID,
-        BillNo = dto.SATComplemento.UUID,
-        CertificationNo = dto.DatosGenerales.NoCertificado,
-        IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
-        IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
-        CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
-        Subtotal = dto.DatosGenerales.SubTotal,
-        Total = dto.DatosGenerales.Total,
-        //CFDIRelated = MapToCfdiRelated(dto.DatosComplemento.DatosComplementoPago.First()),
-        Concepts = MapToPaymentComplementConceptFields(dto.Conceptos),
-        SchemaData = MapToPaymentComplementSchemaData(dto),
-        SecurityData = MapToPaymentComplementSecurityData(dto),
-        ComplementRelatedPayoutData = MapToComplementRelatedPayout(dto.DatosComplemento.DatosComplementoPago)
-      };
-    }
-
-
     private static FixedList<ComplementRelatedPayoutDataFields> MapToComplementRelatedPayout(
       FixedList<ComplementRelatedPayoutDataDto> datosComplementoPagoDto) {
+
       var datosComplementos = new List<ComplementRelatedPayoutDataFields>();
 
       foreach (var complemento in datosComplementoPagoDto) {
@@ -113,23 +62,25 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    private static FixedList<BillTaxEntryFields> MapToTaxes(FixedList<SATBillTaxDto> taxesDto) {
-      var taxList = new List<BillTaxEntryFields>();
+    static private BillOrganizationFields MapToIssuedBy(SATBillOrganizationDto emisor) {
 
-      foreach (var tax in taxesDto) {
+      return new BillOrganizationFields() {
+        Nombre = emisor.Nombre,
+        RFC = emisor.RFC,
+        RegimenFiscal = emisor.RegimenFiscal
+      };
+    }
 
-        taxList.Add(
-          new BillTaxEntryFields {
-            TaxMethod = tax.MetodoAplicacion,
-            TaxFactorType = BillTaxEntryFields.GetFactorTypeByTax(tax.TipoFactor),
-            Factor = tax.TasaOCuota,
-            BaseAmount = tax.Base,
-            Total = tax.Importe,
-            Impuesto = tax.Impuesto
-          }
-        );
-      }
-      return taxList.ToFixedList();
+
+    static private BillOrganizationFields MapToIssuedTo(SATBillOrganizationDto receptor) {
+
+      return new BillOrganizationFields() {
+        Nombre = receptor.Nombre,
+        RFC = receptor.RFC,
+        RegimenFiscal = receptor.RegimenFiscal,
+        DomicilioFiscal = receptor.DomicilioFiscal,
+        UsoCFDI = receptor.UsoCFDI
+      };
     }
 
 
@@ -155,6 +106,25 @@ namespace Empiria.Billing.Adapters {
         conceptFields.Add(field);
       }
       return conceptFields.ToFixedList();
+    }
+
+
+    static private IBillFields MapToPaymentComplementFields(SatBillPaymentComplementDto dto) {
+
+      return new BillPaymentComplementFields {
+        BillCategoryUID = BillCategory.ComplementoPagoProveedores.UID,
+        BillNo = dto.SATComplemento.UUID,
+        CertificationNo = dto.DatosGenerales.NoCertificado,
+        IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
+        IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
+        CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
+        Subtotal = dto.DatosGenerales.SubTotal,
+        Total = dto.DatosGenerales.Total,
+        Concepts = MapToPaymentComplementConceptFields(dto.Conceptos),
+        SchemaData = MapToPaymentComplementSchemaData(dto),
+        SecurityData = MapToPaymentComplementSecurityData(dto),
+        ComplementRelatedPayoutData = MapToComplementRelatedPayout(dto.DatosComplemento.DatosComplementoPago)
+      };
     }
 
 
@@ -199,6 +169,26 @@ namespace Empiria.Billing.Adapters {
         Tfd_Version = dto.SATComplemento.Tfd_Version,
         Xmlns_Tfd = dto.SATComplemento.Xmlns_Tfd
       };
+    }
+
+
+    private static FixedList<BillTaxEntryFields> MapToTaxes(FixedList<SATBillTaxDto> taxesDto) {
+      var taxList = new List<BillTaxEntryFields>();
+
+      foreach (var tax in taxesDto) {
+
+        taxList.Add(
+          new BillTaxEntryFields {
+            TaxMethod = tax.MetodoAplicacion,
+            TaxFactorType = BillTaxEntryFields.GetFactorTypeByTax(tax.TipoFactor),
+            Factor = tax.TasaOCuota,
+            BaseAmount = tax.Base,
+            Total = tax.Importe,
+            Impuesto = tax.Impuesto
+          }
+        );
+      }
+      return taxList.ToFixedList();
     }
 
     #endregion Private methods

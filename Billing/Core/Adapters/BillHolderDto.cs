@@ -46,7 +46,6 @@ namespace Empiria.Billing.Adapters {
   } // class BillHolderDto
 
 
-
   /// <summary>Output DTO used to return bill entry data.</summary>
   public class BillDto {
 
@@ -129,7 +128,6 @@ namespace Empiria.Billing.Adapters {
   } // Class BillEntryDto
 
 
-
   /// <summary>Output DTO used to return bill concept entry data.</summary>
   public class BillWithConceptsDto {
 
@@ -152,7 +150,7 @@ namespace Empiria.Billing.Adapters {
   public class BillConceptDto {
 
     public string UID {
-      get; set;
+      get; internal set;
     }
 
     public NamedEntityDto Product {
@@ -168,7 +166,7 @@ namespace Empiria.Billing.Adapters {
     }
 
     public decimal UnitPrice {
-      get; set;
+      get; internal set;
     }
 
     public decimal Subtotal {
@@ -220,12 +218,11 @@ namespace Empiria.Billing.Adapters {
   }  // class BillRelatedBillDto
 
 
-
   /// <summary>Output DTO used to return bill tax entry data.</summary>
   public class BillTaxEntryDto {
 
     public string UID {
-      get; set;
+      get; internal set;
     }
 
     public NamedEntityDto TaxMethod {

@@ -15,47 +15,47 @@ namespace Empiria.Billing.Adapters {
   public class BillDescriptorDto {
 
     public string UID {
-      get; set;
+      get; internal set;
     }
 
 
     public string BillNo {
-      get; set;
+      get; internal set;
     }
 
 
     public string BillTypeName {
-      get; set;
+      get; internal set;
     }
 
 
     public string IssuedByName {
-      get; set;
+      get; internal set;
     }
 
 
     public string IssuedToName {
-      get; set;
+      get; internal set;
     }
 
 
     public string CategoryName {
-      get; set;
+      get; internal set;
     }
 
 
     public decimal Total {
-      get; set;
+      get; internal set;
     }
 
 
     public DateTime IssueDate {
-      get; set;
+      get; internal set;
     }
 
 
     public string StatusName {
-      get; set;
+      get; internal set;
     }
     
   } // class BillDescriptorDto

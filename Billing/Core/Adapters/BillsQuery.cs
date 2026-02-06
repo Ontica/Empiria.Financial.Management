@@ -30,7 +30,6 @@ namespace Empiria.Billing.Adapters {
   }  // enum BillQueryDateType
 
 
-
   /// <summary>Input query DTO used to retrieve bills.</summary>
   public class BillsQuery {
 
