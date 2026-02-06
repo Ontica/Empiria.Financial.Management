@@ -170,6 +170,10 @@ namespace Empiria.Billing.UseCases {
         bill.AddConcept(BillConceptType.Addenda, addendaConcept);
       }
 
+      foreach (var billTax in fields.BillTaxes) {
+        bill.AddBillTaxes(billTax, -1);
+      }
+
       return bill;
     }
 

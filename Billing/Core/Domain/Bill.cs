@@ -371,6 +371,14 @@ namespace Empiria.Billing {
     }
 
 
+    public void AddBillTaxes(BillTaxEntryFields taxFields, int billTaxRelatedObjectId) {
+      Assertion.Require(taxFields, nameof(taxFields));
+
+      BillTaxEntry taxEntry = new BillTaxEntry(this, billTaxRelatedObjectId, taxFields);
+      taxEntry.Save();
+    }
+
+
     internal void AddComplementConcepts(FuelConsumptionComplementConceptDataFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -400,13 +408,6 @@ namespace Empiria.Billing {
       }
     }
 
-
-    public void AddBillTaxes(BillTaxEntryFields taxFields, int billTaxRelatedObjectId) {
-      Assertion.Require(taxFields, nameof(taxFields));
-
-      BillTaxEntry taxEntry = new BillTaxEntry(this, billTaxRelatedObjectId, taxFields);
-      taxEntry.Save();
-    }
 
 
     public void Delete() {
