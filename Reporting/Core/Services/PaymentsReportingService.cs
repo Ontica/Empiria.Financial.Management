@@ -8,6 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
+using Empiria.DynamicData;
 using Empiria.Office;
 using Empiria.Services;
 using Empiria.Storage;
@@ -30,6 +33,28 @@ namespace Empiria.Payments.Reporting {
     #endregion Constructors and parsers
 
     #region Services
+
+    public DynamicDto<PaymentBillDto> BuildPaymentsBillsReport(DateTime fromDate, DateTime toEndDate) {
+
+      var builder = new PaymentsBillsReportBuilder(fromDate, toEndDate);
+
+      var columns = builder.BuildColumns();
+      var entries = builder.BuildEntries();
+
+      return new DynamicDto<PaymentBillDto>(columns, entries);
+    }
+
+
+    public DynamicDto<PaymentConceptDto> BuildPaymentsConceptsReport(DateTime fromDate, DateTime toDate) {
+
+      var builder = new PaymentsConceptsReportBuilder(fromDate, toDate);
+
+      var columns = builder.BuildColumns();
+      var entries = builder.BuildEntries();
+
+      return new DynamicDto<PaymentConceptDto>(columns, entries);
+    }
+
 
     public FileDto ExportPaymentOrderToPdf(PaymentOrder paymentOrder) {
       Assertion.Require(paymentOrder, nameof(paymentOrder));
