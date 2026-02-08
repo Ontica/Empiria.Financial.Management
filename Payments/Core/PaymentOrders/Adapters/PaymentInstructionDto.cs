@@ -15,8 +15,6 @@ using Empiria.History;
 
 using Empiria.Billing.Adapters;
 
-using Empiria.Financial.Adapters;
-
 namespace Empiria.Payments.Adapters {
 
   /// <summary>Output DTO with a payment instruction holder.</summary>

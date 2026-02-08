@@ -12,7 +12,6 @@ using Empiria.Documents;
 using Empiria.History;
 
 using Empiria.Financial;
-using Empiria.Financial.Adapters;
 using Empiria.StateEnums;
 
 using Empiria.Billing;

@@ -10,9 +10,7 @@
 
 using Empiria.Services;
 
-using Empiria.Financial;
-using Empiria.Financial.Adapters;
-using Empiria.Financial.Services;
+using Empiria.Payments.Adapters;
 
 namespace Empiria.Payments.UseCases {
 
@@ -45,20 +43,11 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    public FixedList<PaymentAccountDto> GetPaymentAccounts(string payeeUID) {
-      Assertion.Require(payeeUID, nameof(payeeUID));
-
-      var payee = Payee.Parse(payeeUID);
-
-      return PaymentAccountServices.GetPaymentAccounts(payee);
-    }
-
-
     public PaymentAccountDto RemovePaymentAccount(Payee payee, PaymentAccount account) {
       Assertion.Require(payee, nameof(payee));
       Assertion.Require(account, nameof(account));
 
-      Assertion.Require(account.Party.Equals(payee), "La cuenta no pertenece al beneficiario especificado.");
+      Assertion.Require(account.Payee.Equals(payee), "La cuenta no pertenece al beneficiario especificado.");
 
       account.Delete();
 
@@ -74,7 +63,7 @@ namespace Empiria.Payments.UseCases {
 
       var account = PaymentAccount.Parse(fields.UID);
 
-      Assertion.Require(account.Party.Equals(payee), "La cuenta no pertenece al beneficiario especificado.");
+      Assertion.Require(account.Payee.Equals(payee), "La cuenta no pertenece al beneficiario especificado.");
 
       account.Update(fields);
 
