@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Documents;
 using Empiria.History;
 using Empiria.StateEnums;
@@ -69,7 +70,7 @@ namespace Empiria.Billing.Adapters {
         CurrencyCode = bill.Currency.ISOCode,
         Subtotal = bill.Subtotal,
         Discount = bill.Discount,
-        Taxes = bill.Taxes,
+        Taxes = Math.Round(bill.Taxes, 2),
         Total = bill.Subtotal - bill.Discount,
         IssueDate = bill.IssueDate,
         PostedBy = bill.PostedBy.MapToNamedEntity(),

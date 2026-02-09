@@ -371,7 +371,7 @@ namespace Empiria.Billing {
     }
 
 
-    public void AddBillTaxes(BillTaxEntryFields taxFields, int billTaxRelatedObjectId) {
+    internal void AddBillTaxes(BillTaxEntryFields taxFields, int billTaxRelatedObjectId) {
       Assertion.Require(taxFields, nameof(taxFields));
 
       BillTaxEntry taxEntry = new BillTaxEntry(this, billTaxRelatedObjectId, taxFields);
