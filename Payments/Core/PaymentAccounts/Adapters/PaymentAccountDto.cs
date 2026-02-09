@@ -72,15 +72,6 @@ namespace Empiria.Payments.Adapters {
                      .ToFixedList();
     }
 
-
-    static public FixedList<PaymentAccountDto> MapFor(Payee payee) {
-      Assertion.Require(payee, nameof(payee));
-
-      var accounts = PaymentAccount.GetListFor(payee);
-
-      return Map(accounts);
-    }
-
     #endregion Mappers
 
   }  // class PaymentAccountDto

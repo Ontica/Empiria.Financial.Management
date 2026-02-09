@@ -27,7 +27,7 @@ namespace Empiria.Payments {
       // Required by Empiria Framework.
     }
 
-    public PaymentAccount(Payee payee, PaymentAccountFields fields) {
+    internal PaymentAccount(Payee payee, PaymentAccountFields fields) {
       Assertion.Require(payee, nameof(payee));
       Assertion.Require(!payee.IsEmptyInstance, nameof(payee));
       Assertion.Require(fields, nameof(fields));
@@ -42,12 +42,6 @@ namespace Empiria.Payments {
     static public PaymentAccount Parse(int id) => ParseId<PaymentAccount>(id);
 
     static public PaymentAccount Parse(string uid) => ParseKey<PaymentAccount>(uid);
-
-    static public FixedList<PaymentAccount> GetListFor(Payee payee) {
-      return GetList<PaymentAccount>()
-            .ToFixedList()
-            .FindAll(x => x.Payee.Equals(payee));
-    }
 
     static public PaymentAccount Empty => ParseEmpty<PaymentAccount>();
 
@@ -178,13 +172,6 @@ namespace Empiria.Payments {
 
     #region Methods
 
-    public void Delete() {
-      Status = EntityStatus.Deleted;
-
-      MarkAsDirty();
-    }
-
-
     protected override void OnSave() {
       if (IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
@@ -195,7 +182,14 @@ namespace Empiria.Payments {
     }
 
 
-    public void Update(PaymentAccountFields fields) {
+    internal void Remove() {
+      Status = EntityStatus.Deleted;
+
+      MarkAsDirty();
+    }
+
+
+    internal void Update(PaymentAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       fields.EnsureValid();

@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Payments Management                          Component : Domain Layer                          *
-*  Assembly : Empiria.Payments.Core.dll                    Pattern   : Information Holder                    *
+*  Assembly : Empiria.Payments.Core.dll                    Pattern   : Aggregate root                        *
 *  Type     : Payee                                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Represents a payee. A payee is someone who receives payments.                                  *
@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
 
 using Empiria.Parties;
 using Empiria.StateEnums;
@@ -19,6 +20,8 @@ namespace Empiria.Payments {
 
   /// <summary>Represents a payee. A payee is someone who receives payments.</summary>
   public class Payee : Party, INamedEntity {
+
+    private Lazy<List<PaymentAccount>> _accounts;
 
     #region Constructors and parsers
 
@@ -39,6 +42,10 @@ namespace Empiria.Payments {
     static public new Payee Parse(string uid) => ParseKey<Payee>(uid);
 
     static public new Payee Empty => ParseEmpty<Payee>();
+
+    protected override void OnLoad() {
+      LoadAccounts();
+    }
 
     #endregion Constructors and parsers
 
@@ -144,6 +151,61 @@ namespace Empiria.Payments {
     }
 
     #endregion Methods
+
+    #region Payment accounts aggregate
+
+    internal PaymentAccount AddAccount(PaymentAccountFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      var account = new PaymentAccount(this, fields);
+
+      _accounts.Value.Add(account);
+
+      return account;
+    }
+
+
+    public FixedList<PaymentAccount> GetAccounts() {
+      return _accounts.Value.ToFixedList();
+    }
+
+
+    private void LoadAccounts() {
+      _accounts = new Lazy<List<PaymentAccount>>(() => GetList<PaymentAccount>()
+                                                      .FindAll(x => x.Payee.Equals(this)));
+    }
+
+
+    internal void RemoveAccount(PaymentAccount account) {
+      Assertion.Require(account, nameof(account));
+
+      EnsureHasAccount(account);
+
+      account.Remove();
+
+      _accounts.Value.Remove(account);
+    }
+
+
+    internal void UpdateAccount(PaymentAccount account, PaymentAccountFields fields) {
+      Assertion.Require(account, nameof(account));
+      Assertion.Require(fields, nameof(fields));
+
+      fields.EnsureValid();
+
+      EnsureHasAccount(account);
+
+      account.Update(fields);
+    }
+
+
+    private void EnsureHasAccount(PaymentAccount account) {
+      var found = GetAccounts().Find(x => x.Equals(account));
+
+      Assertion.Require(found, "Payee has not the given account.");
+    }
+
+    #endregion Payment accounts aggregate
 
   } // class Payee
 
