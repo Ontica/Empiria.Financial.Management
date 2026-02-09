@@ -8,19 +8,15 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System.Linq;
 using System.Web.Http;
 
 using Empiria.StateEnums;
-using Empiria.Storage;
 
 using Empiria.WebApi;
 
 using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.UseCases;
-
-using Empiria.Budgeting.Reporting;
 
 namespace Empiria.Budgeting.Transactions.WebApi {
 
@@ -78,51 +74,6 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
-    [Route("v2/budgeting/transactions/bulk-operation/export-entries-grouped")]
-    public SingleObjectModel ExportGroupedEntriesToExcel([FromBody] BulkOperationCommand command) {
-
-      FixedList<BudgetTransactionByYear> transactions =
-            command.Items.Select(x => new BudgetTransactionByYear(BudgetTransaction.Parse(x)))
-                         .ToFixedList()
-                         .Sort((x, y) => x.Transaction.TransactionNo.CompareTo(y.Transaction.TransactionNo));
-
-      using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
-
-        var result = new FileResultDto(
-            reportingService.ExportGroupedEntriesToExcel(transactions),
-            $"Se exportaron {transactions.Count} transacciones presupuestales a Excel."
-        );
-
-        SetOperation(result.Message);
-
-        return new SingleObjectModel(base.Request, result);
-      }
-    }
-
-
-    [HttpPost]
-    [Route("v2/budgeting/transactions/bulk-operation/export-entries-ungrouped")]
-    public SingleObjectModel ExportUngroupedEntriesToExcel([FromBody] BulkOperationCommand command) {
-
-      FixedList<BudgetTransaction> transactions =
-            command.Items.Select(x => BudgetTransaction.Parse(x))
-                         .ToFixedList()
-                         .Sort((x, y) => x.TransactionNo.CompareTo(y.TransactionNo));
-
-      using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
-
-        var result = new FileResultDto(
-            reportingService.ExportUngroupedEntriesToExcel(transactions),
-            $"Se exportaron {transactions.Count} transacciones presupuestales a Excel."
-        );
-
-        SetOperation(result.Message);
-
-        return new SingleObjectModel(base.Request, result);
-      }
-    }
-
-    [HttpPost]
     [Route("v2/budgeting/transactions/planning/generate")]
     public SingleObjectModel GeneratePlanningTransactions() {
 
@@ -174,22 +125,6 @@ namespace Empiria.Budgeting.Transactions.WebApi {
         BudgetTransactionHolderDto transaction = usecases.GetTransaction(transactionUID);
 
         return new SingleObjectModel(base.Request, transaction);
-      }
-    }
-
-
-    [HttpGet]
-    [Route("v2/budgeting/transactions/{transactionUID:guid}/print")]
-    public SingleObjectModel PrintTransaction([FromUri] string transactionUID) {
-
-      using (var reportingService = BudgetTransactionReportingService.ServiceInteractor()) {
-
-
-        var transaction = BudgetTransaction.Parse(transactionUID);
-
-        FileDto file = reportingService.ExportTransactionVoucherToPdf(transaction);
-
-        return new SingleObjectModel(base.Request, file);
       }
     }
 
@@ -290,24 +225,5 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     #endregion Web Apis
 
   }  // class BudgetTransactionsController
-
-
-
-  public class MessageFields {
-
-    public string Message {
-      get; set;
-    } = "No se indicó el motivo.";
-
-  }  // class MessageFields
-
-
-  public class BulkOperationCommand {
-
-    public string[] Items {
-      get; set;
-    }
-
-  }  // class BulkOperationCommand
 
 }  // namespace Empiria.Budgeting.Transactions.WebApi

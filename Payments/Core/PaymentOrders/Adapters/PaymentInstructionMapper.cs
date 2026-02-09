@@ -15,8 +15,6 @@ using Empiria.StateEnums;
 using Empiria.Billing;
 using Empiria.Billing.Adapters;
 
-using Empiria.Financial.Adapters;
-
 namespace Empiria.Payments.Adapters {
 
   static internal class PaymentInstructionMapper {

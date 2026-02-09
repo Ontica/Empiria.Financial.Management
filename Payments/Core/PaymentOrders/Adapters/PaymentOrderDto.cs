@@ -13,8 +13,6 @@ using System;
 using Empiria.Documents;
 using Empiria.History;
 using Empiria.StateEnums;
-
-using Empiria.Financial.Adapters;
 using Empiria.Billing.Adapters;
 
 using Empiria.Budgeting.Transactions.Adapters;

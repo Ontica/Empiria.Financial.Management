@@ -11,7 +11,6 @@
 using System;
 
 using Empiria.Data;
-using Empiria.Financial;
 using Empiria.Parties;
 
 namespace Empiria.Payments.Adapters {

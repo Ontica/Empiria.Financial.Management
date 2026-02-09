@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.Financial;
-using Empiria.Financial.Services;
 
 namespace Empiria.Payments.Adapters {
 
@@ -36,7 +35,7 @@ namespace Empiria.Payments.Adapters {
         Currency = payableEntity.Currency.MapToNamedEntity(),
         Total = payableEntity.Total,
         PayTo = payableEntity.PayTo.MapToNamedEntity(),
-        PaymentAccounts = PaymentAccountServices.GetPaymentAccounts(payableEntity.PayTo),
+        PaymentAccounts = PaymentAccountDto.MapFor((Payee) payableEntity.PayTo),
         Items = MapItems(payableEntity.Items)
       };
     }

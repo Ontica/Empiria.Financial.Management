@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial.Adapters;
-
 namespace Empiria.Payments.Adapters {
 
   /// <summary>Data transfer objects used to return payable entities data.</summary>
