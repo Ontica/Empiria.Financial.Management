@@ -170,6 +170,10 @@ namespace Empiria.Billing {
 
         return TaxType.Parse(103);
 
+      } else if (fields.Impuesto == "Impuesto local") {
+
+        return TaxType.Parse(119);
+
       } else {
         return TaxType.Parse(-1);
         //throw Assertion.EnsureNoReachThisCode($"Unrecognized field '{fields.Impuesto}'");

@@ -42,7 +42,7 @@ namespace Empiria.Billing.Adapters {
         var field = new BillTaxEntryFields {
           TaxMethod = tax.MetodoAplicacion,
           TaxFactorType = BillTaxFactorType.None,
-          Impuesto = string.Empty,
+          Impuesto = tax.Impuesto,
           Description = tax.ImpLocalDescripcion,
           Factor = tax.TasaDe,
           Total = tax.Importe

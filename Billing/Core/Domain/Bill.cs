@@ -217,7 +217,6 @@ namespace Empiria.Billing {
       get {
         return Concepts.SelectFlat(x => x.TaxEntries).Sum(x => x.Total) +
                BillTaxes.Sum(x => x.Total);
-        ;
       }
     }
 
