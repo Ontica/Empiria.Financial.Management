@@ -21,7 +21,7 @@ namespace Empiria.Payments {
   /// <summary>Represents a payee. A payee is someone who receives payments.</summary>
   public class Payee : Party, INamedEntity {
 
-    private Lazy<List<PaymentAccount>> _accounts;
+    private Lazy<List<PaymentAccount>> _accounts = new Lazy<List<PaymentAccount>>();
 
     #region Constructors and parsers
 
@@ -171,8 +171,7 @@ namespace Empiria.Payments {
 
 
     private void LoadAccounts() {
-      _accounts = new Lazy<List<PaymentAccount>>(() => GetList<PaymentAccount>()
-                                                      .FindAll(x => x.Payee.Equals(this)));
+      _accounts = new Lazy<List<PaymentAccount>>(() => PaymentAccountsData.GetFor(this));
     }
 
 
