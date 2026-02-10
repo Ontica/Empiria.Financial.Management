@@ -310,6 +310,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
+    public string Impuesto {
+      get; internal set;
+    }
+
+
     public decimal TasaDe {
       get; internal set;
     }

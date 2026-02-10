@@ -124,18 +124,26 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode impuestoLocal in impuestosLocalesNode.ChildNodes) {
 
+        BillComplementLocalTax impuesto = new BillComplementLocalTax();
+        
         if (impuestoLocal.Name.Equals("implocal:TrasladosLocales")) {
 
-          BillComplementLocalTax impuesto = new BillComplementLocalTax {
-            MetodoAplicacion = AssignBillTaxMethod(impuestoLocal),
-            ImpLocalDescripcion = GetAttribute(impuestoLocal, "ImpLocTrasladado"),
-            TasaDe = GetAttribute<decimal>(impuestoLocal, "TasadeTraslado"),
-            Importe = GetAttribute<decimal>(impuestoLocal, "Importe")
-          };
-          impuestosLocales.Add(impuesto);
+          impuesto.ImpLocalDescripcion = GetAttribute(impuestoLocal, "ImpLocTrasladado");
+          impuesto.TasaDe = GetAttribute<decimal>(impuestoLocal, "TasadeTraslado");
+
+        } else if (impuestoLocal.Name.Equals("implocal:RetencionesLocales")) {
+
+          impuesto.ImpLocalDescripcion = GetAttribute(impuestoLocal, "ImpLocRetenido");
+          impuesto.TasaDe = GetAttribute<decimal>(impuestoLocal, "TasadeRetencion");
+
         } else {
           throw Assertion.EnsureNoReachThisCode($"Unhandled Xml node SAT tax method: {impuestoLocal.Name}");
         }
+
+        impuesto.MetodoAplicacion = AssignBillTaxMethod(impuestoLocal);
+        impuesto.Impuesto = "Impuesto local";
+        impuesto.Importe = GetAttribute<decimal>(impuestoLocal, "Importe");
+        impuestosLocales.Add(impuesto);
       }
       return new FixedList<BillComplementLocalTax>(impuestosLocales);
     }
