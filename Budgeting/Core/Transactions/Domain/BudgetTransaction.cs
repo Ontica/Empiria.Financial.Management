@@ -450,6 +450,9 @@ namespace Empiria.Budgeting.Transactions {
         this.TransactionNo = "Eliminada";
         this.Status = TransactionStatus.Deleted;
       }
+
+      Entries.ToList()
+             .ForEach(x => x.Reject());
     }
 
 
