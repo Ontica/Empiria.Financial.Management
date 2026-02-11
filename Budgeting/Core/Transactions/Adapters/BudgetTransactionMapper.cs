@@ -184,6 +184,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       return new TransactionTypeForEditionDto {
         UID = txnType.UID,
         Name = txnType.DisplayName,
+        AskForAllowsOverdrafts = txnType.AllowsOverdrafts,
         ManualEdition = txnType.ManualEdition,
         OperationSources = txnType.OperationSources.MapToNamedEntityList(),
         RelatedDocumentTypes = txnType.RelatedDocumentTypes.MapToNamedEntityList(),
@@ -218,6 +219,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         BaseEntity = transaction.HasEntity ?
             transaction.GetEntity().MapToNamedEntity() : NamedEntityDto.Empty,
         BaseEntityNo = transaction.HasEntity ? transaction.GetEntity().EntityNo : string.Empty,
+        AllowsOverdrafts = transaction.AllowsOverdrafts,
         Total = transaction.GetTotal(),
         RecordingDate = transaction.RequestedDate,
         RecordedBy = transaction.RecordedBy.MapToNamedEntity(),

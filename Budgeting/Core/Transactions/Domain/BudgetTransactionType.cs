@@ -82,6 +82,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool AllowsOverdrafts {
+      get {
+        return ExtensionData.Get("allowsOverdrafts", false);
+      }
+    }
+
+
     public FixedList<int> AvailableYears {
       get {
         return ExtensionData.GetFixedList<int>("availableYears", false);

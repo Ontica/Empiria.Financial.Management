@@ -131,6 +131,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public bool AllowsOverdrafts {
+      get; internal set;
+    }
+
     public string Description {
       get; internal set;
     }

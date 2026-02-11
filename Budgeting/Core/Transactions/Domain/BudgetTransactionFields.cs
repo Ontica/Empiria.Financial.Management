@@ -42,6 +42,10 @@ namespace Empiria.Budgeting.Transactions {
     } = decimal.One;
 
 
+    public bool AllowsOverdrafts {
+      get; set;
+    }
+
     public string Description {
       get; set;
     } = string.Empty;

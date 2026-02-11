@@ -155,6 +155,16 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool AllowsOverdrafts {
+      get {
+        return ExtensionData.Get("allowsOverdrafts", false);
+      }
+      private set {
+        ExtensionData.SetIf("allowsOverdrafts", value, value);
+      }
+    }
+
+
     [DataField("BDG_TXN_IDENTIFICATORS")]
     private string _identificators = string.Empty;
 
@@ -576,6 +586,7 @@ namespace Empiria.Budgeting.Transactions {
       BaseParty = Patcher.Patch(fields.BasePartyUID, BaseParty);
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       ExchangeRate = Patcher.Patch(fields.ExchangeRate, ExchangeRate);
+      AllowsOverdrafts = fields.AllowsOverdrafts && TransactionType.AllowsOverdrafts;
       RequestedBy = Patcher.Patch(fields.RequestedByUID, RequestedBy);
       PayableId = fields.PayableId;
       OperationSource = Patcher.Patch(fields.OperationSourceUID, OperationSource);
