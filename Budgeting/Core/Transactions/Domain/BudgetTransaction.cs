@@ -409,13 +409,13 @@ namespace Empiria.Budgeting.Transactions {
 
       var txns = GetRelatedTo(this)
                  .FindAll(x => x.ApplicationDate >= this.ApplicationDate &&
-                               x.Id != this.Id &&
+                               x.Id > this.Id &&
                                x.Status != TransactionStatus.Canceled &&
                                x.Status != TransactionStatus.Rejected);
 
       if (txns.Count != 0) {
         Assertion.RequireFail("Para cancelar esta transacción se requiere cancelar " +
-                              $"rechazar primero la transacción {txns.Last().TransactionNo}.");
+                              $"primero la transacción {txns.Last().TransactionNo}.");
       }
 
       RejectedReason = EmpiriaString.Clean(reason);
