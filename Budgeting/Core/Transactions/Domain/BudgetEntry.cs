@@ -329,6 +329,15 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal void SetControlNo(string controlNo) {
+      Assertion.Require(controlNo, nameof(controlNo));
+
+      ControlNo = controlNo;
+
+      MarkAsDirty();
+    }
+
+
     protected override void OnSave() {
       if (IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);

@@ -492,17 +492,6 @@ namespace Empiria.Budgeting.Transactions {
         RecordingDate = DateTime.Now;
       }
 
-      if (OperationType == BudgetOperationType.Exercise) {
-        if (!HasTransactionNo) {
-          TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
-        }
-        PostedBy = Party.Parse(145);
-        RecordedBy = Party.Parse(145);
-        AuthorizedBy = Party.Parse(145);
-        AppliedBy = Party.Parse(145);
-        RequestedBy = Party.Parse(145);
-      }
-
       BudgetTransactionDataService.WriteTransaction(this);
 
       foreach (var entry in _entries.Value) {
@@ -543,6 +532,34 @@ namespace Empiria.Budgeting.Transactions {
       this.RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       this.RequestedDate = DateTime.Now;
       this.Status = TransactionStatus.OnAuthorization;
+    }
+
+
+    public void SetExerciseData(DateTime exerciseDate,
+                                BudgetTransaction paymentApproval) {
+      if (OperationType != BudgetOperationType.Exercise) {
+        return;
+      }
+
+      TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
+
+      ApplicationDate = exerciseDate.Date;
+      RecordingDate = exerciseDate.Date;
+      RequestedDate = exerciseDate.Date;
+
+      PostedBy = Party.Parse(145);
+      RecordedBy = Party.Parse(145);
+      AuthorizedBy = Party.Parse(145);
+      AppliedBy = Party.Parse(145);
+      RequestedBy = Party.Parse(145);
+
+      foreach (var entry in Entries) {
+        var approvalEntry = paymentApproval.Entries.Find(x => x.RelatedEntryId == entry.RelatedEntryId);
+
+        if (approvalEntry != null) {
+          entry.SetControlNo(approvalEntry.ControlNo);
+        }
+      }
     }
 
 
