@@ -315,7 +315,17 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
+    public string TipoFactor {
+      get; internal set;
+    }
+
+
     public decimal TasaDe {
+      get; internal set;
+    }
+
+
+    public decimal CuotaDe {
       get; internal set;
     }
 

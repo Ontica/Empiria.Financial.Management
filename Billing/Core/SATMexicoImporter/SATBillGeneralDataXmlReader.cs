@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace Empiria.Billing.SATMexicoImporter {
 
@@ -24,6 +25,38 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
     #region Public methods
+
+    internal FixedList<SATBillConceptDto> GenerateConceptsList(XmlNode conceptsNode) {
+
+      var conceptosDto = new List<SATBillConceptDto>();
+
+      foreach (XmlNode concept in conceptsNode.ChildNodes) {
+
+        if (!concept.Name.Equals("cfdi:Concepto") && !concept.Name.Equals("edr:Concepto")) {
+          Assertion.EnsureFailed("The concepts node must contain only concepts.");
+        }
+
+        var conceptoDto = new SATBillConceptDto() {
+          ClaveProdServ = GetAttribute(concept, "ClaveProdServ"),
+          ClaveUnidad = GetAttribute(concept, "ClaveUnidad"),
+          Cantidad = GetAttribute<decimal>(concept, "Cantidad"),
+          Unidad = GetAttribute(concept, "Unidad"),
+          NoIdentificacion = GetAttribute(concept, "NoIdentificacion"),
+          Descripcion = GetAttribute(concept, "Descripcion"),
+          ValorUnitario = GetAttribute<decimal>(concept, "ValorUnitario"),
+          Importe = GetAttribute<decimal>(concept, "Importe"),
+          Descuento = GetAttribute<decimal>(concept, "Descuento"),
+          ObjetoImp = GetAttribute(concept, "ObjetoImp"),
+          Impuestos = GenerateTaxesByConcept(concept.ChildNodes)
+        };
+
+        conceptosDto.Add(conceptoDto);
+
+      }
+      return conceptosDto.ToFixedList();
+
+    }
+
 
     internal FixedList<SATBillCFDIRelatedDataDto> GenerateRelatedCfdiData(XmlNode cfdiRelatedNode) {
 
@@ -130,11 +163,13 @@ namespace Empiria.Billing.SATMexicoImporter {
 
           impuesto.ImpLocalDescripcion = GetAttribute(impuestoLocal, "ImpLocTrasladado");
           impuesto.TasaDe = GetAttribute<decimal>(impuestoLocal, "TasadeTraslado");
+          impuesto.CuotaDe = GetAttribute<decimal>(impuestoLocal, "CuotadeTraslado");
 
         } else if (impuestoLocal.Name.Equals("implocal:RetencionesLocales")) {
 
           impuesto.ImpLocalDescripcion = GetAttribute(impuestoLocal, "ImpLocRetenido");
           impuesto.TasaDe = GetAttribute<decimal>(impuestoLocal, "TasadeRetencion");
+          impuesto.CuotaDe = GetAttribute<decimal>(impuestoLocal, "CuotadeRetencion");
 
         } else {
           throw Assertion.EnsureNoReachThisCode($"Unhandled Xml node SAT tax method: {impuestoLocal.Name}");
@@ -143,6 +178,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         impuesto.MetodoAplicacion = AssignBillTaxMethod(impuestoLocal);
         impuesto.Impuesto = "Impuesto local";
         impuesto.Importe = GetAttribute<decimal>(impuestoLocal, "Importe");
+        impuesto.TipoFactor = GetFactorTypeForComplementLocalTax(impuesto);
         impuestosLocales.Add(impuesto);
       }
       return new FixedList<BillComplementLocalTax>(impuestosLocales);
@@ -166,6 +202,21 @@ namespace Empiria.Billing.SATMexicoImporter {
         }
       }
       return new FixedList<BillComplementFiscalLegend>(leyendas);
+    }
+
+
+
+    internal string GetAttribute(XmlNode concept, string attributeName) {
+      return Patcher.Patch(concept.Attributes[attributeName]?.Value, string.Empty);
+    }
+
+
+    internal T GetAttribute<T>(XmlNode concept, string attributeName) {
+      if (concept.Attributes[attributeName]?.Value == null) {
+        return default;
+      } else {
+        return (T) Convert.ChangeType(concept.Attributes[attributeName]?.Value, typeof(T));
+      }
     }
 
 
@@ -216,52 +267,6 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    internal string GetAttribute(XmlNode concept, string attributeName) {
-      return Patcher.Patch(concept.Attributes[attributeName]?.Value, string.Empty);
-    }
-
-
-    internal T GetAttribute<T>(XmlNode concept, string attributeName) {
-      if (concept.Attributes[attributeName]?.Value == null) {
-        return default;
-      } else {
-        return (T) Convert.ChangeType(concept.Attributes[attributeName]?.Value, typeof(T));
-      }
-    }
-
-
-    internal FixedList<SATBillConceptDto> GenerateConceptsList(XmlNode conceptsNode) {
-
-      var conceptosDto = new List<SATBillConceptDto>();
-
-      foreach (XmlNode concept in conceptsNode.ChildNodes) {
-
-        if (!concept.Name.Equals("cfdi:Concepto") && !concept.Name.Equals("edr:Concepto")) {
-          Assertion.EnsureFailed("The concepts node must contain only concepts.");
-        }
-
-        var conceptoDto = new SATBillConceptDto() {
-          ClaveProdServ = GetAttribute(concept, "ClaveProdServ"),
-          ClaveUnidad = GetAttribute(concept, "ClaveUnidad"),
-          Cantidad = GetAttribute<decimal>(concept, "Cantidad"),
-          Unidad = GetAttribute(concept, "Unidad"),
-          NoIdentificacion = GetAttribute(concept, "NoIdentificacion"),
-          Descripcion = GetAttribute(concept, "Descripcion"),
-          ValorUnitario = GetAttribute<decimal>(concept, "ValorUnitario"),
-          Importe = GetAttribute<decimal>(concept, "Importe"),
-          Descuento = GetAttribute<decimal>(concept, "Descuento"),
-          ObjetoImp = GetAttribute(concept, "ObjetoImp"),
-          Impuestos = GenerateTaxesByConcept(concept.ChildNodes)
-        };
-
-        conceptosDto.Add(conceptoDto);
-
-      }
-      return conceptosDto.ToFixedList();
-
-    }
-
-
     private FixedList<SATBillTaxDto> GenerateTaxesByConcept(XmlNodeList childNodes) {
 
       var taxesByConceptDto = new List<SATBillTaxDto>();
@@ -277,6 +282,24 @@ namespace Empiria.Billing.SATMexicoImporter {
         }
       }
       return taxesByConceptDto.ToFixedList();
+    }
+
+
+    private string GetFactorTypeForComplementLocalTax(BillComplementLocalTax impuesto) {
+
+      string tipoFactor = string.Empty;
+
+      if (impuesto.TasaDe > 0 && impuesto.CuotaDe == 0) {
+        tipoFactor = "Tasa";
+
+      } else if (impuesto.TasaDe == 0 && impuesto.CuotaDe > 0) {
+        tipoFactor = "Cuota";
+
+      } else {
+
+        tipoFactor = "None";
+      }
+      return tipoFactor;
     }
 
     #endregion Services
