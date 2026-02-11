@@ -88,10 +88,6 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-    public bool CanExerciseBudget {
-      get; internal set;
-    }
-
   }  // class PaymentOrderActionsDto
 
 

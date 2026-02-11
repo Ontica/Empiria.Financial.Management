@@ -113,7 +113,7 @@ namespace Empiria.Payments.Adapters {
         CanEditDocuments = paymentOrder.Rules.CanEditDocuments(),
         CanApproveBudget = paymentOrder.Rules.CanApproveBudget(),
         CanGeneratePaymentInstruction = paymentOrder.Rules.CanGeneratePaymentInstruction(),
-        CanExerciseBudget = paymentOrder.Rules.CanExerciseBudget()
+        CanExerciseBudget = false
       };
     }
 

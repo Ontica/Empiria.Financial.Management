@@ -82,15 +82,6 @@ namespace Empiria.Payments {
     }
 
 
-    internal bool CanExerciseBudget() {
-      if (_paymentOrder.Status == PaymentOrderStatus.Payed) {
-        return true;
-      }
-
-      return false;
-    }
-
-
     internal bool CanGeneratePaymentInstruction() {
 
       Budget budget = (Budget) _paymentOrder.PayableEntity.Budget;

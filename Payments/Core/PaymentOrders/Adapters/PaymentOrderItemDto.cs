@@ -25,7 +25,6 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
-
     public string PayableEntityItemUID {
       get; internal set;
     }

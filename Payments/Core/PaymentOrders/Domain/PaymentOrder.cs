@@ -17,10 +17,10 @@ using Empiria.Json;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Budgeting;
 using Empiria.Budgeting.Transactions;
 
 using Empiria.Payments.Data;
-using Empiria.Budgeting;
 
 namespace Empiria.Payments {
 
