@@ -121,8 +121,7 @@ namespace Empiria.Billing {
     #region Methods
 
     private FixedList<BillTaxItemTotal> BuildTaxItems() {
-      FixedList<BillTaxEntry> taxEntries = _bills.SelectFlat(x => x.Concepts)
-                                                 .SelectFlat(x => x.TaxEntries);
+      FixedList<BillTaxEntry> taxEntries = _bills.SelectFlat(x => x.BillTaxes);
 
       var taxTypeGroups = taxEntries.GroupBy(x => new { x.TaxType, x.TaxMethod });
 

@@ -41,10 +41,10 @@ namespace Empiria.Billing.Adapters {
 
         var field = new BillTaxEntryFields {
           TaxMethod = tax.MetodoAplicacion,
-          TaxFactorType = BillTaxFactorType.None,
+          TaxFactorType = BillTaxEntryFields.GetFactorTypeByTax(tax.TipoFactor),
           Impuesto = tax.Impuesto,
           Description = tax.ImpLocalDescripcion,
-          Factor = tax.TasaDe,
+          Factor = tax.TasaDe > tax.CuotaDe ? tax.TasaDe : tax.CuotaDe,
           Total = tax.Importe
         };
 
