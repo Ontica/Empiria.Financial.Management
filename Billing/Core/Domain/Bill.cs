@@ -215,7 +215,7 @@ namespace Empiria.Billing {
 
     public decimal Taxes {
       get {
-        return BillTaxes.Sum(x => x.Total);
+        return Math.Round(BillTaxes.Sum(x => x.Total), 2);
       }
     }
 
