@@ -215,7 +215,7 @@ namespace Empiria.Billing {
 
     public decimal Taxes {
       get {
-        return Math.Round(BillTaxes.Sum(x => x.Total), 2);
+        return BillTaxes.Sum(x => x.Total);
       }
     }
 
@@ -335,7 +335,11 @@ namespace Empiria.Billing {
 
     internal FixedList<BillTaxEntry> BillTaxes {
       get {
-        return BillTaxEntry.GetListByBill(this);
+        var taxes = BillTaxEntry.GetListByBill(this);
+        foreach (var item in taxes) {
+          item.Total = Math.Round(item.Total, 2);
+        }
+        return taxes.ToFixedList();
       }
     }
 

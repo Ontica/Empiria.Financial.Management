@@ -118,7 +118,7 @@ namespace Empiria.Billing {
 
     [DataField("BILL_TAX_TOTAL")]
     public decimal Total {
-      get; private set;
+      get; internal set;
     }
 
 
