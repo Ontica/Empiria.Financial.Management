@@ -83,20 +83,6 @@ namespace Empiria.Budgeting.Transactions.Data {
       }
     }
 
-
-    static internal void GenerateExerciseControlCodes(BudgetTransaction transaction) {
-
-      foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
-
-        var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
-
-        entry.ControlNo = relatedEntry.ControlNo;
-
-        entry.Save();
-      }
-    }
-
-
     static internal void GenerateRequestControlCodes(BudgetTransaction transaction) {
 
       foreach (var year in transaction.Entries.SelectDistinct(x => x.Year)) {

@@ -657,10 +657,6 @@ namespace Empiria.Budgeting.Transactions {
 
         BudgetTransactionDataService.GenerateApprovedPaymentControlCodes(this);
 
-      } else if (OperationType == BudgetOperationType.Exercise) {
-
-        BudgetTransactionDataService.GenerateExerciseControlCodes(this);
-
       }
     }
 
