@@ -536,7 +536,9 @@ namespace Empiria.Budgeting.Transactions {
 
 
     public void SetExerciseData(DateTime exerciseDate,
-                                BudgetTransaction paymentApproval) {
+                                BudgetTransaction paymentApproval,
+                                IIdentifiable payable) {
+
       if (OperationType != BudgetOperationType.Exercise) {
         return;
       }
@@ -544,14 +546,17 @@ namespace Empiria.Budgeting.Transactions {
       TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
 
       ApplicationDate = exerciseDate.Date;
-      RecordingDate = exerciseDate.Date;
       RequestedDate = exerciseDate.Date;
+      AuthorizationDate = exerciseDate.Date;
+      RecordingDate = exerciseDate.Date;
 
       PostedBy = Party.Parse(145);
       RecordedBy = Party.Parse(145);
       AuthorizedBy = Party.Parse(145);
       AppliedBy = Party.Parse(145);
       RequestedBy = Party.Parse(145);
+
+      this.SetPayable(payable);
 
       foreach (var entry in Entries) {
         var approvalEntry = paymentApproval.Entries.Find(x => x.RelatedEntryId == entry.RelatedEntryId);
@@ -560,6 +565,14 @@ namespace Empiria.Budgeting.Transactions {
           entry.SetControlNo(approvalEntry.ControlNo);
         }
       }
+    }
+
+
+    public void SetPayable(IIdentifiable payable) {
+      if (OperationType != BudgetOperationType.ApprovePayment && OperationType != BudgetOperationType.Exercise) {
+        return;
+      }
+      this.PayableId = payable.Id;
     }
 
 
