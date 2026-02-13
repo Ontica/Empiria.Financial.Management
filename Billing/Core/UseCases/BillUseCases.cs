@@ -96,6 +96,16 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    public void DeleteBill(string billUID) {
+
+      Bill bill = Bill.Parse(billUID);
+
+      bill.Delete();
+
+      bill.Save();
+    }
+
+
     public string ExtractCFDINo(string xmlString) {
       Assertion.Require(xmlString, nameof(xmlString));
 

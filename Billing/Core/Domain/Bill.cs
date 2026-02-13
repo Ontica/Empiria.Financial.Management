@@ -411,9 +411,22 @@ namespace Empiria.Billing {
     }
 
 
-
     public void Delete() {
+
       this.Status = BillStatus.Deleted;
+
+      foreach (var concept in Concepts) {
+        concept.Delete();
+        concept.Save();
+      }
+      foreach (var tax in BillTaxes) {
+        tax.Delete();
+        tax.Save();
+      }
+      foreach (var relatedBill in BillRelatedBills) {
+        relatedBill.Delete();
+        relatedBill.Save();
+      }
     }
 
 

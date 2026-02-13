@@ -243,6 +243,11 @@ namespace Empiria.Billing {
 
     #region Methods
 
+    internal void Delete() {
+      this.Status = EntityStatus.Deleted;
+    }
+
+
     protected override void OnSave() {
       if (IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
