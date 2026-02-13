@@ -54,7 +54,7 @@ namespace Empiria.Payments {
       RefreshPaymentInstructions();
     }
 
-    static internal PaymentOrder Parse(int id) => ParseId<PaymentOrder>(id);
+    static public PaymentOrder Parse(int id) => ParseId<PaymentOrder>(id);
 
     static public PaymentOrder Parse(string uid) => ParseKey<PaymentOrder>(uid);
 

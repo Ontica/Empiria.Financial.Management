@@ -212,7 +212,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_TXN_PAYABLE_ID")]
-    internal int PayableId {
+    public int PayableId {
       get; private set;
     }
 
