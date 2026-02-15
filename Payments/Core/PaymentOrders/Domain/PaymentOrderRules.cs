@@ -13,7 +13,7 @@ using Empiria.Budgeting;
 namespace Empiria.Payments {
 
   /// <summary>Provides services to control payment order's rules.</summary>
-  internal class PaymentOrderRules {
+  public class PaymentOrderRules {
 
     private PaymentOrder _paymentOrder;
 
@@ -22,7 +22,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal bool CanApproveBudget() {
+    public bool CanApproveBudget() {
 
       if (_paymentOrder.Status != PaymentOrderStatus.Pending) {
         return false;
@@ -48,7 +48,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal bool CanCancel() {
+    public bool CanCancel() {
 
       Budget budget = (Budget) _paymentOrder.PayableEntity.Budget;
 
@@ -77,12 +77,12 @@ namespace Empiria.Payments {
     }
 
 
-    internal bool CanEditDocuments() {
+    public bool CanEditDocuments() {
       return true;
     }
 
 
-    internal bool CanGeneratePaymentInstruction() {
+    public bool CanGeneratePaymentInstruction() {
 
       Budget budget = (Budget) _paymentOrder.PayableEntity.Budget;
 
@@ -111,7 +111,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal bool CanReset() {
+    public bool CanReset() {
       if (_paymentOrder.Status == PaymentOrderStatus.Suspended ||
           _paymentOrder.Status == PaymentOrderStatus.Programmed) {
         return true;
@@ -127,7 +127,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal bool CanSuspend() {
+    public bool CanSuspend() {
       if (_paymentOrder.Status == PaymentOrderStatus.Pending ||
           _paymentOrder.Status == PaymentOrderStatus.Programmed) {
         return true;
@@ -137,7 +137,7 @@ namespace Empiria.Payments {
     }
 
 
-    internal bool CanUpdate() {
+    public bool CanUpdate() {
       if (_paymentOrder.Status == PaymentOrderStatus.Pending ||
         _paymentOrder.Status == PaymentOrderStatus.Programmed) {
         return true;

@@ -248,7 +248,7 @@ namespace Empiria.Payments {
     } = PaymentOrderStatus.Pending;
 
 
-    internal PaymentOrderRules Rules {
+    public PaymentOrderRules Rules {
       get {
         return new PaymentOrderRules(this);
       }
