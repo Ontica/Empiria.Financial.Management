@@ -1,7 +1,7 @@
 ﻿Empiria Payments Management System - Core Module Tests. License
 ===============================================================
 
-Copyright (c) 2024-2025. La Vía Óntica SC, Ontica LLC y autores.
+Copyright (c) 2024-2026. La Vía Óntica SC, Ontica LLC y autores.
                          Todos los derechos reservados.
 -----------------------------------------------------------------------
 

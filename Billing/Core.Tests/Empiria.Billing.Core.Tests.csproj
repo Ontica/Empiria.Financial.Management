@@ -3,7 +3,7 @@
     <Company>Ontica</Company>
     <Product>Empiria Billing</Product>
     <Description>Tests suite for Empiria Billing Management core types, use cases and services.</Description>
-    <Copyright>(c) 2024-2025. La Vía Óntica SC, Ontica LLC y de los autores. Todos los derechos reservados.</Copyright>
+    <Copyright>(c) 2024-2026. La Vía Óntica SC, Ontica LLC y de los autores. Todos los derechos reservados.</Copyright>
     <Version>2.0.0</Version>
     <AssemblyVersion>2.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
@@ -72,15 +72,12 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Tests" Version="1.0.0" />
     <PackageReference Include="Empiria.Billing.Core" Version="2.0.0" />
+    <PackageReference Include="Empiria.Orders.Core" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\extensions\Tests\Empiria.Tests.csproj" />
     <ProjectReference Include="..\Core\Empiria.Billing.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\operations.management\Procurement\Core\Empiria.Procurement.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\..\operations.management\Orders\Core\Empiria.Orders.Core.csproj" />
     <None Update="empiria.config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
