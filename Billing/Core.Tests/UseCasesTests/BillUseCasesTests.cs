@@ -37,6 +37,24 @@ namespace Empiria.Tests.Billing {
 
 
     //[Fact]
+    //public void Create_Credit_Note_Test() {
+
+    //  TestsCommonMethods.Authenticate();
+
+    //  using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+    //    string xmlFilePath = TestingConstants.XML_CREDIT_NOTE_FILE_PATH;
+
+    //    var xmlText = System.IO.File.ReadAllText(xmlFilePath);
+
+    //    BillDto sut = usecases.CreateBillTest(xmlText);
+
+    //    Assert.NotNull(sut);
+    //  }
+    //}
+
+
+    //[Fact]
     //public void Create_Fuel_Consumption_Bill_Test() {
 
     //  TestsCommonMethods.Authenticate();
@@ -73,11 +91,25 @@ namespace Empiria.Tests.Billing {
 
 
     [Fact]
+    public void Delete_Bill_Test() {
+
+      TestsCommonMethods.Authenticate();
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+        usecases.DeleteBill("12972994-0808-4240-b4b3-dbf33c403d4f");
+
+        Assert.True(true);
+      }
+    }
+
+
+    [Fact]
     public void Get_Bill_By_UID_Test() {
 
       TestsCommonMethods.Authenticate();
 
-      string billUID = "cd7224f2-9ee7-44dd-aaae-55b775eca289";
+      string billUID = "ce112a39-d1c6-4eea-a5b7-314377a900a0";
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 

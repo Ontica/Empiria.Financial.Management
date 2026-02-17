@@ -335,11 +335,7 @@ namespace Empiria.Billing {
 
     internal FixedList<BillTaxEntry> BillTaxes {
       get {
-        var taxes = BillTaxEntry.GetListByBill(this);
-        foreach (var item in taxes) {
-          item.Total = Math.Round(item.Total, 2);
-        }
-        return taxes.ToFixedList();
+        return BillTaxEntry.GetListByBill(this);
       }
     }
 
