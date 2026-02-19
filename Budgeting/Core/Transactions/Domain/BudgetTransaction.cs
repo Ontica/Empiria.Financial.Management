@@ -371,6 +371,17 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Methods
 
+    internal BudgetEntry AddEntry(BudgetEntry newEntry) {
+      Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
+      Assertion.Require(newEntry, nameof(newEntry));
+      Assertion.Require(newEntry.Transaction.Equals(this), "BudgetTransaction mismatch.");
+
+      _entries.Value.Add(newEntry);
+
+      return newEntry;
+    }
+
+
     public BudgetEntry AddEntry(BudgetEntryFields entryFields) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
 
@@ -428,12 +439,15 @@ namespace Empiria.Budgeting.Transactions {
 
 
     public void Close() {
-      Assertion.Require(Rules.CanClose, "Current user can not close this transaction.");
+      if (OperationType != BudgetOperationType.Exercise) {
 
-      AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        Assertion.Require(Rules.CanClose, "Current user can not close this transaction.");
 
-      if (ApplicationDate == ExecutionServer.DateMaxValue) {
-        ApplicationDate = DateTime.Now;
+        AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+        if (ApplicationDate == ExecutionServer.DateMaxValue) {
+          ApplicationDate = DateTime.Now;
+        }
       }
 
       Status = TransactionStatus.Closed;
@@ -485,7 +499,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     protected override void OnSave() {
-      if (IsNew) {
+      if (IsNew && Status == TransactionStatus.Pending) {
         TransactionNo = TO_ASSIGN_TRANSACTION_NO;
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         RecordingDate = DateTime.Now;
@@ -545,43 +559,37 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    public void SetExerciseData(DateTime exerciseDate,
-                                BudgetTransaction paymentApproval,
-                                IIdentifiable payable) {
+    public void SetExerciseData(IIdentifiable payable, Party applicationParty) {
 
       if (OperationType != BudgetOperationType.Exercise) {
         return;
       }
 
-      TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
+      if (!HasTransactionNo) {
+        TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
+      }
 
-      ApplicationDate = exerciseDate.Date;
-      RequestedDate = exerciseDate.Date;
-      AuthorizationDate = exerciseDate.Date;
-      RecordingDate = exerciseDate.Date;
+      PostingTime = DateTime.Now;
+      RequestedDate = ApplicationDate;
+      AuthorizationDate = ApplicationDate;
+      RecordingDate = ApplicationDate;
 
-      PostedBy = Party.Parse(145);
-      RecordedBy = Party.Parse(145);
-      AuthorizedBy = Party.Parse(145);
-      AppliedBy = Party.Parse(145);
-      RequestedBy = Party.Parse(145);
+      PostedBy = applicationParty;
+      RecordedBy = applicationParty;
+      AuthorizedBy = applicationParty;
+      AppliedBy = applicationParty;
+      RequestedBy = applicationParty;
 
       SetPayable(payable);
-
-      foreach (var entry in Entries) {
-        var approvalEntry = paymentApproval.Entries.Find(x => x.RelatedEntryId == entry.RelatedEntryId);
-
-        if (approvalEntry != null) {
-          entry.SetControlNo(approvalEntry.ControlNo);
-        }
-      }
     }
 
 
     public void SetPayable(IIdentifiable payable) {
-      if (OperationType != BudgetOperationType.ApprovePayment && OperationType != BudgetOperationType.Exercise) {
+      if (OperationType != BudgetOperationType.ApprovePayment &&
+          OperationType != BudgetOperationType.Exercise) {
         return;
       }
+
       PayableId = payable.Id;
     }
 
