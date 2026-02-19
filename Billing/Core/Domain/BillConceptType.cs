@@ -36,6 +36,8 @@ namespace Empiria.Billing {
 
     static public BillConceptType GasStation => Parse("ObjectTypeInfo.BillConcept.GasStation");
 
+    //static public BillConceptType AddendaBono => Parse("ObjectTypeInfo.BillConcept.Addenda.Descuento");
+
     static public FixedList<BillConceptType> GetList() {
       return Default.GetAllSubclasses()
                     .Select(x => (BillConceptType) x)

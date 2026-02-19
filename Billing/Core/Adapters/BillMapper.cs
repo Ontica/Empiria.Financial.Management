@@ -144,8 +144,10 @@ namespace Empiria.Billing.Adapters {
 
 
     static private BillConceptDto MapToBillConceptsDto(BillConcept billConcept) {
+      
       return new BillConceptDto {
         UID = billConcept.UID,
+        TypeName = billConcept.BillConceptType.DisplayName,
         Product = billConcept.Product.MapToNamedEntity(),
         Description = billConcept.Description,
         Quantity = billConcept.Quantity,

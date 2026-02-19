@@ -157,6 +157,10 @@ namespace Empiria.Billing.Adapters {
       get; internal set;
     }
 
+    public string TypeName {
+      get; internal set;
+    }
+
     public string Description {
       get; internal set;
     }
@@ -188,7 +192,7 @@ namespace Empiria.Billing.Adapters {
     public FixedList<BillTaxEntryDto> TaxEntries {
       get; internal set;
     }
-
+    
   } // class BillConceptDto
 
 
