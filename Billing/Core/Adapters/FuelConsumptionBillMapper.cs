@@ -81,8 +81,9 @@ namespace Empiria.Billing.Adapters {
         IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
         IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
         CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
-        Subtotal = dto.DatosGenerales.SubTotal,
-        Total = dto.DatosGenerales.Total,
+        Subtotal = dto.DatosComplemento.SubTotal,
+        //Discount = dto.DatosGenerales.Descuento,
+        Total = dto.DatosComplemento.Total,
         Concepts = MapToFuelConsumptionConceptFields(dto.Conceptos),
         SchemaData = MapToFuelConsumptionSchemaData(dto),
         SecurityData = MapToFuelConsumptionSecurityData(dto),
@@ -125,6 +126,8 @@ namespace Empiria.Billing.Adapters {
           Quantity = concepto.Cantidad,
           UnitPrice = concepto.ValorUnitario,
           Subtotal = concepto.Importe,
+          Discount = concepto.Descuento,
+          IsBonusDiscount = concepto.IsBonusDiscount,
           TaxEntries = MapToTaxFields(concepto.Impuestos)
         };
         fields.Add(field);
@@ -147,9 +150,9 @@ namespace Empiria.Billing.Adapters {
         Exportacion = dto.DatosGenerales.Exportacion,
         LugarExpedicion = dto.DatosGenerales.LugarExpedicion,
         Moneda = dto.DatosGenerales.Moneda,
-        Subtotal = dto.DatosGenerales.SubTotal,
-        Descuento = dto.DatosGenerales.Descuento,
-        Total = dto.DatosGenerales.Total,
+        Subtotal = dto.DatosComplemento.SubTotal,
+        //Descuento = dto.DatosGenerales.Descuento,
+        Total = dto.DatosComplemento.Total,
         TipoCambio = dto.DatosGenerales.TipoCambio,
         TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
       };

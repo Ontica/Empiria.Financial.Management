@@ -239,7 +239,7 @@ namespace Empiria.Billing {
       return _schemaData.ToString();
     }
 
-    internal void Update(BillSchemaDataFields schemaData) {
+    internal void Update(BillSchemaDataFields schemaData, bool isFuelConsumptionBill= false) {
       Assertion.Require(schemaData, nameof(schemaData));
 
       Version = schemaData.SchemaVersion;
@@ -259,7 +259,7 @@ namespace Empiria.Billing {
       LugarExpedicion = schemaData.LugarExpedicion;
       Moneda = schemaData.Moneda;
       SubTotal = schemaData.Subtotal;
-      Descuento = schemaData.Descuento;
+      Descuento = isFuelConsumptionBill ? 0M : schemaData.Descuento;
       Total = schemaData.Total;
       TipoComprobante = schemaData.TipoComprobante;
     }

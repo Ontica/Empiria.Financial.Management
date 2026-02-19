@@ -476,13 +476,13 @@ namespace Empiria.Billing {
       IssuedTo = Patcher.Patch(fields.IssuedToUID, IssuedTo);
       _tags = EmpiriaString.Tagging(fields.Tags);
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
-      Subtotal = fields.Subtotal;
-      Discount = fields.Discount;
-      Total = fields.Total;
+      Subtotal = fields.ComplementData.SubTotal;
+      //Discount = fields.Discount;
+      Total = fields.ComplementData.Total;
 
-      SchemaData.Update(fields.SchemaData);
+      SchemaData.Update(fields.SchemaData, true);
       SecurityData.Update(fields.SecurityData);
-      BillExtData.UpdateFuelConsumptionComplementData(fields.ComplementData, fields.Addenda.Labels);
+      BillExtData.UpdateFuelConsumptionComplementData(fields);
     }
 
 

@@ -308,22 +308,20 @@ namespace Empiria.Billing {
     }
 
 
-    internal void UpdateFuelConsumptionComplementData(FuelConsumptionComplementDataFields complementDataFields,
-                                                      FixedList<string> addendaLabels) {
-      Assertion.Require(complementDataFields, nameof(complementDataFields));
-      Assertion.Require(addendaLabels, nameof(addendaLabels));
-
+    internal void UpdateFuelConsumptionComplementData(FuelConsumptionBillFields fields) {
+      Assertion.Require(fields, nameof(fields));
+      
       string addendaLeyendas = string.Empty;
-      foreach (var addendaLabel in addendaLabels) {
 
+      foreach (var addendaLabel in fields.Addenda.Labels) {
         addendaLeyendas += $"{addendaLabel}.. ";
       }
 
-      ComplementVersion = complementDataFields.Version;
-      TipoOperacion = complementDataFields.TipoOperacion;
-      NumeroDeCuenta = complementDataFields.NumeroDeCuenta;
-      SubTotal = complementDataFields.SubTotal;
-      Total = complementDataFields.Total;
+      ComplementVersion = fields.ComplementData.Version;
+      TipoOperacion = fields.ComplementData.TipoOperacion;
+      NumeroDeCuenta = fields.ComplementData.NumeroDeCuenta;
+      SubTotal = fields.ComplementData.SubTotal;
+      Total = fields.ComplementData.Total;
       AddendaLeyendas = addendaLeyendas;
     }
 

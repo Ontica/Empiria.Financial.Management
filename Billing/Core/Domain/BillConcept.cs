@@ -35,9 +35,12 @@ namespace Empiria.Billing {
       // no-op
     }
 
-    public BillConcept(BillConceptType billConceptType, Bill bill, BillConceptFields fields) : base(billConceptType) {
+    public BillConcept(BillConceptType billConceptType, Bill bill,
+                       BillConceptFields fields) : base(billConceptType) {
+
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
+      Assertion.Require(fields, nameof(fields));
 
       fields.EnsureIsValid();
 
@@ -58,7 +61,9 @@ namespace Empiria.Billing {
     }
 
 
-    public BillConcept(BillConceptType billConceptType, Bill bill, FuelConsumptionComplementConceptDataFields fields) {
+    public BillConcept(BillConceptType billConceptType, Bill bill, 
+                       FuelConsumptionComplementConceptDataFields fields) : base(billConceptType) {
+
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
       Assertion.Require(fields, nameof(fields));
