@@ -395,9 +395,9 @@ namespace Empiria.Budgeting.Transactions {
 
       GenerateControlCodes();
 
-      this.AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      this.AuthorizationDate = DateTime.Now;
-      this.Status = TransactionStatus.Authorized;
+      AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      AuthorizationDate = DateTime.Now;
+      Status = TransactionStatus.Authorized;
     }
 
 
@@ -430,25 +430,30 @@ namespace Empiria.Budgeting.Transactions {
     public void Close() {
       Assertion.Require(Rules.CanClose, "Current user can not close this transaction.");
 
-      this.AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
       if (ApplicationDate == ExecutionServer.DateMaxValue) {
         ApplicationDate = DateTime.Now;
       }
-      this.Status = TransactionStatus.Closed;
+
+      Status = TransactionStatus.Closed;
+
+      Entries.ToList()
+             .ForEach(x => x.Close());
     }
 
 
     internal void DeleteOrCancel() {
       Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this transaction.");
 
-      Assertion.Require(this.Status == TransactionStatus.Pending,
+      Assertion.Require(Status == TransactionStatus.Pending,
                        $"Can not delete or cancel budget transaction. Its status is {Status.GetName()}.");
 
       if (HasTransactionNo) {
-        this.Status = TransactionStatus.Canceled;
+        Status = TransactionStatus.Canceled;
       } else {
-        this.TransactionNo = "Eliminada";
-        this.Status = TransactionStatus.Deleted;
+        TransactionNo = "Eliminada";
+        Status = TransactionStatus.Deleted;
       }
 
       Entries.ToList()
@@ -529,9 +534,14 @@ namespace Empiria.Budgeting.Transactions {
         TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
       }
 
-      this.RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      this.RequestedDate = DateTime.Now;
-      this.Status = TransactionStatus.OnAuthorization;
+      RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      RequestedDate = DateTime.Now;
+      Status = TransactionStatus.OnAuthorization;
+
+      if (OperationType == BudgetOperationType.Request) {
+        Entries.ToList()
+               .ForEach(x => x.Close());
+      }
     }
 
 
@@ -556,7 +566,7 @@ namespace Empiria.Budgeting.Transactions {
       AppliedBy = Party.Parse(145);
       RequestedBy = Party.Parse(145);
 
-      this.SetPayable(payable);
+      SetPayable(payable);
 
       foreach (var entry in Entries) {
         var approvalEntry = paymentApproval.Entries.Find(x => x.RelatedEntryId == entry.RelatedEntryId);
@@ -572,7 +582,7 @@ namespace Empiria.Budgeting.Transactions {
       if (OperationType != BudgetOperationType.ApprovePayment && OperationType != BudgetOperationType.Exercise) {
         return;
       }
-      this.PayableId = payable.Id;
+      PayableId = payable.Id;
     }
 
 

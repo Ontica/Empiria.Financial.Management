@@ -99,7 +99,7 @@ namespace Empiria.Payments.UseCases {
     }
 
 
-    internal PaymentOrderHolderDto ResetPaymentOrder(string paymentOrderUID) {
+    public PaymentOrderHolderDto ResetPaymentOrder(string paymentOrderUID) {
       Assertion.Require(paymentOrderUID, nameof(paymentOrderUID));
 
       var order = PaymentOrder.Parse(paymentOrderUID);

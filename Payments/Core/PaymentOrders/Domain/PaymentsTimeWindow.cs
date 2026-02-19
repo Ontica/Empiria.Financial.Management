@@ -14,7 +14,7 @@ using Empiria.Json;
 
 namespace Empiria.Payments {
 
-  internal class PaymentsTimeWindow {
+  public class PaymentsTimeWindow {
 
     private readonly StoredJson _storedJson;
 
@@ -30,7 +30,7 @@ namespace Empiria.Payments {
     }
 
 
-    static internal PaymentsTimeWindow Instance {
+    static public PaymentsTimeWindow Instance {
       get {
         lock (_locker) {
           if (_singleton != null) {
@@ -119,6 +119,7 @@ namespace Empiria.Payments {
         }
       }
     }
+
 
     private DateTime LastUpdate {
       get {

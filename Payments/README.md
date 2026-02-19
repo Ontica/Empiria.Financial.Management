@@ -29,10 +29,6 @@ El *backend* del **Sistema de pagos a proveedores** se conforma de los siguiente
 1.  **Core**  
     Casos de uso, servicios, tipos y clases de propósito general que conforman el núcleo del *backend*.  
 
-2. **Web API**  
-    Capa de servicios web HTTP/Json para interactuar con todos los módulos que conforman el *backend* del sistema.  
-
-
 ## Licencia
 
 Este producto y sus partes se distribuyen mediante una licencia GNU AFFERO
@@ -55,5 +51,5 @@ e internacionales de derechos de autor.
 
 ## Copyright
 
-Copyright © 2024-2025. La Vía Óntica SC, Ontica LLC y autores.
+Copyright © 2024-2026. La Vía Óntica SC, Ontica LLC y autores.
 Todos los derechos reservados.

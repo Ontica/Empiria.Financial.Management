@@ -315,6 +315,13 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Methods
 
+    internal void Close() {
+      Status = TransactionStatus.Closed;
+
+      MarkAsDirty();
+    }
+
+
     internal void Delete() {
       Status = TransactionStatus.Deleted;
 
