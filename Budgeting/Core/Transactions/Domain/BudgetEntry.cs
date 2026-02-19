@@ -315,6 +315,41 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Methods
 
+    internal BudgetEntry CloneFor(BudgetTransaction transaction, DateTime date,
+                                  BalanceColumn balanceColumn, bool withdrawal) {
+      var budgetEntry = new BudgetEntry(transaction, date.Year, date.Month) {
+        BudgetAccount = this.BudgetAccount,
+        BudgetProgram = this.BudgetProgram,
+        Product = this.Product,
+        ProductCode = this.ProductCode,
+        ProductName = this.ProductName,
+        ProductUnit = this.ProductUnit,
+        ProductQty = this.ProductQty,
+        OriginCountry = this.OriginCountry,
+        Project = this.Project,
+        Party = this.Party,
+        EntityTypeId = this.EntityTypeId,
+        EntityId = this.EntityId,
+        OperationNo = this.OperationNo,
+        Day = date.Day,
+        BalanceColumn = balanceColumn,
+        Currency = this.Currency,
+        ExchangeRate = this.ExchangeRate,
+        CurrencyAmount = this.CurrencyAmount,
+        Withdrawal = withdrawal ? this.Amount : 0m,
+        Deposit = !withdrawal ? this.Amount : 0m,
+        Description = this.Description,
+        Justification = this.Justification,
+        Identificators = this.Identificators,
+        Tags = this.Tags,
+        ControlNo = this.ControlNo,
+        RelatedEntryId = this.RelatedEntryId
+      };
+
+      return budgetEntry;
+    }
+
+
     internal void Close() {
       Status = TransactionStatus.Closed;
 
@@ -391,8 +426,10 @@ namespace Empiria.Budgeting.Transactions {
       if (fields.RelatedEntryUID.Length != 0) {
         RelatedEntryId = Parse(fields.RelatedEntryUID).Id;
       }
+
       MarkAsDirty();
     }
+
 
     #endregion Methods
 
