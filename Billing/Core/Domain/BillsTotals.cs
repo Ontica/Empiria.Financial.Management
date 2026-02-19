@@ -57,14 +57,16 @@ namespace Empiria.Billing {
         TaxName = $"{taxType.Name} Retenido";
       }
 
-      BaseAmount = Math.Round(billTaxEntries.Sum(x => x.BaseAmount), 2);
+      BaseAmount = Math.Round(billTaxEntries.Sum(x => x.BaseAmount), 2, MidpointRounding.AwayFromZero);
 
       var taxes = Math.Round(billTaxEntries.FindAll(x => !x.Bill.BillType.IsCreditNote)
-                                .Sum(x => x.TaxMethod == BillTaxMethod.Retencion ? -1 * x.Total : x.Total),2);
+                              .Sum(x => x.TaxMethod == BillTaxMethod.Retencion ? -1 * x.Total : x.Total),
+                             2, MidpointRounding.AwayFromZero);
 
       var creditNoteTaxes = Math.Round(billTaxEntries.ToFixedList()
-                                          .FindAll(x => x.Bill.BillType.IsCreditNote)
-                                          .Sum(x => x.TaxMethod == BillTaxMethod.Retencion ? x.Total : -1 * x.Total),2);
+                                        .FindAll(x => x.Bill.BillType.IsCreditNote)
+                                        .Sum(x => x.TaxMethod == BillTaxMethod.Retencion ? x.Total : -1 * x.Total)
+                                       ,2, MidpointRounding.AwayFromZero);
 
       Total = taxes + creditNoteTaxes;
     }
