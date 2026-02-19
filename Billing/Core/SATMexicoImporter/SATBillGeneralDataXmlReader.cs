@@ -224,7 +224,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       string tipoFactor = GetAttribute(taxItem, "TipoFactor") == string.Empty ? "None" :
                           GetAttribute(taxItem, "TipoFactor");
-
+      
       return new SATBillTaxDto {
         Base = GetAttribute<decimal>(taxItem, "Base"),
         Impuesto = GetAttribute(taxItem, "Impuesto"),

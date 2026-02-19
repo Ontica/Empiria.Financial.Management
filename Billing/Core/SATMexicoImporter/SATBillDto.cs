@@ -119,6 +119,11 @@ namespace Empiria.Billing.SATMexicoImporter {
       get; internal set;
     } = new FixedList<SATBillTaxDto>();
 
+
+    public bool IsBonusDiscount {
+      get; internal set;
+    }
+
   }  // class SATBillConceptDto
 
 

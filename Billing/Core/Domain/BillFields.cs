@@ -309,10 +309,15 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public bool IsBonusDiscount {
+      get; internal set;
+    }
+
+
     public FixedList<BillTaxEntryFields> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntryFields>();
-
+    
 
     internal void EnsureIsValid() {
       // ToDo

@@ -85,6 +85,8 @@ namespace Empiria.Billing.SATMexicoImporter {
 
           _satBillDto.Addenda.AddendaConceptos = generalDataReader.GenerateConceptsList(node);
 
+          FilterAddendaBonusConcepts();
+
         } else if (node.Name.Equals("edr:LeyendasOtros")) {
 
           _satBillDto.Addenda.AddendaLeyendas = GetAddendaLabels(node);
@@ -93,7 +95,25 @@ namespace Empiria.Billing.SATMexicoImporter {
       }
     }
 
-    
+    private void FilterAddendaBonusConcepts() {
+
+      var checkConcepts = new List<SATBillConceptDto>(_satBillDto.Addenda.AddendaConceptos);
+
+      foreach (var concept in checkConcepts) {
+
+        if (!(concept.Descripcion.ToLower().StartsWith("bonif.") ||
+              concept.Descripcion.ToLower().StartsWith("bonificacion") ||
+              concept.Descripcion.ToLower().StartsWith("desc.") ||
+              concept.Descripcion.ToLower().StartsWith("descuento") ||
+              concept.Descripcion.ToLower().StartsWith("rebaja"))) {
+
+          _satBillDto.Addenda.AddendaConceptos.Remove(concept);
+        } else {
+          concept.IsBonusDiscount = true;
+        }
+      }
+    }
+
     private void GenerateComplementData(XmlNode complementNode) {
 
       foreach (XmlNode complementChild in complementNode.ChildNodes) {
@@ -198,7 +218,13 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode taxType in taxesNode.ChildNodes) {
 
-        taxesData.Add(generalDataReader.GetTaxItem(taxType));
+        var tax = generalDataReader.GetTaxItem(taxType);
+        
+        if ((taxType.Name == "ecc12:Traslado" || taxType.Name == "ecc12:Retencion") &&
+            tax.TipoFactor == "None") {
+          tax.TipoFactor = "Tasa";
+        }
+        taxesData.Add(tax);
       }
 
       return taxesData.ToFixedList();

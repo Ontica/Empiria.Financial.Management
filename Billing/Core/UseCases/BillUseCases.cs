@@ -238,9 +238,9 @@ namespace Empiria.Billing.UseCases {
         bill.AddComplementConcepts(fieldsConcept);
       }
 
-      foreach (var fieldsConcept in fields.Addenda.Concepts) {
-        bill.AddConcept(BillConceptType.Addenda, fieldsConcept);
-      }
+      //foreach (var fieldsConcept in fields.Addenda.Concepts) {
+      //  bill.AddConcept(BillConceptType.Addenda, fieldsConcept);
+      //}
 
       return bill;
     }
