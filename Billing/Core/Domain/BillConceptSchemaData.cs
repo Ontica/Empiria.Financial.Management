@@ -129,6 +129,16 @@ namespace Empiria.Billing {
     }
 
 
+    public bool IsBonusConcept {
+      get {
+        return _conceptSchemaData.Get<bool>("isBonusConcept", false);
+      }
+      private set {
+        _conceptSchemaData.SetIfValue("isBonusConcept", value);
+      }
+    }
+
+
     internal string ToJsonString() {
       return _conceptSchemaData.ToString();
     }
@@ -147,6 +157,9 @@ namespace Empiria.Billing {
       Descuento = fields.Discount;
       NoIdentificacion = fields.IdentificationNo;
       ObjetoImp = fields.ObjectImp;
+      if (fields.IsBonusConcept) {
+        IsBonusConcept = true;
+      }
     }
 
 

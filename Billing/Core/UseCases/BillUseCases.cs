@@ -16,6 +16,7 @@ using Empiria.Billing.SATMexicoImporter;
 
 using Empiria.Billing.Adapters;
 using Empiria.Billing.Data;
+using System.Collections.Generic;
 
 namespace Empiria.Billing.UseCases {
 
@@ -121,7 +122,6 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(billUID, nameof(billUID));
 
       Bill bill = Bill.Parse(billUID);
-
       return BillMapper.Map(bill);
     }
 
@@ -238,9 +238,9 @@ namespace Empiria.Billing.UseCases {
         bill.AddComplementConcepts(fieldsConcept);
       }
 
-      //foreach (var fieldsConcept in fields.Addenda.Concepts) {
-      //  bill.AddConcept(BillConceptType.Addenda, fieldsConcept);
-      //}
+      foreach (var fieldsConcept in fields.Addenda.Concepts) {
+        bill.AddConcept(BillConceptType.Addenda, fieldsConcept);
+      }
 
       return bill;
     }

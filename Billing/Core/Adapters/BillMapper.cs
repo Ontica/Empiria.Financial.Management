@@ -57,8 +57,6 @@ namespace Empiria.Billing.Adapters {
 
       var files = DocumentServices.GetAllEntityDocuments(bill);
 
-      var concepts = bill.Concepts;
-
       return new BillDto {
         UID = bill.UID,
         BillNo = bill.BillNo,

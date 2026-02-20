@@ -127,7 +127,7 @@ namespace Empiria.Billing.Adapters {
           UnitPrice = concepto.ValorUnitario,
           Subtotal = concepto.Importe,
           Discount = concepto.Descuento,
-          IsBonusDiscount = concepto.IsBonusDiscount,
+          IsBonusConcept = concepto.IsBonusConcept,
           TaxEntries = MapToTaxFields(concepto.Impuestos)
         };
         fields.Add(field);
@@ -214,7 +214,8 @@ namespace Empiria.Billing.Adapters {
           Factor = tax.TasaOCuota,
           BaseAmount = tax.Base,
           Impuesto = tax.Impuesto,
-          Total = tax.Importe
+          Total = tax.Importe,
+          IsBonusTax = tax.IsBonusTax
         };
 
         fields.Add(field);

@@ -32,7 +32,9 @@ namespace Empiria.Billing {
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
       Assertion.Require(billTaxRelatedObjectId, nameof(billTaxRelatedObjectId));
-
+      if (fields.IsBonusTax) {
+        string x = string.Empty;
+      }
       Bill = bill;
       BillTaxRelatedObjectTypeId = Bill.BillType.Id;
       BillTaxRelatedObjectId = billTaxRelatedObjectId;
@@ -42,7 +44,7 @@ namespace Empiria.Billing {
       TaxFactorType = fields.TaxFactorType;
       Factor = fields.Factor;
       BaseAmount = fields.BaseAmount;
-      Total = fields.Total;
+      Total = fields.IsBonusTax ? fields.Total * -1 : fields.Total;
       BillTaxExtData.Update(fields);
     }
 

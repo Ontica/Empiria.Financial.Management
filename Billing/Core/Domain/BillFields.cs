@@ -309,7 +309,7 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
-    public bool IsBonusDiscount {
+    public bool IsBonusConcept {
       get; internal set;
     }
 
@@ -373,6 +373,10 @@ namespace Empiria.Billing {
       get; set;
     }
 
+
+    public bool IsBonusTax {
+      get; set;
+    }
 
     static public BillTaxFactorType GetFactorTypeByTax(string tipoFactor) {
 

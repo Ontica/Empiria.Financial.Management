@@ -120,7 +120,7 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = new FixedList<SATBillTaxDto>();
 
 
-    public bool IsBonusDiscount {
+    public bool IsBonusConcept {
       get; internal set;
     }
 
@@ -297,6 +297,11 @@ namespace Empiria.Billing.SATMexicoImporter {
 
 
     public decimal Importe {
+      get; internal set;
+    }
+    
+    
+    public bool IsBonusTax {
       get; internal set;
     }
 

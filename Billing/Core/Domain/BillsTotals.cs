@@ -126,14 +126,17 @@ namespace Empiria.Billing {
     public decimal Subtotal {
       get {
         return _bills.Sum(x => x.BillType.IsCreditNote ?
-                               -1 * x.Subtotal : x.Subtotal);
+                               -1 * x.Subtotal : x.Subtotal) +
+               _bills.SelectFlat(x => x.Concepts.Where(a => a.SchemaData.IsBonusConcept))
+                     .ToFixedList().Sum(x => x.Subtotal);
       }
     }
 
 
     public decimal Discounts {
       get {
-        return _bills.SelectFlat(x => x.Concepts)
+        return _bills.FindAll(x=>x.BillCategory.Name != "Factura de consumo de combustible")
+                     .SelectFlat(x => x.Concepts)
                      .ToFixedList().Sum(x => x.Bill.BillType.IsCreditNote ? -1 * x.Discount : x.Discount);
       }
     }

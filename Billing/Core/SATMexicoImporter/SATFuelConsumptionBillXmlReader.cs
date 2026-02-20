@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 
 namespace Empiria.Billing.SATMexicoImporter {
@@ -101,17 +102,30 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (var concept in checkConcepts) {
 
-        if (!(concept.Descripcion.ToLower().StartsWith("bonif.") ||
-              concept.Descripcion.ToLower().StartsWith("bonificacion") ||
-              concept.Descripcion.ToLower().StartsWith("desc.") ||
-              concept.Descripcion.ToLower().StartsWith("descuento") ||
-              concept.Descripcion.ToLower().StartsWith("rebaja"))) {
+        if (ValuateIfIsBonusConcept(concept) &&
+            (concept.ValorUnitario == concept.Importe) &&
+            concept.Cantidad == 1.00M) {
+
+          concept.IsBonusConcept = true;
+          concept.Impuestos.ToList().ForEach(x => x.IsBonusTax = true);
+        } else {
 
           _satBillDto.Addenda.AddendaConceptos.Remove(concept);
-        } else {
-          concept.IsBonusDiscount = true;
         }
       }
+    }
+
+
+    private bool ValuateIfIsBonusConcept(SATBillConceptDto concept) {
+      if ((concept.Descripcion.ToLower().StartsWith("bonif.") ||
+          concept.Descripcion.ToLower().StartsWith("bonificacion") ||
+          concept.Descripcion.ToLower().StartsWith("desc.") ||
+          concept.Descripcion.ToLower().StartsWith("descuento") ||
+          concept.Descripcion.ToLower().StartsWith("rebaja"))) {
+        
+        return true;
+      }
+      return false;
     }
 
     private void GenerateComplementData(XmlNode complementNode) {
@@ -219,7 +233,7 @@ namespace Empiria.Billing.SATMexicoImporter {
       foreach (XmlNode taxType in taxesNode.ChildNodes) {
 
         var tax = generalDataReader.GetTaxItem(taxType);
-        
+
         if ((taxType.Name == "ecc12:Traslado" || taxType.Name == "ecc12:Retencion") &&
             tax.TipoFactor == "None") {
           tax.TipoFactor = "Tasa";

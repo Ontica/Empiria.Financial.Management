@@ -54,7 +54,7 @@ namespace Empiria.Billing {
       Quantity = fields.Quantity;
       QuantityUnit = Product.BaseUnit;
       UnitPrice = fields.UnitPrice;
-      Subtotal = fields.Subtotal;
+      Subtotal = fields.IsBonusConcept ? fields.Subtotal * -1 : fields.Subtotal;
       Discount = fields.Discount;
 
       SchemaData.Update(fields);

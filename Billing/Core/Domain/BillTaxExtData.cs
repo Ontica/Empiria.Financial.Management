@@ -94,6 +94,14 @@ namespace Empiria.Billing {
       }
     }
 
+    public bool IsBonusTax {
+      get {
+        return _extData.Get<bool>("isBonusTax", false);
+      }
+      private set {
+        _extData.SetIfValue("isBonusTax", value);
+      }
+    }
 
     internal string ToJsonString() {
       return _extData.ToString();
@@ -109,6 +117,9 @@ namespace Empiria.Billing {
       Base = fields.BaseAmount;
       Impuesto = fields.Impuesto;
       Importe = fields.Total;
+      if (fields.IsBonusTax) {
+        IsBonusTax = fields.IsBonusTax;
+      }
     }
   } // class BillTaxExtData
 }
