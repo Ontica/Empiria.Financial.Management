@@ -100,6 +100,17 @@ namespace Empiria.Financial.Data {
       return DataReader.GetFixedList<StandardAccount>(op);
     }
 
+
+    static internal void SetStatus(StandardAccount stdAccount) {
+      var sql = "UPDATE FMS_STD_ACCOUNTS " +
+               $"SET STD_ACCT_STATUS = '{(char) stdAccount.Status}' " +
+               $"WHERE STD_ACCT_ID = {stdAccount.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
+
   }  // class StandardAccountDataService
 
 }  // namespace Empiria.Financial.Data

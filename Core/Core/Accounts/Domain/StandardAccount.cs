@@ -16,6 +16,7 @@ using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Financial.Data;
 using Empiria.Financial.Concepts;
 
 namespace Empiria.Financial {
@@ -221,6 +222,15 @@ namespace Empiria.Financial {
 
     #region Methods
 
+    internal void Activate() {
+      Assertion.Require(this.Status == EntityStatus.Suspended, "La cuenta estándar ya se encuentra activa.");
+
+      this.Status = EntityStatus.Active;
+
+      StandardAccountDataService.SetStatus(this);
+    }
+
+
     private List<StandardAccount> _allChildren = null;
     public FixedList<StandardAccount> GetAllChildren() {
       if (_allChildren != null) {
@@ -272,6 +282,15 @@ namespace Empiria.Financial {
         .FindAll(x => ids.Contains(x.StandardAccount.Id) && !x.IsOperationAccount)
         .Sort((x, y) => $"{x.AccountNo.PadRight(32)}|{x.OrganizationalUnit.Code.PadRight(32)}|{x.Project.ProjectNo.PadRight(32)}"
              .CompareTo($"{y.AccountNo.PadRight(32)}|{y.OrganizationalUnit.Code.PadRight(32)}|{y.Project.ProjectNo.PadRight(32)}"));
+    }
+
+
+    internal void Suspend() {
+      Assertion.Require(this.Status == EntityStatus.Active, "La cuenta estándar ya se encuentra suspendida.");
+
+      this.Status = EntityStatus.Suspended;
+
+      StandardAccountDataService.SetStatus(this);
     }
 
     #endregion Methods

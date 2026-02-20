@@ -52,7 +52,21 @@ namespace Empiria.Financial.WebApi {
     }
 
 
-    #region Query web apis
+    #region Web apis
+
+    [HttpPost]
+    [Route("v3/charts-of-accounts/{chartOfAccountsUID:guid}/standard-accounts/{stdAccountUID:guid}/activate")]
+    public SingleObjectModel ActivateStandardAccount([FromUri] string chartOfAccountsUID,
+                                                     [FromUri] string stdAccountUID) {
+
+      using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
+
+        StandardAccountHolder stdAccount = usecases.ActivateStandardAccount(chartOfAccountsUID, stdAccountUID);
+
+        return new SingleObjectModel(base.Request, stdAccount);
+      }
+    }
+
 
     [HttpGet]
     [Route("v3/charts-of-accounts")]
@@ -124,7 +138,21 @@ namespace Empiria.Financial.WebApi {
       }
     }
 
-    #endregion Query web apis
+
+    [HttpPost]
+    [Route("v3/charts-of-accounts/{chartOfAccountsUID:guid}/standard-accounts/{stdAccountUID:guid}/suspend")]
+    public SingleObjectModel SuspendStandardAccount([FromUri] string chartOfAccountsUID,
+                                                    [FromUri] string stdAccountUID) {
+
+      using (var usecases = ChartOfAccountsUseCases.UseCaseInteractor()) {
+
+        StandardAccountHolder stdAccount = usecases.SuspendStandardAccount(chartOfAccountsUID, stdAccountUID);
+
+        return new SingleObjectModel(base.Request, stdAccount);
+      }
+    }
+
+    #endregion Web apis
 
   }  // class StandardAccountController
 

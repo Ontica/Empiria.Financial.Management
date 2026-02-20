@@ -31,6 +31,20 @@ namespace Empiria.Financial.UseCases {
 
     #region Use cases
 
+    public StandardAccountHolder ActivateStandardAccount(string chartOfAccountsUID, string stdAccountUID) {
+      Assertion.Require(chartOfAccountsUID, nameof(chartOfAccountsUID));
+      Assertion.Require(stdAccountUID, nameof(stdAccountUID));
+
+      var chartOfAccounts = ChartOfAccounts.Parse(chartOfAccountsUID);
+
+      StandardAccount stdAccount = chartOfAccounts.GetStandardAccount(stdAccountUID);
+
+      stdAccount.Activate();
+
+      return StandardAccountMapper.Map(stdAccount);
+    }
+
+
     public ChartOfAccountsDto GetChartOfAccounts(string chartOfAccountsUID) {
       Assertion.Require(chartOfAccountsUID, nameof(chartOfAccountsUID));
 
@@ -84,6 +98,20 @@ namespace Empiria.Financial.UseCases {
       FixedList<StandardAccount> stdAccounts = query.Execute();
 
       return ChartOfAccountsMapper.Map(chartOfAccounts, stdAccounts);
+    }
+
+
+    internal StandardAccountHolder SuspendStandardAccount(string chartOfAccountsUID, string stdAccountUID) {
+      Assertion.Require(chartOfAccountsUID, nameof(chartOfAccountsUID));
+      Assertion.Require(stdAccountUID, nameof(stdAccountUID));
+
+      var chartOfAccounts = ChartOfAccounts.Parse(chartOfAccountsUID);
+
+      StandardAccount stdAccount = chartOfAccounts.GetStandardAccount(stdAccountUID);
+
+      stdAccount.Suspend();
+
+      return StandardAccountMapper.Map(stdAccount);
     }
 
 
