@@ -418,15 +418,33 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(Rules.CanCancel,
                         $"Can not cancel this budget transaction. Its status is {Status.GetName()}.");
 
-      var txns = GetRelatedTo(this)
-                 .FindAll(x => x.ApplicationDate >= this.ApplicationDate &&
-                               x.Id > this.Id &&
-                               x.Status != TransactionStatus.Canceled &&
-                               x.Status != TransactionStatus.Rejected);
 
-      if (txns.Count != 0) {
-        Assertion.RequireFail("Para cancelar esta transacción se requiere cancelar " +
-                              $"primero la transacción {txns.Last().TransactionNo}.");
+      if (this.OperationType == BudgetOperationType.Request) {
+        var txns = GetRelatedTo(this)
+                   .FindAll(x => x.ApplicationDate >= this.ApplicationDate &&
+                                 x.Id > this.Id &&
+                                 x.Status != TransactionStatus.Canceled &&
+                                 x.Status != TransactionStatus.Rejected);
+
+        if (txns.Count != 0) {
+          Assertion.RequireFail("Para cancelar esta transacción se requiere cancelar " +
+                                $"primero la transacción {txns.Last().TransactionNo}.");
+        }
+
+      } else {
+
+        var txns = GetRelatedTo(this)
+           .FindAll(x => x.ApplicationDate >= this.ApplicationDate &&
+                         x.Id > this.Id &&
+                         x.Status != TransactionStatus.Canceled &&
+                         x.Status != TransactionStatus.Rejected &&
+                         x.EntityId == this.EntityId);
+
+        if (txns.Count != 0) {
+          Assertion.RequireFail("Para cancelar esta transacción se requiere cancelar " +
+                                $"primero la transacción {txns.Last().TransactionNo}.");
+        }
+
       }
 
       RejectedReason = EmpiriaString.Clean(reason);
@@ -491,6 +509,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public decimal GetTotal() {
       if (_entries.IsValueCreated) {
+
         return _entries.Value.Sum(x => x.Deposit);
       } else {
         return _total;
