@@ -34,9 +34,17 @@ namespace Empiria.Budgeting {
 
     static public new BudgetAccount Parse(string uid) => ParseKey<BudgetAccount>(uid);
 
-    static public BudgetAccount TryParse(string accountNo) => TryParse<BudgetAccount>($"ACCT_NUMBER = '{accountNo}'");
+
+    static public BudgetAccount TryParse(string accountNo) =>
+          TryParse<BudgetAccount>($"ACCT_NUMBER = '{accountNo}'");
+
+
+    static public BudgetAccount TryParse(OrganizationalUnit orgUnit, string accountNo) =>
+          TryParse<BudgetAccount>($"ACCT_NUMBER = '{accountNo}' AND ACCT_ORG_UNIT_ID = {orgUnit.Id}");
+
 
     static public new BudgetAccount Empty => ParseEmpty<BudgetAccount>();
+
 
     static public FixedList<BudgetAccount> GetList(BudgetType budgetType, OrganizationalUnit orgUnit) {
       Assertion.Require(budgetType, nameof(budgetType));
