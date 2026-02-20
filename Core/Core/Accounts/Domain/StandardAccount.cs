@@ -24,17 +24,7 @@ namespace Empiria.Financial {
   [PartitionedType(typeof(StandardAccountType))]
   public class StandardAccount : BaseObject, INamedEntity {
 
-    #region Fields
-
-    static readonly private FixedList<StandardAccount> _cache;
-
-    #endregion Fields
-
     #region Constructors and parsers
-
-    static StandardAccount() {
-      _cache = GetFullList<StandardAccount>("STD_ACCT_STATUS <> 'X'");
-    }
 
     protected StandardAccount(StandardAccountType powertype) : base(powertype) {
       // Require by Empiria FrameWork
