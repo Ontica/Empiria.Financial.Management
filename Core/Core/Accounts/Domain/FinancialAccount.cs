@@ -33,18 +33,11 @@ namespace Empiria.Financial {
     private Lazy<List<FinancialAccount>> _operations = new Lazy<List<FinancialAccount>>();
     private List<FinancialAccount> _deletedOperations = new List<FinancialAccount>();
 
-    static readonly private List<FinancialAccount> _cache = null;
+    static readonly private Lazy<List<FinancialAccount>> _cache = new Lazy<List<FinancialAccount>>(() => GetAllAccounts());
 
     #endregion Fields
 
     #region Constructors and parsers
-
-    static FinancialAccount() {
-      var allAccounts = GetFullList<FinancialAccount>("ACCT_STATUS <> 'X'");
-
-      _cache = new List<FinancialAccount>(allAccounts);
-    }
-
 
     protected FinancialAccount(FinancialAccountType powertype) : base(powertype) {
       // Required by Empiria Framework
@@ -91,15 +84,15 @@ namespace Empiria.Financial {
 
 
     static public FixedList<FinancialAccount> GetList() {
-      return _cache.ToFixedList();
+      return _cache.Value.ToFixedList();
     }
 
 
     static public FixedList<FinancialAccount> GetList(Predicate<FinancialAccount> predicate) {
       Assertion.Require(predicate, nameof(predicate));
 
-      return _cache.FindAll(x => predicate.Invoke(x))
-                   .ToFixedList();
+      return _cache.Value.FindAll(x => predicate.Invoke(x))
+                         .ToFixedList();
     }
 
 
@@ -122,8 +115,8 @@ namespace Empiria.Financial {
 
     protected override void OnLoad() {
       _operations = new Lazy<List<FinancialAccount>>(() =>
-                      _cache.FindAll(x => x._parentId == this.Id &&
-                                          x.Project.Equals(this.Project) &&
+                        _cache.Value.FindAll(x => x._parentId == this.Id &&
+                                                  x.Project.Equals(this.Project) &&
                                           x.IsOperationAccount
                       ));
     }
@@ -410,6 +403,13 @@ namespace Empiria.Financial {
     }
 
 
+    static private List<FinancialAccount> GetAllAccounts() {
+      var allAccounts = GetFullList<FinancialAccount>("ACCT_STATUS <> 'X'");
+
+      return new List<FinancialAccount>(allAccounts);
+    }
+
+
     internal FixedList<StandardAccount> GetAvailableOperations() {
       return StandardAccount.GetChildren()
                             .FindAll(x => !GetOperations().Contains(y => y.StandardAccount.Equals(x)));
@@ -435,13 +435,13 @@ namespace Empiria.Financial {
         this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         this.PostingTime = DateTime.Now;
 
-        _cache.Add(this);
+        _cache.Value.Add(this);
       }
 
       FinancialAccountDataService.WriteAccount(this, this.ExtData.ToString());
 
       if (this.Status == EntityStatus.Deleted) {
-        _cache.Remove(this);
+        _cache.Value.Remove(this);
       }
 
       foreach (var operation in _operations.Value) {
