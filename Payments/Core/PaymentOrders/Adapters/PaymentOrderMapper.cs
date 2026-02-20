@@ -32,8 +32,21 @@ namespace Empiria.Payments.Adapters {
 
       var documents = DocumentServices.GetAllEntityDocuments(paymentOrder);
 
+      documents = FixedList<DocumentDto>.Merge(documents,
+                                               DocumentServices.GetAllEntityDocuments((BaseObject) paymentOrder.PayableEntity));
+
+      if (paymentOrder.PayableEntity is IBudgetable) {
+        var payableEntity = (IBudgetable) paymentOrder.PayableEntity;
+
+        foreach (var entity in payableEntity.GetPayableEntities()) {
+          var entityDocuments = DocumentServices.GetAllEntityDocuments((BaseObject) entity);
+
+          documents = FixedList<DocumentDto>.Merge(documents, entityDocuments);
+        }
+      }
+
       return new PaymentOrderHolderDto {
-        PaymentOrder = MapPaymentOrder(paymentOrder),
+        PaymentOrder = MapToDto(paymentOrder),
         PayableEntity = PayableEntityMapper.Map(paymentOrder.PayableEntity),
         Items = MapItems(paymentOrder.PayableEntity.Items),
         Bills = BillMapper.MapToBillStructure(bills),
@@ -51,15 +64,41 @@ namespace Empiria.Payments.Adapters {
                    .ToFixedList();
     }
 
+
+    static public PaymentOrderDto MapToDto(PaymentOrder paymentOrder) {
+      return new PaymentOrderDto {
+        UID = paymentOrder.UID,
+        PaymentType = paymentOrder.PaymentType.MapToNamedEntity(),
+        PaymentOrderNo = paymentOrder.PaymentOrderNo,
+        PayTo = paymentOrder.PayTo.MapToNamedEntity(),
+        Debtor = paymentOrder.Debtor.MapToNamedEntity(),
+        RequestedDate = paymentOrder.PostingTime,
+        RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
+        RecordedBy = paymentOrder.PostedBy.MapToNamedEntity(),
+        DueTime = paymentOrder.DueTime,
+        Priority = paymentOrder.Priority,
+        Description = paymentOrder.Description,
+        Observations = paymentOrder.Observations,
+        Budget = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
+        BudgetType = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
+        PaymentMethod = new PaymentMethodDto(paymentOrder.PaymentMethod),
+        PaymentAccount = new PaymentAccountDto(paymentOrder.PaymentAccount),
+        Currency = paymentOrder.Currency.MapToNamedEntity(),
+        Total = paymentOrder.Total,
+        Status = paymentOrder.Status.MapToNamedEntity(),
+        ReferenceNumber = paymentOrder.ReferenceNumber,
+      };
+    }
+
     #region Helpers
 
-    static internal FixedList<PaymentOrderItemDto> MapItems(FixedList<IPayableEntityItem> items) {
+    static private FixedList<PaymentOrderItemDto> MapItems(FixedList<IPayableEntityItem> items) {
       return items.Select(x => MapItems(x))
                   .ToFixedList();
     }
 
 
-    static internal PaymentOrderItemDto MapItems(IPayableEntityItem payableItem) {
+    static private PaymentOrderItemDto MapItems(IPayableEntityItem payableItem) {
       return new PaymentOrderItemDto {
         UID = payableItem.UID,
         BudgetAccount = payableItem.BudgetAccount.MapToNamedEntity(),
@@ -113,32 +152,6 @@ namespace Empiria.Payments.Adapters {
         CanEditDocuments = paymentOrder.Rules.CanEditDocuments(),
         CanApproveBudget = paymentOrder.Rules.CanApproveBudget(),
         CanGeneratePaymentInstruction = paymentOrder.Rules.CanGeneratePaymentInstruction()
-      };
-    }
-
-
-    static internal PaymentOrderDto MapPaymentOrder(PaymentOrder paymentOrder) {
-      return new PaymentOrderDto {
-        UID = paymentOrder.UID,
-        PaymentType = paymentOrder.PaymentType.MapToNamedEntity(),
-        PaymentOrderNo = paymentOrder.PaymentOrderNo,
-        PayTo = paymentOrder.PayTo.MapToNamedEntity(),
-        Debtor = paymentOrder.Debtor.MapToNamedEntity(),
-        RequestedDate = paymentOrder.PostingTime,
-        RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),
-        RecordedBy = paymentOrder.PostedBy.MapToNamedEntity(),
-        DueTime = paymentOrder.DueTime,
-        Priority = paymentOrder.Priority,
-        Description = paymentOrder.Description,
-        Observations = paymentOrder.Observations,
-        Budget = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
-        BudgetType = paymentOrder.PayableEntity.Budget.MapToNamedEntity(),
-        PaymentMethod = new PaymentMethodDto(paymentOrder.PaymentMethod),
-        PaymentAccount = new PaymentAccountDto(paymentOrder.PaymentAccount),
-        Currency = paymentOrder.Currency.MapToNamedEntity(),
-        Total = paymentOrder.Total,
-        Status = paymentOrder.Status.MapToNamedEntity(),
-        ReferenceNumber = paymentOrder.ReferenceNumber,
       };
     }
 
