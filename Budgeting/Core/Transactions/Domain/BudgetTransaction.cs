@@ -509,7 +509,6 @@ namespace Empiria.Budgeting.Transactions {
 
     public decimal GetTotal() {
       if (_entries.IsValueCreated) {
-
         return _entries.Value.Sum(x => x.Deposit);
       } else {
         return _total;
@@ -518,7 +517,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     protected override void OnSave() {
-      if (IsNew && Status == TransactionStatus.Pending) {
+      if (IsNew && Status != TransactionStatus.Closed) {
         TransactionNo = TO_ASSIGN_TRANSACTION_NO;
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         RecordingDate = DateTime.Now;
