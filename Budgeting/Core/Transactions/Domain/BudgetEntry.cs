@@ -238,6 +238,12 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    [DataField("BDG_ENTRY_IS_ADJUSTMENT", ConvertFrom = typeof(int))]
+    public bool IsAdjustment {
+      get; private set;
+    }
+
+
     [DataField("BDG_ENTRY_DESCRIPTION")]
     public string Description {
       get; private set;
@@ -316,7 +322,7 @@ namespace Empiria.Budgeting.Transactions {
     #region Methods
 
     internal BudgetEntry CloneFor(BudgetTransaction transaction, DateTime date,
-                                  BalanceColumn balanceColumn, bool withdrawal) {
+                                  BalanceColumn balanceColumn, bool deposit, bool isAdjustment = false) {
       var budgetEntry = new BudgetEntry(transaction, date.Year, date.Month) {
         BudgetAccount = this.BudgetAccount,
         BudgetProgram = this.BudgetProgram,
@@ -336,8 +342,9 @@ namespace Empiria.Budgeting.Transactions {
         Currency = this.Currency,
         ExchangeRate = this.ExchangeRate,
         CurrencyAmount = this.CurrencyAmount,
-        Withdrawal = withdrawal ? this.Amount : 0m,
-        Deposit = !withdrawal ? this.Amount : 0m,
+        Withdrawal = deposit ? 0m : this.Amount,
+        Deposit = deposit ? this.Amount : 0m,
+        IsAdjustment = isAdjustment,
         Description = this.Description,
         Justification = this.Justification,
         Identificators = this.Identificators,

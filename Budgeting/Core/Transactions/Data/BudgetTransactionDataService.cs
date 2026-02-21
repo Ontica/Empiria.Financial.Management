@@ -244,9 +244,10 @@ namespace Empiria.Budgeting.Transactions.Data {
         o.ProductCode, o.ProductName, o.ProductUnit.Id, o.ProductQty,
         o.Project.Id, o.Party.Id, o.EntityTypeId, o.EntityId, o.OperationNo,
         o.Year, o.Month, o.Day, o.BalanceColumn.Id, o.Currency.Id, o.CurrencyAmount,
-        o.Deposit, o.Withdrawal, o.ExchangeRate, o.Description, o.Justification,
-        o.Identificators, o.Tags, o.ExtensionData.ToString(), o.Keywords,
-        o.RelatedEntryId, o.Position, o.PostedBy.Id, o.PostingTime, (char) o.Status);
+        o.Deposit, o.Withdrawal, o.ExchangeRate, o.IsAdjustment ? 1 : 0,
+        o.Description, o.Justification, o.Identificators, o.Tags,
+        o.ExtensionData.ToString(), o.Keywords, o.RelatedEntryId,
+        o.Position, o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
       DataWriter.Execute(op);
     }
