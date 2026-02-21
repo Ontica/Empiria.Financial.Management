@@ -128,6 +128,10 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public decimal ExchangeRate {
+      get; internal set;
+    }
+
     public DateTime DueTime {
       get; internal set;
     }

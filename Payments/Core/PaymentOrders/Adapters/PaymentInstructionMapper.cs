@@ -66,6 +66,7 @@ namespace Empiria.Payments.Adapters {
       return new PaymentInstructionDto {
         UID = instruction.UID,
         Currency = paymentOrder.Currency.MapToNamedEntity(),
+        ExchangeRate = paymentOrder.ExchangeRate,
         DueTime = paymentOrder.DueTime,
         PaymentAccount = new PaymentAccountDto(paymentOrder.PaymentAccount),
         RequestedBy = paymentOrder.RequestedBy.MapToNamedEntity(),

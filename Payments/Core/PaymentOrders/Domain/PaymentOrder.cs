@@ -135,6 +135,16 @@ namespace Empiria.Payments {
     }
 
 
+    public decimal ExchangeRate {
+      get {
+        return ExtData.Get("exchangeRate", decimal.One);
+      }
+      private set {
+        ExtData.SetIf("exchangeRate", value, value != decimal.One);
+      }
+    }
+
+
     [DataField("PYMT_ORD_TOTAL")]
     public decimal Total {
       get; private set;
@@ -259,7 +269,8 @@ namespace Empiria.Payments {
       get {
         return Status != PaymentOrderStatus.Canceled &&
                Status != PaymentOrderStatus.Failed &&
-               Status != PaymentOrderStatus.Payed;
+               Status != PaymentOrderStatus.Payed &&
+               !IsEmptyInstance;
       }
     }
 
@@ -325,6 +336,11 @@ namespace Empiria.Payments {
         Assertion.RequireFail("No se puede ejecutar la operación debido a que la " +
                               "solicitud de pago tiene una instrucción de pago " +
                               "que está programada o en proceso.");
+      }
+
+      if (Currency.Distinct(Currency.Default) && ExchangeRate == decimal.One) {
+        Assertion.RequireFail("No se puede crear la instrucción de pago debido a que " +
+                              "no se ha proporcionado el tipo de cambio.");
       }
 
       if (Status == PaymentOrderStatus.Pending ||
@@ -434,10 +450,10 @@ namespace Empiria.Payments {
       Debtor = Patcher.Patch(fields.DebtorUID, Debtor);
       PaymentMethod = Patcher.Patch(fields.PaymentMethodUID, PaymentMethod);
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
+      ExchangeRate = Currency.Equals(Currency.Default) ? decimal.One : fields.ExchangeRate;
       PaymentAccount = Patcher.Patch(fields.PaymentAccountUID, PaymentAccount);
       DueTime = Patcher.Patch(fields.DueTime, DueTime);
       Priority = fields.Priority;
-
       Description = EmpiriaString.Clean(fields.Description);
       Observations = EmpiriaString.Clean(fields.Observations);
       RequestedBy = Patcher.Patch(fields.RequestedByUID, RequestedBy);

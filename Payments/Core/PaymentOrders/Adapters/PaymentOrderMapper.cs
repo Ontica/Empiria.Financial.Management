@@ -84,6 +84,7 @@ namespace Empiria.Payments.Adapters {
         PaymentMethod = new PaymentMethodDto(paymentOrder.PaymentMethod),
         PaymentAccount = new PaymentAccountDto(paymentOrder.PaymentAccount),
         Currency = paymentOrder.Currency.MapToNamedEntity(),
+        ExchangeRate = paymentOrder.ExchangeRate,
         Total = paymentOrder.Total,
         Status = paymentOrder.Status.MapToNamedEntity(),
         ReferenceNumber = paymentOrder.ReferenceNumber,

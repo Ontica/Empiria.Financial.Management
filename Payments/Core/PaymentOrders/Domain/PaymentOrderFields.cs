@@ -61,6 +61,11 @@ namespace Empiria.Payments {
     } = string.Empty;
 
 
+    public decimal ExchangeRate {
+      get; set;
+    } = decimal.One;
+
+
     public string PaymentAccountUID {
       get; set;
     } = string.Empty;
@@ -117,6 +122,8 @@ namespace Empiria.Payments {
 
       Assertion.Require(PaymentTypeUID, "Necesito el tipo de pago.");
       Assertion.Require(PaymentMethodUID, "Necesito el método de pago.");
+
+      Assertion.Require(ExchangeRate > 0, "El tipo de cambio debe ser mayor a cero.");
 
       var paymentMethod = PaymentMethod.Parse(PaymentMethodUID);
 

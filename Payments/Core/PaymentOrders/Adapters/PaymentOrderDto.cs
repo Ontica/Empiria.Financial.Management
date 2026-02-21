@@ -164,6 +164,10 @@ namespace Empiria.Payments.Adapters {
       get; internal set;
     }
 
+    public decimal ExchangeRate {
+      get; internal set;
+    }
+
     public decimal Total {
       get; internal set;
     }
