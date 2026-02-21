@@ -509,7 +509,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public decimal GetTotal() {
       if (_entries.IsValueCreated) {
-        return _entries.Value.FindAll(x => !x.IsAdjustment).Sum(x => x.Deposit);
+        return _entries.Value.FindAll(x => x.NotAdjustment).Sum(x => x.Deposit);
       } else {
         return _total;
       }

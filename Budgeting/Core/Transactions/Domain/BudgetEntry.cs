@@ -244,6 +244,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool NotAdjustment {
+      get {
+        return !IsAdjustment;
+      }
+    }
+
+
     [DataField("BDG_ENTRY_DESCRIPTION")]
     public string Description {
       get; private set;
