@@ -188,7 +188,7 @@ namespace Empiria.Budgeting.Transactions.Data {
     static internal FixedList<BudgetTransaction> GetTransactions(IBudgetable budgetable) {
       Assertion.Require(budgetable, nameof(budgetable));
 
-      var filter = $"BDG_TXN_ENTITY_TYPE_ID = {budgetable.GetEmpiriaType().Id} AND " +
+      var filter = $"BDG_TXN_ENTITY_TYPE_ID = {budgetable.Data.BudgetableType.Id} AND " +
                    $"BDG_TXN_ENTITY_ID = {budgetable.Id} AND " +
                    $"BDG_TXN_STATUS <> 'X'";
 
@@ -258,7 +258,7 @@ namespace Empiria.Budgeting.Transactions.Data {
           o.Id, o.UID, o.TransactionType.Id, o.OperationSource.Id, o.BaseBudget.Id,
           o.BaseParty.Id, o.TransactionNo, o.Description, o.Justification,
           EmpiriaString.Tagging(o.Identificators), EmpiriaString.Tagging(o.Tags), -1,
-          o.HasEntity ? o.GetEntity().GetEmpiriaType().Id : -1,
+          o.HasEntity ? o.GetEntity().Data.BudgetableType.Id : -1,
           o.HasEntity ? o.GetEntity().Id : -1,
           o.PayableId, o.ApplicationDate, o.AppliedBy.Id, o.RecordingDate, o.RecordedBy.Id,
           o.AuthorizationDate, o.AuthorizedBy.Id, o.RequestedDate, o.RequestedBy.Id,

@@ -75,7 +75,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         TransactionNo = transaction.TransactionNo,
         Description = transaction.Description,
         Total = transaction.GetTotal(),
-        BaseEntityNo = transaction.HasEntity ? transaction.GetEntity().EntityNo : string.Empty,
+        BaseEntityNo = transaction.HasEntity ? transaction.GetEntity().Data.BudgetableNo : string.Empty,
         OperationSourceName = transaction.OperationSource.Name,
         BasePartyName = transaction.BaseParty.Name,
         RecordingDate = transaction.RecordingDate,
@@ -215,10 +215,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         OperationSource = transaction.OperationSource.MapToNamedEntity(),
         BaseParty = transaction.BaseParty.MapToNamedEntity(),
         BaseEntityType = transaction.HasEntity ?
-            transaction.GetEntity().GetEmpiriaType().MapToNamedEntity() : NamedEntityDto.Empty,
+            transaction.GetEntity().Data.BudgetableType.MapToNamedEntity() : NamedEntityDto.Empty,
         BaseEntity = transaction.HasEntity ?
             transaction.GetEntity().MapToNamedEntity() : NamedEntityDto.Empty,
-        BaseEntityNo = transaction.HasEntity ? transaction.GetEntity().EntityNo : string.Empty,
+        BaseEntityNo = transaction.HasEntity ? transaction.GetEntity().Data.BudgetableNo : string.Empty,
         AllowsOverdrafts = transaction.AllowsOverdrafts,
         Total = transaction.GetTotal(),
         RecordingDate = transaction.RequestedDate,

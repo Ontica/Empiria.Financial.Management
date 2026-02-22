@@ -58,7 +58,7 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(baseBudget, nameof(baseBudget));
 
       BaseBudget = baseBudget;
-      EntityTypeId = budgetable.GetEmpiriaType().Id;
+      EntityTypeId = budgetable.Data.BudgetableType.Id;
       EntityId = budgetable.Id;
     }
 
