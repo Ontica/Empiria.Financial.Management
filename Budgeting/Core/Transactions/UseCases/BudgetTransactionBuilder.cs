@@ -10,6 +10,7 @@
 
 using System;
 
+using Empiria.Financial;
 using Empiria.Parties;
 
 namespace Empiria.Budgeting.Transactions {
@@ -17,36 +18,56 @@ namespace Empiria.Budgeting.Transactions {
   /// <summary>Provides services used to build a budget transaction using data from another transaction.</summary>
   public class BudgetTransactionBuilder {
 
-    private readonly BudgetTransaction _baseTransaction;
-    private readonly BudgetOperationType _operationType;
+    private readonly IBudgetable _budgetable;
     private readonly OperationSource _operationSource;
     private readonly DateTime _applicationDate;
-    private readonly BudgetTransactionType _transactionType;
+    private readonly decimal _exchangeRate;
 
-    public BudgetTransactionBuilder(BudgetTransaction baseTransaction,
-                                    BudgetOperationType operationType,
+    public BudgetTransactionBuilder(IBudgetable budgetable,
                                     OperationSource operationSource,
-                                    DateTime applicationDate) {
+                                    DateTime applicationDate,
+                                    decimal? exchangeRate = null) {
 
-      Assertion.Require(baseTransaction, nameof(baseTransaction));
-      Assertion.Require(operationType, nameof(operationType));
+      Assertion.Require(budgetable, nameof(budgetable));
       Assertion.Require(operationSource, nameof(operationSource));
-      Assertion.Require(applicationDate >= baseTransaction.ApplicationDate,
-        "La fecha de aplicación debe ser igual o posterior a la fecha de aplicación de la transacción base.");
 
-      _baseTransaction = baseTransaction;
-      _operationType = operationType;
+      if (exchangeRate.HasValue) {
+        Assertion.Require(exchangeRate > decimal.Zero, "El tipo de cambio debe ser mayor a cero.");
+      } else {
+        exchangeRate = budgetable.Data.ExchangeRate;
+      }
+
+      _budgetable = budgetable;
       _operationSource = operationSource;
       _applicationDate = applicationDate;
-      _transactionType = BudgetTransactionType.GetFor(baseTransaction.BaseBudget.BudgetType, operationType);
+      _exchangeRate = exchangeRate.Value;
     }
 
 
-    public BudgetTransaction Build() {
+    public Budget BaseBudget {
+      get {
+        return (Budget) _budgetable.Data.BaseBudget;
+      }
+    }
 
-      BudgetTransaction transaction = BuildTransaction();
 
-      BuildEntries(transaction);
+    public BudgetTransaction Build(BudgetOperationType operationType,
+                                   BudgetTransaction previousTransaction) {
+      Assertion.Require(operationType, nameof(operationType));
+      Assertion.Require(previousTransaction, nameof(previousTransaction));
+
+      Assertion.Require(previousTransaction.BaseBudget.Equals(BaseBudget),
+            "El presupuesto de la transacción no coincide con el presupuesto de la transacción previa.");
+
+      Assertion.Require(_applicationDate >= previousTransaction.ApplicationDate,
+            "La fecha de aplicación de la transacción no puede ser menor a " +
+            "la fecha de aplicación de la transacción previa.");
+
+      BudgetTransactionFields fields = BuildTransactionFields(operationType, previousTransaction);
+
+      BudgetTransaction transaction = BuildTransaction(operationType, fields);
+
+      BuildEntries(transaction, previousTransaction);
 
       Assertion.Require(transaction.Entries.Count > 0,
                         "No es posible generar la transacción presupuestal debido " +
@@ -58,13 +79,14 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Helpers
 
-    private void BuildEntries(BudgetTransaction transaction) {
+    private void BuildEntries(BudgetTransaction transaction, BudgetTransaction baseTransaction) {
 
-      BalanceColumn depositColumn = _operationType.DepositColumn();
+      BalanceColumn depositColumn = transaction.OperationType.DepositColumn();
 
-      BalanceColumn withdrawalColumn = _baseTransaction.OperationType.DepositColumn();
+      BalanceColumn withdrawalColumn = baseTransaction.OperationType.DepositColumn();
 
-      foreach (var entry in _baseTransaction.Entries.FindAll(x => x.Deposit > 0 && x.BalanceColumn.Equals(withdrawalColumn))) {
+      foreach (var entry in baseTransaction.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment &&
+                                                                 x.BalanceColumn.Equals(withdrawalColumn))) {
 
         BudgetEntry newEntry = entry.CloneFor(transaction, _applicationDate, depositColumn, true);
 
@@ -93,15 +115,11 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    private BudgetTransaction BuildTransaction() {
+    private BudgetTransaction BuildTransaction(BudgetOperationType operationType, BudgetTransactionFields fields) {
 
-      BudgetTransactionFields fields = BuildTransactionFields();
+      var transactionType = BudgetTransactionType.GetFor(BaseBudget.BudgetType, operationType);
 
-      var budget = Budget.Parse(fields.BaseBudgetUID);
-
-      var bdgTxnType = BudgetTransactionType.GetFor(budget.BudgetType, _operationType);
-
-      var transaction = new BudgetTransaction(bdgTxnType, budget, _baseTransaction.GetEntity());
+      var transaction = new BudgetTransaction(transactionType, BaseBudget, _budgetable);
 
       transaction.Update(fields);
 
@@ -109,19 +127,34 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    private BudgetTransactionFields BuildTransactionFields() {
+    private BudgetTransactionFields BuildTransactionFields(BudgetOperationType operationType,
+                                                           BudgetTransaction previousTransaction) {
 
-      return new BudgetTransactionFields {
-        TransactionTypeUID = _transactionType.UID,
-        Justification = _baseTransaction.Justification,
-        Description = _baseTransaction.Description,
-        BaseBudgetUID = _baseTransaction.BaseBudget.UID,
-        BasePartyUID = _baseTransaction.BaseParty.UID,
-        CurrencyUID = _baseTransaction.Currency.UID,
-        ExchangeRate = _baseTransaction.ExchangeRate,
-        OperationSourceUID = _operationSource.UID,
-        ApplicationDate = _applicationDate
-      };
+      if (operationType == BudgetOperationType.Exercise) {
+
+        return new BudgetTransactionFields {
+          BasePartyUID = previousTransaction.BaseParty.UID,
+          OperationSourceUID = _operationSource.UID,
+          CurrencyUID = previousTransaction.Currency.UID,
+          ExchangeRate = _exchangeRate,
+          ApplicationDate = _applicationDate,
+          Description = previousTransaction.Description,
+          Justification = previousTransaction.Justification
+        };
+
+      } else {
+
+        return new BudgetTransactionFields {
+          BasePartyUID = _budgetable.Data.RequestedBy.UID,
+          OperationSourceUID = _operationSource.UID,
+          CurrencyUID = _budgetable.Data.Currency.UID,
+          ExchangeRate = _exchangeRate,
+          ApplicationDate = _applicationDate,
+          Description = _budgetable.Data.Description,
+          Justification = _budgetable.Data.Justification,
+          RequestedByUID = Party.ParseWithContact(ExecutionServer.CurrentContact).UID,
+        };
+      }
     }
 
     #endregion Helpers
