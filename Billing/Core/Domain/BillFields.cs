@@ -149,6 +149,11 @@ namespace Empiria.Billing {
     } = string.Empty;
 
 
+    public string BillType {
+      get; set;
+    } = string.Empty;
+
+
     public string CertificationNo {
       get; set;
     } = string.Empty;
@@ -730,6 +735,9 @@ namespace Empiria.Billing {
 
     static internal void EnsureIsValidFuelConsumption(this FuelConsumptionBillFields fields,
                                                       BillCategory billCategory) {
+
+      Assertion.Require(fields.BillType == "factura-consumo-combustible-sat",
+                       "El documento que intenta guardar no es del tipo factura de consumo de combustible.");
 
       Assertion.Require(billCategory == BillCategory.FacturaConsumoCombustible,
                         "El documento que intenta guardar no es una factura de consumo de combustible.");

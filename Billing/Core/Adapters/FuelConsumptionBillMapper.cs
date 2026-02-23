@@ -23,9 +23,9 @@ namespace Empiria.Billing.Adapters {
 
     #region Public methods
 
-    static internal IBillFields Map(SATFuelConsumptionBillDto paymentComplementDto) {
+    static internal IBillFields Map(SATFuelConsumptionBillDto paymentComplementDto, string billType) {
 
-      return MapToFuelConsumptionBillFields(paymentComplementDto);
+      return MapToFuelConsumptionBillFields(paymentComplementDto, billType);
     }
 
     #endregion Public methods
@@ -72,11 +72,12 @@ namespace Empiria.Billing.Adapters {
     }
 
 
-    static private IBillFields MapToFuelConsumptionBillFields(SATFuelConsumptionBillDto dto) {
+    static private IBillFields MapToFuelConsumptionBillFields(SATFuelConsumptionBillDto dto, string billType) {
 
       return new FuelConsumptionBillFields {
         BillCategoryUID = BillCategory.FacturaConsumoCombustible.UID,
         BillNo = dto.SATComplemento.UUID,
+        BillType = billType,
         CertificationNo = dto.DatosGenerales.NoCertificado,
         IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
         IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,

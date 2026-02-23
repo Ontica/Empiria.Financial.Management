@@ -32,9 +32,7 @@ namespace Empiria.Billing {
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
       Assertion.Require(billTaxRelatedObjectId, nameof(billTaxRelatedObjectId));
-      if (fields.IsBonusTax) {
-        string x = string.Empty;
-      }
+      
       Bill = bill;
       BillTaxRelatedObjectTypeId = Bill.BillType.Id;
       BillTaxRelatedObjectId = billTaxRelatedObjectId;

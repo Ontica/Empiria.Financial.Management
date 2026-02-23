@@ -57,25 +57,11 @@ namespace Empiria.Billing.UseCases {
         return CreateBillPaymentComplement(xmlString, payable);
 
       } else if (billType == "factura-consumo-combustible-sat") {
-        return CreateFuelConsumptionBill(xmlString, payable);
+        return CreateFuelConsumptionBill(xmlString, payable, billType);
 
       } else {
         throw Assertion.EnsureNoReachThisCode($"Unrecognized applicationContentType '{billType}'.");
       }
-    }
-
-
-    public Bill CreateFuelConsumptionBill(string xmlString, IPayableEntity payable) {
-      Assertion.Require(xmlString, nameof(xmlString));
-      Assertion.Require(payable, nameof(payable));
-
-      var reader = new SATFuelConsumptionBillXmlReader(xmlString);
-
-      ISATBillDto satDto = reader.ReadAsFuelConsumptionBillDto();
-
-      IBillFields fields = FuelConsumptionBillMapper.Map((SATFuelConsumptionBillDto) satDto);
-
-      return CreateFuelConsumptionImplementation(payable, (FuelConsumptionBillFields) fields);
     }
 
 
@@ -217,6 +203,20 @@ namespace Empiria.Billing.UseCases {
       } else {
         return CreateBillByCategory(payable, fields, BillCategory.NotaDeCreditoProveedores);
       }
+    }
+
+
+    public Bill CreateFuelConsumptionBill(string xmlString, IPayableEntity payable, string billType) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+
+      var reader = new SATFuelConsumptionBillXmlReader(xmlString);
+
+      ISATBillDto satDto = reader.ReadAsFuelConsumptionBillDto();
+
+      IBillFields fields = FuelConsumptionBillMapper.Map((SATFuelConsumptionBillDto) satDto, billType);
+
+      return CreateFuelConsumptionImplementation(payable, (FuelConsumptionBillFields) fields);
     }
 
 
