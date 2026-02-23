@@ -100,6 +100,14 @@ namespace Empiria.Financial {
       Assertion.Require(Justification != null, nameof(Justification));
       Assertion.Require(Description != null, nameof(Description));
       Assertion.Require(Keywords, nameof(Keywords));
+
+      if (Currency.Equals(Currency.Default)) {
+        Assertion.Require(ExchangeRate == decimal.One,
+          $"{nameof(ExchangeRate)} must be equal to $1.00 when currency is default.");
+      } else {
+        Assertion.Require(ExchangeRate != decimal.One,
+          $"{nameof(ExchangeRate)} must be distinct to $1.00 when currency is not default.");
+      }
     }
 
   }  // class BudgetableData
@@ -111,7 +119,11 @@ namespace Empiria.Financial {
   /// or a payment liability in a loan or payable order.</summary>
   public class BudgetableItemData {
 
-    public IIdentifiable BudgetableItem {
+    public BaseObject BudgetableItem {
+      get; set;
+    }
+
+    public IIdentifiable BudgetEntry {
       get; set;
     }
 
@@ -212,6 +224,7 @@ namespace Empiria.Financial {
 
     public void EnsureValid() {
       Assertion.Require(BudgetableItem, nameof(BudgetableItem));
+      Assertion.Require(BudgetEntry, nameof(BudgetEntry));
       Assertion.Require(Budget, nameof(Budget));
       Assertion.Require(BudgetAccount != FinancialAccount.Empty, nameof(BudgetAccount));
       Assertion.Require(Product, nameof(Product));
