@@ -38,12 +38,53 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(0 <= month && month <= 12,
                        "Month must be between 0 and 12 (0 means the whole year).");
 
-      this.Transaction = transaction;
-      this.Budget = transaction.BaseBudget;
+      Transaction = transaction;
+      Budget = transaction.BaseBudget;
 
-      this.Year = year;
-      this.Month = month;
+      Year = year;
+      Month = month;
     }
+
+
+    internal BudgetEntry(BudgetTransaction transaction, BudgetableItemData entry,
+                         BalanceColumn balanceColumn, bool isDeposit) {
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(entry, nameof(entry));
+      Assertion.Require(balanceColumn, nameof(balanceColumn));
+
+      Transaction = transaction;
+      Budget = (Budget) entry.Budget;
+      BudgetAccount = (BudgetAccount) entry.BudgetAccount;
+      BudgetProgram = BudgetAccount.BudgetProgram;
+      BalanceColumn = balanceColumn;
+
+      Year = entry.BudgetingDate.Year;
+      Month = entry.BudgetingDate.Month;
+      Day = entry.BudgetingDate.Day;
+
+      Product = entry.Product;
+      ProductCode = entry.ProductCode;
+      ProductName = entry.ProductName;
+      ProductUnit = entry.ProductUnit;
+      ProductQty = entry.ProductQty;
+      OriginCountry = entry.OriginCountry;
+      Project = entry.Project;
+      Party = entry.Party;
+      EntityTypeId = entry.BudgetableItem.GetEmpiriaType().Id;
+      EntityId = entry.BudgetableItem.Id;
+
+      Currency = entry.Currency;
+      ExchangeRate = entry.ExchangeRate;
+      CurrencyAmount = entry.CurrencyAmount;
+      Deposit = isDeposit ? entry.Amount : 0m;
+      Withdrawal = isDeposit ? 0m : entry.Amount;
+
+      Description = entry.Description;
+      Justification = entry.Justification;
+
+      RelatedEntryId = entry.HasRelatedBudgetEntry ? entry.RelatedBudgetEntry.Id : -1;
+    }
+
 
     static public BudgetEntry Parse(int id) => ParseId<BudgetEntry>(id);
 

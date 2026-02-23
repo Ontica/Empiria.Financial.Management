@@ -397,6 +397,18 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal BudgetEntry AddEntry(BudgetableItemData entry, BalanceColumn balanceColumn, bool isDeposit) {
+      Assertion.Require(entry, nameof(entry));
+      Assertion.Require(balanceColumn, nameof(balanceColumn));
+
+      var newEntry = new BudgetEntry(this, entry, balanceColumn, isDeposit);
+
+      _entries.Value.Add(newEntry);
+
+      return newEntry;
+    }
+
+
     public void Authorize() {
       Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this transaction.");
 
@@ -517,6 +529,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     protected override void OnSave() {
+
       if (IsNew && Status != TransactionStatus.Closed) {
         TransactionNo = TO_ASSIGN_TRANSACTION_NO;
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
@@ -713,6 +726,7 @@ namespace Empiria.Budgeting.Transactions {
     private void Reload() {
       _entries = new Lazy<List<BudgetEntry>>(() => BudgetTransactionDataService.GetTransactionEntries(this));
     }
+
 
     #endregion Helpers
 
