@@ -141,22 +141,22 @@ namespace Empiria.Budgeting.Transactions {
 
       BalanceColumn withdrawalColumn = previousTransaction.OperationType.DepositColumn();
 
-      foreach (var entry in _budgetable.Items) {
+      foreach (var budgetableItem in _budgetable.Items) {
 
         var previousEntry = previousTransaction.Entries
-                                               .Find(x => x.Equals(entry.BudgetEntry) &&
+                                               .Find(x => x.Equals(budgetableItem.RelatedBudgetEntry) &&
                                                           x.BalanceColumn.Equals(withdrawalColumn) &&
                                                           x.Deposit > 0 && x.NotAdjustment);
 
         Assertion.Require(previousEntry, "No se encontró una entrada previa correspondiente.");
 
-        BudgetEntry newEntry = BuildEntry(transaction, entry, _applicationDate, depositColumn, true);
+        BudgetEntry newEntry = BuildEntry(transaction, budgetableItem, _applicationDate, depositColumn, true);
 
         transaction.AddEntry(newEntry);
 
         DateTime withdrawalDate = SameYearMonth(_applicationDate, previousEntry.Date) ? _applicationDate : previousEntry.Date;
 
-        newEntry = BuildEntry(transaction, entry, withdrawalDate, withdrawalColumn, false);
+        newEntry = BuildEntry(transaction, budgetableItem, withdrawalDate, withdrawalColumn, false);
 
         transaction.AddEntry(newEntry);
 
@@ -164,11 +164,11 @@ namespace Empiria.Budgeting.Transactions {
           continue;
         }
 
-        newEntry = previousEntry.CloneFor(transaction, withdrawalDate, BalanceColumn.Reduced, true, true);
+        newEntry = BuildEntryForAdjustment(previousEntry, transaction, withdrawalDate, BalanceColumn.Reduced, budgetableItem.CurrencyAmount);
 
         transaction.AddEntry(newEntry);
 
-        newEntry = previousEntry.CloneFor(transaction, _applicationDate, BalanceColumn.Expanded, true, true);
+        newEntry = BuildEntryForAdjustment(previousEntry, transaction, _applicationDate, BalanceColumn.Expanded, budgetableItem.CurrencyAmount);
 
         transaction.AddEntry(newEntry);
       }
@@ -199,11 +199,11 @@ namespace Empiria.Budgeting.Transactions {
           continue;
         }
 
-        newEntry = entry.CloneFor(transaction, withdrawalDate, BalanceColumn.Reduced, true, true);
+        newEntry = BuildEntryForAdjustment(entry, transaction, withdrawalDate, BalanceColumn.Reduced, entry.CurrencyAmount);
 
         transaction.AddEntry(newEntry);
 
-        newEntry = entry.CloneFor(transaction, _applicationDate, BalanceColumn.Expanded, true, true);
+        newEntry = BuildEntryForAdjustment(entry, transaction, _applicationDate, BalanceColumn.Expanded, entry.CurrencyAmount);
 
         transaction.AddEntry(newEntry);
       }
@@ -211,12 +211,25 @@ namespace Empiria.Budgeting.Transactions {
 
 
     private BudgetEntry BuildEntry(BudgetTransaction transaction, BudgetableItemData entry, DateTime budgetingDate,
-                                   BalanceColumn depositColumn, bool isDeposit) {
+                                   BalanceColumn balanceColumn, bool isDeposit) {
 
       entry.BudgetingDate = budgetingDate;
       entry.ExchangeRate = _exchangeRate;
 
-      BudgetEntry newEntry = transaction.AddEntry(entry, depositColumn, isDeposit);
+      BudgetEntry newEntry = new BudgetEntry(transaction, entry, balanceColumn, isDeposit);
+
+      return newEntry;
+
+    }
+
+
+
+    private BudgetEntry BuildEntryForAdjustment(BudgetEntry previousEntry, BudgetTransaction transaction,
+                                                DateTime date, BalanceColumn balanceColumn, decimal currencyAmount) {
+
+      BudgetEntry newEntry = previousEntry.CloneFor(transaction, date, balanceColumn, true, true);
+
+      newEntry.SetAmount(currencyAmount, _exchangeRate);
 
       return newEntry;
     }
