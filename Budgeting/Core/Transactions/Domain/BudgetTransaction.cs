@@ -397,18 +397,6 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    internal BudgetEntry AddEntry(BudgetableItemData entry, BalanceColumn balanceColumn, bool isDeposit) {
-      Assertion.Require(entry, nameof(entry));
-      Assertion.Require(balanceColumn, nameof(balanceColumn));
-
-      var newEntry = new BudgetEntry(this, entry, balanceColumn, isDeposit);
-
-      _entries.Value.Add(newEntry);
-
-      return newEntry;
-    }
-
-
     public void Authorize() {
       Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this transaction.");
 
