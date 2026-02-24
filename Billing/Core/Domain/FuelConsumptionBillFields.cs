@@ -15,6 +15,11 @@ namespace Empiria.Billing {
   /// <summary></summary>
   internal class FuelConsumptionBillFields : BillGeneralDataFields, IBillFields {
     
+    public decimal ImpuestoGralAddenda {
+      get; set;
+    }
+
+
     public FixedList<BillConceptFields> Concepts {
       get; set;
     } = new FixedList<BillConceptFields>();

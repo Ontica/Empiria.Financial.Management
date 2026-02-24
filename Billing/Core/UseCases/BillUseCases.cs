@@ -65,6 +65,20 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    public Bill CreateFuelConsumptionBill(string xmlString, IPayableEntity payable, string billType) {
+      Assertion.Require(xmlString, nameof(xmlString));
+      Assertion.Require(payable, nameof(payable));
+
+      var reader = new SATFuelConsumptionBillXmlReader(xmlString);
+
+      ISATBillDto satDto = reader.ReadAsFuelConsumptionBillDto();
+
+      IBillFields fields = FuelConsumptionBillMapper.Map((SATFuelConsumptionBillDto) satDto, billType);
+
+      return CreateFuelConsumptionImplementation(payable, (FuelConsumptionBillFields) fields);
+    }
+
+
     public Bill CreateVoucherBill(IPayableEntity payable, DocumentFields fields) {
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(fields, nameof(fields));
@@ -108,6 +122,7 @@ namespace Empiria.Billing.UseCases {
       Assertion.Require(billUID, nameof(billUID));
 
       Bill bill = Bill.Parse(billUID);
+
       return BillMapper.Map(bill);
     }
 
@@ -206,20 +221,6 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public Bill CreateFuelConsumptionBill(string xmlString, IPayableEntity payable, string billType) {
-      Assertion.Require(xmlString, nameof(xmlString));
-      Assertion.Require(payable, nameof(payable));
-
-      var reader = new SATFuelConsumptionBillXmlReader(xmlString);
-
-      ISATBillDto satDto = reader.ReadAsFuelConsumptionBillDto();
-
-      IBillFields fields = FuelConsumptionBillMapper.Map((SATFuelConsumptionBillDto) satDto, billType);
-
-      return CreateFuelConsumptionImplementation(payable, (FuelConsumptionBillFields) fields);
-    }
-
-
     private Bill CreateFuelConsumptionImplementation(IPayableEntity payable, FuelConsumptionBillFields fields) {
 
       var billCategory = BillCategory.FacturaConsumoCombustible;
@@ -239,7 +240,10 @@ namespace Empiria.Billing.UseCases {
       }
 
       foreach (var fieldsConcept in fields.Addenda.Concepts) {
-        bill.AddConcept(BillConceptType.Addenda, fieldsConcept);
+        
+        if (fieldsConcept.IsBonusConcept) {
+          bill.AddConcept(BillConceptType.Addenda, fieldsConcept);
+        }
       }
 
       return bill;

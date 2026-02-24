@@ -319,6 +319,11 @@ namespace Empiria.Billing {
     }
 
 
+    public bool IsSubtotalGeneralConcept {
+      get; internal set;
+    }
+
+
     public FixedList<BillTaxEntryFields> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntryFields>();
@@ -382,6 +387,12 @@ namespace Empiria.Billing {
     public bool IsBonusTax {
       get; set;
     }
+
+
+    public bool IsSubtotalGeneralTax {
+      get; set;
+    }
+
 
     static public BillTaxFactorType GetFactorTypeByTax(string tipoFactor) {
 

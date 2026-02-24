@@ -110,7 +110,8 @@ namespace Empiria.Billing.SATMexicoImporter {
           concept.Impuestos.ToList().ForEach(x => x.IsBonusTax = true);
         } else {
 
-          _satBillDto.Addenda.AddendaConceptos.Remove(concept);
+          concept.IsSubtotalGralConcept = true;
+          concept.Impuestos.ToList().ForEach(x => x.IsSubtotalGeneralTax = true);
         }
       }
     }

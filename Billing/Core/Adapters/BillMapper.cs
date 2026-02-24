@@ -70,7 +70,7 @@ namespace Empiria.Billing.Adapters {
         Subtotal = bill.Subtotal,
         Discount = bill.Discount,
         Taxes = Math.Round(bill.Taxes, 2, MidpointRounding.AwayFromZero),
-        Total = bill.Subtotal - bill.Discount,
+        Total = bill.Subtotal - bill.Discount + bill.Taxes,
         IssueDate = bill.IssueDate,
         PostedBy = bill.PostedBy.MapToNamedEntity(),
         PostingTime = bill.PostingTime,

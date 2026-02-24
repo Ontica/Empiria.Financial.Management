@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using DocumentFormat.OpenXml.Vml;
 using Empiria.Billing.SATMexicoImporter;
@@ -74,6 +75,13 @@ namespace Empiria.Billing.Adapters {
 
     static private IBillFields MapToFuelConsumptionBillFields(SATFuelConsumptionBillDto dto, string billType) {
 
+      var subtotalGeneralAddenda = dto.Addenda.AddendaConceptos.FindAll(x => x.IsSubtotalGralConcept)
+                                                               .Sum(x => x.Importe);
+      var impuestoGeneralAddenda = dto.Addenda.AddendaConceptos.FindAll(x => x.IsSubtotalGralConcept)
+                                                               .SelectFlat(x=>x.Impuestos)
+                                                               .Sum(x => x.Importe);
+      var totalGralAddenda = subtotalGeneralAddenda + impuestoGeneralAddenda;
+
       return new FuelConsumptionBillFields {
         BillCategoryUID = BillCategory.FacturaConsumoCombustible.UID,
         BillNo = dto.SATComplemento.UUID,
@@ -82,14 +90,15 @@ namespace Empiria.Billing.Adapters {
         IssuedByUID = Party.TryParseWithID(dto.Emisor.RFC)?.UID ?? string.Empty,
         IssuedToUID = Party.TryParseWithID(dto.Receptor.RFC)?.UID ?? string.Empty,
         CurrencyUID = SATMoneda.ParseWithCode(dto.DatosGenerales.Moneda).Currency.UID,
-        Subtotal = dto.DatosComplemento.SubTotal,
+        Subtotal = subtotalGeneralAddenda,
+        ImpuestoGralAddenda = impuestoGeneralAddenda,
+        Total = totalGralAddenda,
         //Discount = dto.DatosGenerales.Descuento,
-        Total = dto.DatosComplemento.Total,
         Concepts = MapToFuelConsumptionConceptFields(dto.Conceptos),
         SchemaData = MapToFuelConsumptionSchemaData(dto),
         SecurityData = MapToFuelConsumptionSecurityData(dto),
         ComplementData = MapToFuelConsumptionComplementData(dto.DatosComplemento),
-        Addenda = MapToAddendaData(dto.Addenda)
+        Addenda = MapToAddendaData(dto.Addenda),
       };
     }
 
@@ -129,6 +138,7 @@ namespace Empiria.Billing.Adapters {
           Subtotal = concepto.Importe,
           Discount = concepto.Descuento,
           IsBonusConcept = concepto.IsBonusConcept,
+          IsSubtotalGeneralConcept = concepto.IsSubtotalGralConcept,
           TaxEntries = MapToTaxFields(concepto.Impuestos)
         };
         fields.Add(field);
@@ -151,9 +161,9 @@ namespace Empiria.Billing.Adapters {
         Exportacion = dto.DatosGenerales.Exportacion,
         LugarExpedicion = dto.DatosGenerales.LugarExpedicion,
         Moneda = dto.DatosGenerales.Moneda,
-        Subtotal = dto.DatosComplemento.SubTotal,
-        //Descuento = dto.DatosGenerales.Descuento,
-        Total = dto.DatosComplemento.Total,
+        Subtotal = dto.DatosGenerales.SubTotal,
+        Descuento = dto.DatosGenerales.Descuento,
+        Total = dto.DatosGenerales.Total,
         TipoCambio = dto.DatosGenerales.TipoCambio,
         TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
       };
@@ -216,7 +226,8 @@ namespace Empiria.Billing.Adapters {
           BaseAmount = tax.Base,
           Impuesto = tax.Impuesto,
           Total = tax.Importe,
-          IsBonusTax = tax.IsBonusTax
+          IsBonusTax = tax.IsBonusTax,
+          IsSubtotalGeneralTax = tax.IsSubtotalGeneralTax
         };
 
         fields.Add(field);

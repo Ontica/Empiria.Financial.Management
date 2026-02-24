@@ -124,6 +124,11 @@ namespace Empiria.Billing.SATMexicoImporter {
       get; internal set;
     }
 
+
+    public bool IsSubtotalGralConcept {
+      get; internal set;
+    }
+
   }  // class SATBillConceptDto
 
 
@@ -302,6 +307,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     
     
     public bool IsBonusTax {
+      get; internal set;
+    }
+
+
+    public bool IsSubtotalGeneralTax {
       get; internal set;
     }
 
