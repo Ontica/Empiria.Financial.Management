@@ -54,38 +54,39 @@ namespace Empiria.Budgeting.Transactions {
     public BudgetTransaction Build(BudgetOperationType operationType) {
       Assertion.Require(operationType, nameof(operationType));
 
-      BudgetTransactionFields fields = BuildTransactionFields(operationType, BudgetTransaction.Empty);
+      if (operationType == BudgetOperationType.Request) {
+        return BuildBudgetRequestTransaction();
+      }
 
-      BudgetTransaction transaction = BuildTransaction(operationType, fields);
+      return BuildTransaction(operationType);
+    }
 
-      BuildEntries(transaction, BudgetTransaction.Empty);
+    #region Transaction builders
+
+    private BudgetTransaction BuildBudgetRequestTransaction() {
+      BudgetTransactionFields fields = BuildTransactionFields(BudgetOperationType.Request);
+
+      BudgetTransaction transaction = BuildTransaction(BudgetOperationType.Request, fields);
+
+      BuildBudgetRequestEntries(transaction);
 
       Assertion.Require(transaction.Entries.Count > 0,
                         "No es posible generar la transacción presupuestal debido " +
-                        "a que la orden de compra o requisición no cuenta " +
-                        "con conceptos pendientes de autorizar.");
+                        "a que la requisición no cuenta con conceptos pendientes de autorizar.");
 
       return transaction;
     }
 
 
-    public BudgetTransaction Build(BudgetOperationType operationType, BudgetTransaction previousTransaction) {
+    private BudgetTransaction BuildTransaction(BudgetOperationType operationType) {
 
       Assertion.Require(operationType, nameof(operationType));
-      Assertion.Require(previousTransaction, nameof(previousTransaction));
 
-      Assertion.Require(previousTransaction.BaseBudget.Equals(BaseBudget),
-          "El presupuesto de la transacción no coincide con el presupuesto de la transacción previa.");
-
-      Assertion.Require(_applicationDate >= previousTransaction.ApplicationDate,
-          "La fecha de aplicación de la transacción no puede ser menor a " +
-          "la fecha de aplicación de la transacción previa.");
-
-      BudgetTransactionFields fields = BuildTransactionFields(operationType, previousTransaction);
+      BudgetTransactionFields fields = BuildTransactionFields(operationType);
 
       BudgetTransaction transaction = BuildTransaction(operationType, fields);
 
-      BuildEntries(transaction, previousTransaction);
+      BuildEntries(transaction);
 
       Assertion.Require(transaction.Entries.Count > 0,
           "No es posible generar la transacción presupuestal debido " +
@@ -95,27 +96,38 @@ namespace Empiria.Budgeting.Transactions {
       return transaction;
     }
 
-    #region Helpers
 
-    private void BuildEntries(BudgetTransaction transaction, BudgetTransaction previousTransaction) {
+    private BudgetTransaction BuildTransaction(BudgetOperationType operationType, BudgetTransactionFields fields) {
 
-      if (transaction.OperationType == BudgetOperationType.Exercise) {
+      var transactionType = BudgetTransactionType.GetFor(BaseBudget.BudgetType, operationType);
 
-        BuildEntriesFromTransaction(transaction, previousTransaction);
+      var transaction = new BudgetTransaction(transactionType, BaseBudget, _budgetable);
 
-      } else if (!previousTransaction.IsEmptyInstance) {
+      transaction.Update(fields);
 
-        BuildEntriesFromBudgetable(transaction, previousTransaction);
-
-      } else {
-
-        BuildEntriesFromBudgetable(transaction);
-
-      }
+      return transaction;
     }
 
 
-    private void BuildEntriesFromBudgetable(BudgetTransaction transaction) {
+    private BudgetTransactionFields BuildTransactionFields(BudgetOperationType operationType) {
+
+      return new BudgetTransactionFields {
+        BasePartyUID = _budgetable.Data.RequestedBy.UID,
+        OperationSourceUID = _operationSource.UID,
+        CurrencyUID = _budgetable.Data.Currency.UID,
+        ExchangeRate = _exchangeRate,
+        ApplicationDate = _applicationDate,
+        Description = _budgetable.Data.Description,
+        Justification = _budgetable.Data.Justification,
+        RequestedByUID = Party.ParseWithContact(ExecutionServer.CurrentContact).UID,
+      };
+    }
+
+    #endregion Transaction builders
+
+    #region Entries builders
+
+    private void BuildBudgetRequestEntries(BudgetTransaction transaction) {
 
       BalanceColumn depositColumn = transaction.OperationType.DepositColumn();
 
@@ -131,22 +143,21 @@ namespace Empiria.Budgeting.Transactions {
 
         transaction.AddEntry(newEntry);
       }
-
     }
 
 
-    private void BuildEntriesFromBudgetable(BudgetTransaction transaction, BudgetTransaction previousTransaction) {
+    private void BuildEntries(BudgetTransaction transaction) {
+      BuildEntriesFromBudgetable(transaction);
+    }
+
+
+    private void BuildEntriesFromBudgetable(BudgetTransaction transaction) {
 
       BalanceColumn depositColumn = transaction.OperationType.DepositColumn();
 
-      BalanceColumn withdrawalColumn = previousTransaction.OperationType.DepositColumn();
-
       foreach (var budgetableItem in _budgetable.Items) {
 
-        var previousEntry = previousTransaction.Entries
-                                               .Find(x => x.Equals(budgetableItem.RelatedBudgetEntry) &&
-                                                          x.BalanceColumn.Equals(withdrawalColumn) &&
-                                                          x.Deposit > 0 && x.NotAdjustment);
+        BudgetEntry previousEntry = (BudgetEntry) budgetableItem.RelatedBudgetEntry;
 
         Assertion.Require(previousEntry, "No se encontró una entrada previa correspondiente.");
 
@@ -156,7 +167,7 @@ namespace Empiria.Budgeting.Transactions {
 
         DateTime withdrawalDate = SameYearMonth(_applicationDate, previousEntry.Date) ? _applicationDate : previousEntry.Date;
 
-        newEntry = BuildEntry(transaction, budgetableItem, withdrawalDate, withdrawalColumn, false);
+        newEntry = BuildEntry(transaction, budgetableItem, withdrawalDate, previousEntry.BalanceColumn, false);
 
         transaction.AddEntry(newEntry);
 
@@ -175,41 +186,6 @@ namespace Empiria.Budgeting.Transactions {
 
     }
 
-
-    private void BuildEntriesFromTransaction(BudgetTransaction transaction, BudgetTransaction previousTransaction) {
-
-      BalanceColumn depositColumn = transaction.OperationType.DepositColumn();
-
-      BalanceColumn withdrawalColumn = previousTransaction.OperationType.DepositColumn();
-
-      foreach (var entry in previousTransaction.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment &&
-                                                                     x.BalanceColumn.Equals(withdrawalColumn))) {
-
-        BudgetEntry newEntry = entry.CloneFor(transaction, _applicationDate, depositColumn, true);
-
-        transaction.AddEntry(newEntry);
-
-        DateTime withdrawalDate = SameYearMonth(_applicationDate, entry.Date) ? _applicationDate : entry.Date;
-
-        newEntry = entry.CloneFor(transaction, withdrawalDate, withdrawalColumn, false);
-
-        transaction.AddEntry(newEntry);
-
-        if (SameYearMonth(_applicationDate, withdrawalDate)) {
-          continue;
-        }
-
-        newEntry = BuildEntryForAdjustment(entry, transaction, withdrawalDate, BalanceColumn.Reduced, entry.CurrencyAmount);
-
-        transaction.AddEntry(newEntry);
-
-        newEntry = BuildEntryForAdjustment(entry, transaction, _applicationDate, BalanceColumn.Expanded, entry.CurrencyAmount);
-
-        transaction.AddEntry(newEntry);
-      }
-    }
-
-
     private BudgetEntry BuildEntry(BudgetTransaction transaction, BudgetableItemData entry, DateTime budgetingDate,
                                    BalanceColumn balanceColumn, bool isDeposit) {
 
@@ -219,7 +195,6 @@ namespace Empiria.Budgeting.Transactions {
       BudgetEntry newEntry = new BudgetEntry(transaction, entry, balanceColumn, isDeposit);
 
       return newEntry;
-
     }
 
 
@@ -234,49 +209,10 @@ namespace Empiria.Budgeting.Transactions {
       return newEntry;
     }
 
-
-    private BudgetTransaction BuildTransaction(BudgetOperationType operationType, BudgetTransactionFields fields) {
-
-      var transactionType = BudgetTransactionType.GetFor(BaseBudget.BudgetType, operationType);
-
-      var transaction = new BudgetTransaction(transactionType, BaseBudget, _budgetable);
-
-      transaction.Update(fields);
-
-      return transaction;
-    }
+    #endregion Entries builders
 
 
-    private BudgetTransactionFields BuildTransactionFields(BudgetOperationType operationType,
-                                                           BudgetTransaction previousTransaction) {
-
-      if (operationType == BudgetOperationType.Exercise) {
-
-        return new BudgetTransactionFields {
-          BasePartyUID = previousTransaction.BaseParty.UID,
-          OperationSourceUID = _operationSource.UID,
-          CurrencyUID = previousTransaction.Currency.UID,
-          ExchangeRate = _exchangeRate,
-          ApplicationDate = _applicationDate,
-          Description = previousTransaction.Description,
-          Justification = previousTransaction.Justification
-        };
-
-      } else {
-
-        return new BudgetTransactionFields {
-          BasePartyUID = _budgetable.Data.RequestedBy.UID,
-          OperationSourceUID = _operationSource.UID,
-          CurrencyUID = _budgetable.Data.Currency.UID,
-          ExchangeRate = _exchangeRate,
-          ApplicationDate = _applicationDate,
-          Description = _budgetable.Data.Description,
-          Justification = _budgetable.Data.Justification,
-          RequestedByUID = Party.ParseWithContact(ExecutionServer.CurrentContact).UID,
-        };
-      }
-    }
-
+    #region Helpers
 
     static private bool SameYearMonth(DateTime date1, DateTime date2) {
       return date1.Year == date2.Year && date1.Month == date2.Month;
