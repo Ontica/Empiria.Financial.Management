@@ -373,7 +373,7 @@ namespace Empiria.Budgeting.Transactions {
                                   BalanceColumn balanceColumn, bool deposit, bool isAdjustment = false) {
       var budgetEntry = new BudgetEntry(transaction, date.Year, date.Month) {
         BudgetAccount = this.BudgetAccount,
-        BudgetProgram = this.BudgetProgram,
+        BudgetProgram = BudgetAccount.BudgetProgram,
         Product = this.Product,
         ProductCode = this.ProductCode,
         ProductName = this.ProductName,
@@ -425,6 +425,31 @@ namespace Empiria.Budgeting.Transactions {
       MarkAsDirty();
     }
 
+
+    internal void SetAmount(decimal currencyAmount, decimal exchangeRate = decimal.One) {
+      Assertion.Require(currencyAmount > 0, "Amount must be greater than zero.");
+      Assertion.Require(exchangeRate > 0, "Exchange rate must be greater than zero.");
+
+      if (Currency.Equals(Currency.Default)) {
+        Assertion.Require(exchangeRate == decimal.One, "Exchange rate must be $1.00 when currency is default currency.");
+      } else {
+        Assertion.Require(exchangeRate != decimal.One, "Exchange rate must be different from $1.00 when currency is not default.");
+      }
+
+      CurrencyAmount = currencyAmount;
+
+      if (Deposit > 0) {
+        Deposit = Math.Round(currencyAmount * exchangeRate, 2);
+        Withdrawal = 0m;
+      } else if (Withdrawal > 0) {
+        Withdrawal = Math.Round(currencyAmount * exchangeRate, 2);
+        Deposit = 0m;
+      }
+
+      ExchangeRate = exchangeRate;
+
+      MarkAsDirty();
+    }
 
     internal void SetControlNo(string controlNo) {
       Assertion.Require(controlNo, nameof(controlNo));
@@ -484,7 +509,6 @@ namespace Empiria.Budgeting.Transactions {
 
       MarkAsDirty();
     }
-
 
     #endregion Methods
 
