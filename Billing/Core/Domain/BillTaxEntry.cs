@@ -20,7 +20,7 @@ using Empiria.Billing.Data;
 namespace Empiria.Billing {
 
   /// <summary>Holds tax data related to a bill or a bill concept.</summary>
-  internal class BillTaxEntry : BaseObject {
+  public class BillTaxEntry : BaseObject {
 
     #region Constructors and parsers
 
@@ -146,7 +146,7 @@ namespace Empiria.Billing {
     }
 
 
-    public BillTaxExtData BillTaxExtData {
+    internal BillTaxExtData BillTaxExtData {
       get {
         return new BillTaxExtData(this.ExtData);
       }

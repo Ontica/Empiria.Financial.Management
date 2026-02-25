@@ -23,7 +23,7 @@ namespace Empiria.Billing.WebApi {
     #region Web apis
 
     [HttpGet]
-    [Route("v2/billing-management/bills/{billUID:guid}")]
+    [Route("v2/billing-management/bills_/{billUID:guid}")]
     public SingleObjectModel GetBill([FromUri] string billUID) {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {

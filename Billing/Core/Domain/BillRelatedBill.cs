@@ -19,7 +19,7 @@ using Empiria.Billing.Data;
 namespace Empiria.Billing {
 
   /// <summary>Represents a payment complement related bill for an invoice.</summary>
-  internal class BillRelatedBill : BaseObject {
+  public class BillRelatedBill : BaseObject {
 
 
     #region Constructors and parsers
@@ -93,14 +93,14 @@ namespace Empiria.Billing {
     }
 
 
-    public BillRelatedBillSchemaData BillRelatedSchemaExtData {
+    internal BillRelatedBillSchemaData BillRelatedSchemaExtData {
       get {
         return new BillRelatedBillSchemaData(this.SchemaExtData);
       }
     }
 
 
-    internal FixedList<BillTaxEntry> TaxEntries {
+    public FixedList<BillTaxEntry> TaxEntries {
       get {
         return BillTaxEntry.GetListFor(this.Bill.BillType.Id, this.Id);
       }

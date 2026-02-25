@@ -23,7 +23,7 @@ namespace Empiria.Billing {
 
   /// <summary>Partitioned type that represents a bill concept with its tax entries.</summary>
   [PartitionedType(typeof(BillConceptType))]
-  internal class BillConcept : BaseObject {
+  public class BillConcept : BaseObject {
 
     #region Constructors and parsers
 

@@ -319,21 +319,21 @@ namespace Empiria.Billing {
     }
 
 
-    internal FixedList<BillConcept> Concepts {
+    public FixedList<BillConcept> Concepts {
       get {
         return BillConcept.GetListFor(this);
       }
     }
 
 
-    internal FixedList<BillRelatedBill> BillRelatedBills {
+    public FixedList<BillRelatedBill> BillRelatedBills {
       get {
         return BillRelatedBill.GetListFor(this);
       }
     }
 
 
-    internal FixedList<BillTaxEntry> BillTaxes {
+    public FixedList<BillTaxEntry> BillTaxes {
       get {
         return BillTaxEntry.GetListByBill(this);
       }
