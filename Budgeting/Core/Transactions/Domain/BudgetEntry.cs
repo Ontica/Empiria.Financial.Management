@@ -460,6 +460,15 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal void SetDescription(string description) {
+      Assertion.Require(description, nameof(description));
+
+      Description = description;
+
+      MarkAsDirty();
+    }
+
+
     protected override void OnSave() {
       if (IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);

@@ -171,20 +171,19 @@ namespace Empiria.Budgeting.Transactions {
 
         transaction.AddEntry(newEntry);
 
-        if (SameYearMonth(_applicationDate, withdrawalDate)) {
+        if (!SameYearMonth(_applicationDate, withdrawalDate)) {
+          BuildMonthAdjustmentEntries(previousEntry, transaction, withdrawalDate, budgetableItem.CurrencyAmount);
           continue;
         }
 
-        newEntry = BuildEntryForAdjustment(previousEntry, transaction, withdrawalDate, BalanceColumn.Reduced, budgetableItem.CurrencyAmount);
+        if (previousEntry.ExchangeRate != _exchangeRate) {
+          BuildExchangeRateAdjustmentEntries(previousEntry, transaction, budgetableItem.CurrencyAmount);
+        }
 
-        transaction.AddEntry(newEntry);
-
-        newEntry = BuildEntryForAdjustment(previousEntry, transaction, _applicationDate, BalanceColumn.Expanded, budgetableItem.CurrencyAmount);
-
-        transaction.AddEntry(newEntry);
-      }
+      }  // foreach
 
     }
+
 
     private BudgetEntry BuildEntry(BudgetTransaction transaction, BudgetableItemData entry, DateTime budgetingDate,
                                    BalanceColumn balanceColumn, bool isDeposit) {
@@ -198,7 +197,6 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-
     private BudgetEntry BuildEntryForAdjustment(BudgetEntry previousEntry, BudgetTransaction transaction,
                                                 DateTime date, BalanceColumn balanceColumn, decimal currencyAmount) {
 
@@ -209,8 +207,44 @@ namespace Empiria.Budgeting.Transactions {
       return newEntry;
     }
 
-    #endregion Entries builders
 
+    private void BuildExchangeRateAdjustmentEntries(BudgetEntry previousEntry, BudgetTransaction transaction, decimal currencyAmount) {
+      decimal difference = previousEntry.ExchangeRate - _exchangeRate;
+
+      BudgetEntry newEntry;
+
+      if (difference > 0) {
+        newEntry = previousEntry.CloneFor(transaction, _applicationDate, BalanceColumn.Expanded, true, true);
+      } else if (difference < 0) {
+        newEntry = previousEntry.CloneFor(transaction, _applicationDate, BalanceColumn.Reduced, true, true);
+      } else {
+        return;
+      }
+
+      newEntry.SetAmount(currencyAmount, difference);
+
+      newEntry.SetDescription(string.Format("Ajuste por tipo de cambio. Tipo de cambio previo: {0}, nuevo tipo de cambio: {1}.",
+                                            previousEntry.ExchangeRate, _exchangeRate));
+
+      transaction.AddEntry(newEntry);
+    }
+
+
+    private void BuildMonthAdjustmentEntries(BudgetEntry previousEntry, BudgetTransaction transaction,
+                                             DateTime withdrawalDate, decimal currencyAmount) {
+
+      BudgetEntry newEntry = BuildEntryForAdjustment(previousEntry, transaction, withdrawalDate,
+                                                     BalanceColumn.Reduced, currencyAmount);
+
+      transaction.AddEntry(newEntry);
+
+      newEntry = BuildEntryForAdjustment(previousEntry, transaction, _applicationDate,
+                                         BalanceColumn.Expanded, currencyAmount);
+
+      transaction.AddEntry(newEntry);
+    }
+
+    #endregion Entries builders
 
     #region Helpers
 
