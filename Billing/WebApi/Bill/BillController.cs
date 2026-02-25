@@ -40,6 +40,7 @@ namespace Empiria.Billing.WebApi {
     public CollectionModel SearchBills([FromBody] BillsQuery query) {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
+
         FixedList<BillDescriptorDto> bills = usecases.SearchBills(query);
 
         return new CollectionModel(this.Request, bills);
