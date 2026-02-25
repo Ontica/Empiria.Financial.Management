@@ -86,15 +86,6 @@ namespace Empiria.Billing.Adapters {
                   .ToFixedList();
     }
 
-
-    static internal BillWithConceptsDto MapToBillWithConcepts(Bill bill) {
-      return new BillWithConceptsDto {
-        Bill = MapToBillDto(bill),
-        Concepts = MapBillConcepts(bill.Concepts),
-        BillRelatedBills = MapBillRelatedBills(bill.BillRelatedBills)
-      };
-    }
-
     #endregion Public methods
 
     #region Helpers

@@ -10,8 +10,7 @@
 
 namespace Empiria.Payments.Adapters {
 
-  /// <summary>Data transfer objects used to return payable entities data.</summary>
-  public class PayableEntityDto {
+  public class PayableEntityBaseDto {
 
     public string UID {
       get; set;
@@ -28,6 +27,12 @@ namespace Empiria.Payments.Adapters {
     public string Name {
       get; set;
     }
+
+  }
+
+
+  /// <summary>Data transfer objects used to return payable entities data.</summary>
+  public class PayableEntityDto : PayableEntityBaseDto{
 
     public string Description {
       get; set;
