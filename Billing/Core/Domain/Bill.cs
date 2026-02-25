@@ -178,19 +178,19 @@ namespace Empiria.Billing {
 
 
     [DataField("BILL_PAYABLE_ENTITY_TYPE_ID")]
-    internal int PayableEntityTypeId {
+    public int PayableEntityTypeId {
       get; private set;
     }
 
 
     [DataField("BILL_PAYABLE_ENTITY_ID")]
-    internal int PayableEntityId {
+    public int PayableEntityId {
       get; private set;
     }
 
 
     [DataField("BILL_PAYABLE_ID")]
-    internal int PayableId {
+    public int PayableId {
       get; private set;
     }
 

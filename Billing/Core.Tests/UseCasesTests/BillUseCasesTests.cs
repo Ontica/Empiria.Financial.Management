@@ -142,7 +142,7 @@ namespace Empiria.Tests.Billing {
         BillTypeUID = "",
         BillCategoryUID = "",
         ManagedByUID = "",
-        Keywords = "FACTURA ONTICA",
+        Keywords = "3F286DEE-DC25-11F0-8891-77A2C4B2D608",
         ConceptsKeywords = "",
         Tags = new string[] { },
         BillDateType = BillQueryDateType.None,

@@ -36,7 +36,7 @@ namespace Empiria.Billing.WebApi {
 
 
     [HttpPost]
-    [Route("v2/billing-management/bills/search")]
+    [Route("v2/billing-management/bills/search_")]
     public CollectionModel SearchBills([FromBody] BillsQuery query) {
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {

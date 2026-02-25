@@ -138,6 +138,12 @@ namespace Empiria.Billing.UseCases {
       return BillMapper.MapToBillListDto(bills);
     }
 
+
+    public FixedList<Bill> SearchBills_(string filter, string sort) {
+
+      return BillData.SearchBills(filter, sort);
+    }
+
     #endregion Use cases
 
     #region Private methods
