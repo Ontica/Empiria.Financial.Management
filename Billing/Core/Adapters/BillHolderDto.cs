@@ -128,24 +128,6 @@ namespace Empiria.Billing.Adapters {
   } // Class BillEntryDto
 
 
-  /// <summary>Output DTO used to return bill concept entry data.</summary>
-  public class BillWithConceptsDto {
-
-    public BillDto Bill {
-      get; internal set;
-    }
-
-    public FixedList<BillConceptDto> Concepts {
-      get; internal set;
-    }
-
-    public FixedList<BillRelatedBillDto> BillRelatedBills {
-      get; internal set;
-    }
-
-  } // class BillWithConceptsDto
-
-
   /// <summary>Output DTO used to return bill entry data.</summary>
   public class BillConceptDto {
 

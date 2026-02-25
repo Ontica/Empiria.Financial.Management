@@ -127,15 +127,6 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    internal BillWithConceptsDto GetBillWithConceptsDtoTests(string billUID) {
-      Assertion.Require(billUID, nameof(billUID));
-
-      Bill bill = Bill.Parse(billUID);
-
-      return BillMapper.MapToBillWithConcepts(bill);
-    }
-
-
     public FixedList<BillDescriptorDto> SearchBills(BillsQuery query) {
       Assertion.Require(query, nameof(query));
 

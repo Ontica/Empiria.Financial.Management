@@ -109,25 +109,12 @@ namespace Empiria.Tests.Billing {
 
       TestsCommonMethods.Authenticate();
 
-      string billUID = "ce112a39-d1c6-4eea-a5b7-314377a900a0";
+      string billUID = "49d7b3bb-9a06-4388-9c34-5859a9feb41e";
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
         BillHolderDto sut = usecases.GetBill(billUID);
 
-        Assert.NotNull(sut);
-      }
-    }
-
-
-    [Fact]
-    public void Get_Bill_Map_By_UID_Test() {
-
-      string billUID = "536baff0-2038-4ec1-93f8-ecf2d87e0560";
-
-      using (var usecases = BillUseCases.UseCaseInteractor()) {
-
-        BillWithConceptsDto sut = usecases.GetBillWithConceptsDtoTests(billUID);
         Assert.NotNull(sut);
       }
     }
