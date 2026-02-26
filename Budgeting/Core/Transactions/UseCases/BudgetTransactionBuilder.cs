@@ -51,14 +51,14 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    public BudgetTransaction Build(BudgetOperationType operationType) {
+    public BudgetTransaction Build(BudgetOperationType operationType, FixedList<BudgetEntry> previousEntries) {
       Assertion.Require(operationType, nameof(operationType));
 
       if (operationType == BudgetOperationType.Request) {
         return BuildBudgetRequestTransaction();
       }
 
-      return BuildTransaction(operationType);
+      return BuildTransaction(operationType, previousEntries);
     }
 
     #region Transaction builders
@@ -78,7 +78,7 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    private BudgetTransaction BuildTransaction(BudgetOperationType operationType) {
+    private BudgetTransaction BuildTransaction(BudgetOperationType operationType, FixedList<BudgetEntry> previousEntries) {
 
       Assertion.Require(operationType, nameof(operationType));
 
@@ -86,7 +86,7 @@ namespace Empiria.Budgeting.Transactions {
 
       BudgetTransaction transaction = BuildTransaction(operationType, fields);
 
-      BuildEntries(transaction);
+      BuildEntriesFromBudgetable(transaction, previousEntries);
 
       Assertion.Require(transaction.Entries.Count > 0,
           "No es posible generar la transacción presupuestal debido " +
@@ -135,45 +135,51 @@ namespace Empiria.Budgeting.Transactions {
 
       foreach (var entry in _budgetable.Items) {
 
-        BudgetEntry newEntry = BuildEntry(transaction, entry, _applicationDate, depositColumn, true);
+        BudgetEntry newEntry = BuildEntry(transaction, BudgetEntry.Empty, entry,
+                                          entry.BudgetingDate, depositColumn, true);
 
         transaction.AddEntry(newEntry);
 
-        newEntry = BuildEntry(transaction, entry, _applicationDate, withdrawalColumn, false);
+        newEntry = BuildEntry(transaction, BudgetEntry.Empty, entry,
+                              entry.BudgetingDate, withdrawalColumn, false);
 
         transaction.AddEntry(newEntry);
       }
     }
 
 
-    private void BuildEntries(BudgetTransaction transaction) {
-      BuildEntriesFromBudgetable(transaction);
-    }
-
-
-    private void BuildEntriesFromBudgetable(BudgetTransaction transaction) {
+    private void BuildEntriesFromBudgetable(BudgetTransaction transaction, FixedList<BudgetEntry> previousEntries) {
 
       BalanceColumn depositColumn = transaction.OperationType.DepositColumn();
 
+      previousEntries = previousEntries.FindAll(x => x.Deposit > 0 && x.NotAdjustment);
+
       foreach (var budgetableItem in _budgetable.Items) {
 
-        BudgetEntry previousEntry = (BudgetEntry) budgetableItem.RelatedBudgetEntry;
+        var previousEntry = previousEntries.Find(x => budgetableItem.HasRelatedBudgetableItem &&
+                                                      x.EntityId == budgetableItem.RelatedBudgetableItem.Id &&
+                                                      x.EntityTypeId == budgetableItem.RelatedBudgetableItem.GetEmpiriaType().Id);
+
+        if (previousEntry == null) {
+          previousEntry = previousEntries.Find(x => x.EntityId == budgetableItem.BudgetableItem.Id &&
+                                                    x.EntityTypeId == budgetableItem.BudgetableItem.GetEmpiriaType().Id);
+        }
 
         Assertion.Require(previousEntry, "No se encontró una entrada previa correspondiente.");
 
-        BudgetEntry newEntry = BuildEntry(transaction, budgetableItem, _applicationDate, depositColumn, true);
+        BudgetEntry newEntry = BuildEntry(transaction, previousEntry, budgetableItem, _applicationDate, depositColumn, true);
 
         transaction.AddEntry(newEntry);
 
         DateTime withdrawalDate = SameYearMonth(_applicationDate, previousEntry.Date) ? _applicationDate : previousEntry.Date;
 
-        newEntry = BuildEntry(transaction, budgetableItem, withdrawalDate, previousEntry.BalanceColumn, false);
+        newEntry = BuildEntry(transaction, previousEntry, budgetableItem,
+                              withdrawalDate, previousEntry.BalanceColumn, false);
 
         transaction.AddEntry(newEntry);
 
         if (!SameYearMonth(_applicationDate, withdrawalDate)) {
           BuildMonthAdjustmentEntries(previousEntry, transaction, withdrawalDate, budgetableItem.CurrencyAmount);
-          continue;
         }
 
         if (previousEntry.ExchangeRate != _exchangeRate) {
@@ -185,11 +191,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    private BudgetEntry BuildEntry(BudgetTransaction transaction, BudgetableItemData entry, DateTime budgetingDate,
+    private BudgetEntry BuildEntry(BudgetTransaction transaction, BudgetEntry previousEntry,
+                                   BudgetableItemData entry, DateTime budgetingDate,
                                    BalanceColumn balanceColumn, bool isDeposit) {
 
       entry.BudgetingDate = budgetingDate;
       entry.ExchangeRate = _exchangeRate;
+      entry.PreviousBudgetEntry = previousEntry;
 
       BudgetEntry newEntry = new BudgetEntry(transaction, entry, balanceColumn, isDeposit);
 
@@ -208,7 +216,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    private void BuildExchangeRateAdjustmentEntries(BudgetEntry previousEntry, BudgetTransaction transaction, decimal currencyAmount) {
+    private void BuildExchangeRateAdjustmentEntries(BudgetEntry previousEntry, BudgetTransaction transaction,
+                                                    decimal currencyAmount) {
       decimal difference = previousEntry.ExchangeRate - _exchangeRate;
 
       BudgetEntry newEntry;
@@ -223,8 +232,8 @@ namespace Empiria.Budgeting.Transactions {
 
       newEntry.SetAmount(currencyAmount, difference);
 
-      newEntry.SetDescription(string.Format("Ajuste por tipo de cambio. Tipo de cambio previo: {0}, nuevo tipo de cambio: {1}.",
-                                            previousEntry.ExchangeRate, _exchangeRate));
+      newEntry.SetDescription($"Ajuste por tipo de cambio. Tipo de cambio previo: {previousEntry.ExchangeRate:C2}, " +
+                              $"nuevo tipo de cambio: {_exchangeRate:C2}.");
 
       transaction.AddEntry(newEntry);
     }
