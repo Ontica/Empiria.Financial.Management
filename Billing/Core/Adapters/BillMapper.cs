@@ -22,7 +22,7 @@ namespace Empiria.Billing.Adapters {
     #region Public methods
 
 
-    static public FixedList<BillDto> MapToBillsDto(FixedList<Bill> bills) {
+    static public FixedList<BillDto> MapToBillDto(FixedList<Bill> bills) {
       return bills.Select((x) => MapToBillDto(x))
                   .ToFixedList();
 
@@ -32,7 +32,7 @@ namespace Empiria.Billing.Adapters {
       var billsTotals = new BillsTotals(bills);
 
       return new BillsStructureDto {
-        Bills = MapToBillsDto(bills),
+        Bills = MapToBillDto(bills),
         Subtotal = billsTotals.Subtotal,
         Discounts = billsTotals.Discounts,
         Taxes = MapStructureTaxEntries(billsTotals.TaxItems),
