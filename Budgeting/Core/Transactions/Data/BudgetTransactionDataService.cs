@@ -50,6 +50,20 @@ namespace Empiria.Budgeting.Transactions.Data {
     }
 
 
+
+    static internal void CopyRelatedEntryControlCodes(BudgetTransaction transaction) {
+
+      foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
+
+        var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
+
+        entry.ControlNo = relatedEntry.ControlNo;
+
+        entry.Save();
+      }
+    }
+
+
     static internal void GenerateApprovedPaymentControlCodes(BudgetTransaction transaction) {
 
       int counter = BudgetTransaction.GetRelatedTo(transaction)
@@ -70,18 +84,6 @@ namespace Empiria.Budgeting.Transactions.Data {
       }
     }
 
-
-    static internal void GenerateCommitControlCodes(BudgetTransaction transaction) {
-
-      foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
-
-        var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
-
-        entry.ControlNo = relatedEntry.ControlNo;
-
-        entry.Save();
-      }
-    }
 
     static internal void GenerateRequestControlCodes(BudgetTransaction transaction) {
 
