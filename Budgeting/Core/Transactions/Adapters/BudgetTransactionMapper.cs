@@ -203,7 +203,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
-    static private BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
+    static public BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
       return new BudgetTransactionDto {
         UID = transaction.UID,
         TransactionType = MapTransactionTypeForEdition(transaction.TransactionType),
