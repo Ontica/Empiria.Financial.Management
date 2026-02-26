@@ -382,6 +382,19 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal BudgetEntry AddAdjustmentEntry(BudgetEntry newEntry) {
+      Assertion.Require(newEntry, nameof(newEntry));
+      Assertion.Require(newEntry.Transaction.Equals(this), "BudgetTransaction mismatch.");
+      Assertion.Require(newEntry.IsAdjustment, "Entry must be an adjustment.");
+      Assertion.Require(newEntry.BalanceColumn == BalanceColumn.Expanded || newEntry.BalanceColumn == BalanceColumn.Reduced,
+                        "Entry must be an adjustment with a valid balance column.");
+
+      _entries.Value.Add(newEntry);
+
+      return newEntry;
+    }
+
+
     public BudgetEntry AddEntry(BudgetEntryFields entryFields) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
 
