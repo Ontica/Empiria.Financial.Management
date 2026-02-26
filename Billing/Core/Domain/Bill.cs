@@ -69,7 +69,7 @@ namespace Empiria.Billing {
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
-
+      
       PayableEntityTypeId = payable.GetEmpiriaType().Id;
       PayableEntityId = payable.Id;
       PayableId = payable.Id;
@@ -79,6 +79,8 @@ namespace Empiria.Billing {
       BillCategory = billCategory;
       BillNo = billNo;
       PayableTotal = payable.Total;
+
+      PayableEntityNo = payable.EntityNo;
     }
 
 
@@ -343,13 +345,19 @@ namespace Empiria.Billing {
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(BillNo, RelatedBillNo, BillCategory.Keywords,
-                                          _identificators, _tags, IssuedBy.Keywords, IssuedTo.Keywords);
+                                          _identificators, _tags, IssuedBy.Keywords,
+                                          IssuedTo.Keywords, PayableEntityNo);
       }
     }
 
 
     public decimal PayableTotal {
       get; private set;
+    }
+
+
+    private string PayableEntityNo {
+      get; set;
     }
 
     #endregion Properties
