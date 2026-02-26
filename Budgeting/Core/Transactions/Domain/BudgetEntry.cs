@@ -82,7 +82,7 @@ namespace Empiria.Budgeting.Transactions {
       Description = entry.Description;
       Justification = entry.Justification;
 
-      RelatedEntryId = entry.HasRelatedBudgetEntry ? entry.RelatedBudgetEntry.Id : -1;
+      RelatedEntryId = entry.HasPreviousBudgetEntry ? entry.PreviousBudgetEntry.Id : -1;
     }
 
 
@@ -464,6 +464,7 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(description, nameof(description));
 
       Description = description;
+      ProductName = description;
 
       MarkAsDirty();
     }

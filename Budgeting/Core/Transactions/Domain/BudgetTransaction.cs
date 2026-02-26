@@ -600,6 +600,8 @@ namespace Empiria.Budgeting.Transactions {
       RequestedBy = applicationParty;
 
       SetPayable(payable);
+
+      GenerateControlCodes();
     }
 
 
@@ -701,12 +703,15 @@ namespace Empiria.Budgeting.Transactions {
 
       } else if (OperationType == BudgetOperationType.Commit) {
 
-        BudgetTransactionDataService.GenerateCommitControlCodes(this);
+        BudgetTransactionDataService.CopyRelatedEntryControlCodes(this);
 
       } else if (OperationType == BudgetOperationType.ApprovePayment) {
 
         BudgetTransactionDataService.GenerateApprovedPaymentControlCodes(this);
 
+      } else if (OperationType == BudgetOperationType.Exercise) {
+
+        BudgetTransactionDataService.CopyRelatedEntryControlCodes(this);
       }
     }
 

@@ -212,13 +212,24 @@ namespace Empiria.Financial {
     }
 
 
-    public bool HasRelatedBudgetEntry {
+    public bool HasRelatedBudgetableItem {
       get {
-        return RelatedBudgetEntry != null;
+        return RelatedBudgetableItem != null;
       }
     }
 
-    public IIdentifiable RelatedBudgetEntry {
+    public BaseObject RelatedBudgetableItem {
+      get; set;
+    }
+
+
+    public bool HasPreviousBudgetEntry {
+      get {
+        return PreviousBudgetEntry != null;
+      }
+    }
+
+    public IIdentifiable PreviousBudgetEntry {
       get; set;
     }
 

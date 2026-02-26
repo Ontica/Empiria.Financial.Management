@@ -66,7 +66,7 @@ namespace Empiria.Billing {
       var creditNoteTaxes = Math.Round(billTaxEntries.ToFixedList()
                                         .FindAll(x => x.Bill.BillType.IsCreditNote)
                                         .Sum(x => x.TaxMethod == BillTaxMethod.Retencion ? x.Total : -1 * x.Total)
-                                       ,2, MidpointRounding.AwayFromZero);
+                                       , 2, MidpointRounding.AwayFromZero);
 
       Total = taxes + creditNoteTaxes;
     }
@@ -111,7 +111,7 @@ namespace Empiria.Billing {
     private readonly FixedList<Bill> _bills;
 
     #region Constructors and parsers
-    
+
     public BillsTotals(FixedList<Bill> bills) {
       Assertion.Require(bills, nameof(bills));
 
@@ -135,7 +135,7 @@ namespace Empiria.Billing {
 
     public decimal Discounts {
       get {
-        return _bills.FindAll(x=>x.BillCategory.Name != "Factura de consumo de combustible")
+        return _bills.FindAll(x => x.BillCategory.Name != "Factura de consumo de combustible")
                      .SelectFlat(x => x.Concepts)
                      .ToFixedList().Sum(x => x.Bill.BillType.IsCreditNote ? -1 * x.Discount : x.Discount);
       }
@@ -152,6 +152,12 @@ namespace Empiria.Billing {
         return Subtotal - Discounts + TaxItems.Sum(x => x.Total);
       }
     }
+
+
+    public decimal GetTotal() {
+      return _bills.Sum(x => x.BillType.IsCreditNote ? -1 * x.Total : x.Total);
+    }
+
 
     public decimal BudgetableTaxesTotal {
       get {
@@ -187,7 +193,7 @@ namespace Empiria.Billing {
       var taxTypesGroupsByBills = new List<BillTaxItemTotal>();
 
       foreach (var bill in _bills) {
-        
+
         taxTypesGroupsByBills.AddRange(GetTaxItemsByBills(bill));
       }
 
@@ -218,7 +224,7 @@ namespace Empiria.Billing {
 
       foreach (var taxItem in billTaxItemTotals) {
 
-        var existTaxItemType = returnedTaxItems.Find(x=>x.TaxType == taxItem.TaxType && x.TaxName == taxItem.TaxName);
+        var existTaxItemType = returnedTaxItems.Find(x => x.TaxType == taxItem.TaxType && x.TaxName == taxItem.TaxName);
 
         if (existTaxItemType != null) {
           existTaxItemType.SumTotals(taxItem);
