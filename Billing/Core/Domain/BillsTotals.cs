@@ -23,29 +23,6 @@ namespace Empiria.Billing {
 
     }
 
-    internal BillTaxItemTotal(TaxType taxType,
-                              BillTaxMethod taxMethod,
-                              FixedList<BillTaxEntry> billTaxEntries) {
-      UID = taxType.UID;
-      TaxType = taxType;
-      TaxName = taxType.Name;
-
-      if (taxMethod == BillTaxMethod.Retencion) {
-        TaxName = $"{taxType.Name} Retenido";
-      }
-
-      BaseAmount = billTaxEntries.Sum(x => x.BaseAmount);
-
-      var taxes = billTaxEntries.FindAll(x => !x.Bill.BillType.IsCreditNote)
-                                .Sum(x => x.TaxMethod == BillTaxMethod.Retencion ? -1 * x.Total : x.Total);
-
-      var creditNoteTaxes = billTaxEntries.ToFixedList()
-                                          .FindAll(x => x.Bill.BillType.IsCreditNote)
-                                          .Sum(x => x.TaxMethod == BillTaxMethod.Retencion ? x.Total : -1 * x.Total);
-
-      Total = taxes + creditNoteTaxes;
-    }
-
     internal BillTaxItemTotal(BillTaxMethod taxMethod, TaxType taxType,
                               FixedList<BillTaxEntry> billTaxEntries) {
       UID = taxType.UID;
@@ -116,7 +93,7 @@ namespace Empiria.Billing {
       Assertion.Require(bills, nameof(bills));
 
       _bills = bills;
-      TaxItems = BuildTaxItems_();
+      TaxItems = BuildTaxItems();
     }
 
     #endregion Constructors and parsers
@@ -135,9 +112,8 @@ namespace Empiria.Billing {
 
     public decimal Discounts {
       get {
-        return _bills.FindAll(x => x.BillCategory.Name != "Factura de consumo de combustible")
-                     .SelectFlat(x => x.Concepts)
-                     .ToFixedList().Sum(x => x.Bill.BillType.IsCreditNote ? -1 * x.Discount : x.Discount);
+        var discount = _bills.Sum(x => x.BillType.IsCreditNote ? -1 * x.Discount : x.Discount);
+        return _bills.Sum(x => x.BillType.IsCreditNote ? -1 * x.Discount : x.Discount);
       }
     }
 
@@ -170,25 +146,7 @@ namespace Empiria.Billing {
 
     #region Methods
 
-    private FixedList<BillTaxItemTotal> BuildTaxItems() {
-      FixedList<BillTaxEntry> taxEntries = _bills.SelectFlat(x => x.BillTaxes);
-
-      var taxTypeGroups = taxEntries.GroupBy(x => new { x.TaxType, x.TaxMethod });
-
-      var taxItems = new List<BillTaxItemTotal>(taxTypeGroups.Count());
-
-      foreach (var taxTypeGroup in taxTypeGroups) {
-        var taxTotal = new BillTaxItemTotal(taxTypeGroup.Key.TaxType,
-                                            taxTypeGroup.Key.TaxMethod,
-                                            taxTypeGroup.ToFixedList());
-        taxItems.Add(taxTotal);
-      }
-
-      return taxItems.ToFixedList();
-    }
-
-
-    internal FixedList<BillTaxItemTotal> BuildTaxItems_() {
+    internal FixedList<BillTaxItemTotal> BuildTaxItems() {
 
       var taxTypesGroupsByBills = new List<BillTaxItemTotal>();
 
