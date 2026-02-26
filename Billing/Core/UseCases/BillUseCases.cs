@@ -118,28 +118,7 @@ namespace Empiria.Billing.UseCases {
     }
 
 
-    public BillHolderDto GetBill(string billUID) {
-      Assertion.Require(billUID, nameof(billUID));
-
-      Bill bill = Bill.Parse(billUID);
-
-      return BillMapper.Map(bill);
-    }
-
-
-    public FixedList<BillDescriptorDto> SearchBills(BillsQuery query) {
-      Assertion.Require(query, nameof(query));
-
-      var filter = query.MapToFilterString();
-      var sort = query.MapToSortString();
-
-      FixedList<Bill> bills = BillData.SearchBills(filter, sort);
-
-      return BillMapper.MapToBillListDto(bills);
-    }
-
-
-    public FixedList<Bill> SearchBills_(string filter, string sort) {
+    public FixedList<Bill> SearchBills(string filter, string sort) {
 
       return BillData.SearchBills(filter, sort);
     }

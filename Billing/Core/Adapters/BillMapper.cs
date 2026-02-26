@@ -21,20 +21,8 @@ namespace Empiria.Billing.Adapters {
 
     #region Public methods
 
-    static internal BillHolderDto Map(Bill bill) {
 
-      return new BillHolderDto() {
-        Bill = MapToBillDto(bill),
-        Concepts = MapBillConcepts(bill.Concepts),
-        BillRelatedBills = MapBillRelatedBills(bill.BillRelatedBills),
-        Documents = DocumentServices.GetAllEntityDocuments(bill),
-        History = HistoryServices.GetEntityHistory(bill),
-        Actions = MapActions()
-      };
-    }
-
-
-    static public FixedList<BillDto> MapToBillDto(FixedList<Bill> bills) {
+    static public FixedList<BillDto> MapToBillsDto(FixedList<Bill> bills) {
       return bills.Select((x) => MapToBillDto(x))
                   .ToFixedList();
 
@@ -44,7 +32,7 @@ namespace Empiria.Billing.Adapters {
       var billsTotals = new BillsTotals(bills);
 
       return new BillsStructureDto {
-        Bills = MapToBillDto(bills),
+        Bills = MapToBillsDto(bills),
         Subtotal = billsTotals.Subtotal,
         Discounts = billsTotals.Discounts,
         Taxes = MapStructureTaxEntries(billsTotals.TaxItems),
@@ -80,36 +68,9 @@ namespace Empiria.Billing.Adapters {
       };
     }
 
-
-    static internal FixedList<BillDescriptorDto> MapToBillListDto(FixedList<Bill> bills) {
-      return bills.Select((x) => MapToBillDescriptorDto(x))
-                  .ToFixedList();
-    }
-
     #endregion Public methods
 
     #region Helpers
-
-    static private BaseActions MapActions() {
-      return new BaseActions {
-        CanEditDocuments = true
-      };
-    }
-
-
-    static private FixedList<BillConceptDto> MapBillConcepts(FixedList<BillConcept> billConcepts) {
-      return billConcepts.Select((x) => MapToBillConceptsDto(x))
-                         .ToFixedList();
-    }
-
-
-    static private FixedList<BillRelatedBillDto> MapBillRelatedBills(
-                    FixedList<BillRelatedBill> billRelatedBills) {
-
-      return billRelatedBills.Select((x) => MapToBillRelatedBillsDto(x))
-                         .ToFixedList();
-    }
-
 
     static private FixedList<BillsStructureTaxEntryDto> MapStructureTaxEntries(FixedList<BillTaxItemTotal> taxItemsTotals) {
       return taxItemsTotals.Select(x => MapStructureTaxEntry(x))
@@ -123,72 +84,6 @@ namespace Empiria.Billing.Adapters {
         TaxType = new NamedEntityDto(taxItemTotal.TaxType.UID, taxItemTotal.TaxName),
         BaseAmount = taxItemTotal.BaseAmount,
         Total = taxItemTotal.Total
-      };
-    }
-
-
-    static private FixedList<BillTaxEntryDto> MapBillTaxes(FixedList<BillTaxEntry> taxEntries) {
-      return taxEntries.Select((x) => MapToBillTaxesDto(x))
-                       .ToFixedList();
-    }
-
-
-    static private BillConceptDto MapToBillConceptsDto(BillConcept billConcept) {
-      
-      return new BillConceptDto {
-        UID = billConcept.UID,
-        TypeName = billConcept.BillConceptType.DisplayName,
-        Product = billConcept.Product.MapToNamedEntity(),
-        Description = billConcept.Description,
-        Quantity = billConcept.Quantity,
-        UnitPrice = billConcept.UnitPrice,
-        Subtotal = billConcept.Subtotal,
-        Discount = billConcept.Discount,
-        PostedBy = billConcept.PostedBy.MapToNamedEntity(),
-        PostingTime = billConcept.PostingTime,
-        TaxEntries = MapBillTaxes(billConcept.TaxEntries)
-      };
-    }
-
-
-    static private BillDescriptorDto MapToBillDescriptorDto(Bill bill) {
-      return new BillDescriptorDto() {
-        UID = bill.UID,
-        BillNo = bill.BillNo,
-        BillTypeName = bill.BillType.DisplayName,
-        IssuedByName = bill.IssuedBy.Name,
-        IssuedToName = bill.IssuedTo.Name,
-        CategoryName = bill.BillCategory.Name,
-        Total = bill.Total,
-        IssueDate = bill.IssueDate,
-        StatusName = bill.Status.GetName()
-      };
-    }
-
-
-    static private BillRelatedBillDto MapToBillRelatedBillsDto(BillRelatedBill x) {
-
-      return new BillRelatedBillDto {
-        UID = x.UID,
-        RelatedDocument = x.RelatedDocument,
-        PostedBy = x.PostedBy.MapToNamedEntity(),
-        PostingTime = x.PostingTime,
-        TaxEntries = MapBillTaxes(x.TaxEntries)
-      };
-    }
-
-
-    static private BillTaxEntryDto MapToBillTaxesDto(BillTaxEntry taxEntry) {
-      return new BillTaxEntryDto {
-        UID = taxEntry.UID,
-        TaxMethod = taxEntry.TaxMethod.MapToDto(),
-        TaxFactorType = taxEntry.TaxFactorType.MapToDto(),
-        Factor = taxEntry.Factor,
-        BaseAmount = taxEntry.BaseAmount,
-        Total = taxEntry.Total,
-        PostedBy = taxEntry.PostedBy.MapToNamedEntity(),
-        PostingTime = taxEntry.PostingTime,
-        Status = EntityStatusEnumExtensions.MapToDto(taxEntry.Status)
       };
     }
 

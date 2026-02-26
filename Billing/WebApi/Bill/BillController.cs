@@ -22,18 +22,6 @@ namespace Empiria.Billing.WebApi {
 
     #region Web apis
 
-    [HttpGet]
-    [Route("v2/billing-management/bills_/{billUID:guid}")]
-    public SingleObjectModel GetBill([FromUri] string billUID) {
-
-      using (var usecases = BillUseCases.UseCaseInteractor()) {
-
-        BillHolderDto bill = usecases.GetBill(billUID);
-
-        return new SingleObjectModel(base.Request, bill);
-      }
-    }
-
     #endregion Web apis
 
   } // class BillController
