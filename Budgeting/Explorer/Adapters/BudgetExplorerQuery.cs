@@ -17,7 +17,7 @@ namespace Empiria.Budgeting.Explorer.Adapters {
 
     MonthlyAvailability,
 
-    ScheduledByArea,
+    SaldosOperacion,
 
   }  // enum BudgetReportType
 

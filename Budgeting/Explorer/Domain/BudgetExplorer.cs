@@ -77,14 +77,14 @@ namespace Empiria.Budgeting.Explorer {
         columns.Insert(0, new DataTableColumn("organizationalUnitName", "Área", "string"));
         columns.Insert(1, new DataTableColumn("budgetAccountName", "Partida", "string"));
 
-        if (_command.ReportType == Adapters.BudgetReportType.ScheduledByArea) {
+        if (_command.ReportType == Adapters.BudgetReportType.SaldosOperacion) {
           columns.Insert(2, new DataTableColumn("monthName", "Mes", "text"));
         }
 
       } else if (_command.GroupBy == BudgetExplorerGroupBy.PARTIDA) {
         columns.Insert(0, new DataTableColumn("budgetAccountName", "Partida", "string"));
 
-        if (_command.ReportType == Adapters.BudgetReportType.ScheduledByArea) {
+        if (_command.ReportType == Adapters.BudgetReportType.SaldosOperacion) {
           columns.Insert(1, new DataTableColumn("monthName", "Mes", "text"));
         }
       }
@@ -107,7 +107,7 @@ namespace Empiria.Budgeting.Explorer {
       switch (_command.ReportType) {
         case Adapters.BudgetReportType.ByColumn:
           return BudgetExplorerDataService.GetBudgetDataInMultipleColumns(_command.Budget);
-        case Adapters.BudgetReportType.ScheduledByArea:
+        case Adapters.BudgetReportType.SaldosOperacion:
           return BudgetExplorerDataService.GetBudgetDataInMultipleColumnsByMonth(_command.Budget);
         default:
           return BudgetExplorerDataService.GetBudgetDataInMultipleColumns(_command.Budget);
@@ -138,7 +138,7 @@ namespace Empiria.Budgeting.Explorer {
 
     private Func<BudgetDataInColumns, object> GroupByFunction() {
 
-      if (_command.ReportType == Adapters.BudgetReportType.ScheduledByArea) {
+      if (_command.ReportType == Adapters.BudgetReportType.SaldosOperacion) {
 
         switch (_command.GroupBy) {
 
