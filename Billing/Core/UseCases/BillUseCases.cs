@@ -97,6 +97,19 @@ namespace Empiria.Billing.UseCases {
     }
 
 
+    public BillsStructureDto GetBills(string[] billsUID) {
+      Assertion.Require(billsUID, nameof(billsUID));
+
+      List<Bill> bills = new List<Bill>();
+
+      foreach (var billUID in billsUID) {
+        Bill bill = Bill.Parse(billUID);  
+        bills.Add(bill);
+      }
+      return BillMapper.MapToBillStructure(bills.ToFixedList());
+    }
+
+
     public void DeleteBill(string billUID) {
 
       Bill bill = Bill.Parse(billUID);

@@ -11,6 +11,7 @@ using Xunit;
 
 using Empiria.Billing.Adapters;
 using Empiria.Billing.UseCases;
+using Empiria.Billing;
 
 namespace Empiria.Tests.Billing {
 
@@ -88,6 +89,24 @@ namespace Empiria.Tests.Billing {
     //    Assert.NotNull(sut);
     //  }
     //}
+
+
+    [Fact]
+    public void Get_Bill_By_UID_Test() {
+
+      TestsCommonMethods.Authenticate();
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+        string[] billsUID = new string[] {
+          "3bc2aff6-b179-439b-a750-aa7a3190bd83"
+        };
+
+        BillsStructureDto sut = usecases.GetBills(billsUID);
+
+        Assert.NotNull(sut);
+      }
+    }
 
 
     [Fact]
