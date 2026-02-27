@@ -112,7 +112,6 @@ namespace Empiria.Billing {
 
     public decimal Discounts {
       get {
-        var discount = _bills.Sum(x => x.BillType.IsCreditNote ? -1 * x.Discount : x.Discount);
         return _bills.Sum(x => x.BillType.IsCreditNote ? -1 * x.Discount : x.Discount);
       }
     }
