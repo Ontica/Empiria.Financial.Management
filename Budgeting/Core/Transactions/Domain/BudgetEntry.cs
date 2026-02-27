@@ -323,7 +323,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_ENTRY_RELATED_ENTRY_ID")]
-    internal int RelatedEntryId {
+    public int RelatedEntryId {
       get; private set;
     } = -1;
 
@@ -451,6 +451,7 @@ namespace Empiria.Budgeting.Transactions {
       MarkAsDirty();
     }
 
+
     internal void SetControlNo(string controlNo) {
       Assertion.Require(controlNo, nameof(controlNo));
 
@@ -465,6 +466,17 @@ namespace Empiria.Budgeting.Transactions {
 
       Description = description;
       ProductName = description;
+
+      MarkAsDirty();
+    }
+
+
+    public void SetDate(DateTime applicationDate) {
+      Assertion.Require(applicationDate.Year == Transaction.ApplicationDate.Year, "Invalid year");
+      //Assertion.Require(applicationDate.Month == Transaction.ApplicationDate.Month, "Invalid month");
+
+      Month = applicationDate.Month;
+      Day = applicationDate.Day;
 
       MarkAsDirty();
     }
