@@ -724,6 +724,10 @@ namespace Empiria.Budgeting.Transactions {
 
       } else if (OperationType == BudgetOperationType.Exercise) {
 
+        if (this.IsNew) {
+          Save();
+        }
+
         BudgetTransactionDataService.CopyRelatedEntryControlCodes(this);
       }
     }
