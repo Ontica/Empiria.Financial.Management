@@ -50,6 +50,20 @@ namespace Empiria.Budgeting.Explorer.Data {
       return DataReader.GetPlainObjectFixedList<BudgetDataInColumns>(op);
     }
 
+
+    static internal FixedList<BudgetDataInColumns> GetMonthBalances(Budget budget) {
+      Assertion.Require(budget, nameof(budget));
+
+      var sql = "SELECT * FROM vw_Budget_Multicolumn_By_Year " +
+                $"WHERE BUDGET_ID = {budget.Id} AND " +
+                $"BUDGET_YEAR = {budget.Year} " +
+                "ORDER BY BUDGET_MONTH";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetPlainObjectFixedList<BudgetDataInColumns>(op);
+    }
+
   }  // class BudgetTransactionDataService
 
 }  // namespace Empiria.Budgeting.Explorer.Data
