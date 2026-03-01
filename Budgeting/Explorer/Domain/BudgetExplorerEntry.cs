@@ -48,7 +48,7 @@ namespace Empiria.Budgeting.Explorer {
       Requested = sourceData.Requested;
       Commited = sourceData.Commited;
       ToPay = sourceData.ToPay;
-      Excercised = sourceData.Excercised;
+      Exercised = sourceData.Exercised;
       ToExercise = sourceData.ToExercise;
       Available = sourceData.Available;
 
@@ -136,7 +136,7 @@ namespace Empiria.Budgeting.Explorer {
       get; private set;
     }
 
-    public decimal Excercised {
+    public decimal Exercised {
       get; private set;
     }
 
@@ -158,7 +158,7 @@ namespace Empiria.Budgeting.Explorer {
       Requested += entry.Requested;
       Commited += entry.Commited;
       ToPay += entry.ToPay;
-      Excercised += entry.Excercised;
+      Exercised += entry.Exercised;
       ToExercise += entry.ToExercise;
       Available += entry.Available;
     }

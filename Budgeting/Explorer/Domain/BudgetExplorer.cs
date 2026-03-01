@@ -68,7 +68,7 @@ namespace Empiria.Budgeting.Explorer {
         new DataTableColumn("requested", "Apartado", "decimal"),
         new DataTableColumn("commited", "Comprometido", "decimal"),
         new DataTableColumn("toPay", "Por pagar", "decimal"),
-        new DataTableColumn("excercised", "Ejercido", "decimal"),
+        new DataTableColumn("exercised", "Ejercido", "decimal"),
         new DataTableColumn("toExercise", "Por ejercer", "decimal"),
         new DataTableColumn("available", "Disponible", "decimal")
       };

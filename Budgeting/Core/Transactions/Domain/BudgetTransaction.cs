@@ -597,6 +597,10 @@ namespace Empiria.Budgeting.Transactions {
         return;
       }
 
+      if (this.IsNew) {
+        Save();
+      }
+
       if (!HasTransactionNo) {
         TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
       }
@@ -615,6 +619,8 @@ namespace Empiria.Budgeting.Transactions {
       SetPayable(payable);
 
       GenerateControlCodes();
+
+
     }
 
 
@@ -723,10 +729,6 @@ namespace Empiria.Budgeting.Transactions {
         BudgetTransactionDataService.GenerateApprovedPaymentControlCodes(this);
 
       } else if (OperationType == BudgetOperationType.Exercise) {
-
-        if (this.IsNew) {
-          Save();
-        }
 
         BudgetTransactionDataService.CopyRelatedEntryControlCodes(this);
       }

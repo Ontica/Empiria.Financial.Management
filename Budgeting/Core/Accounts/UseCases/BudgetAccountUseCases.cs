@@ -54,6 +54,7 @@ namespace Empiria.Budgeting.UseCases {
       Assertion.Require(existing.Count == 0,
         $"El área {orgUnit.FullName} ya tiene asignada la partida presupuestal {stdAccount.Name}.");
 
+
       var account = new BudgetAccount(accountType, stdAccount, orgUnit);
 
       account.Save();

@@ -89,7 +89,7 @@ namespace Empiria.Budgeting.Explorer {
     }
 
     [DataField("EXERCISED")]
-    public decimal Excercised {
+    public decimal Exercised {
       get; private set;
     }
 
