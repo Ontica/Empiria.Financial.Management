@@ -217,11 +217,11 @@ namespace Empiria.Billing {
 
     public decimal Taxes {
       get {
-        return BillTaxes.Sum(x => x.Total);
+        return SumTaxes();
       }
     }
 
-
+    
     [DataField("BILL_TOTAL")]
     public decimal Total {
       get; private set;
@@ -450,6 +450,13 @@ namespace Empiria.Billing {
     }
 
 
+    private decimal SumTaxes() {
+
+      return -1 * BillTaxes.FindAll(x => x.TaxMethod == BillTaxMethod.Retencion).Sum(x => x.Total) +
+                  BillTaxes.FindAll(x => x.TaxMethod != BillTaxMethod.Retencion).Sum(x => x.Total);
+    }
+
+
     internal void Update(BillFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -465,7 +472,6 @@ namespace Empiria.Billing {
       Subtotal = fields.Subtotal;
       Discount = fields.Discount;
       Total = fields.Total;
-
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
       BillExtData.Update(fields);
