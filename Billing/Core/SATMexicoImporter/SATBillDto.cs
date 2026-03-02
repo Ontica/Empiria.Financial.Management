@@ -40,6 +40,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     } = new FixedList<SATBillConceptDto>();
 
 
+    public SATBillGeneralTaxesDto GeneralTaxes {
+      get; internal set;
+    } = new SATBillGeneralTaxesDto();
+
+
     public SATBillComplementDto SATComplemento {
       get; internal set;
     } = new SATBillComplementDto();
@@ -53,7 +58,7 @@ namespace Empiria.Billing.SATMexicoImporter {
     public FixedList<BillComplementLocalTax> ImpuestosLocales {
       get; internal set;
     } = new FixedList<BillComplementLocalTax>();
-    
+
 
     public SATBillAddenda Addenda {
       get; internal set;
@@ -260,6 +265,34 @@ namespace Empiria.Billing.SATMexicoImporter {
   }  // class SATBillOrganizationDto
 
 
+  public class SATBillGeneralTaxesDto {
+    
+    public decimal TrasladoIVA {
+      get; internal set;
+    }
+
+
+    public decimal TrasladoIEPS {
+      get; internal set;
+    }
+
+
+    public decimal RetencionISR {
+      get; internal set;
+    }
+
+
+    public decimal RetencionIVA {
+      get; internal set;
+    }
+
+
+    public decimal RetencionIEPS {
+      get; internal set;
+    }
+
+  }
+
   public class SATBillCFDIRelatedDataDto {
 
     public string TipoRelacion {
@@ -304,8 +337,8 @@ namespace Empiria.Billing.SATMexicoImporter {
     public decimal Importe {
       get; internal set;
     }
-    
-    
+
+
     public bool IsBonusTax {
       get; internal set;
     }

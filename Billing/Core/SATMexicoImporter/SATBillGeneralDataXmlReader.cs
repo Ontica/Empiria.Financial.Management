@@ -285,6 +285,67 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
+    internal SATBillGeneralTaxesDto GenerateGeneralTaxesData(XmlNode gralTaxNode) {
+
+      SATBillGeneralTaxesDto generalTaxes = new SATBillGeneralTaxesDto();
+
+      var taxChildNodes = gralTaxNode.ChildNodes;
+
+      foreach (XmlNode taxChildNode in taxChildNodes) {
+
+        if (taxChildNode.Name.Equals("cfdi:Traslados")) {
+
+          GetTotalTraslados(generalTaxes, taxChildNode.ChildNodes);
+
+        } else if (taxChildNode.Name.Equals("cfdi:Retenciones")) {
+
+          GetTotalRetenciones(generalTaxes, taxChildNode);
+        }
+      }
+      return generalTaxes;
+    }
+
+    private void GetTotalRetenciones(SATBillGeneralTaxesDto generalTaxes, XmlNode taxChildNodes) {
+
+      foreach (XmlNode taxChildNode in taxChildNodes) {
+
+        string impuesto = GetAttribute(taxChildNode, "Impuesto");
+        string tipoFactor = GetAttribute(taxChildNode, "TipoFactor") == string.Empty ? "None" :
+                            GetAttribute(taxChildNode, "TipoFactor");
+
+        if (impuesto == "001" && tipoFactor != "Exento") {
+
+          generalTaxes.RetencionISR = GetAttribute<decimal>(taxChildNode, "Importe");
+
+        } else if(impuesto == "002" && tipoFactor != "Exento") {
+
+          generalTaxes.RetencionIVA = GetAttribute<decimal>(taxChildNode, "Importe");
+
+        } else if (impuesto == "003" && tipoFactor != "Exento") {
+
+          generalTaxes.RetencionIEPS = GetAttribute<decimal>(taxChildNode, "Importe");
+        }
+      }
+    }
+
+    private void GetTotalTraslados(SATBillGeneralTaxesDto generalTaxes, XmlNodeList taxChildNodes) {
+
+      foreach (XmlNode taxChildNode in taxChildNodes) {
+
+        string impuesto = GetAttribute(taxChildNode, "Impuesto");
+        string tipoFactor = GetAttribute(taxChildNode, "TipoFactor") == string.Empty ? "None" :
+                            GetAttribute(taxChildNode, "TipoFactor");
+
+        if (impuesto == "002" && tipoFactor != "Exento") {
+
+          generalTaxes.TrasladoIVA = GetAttribute<decimal>(taxChildNode, "Importe");
+        } else if (impuesto == "003" && tipoFactor != "Exento") {
+
+          generalTaxes.TrasladoIEPS = GetAttribute<decimal>(taxChildNode, "Importe");
+        }
+      }
+    }
+
     private string GetFactorTypeForComplementLocalTax(BillComplementLocalTax impuesto) {
 
       string tipoFactor = string.Empty;

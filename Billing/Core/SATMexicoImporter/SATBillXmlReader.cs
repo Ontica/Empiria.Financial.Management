@@ -62,6 +62,10 @@ namespace Empiria.Billing.SATMexicoImporter {
 
           _satBillDto.Conceptos = generalDataReader.GenerateConceptsList(node);
         }
+        if (node.Name == "cfdi:Impuestos") {
+
+          _satBillDto.GeneralTaxes = generalDataReader.GenerateGeneralTaxesData(node);
+        }
         if (node.Name == "cfdi:Complemento") {
           
           GenerateComplementData(node);
