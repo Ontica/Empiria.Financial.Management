@@ -491,6 +491,14 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public void SetBalanceColumn(BalanceColumn newColumn) {
+      Assertion.Require(newColumn, nameof(newColumn));
+
+      BalanceColumn = newColumn;
+
+      MarkAsDirty();
+    }
+
     internal void Update(BudgetEntryFields fields) {
       Assertion.Require(fields, nameof(fields));
 

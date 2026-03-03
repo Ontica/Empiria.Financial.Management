@@ -165,7 +165,8 @@ namespace Empiria.Budgeting.Transactions {
                                                     x.EntityTypeId == budgetableItem.BudgetableItem.GetEmpiriaType().Id);
         }
 
-        Assertion.Require(previousEntry, "No se encontró una entrada previa correspondiente.");
+        Assertion.Require(previousEntry, $"No se encontró una entrada previa correspondiente: " +
+                                         $"{transaction.TransactionNo} / {budgetableItem.BudgetableItem.Id}");
 
         BudgetEntry newEntry = BuildEntry(transaction, previousEntry, budgetableItem, _applicationDate, depositColumn, true);
 
