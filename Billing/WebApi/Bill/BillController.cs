@@ -22,17 +22,17 @@ namespace Empiria.Billing.WebApi {
 
     #region Web apis
 
-    //[HttpGet]
-    //[Route("v2/billing-management/bills/bills-structure")]
-    //public SingleObjectModel GetBill([FromBody] string[] billsUID) {
+    [HttpGet]
+    [Route("v2/billing-management/bills/bills-structure")]
+    public SingleObjectModel GetBill([FromBody] string[] billsUID) {
 
-    //  using (var service = BillUseCases.UseCaseInteractor()) {
+      using (var service = BillUseCases.UseCaseInteractor()) {
 
-    //    BillsStructureDto bill = service.GetBills(billsUID);
+        BillsStructureDto bill = service.GetBills(billsUID);
 
-    //    return new SingleObjectModel(base.Request, bill);
-    //  }
-    //}
+        return new SingleObjectModel(base.Request, bill);
+      }
+    }
 
     #endregion Web apis
 

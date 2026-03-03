@@ -26,7 +26,6 @@ namespace Empiria.Billing {
     
     internal BillTaxItemTotal(BillTaxMethod taxMethod, TaxType taxType,
                               FixedList<Bill> bills, decimal totalTax) {
-
       UID = taxType.UID;
       TaxType = taxType;
       TaxName = taxType.Name;
@@ -114,7 +113,7 @@ namespace Empiria.Billing {
       Assertion.Require(bills, nameof(bills));
 
       _bills = bills;
-      TaxItems = BuildTaxItems();
+      TaxItems = ValuateBuildTaxItemFrom();
     }
 
     #endregion Constructors and parsers
@@ -164,7 +163,7 @@ namespace Empiria.Billing {
 
     #endregion Properties
 
-    #region Methods
+    #region Methods Tax Totals from Items
 
     internal FixedList<BillTaxItemTotal> BuildTaxItems() {
 
@@ -226,7 +225,27 @@ namespace Empiria.Billing {
       return returnedTaxItems.ToFixedList();
     }
 
-    #endregion Methods
+
+    private FixedList<BillTaxItemTotal> ValuateBuildTaxItemFrom() {
+
+      var valuateTrasladoIVA = _bills.FindAll(x => x.SchemaData.TrasladoIVA > 0);
+      var valuateTrasladoIEPS = _bills.FindAll(x => x.SchemaData.TrasladoIEPS > 0);
+      var valuateRetencionISR = _bills.FindAll(x => x.SchemaData.RetencionISR > 0);
+      var valuateRetencionIVA = _bills.FindAll(x => x.SchemaData.RetencionIVA > 0);
+      var valuateRetencionIEPS = _bills.FindAll(x => x.SchemaData.RetencionIEPS > 0);
+
+      if (valuateTrasladoIVA.Count > 0 || valuateTrasladoIEPS.Count > 0 ||
+          valuateRetencionISR.Count > 0 || valuateRetencionIVA.Count > 0 ||
+          valuateRetencionIEPS.Count > 0) {
+
+        return BuildTaxItemsFromBillSchemaData();
+      } else {
+
+        return BuildTaxItems();
+      }
+    }
+
+    #endregion Methods Tax Totals from Items
 
     #region Methods Tax Totals from BillSchemaData
 
@@ -316,7 +335,7 @@ namespace Empiria.Billing {
                                   billsTrasladosIVA.ToFixedList(), ivaTraslados));
       }
     }
-
+    
     #endregion Methods Tax Totals from BillSchemaData
 
   }  // class BillsTotals
