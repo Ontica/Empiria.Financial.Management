@@ -217,7 +217,7 @@ namespace Empiria.Billing {
 
     public decimal Taxes {
       get {
-        return SumTaxes();
+        return GetSumTaxes();
       }
     }
 
@@ -450,7 +450,7 @@ namespace Empiria.Billing {
     }
 
 
-    private decimal SumTaxes() {
+    private decimal GetSumTaxes() {
 
       return -1 * BillTaxes.FindAll(x => x.TaxMethod == BillTaxMethod.Retencion).Sum(x => x.Total) +
                   BillTaxes.FindAll(x => x.TaxMethod != BillTaxMethod.Retencion).Sum(x => x.Total);
