@@ -425,6 +425,15 @@ namespace Empiria.Budgeting.Transactions {
       MarkAsDirty();
     }
 
+    internal void SetAccount(BudgetAccount account) {
+      Assertion.Require(account, nameof(account));
+      Assertion.Require(account.StandardAccount.Equals(this.BudgetAccount.StandardAccount), "Standard account mismatch.");
+
+      this.BudgetAccount = account;
+
+      MarkAsDirty();
+    }
+
 
     internal void SetAmount(decimal currencyAmount, decimal exchangeRate = decimal.One) {
       Assertion.Require(currencyAmount > 0, "Amount must be greater than zero.");
