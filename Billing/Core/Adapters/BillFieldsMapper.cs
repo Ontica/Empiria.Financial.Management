@@ -126,11 +126,6 @@ namespace Empiria.Billing.Adapters {
         Subtotal = dto.DatosGenerales.SubTotal,
         Discount = dto.DatosGenerales.Descuento,
         Total = dto.DatosGenerales.Total,
-        TrasladoIVA = dto.GeneralTaxes.TrasladoIVA,
-        TrasladoIEPS = dto.GeneralTaxes.TrasladoIEPS,
-        RetencionISR = dto.GeneralTaxes.RetencionISR,
-        RetencionIVA = dto.GeneralTaxes.RetencionIVA,
-        RetencionIEPS = dto.GeneralTaxes.RetencionIEPS,
         Concepts = MapToBillConceptsFieldsList(dto.Conceptos),
         SchemaData = MapToSchemaData(dto),
         SecurityData = MapToSecurityData(dto),
@@ -216,6 +211,11 @@ namespace Empiria.Billing.Adapters {
 
     static private BillSchemaDataFields MapToSchemaData(SATBillDto dto) {
 
+      decimal trasladoLocal = dto.ImpuestosLocales
+                .FindAll(x => x.MetodoAplicacion == BillTaxMethod.Traslado).Sum(x=>x.Importe);
+      decimal retencionLocal = dto.ImpuestosLocales
+                .FindAll(x => x.MetodoAplicacion == BillTaxMethod.Retencion).Sum(x => x.Importe);
+
       return new BillSchemaDataFields() {
         IssuedBy = MapToIssuedBy(dto.Emisor),
         IssuedTo = MapToIssuedTo(dto.Receptor),
@@ -232,8 +232,10 @@ namespace Empiria.Billing.Adapters {
         Subtotal = dto.DatosGenerales.SubTotal,
         Descuento = dto.DatosGenerales.Descuento,
         Total = dto.DatosGenerales.Total,
+        TrasladoLocal = trasladoLocal,
         TrasladoIVA = dto.GeneralTaxes.TrasladoIVA,
         TrasladoIEPS = dto.GeneralTaxes.TrasladoIEPS,
+        RetencionLocal = retencionLocal,
         RetencionISR = dto.GeneralTaxes.RetencionISR,
         RetencionIVA = dto.GeneralTaxes.RetencionIVA,
         RetencionIEPS = dto.GeneralTaxes.RetencionIEPS,

@@ -225,6 +225,16 @@ namespace Empiria.Billing {
     }
 
 
+    public decimal TrasladoLocal {
+      get {
+        return _schemaData.Get<decimal>("trasladoLocal", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("trasladoLocal", value);
+      }
+    }
+
+
     public decimal TrasladoIVA {
       get {
         return _schemaData.Get<decimal>("trasladoIVA", 0);
@@ -241,6 +251,16 @@ namespace Empiria.Billing {
       }
       private set {
         _schemaData.SetIfValue("trasladoIEPS", value);
+      }
+    }
+
+
+    public decimal RetencionLocal {
+      get {
+        return _schemaData.Get<decimal>("retencionLocal", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("retencionLocal", value);
       }
     }
 
@@ -311,8 +331,10 @@ namespace Empiria.Billing {
       SubTotal = schemaData.Subtotal;
       Descuento = schemaData.Descuento;
       Total = schemaData.Total;
+      TrasladoLocal = schemaData.TrasladoLocal;
       TrasladoIVA = schemaData.TrasladoIVA;
       TrasladoIEPS = schemaData.TrasladoIEPS;
+      RetencionLocal = schemaData.RetencionLocal;
       RetencionISR = schemaData.RetencionISR;
       RetencionIVA = schemaData.RetencionIVA;
       RetencionIEPS = schemaData.RetencionIEPS;

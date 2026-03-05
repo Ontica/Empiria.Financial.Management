@@ -80,31 +80,6 @@ namespace Empiria.Billing {
     }
 
 
-    public decimal TrasladoIVA {
-      get; internal set;
-    }
-
-
-    public decimal TrasladoIEPS {
-      get; internal set;
-    }
-
-
-    public decimal RetencionISR {
-      get; internal set;
-    }
-
-
-    public decimal RetencionIVA {
-      get; internal set;
-    }
-
-
-    public decimal RetencionIEPS {
-      get; internal set;
-    }
-
-
     public BillRelatedDocumentData BillRelatedDocument {
       get; internal set;
     } = new BillRelatedDocumentData();
@@ -530,12 +505,22 @@ namespace Empiria.Billing {
     }
 
 
+    public decimal TrasladoLocal {
+      get; internal set;
+    }
+
+
     public decimal TrasladoIVA {
       get; internal set;
     }
 
 
     public decimal TrasladoIEPS {
+      get; internal set;
+    }
+
+
+    public decimal RetencionLocal {
       get; internal set;
     }
 

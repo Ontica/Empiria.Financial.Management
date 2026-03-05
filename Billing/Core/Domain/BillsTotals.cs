@@ -228,15 +228,19 @@ namespace Empiria.Billing {
 
     private FixedList<BillTaxItemTotal> ValuateBuildTaxItemFrom() {
 
-      var valuateTrasladoIVA = _bills.FindAll(x => x.SchemaData.TrasladoIVA > 0);
-      var valuateTrasladoIEPS = _bills.FindAll(x => x.SchemaData.TrasladoIEPS > 0);
+      var valuateRetencionLocal = _bills.FindAll(x => x.SchemaData.RetencionLocal > 0);
       var valuateRetencionISR = _bills.FindAll(x => x.SchemaData.RetencionISR > 0);
       var valuateRetencionIVA = _bills.FindAll(x => x.SchemaData.RetencionIVA > 0);
       var valuateRetencionIEPS = _bills.FindAll(x => x.SchemaData.RetencionIEPS > 0);
+      var valuateTrasladoLocal = _bills.FindAll(x => x.SchemaData.TrasladoLocal > 0);
+      var valuateTrasladoIVA = _bills.FindAll(x => x.SchemaData.TrasladoIVA > 0);
+      var valuateTrasladoIEPS = _bills.FindAll(x => x.SchemaData.TrasladoIEPS > 0);
+      
 
       if (valuateTrasladoIVA.Count > 0 || valuateTrasladoIEPS.Count > 0 ||
           valuateRetencionISR.Count > 0 || valuateRetencionIVA.Count > 0 ||
-          valuateRetencionIEPS.Count > 0) {
+          valuateRetencionIEPS.Count > 0 || valuateRetencionLocal.Count > 0 ||
+          valuateTrasladoLocal.Count > 0) {
 
         return BuildTaxItemsFromBillSchemaData();
       } else {
@@ -256,12 +260,42 @@ namespace Empiria.Billing {
       GetRetencionISR(taxTypesGroupsByBills);
       GetRetencionIVA(taxTypesGroupsByBills);
       GetRetencionIEPS(taxTypesGroupsByBills);
+      GetRetencionLocal(taxTypesGroupsByBills);
       GetTrasladoIVA(taxTypesGroupsByBills);
       GetTrasladoIEPS(taxTypesGroupsByBills);
+      GetTrasladoLocal(taxTypesGroupsByBills);
 
       return taxTypesGroupsByBills.ToFixedList();
     }
 
+    private void GetTrasladoLocal(List<BillTaxItemTotal> taxTypesGroupsByBills) {
+
+      var billsTrasladosLocales = _bills.FindAll(x => x.SchemaData.TrasladoLocal > 0);
+
+      var localTraslados = billsTrasladosLocales.FindAll(x => !x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.TrasladoLocal) +
+                           billsTrasladosLocales.FindAll(x => x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.TrasladoLocal * -1);
+      if (localTraslados != 0) {
+        taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Traslado, TaxType.Parse(119),
+                                  billsTrasladosLocales.ToFixedList(), localTraslados));
+      }
+
+    }
+
+    private void GetRetencionLocal(List<BillTaxItemTotal> taxTypesGroupsByBills) {
+      var billsRetencionesLocales = _bills.FindAll(x => x.SchemaData.RetencionLocal > 0);
+
+      var localRetenciones = billsRetencionesLocales.FindAll(x => !x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.RetencionLocal * -1) +
+                              billsRetencionesLocales.FindAll(x => x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.RetencionLocal);
+      if (localRetenciones != 0) {
+
+        taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Retencion, TaxType.Parse(119),
+                                  billsRetencionesLocales.ToFixedList(), localRetenciones));
+      }
+    }
 
     private void GetRetencionIEPS(List<BillTaxItemTotal> taxTypesGroupsByBills) {
       var billsRetencionesIEPS = _bills.FindAll(x => x.SchemaData.RetencionIEPS > 0);
