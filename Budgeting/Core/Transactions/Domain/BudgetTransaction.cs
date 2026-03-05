@@ -420,7 +420,10 @@ namespace Empiria.Budgeting.Transactions {
       GenerateControlCodes();
 
       AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      AuthorizationDate = DateTime.Now;
+
+      AuthorizationDate = CalculateApplicationDate();
+
+
       Status = TransactionStatus.Authorized;
     }
 
@@ -476,9 +479,7 @@ namespace Empiria.Budgeting.Transactions {
 
         AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
 
-        if (ApplicationDate == ExecutionServer.DateMaxValue) {
-          ApplicationDate = DateTime.Now;
-        }
+        ApplicationDate = CalculateApplicationDate();
       }
 
       Status = TransactionStatus.Closed;
@@ -569,13 +570,16 @@ namespace Empiria.Budgeting.Transactions {
       if (IsNew && Status != TransactionStatus.Closed) {
         TransactionNo = TO_ASSIGN_TRANSACTION_NO;
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        RecordingDate = DateTime.Now;
+
+        RecordingDate = CalculateApplicationDate();
+
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
 
       } else if (Status == TransactionStatus.Pending) {
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        RecordingDate = DateTime.Now;
+
+        RecordingDate = CalculateApplicationDate();
       }
 
       BudgetTransactionDataService.WriteTransaction(this);
@@ -616,7 +620,9 @@ namespace Empiria.Budgeting.Transactions {
       }
 
       RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-      RequestedDate = DateTime.Now;
+
+      RequestedDate = CalculateApplicationDate();
+
       Status = TransactionStatus.OnAuthorization;
 
       if (OperationType == BudgetOperationType.Request) {
@@ -714,6 +720,12 @@ namespace Empiria.Budgeting.Transactions {
     #endregion Methods
 
     #region Helpers
+
+    private DateTime CalculateApplicationDate() {
+      return ApplicationDate.Date < DateTime.Now.Date &&
+                            ApplicationDate.Year == BaseBudget.Year ? ApplicationDate.Date : DateTime.Now;
+    }
+
 
     private void GenerateControlCodes() {
 
