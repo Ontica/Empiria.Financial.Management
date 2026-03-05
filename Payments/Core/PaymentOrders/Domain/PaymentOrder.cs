@@ -451,7 +451,11 @@ namespace Empiria.Payments {
       PaymentMethod = Patcher.Patch(fields.PaymentMethodUID, PaymentMethod);
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       ExchangeRate = Currency.Equals(Currency.Default) ? decimal.One : fields.ExchangeRate;
-      PaymentAccount = Patcher.Patch(fields.PaymentAccountUID, PaymentAccount);
+      if (PaymentMethod.AccountRelated) {
+        PaymentAccount = Patcher.Patch(fields.PaymentAccountUID, PaymentAccount);
+      } else {
+        PaymentAccount = PaymentAccount.Empty;
+      }
       DueTime = Patcher.Patch(fields.DueTime, DueTime);
       Priority = fields.Priority;
       Description = EmpiriaString.Clean(fields.Description);
