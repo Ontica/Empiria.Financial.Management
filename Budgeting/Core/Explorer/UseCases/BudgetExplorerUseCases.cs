@@ -13,6 +13,7 @@ using Empiria.Parties;
 using Empiria.Services;
 
 using Empiria.Budgeting.Transactions;
+using Empiria.Budgeting.Transactions.Adapters;
 
 using Empiria.Budgeting.Explorer.Adapters;
 using Empiria.Budgeting.Explorer.Data;
@@ -125,6 +126,46 @@ namespace Empiria.Budgeting.Explorer.UseCases {
       var builder = new AvailableBudgetBuilder(query);
 
       return builder.Build();
+    }
+
+
+    public FixedList<BudgetMonthEntryDto> GetAvailableBudget(BudgetAccount account, int year) {
+      Assertion.Require(account, nameof(account));
+
+      var budget = Budget.GetList(account.BudgetType)
+                         .Find(x => x.Year == year);
+
+      Assertion.Require(budget,
+        $"No se encontró un presupuesto del tipo {account.BudgetType.DisplayName} para el año {year}.");
+
+      var query = new AvailableBudgetQuery {
+        Budget = budget,
+        Accounts = new FixedList<BudgetAccount>(new[] { account }),
+        Year = year,
+      };
+
+      var builder = new AvailableBudgetBuilder(query);
+
+      FixedList<BudgetDataInColumns> result = builder.Build();
+
+      var list = result.Select(x => new BudgetMonthEntryDto {
+        Month = x.Month,
+        Amount = x.Available
+      }).ToFixedList();
+
+      var zerosMonths = EmpiriaMath.GetRange(1, 12)
+                                   .ToFixedList()
+                                   .FindAll(x => !list.Contains(y => y.Month == x))
+                                   .Select(x => new BudgetMonthEntryDto {
+                                     Month = x,
+                                     Amount = 0
+                                   }).ToFixedList();
+
+      list = FixedList<BudgetMonthEntryDto>.MergeDistinct(list, zerosMonths);
+
+      list.Sort((x, y) => x.Month.CompareTo(y.Month));
+
+      return list;
     }
 
 
