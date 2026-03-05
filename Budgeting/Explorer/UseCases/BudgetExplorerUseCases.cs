@@ -8,9 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.DynamicData;
+using Empiria.Parties;
 using Empiria.Services;
 
-using Empiria.Parties;
+using Empiria.Budgeting.Transactions;
 
 using Empiria.Budgeting.Explorer.Adapters;
 using Empiria.Budgeting.Explorer.Data;
@@ -34,21 +36,86 @@ namespace Empiria.Budgeting.Explorer.UseCases {
 
     #region Use cases
 
-    public BudgetExplorerResultDto BreakdownBudget(BudgetExplorerQuery query, string uid) {
-      Assertion.Require(uid, nameof(uid));
+    public object BreakdownBudget(ExplorerBreakdownQuery query) {
+      Assertion.Require(query, nameof(query));
 
-      string[] parts = uid.Split('|');
+      string[] parts = query.Entry.UID.Split('|');
 
       OrganizationalUnit orgUnit = OrganizationalUnit.Parse(int.Parse(parts[0]));
       BudgetAccount budgetAccount = BudgetAccount.Parse(int.Parse(parts[1]));
 
-      BudgetExplorerCommand command = BudgetExplorerQueryMapper.Map(query);
+      BudgetExplorerResult result;
 
-      var explorer = new BudgetBreakdown(command);
+      switch (query.SubQuery.ReportType) {
 
-      BudgetExplorerResult result = explorer.Execute(orgUnit, budgetAccount);
+        case "budget-transactions":
 
-      return BudgetExplorerResultMapper.Map(query, result);
+          FixedList<BudgetTransaction> txns = BudgetExplorerDataService.GetBudgetTransactions(orgUnit, budgetAccount,
+                                                                                              query.Entry.Year, query.Entry.Month);
+
+          var dtoTxn = new DynamicDto<object>(
+            new DataTableColumn[] {
+                new DataTableColumn("transactionNo", "Mes", "text-nowrap"),
+                new DataTableColumn("description", "descripción", "text"),
+                new DataTableColumn("applicationDate", "Fecha aplicación", "date"),
+              }.ToFixedList(),
+            txns.Select(x => (object) new {
+              x.TransactionNo,
+              Description = EmpiriaString.FirstWithValue(x.Justification, x.Description),
+              x.ApplicationDate,
+              x.UID,
+              ClickableEntry = true,
+              ItemType = "Entry"
+            }).ToFixedList());
+
+          return dtoTxn;
+
+        case "budget-entries":
+
+          FixedList<BudgetEntry> entries = BudgetExplorerDataService.GetBudgetEntries(orgUnit, budgetAccount,
+                                                                                      query.Entry.Year, query.Entry.Month);
+
+          var dto = new DynamicDto<object>(
+            new DataTableColumn[] {
+            new DataTableColumn("transactionNo", "Transacción", "text-nowrap"),
+            new DataTableColumn("description", "Descripción", "text"),
+            new DataTableColumn("monthName", "Mes", "text"),
+            new DataTableColumn("columnName", "Movimiento", "text"),
+            new DataTableColumn("controlNo", "Num Verif", "text-nowrap"),
+            new DataTableColumn("deposit", "Ampliación", "decimal"),
+            new DataTableColumn("withdrawal", "Reducción", "decimal"),
+            new DataTableColumn("applicationDate", "Fecha aplicación", "date"),
+          }.ToFixedList(),
+            entries.Select(x => (object) new {
+              x.Transaction.TransactionNo,
+              Description = EmpiriaString.FirstWithValue(x.Description, x.ProductName, x.Transaction.Justification),
+              x.MonthName,
+              ColumnName = x.BalanceColumn.Name,
+              x.ControlNo,
+              x.Deposit,
+              x.Withdrawal,
+              x.Transaction.ApplicationDate,
+              x.Transaction.UID,
+              ClickableEntry = true,
+              ItemType = "Entry"
+            }).ToFixedList());
+
+          return dto;
+
+        case "monthly-balance":
+
+          BudgetExplorerCommand command = BudgetExplorerQueryMapper.Map(query.Query);
+
+          var explorer = new BudgetBreakdown(command);
+
+          result = explorer.Execute(orgUnit, budgetAccount);
+
+          return BudgetExplorerResultMapper.Map(query.Query, result);
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized report type '{query.SubQuery.ReportType}'.");
+
+      }
     }
 
 
