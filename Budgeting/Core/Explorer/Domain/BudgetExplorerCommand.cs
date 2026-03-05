@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Domain Layer                            *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Query DTO                               *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Query DTO                               *
 *  Type     : BudgetExplorerCommand                      License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Command information used by the BudgetExplorer.                                                *

@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Domain Layer                            *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Builder                                 *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Builder                                 *
 *  Type     : BudgetBreakdown                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Builds budget information for a budget account break down by months.                           *

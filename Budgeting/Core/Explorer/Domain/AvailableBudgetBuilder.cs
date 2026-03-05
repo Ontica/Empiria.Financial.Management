@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Domain Layer                            *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Information builder                     *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Information builder                     *
 *  Type     : AvailableBudgetBuilder                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Builds available budget information.                                                           *

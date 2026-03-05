@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Adapters Layer                          *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Dynamic Columns Output DTO              *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Dynamic Columns Output DTO              *
 *  Type     : BudgetExplorerResultDto                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Dynamic columns output DTO with budget information.                                            *

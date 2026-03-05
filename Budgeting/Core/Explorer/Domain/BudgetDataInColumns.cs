@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Domain Layer                            *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Value type                              *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Value type                              *
 *  Type     : BudgetDataInColumns                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Value type that holds budget data in columns.                                                  *

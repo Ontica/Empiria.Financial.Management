@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Use cases Layer                         *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Use case interactor class               *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Use case interactor class               *
 *  Type     : BudgetExplorerUseCases                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Use cases for retrieve budget information.                                                     *

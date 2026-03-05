@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Domain Layer                            *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Builder                                 *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Builder                                 *
 *  Type     : BudgetExplorer                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Retrieves budget information bases on a query returning a dynamic result data structure.       *

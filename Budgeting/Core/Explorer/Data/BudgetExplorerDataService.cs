@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Data Layer                              *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Data Service                            *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Data Service                            *
 *  Type     : BudgetExplorerDataService                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides data access services for the budget explorer.                                         *
@@ -17,6 +17,18 @@ namespace Empiria.Budgeting.Explorer.Data {
 
   /// <summary>Provides data access services for the budget explorer.</summary>
   static internal class BudgetExplorerDataService {
+
+    static internal FixedList<BudgetDataInMonths> GetBudgetDataInMonthsColumns(string filter) {
+      Assertion.Require(filter, nameof(filter));
+
+      var sql = "SELECT * FROM vw_Budget_By_Months " +
+                $"WHERE {filter}";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetPlainObjectFixedList<BudgetDataInMonths>(op);
+    }
+
 
     static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumns(Budget budget) {
       Assertion.Require(budget, nameof(budget));

@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Adapters Layer                          *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Input query DTO                         *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Input query DTO                         *
 *  Type     : AvailableBudgetQuery                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Input query for request available budget information.                                          *

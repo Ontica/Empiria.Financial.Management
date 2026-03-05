@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Adapters Layer                          *
-*  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Mapper                                  *
+*  Assembly : Empiria.Budgeting.Core.dll                 Pattern   : Mapper                                  *
 *  Type     : BudgetExplorerResultMapper                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Maps a BudgetExplorerResult instance to its output DTO.                                        *
