@@ -50,6 +50,16 @@ namespace Empiria.Payments {
       BrokerConfigData = brokerConfigData;
       PaymentOrder = paymentOrder;
 
+      if (!PaymentOrder.PaymentMethod.IsElectronic) {
+
+        Assertion.Require(PaymentOrder.HasDueTime, "Payment order must have a valid due time.");
+
+        PostingTime = PaymentOrder.DueTime;
+
+      } else {
+        PostingTime = DateTime.Now;
+      }
+
       LoadLogEntries();
     }
 
@@ -273,10 +283,16 @@ namespace Empiria.Payments {
 
         case PaymentInstructionEvent.RequestPayment:
 
-          if (!PaymentOrder.PaymentMethod.IsElectronic) {
+          if (!PaymentOrder.PaymentMethod.IsElectronic && !PaymentOrder.HasDueTime) {
+
+            Assertion.RequireFail("Las instrucciones de pago que no son electrónicas deben contener la fecha real del pago.");
+
+          } else if (!PaymentOrder.PaymentMethod.IsElectronic) {
+
             Status = PaymentInstructionStatus.Payed;
             PaymentOrder.SetAsPayed(this);
             break;
+
           }
 
           Assertion.Require(Rules.CanRequestPayment(),
@@ -328,7 +344,7 @@ namespace Empiria.Payments {
       if (IsNew) {
         PaymentInstructionNo = PaymentInstructionData.GeneratePaymentInstructionNo(this);
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        PostingTime = DateTime.Now;
+        PostingTime = ExecutionServer.IsMinOrMaxDate(PostingTime) ? DateTime.Now : PostingTime;
       }
 
       PaymentInstructionData.WritePaymentInstruction(this);
@@ -343,6 +359,7 @@ namespace Empiria.Payments {
     }
 
     private void SaveEventLogEntry() {
+
       var logEntry = new PaymentInstructionLogEntry(this, _lastEvent, _userMessageText);
 
       logEntry.Save();

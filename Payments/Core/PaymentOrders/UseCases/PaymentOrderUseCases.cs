@@ -44,6 +44,10 @@ namespace Empiria.Payments.UseCases {
       Assertion.Require(order.Rules.CanGeneratePaymentInstruction(),
                        "No se puede crear la instrucción de pago");
 
+      if (!order.PaymentMethod.IsElectronic && !order.HasDueTime) {
+        Assertion.RequireFail("Debido a que el pago no es electrónico, se requiere proporcionar la fecha real de pago.");
+      }
+
       order.CreatePaymentInstruction();
 
       order.Save();

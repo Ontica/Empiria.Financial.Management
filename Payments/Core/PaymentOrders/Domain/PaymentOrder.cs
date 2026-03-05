@@ -163,6 +163,13 @@ namespace Empiria.Payments {
     }
 
 
+    public bool HasDueTime {
+      get {
+        return !ExecutionServer.IsMinOrMaxDate(DueTime);
+      }
+    }
+
+
     public Priority Priority {
       get {
         return ExtData.Get("priority", Priority.Normal);

@@ -10,10 +10,8 @@
 
 using System;
 using Empiria.Json;
-
-using Empiria.Payments.Processor.Adapters;
-
 using Empiria.Payments.Data;
+using Empiria.Payments.Processor.Adapters;
 
 namespace Empiria.Payments {
 
@@ -27,21 +25,22 @@ namespace Empiria.Payments {
     }
 
 
-    internal PaymentInstructionLogEntry(PaymentInstruction paymentInstruction,
+    internal PaymentInstructionLogEntry(PaymentInstruction instruction,
                                         PaymentInstructionEvent instructionEvent,
                                         string userMessage) {
-      Assertion.Require(paymentInstruction, nameof(paymentInstruction));
-      Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
+      Assertion.Require(instruction, nameof(instruction));
+      Assertion.Require(!instruction.IsEmptyInstance, nameof(instruction));
       Assertion.Require(instructionEvent != PaymentInstructionEvent.None, nameof(instructionEvent));
 
       userMessage = userMessage ?? string.Empty;
 
-      TimeStamp = DateTime.Now;
-      PaymentInstruction = paymentInstruction;
-      PaymentOrder = paymentInstruction.PaymentOrder;
+      PaymentInstruction = instruction;
+      PaymentOrder = instruction.PaymentOrder;
+
+      TimeStamp = GetTimeStamp(PaymentOrder);
+
       Load(instructionEvent, userMessage);
     }
-
 
     internal PaymentInstructionLogEntry(PaymentInstruction paymentInstruction,
                                         BrokerResponseDto brokerResponse) {
@@ -50,9 +49,11 @@ namespace Empiria.Payments {
       Assertion.Require(!paymentInstruction.IsEmptyInstance, nameof(paymentInstruction));
       Assertion.Require(brokerResponse, nameof(brokerResponse));
 
-      TimeStamp = DateTime.Now;
       PaymentInstruction = paymentInstruction;
       PaymentOrder = paymentInstruction.PaymentOrder;
+
+      TimeStamp = GetTimeStamp(PaymentOrder);
+
       Load(brokerResponse);
     }
 
@@ -112,8 +113,17 @@ namespace Empiria.Payments {
 
     #region Methods
 
-    protected override void OnSave() {
-      PaymentInstructionData.WritePaymentLog(this);
+    private DateTime GetTimeStamp(PaymentOrder paymentOrder) {
+
+      if (PaymentOrder.PaymentMethod.IsElectronic) {
+        return DateTime.Now;
+
+      } else if (!PaymentOrder.HasDueTime) {
+        throw Assertion.EnsureNoReachThisCode("Payment order must have a valid due time.");
+
+      } else {
+        return PaymentOrder.DueTime;
+      }
     }
 
 
@@ -130,7 +140,9 @@ namespace Empiria.Payments {
 
 
     private void Load(BrokerResponseDto brokerResponse) {
+
       var brokerName = PaymentInstruction.BrokerConfigData.Name;
+
       var brokerInstructionNo = PaymentInstruction.BrokerInstructionNo;
 
       LogText = $"Solicitud {brokerName} {brokerInstructionNo}. ";
@@ -140,8 +152,14 @@ namespace Empiria.Payments {
       } else {
         LogText += brokerResponse.BrokerStatusText;
       }
+
       BrokerResponse = brokerResponse.BrokerStatusText;
+
       Status = brokerResponse.Status;
+    }
+
+    protected override void OnSave() {
+      PaymentInstructionData.WritePaymentLog(this);
     }
 
     #endregion Methods
