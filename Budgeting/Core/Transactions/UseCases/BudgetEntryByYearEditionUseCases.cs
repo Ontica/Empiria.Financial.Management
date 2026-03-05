@@ -10,6 +10,8 @@
 
 using Empiria.Services;
 
+using Empiria.Budgeting.Explorer.UseCases;
+
 using Empiria.Budgeting.Transactions.Adapters;
 
 namespace Empiria.Budgeting.Transactions.UseCases {
@@ -41,6 +43,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       var byYearTransaction = new BudgetTransactionByYear(transaction);
 
       FixedList<BudgetEntry> entries = byYearTransaction.CreateBudgetEntries(fields);
+
+      EnsureAvailableBudget(BudgetAccount.Parse(fields.BudgetAccountUID), fields.Year, entries);
 
       transaction.UpdateEntries(entries);
 
@@ -97,6 +101,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       FixedList<BudgetEntry> updatedEntries = byYearTransaction.GetUpdatedBudgetEntries(fields);
 
+      EnsureAvailableBudget(BudgetAccount.Parse(fields.BudgetAccountUID), fields.Year, updatedEntries);
+
       transaction.UpdateEntries(updatedEntries);
 
       transaction.Save();
@@ -107,6 +113,28 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
     #endregion Use cases
+
+    #region Helpers
+
+    static private void EnsureAvailableBudget(BudgetAccount budgetAccount, int year, FixedList<BudgetEntry> entries) {
+      var yearAvailable = BudgetExplorerUseCases.UseCaseInteractor()
+                                                .GetAvailableBudget(budgetAccount, year);
+
+      foreach (var entry in entries.FindAll(x => x.BalanceColumn.Equals(BalanceColumn.Reduced) &&
+                                                  x.Status != StateEnums.TransactionStatus.Deleted)) {
+
+        var available = yearAvailable.Find(x => x.Month == entry.Month);
+
+        if (available.Amount < entry.Amount) {
+          Assertion.RequireFail($"No hay presupuesto suficiente para la partida {entry.BudgetAccount.Name} en el mes de {entry.MonthName}. " +
+                                $"Disponible: {available.Amount:C2}, Solicitado: {entry.Amount:C2}.");
+        }
+
+      }
+    }
+
+    #endregion Helpers
+
 
   }  // class BudgetEntryByYearEditionUseCases
 
