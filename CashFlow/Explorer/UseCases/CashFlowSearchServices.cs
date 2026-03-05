@@ -86,27 +86,6 @@ namespace Empiria.CashFlow.Explorer.UseCases {
       return new DynamicDto<CashFlowAccountDto>(query, columns, dtos);
     }
 
-
-    public DynamicDto<ICreditEntryData> SearchExternalCreditEntries(RecordsSearchQuery query) {
-      Assertion.Require(query, nameof(query));
-
-      ExternalCreditSystemServices provider = new ExternalCreditSystemServices();
-
-      FixedList<ICreditEntryData> entries = provider.GetCreditEntries(query.Keywords.ToFixedList(),
-                                                                      query.FromDate,
-                                                                      query.ToDate);
-      var columns = new DataTableColumn[] {
-        new DataTableColumn("accountNo", "No crédito", "text"),
-        new DataTableColumn("subledgerAccountNo", "Auxiliar", "text"),
-        new DataTableColumn("applicationDate", "Fecha", "date"),
-        new DataTableColumn("operationTypeNo", "Clave", "text"),
-        new DataTableColumn("operationName", "Concepto", "text"),
-        new DataTableColumn("amount", "Importe", "decimal"),
-      }.ToFixedList();
-
-      return new DynamicDto<ICreditEntryData>(query, columns, entries);
-    }
-
     #endregion Services
 
   }  // class Services

@@ -23,6 +23,23 @@ namespace Empiria.Budgeting.Explorer.Adapters {
 
 
 
+  public class ExplorerBreakdownQuery {
+
+    public BudgetExplorerQuery Query {
+      get; set;
+    }
+
+    public BreakdownSubQuery SubQuery {
+      get; set;
+    }
+
+    public BreakdownEntry Entry {
+      get; set;
+    }
+
+  }
+
+
   /// <summary>Input query DTO used to explore budget information.</summary>
   public class BudgetExplorerQuery {
 
@@ -51,5 +68,33 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     } = BudgetExplorerGroupBy.AREA_PARTIDA;
 
   }  // class BudgetExplorerQuery
+
+
+  public class BreakdownSubQuery {
+
+    public string ReportType {
+      get; set;
+    } = string.Empty;
+
+  }  // class BreakdownSubQuery
+
+
+
+  public class BreakdownEntry {
+
+    public string UID {
+      get; set;
+    } = string.Empty;
+
+
+    public int Year {
+      get; set;
+    }
+
+    public int Month {
+      get; set;
+    }
+
+  }  // class BreakdownEntry
 
 }  // namespace Empiria.Budgeting.Explorer.Adapters

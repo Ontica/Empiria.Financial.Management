@@ -2,13 +2,16 @@
 *                                                                                                            *
 *  Module   : Budget Explorer                            Component : Data Layer                              *
 *  Assembly : Empiria.Budgeting.Explorer.dll             Pattern   : Data Service                            *
-*  Type     : BudgetDataInColumns                        License   : Please read LICENSE.txt file            *
+*  Type     : BudgetExplorerDataService                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides data access services for the budget explorer.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Data;
+using Empiria.Parties;
+
+using Empiria.Budgeting.Transactions;
 
 namespace Empiria.Budgeting.Explorer.Data {
 
@@ -48,6 +51,70 @@ namespace Empiria.Budgeting.Explorer.Data {
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetPlainObjectFixedList<BudgetDataInColumns>(op);
+    }
+
+
+    static internal FixedList<BudgetEntry> GetBudgetEntries(OrganizationalUnit orgUnit,
+                                                            BudgetAccount account,
+                                                            int year, int month) {
+      var filter = new Filter();
+
+      if (!orgUnit.IsEmptyInstance) {
+        filter.AppendAnd($"ACCT_ORG_UNIT_ID = {orgUnit.Id}");
+      }
+      if (!account.IsEmptyInstance) {
+        filter.AppendAnd($"BDG_ENTRY_BUDGET_ACCT_ID = {account.Id}");
+      }
+      if (year > 0) {
+        filter.AppendAnd($"BDG_ENTRY_YEAR = {year}");
+      }
+      if (month > 0) {
+        filter.AppendAnd($"BDG_ENTRY_MONTH = {month}");
+      }
+
+      filter.AppendAnd($"BDG_ENTRY_STATUS = 'C'");
+
+      var sql = "SELECT BDG_ENTRY_ID FROM VW_BUDGET_TRANSACTIONS_GRAL " +
+                $"WHERE {filter.ToString()} " +
+                $"ORDER BY BDG_ENTRY_YEAR, BDG_ENTRY_MONTH, BDG_TXN_APPLICATION_DATE";
+
+      var op = DataOperation.Parse(sql);
+
+      var entriesIds = DataReader.GetFieldValues<int>(op).ToFixedList();
+
+      return entriesIds.Select(x => BudgetEntry.Parse(x)).ToFixedList();
+    }
+
+
+    static internal FixedList<BudgetTransaction> GetBudgetTransactions(OrganizationalUnit orgUnit,
+                                                                       BudgetAccount account,
+                                                                       int year, int month) {
+      var filter = new Filter();
+
+      if (!orgUnit.IsEmptyInstance) {
+        filter.AppendAnd($"ACCT_ORG_UNIT_ID = {orgUnit.Id}");
+      }
+      if (!account.IsEmptyInstance) {
+        filter.AppendAnd($"BDG_ENTRY_BUDGET_ACCT_ID = {account.Id}");
+      }
+      if (year > 0) {
+        filter.AppendAnd($"BDG_ENTRY_YEAR = {year}");
+      }
+      if (month > 0) {
+        filter.AppendAnd($"BDG_ENTRY_MONTH = {month}");
+      }
+
+      filter.AppendAnd($"BDG_ENTRY_STATUS = 'C'");
+
+      var sql = "SELECT BDG_ENTRY_TXN_ID FROM VW_BUDGET_TRANSACTIONS_GRAL " +
+                $"WHERE {filter.ToString()} " +
+                $"ORDER BY BDG_ENTRY_YEAR, BDG_ENTRY_MONTH, BDG_TXN_APPLICATION_DATE";
+
+      var op = DataOperation.Parse(sql);
+
+      var txnsIds = DataReader.GetFieldValues<int>(op).ToFixedList();
+
+      return txnsIds.SelectDistinct(x => BudgetTransaction.Parse(x)).ToFixedList();
     }
 
 

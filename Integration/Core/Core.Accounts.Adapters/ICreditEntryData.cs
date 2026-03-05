@@ -27,7 +27,7 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    string OperationTypeNo {
+    string AccountName {
       get;
     }
 

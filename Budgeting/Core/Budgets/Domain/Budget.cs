@@ -8,9 +8,14 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+using System.Linq;
+
 using Empiria.Ontology;
 
 using Empiria.Budgeting.Transactions;
+
+using Empiria.Budgeting.Budgets.Data;
 
 namespace Empiria.Budgeting {
 
@@ -65,6 +70,16 @@ namespace Empiria.Budgeting {
     }
 
 
+    public FixedList<int> ClosedMonths {
+      get {
+        return ExtData.GetFixedList<int>("closedMonths", false);
+      }
+      private set {
+        ExtData.SetIf("closedMonths", value.Select(x => x).ToList(), value.Count != 0);
+      }
+    }
+
+
     public bool EditionAllowed {
       get {
         return AvailableTransactionTypes.Count > 0;
@@ -90,6 +105,54 @@ namespace Empiria.Budgeting {
     }
 
     #endregion Properties
+
+    #region Methods
+
+    public bool CanCloseMonth(int month) {
+      Assertion.Require(1 <= month && month <= 12, nameof(month));
+
+      return !ClosedMonths.Contains(month) && month < DateTime.Today.Month;
+    }
+
+
+    public bool CanOpenMonth(int month) {
+      Assertion.Require(1 <= month && month <= 12, nameof(month));
+
+      return ClosedMonths.Contains(month) && month < DateTime.Today.Month;
+    }
+
+
+    public void CloseMonth(int month) {
+      Assertion.Require(1 <= month && month <= 12, nameof(month));
+
+      var newlist = ClosedMonths.ToList();
+
+      newlist.Add(month);
+
+      ClosedMonths = newlist.ToFixedList();
+
+      Save();
+    }
+
+
+    protected override void OnSave() {
+      BudgetData.Write(this, base.ExtData.ToString());
+    }
+
+
+    public void OpenMonth(int month) {
+      Assertion.Require(1 <= month && month <= 12, nameof(month));
+
+      var newlist = ClosedMonths.ToList();
+
+      newlist.Remove(month);
+
+      ClosedMonths = newlist.ToFixedList();
+
+      Save();
+    }
+
+    #endregion Methods
 
   }  // class Budget
 
