@@ -126,6 +126,11 @@ namespace Empiria.Billing.Adapters {
         Subtotal = dto.DatosGenerales.SubTotal,
         Discount = dto.DatosGenerales.Descuento,
         Total = dto.DatosGenerales.Total,
+        TrasladoIVA = dto.GeneralTaxes.TrasladoIVA,
+        TrasladoIEPS = dto.GeneralTaxes.TrasladoIEPS,
+        RetencionISR = dto.GeneralTaxes.RetencionISR,
+        RetencionIVA = dto.GeneralTaxes.RetencionIVA,
+        RetencionIEPS = dto.GeneralTaxes.RetencionIEPS,
         Concepts = MapToBillConceptsFieldsList(dto.Conceptos),
         SchemaData = MapToSchemaData(dto),
         SecurityData = MapToSecurityData(dto),
@@ -227,6 +232,11 @@ namespace Empiria.Billing.Adapters {
         Subtotal = dto.DatosGenerales.SubTotal,
         Descuento = dto.DatosGenerales.Descuento,
         Total = dto.DatosGenerales.Total,
+        TrasladoIVA = dto.GeneralTaxes.TrasladoIVA,
+        TrasladoIEPS = dto.GeneralTaxes.TrasladoIEPS,
+        RetencionISR = dto.GeneralTaxes.RetencionISR,
+        RetencionIVA = dto.GeneralTaxes.RetencionIVA,
+        RetencionIEPS = dto.GeneralTaxes.RetencionIEPS,
         TipoCambio = dto.DatosGenerales.TipoCambio,
         TipoComprobante = dto.DatosGenerales.TipoDeComprobante,
       };
@@ -280,7 +290,7 @@ namespace Empiria.Billing.Adapters {
       }
       return BillRelatedDocumentType.Ninguno;
     }
-    
+
     #endregion Helpers
 
   } // class BillFieldsMapper

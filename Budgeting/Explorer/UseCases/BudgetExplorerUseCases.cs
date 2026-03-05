@@ -13,6 +13,7 @@ using Empiria.Services;
 using Empiria.Parties;
 
 using Empiria.Budgeting.Explorer.Adapters;
+using Empiria.Budgeting.Explorer.Data;
 
 namespace Empiria.Budgeting.Explorer.UseCases {
 
@@ -70,6 +71,14 @@ namespace Empiria.Budgeting.Explorer.UseCases {
       BudgetExplorerResult result = explorer.Execute();
 
       return BudgetExplorerResultMapper.Map(query, result);
+    }
+
+
+    public FixedList<BudgetDataInColumns> GetMonthBalances(Budget budget) {
+      Assertion.Require(budget, nameof(budget));
+
+      return BudgetExplorerDataService.GetMonthBalances(budget);
+
     }
 
     #endregion Use cases

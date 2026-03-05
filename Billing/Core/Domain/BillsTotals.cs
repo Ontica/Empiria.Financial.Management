@@ -23,6 +23,26 @@ namespace Empiria.Billing {
 
     }
 
+    
+    internal BillTaxItemTotal(BillTaxMethod taxMethod, TaxType taxType,
+                              FixedList<Bill> bills, decimal totalTax) {
+      UID = taxType.UID;
+      TaxType = taxType;
+      TaxName = taxType.Name;
+      TaxMethod = taxMethod;
+
+      if (taxMethod == BillTaxMethod.Retencion) {
+        TaxName = $"{taxType.Name} Retenido";
+      }
+
+      BaseAmount = Math.Round(bills.Sum(x => x.Subtotal), 2, MidpointRounding.AwayFromZero);
+
+      var taxes = Math.Round(totalTax, 2, MidpointRounding.AwayFromZero);
+
+      Total = taxes;
+    }
+
+
     internal BillTaxItemTotal(BillTaxMethod taxMethod, TaxType taxType,
                               FixedList<BillTaxEntry> billTaxEntries) {
       UID = taxType.UID;
@@ -93,7 +113,7 @@ namespace Empiria.Billing {
       Assertion.Require(bills, nameof(bills));
 
       _bills = bills;
-      TaxItems = BuildTaxItems();
+      TaxItems = ValuateBuildTaxItemFrom();
     }
 
     #endregion Constructors and parsers
@@ -143,21 +163,21 @@ namespace Empiria.Billing {
 
     #endregion Properties
 
-    #region Methods
+    #region Methods Tax Totals from Items
 
     internal FixedList<BillTaxItemTotal> BuildTaxItems() {
 
       var taxTypesGroupsByBills = new List<BillTaxItemTotal>();
 
       foreach (var bill in _bills) {
-
+        
         taxTypesGroupsByBills.AddRange(GetTaxItemsByBills(bill));
       }
 
       return GroupTaxesByType(taxTypesGroupsByBills.ToFixedList());
     }
 
-
+    
     private List<BillTaxItemTotal> GetTaxItemsByBills(Bill bill) {
 
       var taxItemsByBills = new List<BillTaxItemTotal>();
@@ -165,8 +185,9 @@ namespace Empiria.Billing {
       var taxTypesByBill = bill.BillTaxes.GroupBy(x => new { x.TaxType, x.TaxMethod });
 
       foreach (var taxTypeGroup in taxTypesByBill) {
-
-        var taxTotal = new BillTaxItemTotal(taxTypeGroup.Key.TaxMethod, taxTypeGroup.Key.TaxType, taxTypeGroup.ToFixedList());
+        
+        var taxTotal = new BillTaxItemTotal(taxTypeGroup.Key.TaxMethod,
+                                            taxTypeGroup.Key.TaxType, taxTypeGroup.ToFixedList());
 
         taxItemsByBills.Add(taxTotal);
       }
@@ -175,13 +196,15 @@ namespace Empiria.Billing {
     }
 
 
-    static private FixedList<BillTaxItemTotal> GroupTaxesByType(FixedList<BillTaxItemTotal> billTaxItemTotals) {
+    static private FixedList<BillTaxItemTotal> GroupTaxesByType(
+                                                FixedList<BillTaxItemTotal> billTaxItemTotals) {
 
       var returnedTaxItems = new List<BillTaxItemTotal>();
 
       foreach (var taxItem in billTaxItemTotals) {
 
-        var existTaxItemType = returnedTaxItems.Find(x => x.TaxType == taxItem.TaxType && x.TaxName == taxItem.TaxName);
+        var existTaxItemType = returnedTaxItems.Find(x => x.TaxType == taxItem.TaxType &&
+                                                          x.TaxName == taxItem.TaxName);
 
         if (existTaxItemType != null) {
           existTaxItemType.SumTotals(taxItem);
@@ -202,7 +225,118 @@ namespace Empiria.Billing {
       return returnedTaxItems.ToFixedList();
     }
 
-    #endregion Methods
+
+    private FixedList<BillTaxItemTotal> ValuateBuildTaxItemFrom() {
+
+      var valuateTrasladoIVA = _bills.FindAll(x => x.SchemaData.TrasladoIVA > 0);
+      var valuateTrasladoIEPS = _bills.FindAll(x => x.SchemaData.TrasladoIEPS > 0);
+      var valuateRetencionISR = _bills.FindAll(x => x.SchemaData.RetencionISR > 0);
+      var valuateRetencionIVA = _bills.FindAll(x => x.SchemaData.RetencionIVA > 0);
+      var valuateRetencionIEPS = _bills.FindAll(x => x.SchemaData.RetencionIEPS > 0);
+
+      if (valuateTrasladoIVA.Count > 0 || valuateTrasladoIEPS.Count > 0 ||
+          valuateRetencionISR.Count > 0 || valuateRetencionIVA.Count > 0 ||
+          valuateRetencionIEPS.Count > 0) {
+
+        return BuildTaxItemsFromBillSchemaData();
+      } else {
+
+        return BuildTaxItems();
+      }
+    }
+
+    #endregion Methods Tax Totals from Items
+
+    #region Methods Tax Totals from BillSchemaData
+
+    internal FixedList<BillTaxItemTotal> BuildTaxItemsFromBillSchemaData() {
+
+      List<BillTaxItemTotal> taxTypesGroupsByBills = new List<BillTaxItemTotal>();
+
+      GetRetencionISR(taxTypesGroupsByBills);
+      GetRetencionIVA(taxTypesGroupsByBills);
+      GetRetencionIEPS(taxTypesGroupsByBills);
+      GetTrasladoIVA(taxTypesGroupsByBills);
+      GetTrasladoIEPS(taxTypesGroupsByBills);
+
+      return taxTypesGroupsByBills.ToFixedList();
+    }
+
+
+    private void GetRetencionIEPS(List<BillTaxItemTotal> taxTypesGroupsByBills) {
+      var billsRetencionesIEPS = _bills.FindAll(x => x.SchemaData.RetencionIEPS > 0);
+
+      var iepsRetenciones = billsRetencionesIEPS.FindAll(x => !x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.RetencionIEPS * -1) +
+                              billsRetencionesIEPS.FindAll(x => x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.RetencionIEPS);
+      if (iepsRetenciones != 0) {
+
+        taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Retencion, TaxType.Parse(103),
+                                  billsRetencionesIEPS.ToFixedList(), iepsRetenciones));
+      }
+    }
+
+
+    private void GetRetencionISR(List<BillTaxItemTotal> taxTypesGroupsByBills) {
+      var billsRetencionesISR = _bills.FindAll(x => x.SchemaData.RetencionISR > 0);
+
+      var isrRetenciones = billsRetencionesISR.FindAll(x => !x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.RetencionISR * -1) +
+                              billsRetencionesISR.FindAll(x => x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.RetencionISR);
+      if (isrRetenciones != 0) {
+        taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Retencion, TaxType.Parse(102),
+                                  billsRetencionesISR.ToFixedList(), isrRetenciones));
+      }
+    }
+
+
+    private void GetRetencionIVA(List<BillTaxItemTotal> taxTypesGroupsByBills) {
+
+      var billsRetencionesIVA = _bills.FindAll(x => x.SchemaData.RetencionIVA > 0);
+
+      var ivaRetenciones = billsRetencionesIVA.FindAll(x => !x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.RetencionIVA * -1) +
+                              billsRetencionesIVA.FindAll(x => x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.RetencionIVA);
+      if (ivaRetenciones != 0) {
+        taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Retencion, TaxType.Parse(101),
+                                  billsRetencionesIVA.ToFixedList(), ivaRetenciones));
+      }
+    }
+
+
+    private void GetTrasladoIEPS(List<BillTaxItemTotal> taxTypesGroupsByBills) {
+
+      var billsTrasladosIEPS = _bills.FindAll(x => x.SchemaData.TrasladoIEPS > 0);
+
+      var iepsTraslados = billsTrasladosIEPS.FindAll(x => !x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.TrasladoIEPS) +
+                           billsTrasladosIEPS.FindAll(x => x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.TrasladoIEPS * -1);
+      if (iepsTraslados != 0) {
+        taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Traslado, TaxType.Parse(103),
+                                  billsTrasladosIEPS.ToFixedList(), iepsTraslados));
+      }
+    }
+
+
+    private void GetTrasladoIVA(List<BillTaxItemTotal> taxTypesGroupsByBills) {
+
+      var billsTrasladosIVA = _bills.FindAll(x => x.SchemaData.TrasladoIVA > 0);
+
+      var ivaTraslados = billsTrasladosIVA.FindAll(x => !x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.TrasladoIVA) +
+                           billsTrasladosIVA.FindAll(x => x.BillType.IsCreditNote)
+                              .Sum(x => x.SchemaData.TrasladoIVA * -1);
+      if (ivaTraslados != 0) {
+        taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Traslado, TaxType.Parse(101),
+                                  billsTrasladosIVA.ToFixedList(), ivaTraslados));
+      }
+    }
+    
+    #endregion Methods Tax Totals from BillSchemaData
 
   }  // class BillsTotals
 

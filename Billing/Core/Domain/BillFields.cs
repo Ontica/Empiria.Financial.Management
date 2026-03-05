@@ -80,6 +80,31 @@ namespace Empiria.Billing {
     }
 
 
+    public decimal TrasladoIVA {
+      get; internal set;
+    }
+
+
+    public decimal TrasladoIEPS {
+      get; internal set;
+    }
+
+
+    public decimal RetencionISR {
+      get; internal set;
+    }
+
+
+    public decimal RetencionIVA {
+      get; internal set;
+    }
+
+
+    public decimal RetencionIEPS {
+      get; internal set;
+    }
+
+
     public BillRelatedDocumentData BillRelatedDocument {
       get; internal set;
     } = new BillRelatedDocumentData();
@@ -113,7 +138,7 @@ namespace Empiria.Billing {
     public FixedList<BillTaxEntryFields> BillTaxes {
       get; internal set;
     } = new FixedList<BillTaxEntryFields>();
-
+    
   } // class BillFields
 
 
@@ -502,6 +527,31 @@ namespace Empiria.Billing {
 
     public decimal Total {
       get; set;
+    }
+
+
+    public decimal TrasladoIVA {
+      get; internal set;
+    }
+
+
+    public decimal TrasladoIEPS {
+      get; internal set;
+    }
+
+
+    public decimal RetencionISR {
+      get; internal set;
+    }
+
+
+    public decimal RetencionIVA {
+      get; internal set;
+    }
+
+
+    public decimal RetencionIEPS {
+      get; internal set;
     }
 
   } // class BillSchemaDataFields

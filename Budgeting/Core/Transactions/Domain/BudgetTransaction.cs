@@ -488,6 +488,41 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public void Close(IIdentifiable payable, Party applicationParty) {
+
+      Assertion.Require(OperationType == BudgetOperationType.Exercise,
+                       "Invalid operation type for closing budget transaction.");
+
+      if (this.IsNew) {
+        Save();
+      }
+
+      if (!HasTransactionNo) {
+        TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
+      }
+
+      PostingTime = DateTime.Now;
+      RequestedDate = ApplicationDate;
+      AuthorizationDate = ApplicationDate;
+      RecordingDate = ApplicationDate;
+
+      PostedBy = applicationParty;
+      RecordedBy = applicationParty;
+      AuthorizedBy = applicationParty;
+      AppliedBy = applicationParty;
+      RequestedBy = applicationParty;
+
+      SetPayable(payable);
+
+      GenerateControlCodes();
+
+      Status = TransactionStatus.Closed;
+
+      Entries.ToList()
+             .ForEach(x => x.Close());
+    }
+
+
     internal void DeleteOrCancel() {
       Assertion.Require(Rules.CanDelete, "Current user can not delete or cancel this transaction.");
 
@@ -591,40 +626,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    public void SetExerciseData(IIdentifiable payable, Party applicationParty) {
-
-      if (OperationType != BudgetOperationType.Exercise) {
-        return;
-      }
-
-      if (!HasTransactionNo) {
-        TransactionNo = BudgetTransactionDataService.GetNextTransactionNo(this);
-      }
-
-      PostingTime = DateTime.Now;
-      RequestedDate = ApplicationDate;
-      AuthorizationDate = ApplicationDate;
-      RecordingDate = ApplicationDate;
-
-      PostedBy = applicationParty;
-      RecordedBy = applicationParty;
-      AuthorizedBy = applicationParty;
-      AppliedBy = applicationParty;
-      RequestedBy = applicationParty;
-
-      SetPayable(payable);
-
-      GenerateControlCodes();
-    }
-
-
     public void SetPayable(IIdentifiable payable) {
-      if (OperationType != BudgetOperationType.ApprovePayment &&
-          OperationType != BudgetOperationType.Exercise) {
-        return;
-      }
+      Assertion.Require(OperationType == BudgetOperationType.ApprovePayment ||
+                        OperationType == BudgetOperationType.Exercise, "Invalid operation type.");
 
       PayableId = payable.Id;
+
+      MarkAsDirty();
     }
 
 
@@ -723,10 +731,6 @@ namespace Empiria.Budgeting.Transactions {
         BudgetTransactionDataService.GenerateApprovedPaymentControlCodes(this);
 
       } else if (OperationType == BudgetOperationType.Exercise) {
-
-        if (this.IsNew) {
-          Save();
-        }
 
         BudgetTransactionDataService.CopyRelatedEntryControlCodes(this);
       }

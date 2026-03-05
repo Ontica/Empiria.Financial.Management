@@ -225,6 +225,56 @@ namespace Empiria.Billing {
     }
 
 
+    public decimal TrasladoIVA {
+      get {
+        return _schemaData.Get<decimal>("trasladoIVA", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("trasladoIVA", value);
+      }
+    }
+
+
+    public decimal TrasladoIEPS {
+      get {
+        return _schemaData.Get<decimal>("trasladoIEPS", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("trasladoIEPS", value);
+      }
+    }
+
+
+    public decimal RetencionISR {
+      get {
+        return _schemaData.Get<decimal>("retencionISR", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("retencionISR", value);
+      }
+    }
+
+
+    public decimal RetencionIVA {
+      get {
+        return _schemaData.Get<decimal>("retencionIVA", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("retencionIVA", value);
+      }
+    }
+
+
+    public decimal RetencionIEPS {
+      get {
+        return _schemaData.Get<decimal>("retencionIEPS", 0);
+      }
+      private set {
+        _schemaData.SetIfValue("retencionIEPS", value);
+      }
+    }
+
+
     public string TipoDeComprobante {
       get {
         return _schemaData.Get<string>("tipoDeComprobante", string.Empty);
@@ -248,7 +298,7 @@ namespace Empiria.Billing {
       NombreEmisor = schemaData.IssuedBy.Nombre;
       RFCReceptor = schemaData.IssuedTo.RFC;
       NombreReceptor = schemaData.IssuedTo.Nombre;
-      RegimenFiscalEmisor =schemaData.IssuedBy.RegimenFiscal;
+      RegimenFiscalEmisor = schemaData.IssuedBy.RegimenFiscal;
       DomicilioFiscalReceptor = schemaData.IssuedTo.DomicilioFiscal;
       UsoCFDI = schemaData.IssuedTo.UsoCFDI;
       Folio = schemaData.Folio;
@@ -261,6 +311,12 @@ namespace Empiria.Billing {
       SubTotal = schemaData.Subtotal;
       Descuento = schemaData.Descuento;
       Total = schemaData.Total;
+      TrasladoIVA = schemaData.TrasladoIVA;
+      TrasladoIEPS = schemaData.TrasladoIEPS;
+      RetencionISR = schemaData.RetencionISR;
+      RetencionIVA = schemaData.RetencionIVA;
+      RetencionIEPS = schemaData.RetencionIEPS;
+
       TipoComprobante = schemaData.TipoComprobante;
     }
   }

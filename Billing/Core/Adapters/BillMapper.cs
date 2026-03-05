@@ -58,7 +58,7 @@ namespace Empiria.Billing.Adapters {
         Subtotal = bill.Subtotal,
         Discount = bill.Discount,
         Taxes = Math.Round(bill.Taxes, 2, MidpointRounding.AwayFromZero),
-        Total = bill.Subtotal - bill.Discount + bill.Taxes,
+        Total = Math.Round(bill.Subtotal - bill.Discount + bill.Taxes, 2, MidpointRounding.AwayFromZero),
         IssueDate = bill.IssueDate,
         PostedBy = bill.PostedBy.MapToNamedEntity(),
         PostingTime = bill.PostingTime,
@@ -79,6 +79,7 @@ namespace Empiria.Billing.Adapters {
 
 
     static private BillsStructureTaxEntryDto MapStructureTaxEntry(BillTaxItemTotal taxItemTotal) {
+
       return new BillsStructureTaxEntryDto {
         UID = taxItemTotal.UID,
         TaxType = new NamedEntityDto(taxItemTotal.TaxType.UID, taxItemTotal.TaxName),

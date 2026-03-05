@@ -73,38 +73,6 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     }
 
 
-    [HttpPost]
-    [Route("v2/budgeting/transactions/planning/generate")]
-    public SingleObjectModel GeneratePlanningTransactions() {
-
-      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-
-        Budget budget = BaseObject.GetFullList<Budget>().Find(x => x.PlanningAutoGenerationTransactionTypes.Count != 0);
-
-        int closed = usecases.AutoCloseTransactions(budget);
-
-        var result = new {
-          Message = $"Se cerraron automáticamente {closed} transacciones presupuestales para el presupuesto {budget.Name}."
-        };
-
-        return new SingleObjectModel(base.Request, result);
-      }
-
-      //using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-
-      //  Budget budget = BaseObject.GetFullList<Budget>().Find(x => x.PlanningAutoGenerationTransactionTypes.Count != 0);
-
-      //  FixedList<BudgetTransactionDescriptorDto> generated = usecases.GeneratePlanningTransactions(budget.UID);
-
-      //  var result = new BulkOperationResult {
-      //    Message = $"Se generaron {generated.Count} transacciones presupuestales para el presupuesto {budget.Name}."
-      //  };
-
-      //  return new SingleObjectModel(base.Request, result);
-      //}
-    }
-
-
     [HttpGet]
     [Route("v2/budgeting/transactions/operation-sources")]
     public SingleObjectModel GetOperationSources() {

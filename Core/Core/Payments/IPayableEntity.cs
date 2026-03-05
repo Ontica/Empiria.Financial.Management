@@ -101,6 +101,9 @@ namespace Empiria.Financial {
       get;
     }
 
+    BaseObject BudgetEntry {
+      get;
+    }
 
     decimal Subtotal {
       get;
