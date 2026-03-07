@@ -76,8 +76,11 @@ namespace Empiria.Budgeting.Transactions {
       Currency = entry.Currency;
       ExchangeRate = entry.ExchangeRate;
       CurrencyAmount = entry.CurrencyAmount;
-      Deposit = isDeposit ? entry.Amount : 0m;
-      Withdrawal = isDeposit ? 0m : entry.Amount;
+
+      decimal amount = Math.Round(entry.CurrencyAmount * entry.ExchangeRate, 2);
+
+      Deposit = isDeposit ? amount : 0m;
+      Withdrawal = isDeposit ? 0m : amount;
 
       Description = entry.Description;
       Justification = entry.Justification;

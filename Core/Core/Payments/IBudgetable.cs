@@ -205,13 +205,6 @@ namespace Empiria.Financial {
     }
 
 
-    public decimal Amount {
-      get {
-        return Math.Round(CurrencyAmount * ExchangeRate, 2);
-      }
-    }
-
-
     public bool HasRelatedBudgetableItem {
       get {
         return RelatedBudgetableItem != null;

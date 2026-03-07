@@ -233,8 +233,8 @@ namespace Empiria.Budgeting.Transactions {
 
       newEntry.SetAmount(currencyAmount, difference);
 
-      newEntry.SetDescription($"Ajuste por tipo de cambio. Tipo de cambio previo: {previousEntry.ExchangeRate:C2}, " +
-                              $"nuevo tipo de cambio: {_exchangeRate:C2}.");
+      newEntry.SetDescription($"Ajuste por tipo de cambio. Tipo de cambio previo: {previousEntry.ExchangeRate:C4}, " +
+                              $"nuevo tipo de cambio: {_exchangeRate:C4}.");
 
       transaction.AddEntry(newEntry);
     }
