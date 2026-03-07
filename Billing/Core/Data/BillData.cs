@@ -111,20 +111,6 @@ namespace Empiria.Billing.Data {
     }
 
 
-    static internal void SetBillAsPayed(string billUID) {
-
-      Bill bill = Bill.Parse(billUID);
-
-      var sql = $"UPDATE FMS_BILLS " +
-                $"SET BILL_STATUS = '{(char) BillStatus.Payed}' " +
-                $"WHERE BILL_ID = {bill.Id}";
-
-      var op = DataOperation.Parse(sql);
-
-      DataWriter.Execute(op);
-    }
-
-
     static internal Bill TryGetBillWithBillNo(string billNo) {
       Assertion.Require(billNo, nameof(billNo));
 
@@ -135,6 +121,18 @@ namespace Empiria.Billing.Data {
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetObject<Bill>(op, null);
+    }
+
+
+    static internal void UpdateBillStatus(Bill bill) {
+
+      var sql = $"UPDATE FMS_BILLS " +
+                $"SET BILL_STATUS = '{(char) bill.Status}' " +
+                $"WHERE BILL_ID = {bill.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
     }
 
 

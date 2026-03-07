@@ -69,7 +69,7 @@ namespace Empiria.Billing {
       Assertion.Require(payable, nameof(payable));
       Assertion.Require(billCategory, nameof(billCategory));
       Assertion.Require(billNo, nameof(billNo));
-      
+
       PayableEntityTypeId = payable.GetEmpiriaType().Id;
       PayableEntityId = payable.Id;
       PayableId = payable.Id;
@@ -221,7 +221,7 @@ namespace Empiria.Billing {
       }
     }
 
-    
+
     [DataField("BILL_TOTAL")]
     public decimal Total {
       get; private set;
@@ -446,7 +446,11 @@ namespace Empiria.Billing {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
-      BillData.WriteBill(this, ExtData.ToString());
+      if (Status == BillStatus.Payed && IsDirty) {
+        BillData.UpdateBillStatus(this);
+      } else {
+        BillData.WriteBill(this, ExtData.ToString());
+      }
     }
 
 
@@ -454,6 +458,15 @@ namespace Empiria.Billing {
 
       return -1 * BillTaxes.FindAll(x => x.TaxMethod == BillTaxMethod.Retencion).Sum(x => x.Total) +
                   BillTaxes.FindAll(x => x.TaxMethod != BillTaxMethod.Retencion).Sum(x => x.Total);
+    }
+
+
+    public void SetAsPayed() {
+      Assertion.Require(Status != BillStatus.Deleted, "Deleted bills cannot be marked as payed.");
+
+      Status = BillStatus.Payed;
+
+      MarkAsDirty();
     }
 
 
