@@ -129,6 +129,12 @@ namespace Empiria.Financial {
     }
 
 
+    [DataField("STD_ACCT_MAIN_CLASSIFICATION_ID")]
+    public FinancialConcept MainClassification {
+      get; private set;
+    }
+
+
     [DataField("STD_ACCT_RECORDING_RULE")]
     public string RecordingRule {
       get; private set;
@@ -213,9 +219,17 @@ namespace Empiria.Financial {
       }
     }
 
-    [DataField("STD_ACCT_MAIN_CLASSIFICATION_ID")]
-    public FinancialConcept MainClassification {
-      get; private set;
+    public StandardAccount BaseAccount {
+      get {
+        StandardAccount baseAccount = this;
+
+        while (true) {
+          if (baseAccount.Level == 1) {
+            return baseAccount;
+          }
+          baseAccount = baseAccount.Parent;
+        }
+      }
     }
 
     #endregion Properties
