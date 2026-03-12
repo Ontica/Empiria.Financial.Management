@@ -219,6 +219,13 @@ namespace Empiria.Financial {
       }
     }
 
+    public bool IsBaseAccount {
+      get {
+        return this.Equals(BaseAccount);
+      }
+    }
+
+
     public StandardAccount BaseAccount {
       get {
         StandardAccount baseAccount = this;
