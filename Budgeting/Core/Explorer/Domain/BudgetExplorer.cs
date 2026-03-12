@@ -74,16 +74,15 @@ namespace Empiria.Budgeting.Explorer {
       };
 
       if (_command.GroupBy == BudgetExplorerGroupBy.AREA_PARTIDA) {
-        columns.Insert(0, new DataTableColumn("organizationalUnitName", "Área", "string"));
-        columns.Insert(1, new DataTableColumn("budgetAccountName", "Partida", "string"));
+        columns.Insert(0, new DataTableColumn("organizationalUnitName", "Área", "text"));
+        columns.Insert(1, new DataTableColumn("budgetAccountName", "Partida", "text"));
 
         if (_command.ReportType == Adapters.BudgetReportType.SaldosOperacion) {
           columns.Insert(2, new DataTableColumn("monthName", "Mes", "text"));
         }
 
       } else if (_command.GroupBy == BudgetExplorerGroupBy.PARTIDA) {
-        columns.Insert(0, new DataTableColumn("budgetAccountName", "Partida", "string"));
-
+        columns.Insert(0, new DataTableColumn("budgetAccountName", "Partida", "text"));
         if (_command.ReportType == Adapters.BudgetReportType.SaldosOperacion) {
           columns.Insert(1, new DataTableColumn("monthName", "Mes", "text"));
         }
