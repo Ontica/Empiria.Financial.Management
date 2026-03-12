@@ -66,11 +66,23 @@ namespace Empiria.Budgeting.Transactions.Data {
 
     static internal void GenerateApprovedPaymentControlCodes(BudgetTransaction transaction) {
 
-      int counter = BudgetTransaction.GetRelatedTo(transaction)
-                                     .CountAll(x => x.OperationType == BudgetOperationType.ApprovePayment &&
-                                                    x.IsClosed);
+      var paymentNos = BudgetTransaction.GetRelatedTo(transaction)
+                                        .FindAll(x => x.OperationType == BudgetOperationType.ApprovePayment &&
+                                                      (x.InProcess || x.IsClosed))
+                                        .SelectDistinctFlat(x => x.Entries.SelectDistinct(y => y.ControlNo))
+                                        .FindAll(x => x.Length > 0 && x.Contains("/"))
+                                        .Sort((x, y) => x.CompareTo(y))
+                                        .Reverse();
 
-      counter++;
+      int counter = 0;
+
+      if (paymentNos.Count > 0) {
+        var paymentNo = paymentNos[0].Split('/')[1];
+        counter = int.Parse(paymentNo);
+        counter++;
+      } else {
+        counter = 1;
+      }
 
       foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
 
@@ -164,13 +176,39 @@ namespace Empiria.Budgeting.Transactions.Data {
     static internal FixedList<BudgetTransaction> GetRelatedTransactions(BudgetTransaction transaction) {
       FixedList<int> entryIds;
 
+      string controlNosFilter = string.Empty;
+
       if (transaction.OperationType == BudgetOperationType.Request) {
         entryIds = transaction.Entries.SelectDistinct(x => x.Id);
+
+        entryIds = FixedList<int>.MergeDistinct(entryIds,
+                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
+                                                                                        .FindAll(x => x > 0));
+
+        entryIds = FixedList<int>.MergeDistinct(entryIds,
+                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
+                                                                                        .FindAll(x => x > 0));
+
+        var controlNos = entryIds.Select(x => BudgetEntry.Parse(x)).ToFixedList().SelectDistinct(x => x.ControlNo).FindAll(x => x.Length > 0);
+
+        foreach (var controlNo in controlNos) {
+          if (controlNosFilter.Length > 0) {
+            controlNosFilter += " OR ";
+          }
+          controlNosFilter += $" BDG_ENTRY_CONTROL_NO LIKE '{controlNo}%'";
+        }
+
+        if (controlNosFilter.Length > 0) {
+          controlNosFilter = $"({controlNosFilter}) OR ";
+        }
 
       } else {
         entryIds = transaction.Entries.SelectDistinct(x => x.RelatedEntryId)
                                       .FindAll(x => x > 0);
 
+        entryIds = FixedList<int>.MergeDistinct(entryIds,
+                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
+                                                                                        .FindAll(x => x > 0));
       }
 
       if (entryIds.Count == 0) {
@@ -180,6 +218,7 @@ namespace Empiria.Budgeting.Transactions.Data {
       string filter = "BDG_TXN_ID IN (SELECT DISTINCT BDG_ENTRY_TXN_ID " +
                                "FROM FMS_BUDGET_ENTRIES WHERE " +
                                $"(BDG_ENTRY_ID IN ({string.Join(",", entryIds)}) OR " +
+                                controlNosFilter +
                                 $"BDG_ENTRY_RELATED_ENTRY_ID IN ({string.Join(",", entryIds)})) AND " +
                                $"BDG_ENTRY_STATUS NOT IN ('J', 'X'))";
 
