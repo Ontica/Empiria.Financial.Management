@@ -71,7 +71,7 @@ namespace Empiria.Billing.Data {
     static internal FixedList<Bill> GetRelatedDocuments(string billNo) {
 
       var sql = $"SELECT * FROM FMS_BILLS " +
-                $"WHERE BILL_RELATED_BILL_NO = '{billNo}' AND " +
+                $"WHERE UPPER(BILL_RELATED_BILL_NO) = '{billNo.ToUpperInvariant()}' AND " +
                 $"BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);
@@ -115,7 +115,7 @@ namespace Empiria.Billing.Data {
       Assertion.Require(billNo, nameof(billNo));
 
       var sql = $"SELECT * FROM FMS_BILLS " +
-                $"WHERE BILL_NO = '{billNo}' AND " +
+                $"WHERE UPPER(BILL_NO) = '{billNo.ToUpperInvariant()}' AND " +
                 $"BILL_STATUS <> 'N' AND BILL_STATUS <> 'X'";
 
       var op = DataOperation.Parse(sql);

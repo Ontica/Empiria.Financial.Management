@@ -36,7 +36,7 @@ namespace Empiria.Billing {
     static public Bill Parse(string uid) => ParseKey<Bill>(uid);
 
     static public Bill TryParseWithBillNo(string billNo) =>
-                            TryParse<Bill>($"BILL_NO = '{billNo}' AND BILL_STATUS <> 'X'");
+                            TryParse<Bill>($"UPPER(BILL_NO) = '{billNo.ToUpperInvariant()}' AND BILL_STATUS <> 'X'");
 
     static public Bill Empty => ParseEmpty<Bill>();
 
