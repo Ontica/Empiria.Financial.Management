@@ -9,8 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+
 using Empiria.Billing.Data;
 using Empiria.Billing.SATMexicoImporter;
 using Empiria.Parties;
@@ -720,7 +720,7 @@ namespace Empiria.Billing {
 
     static private void EnsureIsValid(string billNo, string issuedToUID, DateTime documentDate) {
 
-      Assertion.Require(BillData.TryGetBillWithBillNo(billNo) == null,
+      Assertion.Require(TryGetBillWithBillNo(billNo) == null,
                         "El documento que intenta guardar ya está registrado.");
 
       Assertion.Require(issuedToUID != string.Empty,
@@ -752,11 +752,10 @@ namespace Empiria.Billing {
 
       if (fields.BillRelatedDocument.RelatedCFDI != string.Empty) {
 
-        Bill relatedBill = BillData.TryGetBillWithBillNo(fields.BillRelatedDocument.RelatedCFDI);
+        Bill relatedBill = TryGetBillWithBillNo(fields.BillRelatedDocument.RelatedCFDI);
 
-        Assertion.Require(relatedBill,
-                         $"El CFDI ({fields.BillRelatedDocument.RelatedCFDI}) al que hace referencia el documento, " +
-                          "no ha sido registrado en el sistema.");
+        Assertion.Require(relatedBill, $"El CFDI ({fields.BillRelatedDocument.RelatedCFDI}) al que hace " +
+                          $"referencia el documento, no ha sido registrado en el sistema.");
       }
     }
 
@@ -810,7 +809,7 @@ namespace Empiria.Billing {
                           $"El documento con folio fiscal {fields.BillNo} " +
                           $"que intenta guardar no tiene referencia a un CFDI relacionado.");
 
-        Bill relatedBill = BillData.TryGetBillWithBillNo(relatedDataFields.IdDocumento);
+        Bill relatedBill = TryGetBillWithBillNo(relatedDataFields.IdDocumento);
 
         Assertion.Require(relatedBill,
                           $"El documento con folio fiscal {fields.BillNo} " +
@@ -824,6 +823,22 @@ namespace Empiria.Billing {
                           "El monto total de las facturas registradas y/o " +
                           "la factura que intenta guardar es mayor al monto total del contrato.");
     }
+
+
+    #region Helpers
+
+    static private Bill TryGetBillWithBillNo(string billNo) {
+
+      Bill bill = BillData.TryGetBillWithBillNo(billNo);
+
+      if (bill == null) {
+        bill = BillData.TryGetBillWithBillNo(billNo.ToUpper());
+      }
+
+      return bill;
+    }
+
+    #endregion Helpers
 
   } // class BillFieldsExtensions
 
