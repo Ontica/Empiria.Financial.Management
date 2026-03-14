@@ -88,7 +88,8 @@ namespace Empiria.Budgeting.Explorer.Data {
 
       var sql = "SELECT BDG_ENTRY_ID FROM VW_BUDGET_TRANSACTIONS_GRAL " +
                 $"WHERE {filter.ToString()} " +
-                $"ORDER BY BDG_ENTRY_YEAR, BDG_ENTRY_MONTH, BDG_TXN_APPLICATION_DATE";
+                $"ORDER BY BDG_ENTRY_YEAR, BDG_ENTRY_MONTH, BDG_TXN_APPLICATION_DATE, " +
+                $"BDG_TXN_NUMBER, BDG_ENTRY_CONTROL_NO, BDG_ENTRY_BALANCE_COLUMN_ID";
 
       var op = DataOperation.Parse(sql);
 
