@@ -35,8 +35,13 @@ namespace Empiria.Financial {
 
     static public StandardAccount Parse(string uid) => ParseKey<StandardAccount>(uid);
 
-    static internal StandardAccount TryParseAccountNo(string stdAcctNo) {
+    static public StandardAccount TryParseAccountNo(string stdAcctNo) {
       return TryParse<StandardAccount>($"STD_ACCT_NUMBER = '{stdAcctNo}'");
+    }
+
+    static public StandardAccount TryParseAccountNo(StandardAccountType stdAccountType, string stdAcctNo) {
+      return TryParse<StandardAccount>($"STD_ACCT_TYPE_ID = {stdAccountType.Id} AND " +
+                                       $"STD_ACCT_NUMBER = '{stdAcctNo}'");
     }
 
     static public StandardAccount Empty => ParseEmpty<StandardAccount>();
