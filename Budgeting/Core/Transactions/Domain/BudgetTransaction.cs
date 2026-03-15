@@ -300,9 +300,12 @@ namespace Empiria.Budgeting.Transactions {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(TransactionNo, Description, _identificators, _tags,
-                                           TransactionType.DisplayName,
-                                           BaseBudget.Keywords, BaseParty.Keywords);
+        return TransactionNo + " " +
+          EmpiriaString.BuildKeywords(Description,
+                                      HasEntity ? GetEntity().Data.Keywords : string.Empty,
+                                      _identificators, _tags,
+                                      TransactionType.DisplayName,
+                                      BaseBudget.Keywords, BaseParty.Keywords);
       }
     }
 

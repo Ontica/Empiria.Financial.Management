@@ -35,20 +35,18 @@ namespace Empiria.Budgeting.Transactions.Data {
     }
 
 
-    static internal void CleanTransaction(BudgetTransaction transaction) {
+    static public void CleanTransaction(BudgetTransaction transaction) {
       if (transaction.IsEmptyInstance) {
         return;
       }
       var sql = "UPDATE FMS_BUDGET_TRANSACTIONS " +
-               $"SET BDG_TXN_UID = '{Guid.NewGuid().ToString()}', " +
-               $"BDG_TXN_KEYWORDS = '{transaction.Keywords}' " +
+               $"SET BDG_TXN_KEYWORDS = '{transaction.Keywords}' " +
                $"WHERE BDG_TXN_ID = {transaction.Id}";
 
       var op = DataOperation.Parse(sql);
 
       DataWriter.Execute(op);
     }
-
 
 
     static internal void CopyRelatedEntryControlCodes(BudgetTransaction transaction) {

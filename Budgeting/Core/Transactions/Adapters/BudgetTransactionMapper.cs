@@ -105,9 +105,14 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static private string GetBaseEntityNo(BudgetTransaction transaction) {
 
       if (transaction.HasEntity && !transaction.GetEntity().Data.Provider.IsEmptyInstance) {
-        return $"{transaction.GetEntity().Data.BudgetableNo} - {transaction.GetEntity().Data.Provider.Name}";
+        return $"{transaction.GetEntity().Data.BudgetableNo} - " +
+               $"{transaction.GetEntity().Data.Description} " +
+               $"{transaction.GetEntity().Data.Provider.Name}";
+
       } else if (transaction.HasEntity) {
-        return transaction.GetEntity().Data.BudgetableNo;
+        return $"{transaction.GetEntity().Data.BudgetableNo} - " +
+               $"{transaction.GetEntity().Data.Description}";
+
       } else {
         return "No aplica";
       }
