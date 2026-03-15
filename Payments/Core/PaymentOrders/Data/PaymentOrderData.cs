@@ -16,9 +16,22 @@ using Empiria.Financial;
 namespace Empiria.Payments.Data {
 
   /// <summary>Provides data read and write methods for contract instances.</summary>
-  static internal class PaymentOrderData {
+  static public class PaymentOrderData {
 
     #region Methods
+
+    static public void CleanPaymentOrder(PaymentOrder paymentOrder) {
+      if (paymentOrder.IsEmptyInstance) {
+        return;
+      }
+      var sql = "UPDATE FMS_PAYMENT_ORDERS " +
+                $"SET PYMT_ORD_KEYWORDS = '{paymentOrder.Keywords}' " +
+                $"WHERE PYMT_ORD_ID = {paymentOrder.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
 
     static internal string GeneratePaymentOrderNo(PaymentOrder paymentOrder) {
       int year = ((Budget) paymentOrder.PayableEntity.Budget).Year;

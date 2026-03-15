@@ -27,6 +27,10 @@ namespace Empiria.Financial {
       get;
     }
 
+    string Keywords {
+      get;
+    }
+
     OrganizationalUnit OrganizationalUnit {
       get;
     }

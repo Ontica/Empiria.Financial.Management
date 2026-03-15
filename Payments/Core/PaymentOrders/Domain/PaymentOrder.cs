@@ -208,10 +208,11 @@ namespace Empiria.Payments {
 
     public string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(PaymentOrderNo, PayTo.Keywords,
+        return PaymentOrderNo + " " + PayableEntity.EntityNo + " " +
+               EmpiriaString.BuildKeywords(PayTo.Keywords,
                                            RequestedBy.Keywords, PaymentMethod.Name,
-                                           ReferenceNumber, PayableEntity.Name,
-                                           PayableEntity.Description, Description, Observations,
+                                           ReferenceNumber, PayableEntity.Keywords,
+                                           Description, Observations,
                                            Debtor.Keywords);
       }
     }
