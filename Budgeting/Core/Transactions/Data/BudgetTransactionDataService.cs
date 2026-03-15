@@ -178,6 +178,8 @@ namespace Empiria.Budgeting.Transactions.Data {
 
       string controlNosFilter = string.Empty;
 
+
+
       if (transaction.OperationType == BudgetOperationType.Request) {
         entryIds = transaction.Entries.SelectDistinct(x => x.Id);
 
@@ -209,6 +211,24 @@ namespace Empiria.Budgeting.Transactions.Data {
         entryIds = FixedList<int>.MergeDistinct(entryIds,
                                                 entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
                                                                                         .FindAll(x => x > 0));
+
+        entryIds = FixedList<int>.MergeDistinct(entryIds,
+                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
+                                                                                        .FindAll(x => x > 0));
+
+        var controlNos = entryIds.Select(x => BudgetEntry.Parse(x)).ToFixedList().SelectDistinct(x => x.ControlNo).FindAll(x => x.Length > 0);
+
+        foreach (var controlNo in controlNos) {
+          if (controlNosFilter.Length > 0) {
+            controlNosFilter += " OR ";
+          }
+          controlNosFilter += $" BDG_ENTRY_CONTROL_NO LIKE '{controlNo}%'";
+        }
+
+        if (controlNosFilter.Length > 0) {
+          controlNosFilter = $"({controlNosFilter}) OR ";
+        }
+
       }
 
       if (entryIds.Count == 0) {

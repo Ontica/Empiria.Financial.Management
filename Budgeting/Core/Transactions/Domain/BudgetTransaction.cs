@@ -78,7 +78,10 @@ namespace Empiria.Budgeting.Transactions {
         txns = FixedList<BudgetTransaction>.MergeDistinct(GetFor(transaction.GetEntity()), txns);
       }
 
-      return txns.Sort((x, y) => x.PostingTime.CompareTo(y.PostingTime));
+      return txns.OrderBy(x => x.EntityId)
+                 .ThenBy(x => x.ApplicationDate)
+                 .ThenBy(x => x.PostingTime)
+                 .ToFixedList();
     }
 
     static public BudgetTransaction Empty => ParseEmpty<BudgetTransaction>();
