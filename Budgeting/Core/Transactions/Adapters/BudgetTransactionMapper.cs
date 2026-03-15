@@ -67,6 +67,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static public BudgetTransactionDescriptorDto MapToDescriptor(BudgetTransaction transaction) {
+
       return new BudgetTransactionDescriptorDto {
         UID = transaction.UID,
         TransactionTypeName = transaction.TransactionType.DisplayName,
@@ -75,7 +76,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         TransactionNo = transaction.TransactionNo,
         Description = transaction.Description,
         Total = transaction.GetTotal(),
-        BaseEntityNo = transaction.HasEntity ? transaction.GetEntity().Data.BudgetableNo : string.Empty,
+        BaseEntityNo = GetBaseEntityNo(transaction),
         OperationSourceName = transaction.OperationSource.Name,
         BasePartyName = transaction.BaseParty.Name,
         RecordingDate = transaction.RecordingDate,
@@ -100,6 +101,17 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     #endregion Public mappers
 
     #region Helpers
+
+    static private string GetBaseEntityNo(BudgetTransaction transaction) {
+
+      if (transaction.HasEntity && !transaction.GetEntity().Data.Provider.IsEmptyInstance) {
+        return $"{transaction.GetEntity().Data.BudgetableNo} - {transaction.GetEntity().Data.Provider.Name}";
+      } else if (transaction.HasEntity) {
+        return transaction.GetEntity().Data.BudgetableNo;
+      } else {
+        return "No aplica";
+      }
+    }
 
     static private BudgetTransactionActions MapActions(BudgetTransactionRules rules) {
       return new BudgetTransactionActions {
@@ -204,6 +216,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static public BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
+
       return new BudgetTransactionDto {
         UID = transaction.UID,
         TransactionType = MapTransactionTypeForEdition(transaction.TransactionType),
@@ -218,7 +231,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
             transaction.GetEntity().Data.BudgetableType.MapToNamedEntity() : NamedEntityDto.Empty,
         BaseEntity = transaction.HasEntity ?
             transaction.GetEntity().MapToNamedEntity() : NamedEntityDto.Empty,
-        BaseEntityNo = transaction.HasEntity ? transaction.GetEntity().Data.BudgetableNo : string.Empty,
+        BaseEntityNo = GetBaseEntityNo(transaction),
         AllowsOverdrafts = transaction.AllowsOverdrafts,
         Total = transaction.GetTotal(),
         RecordingDate = transaction.RequestedDate,

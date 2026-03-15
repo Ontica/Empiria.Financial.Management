@@ -60,6 +60,11 @@ namespace Empiria.Financial {
     } = Party.Empty;
 
 
+    public Party Provider {
+      get; set;
+    } = Party.Empty;
+
+
     public Currency Currency {
       get; set;
     } = Currency.Default;
@@ -95,6 +100,7 @@ namespace Empiria.Financial {
       Assertion.Require(BudgetableNo, nameof(BudgetableNo));
       Assertion.Require(BaseBudget, nameof(BaseBudget));
       Assertion.Require(RequestedBy, nameof(RequestedBy));
+      Assertion.Require(Provider, nameof(Provider));
       Assertion.Require(Currency, nameof(Currency));
       Assertion.Require(ExchangeRate > decimal.Zero, $"{nameof(ExchangeRate)} must be positive.");
       Assertion.Require(Justification != null, nameof(Justification));
@@ -203,7 +209,6 @@ namespace Empiria.Financial {
     public decimal CurrencyAmount {
       get; set;
     }
-
 
     public bool HasRelatedBudgetableItem {
       get {
