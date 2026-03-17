@@ -106,6 +106,21 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public BudgetTransaction CompleteBalanceEntries(BudgetTransaction transaction) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      var balancer = new BudgetTransactionBalancer(transaction);
+
+      FixedList<BudgetEntry> entries = balancer.BuildBalanceEntries();
+
+      foreach (var entry in entries) {
+        transaction.AddEntry(entry);
+      }
+
+      return transaction;
+    }
+
+
     public BudgetTransactionHolderDto CreateTransaction(BudgetTransactionFields fields) {
       Assertion.Require(fields, nameof(fields));
 
