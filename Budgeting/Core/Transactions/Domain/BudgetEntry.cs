@@ -89,6 +89,33 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public BudgetEntry(BudgetTransaction transaction, BudgetAccount account,
+                       int month, BalanceColumn balanceColumn, decimal amount,
+                       bool isAdjustment = false) {
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(account, nameof(account));
+      Assertion.Require(1 <= month && month <= 12, nameof(month));
+      Assertion.Require(balanceColumn, nameof(balanceColumn));
+      Assertion.Require(amount != decimal.Zero, nameof(amount));
+
+      Transaction = transaction;
+      Budget = transaction.BaseBudget;
+      BudgetAccount = account;
+      BudgetProgram = BudgetAccount.BudgetProgram;
+      BalanceColumn = balanceColumn;
+
+      Year = transaction.BaseBudget.Year;
+      Month = month;
+      Day = 1;
+
+      CurrencyAmount = Math.Abs(amount);
+
+      Deposit = amount > 0 ? amount : 0m;
+      Withdrawal = amount < 0 ? Math.Abs(amount) : 0m;
+
+      IsAdjustment = isAdjustment;
+    }
+
     static public BudgetEntry Parse(int id) => ParseId<BudgetEntry>(id);
 
     static public BudgetEntry Parse(string uid) => ParseKey<BudgetEntry>(uid);
@@ -510,6 +537,7 @@ namespace Empiria.Budgeting.Transactions {
 
       MarkAsDirty();
     }
+
 
     internal void Update(BudgetEntryFields fields) {
       Assertion.Require(fields, nameof(fields));

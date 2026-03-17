@@ -43,8 +43,8 @@ namespace Empiria.Budgeting.Transactions {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    internal protected BudgetTransaction(BudgetTransactionType transactionType,
-                                         Budget baseBudget) : base(transactionType) {
+    public BudgetTransaction(BudgetTransactionType transactionType,
+                             Budget baseBudget) : base(transactionType) {
       Assertion.Require(baseBudget, nameof(baseBudget));
 
       BaseBudget = baseBudget;
