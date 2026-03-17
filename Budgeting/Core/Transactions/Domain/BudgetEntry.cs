@@ -108,6 +108,8 @@ namespace Empiria.Budgeting.Transactions {
       Month = month;
       Day = 1;
 
+      amount = Math.Round(amount, 2);
+
       CurrencyAmount = Math.Abs(amount);
 
       Deposit = amount > 0 ? amount : 0m;

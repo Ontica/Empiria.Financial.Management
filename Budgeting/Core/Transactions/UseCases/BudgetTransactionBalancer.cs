@@ -23,13 +23,17 @@ namespace Empiria.Budgeting.Transactions {
     private readonly FixedList<BudgetDataInColumns> _availableBudget;
 
     public BudgetTransactionBalancer(BudgetTransaction transaction) {
+
       Assertion.Require(transaction, nameof(transaction));
+
       Assertion.Require(transaction.Entries.Count > 0,
                         "Transaction has no entries.");
+
       Assertion.Require(transaction.Entries.SelectDistinct(x => x.Year).Count == 1,
                         "Transaction can not be multiyear.");
 
       _transaction = transaction;
+
       _availableBudget = GetAvailableBudget();
     }
 
@@ -61,14 +65,14 @@ namespace Empiria.Budgeting.Transactions {
                                         .Sum(x => x.Available);
 
         if (available >= needed) {
-          BudgetEntry entry = BuildEntry(account, month, needed);
+          BudgetEntry entry = BuildEntry(account, BalanceColumn.Available, month, -needed);
 
           entries.Add(entry);
 
           continue;
 
         } else if (available > 0) {
-          BudgetEntry entry = BuildEntry(account, month, available);
+          BudgetEntry entry = BuildEntry(account, BalanceColumn.Available, month, -available);
 
           entries.Add(entry);
 
@@ -81,17 +85,26 @@ namespace Empiria.Budgeting.Transactions {
                                       .Sum(x => x.Available);
 
           if (available >= needed) {
-            BudgetEntry entry = BuildEntry(account, monthIndex, needed);
+
+            BudgetEntry entry = BuildEntry(account, BalanceColumn.Reduced, monthIndex, needed);
 
             entries.Add(entry);
+
+            var entry2 = BuildEntry(account, BalanceColumn.Expanded, month, needed);
+
+            entries.Add(entry2);
 
             break;
 
           } else if (available > 0) {
 
-            BudgetEntry entry = BuildEntry(account, monthIndex, available);
+            BudgetEntry entry = BuildEntry(account, BalanceColumn.Reduced, monthIndex, available);
 
             entries.Add(entry);
+
+            var entry2 = BuildEntry(account, BalanceColumn.Expanded, month, available);
+
+            entries.Add(entry2);
 
             needed = needed - available;
           }
@@ -104,10 +117,11 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Helpers
 
-    private BudgetEntry BuildEntry(BudgetAccount account, int month, decimal amount) {
+    private BudgetEntry BuildEntry(BudgetAccount account, BalanceColumn balanceColumn,
+                                  int month, decimal amount) {
 
       var entry = new BudgetEntry(_transaction, account, month,
-                                  BalanceColumn.Available, -1 * amount, true);
+                                  balanceColumn, amount, true);
 
       return entry;
     }
