@@ -146,8 +146,11 @@ namespace Empiria.Budgeting.Transactions {
         list.Add(item);
       }
 
-      return list.ToFixedList()
-                 .Sort((x, y) => x.BudgetAccount.Name.CompareTo(y.BudgetAccount.Name));
+      return list.OrderBy(x => x.Year)
+                 .ThenBy(x => x.BudgetAccount.OrganizationalUnit.Code)
+                 .ThenBy(x => x.BudgetAccount.AccountNo)
+                 .ThenByDescending(x => x.Total)
+                 .ToFixedList();
     }
 
 
