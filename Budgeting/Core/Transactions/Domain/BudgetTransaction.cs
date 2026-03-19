@@ -300,7 +300,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public virtual string Keywords {
       get {
-        return TransactionNo + " " +
+        return TransactionNo.ToLower() + " " +
           EmpiriaString.BuildKeywords(Description,
                                       HasEntity ? GetEntity().Data.Keywords : string.Empty,
                                       _identificators, _tags,
@@ -758,7 +758,6 @@ namespace Empiria.Budgeting.Transactions {
     private void Reload() {
       _entries = new Lazy<List<BudgetEntry>>(() => BudgetTransactionDataService.GetTransactionEntries(this));
     }
-
 
     #endregion Helpers
 

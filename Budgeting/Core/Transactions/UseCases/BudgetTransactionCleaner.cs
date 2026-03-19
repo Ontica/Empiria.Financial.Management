@@ -44,7 +44,7 @@ namespace Empiria.Budgeting.Transactions {
 
         Assertion.Require(previousEntry, $"No se encontró una entrada previa correspondiente: " +
                                          $"{transaction.TransactionNo} {transaction.Id} / {budgetableItem.BudgetableItem.Id} in" +
-                                         $"{string.Join(",", previousEntries.Select(x => x.Id))}");
+                                         $"{string.Join(",", previousEntries.Select(x => x.EntityId))}");
 
         DateTime withdrawalDate = SameYearMonth(applicationDate, previousEntry.Date) ? applicationDate : previousEntry.Date;
 

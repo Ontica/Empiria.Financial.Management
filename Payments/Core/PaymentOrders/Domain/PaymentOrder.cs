@@ -208,7 +208,7 @@ namespace Empiria.Payments {
 
     public string Keywords {
       get {
-        return PaymentOrderNo + " " + PayableEntity.EntityNo + " " +
+        return PaymentOrderNo.ToLower() + " " + PayableEntity.EntityNo.ToLower() + " " +
                EmpiriaString.BuildKeywords(PayTo.Keywords,
                                            RequestedBy.Keywords, PaymentMethod.Name,
                                            ReferenceNumber, PayableEntity.Keywords,

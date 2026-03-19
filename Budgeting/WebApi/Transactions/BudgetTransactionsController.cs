@@ -38,6 +38,22 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/cancel")]
+    public SingleObjectModel CancelTransaction([FromUri] string transactionUID,
+                                               [FromBody] MessageFields fields) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+
+        var transaction = BudgetTransaction.Parse(transactionUID);
+
+        BudgetTransactionHolderDto txnHolder = usecases.CancelTransaction(transaction, fields.Message);
+
+        return new SingleObjectModel(base.Request, txnHolder);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v2/budgeting/transactions/{budgetTransactionUID:guid}/close")]
     public SingleObjectModel CloseTransaction([FromUri] string budgetTransactionUID) {
 
@@ -95,23 +111,6 @@ namespace Empiria.Budgeting.Transactions.WebApi {
         return new SingleObjectModel(base.Request, transaction);
       }
     }
-
-
-    [HttpPost]
-    [Route("v2/budgeting/transactions/{transactionUID:guid}/cancel")]
-    public SingleObjectModel CancelTransaction([FromUri] string transactionUID,
-                                               [FromBody] MessageFields fields) {
-
-      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
-
-        var transaction = BudgetTransaction.Parse(transactionUID);
-
-        BudgetTransactionHolderDto txnHolder = usecases.CancelTransaction(transaction, fields.Message);
-
-        return new SingleObjectModel(base.Request, txnHolder);
-      }
-    }
-
 
 
     [HttpPost]
