@@ -12,6 +12,7 @@ using System;
 
 using Empiria.Financial;
 using Empiria.Parties;
+using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Transactions {
 
@@ -133,7 +134,10 @@ namespace Empiria.Budgeting.Transactions {
 
       BalanceColumn withdrawalColumn = transaction.OperationType.DefaultWithdrawalColumn();
 
-      foreach (var entry in _budgetable.Items) {
+      var entries = _budgetable.Items.FindAll(x => ((BudgetEntry) x.BudgetEntry).IsEmptyInstance ||
+                                                   ((BudgetEntry) x.BudgetEntry).Status == TransactionStatus.Rejected ||
+                                                   ((BudgetEntry) x.BudgetEntry).Status == TransactionStatus.Canceled);
+      foreach (var entry in entries) {
 
         BudgetEntry newEntry = BuildEntry(transaction, BudgetEntry.Empty, entry,
                                           entry.BudgetingDate, depositColumn, true);
