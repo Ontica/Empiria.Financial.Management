@@ -44,7 +44,7 @@ namespace Empiria.Billing.Adapters {
     static public BillDto MapToBillDto(Bill bill) {
 
       var files = DocumentServices.GetAllEntityDocuments(bill);
-
+      
       return new BillDto {
         UID = bill.UID,
         BillNo = bill.BillNo,
@@ -58,7 +58,7 @@ namespace Empiria.Billing.Adapters {
         Subtotal = bill.Subtotal,
         Discount = bill.Discount,
         Taxes = Math.Round(bill.Taxes, 2, MidpointRounding.AwayFromZero),
-        Total = Math.Round(bill.Subtotal - bill.Discount + bill.Taxes, 2, MidpointRounding.AwayFromZero),
+        Total = Math.Round(bill.Total, MidpointRounding.AwayFromZero),
         IssueDate = bill.IssueDate,
         PostedBy = bill.PostedBy.MapToNamedEntity(),
         PostingTime = bill.PostingTime,

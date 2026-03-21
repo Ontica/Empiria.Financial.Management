@@ -116,6 +116,7 @@ namespace Empiria.Billing {
       TaxItems = ValuateBuildTaxItemFrom();
     }
 
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -228,19 +229,7 @@ namespace Empiria.Billing {
 
     private FixedList<BillTaxItemTotal> ValuateBuildTaxItemFrom() {
 
-      var valuateRetencionLocal = _bills.FindAll(x => x.SchemaData.RetencionLocal > 0);
-      var valuateRetencionISR = _bills.FindAll(x => x.SchemaData.RetencionISR > 0);
-      var valuateRetencionIVA = _bills.FindAll(x => x.SchemaData.RetencionIVA > 0);
-      var valuateRetencionIEPS = _bills.FindAll(x => x.SchemaData.RetencionIEPS > 0);
-      var valuateTrasladoLocal = _bills.FindAll(x => x.SchemaData.TrasladoLocal > 0);
-      var valuateTrasladoIVA = _bills.FindAll(x => x.SchemaData.TrasladoIVA > 0);
-      var valuateTrasladoIEPS = _bills.FindAll(x => x.SchemaData.TrasladoIEPS > 0);
-      
-
-      if (valuateTrasladoIVA.Count > 0 || valuateTrasladoIEPS.Count > 0 ||
-          valuateRetencionISR.Count > 0 || valuateRetencionIVA.Count > 0 ||
-          valuateRetencionIEPS.Count > 0 || valuateRetencionLocal.Count > 0 ||
-          valuateTrasladoLocal.Count > 0) {
+      if (ValuateSchemaDataTaxes() > 0) {
 
         return BuildTaxItemsFromBillSchemaData();
       } else {
@@ -268,6 +257,7 @@ namespace Empiria.Billing {
       return taxTypesGroupsByBills.ToFixedList();
     }
 
+
     private void GetTrasladoLocal(List<BillTaxItemTotal> taxTypesGroupsByBills) {
 
       var billsTrasladosLocales = _bills.FindAll(x => x.SchemaData.TrasladoLocal > 0);
@@ -283,6 +273,7 @@ namespace Empiria.Billing {
 
     }
 
+
     private void GetRetencionLocal(List<BillTaxItemTotal> taxTypesGroupsByBills) {
       var billsRetencionesLocales = _bills.FindAll(x => x.SchemaData.RetencionLocal > 0);
 
@@ -296,6 +287,7 @@ namespace Empiria.Billing {
                                   billsRetencionesLocales.ToFixedList(), localRetenciones));
       }
     }
+
 
     private void GetRetencionIEPS(List<BillTaxItemTotal> taxTypesGroupsByBills) {
       var billsRetencionesIEPS = _bills.FindAll(x => x.SchemaData.RetencionIEPS > 0);
@@ -369,7 +361,18 @@ namespace Empiria.Billing {
                                   billsTrasladosIVA.ToFixedList(), ivaTraslados));
       }
     }
-    
+
+
+    public int ValuateSchemaDataTaxes() {
+      return _bills.FindAll(x => x.SchemaData.RetencionLocal > 0).Count() +
+             _bills.FindAll(x => x.SchemaData.RetencionISR > 0).Count() +
+             _bills.FindAll(x => x.SchemaData.RetencionIVA > 0).Count() +
+             _bills.FindAll(x => x.SchemaData.RetencionIEPS > 0).Count() +
+             _bills.FindAll(x => x.SchemaData.TrasladoLocal > 0).Count() +
+             _bills.FindAll(x => x.SchemaData.TrasladoIVA > 0).Count() +
+             _bills.FindAll(x => x.SchemaData.TrasladoIEPS > 0).Count();
+    }
+
     #endregion Methods Tax Totals from BillSchemaData
 
   }  // class BillsTotals
