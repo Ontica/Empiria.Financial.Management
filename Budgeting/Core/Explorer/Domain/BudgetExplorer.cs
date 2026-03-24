@@ -76,15 +76,20 @@ namespace Empiria.Budgeting.Explorer {
       if (_command.GroupBy == BudgetExplorerGroupBy.AREA_PARTIDA) {
         columns.Insert(0, new DataTableColumn("organizationalUnitName", "Área", "text"));
         columns.Insert(1, new DataTableColumn("budgetAccountName", "Partida", "text"));
+        columns.Insert(2, new DataTableColumn("baseAccountNo", "Capítulo", "text"));
+        columns.Insert(3, new DataTableColumn("budgetProgram", "Programa", "text"));
 
         if (_command.ReportType == Adapters.BudgetReportType.SaldosOperacion) {
-          columns.Insert(2, new DataTableColumn("monthName", "Mes", "text"));
+          columns.Insert(4, new DataTableColumn("monthName", "Mes", "text"));
         }
 
       } else if (_command.GroupBy == BudgetExplorerGroupBy.PARTIDA) {
         columns.Insert(0, new DataTableColumn("budgetAccountName", "Partida", "text"));
+        columns.Insert(1, new DataTableColumn("baseAccountNo", "Capítulo", "text"));
+        columns.Insert(2, new DataTableColumn("budgetProgram", "Programa", "text"));
+
         if (_command.ReportType == Adapters.BudgetReportType.SaldosOperacion) {
-          columns.Insert(1, new DataTableColumn("monthName", "Mes", "text"));
+          columns.Insert(3, new DataTableColumn("monthName", "Mes", "text"));
         }
       }
 
@@ -169,20 +174,15 @@ namespace Empiria.Budgeting.Explorer {
     private BudgetExplorerEntry TransformToEntry(FixedList<BudgetDataInColumns> groupedEntries) {
       BudgetDataInColumns baseData = groupedEntries[0];
 
-      var entry = new BudgetExplorerEntry(baseData, true);
+      var entry = new BudgetExplorerEntry(baseData);
 
       for (int i = 1; i < groupedEntries.Count; i++) {
-        BudgetExplorerEntry sourceDataAsEntry = TransformToEntry(groupedEntries[i]);
+        BudgetExplorerEntry sourceDataAsEntry = new BudgetExplorerEntry(groupedEntries[i]);
 
         entry.Sum(sourceDataAsEntry);
       }
 
       return entry;
-    }
-
-
-    private BudgetExplorerEntry TransformToEntry(BudgetDataInColumns sourceData) {
-      return new BudgetExplorerEntry(sourceData, false);
     }
 
     #endregion Helpers

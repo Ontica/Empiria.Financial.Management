@@ -17,9 +17,10 @@ namespace Empiria.Budgeting.Explorer {
     internal BudgetExplorerEntry(BudgetExplorerEntry sourceData) {
       Sum(sourceData);
 
+      BudgetAccount = sourceData.BudgetAccount;
+      OrganizationalUnit = sourceData.OrganizationalUnit;
       Year = sourceData.Year;
       Month = sourceData.Month;
-
       ClickableEntry = true;
       ItemType = "Entry";
       Title = sourceData.OrganizationalUnit.FullName;
@@ -28,17 +29,15 @@ namespace Empiria.Budgeting.Explorer {
     }
 
 
-    internal BudgetExplorerEntry(BudgetDataInColumns sourceData, bool fullLoad) {
+    internal BudgetExplorerEntry(BudgetDataInColumns sourceData) {
 
-      if (fullLoad) {
-        BudgetAccount = sourceData.BudgetAccount;
-        OrganizationalUnit = sourceData.BudgetAccount.OrganizationalUnit;
-        Year = sourceData.Year;
-        Month = sourceData.Month;
-        UID = $"{OrganizationalUnit.Id}|{BudgetAccount.Id}";
-        Title = OrganizationalUnit.FullName;
-        Description = BudgetAccount.Name;
-      }
+      BudgetAccount = sourceData.BudgetAccount;
+      OrganizationalUnit = sourceData.BudgetAccount.OrganizationalUnit;
+      Year = sourceData.Year;
+      Month = sourceData.Month;
+      UID = $"{OrganizationalUnit.Id}|{BudgetAccount.Id}";
+      Title = OrganizationalUnit.FullName;
+      Description = BudgetAccount.Name;
 
       Planned = sourceData.Planned;
       Authorized = sourceData.Authorized;
@@ -77,10 +76,28 @@ namespace Empiria.Budgeting.Explorer {
       get;
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     public BudgetAccount BudgetAccount {
       get; private set;
     }
 
+
+    public string BaseAccountNo {
+      get {
+        return BudgetAccount.StandardAccount.IsBaseAccount ? string.Empty :
+                                BudgetAccount.StandardAccount.BaseAccount.StdAcctNo;
+      }
+    }
+
+
+    public string BudgetProgram {
+      get {
+        return BudgetAccount.BudgetProgram.Code;
+      }
+    }
+
+
+    [Newtonsoft.Json.JsonIgnore]
     public OrganizationalUnit OrganizationalUnit {
       get; private set;
     }

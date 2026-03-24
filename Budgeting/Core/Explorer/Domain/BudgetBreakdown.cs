@@ -85,7 +85,7 @@ namespace Empiria.Budgeting.Explorer {
     private BudgetExplorerEntry TransformToEntry(FixedList<BudgetDataInColumns> groupedEntries) {
       BudgetDataInColumns baseData = groupedEntries[0];
 
-      var entry = new BudgetExplorerEntry(baseData, true);
+      var entry = new BudgetExplorerEntry(baseData);
 
       for (int i = 1; i < groupedEntries.Count; i++) {
         BudgetExplorerEntry sourceDataAsEntry = TransformToEntry(groupedEntries[i]);
@@ -97,7 +97,7 @@ namespace Empiria.Budgeting.Explorer {
     }
 
     private BudgetExplorerEntry TransformToEntry(BudgetDataInColumns sourceData) {
-      return new BudgetExplorerEntry(sourceData, false);
+      return new BudgetExplorerEntry(sourceData);
     }
 
     #endregion Helpers
