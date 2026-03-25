@@ -213,6 +213,14 @@ namespace Empiria.Budgeting.Transactions {
           return true;
         }
 
+        if (_transaction.Status == TransactionStatus.OnAuthorization &&
+            (_transaction.OperationType == BudgetOperationType.Request ||
+            _transaction.OperationType == BudgetOperationType.Commit) &&
+            (_securityRoles.Contains(BUDGET_MANAGER) ||
+            _securityRoles.Contains(BUDGET_AUTHORIZER))) {
+          return true;
+        }
+
         if (_transaction.Status != TransactionStatus.Pending) {
           return false;
         }

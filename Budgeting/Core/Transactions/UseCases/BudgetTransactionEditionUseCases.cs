@@ -291,6 +291,28 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public BudgetEntryDto UpdateReopenedBudgetEntry(string budgetEntryUID, BudgetEntryFields fields) {
+      Assertion.Require(budgetEntryUID, nameof(budgetEntryUID));
+      Assertion.Require(fields, nameof(fields));
+
+      var transaction = BudgetTransaction.Parse(fields.TransactionUID);
+
+      var budgetEntry = transaction.GetEntry(budgetEntryUID);
+
+      decimal lastAmount = budgetEntry.Amount;
+
+      transaction.UpdateReopenedEntry(budgetEntry, fields);
+
+      HistoryServices.CreateHistoryEntry(transaction,
+        new HistoryFields("Modificación de partida",
+        $"Partida {budgetEntry.BudgetAccount.AccountNo}. De {lastAmount:C2} a {budgetEntry.Amount:C2}. " +
+        $"Columna {budgetEntry.BalanceColumn.Name}, número de verificación {budgetEntry.ControlNo}," +
+        $"área {budgetEntry.BudgetAccount.OrganizationalUnit.Code}."));
+
+      return BudgetEntryMapper.Map(budgetEntry);
+    }
+
+
     public BudgetTransactionHolderDto UpdateTransaction(string budgetTransactionUID,
                                                         BudgetTransactionFields fields) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));

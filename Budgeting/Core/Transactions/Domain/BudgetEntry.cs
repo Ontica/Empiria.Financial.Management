@@ -582,6 +582,26 @@ namespace Empiria.Budgeting.Transactions {
       MarkAsDirty();
     }
 
+
+    internal void UpdateReopened(BudgetEntryFields fields) {
+
+      decimal originalAmount = Amount;
+
+      Month = fields.Month;
+
+      ProductQty = fields.ProductQty;
+
+      CurrencyAmount = Math.Round(fields.Amount, 2);
+
+      if (Deposit > 0) {
+        Deposit = Math.Round(fields.Amount * ExchangeRate, 2);
+      } else {
+        Withdrawal = Math.Round(fields.Amount * ExchangeRate, 2);
+      }
+
+      BudgetTransactionDataService.WriteReopenedEntry(this, originalAmount);
+    }
+
     #endregion Methods
 
   }  // class BudgetEntry

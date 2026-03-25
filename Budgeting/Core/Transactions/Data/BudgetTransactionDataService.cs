@@ -312,6 +312,66 @@ namespace Empiria.Budgeting.Transactions.Data {
     }
 
 
+    static internal void WriteReopenedEntry(BudgetEntry o, decimal originalAmount) {
+
+      var sql = "UPDATE FMS_BUDGET_ENTRIES " +
+                   $"SET BDG_ENTRY_MONTH = {o.Month}, " +
+                   $"BDG_ENTRY_PRODUCT_QTY = {o.ProductQty}, " +
+                   $"BDG_ENTRY_REQUESTED_AMOUNT = {o.CurrencyAmount}, " +
+                   $"BDG_ENTRY_DEPOSIT_AMOUNT = {o.Deposit}, " +
+                   $"BDG_ENTRY_WITHDRAWAL_AMOUNT = {o.Withdrawal} " +
+               $"WHERE BDG_ENTRY_ID = {o.Id} AND BDG_ENTRY_UID = '{o.UID}'";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+
+      if (o.Deposit == 0 || o.IsAdjustment) {
+        return;
+      }
+
+      sql = "UPDATE OMS_ORDER_ITEMS " +
+                $"SET ORDER_ITEM_REQUESTED_QTY = {o.Deposit} " +
+            $"WHERE ORDER_ITEM_ID = {o.EntityId} AND ORDER_ITEM_REQUESTED_QTY = {originalAmount}";
+
+      op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+
+      sql = "UPDATE OMS_ORDER_ITEMS " +
+              $"SET ORDER_ITEM_MIN_QTY = {o.Deposit} " +
+            $"WHERE ORDER_ITEM_ID = {o.EntityId} AND ORDER_ITEM_MIN_QTY = {originalAmount}";
+
+      op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+
+      sql = "UPDATE OMS_ORDER_ITEMS " +
+              $"SET ORDER_ITEM_MAX_QTY = {o.Deposit} " +
+            $"WHERE ORDER_ITEM_ID = {o.EntityId} AND ORDER_ITEM_MAX_QTY = {originalAmount}";
+
+      op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+
+      sql = "UPDATE OMS_ORDER_ITEMS " +
+            $"SET ORDER_ITEM_QTY = {o.Deposit} " +
+            $"WHERE ORDER_ITEM_ID = {o.EntityId} AND ORDER_ITEM_QTY = {originalAmount}";
+
+      op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+
+      sql = "UPDATE OMS_ORDER_ITEMS " +
+              $"SET ORDER_ITEM_UNIT_PRICE = {o.Deposit} " +
+            $"WHERE ORDER_ITEM_ID = {o.EntityId} AND ORDER_ITEM_UNIT_PRICE = {originalAmount}";
+
+      op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
+
+
     static internal void WriteTransaction(BudgetTransaction o) {
       var op = DataOperation.Parse("write_FMS_Budget_Transaction",
           o.Id, o.UID, o.TransactionType.Id, o.OperationSource.Id, o.BaseBudget.Id,

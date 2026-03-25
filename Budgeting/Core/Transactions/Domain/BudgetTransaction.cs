@@ -729,6 +729,21 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    internal void UpdateReopenedEntry(BudgetEntry budgetEntry,
+                                      BudgetEntryFields fields) {
+
+      budgetEntry.UpdateReopened(fields);
+
+      if (HasEntity) {
+        var entity = GetEntity();
+
+        ((BaseObject) entity).RestoreCache();
+      }
+
+      Reload();
+    }
+
+
     internal void UpdateEntries(FixedList<BudgetEntry> entries) {
       Assertion.Require(Rules.CanUpdate, "Current user can not update this transaction.");
       Assertion.Require(entries, nameof(entries));
