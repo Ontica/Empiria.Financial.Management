@@ -147,6 +147,22 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/return-to-edition")]
+    public SingleObjectModel ReturnTransactionToEdition([FromUri] string transactionUID,
+                                                        [FromBody] MessageFields fields) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+
+        var transaction = BudgetTransaction.Parse(transactionUID);
+
+        BudgetTransactionHolderDto txnHolder = usecases.ReturnTransactionToEdition(transaction, fields.Message);
+
+        return new SingleObjectModel(base.Request, txnHolder);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v2/budgeting/transactions/accounts/search")]
     public CollectionModel SearchTransactionAccounts([FromBody] BudgetAccountsQuery query) {
 

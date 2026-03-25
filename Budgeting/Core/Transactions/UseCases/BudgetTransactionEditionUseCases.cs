@@ -241,6 +241,24 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public BudgetTransactionHolderDto ReturnTransactionToEdition(BudgetTransaction transaction,
+                                                                 string reason) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      reason = EmpiriaString.Clean(reason);
+
+      transaction.ReturnToEdition();
+
+      transaction.Save();
+
+      reason = EmpiriaString.Clean(reason);
+
+      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Regresada a edición", reason));
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public BudgetEntryDto RemoveBudgetEntry(string budgetTransactionUID, string budgetEntryUID) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
       Assertion.Require(budgetEntryUID, nameof(budgetEntryUID));

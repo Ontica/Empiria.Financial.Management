@@ -623,6 +623,25 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public void ReturnToEdition() {
+      Assertion.Require(Rules.CanReturnToEdition,
+                        "Current user can not return this transaction to edition.");
+
+      AppliedBy = Party.Empty;
+      AuthorizedBy = Party.Empty;
+      RequestedBy = Party.Empty;
+
+      ApplicationDate = ExecutionServer.DateMaxValue;
+      AuthorizationDate = ExecutionServer.DateMaxValue;
+      RequestedDate = ExecutionServer.DateMaxValue;
+
+      Status = TransactionStatus.Pending;
+
+      Entries.ToList()
+             .ForEach(x => x.SetAsPending());
+    }
+
+
     internal void Reject(string reason) {
       Assertion.Require(reason, nameof(reason));
 

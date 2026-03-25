@@ -82,8 +82,11 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-
     public bool CanReject {
+      get; internal set;
+    }
+
+    public bool CanReturnToEdition {
       get; internal set;
     }
 

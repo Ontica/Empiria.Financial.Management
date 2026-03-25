@@ -457,9 +457,11 @@ namespace Empiria.Budgeting.Transactions {
       MarkAsDirty();
     }
 
+
     internal void SetAccount(BudgetAccount account) {
       Assertion.Require(account, nameof(account));
-      Assertion.Require(account.StandardAccount.Equals(this.BudgetAccount.StandardAccount), "Standard account mismatch.");
+      Assertion.Require(account.StandardAccount.Equals(BudgetAccount.StandardAccount),
+                        "Standard account mismatch.");
 
       this.BudgetAccount = account;
 
@@ -488,6 +490,13 @@ namespace Empiria.Budgeting.Transactions {
       }
 
       ExchangeRate = exchangeRate;
+
+      MarkAsDirty();
+    }
+
+
+    internal void SetAsPending() {
+      Status = TransactionStatus.Pending;
 
       MarkAsDirty();
     }

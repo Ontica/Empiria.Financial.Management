@@ -194,6 +194,24 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool CanReturnToEdition {
+      get {
+        if (_transaction.Status != TransactionStatus.Pending &&
+            _transaction.Status != TransactionStatus.Deleted &&
+            _transaction.Status != TransactionStatus.Rejected &&
+            _transaction.Status != TransactionStatus.Canceled &&
+            (_transaction.OperationType == BudgetOperationType.Expand ||
+            _transaction.OperationType == BudgetOperationType.Modify ||
+            _transaction.OperationType == BudgetOperationType.Plan ||
+            _transaction.OperationType == BudgetOperationType.Reduce) &&
+            _securityRoles.Contains(BUDGET_MANAGER)) {
+          return true;
+        }
+        return false;
+      }
+    }
+
+
     public bool CanReopen {
       get {
         if (_transaction.Status == TransactionStatus.Closed &&
