@@ -206,6 +206,21 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public BudgetTransactionHolderDto ReopenTransaction(BudgetTransaction transaction, string reason) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      reason = EmpiriaString.Clean(reason);
+
+      transaction.Reopen();
+
+      transaction.Save();
+
+      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Reabierta", reason));
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public BudgetTransactionHolderDto RejectTransaction(BudgetTransaction transaction,
                                                         string reason) {
       Assertion.Require(transaction, nameof(transaction));
@@ -224,6 +239,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       return BudgetTransactionMapper.Map(transaction);
     }
+
 
     public BudgetEntryDto RemoveBudgetEntry(string budgetTransactionUID, string budgetEntryUID) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));

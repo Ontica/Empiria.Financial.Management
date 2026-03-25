@@ -127,6 +127,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         CanEditDocuments = rules.CanEditDocuments,
         CanReject = rules.CanReject,
         CanSendToAuthorization = rules.CanSendToAuthorization,
+        CanReopen = rules.CanReopen,
         CanUpdate = rules.CanUpdate
       };
     }

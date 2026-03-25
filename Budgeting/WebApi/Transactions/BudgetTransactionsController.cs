@@ -130,6 +130,23 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
 
     [HttpPost]
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/reopen")]
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/open")]
+    public SingleObjectModel ReopenTransaction([FromUri] string transactionUID,
+                                               [FromBody] MessageFields fields) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+
+        var transaction = BudgetTransaction.Parse(transactionUID);
+
+        BudgetTransactionHolderDto txnHolder = usecases.ReopenTransaction(transaction, fields.Message);
+
+        return new SingleObjectModel(base.Request, txnHolder);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v2/budgeting/transactions/accounts/search")]
     public CollectionModel SearchTransactionAccounts([FromBody] BudgetAccountsQuery query) {
 

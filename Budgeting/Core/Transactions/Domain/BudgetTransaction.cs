@@ -298,6 +298,16 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool WasReopened {
+      get {
+        return ExtensionData.Get("wasReopened", false);
+      }
+      private set {
+        ExtensionData.SetIf("wasReopened", value, value);
+      }
+    }
+
+
     public virtual string Keywords {
       get {
         return TransactionNo.ToLower() + " " +
@@ -597,6 +607,19 @@ namespace Empiria.Budgeting.Transactions {
         deletedEntry.Save();
       }
       _deletedEntries.Clear();
+    }
+
+
+    public void Reopen() {
+      Assertion.Require(Rules.CanReopen, "Current user can not reopen this transaction.");
+
+      AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      ApplicationDate = CalculateApplicationDate();
+
+      WasReopened = true;
+
+      Status = TransactionStatus.OnAuthorization;
     }
 
 

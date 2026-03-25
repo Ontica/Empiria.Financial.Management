@@ -194,14 +194,29 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool CanReopen {
+      get {
+        if (_transaction.Status == TransactionStatus.Closed &&
+            (_transaction.OperationType == BudgetOperationType.Request ||
+            _transaction.OperationType == BudgetOperationType.Commit) &&
+            _securityRoles.Contains(BUDGET_MANAGER)) {
+          return true;
+        }
+        return false;
+      }
+    }
+
+
     public bool CanUpdate {
       get {
         if (_transaction.IsNew) {
           return true;
         }
+
         if (_transaction.Status != TransactionStatus.Pending) {
           return false;
         }
+
         if (_transaction.TransactionType.IsProtected &&
             _securityRoles.Contains(BUDGET_MANAGER) ||
             _securityRoles.Contains(BUDGET_AUTHORIZER)) {
