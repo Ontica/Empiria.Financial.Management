@@ -319,6 +319,11 @@ namespace Empiria.Billing {
     }
 
 
+    public bool IsConceptSumToTotal {
+      get; internal set;
+    }
+
+
     public bool IsSubtotalGeneralConcept {
       get; internal set;
     }
@@ -678,18 +683,18 @@ namespace Empiria.Billing {
     } = new FixedList<BillConceptFields>();
 
 
-    internal void MapEcoConceptFields(SATBillAddenda addenda) {
+    internal void MapToAddendaFields(SATBillAddenda addenda) {
 
-      if (addenda.EcoConcepts.Count > 0) {
+      if (addenda.AddendaConcepts.Count > 0) {
         NoEstacion = addenda.NoEstacion;
         ClavePemex = addenda.ClavePemex;
-        TasaIEPS = addenda.EcoConcepts[0].TasaIEPS;
-        IEPS = addenda.EcoConcepts[0].IEPS;
-        TasaIVA = addenda.EcoConcepts[0].TasaIVA;
-        IVA = addenda.EcoConcepts[0].IVA;
-        NoIdentificacion = addenda.EcoConcepts[0].NoIdentificacion;
-        TasaAIEPS = addenda.EcoConcepts[0].TasaAIEPS;
-        AIEPS = addenda.EcoConcepts[0].AIEPS;
+        TasaIEPS = addenda.AddendaConcepts[0].TasaIEPS;
+        IEPS = addenda.AddendaConcepts[0].IEPS;
+        TasaIVA = addenda.AddendaConcepts[0].TasaIVA;
+        IVA = addenda.AddendaConcepts[0].IVA;
+        NoIdentificacion = addenda.AddendaConcepts[0].NoIdentificacion;
+        TasaAIEPS = addenda.AddendaConcepts[0].TasaAIEPS;
+        AIEPS = addenda.AddendaConcepts[0].AIEPS;
       }
     }
 

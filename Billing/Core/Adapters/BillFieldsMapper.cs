@@ -60,7 +60,9 @@ namespace Empiria.Billing.Adapters {
 
       if (addenda != null) {
 
-        addendaFields.MapEcoConceptFields(addenda);
+        addendaFields.MapToAddendaFields(addenda);
+        
+        List<BillConceptFields> conceptFields = new List<BillConceptFields>();
 
         if (addenda.Concepto != null) {
 
@@ -68,13 +70,15 @@ namespace Empiria.Billing.Adapters {
           addendaFields.Serie = addenda.Serie;
           addendaFields.FechaEmision = addenda.FechaEmision;
 
-          List<BillConceptFields> conceptFields = new List<BillConceptFields>();
-
           conceptFields.Add(MapToBillConceptFields(addenda.Concepto, true));
-          addendaFields.Concepts = conceptFields.ToFixedList();
         }
-      }
 
+        foreach (var concepto in addenda.Conceptos) {
+          conceptFields.Add(MapToBillConceptFields(concepto));
+        }
+
+        addendaFields.Concepts = conceptFields.ToFixedList();
+      }
       return addendaFields;
     }
 
@@ -95,6 +99,7 @@ namespace Empiria.Billing.Adapters {
         UnitPrice = addendaConcept ? concepto.Cantidad * concepto.Importe : concepto.ValorUnitario,
         Subtotal = concepto.Importe,
         Discount = concepto.Descuento,
+        IsConceptSumToTotal = concepto.IsConceptSumToTotal,
         TaxEntries = MapToBillTaxFields(concepto.Impuestos)
       };
     }
