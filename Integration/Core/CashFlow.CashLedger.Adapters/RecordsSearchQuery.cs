@@ -14,6 +14,8 @@ namespace Empiria.Financial.Adapters {
 
   public enum RecordSearchQueryType {
 
+    BudgetControlNoEntries,
+
     CashFlowConcepts,
 
     CashFlowEntriesBySubledger,

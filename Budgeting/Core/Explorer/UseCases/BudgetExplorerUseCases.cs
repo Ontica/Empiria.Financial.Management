@@ -17,6 +17,7 @@ using Empiria.Budgeting.Transactions.Adapters;
 
 using Empiria.Budgeting.Explorer.Adapters;
 using Empiria.Budgeting.Explorer.Data;
+using Empiria.Financial.Adapters;
 
 namespace Empiria.Budgeting.Explorer.UseCases {
 
@@ -187,6 +188,23 @@ namespace Empiria.Budgeting.Explorer.UseCases {
 
       return BudgetExplorerDataService.GetMonthBalances(budget);
 
+    }
+
+
+    internal DynamicDto<BudgetEntryDto> SearchBudgetControlNoEntries(RecordsSearchQuery query) {
+      return new DynamicDto<BudgetEntryDto>(
+        new DataTableColumn[] {
+          new DataTableColumn("orgUnitCode", "Area", "text"),
+          new DataTableColumn("budgetAccountCode", "Partida", "text-nowrap"),
+          new DataTableColumn("requestTxnNo", "Transacción", "text-nowrap"),
+          new DataTableColumn("controlNo", "Núm verif", "text-nowrap"),
+          new DataTableColumn("amount", "Importe", "decimal"),
+          new DataTableColumn("commited", "Comprometido", "decimal"),
+          new DataTableColumn("toPay", "Por pagar", "decimal"),
+          new DataTableColumn("exercised", "Ejercido", "decimal")
+        }.ToFixedList(),
+        new FixedList<BudgetEntryDto>()
+      );
     }
 
     #endregion Use cases
