@@ -130,6 +130,11 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
+    public bool IsConceptSumToTotal {
+      get; internal set;
+    }
+
+
     public bool IsSubtotalGralConcept {
       get; internal set;
     }
@@ -497,9 +502,14 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    public FixedList<SATBillAddendaConcept> EcoConcepts {
+    public FixedList<SATBillAddendaConcept> AddendaConcepts {
       get; internal set;
     } = new FixedList<SATBillAddendaConcept>();
+
+
+    public FixedList<SATBillConceptDto> Conceptos {
+      get; internal set;
+    } = new FixedList<SATBillConceptDto>();
 
   } // class SATBillAddenda
 

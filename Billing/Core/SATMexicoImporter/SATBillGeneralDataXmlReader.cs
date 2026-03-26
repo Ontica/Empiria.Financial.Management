@@ -267,7 +267,7 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    private FixedList<SATBillTaxDto> GenerateTaxesByConcept(XmlNodeList childNodes) {
+    internal FixedList<SATBillTaxDto> GenerateTaxesByConcept(XmlNodeList childNodes) {
 
       var taxesByConceptDto = new List<SATBillTaxDto>();
 

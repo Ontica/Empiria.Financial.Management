@@ -67,12 +67,12 @@ namespace Empiria.Billing.SATMexicoImporter {
           _satBillDto.GeneralTaxes = generalDataReader.GenerateGeneralTaxesData(node);
         }
         if (node.Name == "cfdi:Complemento") {
-          
+
           GenerateComplementData(node);
         }
         if (node.Name == "cfdi:Addenda") {
 
-          GenerateAddendaEcoComplementData(node);
+          GenerateAddendaComplementData(node);
         }
       }
 
@@ -83,34 +83,44 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     #region Helpers
 
-    private void GenerateAddendaEcoComplementData(XmlNode complementNode) {
+    private void GenerateAddendaComplementData(XmlNode complementNode) {
 
-      foreach (XmlNode child in complementNode.ChildNodes) {
+      foreach (XmlNode complementChild in complementNode.ChildNodes) {
 
-        if (child.Name.Equals("eco:Complementaria")) {
-
-          _satBillDto.Addenda = new SATBillAddenda {
-            NoEstacion = generalDataReader.GetAttribute(child, "noEstacion"),
-            ClavePemex = generalDataReader.GetAttribute(child, "clavePemex"),
-            EcoConcepts = GenerateAddendaEcoConcepts(child.ChildNodes)
-          };
-
-        } else if (child.Name.Equals("TOKA")) {
+        if (complementChild.Name.Equals("eco:Complementaria")) {
 
           _satBillDto.Addenda = new SATBillAddenda {
-            Serie = generalDataReader.GetAttribute(child, "Serie"),
-            Folio = generalDataReader.GetAttribute(child, "Folio"),
-            FechaEmision = generalDataReader.GetAttribute<DateTime>(child, "FechaEmision"),
+            NoEstacion = generalDataReader.GetAttribute(complementChild, "noEstacion"),
+            ClavePemex = generalDataReader.GetAttribute(complementChild, "clavePemex"),
+            AddendaConcepts = GenerateAddendaEcoConcepts(complementChild.ChildNodes)
           };
 
-          if (child.FirstChild.Name.Equals("Concepto")) {
+        } else if (complementChild.Name.Equals("TOKA")) {
+
+          _satBillDto.Addenda = new SATBillAddenda {
+            Serie = generalDataReader.GetAttribute(complementChild, "Serie"),
+            Folio = generalDataReader.GetAttribute(complementChild, "Folio"),
+            FechaEmision = generalDataReader.GetAttribute<DateTime>(complementChild, "FechaEmision"),
+          };
+
+          if (complementChild.FirstChild.Name.Equals("Concepto")) {
 
             _satBillDto.Addenda.Concepto = new SATBillConceptDto {
-              Cantidad = generalDataReader.GetAttribute<decimal>(child.FirstChild, "Cantidad"),
-              Descripcion = generalDataReader.GetAttribute(child.FirstChild, "Descripcion"),
-              Importe = generalDataReader.GetAttribute<decimal>(child.FirstChild, "Importe")
+              Cantidad = generalDataReader.GetAttribute<decimal>(complementChild.FirstChild, "Cantidad"),
+              Descripcion = generalDataReader.GetAttribute(complementChild.FirstChild, "Descripcion"),
+              Importe = generalDataReader.GetAttribute<decimal>(complementChild.FirstChild, "Importe")
 
             };
+          }
+        } else if (complementChild.Name.Equals("racooAdd:minotaria")) {
+
+          foreach (XmlNode item in complementChild.ChildNodes) {
+
+            if (item.Name.Equals("racooAdd:Conceptos")) {
+              _satBillDto.Addenda = new SATBillAddenda {
+                Conceptos = GenerateBillConceptsFromAddenda(item, true)
+              };
+            }
           }
         }
       }
@@ -144,6 +154,37 @@ namespace Empiria.Billing.SATMexicoImporter {
         }
       }
       return addendaConcepts.ToFixedList();
+    }
+
+
+    private FixedList<SATBillConceptDto> GenerateBillConceptsFromAddenda(XmlNode conceptsNode,
+                                                                          bool isConceptSumToTotal = false) {
+      var conceptosDto = new List<SATBillConceptDto>();
+
+      foreach (XmlNode concept in conceptsNode.ChildNodes) {
+
+        if (!concept.Name.Equals("racooAdd:Concepto")) {
+          Assertion.EnsureFailed("The concepts node must contain only concepts.");
+        }
+
+        var conceptoDto = new SATBillConceptDto() {
+          IsConceptSumToTotal = isConceptSumToTotal,
+          Cantidad = generalDataReader.GetAttribute<decimal>(concept, "cantidad"),
+          Unidad = generalDataReader.GetAttribute(concept, "unidad"),
+          ValorUnitario = generalDataReader.GetAttribute<decimal>(concept, "valorUnitario"),
+          Importe = generalDataReader.GetAttribute<decimal>(concept, "importe"),
+          Descripcion = generalDataReader.GetAttribute(concept, "descripcion"),
+          ClaveProdServ = generalDataReader.GetAttribute(concept, "claveProdServ"),
+          ClaveUnidad = generalDataReader.GetAttribute(concept, "claveUnidad"),
+          NoIdentificacion = generalDataReader.GetAttribute(concept, "noIdentificacion"),
+          Descuento = generalDataReader.GetAttribute<decimal>(concept, "descuento"),
+          ObjetoImp = generalDataReader.GetAttribute(concept, "objetoImp"),
+          Impuestos = generalDataReader.GenerateTaxesByConcept(concept.ChildNodes)
+        };
+
+        conceptosDto.Add(conceptoDto);
+      }
+      return conceptosDto.ToFixedList();
     }
 
 
