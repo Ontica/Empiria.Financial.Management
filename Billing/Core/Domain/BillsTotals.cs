@@ -145,7 +145,8 @@ namespace Empiria.Billing {
 
     public decimal Total {
       get {
-        return Subtotal - Discounts + TaxItems.Sum(x => x.Total);
+        //return Subtotal - Discounts + TaxItems.Sum(x => x.Total);
+        return _bills.Sum(x => x.BillType.IsCreditNote ? -1 * x.Total : x.Total);
       }
     }
 

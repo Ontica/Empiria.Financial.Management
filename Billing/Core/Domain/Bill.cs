@@ -484,12 +484,17 @@ namespace Empiria.Billing {
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       Subtotal = fields.Subtotal;
       Discount = fields.Discount;
-      Total = fields.Total;
+      Total = AssignOrCalculateTotal(fields);
       SchemaData.Update(fields.SchemaData);
       SecurityData.Update(fields.SecurityData);
       BillExtData.Update(fields);
     }
 
+    private decimal AssignOrCalculateTotal(BillFields fields) {
+      return fields.Addenda.Concepts.FindAll(x => x.IsConceptSumToTotal).Count > 0 ?
+             fields.Addenda.Concepts.Sum(x => x.Subtotal) + fields.Total :
+             fields.Total;
+    }
 
     internal void UpdateFuelConsumptionBill(FuelConsumptionBillFields fields) {
       Assertion.Require(fields, nameof(fields));
