@@ -112,11 +112,11 @@ namespace Empiria.Billing.SATMexicoImporter {
 
             };
           }
-        } else if (complementChild.Name.Equals("racooAdd:minotaria")) {
+        } else if (complementChild.Name.EndsWith(":minotaria")) {
 
           foreach (XmlNode item in complementChild.ChildNodes) {
 
-            if (item.Name.Equals("racooAdd:Conceptos")) {
+            if (item.Name.EndsWith(":Conceptos")) {
               _satBillDto.Addenda = new SATBillAddenda {
                 Conceptos = GenerateBillConceptsFromAddenda(item, true)
               };
@@ -163,7 +163,7 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode concept in conceptsNode.ChildNodes) {
 
-        if (!concept.Name.Equals("racooAdd:Concepto")) {
+        if (!concept.Name.EndsWith(":Concepto")) {
           Assertion.EnsureFailed("The concepts node must contain only concepts.");
         }
 
