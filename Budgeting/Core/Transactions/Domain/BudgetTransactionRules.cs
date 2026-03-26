@@ -194,14 +194,55 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool CanReturnToEdition {
+      get {
+        if (_transaction.Status != TransactionStatus.Pending &&
+            _transaction.Status != TransactionStatus.Deleted &&
+            _transaction.Status != TransactionStatus.Rejected &&
+            _transaction.Status != TransactionStatus.Canceled &&
+            (_transaction.OperationType == BudgetOperationType.Expand ||
+            _transaction.OperationType == BudgetOperationType.Modify ||
+            _transaction.OperationType == BudgetOperationType.Plan ||
+            _transaction.OperationType == BudgetOperationType.Reduce) &&
+            _securityRoles.Contains(BUDGET_MANAGER)) {
+          return true;
+        }
+        return false;
+      }
+    }
+
+
+    public bool CanReopen {
+      get {
+        if (_transaction.Status == TransactionStatus.Closed &&
+            (_transaction.OperationType == BudgetOperationType.Request ||
+            _transaction.OperationType == BudgetOperationType.Commit) &&
+            _securityRoles.Contains(BUDGET_MANAGER)) {
+          return true;
+        }
+        return false;
+      }
+    }
+
+
     public bool CanUpdate {
       get {
         if (_transaction.IsNew) {
           return true;
         }
+
+        if (_transaction.Status == TransactionStatus.OnAuthorization &&
+            (_transaction.OperationType == BudgetOperationType.Request ||
+            _transaction.OperationType == BudgetOperationType.Commit) &&
+            (_securityRoles.Contains(BUDGET_MANAGER) ||
+            _securityRoles.Contains(BUDGET_AUTHORIZER))) {
+          return true;
+        }
+
         if (_transaction.Status != TransactionStatus.Pending) {
           return false;
         }
+
         if (_transaction.TransactionType.IsProtected &&
             _securityRoles.Contains(BUDGET_MANAGER) ||
             _securityRoles.Contains(BUDGET_AUTHORIZER)) {

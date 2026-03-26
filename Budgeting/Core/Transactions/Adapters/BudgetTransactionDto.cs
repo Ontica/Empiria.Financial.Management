@@ -76,7 +76,17 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "CanOpen")]
+    public bool CanReopen {
+      get; internal set;
+    }
+
     public bool CanReject {
+      get; internal set;
+    }
+
+    public bool CanReturnToEdition {
       get; internal set;
     }
 

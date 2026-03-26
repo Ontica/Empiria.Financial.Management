@@ -10,7 +10,12 @@
 
 using System.Web.Http;
 
+using Empiria.DynamicData;
 using Empiria.WebApi;
+
+using Empiria.Financial.Adapters;
+
+using Empiria.Budgeting.Explorer.UseCases;
 
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.UseCases;
@@ -28,6 +33,10 @@ namespace Empiria.Budgeting.Transactions.WebApi {
                                                [FromBody] BudgetEntryFields fields) {
 
       fields.TransactionUID = transactionUID;
+
+      var txn = BudgetTransaction.Parse(transactionUID);
+
+      Assertion.Require(!txn.WasReopened, "No se pueden crear nuevas entradas en una transacción reabierta.");
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
 
@@ -57,10 +66,28 @@ namespace Empiria.Budgeting.Transactions.WebApi {
     public NoDataModel RemoveBudgetEntry([FromUri] string transactionUID,
                                          [FromUri] string entryUID) {
 
+      var txn = BudgetTransaction.Parse(transactionUID);
+
+      Assertion.Require(!txn.WasReopened, "No se pueden eliminar entradas en una transacción reabierta.");
+
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
         _ = usecases.RemoveBudgetEntry(transactionUID, entryUID);
 
         return new NoDataModel(base.Request);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/tooling/record-search/budget-control-no-entries")]
+    public SingleObjectModel SearchBudgetControlNoEntries([FromBody] RecordsSearchQuery query) {
+
+      query.QueryType = RecordSearchQueryType.BudgetControlNoEntries;
+
+      using (var services = BudgetExplorerUseCases.UseCaseInteractor()) {
+        DynamicDto<BudgetEntryDto> entries = services.SearchBudgetControlNoEntries(query);
+
+        return new SingleObjectModel(base.Request, entries);
       }
     }
 
@@ -73,9 +100,17 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
       fields.TransactionUID = transactionUID;
 
+      var txn = BudgetTransaction.Parse(transactionUID);
+
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
 
-        BudgetEntryDto budgetEntry = usecases.UpdateBudgetEntry(entryUID, fields);
+        BudgetEntryDto budgetEntry;
+
+        if (txn.WasReopened) {
+          budgetEntry = usecases.UpdateReopenedBudgetEntry(entryUID, fields);
+        } else {
+          budgetEntry = usecases.UpdateBudgetEntry(entryUID, fields);
+        }
 
         return new SingleObjectModel(base.Request, budgetEntry);
       }

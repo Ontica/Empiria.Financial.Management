@@ -206,6 +206,21 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    public BudgetTransactionHolderDto ReopenTransaction(BudgetTransaction transaction, string reason) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      reason = EmpiriaString.Clean(reason);
+
+      transaction.Reopen();
+
+      transaction.Save();
+
+      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Reabierta", reason));
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public BudgetTransactionHolderDto RejectTransaction(BudgetTransaction transaction,
                                                         string reason) {
       Assertion.Require(transaction, nameof(transaction));
@@ -224,6 +239,25 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       return BudgetTransactionMapper.Map(transaction);
     }
+
+
+    public BudgetTransactionHolderDto ReturnTransactionToEdition(BudgetTransaction transaction,
+                                                                 string reason) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      reason = EmpiriaString.Clean(reason);
+
+      transaction.ReturnToEdition();
+
+      transaction.Save();
+
+      reason = EmpiriaString.Clean(reason);
+
+      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Regresada a edición", reason));
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
 
     public BudgetEntryDto RemoveBudgetEntry(string budgetTransactionUID, string budgetEntryUID) {
       Assertion.Require(budgetTransactionUID, nameof(budgetTransactionUID));
@@ -270,6 +304,28 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       transaction.UpdateEntry(budgetEntry, fields);
 
       transaction.Save();
+
+      return BudgetEntryMapper.Map(budgetEntry);
+    }
+
+
+    public BudgetEntryDto UpdateReopenedBudgetEntry(string budgetEntryUID, BudgetEntryFields fields) {
+      Assertion.Require(budgetEntryUID, nameof(budgetEntryUID));
+      Assertion.Require(fields, nameof(fields));
+
+      var transaction = BudgetTransaction.Parse(fields.TransactionUID);
+
+      var budgetEntry = transaction.GetEntry(budgetEntryUID);
+
+      decimal lastAmount = budgetEntry.Amount;
+
+      transaction.UpdateReopenedEntry(budgetEntry, fields);
+
+      HistoryServices.CreateHistoryEntry(transaction,
+        new HistoryFields("Modificación de partida",
+        $"Partida {budgetEntry.BudgetAccount.AccountNo}. De {lastAmount:C2} a {budgetEntry.Amount:C2}. " +
+        $"Columna {budgetEntry.BalanceColumn.Name}, número de verificación {budgetEntry.ControlNo}," +
+        $"área {budgetEntry.BudgetAccount.OrganizationalUnit.Code}."));
 
       return BudgetEntryMapper.Map(budgetEntry);
     }

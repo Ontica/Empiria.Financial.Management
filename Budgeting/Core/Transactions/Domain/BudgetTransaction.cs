@@ -298,6 +298,16 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool WasReopened {
+      get {
+        return ExtensionData.Get("wasReopened", false);
+      }
+      private set {
+        ExtensionData.SetIf("wasReopened", value, value);
+      }
+    }
+
+
     public virtual string Keywords {
       get {
         return TransactionNo.ToLower() + " " +
@@ -600,6 +610,38 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public void Reopen() {
+      Assertion.Require(Rules.CanReopen, "Current user can not reopen this transaction.");
+
+      AppliedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      ApplicationDate = CalculateApplicationDate();
+
+      WasReopened = true;
+
+      Status = TransactionStatus.OnAuthorization;
+    }
+
+
+    public void ReturnToEdition() {
+      Assertion.Require(Rules.CanReturnToEdition,
+                        "Current user can not return this transaction to edition.");
+
+      AppliedBy = Party.Empty;
+      AuthorizedBy = Party.Empty;
+      RequestedBy = Party.Empty;
+
+      ApplicationDate = ExecutionServer.DateMaxValue;
+      AuthorizationDate = ExecutionServer.DateMaxValue;
+      RequestedDate = ExecutionServer.DateMaxValue;
+
+      Status = TransactionStatus.Pending;
+
+      Entries.ToList()
+             .ForEach(x => x.SetAsPending());
+    }
+
+
     internal void Reject(string reason) {
       Assertion.Require(reason, nameof(reason));
 
@@ -703,6 +745,21 @@ namespace Empiria.Budgeting.Transactions {
       var currentEntry = TryGetEntry(fields);
 
       budgetEntry.Update(fields);
+    }
+
+
+    internal void UpdateReopenedEntry(BudgetEntry budgetEntry,
+                                      BudgetEntryFields fields) {
+
+      budgetEntry.UpdateReopened(fields);
+
+      if (HasEntity) {
+        var entity = GetEntity();
+
+        ((BaseObject) entity).RestoreCache();
+      }
+
+      Reload();
     }
 
 

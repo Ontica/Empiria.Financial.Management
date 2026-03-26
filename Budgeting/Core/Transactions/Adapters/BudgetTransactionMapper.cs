@@ -126,6 +126,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         CanDelete = rules.CanDelete,
         CanEditDocuments = rules.CanEditDocuments,
         CanReject = rules.CanReject,
+        CanReopen = rules.CanReopen,
+        CanReturnToEdition = rules.CanReturnToEdition,
         CanSendToAuthorization = rules.CanSendToAuthorization,
         CanUpdate = rules.CanUpdate
       };
@@ -134,8 +136,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     static private BudgetTypeForEditionDto MapBudgetTypeForEdition(BudgetType budgetType) {
 
-      var budgets = Budget.GetList(budgetType)
-                          .FindAll(x => x.AvailableTransactionTypes.Contains(y => y.ManualEdition));
+      var budgets = Budget.GetList(budgetType);
+      // .FindAll(x => x.AvailableTransactionTypes.Contains(y => y.ManualEdition));
 
       return new BudgetTypeForEditionDto {
         UID = budgetType.UID,
@@ -188,7 +190,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
       return budget.AvailableTransactionTypes.Select(x => BudgetTransactionType.Parse(x.UID))
                                              .ToFixedList()
-                                             .FindAll(x => x.ManualEdition)
+                                             //.FindAll(x => x.ManualEdition)
                                              .FindAll(x => !x.IsProtected ||
                                                            principal.IsInRole("budget-manager") ||
                                                            principal.IsInRole("budget-authorizer"))
