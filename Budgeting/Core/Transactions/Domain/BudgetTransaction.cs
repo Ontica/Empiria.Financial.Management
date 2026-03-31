@@ -792,6 +792,10 @@ namespace Empiria.Budgeting.Transactions {
 
     private void GenerateControlCodes() {
 
+      if (WasReopened) {
+        return;
+      }
+
       if (OperationType == BudgetOperationType.Request) {
 
         BudgetTransactionDataService.GenerateRequestControlCodes(this);
