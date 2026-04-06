@@ -744,7 +744,8 @@ namespace Empiria.Billing {
     static internal void EnsureIsValidNote(this BillFields fields, BillCategory billCategory) {
 
       if (fields.BillRelatedDocument.TipoRelacion == "02" ||
-          fields.BillRelatedDocument.TipoRelacion == "04") {
+          fields.BillRelatedDocument.TipoRelacion == "04" ||
+          fields.BillRelatedDocument.TipoRelacion == "07") {
         return;
       }
 
