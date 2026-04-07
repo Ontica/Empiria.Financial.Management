@@ -315,15 +315,15 @@ namespace Empiria.Billing.SATMexicoImporter {
 
         if (impuesto == "001" && tipoFactor != "Exento") {
 
-          generalTaxes.RetencionISR = GetAttribute<decimal>(taxChildNode, "Importe");
+          generalTaxes.RetencionISR += GetAttribute<decimal>(taxChildNode, "Importe");
 
         } else if(impuesto == "002" && tipoFactor != "Exento") {
 
-          generalTaxes.RetencionIVA = GetAttribute<decimal>(taxChildNode, "Importe");
+          generalTaxes.RetencionIVA += GetAttribute<decimal>(taxChildNode, "Importe");
 
         } else if (impuesto == "003" && tipoFactor != "Exento") {
 
-          generalTaxes.RetencionIEPS = GetAttribute<decimal>(taxChildNode, "Importe");
+          generalTaxes.RetencionIEPS += GetAttribute<decimal>(taxChildNode, "Importe");
         }
       }
     }
@@ -338,10 +338,10 @@ namespace Empiria.Billing.SATMexicoImporter {
 
         if (impuesto == "002" && tipoFactor != "Exento") {
 
-          generalTaxes.TrasladoIVA = GetAttribute<decimal>(taxChildNode, "Importe");
+          generalTaxes.TrasladoIVA += GetAttribute<decimal>(taxChildNode, "Importe");
         } else if (impuesto == "003" && tipoFactor != "Exento") {
 
-          generalTaxes.TrasladoIEPS = GetAttribute<decimal>(taxChildNode, "Importe");
+          generalTaxes.TrasladoIEPS += GetAttribute<decimal>(taxChildNode, "Importe");
         }
       }
     }
