@@ -113,7 +113,7 @@ namespace Empiria.Billing {
     public FixedList<BillTaxEntryFields> BillTaxes {
       get; internal set;
     } = new FixedList<BillTaxEntryFields>();
-    
+
   } // class BillFields
 
 
@@ -332,7 +332,7 @@ namespace Empiria.Billing {
     public FixedList<BillTaxEntryFields> TaxEntries {
       get; set;
     } = new FixedList<BillTaxEntryFields>();
-    
+
 
     internal void EnsureIsValid() {
       // ToDo
@@ -750,7 +750,7 @@ namespace Empiria.Billing {
       }
 
       if (billCategory == BillCategory.NotaDeCreditoProveedores) {
-        
+
         Assertion.Require(fields.BillRelatedDocument.RelatedCFDI != string.Empty,
                         "La nota de crédito que intenta guardar " +
                         "no tiene referencia a un CFDI relacionado.");

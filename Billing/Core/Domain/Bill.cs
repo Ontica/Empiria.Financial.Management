@@ -342,6 +342,22 @@ namespace Empiria.Billing {
     }
 
 
+    public decimal TotalBonusConcepts {
+      get {
+        return Concepts.Where(a => a.SchemaData.IsBonusConcept)
+                     .ToFixedList().Sum(x => x.Subtotal);
+      }
+    }
+
+
+    public decimal TotalBonusTaxes {
+      get {
+        return BillTaxes.Where(a => a.BillTaxExtData.IsBonusTax)
+                        .ToFixedList().Sum(x => x.Total);
+      }
+    }
+
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(BillNo, RelatedBillNo, BillCategory.Keywords,
