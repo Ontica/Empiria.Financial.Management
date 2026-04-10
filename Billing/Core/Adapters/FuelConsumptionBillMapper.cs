@@ -78,7 +78,7 @@ namespace Empiria.Billing.Adapters {
       var subtotalGeneralAddenda = dto.Addenda.AddendaConceptos.FindAll(x => x.IsSubtotalGralConcept)
                                                                .Sum(x => x.Importe);
       var impuestoGeneralAddenda = dto.Addenda.AddendaConceptos.FindAll(x => x.IsSubtotalGralConcept)
-                                                               .SelectFlat(x=>x.Impuestos)
+                                                               .SelectFlat(x => x.Impuestos)
                                                                .Sum(x => x.Importe);
       var totalGralAddenda = subtotalGeneralAddenda + impuestoGeneralAddenda;
 
