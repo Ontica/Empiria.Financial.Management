@@ -104,7 +104,7 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    string ConstructionBuilding {
+    string CreditProjectType {
       get;
     }
 

@@ -32,6 +32,8 @@ namespace Empiria.Financial {
       //CreditType = CreditType.ParseNamedKey<CreditType>(account.CreditType);
       ExternalCreditNo = account.ExternalCreditNo;
       SubledgerAccountNo = account.SubledgerAccountNo;
+      CreditLineNo = account.CreditLineNo;
+      CreditProjectType = account.CreditProjectType;
     }
 
     internal CreditAttributes(JsonObject attributes) {
@@ -84,6 +86,17 @@ namespace Empiria.Financial {
     }
 
 
+    public CreditProjectType CreditProjectType {
+      get {
+        return _attributes.Get("creditProjectTypeId", CreditProjectType.Empty);
+      }
+      set {
+        _attributes.SetIf("creditProjectTypeId", value.UID, !value.IsEmptyInstance);
+      }
+    }
+
+
+
     public string ExternalCreditNo {
       get {
         return _attributes.Get("externalCreditNo", string.Empty);
@@ -93,16 +106,30 @@ namespace Empiria.Financial {
       }
     }
 
+
+    public string CreditLineNo {
+      get {
+        return _attributes.Get("creditLine", string.Empty);
+      }
+      internal set {
+        _attributes.SetIfValue("creditLine", value);
+      }
+    }
+
     #endregion Properties
 
     #region Helpers
 
     internal JsonObject ToJson() {
-      return _attributes;
+      var json = JsonObject.Parse(_attributes.ToString());
+      json.Set("CreditProjectType", CreditProjectType.MapToNamedEntity());
+      return json;
     }
 
     internal override string ToJsonString() {
-      return _attributes.ToString();
+      var json = JsonObject.Parse(_attributes.ToString());
+      json.Set("CreditProjectType", CreditProjectType.MapToNamedEntity());
+      return json.ToString();
     }
 
     #endregion Helpers
