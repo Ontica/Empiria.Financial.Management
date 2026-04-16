@@ -15,6 +15,19 @@ namespace Empiria.CashFlow.CashLedger.Adapters {
   /// <summary>Output DTO used to retrieve cash ledger entries with transaction information.</summary>
   public class CashEntryExtendedDto : BaseCashEntryDto {
 
+    public static CashEntryExtendedDto Empty {
+      get {
+        return new CashEntryExtendedDto {
+          TransactionId = -1,
+          TransactionNumber = string.Empty,
+          TransactionLedgerName = string.Empty,
+          TransactionConcept = string.Empty,
+          TransactionAccountingDate = DateTime.MinValue,
+          TransactionRecordingDate = DateTime.MinValue
+        };
+      }
+    }
+
     public long TransactionId {
       get; set;
     }
