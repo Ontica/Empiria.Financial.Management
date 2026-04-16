@@ -135,6 +135,16 @@ namespace Empiria.Budgeting {
     }
 
 
+    public bool IsMonthClosed(int month) {
+      return ClosedMonths.Contains(month);
+    }
+
+
+    public bool IsMonthOpened(int month) {
+      return !IsMonthClosed(month);
+    }
+
+
     protected override void OnSave() {
       BudgetData.Write(this, base.ExtData.ToString());
     }
