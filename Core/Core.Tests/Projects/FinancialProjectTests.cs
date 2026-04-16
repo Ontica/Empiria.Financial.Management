@@ -35,14 +35,11 @@ namespace Empiria.Tests.Financial.Projects {
 
       var baseOrgUnit = TestsObjects.TryGetObject<OrganizationalUnit>(x => x.PlaysRole(FinancialProjectRules.PROJECT_MANGER_ROLE));
 
-      var subprogram = TestsObjects.TryGetObject(FinancialProgram.GetList(FinancialProgramType.Subprograma));
-
-      var sut = new FinancialProject(category, baseOrgUnit, subprogram, name);
+      var sut = new FinancialProject(category, baseOrgUnit, name);
 
       Assert.Equal(baseOrgUnit, sut.BaseOrgUnit);
       Assert.Equal(name, sut.Name);
 
-      Assert.Equal(subprogram, sut.Subprogram);
       Assert.Equal(category, sut.Category);
       Assert.True(sut.ProjectNo.Length != 0);
       Assert.Equal(DateTime.Today, sut.StartDate);

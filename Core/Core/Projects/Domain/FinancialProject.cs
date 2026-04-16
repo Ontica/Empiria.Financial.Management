@@ -44,17 +44,15 @@ namespace Empiria.Financial.Projects {
     }
 
     internal FinancialProject(FinancialProjectCategory category, OrganizationalUnit baseOrgUnit,
-                              FinancialProgram subprogram, string name) : base(FinancialProjectType.Empty) {
+                              string name) : base(FinancialProjectType.Empty) {
       Assertion.Require(category, nameof(category));
       Assertion.Require(!category.IsEmptyInstance, nameof(category));
       Assertion.Require(baseOrgUnit, nameof(baseOrgUnit));
       Assertion.Require(!baseOrgUnit.IsEmptyInstance, nameof(baseOrgUnit));
-      Assertion.Require(subprogram, nameof(subprogram));
       Assertion.Require(name, nameof(name));
 
       Category = category;
       BaseOrgUnit = baseOrgUnit;
-      Subprogram = subprogram;
 
       Name = EmpiriaString.Clean(name);
       ProjectNo = TO_ASSIGN_PROJECT_NO;
@@ -103,13 +101,13 @@ namespace Empiria.Financial.Projects {
     string INamedEntity.Name {
       get {
         if (ProjectNo.Length != 0 && Status == EntityStatus.Pending) {
-          return $"({ProjectNo}) {Name} (Proyectado) [{Program.Name}]";
+          return $"({ProjectNo}) {Name} (Proyectado)";
         } else if (ProjectNo.Length == 0 && Status == EntityStatus.Pending) {
-          return $"(S/N) {Name} (Proyectado) [{Program.Name}]";
+          return $"(S/N) {Name} (Proyectado)";
         } else if (ProjectNo.Length != 0) {
-          return $"({ProjectNo}) {Name} [{Program.Name}]";
+          return $"({ProjectNo}) {Name}";
         } else {
-          return $"(S/N) {Name} [{Program.Name}]";
+          return $"(S/N) {Name}";
         }
       }
     }
@@ -367,7 +365,6 @@ namespace Empiria.Financial.Projects {
       fields.EnsureValid();
 
       Category = Patcher.Patch(fields.ProjectTypeCategoryUID, this.Category);
-      Subprogram = Patcher.Patch(fields.SubprogramUID, Subprogram);
       Name = Patcher.Patch(fields.Name, this.Name);
       ProjectNo = Patcher.Patch(fields.ProjectNo, this.ProjectNo);
       BaseOrgUnit = Patcher.Patch(fields.BaseOrgUnitUID, this.BaseOrgUnit);

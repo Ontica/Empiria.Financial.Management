@@ -54,9 +54,7 @@ namespace Empiria.Financial.Projects.UseCases {
       var category = FinancialProjectCategory.Parse(fields.ProjectTypeCategoryUID);
       var orgUnit = OrganizationalUnit.Parse(fields.BaseOrgUnitUID);
 
-      var subprogram = FinancialProgram.Parse(fields.SubprogramUID);
-
-      var project = new FinancialProject(category, orgUnit, subprogram, fields.Name);
+      var project = new FinancialProject(category, orgUnit, fields.Name);
 
       project.Update(fields);
 
