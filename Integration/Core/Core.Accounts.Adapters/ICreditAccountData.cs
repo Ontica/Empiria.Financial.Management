@@ -37,20 +37,24 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
+    CreditProjectType CreditProjectType {
+      get;
+    }
+
     Currency Currency {
       get;
     }
 
     string FederalTaxPayersReg {
       get;
-     }
+    }
 
     int FederalTaxPayersRegNo {
       get;
     }
 
-    string CustomerType { 
-      get; 
+    string CustomerType {
+      get;
     }
 
     string CustomerName {
@@ -67,7 +71,7 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    string CreditStage {
+    string CreditStageId {
       get;
     }
 
@@ -79,15 +83,15 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    DateTime MaxAvailabilityDate { 
-      get; 
+    DateTime MaxAvailabilityDate {
+      get;
     }
 
     DateTime MaxRefinancingDate {
       get;
     }
 
-    int LineCreditNo {
+    string CreditLineNo {
       get;
     }
 
@@ -99,12 +103,12 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    decimal ConstructionBuildingCost { 
-      get; 
+    decimal ConstructionBuildingCost {
+      get;
     }
 
-    decimal LoanAmount { 
-      get; 
+    decimal LoanAmount {
+      get;
     }
 
     decimal CurrentBalance {
@@ -115,8 +119,8 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    int DisbursementPeriod { 
-      get; 
+    int DisbursementPeriod {
+      get;
     }
 
     DateTime DisbursementDate {
@@ -131,8 +135,8 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    int InterestRate { 
-      get; 
+    int InterestRate {
+      get;
     }
 
     int InterestGracePeriod {
