@@ -34,6 +34,8 @@ namespace Empiria.Budgeting.UseCases {
     public FixedList<BudgetTypeDto> BudgetTypesList() {
       FixedList<BudgetType> budgetTypes = BudgetType.GetList();
 
+      budgetTypes = base.RestrictUserDataAccessTo(budgetTypes);
+
       FixedList<Budget> budgets = Budget.GetList();
 
       return BudgetTypeMapper.Map(budgetTypes, budgets);
