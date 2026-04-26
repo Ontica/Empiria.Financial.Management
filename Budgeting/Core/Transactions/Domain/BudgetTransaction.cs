@@ -322,7 +322,10 @@ namespace Empiria.Budgeting.Transactions {
 
     public FixedList<BudgetEntry> Entries {
       get {
-        return _entries.Value.ToFixedList();
+        return _entries.Value
+                       .OrderBy(x => x.BudgetAccount.Code)
+                       .ThenBy(x => x.BudgetAccount.OrganizationalUnit.Code)
+                       .ToFixedList();
       }
     }
 
