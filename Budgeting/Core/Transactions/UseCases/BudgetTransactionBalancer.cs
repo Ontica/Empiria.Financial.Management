@@ -41,7 +41,8 @@ namespace Empiria.Budgeting.Transactions {
 
 
     public FixedList<BudgetEntry> BuildBalanceEntries() {
-      var deposits = _transaction.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment)
+      var deposits = _transaction.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment &&
+                                                       x.BudgetAccount.StandardAccount.RoleType != Financial.AccountRoleType.Control)
                                          .GroupBy(x => new { x.BudgetAccount, x.Month });
 
       var withdrawals = _transaction.Entries.FindAll(x => x.Withdrawal > 0);
