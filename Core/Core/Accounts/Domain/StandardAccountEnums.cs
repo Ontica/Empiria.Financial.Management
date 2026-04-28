@@ -19,6 +19,8 @@ namespace Empiria.Financial {
     /// <summary>Posting account (cuenta de detalle).</summary>
     Detalle = 'P',
 
+    /// <summary>Control account (cuenta de control).</summary>
+    Control = 'C',
 
     Undefined = 'U'
 
