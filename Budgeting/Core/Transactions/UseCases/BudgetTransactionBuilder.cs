@@ -134,6 +134,12 @@ namespace Empiria.Budgeting.Transactions {
 
       BalanceColumn withdrawalColumn = transaction.OperationType.DefaultWithdrawalColumn();
 
+      if (_budgetable.Items.Contains(x => !((BudgetEntry) x.BudgetEntry).IsEmptyInstance &&
+                                            ((BudgetEntry) x.BudgetEntry).Status != TransactionStatus.Rejected &&
+                                            ((BudgetEntry) x.BudgetEntry).Status != TransactionStatus.Canceled)) {
+        transaction.SetHandleTaxesFlag(false);
+      }
+
       var entries = _budgetable.Items.FindAll(x => ((BudgetEntry) x.BudgetEntry).IsEmptyInstance ||
                                                    ((BudgetEntry) x.BudgetEntry).Status == TransactionStatus.Rejected ||
                                                    ((BudgetEntry) x.BudgetEntry).Status == TransactionStatus.Canceled);
