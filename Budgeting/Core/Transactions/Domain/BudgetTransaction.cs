@@ -338,6 +338,15 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool HandleTaxes {
+      get {
+        return ExtensionData.Get("handleTaxes", true);
+      }
+      private set {
+        ExtensionData.SetIf("handleTaxes", value, !value);
+      }
+    }
+
     internal BudgetTransactionRules Rules {
       get {
         return new BudgetTransactionRules(this);
@@ -581,6 +590,11 @@ namespace Empiria.Budgeting.Transactions {
       } else {
         return _total;
       }
+    }
+
+
+    internal void SetHandleTaxesFlag(bool flag) {
+      HandleTaxes = flag;
     }
 
 
