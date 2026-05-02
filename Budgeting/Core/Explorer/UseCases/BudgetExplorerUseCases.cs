@@ -12,12 +12,13 @@ using Empiria.DynamicData;
 using Empiria.Parties;
 using Empiria.Services;
 
+using Empiria.Financial.Adapters;
+
 using Empiria.Budgeting.Transactions;
 using Empiria.Budgeting.Transactions.Adapters;
 
 using Empiria.Budgeting.Explorer.Adapters;
 using Empiria.Budgeting.Explorer.Data;
-using Empiria.Financial.Adapters;
 
 namespace Empiria.Budgeting.Explorer.UseCases {
 
@@ -170,6 +171,31 @@ namespace Empiria.Budgeting.Explorer.UseCases {
     }
 
 
+    public decimal GetAvailableBudget(Budget budget, BudgetAccount budgetAccount, int month) {
+      Assertion.Require(budget, nameof(budget));
+      Assertion.Require(budgetAccount, nameof(budgetAccount));
+      Assertion.Require(1 <= month && month <= 12, nameof(month));
+
+      var query = new AvailableBudgetQuery {
+        Budget = budget,
+        Accounts = new FixedList<BudgetAccount>(new[] { budgetAccount }),
+        Year = budget.Year,
+        Month = month,
+      };
+
+      var builder = new AvailableBudgetBuilder(query);
+
+
+      FixedList<BudgetDataInColumns> result = builder.Build();
+
+      if (result.Count == 0) {
+        return decimal.Zero;
+      }
+
+      return result.Find(x => x.Month == month)?.Available ?? decimal.Zero;
+    }
+
+
     public BudgetExplorerResultDto ExploreBudget(BudgetExplorerQuery query) {
       Assertion.Require(query, nameof(query));
 
@@ -206,6 +232,7 @@ namespace Empiria.Budgeting.Explorer.UseCases {
         new FixedList<BudgetEntryDto>()
       );
     }
+
 
     #endregion Use cases
 
