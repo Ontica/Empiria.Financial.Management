@@ -52,6 +52,15 @@ namespace Empiria.Budgeting {
 
     #region Properties
 
+    public FixedList<BudgetOperationType> AvailableOperationTypes {
+      get {
+        FixedList<BudgetTransactionType> txnTypes = AvailableTransactionTypes;
+
+        return txnTypes.SelectDistinct(x => x.OperationType);
+      }
+    }
+
+
     public FixedList<BudgetTransactionType> AvailableTransactionTypes {
       get {
         FixedList<int> ids = base.ExtData.GetFixedList<int>("availableTransactionTypes", false);
@@ -85,7 +94,6 @@ namespace Empiria.Budgeting {
         return AvailableTransactionTypes.Count > 0;
       }
     }
-
 
     public FixedList<INamedEntity> PlanningAutoGenerationTransactionTypes {
       get {
