@@ -67,6 +67,10 @@ namespace Empiria.Budgeting.Transactions {
 
     static public BudgetTransaction Parse(string uid) => ParseKey<BudgetTransaction>(uid);
 
+    static public BudgetTransaction TryParse(string transactionNo) {
+      return TryParse<BudgetTransaction>($"BDG_TXN_NUMBER = {transactionNo}");
+    }
+
     static public FixedList<BudgetTransaction> GetFor(IBudgetable budgetable) {
       return BudgetTransactionDataService.GetTransactions(budgetable);
     }
