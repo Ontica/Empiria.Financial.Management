@@ -73,11 +73,13 @@ namespace Empiria.Payments.UseCases {
       var paymentType = PaymentType.Parse(fields.PaymentTypeUID);
       var payTo = Party.Parse(fields.PayToUID);
 
-      var order = new PaymentOrder(paymentType, payTo, payableEntity, fields.Total);
+      var paymentOrder = new PaymentOrder(paymentType, payTo, payableEntity, fields.Total);
 
-      order.Save();
+      paymentOrder.Update(fields);
 
-      return PaymentOrderMapper.Map(order);
+      paymentOrder.Save();
+
+      return PaymentOrderMapper.Map(paymentOrder);
     }
 
 
