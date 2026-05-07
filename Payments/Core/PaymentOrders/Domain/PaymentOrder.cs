@@ -60,6 +60,10 @@ namespace Empiria.Payments {
 
     static public PaymentOrder Empty => ParseEmpty<PaymentOrder>();
 
+    static public PaymentOrder TryParse(string paymentOrderNo) {
+      return TryParse<PaymentOrder>($"PYMT_ORD_NO = '{paymentOrderNo}'");
+    }
+
     static public FixedList<PaymentOrder> GetListFor(IPayableEntity payableEntity) {
       Assertion.Require(payableEntity, nameof(payableEntity));
 
