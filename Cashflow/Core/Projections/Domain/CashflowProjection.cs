@@ -228,7 +228,8 @@ namespace Empiria.CashFlow.Projections {
           return this;
         }
         return Parse(_adjustmentOfId);
-      } set {
+      }
+      private set {
         _adjustmentOfId = value.Id;
       }
     }
@@ -418,7 +419,7 @@ namespace Empiria.CashFlow.Projections {
 
     public decimal GetTotal() {
       if (_entries.IsValueCreated) {
-        return Math.Abs(_entries.Value.Sum(x => x.InflowAmount - x.OutflowAmount));
+        return _entries.Value.Sum(x => x.InflowAmount - x.OutflowAmount);
       } else {
         return _total;
       }
