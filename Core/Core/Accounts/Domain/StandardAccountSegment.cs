@@ -73,6 +73,12 @@ namespace Empiria.Financial {
       }
     }
 
+    public new FixedList<string> Tags {
+      get {
+        return base.Tags;
+      }
+    }
+
     #endregion Properties
 
   } // class StandardAccountSegment

@@ -344,7 +344,10 @@ namespace Empiria.Financial {
 
     public bool IsInflowAccount {
       get {
-        return StandardAccount.DebtorCreditorType == DebtorCreditorType.Acreedora;
+        if (!IsOperationAccount) {
+          return false;
+        }
+        return OperationType.Tags.Contains("INFLOW");
       }
     }
 
