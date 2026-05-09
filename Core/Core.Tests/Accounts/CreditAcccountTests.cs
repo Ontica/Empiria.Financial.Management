@@ -21,9 +21,10 @@ namespace Empiria.Tests.Financial.Accounts {
     [Fact]
     public void Should_Update_CreditData() {
       var attributes = new CreditAttributes {
-        Borrower = "La Vía Óntica SC",
-        CreditStage = TestsObjects.TryGetObject<CreditStage>(),
         CreditType = TestsObjects.TryGetObject<CreditType>(),
+        CreditRiskStage = TestsObjects.TryGetObject<CreditRiskStage>(),
+        CreditProcessStage = TestsObjects.TryGetObject<CreditProcessStage>(),
+        Borrower = "La Vía Óntica SC",
         ExternalCreditNo = EmpiriaString.BuildRandomString(32)
       };
 
@@ -35,9 +36,10 @@ namespace Empiria.Tests.Financial.Accounts {
 
       sut.Update(fields);
 
-      Assert.Equal(((CreditAttributes) fields.Attributes).Borrower, ((CreditAttributes) sut.Attributes).Borrower);
-      Assert.Equal(((CreditAttributes) fields.Attributes).CreditStage, ((CreditAttributes) sut.Attributes).CreditStage);
       Assert.Equal(((CreditAttributes) fields.Attributes).CreditType, ((CreditAttributes) sut.Attributes).CreditType);
+      Assert.Equal(((CreditAttributes) fields.Attributes).CreditRiskStage, ((CreditAttributes) sut.Attributes).CreditRiskStage);
+      Assert.Equal(((CreditAttributes) fields.Attributes).CreditProcessStage, ((CreditAttributes) sut.Attributes).CreditProcessStage);
+      Assert.Equal(((CreditAttributes) fields.Attributes).Borrower, ((CreditAttributes) sut.Attributes).Borrower);
       Assert.Equal(((CreditAttributes) fields.Attributes).ExternalCreditNo, ((CreditAttributes) sut.Attributes).ExternalCreditNo);
     }
 

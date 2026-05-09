@@ -66,12 +66,22 @@ namespace Empiria.Financial {
     }
 
 
-    public CreditStage CreditStage {
+    public CreditProcessStage CreditProcessStage {
       get {
-        return _attributes.Get("creditStageId", CreditStage.Empty);
+        return _attributes.Get("creditProcessStageId", CreditProcessStage.Empty);
       }
       internal set {
-        _attributes.SetIf("creditStageId", value.Id, !value.IsEmptyInstance);
+        _attributes.SetIf("creditProcessStageId", value.Id, !value.IsEmptyInstance);
+      }
+    }
+
+
+    public CreditRiskStage CreditRiskStage {
+      get {
+        return _attributes.Get("creditRiskStageId", CreditRiskStage.Empty);
+      }
+      internal set {
+        _attributes.SetIf("creditRiskStageId", value.Id, !value.IsEmptyInstance);
       }
     }
 
@@ -122,13 +132,17 @@ namespace Empiria.Financial {
 
     internal JsonObject ToJson() {
       var json = JsonObject.Parse(_attributes.ToString());
+
       json.Set("CreditProjectType", CreditProjectType.MapToNamedEntity());
+
       return json;
     }
 
     internal override string ToJsonString() {
       var json = JsonObject.Parse(_attributes.ToString());
+
       json.Set("CreditProjectType", CreditProjectType.MapToNamedEntity());
+
       return json.ToString();
     }
 
