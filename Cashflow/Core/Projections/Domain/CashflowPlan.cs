@@ -76,8 +76,7 @@ namespace Empiria.CashFlow.Projections {
 
     public FixedList<int> Years {
       get {
-        return EmpiriaMath.GetRange(StartDate.Year, EndDate.Year)
-                          .ToFixedList();
+        return ExtData.GetFixedList<int>("years");
       }
     }
 
