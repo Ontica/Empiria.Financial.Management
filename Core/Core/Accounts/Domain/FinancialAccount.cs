@@ -192,6 +192,11 @@ namespace Empiria.Financial {
 
     public string Name {
       get {
+
+        if (IsOperationAccount) {
+          return OperationType.Name;
+        }
+
         string name = string.Empty;
 
         if (Description.Length == 0) {
@@ -211,6 +216,10 @@ namespace Empiria.Financial {
 
     string INamedEntity.Name {
       get {
+        if (IsOperationAccount) {
+          return $"({Code}) {OperationType.Name}";
+        }
+
         return $"({Code}) {Name}";
       }
     }
