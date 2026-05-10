@@ -1,6 +1,6 @@
-﻿# Empiria CashFlow Management System - Web Api Module
+﻿# Empiria CashFlow Projections Module
 
-HTTP/JSON web api used to interact with the CashFlow Management System's backend.
+Empiria CashFlow Projections core types, use cases and services.
 
 ## Licencia
 
