@@ -118,12 +118,11 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
 
     static private CashFlowProjectionAccountDto Map(FinancialAccount account) {
-      Currency[] currencies = { Currency.Default };
 
       return new CashFlowProjectionAccountDto {
         UID = account.UID,
         Name = ((INamedEntity) account).Name,
-        Currencies = currencies.MapToNamedEntityList()
+        Currencies = new[] { account.Currency }.MapToNamedEntityList()
       };
     }
 
