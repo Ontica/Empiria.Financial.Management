@@ -13,6 +13,9 @@ using System;
 using Empiria.Documents;
 using Empiria.History;
 
+using Empiria.Financial;
+using Empiria.Financial.Projects;
+
 namespace Empiria.CashFlow.Projections.Adapters {
 
   /// <summary>Output holder DTO used for a cash flow projection.</summary>
@@ -119,6 +122,19 @@ namespace Empiria.CashFlow.Projections.Adapters {
     }
 
     public string[] Tags {
+      get; internal set;
+    }
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "Attributes")]
+    public AccountAttributes AccountAttributes {
+      get; internal set;
+    }
+
+    public FinancialData FinancialData {
+      get; internal set;
+    }
+
+    public FinancialProjectGoals ProjectGoals {
       get; internal set;
     }
 

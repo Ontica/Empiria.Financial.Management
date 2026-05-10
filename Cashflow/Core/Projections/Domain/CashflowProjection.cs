@@ -155,8 +155,26 @@ namespace Empiria.CashFlow.Projections {
 
 
     [DataField("CFW_PJC_FINANCIAL_DATA")]
-    public JsonObject FinancialData {
-      get; private set;
+    private JsonObject _financialData = new JsonObject();
+
+    public FinancialData FinancialData {
+      get {
+        return BaseAccount.FinancialData;
+      }
+    }
+
+
+    public AccountAttributes BaseAccountAttributes {
+      get {
+        return BaseAccount.Attributes;
+      }
+    }
+
+
+    public FinancialProjectGoals ProjectGoals {
+      get {
+        return BaseProject.ProjectGoals;
+      }
     }
 
 

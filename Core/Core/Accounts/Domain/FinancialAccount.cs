@@ -264,7 +264,7 @@ namespace Empiria.Financial {
     [DataField("ACCT_FINANCIAL_DATA")]
     private JsonObject _financialData = new JsonObject();
 
-    internal protected FinancialData FinancialData {
+    public FinancialData FinancialData {
       get {
         return new CreditFinancialData(_financialData);
       }

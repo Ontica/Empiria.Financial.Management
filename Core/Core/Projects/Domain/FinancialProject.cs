@@ -167,7 +167,7 @@ namespace Empiria.Financial.Projects {
     [DataField("PRJ_GOALS_EXT_DATA")]
     private JsonObject _projectGoals = new JsonObject();
 
-    internal protected FinancialProjectGoals ProjectGoals {
+    public FinancialProjectGoals ProjectGoals {
       get {
         return new FinancialProjectGoals(_projectGoals);
       }
