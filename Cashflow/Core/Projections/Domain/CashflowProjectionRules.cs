@@ -87,7 +87,9 @@ namespace Empiria.CashFlow.Projections {
 
     public bool CanEditDocuments {
       get {
-        if (_projection.Status != TransactionStatus.Authorized) {
+        if (_projection.Status == TransactionStatus.Closed ||
+            _projection.Status == TransactionStatus.Canceled ||
+            _projection.Status == TransactionStatus.Deleted) {
           return false;
         }
 
