@@ -149,8 +149,12 @@ namespace Empiria.CashFlow.Projections {
 
 
     [DataField("CFW_PJC_ATTRIBUTES_DATA")]
-    public JsonObject AttributesData {
-      get; private set;
+    private JsonObject _attributes = new JsonObject();
+
+    public AccountAttributes BaseAccountAttributes {
+      get {
+        return new CreditAttributes(_attributes);
+      }
     }
 
 
@@ -159,28 +163,18 @@ namespace Empiria.CashFlow.Projections {
 
     public FinancialData FinancialData {
       get {
-        return BaseAccount.FinancialData;
-      }
-    }
-
-
-    public AccountAttributes BaseAccountAttributes {
-      get {
-        return BaseAccount.Attributes;
-      }
-    }
-
-
-    public FinancialProjectGoals ProjectGoals {
-      get {
-        return BaseProject.ProjectGoals;
+        return new CreditFinancialData(_financialData);
       }
     }
 
 
     [DataField("CFW_PJC_CONFIG_DATA")]
-    public JsonObject ConfigData {
-      get; private set;
+    private JsonObject _projectGoals = new JsonObject();
+
+    public FinancialProjectGoals ProjectGoals {
+      get {
+        return new FinancialProjectGoals(_projectGoals);
+      }
     }
 
 
@@ -390,6 +384,33 @@ namespace Empiria.CashFlow.Projections {
       RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       RequestedTime = DateTime.Now;
       Status = TransactionStatus.OnAuthorization;
+    }
+
+
+    internal void SetAccountAttributes(CreditAttributes accountAttributes) {
+      Assertion.Require(accountAttributes, nameof(accountAttributes));
+
+      _attributes = JsonObject.Parse(accountAttributes.ToJsonString());
+
+      MarkAsDirty();
+    }
+
+
+    internal void SetFinancialData(FinancialData financialData) {
+      Assertion.Require(financialData, nameof(financialData));
+
+      _financialData = JsonObject.Parse(financialData.ToJsonString());
+
+      MarkAsDirty();
+    }
+
+
+    internal void SetProjectGoals(FinancialProjectGoals projectGoals) {
+      Assertion.Require(projectGoals, nameof(projectGoals));
+
+      _projectGoals = JsonObject.Parse(projectGoals.ToJsonString());
+
+      MarkAsDirty();
     }
 
 

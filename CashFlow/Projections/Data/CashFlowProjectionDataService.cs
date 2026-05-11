@@ -47,7 +47,7 @@ namespace Empiria.CashFlow.Projections.Data {
       Assertion.Require(cashFlowPlan, nameof(cashFlowPlan));
 
       if (cashFlowPlan.IsEmptyInstance) {
-        return new List<CashFlowProjection>() ;
+        return new List<CashFlowProjection>();
       }
 
       var sql = "SELECT * FROM VW_FMS_CASHFLOW_PROJECTIONS " +
@@ -90,11 +90,13 @@ namespace Empiria.CashFlow.Projections.Data {
 
 
     static internal void WriteProjection(CashFlowProjection o) {
+
       var op = DataOperation.Parse("write_FMS_CashFlow_Projection",
           o.Id, o.UID, o.ProjectionType.Id, o.Category.Id, o.Plan.Id, o.ProjectionNo,
           o.BaseParty.Id, o.BaseProject.Id, o.BaseAccount.Id, o.OperationSource.Id,
-          o.Description, o.Justification, o.Identificators, o.Tags, o.AttributesData.ToString(),
-          o.FinancialData.ToString(), o.ConfigData.ToString(), o.ExtData.ToString(),
+          o.Description, o.Justification, o.Identificators, o.Tags,
+          o.BaseAccountAttributes.ToJsonString(), o.FinancialData.ToJsonString(),
+          o.ProjectGoals.ToJsonString(), o.ExtData.ToString(),
           o.ApplicationDate, o.AppliedBy.Id, o.RecordingTime, o.RecordedBy.Id,
           o.AuthorizationTime, o.AuthorizedBy.Id, o.RequestedTime, o.RequestedBy.Id,
           o.Keywords, o.AdjustmentOf.Id, o.PostedBy.Id, o.PostingTime, (char) o.Status);
@@ -104,6 +106,7 @@ namespace Empiria.CashFlow.Projections.Data {
 
 
     static internal void WriteProjectionEntry(CashFlowProjectionEntry o) {
+
       var op = DataOperation.Parse("write_FMS_CashFlow_PJC_Entry",
           o.Id, o.UID, o.GetEmpiriaType().Id, o.Projection.Id, o.CashFlowAccount.Id, o.OperationTypeId,
           o.FinancialProject.Id, -1, o.Product.Id, o.ProductUnit.Id, o.ProductQty,

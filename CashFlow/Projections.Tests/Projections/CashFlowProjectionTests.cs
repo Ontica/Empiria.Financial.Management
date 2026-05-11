@@ -113,13 +113,13 @@ namespace Empiria.Tests.CashFlow.Projections {
       foreach (var sut in list) {
         Assert.NotNull(sut.AdjustmentOf);
         Assert.NotNull(sut.AppliedBy);
-        Assert.NotNull(sut.AttributesData);
+        Assert.NotNull(sut.BaseAccountAttributes);
         Assert.NotNull(sut.AuthorizedBy);
         Assert.NotNull(sut.BaseAccount);
         Assert.NotNull(sut.BaseParty);
         Assert.NotNull(sut.BaseProject);
         Assert.NotNull(sut.Category);
-        Assert.NotNull(sut.ConfigData);
+        Assert.NotNull(sut.ProjectGoals);
         Assert.NotNull(sut.Description);
         Assert.NotNull(sut.FinancialData);
         Assert.NotNull(sut.Identificators);
