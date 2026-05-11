@@ -20,7 +20,7 @@ namespace Empiria.Tests.Billing {
       get {
         var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
-        return Path.Combine(directory.Parent.FullName, @"Resources\AVOLAT_Factura.xml");
+        return Path.Combine(directory.Parent.FullName, @"Resources\XML_HERE.xml");
       }
     }
 
@@ -29,7 +29,7 @@ namespace Empiria.Tests.Billing {
       get {
         var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
-        return Path.Combine(directory.Parent.FullName, @"Resources\factura.xml");
+        return Path.Combine(directory.Parent.FullName, @"Resources\XML_HERE.xml");
       }
     }
 
@@ -38,7 +38,7 @@ namespace Empiria.Tests.Billing {
       get {
         var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
-        return Path.Combine(directory.Parent.FullName, @"Resources\nota_credito.xml");
+        return Path.Combine(directory.Parent.FullName, @"Resources\XML_HERE.xml");
       }
     }
 
@@ -47,7 +47,7 @@ namespace Empiria.Tests.Billing {
       get {
         var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
-        return Path.Combine(directory.Parent.FullName, @"Resources\factura_consumo_combustible.xml");
+        return Path.Combine(directory.Parent.FullName, @"Resources\XML_HERE.xml");
       }
     }
 
@@ -56,7 +56,7 @@ namespace Empiria.Tests.Billing {
       get {
         var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
 
-        return Path.Combine(directory.Parent.FullName, @"Resources\factura_nov24_complemento_pago.xml");
+        return Path.Combine(directory.Parent.FullName, @"Resources\XML_HERE.xml");
       }
     }
 

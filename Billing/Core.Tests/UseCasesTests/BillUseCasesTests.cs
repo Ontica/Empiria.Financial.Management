@@ -37,6 +37,24 @@ namespace Empiria.Tests.Billing {
     //}
 
 
+    [Fact]
+    public void Get_Bill_By_UID_Test() {
+
+      TestsCommonMethods.Authenticate();
+
+      using (var usecases = BillUseCases.UseCaseInteractor()) {
+
+        string[] billsUID = new string[] {
+          "499d1348-d2d1-4f9e-997a-f4260fb029c4"
+        };
+
+        BillsStructureDto sut = usecases.GetBills(billsUID);
+
+        Assert.NotNull(sut);
+      }
+    }
+
+
     //[Fact]
     //public void Create_Credit_Note_Test() {
 
@@ -92,31 +110,13 @@ namespace Empiria.Tests.Billing {
 
 
     [Fact]
-    public void Get_Bill_By_UID_Test() {
-
-      TestsCommonMethods.Authenticate();
-
-      using (var usecases = BillUseCases.UseCaseInteractor()) {
-
-        string[] billsUID = new string[] {
-          "3bc2aff6-b179-439b-a750-aa7a3190bd83"
-        };
-
-        BillsStructureDto sut = usecases.GetBills(billsUID);
-
-        Assert.NotNull(sut);
-      }
-    }
-
-
-    [Fact]
     public void Delete_Bill_Test() {
 
       TestsCommonMethods.Authenticate();
 
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
-        usecases.DeleteBill("12972994-0808-4240-b4b3-dbf33c403d4f");
+        usecases.DeleteBill("09062604-3726-4c6b-96f5-c4a436b12626");
 
         Assert.True(true);
       }
