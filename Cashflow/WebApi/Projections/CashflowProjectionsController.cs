@@ -10,9 +10,13 @@
 
 using System.Web.Http;
 
+using Empiria.Json;
 using Empiria.StateEnums;
 using Empiria.Storage;
 using Empiria.WebApi;
+
+using Empiria.Financial;
+using Empiria.Financial.Projects;
 
 using Empiria.CashFlow.Projections.Adapters;
 using Empiria.CashFlow.Projections.UseCases;
@@ -144,8 +148,45 @@ namespace Empiria.CashFlow.Projections.WebApi {
       }
     }
 
+
+    [HttpPut, HttpPatch]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/variables")]
+    public SingleObjectModel UpdateProjectionVariables([FromUri] string projectionUID,
+                                                       [FromBody] CashFlowProjectionVariablesFields fields) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+
+        CreditAttributes accountAttributes = new CreditAttributes(JsonObject.Parse(fields.AccountAttributes));
+        CreditFinancialData financialData = new CreditFinancialData(JsonObject.Parse(fields.FinancialData));
+        FinancialProjectGoals projectGoals = new FinancialProjectGoals(JsonObject.Parse(fields.ProjectGoals));
+
+        CashFlowProjectionHolderDto projection = usecases.UpdateProjectionVariables(projectionUID, accountAttributes,
+                                                                                    financialData, projectGoals);
+
+        return new SingleObjectModel(base.Request, projection);
+      }
+    }
+
     #endregion Query web apis
 
   }  // class CashFlowProjectionsController
+
+  public class CashFlowProjectionVariablesFields {
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "Attributes")]
+    public object AccountAttributes {
+      get; set;
+    } = new object();
+
+
+    public object FinancialData {
+      get; set;
+    } = new object();
+
+
+    public object ProjectGoals {
+      get; set;
+    } = new object();
+  }
 
 }  // namespace Empiria.CashFlow.Projections.WebApi

@@ -16,6 +16,7 @@ using Empiria.StateEnums;
 
 using Empiria.Financial;
 using Empiria.Financial.Adapters;
+using Empiria.Financial.Projects;
 
 using Empiria.CashFlow.Projections.Adapters;
 
@@ -136,6 +137,25 @@ namespace Empiria.CashFlow.Projections.UseCases {
       var projection = CashFlowProjection.Parse(projectionUID);
 
       projection.Update(fields);
+
+      projection.Save();
+
+      return CashFlowProjectionMapper.Map(projection);
+    }
+
+
+    public CashFlowProjectionHolderDto UpdateProjectionVariables(string projectionUID,
+                                                                 CreditAttributes accountAttributes,
+                                                                 FinancialData financialData,
+                                                                 FinancialProjectGoals projectGoals) {
+      Assertion.Require(projectionUID, nameof(projectionUID));
+
+      var projection = CashFlowProjection.Parse(projectionUID);
+
+
+      projection.SetAccountAttributes(accountAttributes);
+      projection.SetFinancialData(financialData);
+      projection.SetProjectGoals(projectGoals);
 
       projection.Save();
 
