@@ -23,18 +23,18 @@ namespace Empiria.Financial {
 
     private readonly JsonObject _financialExtData = new JsonObject();
 
-    internal CreditFinancialData(JsonObject financialData) {
+    public CreditFinancialData(JsonObject financialData) {
       Assertion.Require(financialData, nameof(financialData));
 
       _financialExtData = financialData;
     }
 
-    internal CreditFinancialData(ICreditAccountData account) {
+    public CreditFinancialData(ICreditAccountData account) {
       Assertion.Require(account, nameof(account));
 
       CurrentBalance = account.CurrentBalance;
       GracePeriod = account.InterestGracePeriod;
-      //InterestRate = account.InterestRate;
+      InterestRate = account.InterestRate;
       InvestmentTerm = account.InvestmentTerm;
       InterestRateCeiling = account.InterestRateCeiling;
       InterestRateFactor = account.InterestRateFactor;
@@ -173,7 +173,7 @@ namespace Empiria.Financial {
 
     #region Helpers
 
-    internal override string ToJsonString() {
+    public override string ToJsonString() {
       return _financialExtData.ToString();
     }
 

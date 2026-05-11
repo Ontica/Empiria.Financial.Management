@@ -36,7 +36,7 @@ namespace Empiria.Financial {
       CreditProjectType = account.CreditProjectType;
     }
 
-    internal CreditAttributes(JsonObject attributes) {
+    public CreditAttributes(JsonObject attributes) {
       Assertion.Require(attributes, nameof(attributes));
 
       _attributes = attributes;
@@ -138,7 +138,7 @@ namespace Empiria.Financial {
       return json;
     }
 
-    internal override string ToJsonString() {
+    public override string ToJsonString() {
       var json = JsonObject.Parse(_attributes.ToString());
 
       json.Set("CreditProjectType", CreditProjectType.MapToNamedEntity());

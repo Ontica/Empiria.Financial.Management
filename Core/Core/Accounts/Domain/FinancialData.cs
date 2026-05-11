@@ -13,7 +13,7 @@ namespace Empiria.Financial {
   /// <summary>Abstract class with financial information for financial accounts.</summary>
   abstract public class FinancialData {
 
-    abstract internal string ToJsonString();
+    abstract public string ToJsonString();
 
   }  // class FinancialData
 

@@ -17,7 +17,7 @@ namespace Empiria.Financial.Projects {
 
     private readonly JsonObject _projectGoals = new JsonObject();
 
-    internal FinancialProjectGoals(JsonObject projectGoals) {
+    public FinancialProjectGoals(JsonObject projectGoals) {
       Assertion.Require(projectGoals, nameof(projectGoals));
 
       _projectGoals = projectGoals;
@@ -88,7 +88,7 @@ namespace Empiria.Financial.Projects {
 
     #region Helpers
 
-    internal string ToJsonString() {
+    public string ToJsonString() {
       return _projectGoals.ToString();
     }
 
