@@ -24,6 +24,9 @@ App_Data/
 *.environment.vars.json
 ZZ*.*
 
+## Ignore Billing resources for testing
+Billing/Core.Tests/Resources/
+
 # Build results
 [Dd]ebug/
 [Rr]elease/
