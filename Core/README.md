@@ -1,12 +1,6 @@
 ﻿# Empiria Financial Management System Core
 
-Este producto de software está siendo desarrollado a la medida para el Banco Nacional de Obras y Servicios Públicos, S.N.C (BANOBRAS).
-
-[BANOBRAS](https://www.gob.mx/banobras) es una institución de banca de desarrollo mexicana cuya labor
-es financiar obras para la creación de servicios públicos. Por el tamaño de su cartera de crédito directo,
-es el cuarto Banco más grande del sistema bancario mexicano y el primero de la Banca de Desarrollo de nuestro país.
-
-Este repositorio contiene los módulos del *core del backend* del **Sistema de administración finaciera**.
+Este repositorio contiene los módulos del *core del backend* del **Sistema de administración financiera**.
 
 Todos los módulos están escritos en C# 7.0 y utilizan .NET Framework versión 4.8.  
 Los módulos pueden ser compilados utilizando Visual Studio 2022 Community Edition.
@@ -34,9 +28,9 @@ El *backend* del **Sistema de administración de financiera** se conforma de los
 ## Licencia
 
 Este producto y sus partes se distribuyen mediante una licencia GNU AFFERO
-GENERAL PUBLIC LICENSE, para uso exclusivo de BANOBRAS y de su personal, y
-también para su uso por cualquier otro organismo en México perteneciente a
-la Administración Pública Federal.
+GENERAL PUBLIC LICENSE, para uso exclusivo de la Banca de Desarrollo en México 
+y de su personal, y también para su uso por cualquier otro organismo en México
+perteneciente a la Administración Pública Federal.
 
 Para cualquier otro uso (con excepción a lo estipulado en los Términos de
 Servicio de GitHub), es indispensable obtener con nuestra organización una

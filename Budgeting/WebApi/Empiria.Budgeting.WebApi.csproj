@@ -5,7 +5,7 @@
     <Description>
       HTTP/JSON web api used to interact with the Empiria Budgeting Management System backend.
     </Description>
-    <Copyright>(c) 2024-2025. La Vía Óntica SC, Ontica LLC y de los autores. Todos los derechos reservados.</Copyright>
+    <Copyright>(c) 2024-2026. La Vía Óntica SC, Ontica LLC y de los autores. Todos los derechos reservados.</Copyright>
     <Version>2.0</Version>
     <AssemblyVersion>2.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
@@ -16,7 +16,7 @@
     <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
     <PackageTags>
       Control presupuestal, ejercicio presupuestal, presupuesto por programas, gasto corriente,
-      programa financiero, servicios web, Banca de desarrollo, BANOBRAS, México
+      programa financiero, servicios web, Banca de desarrollo, México
     </PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Budgeting</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

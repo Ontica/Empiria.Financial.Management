@@ -1,6 +1,6 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
-*  Module   : Cash flow Management                       Component : Domain Layer                            *
+*  Module   : CashFlow Projections                       Component : Domain Layer                            *
 *  Assembly : Empiria.CashFlow.Projections.dll           Pattern   : Power type                              *
 *  Type     : CashFlowProjectionType                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *

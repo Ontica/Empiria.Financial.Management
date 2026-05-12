@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/Ontica/Empiria.Financial.Management/tree/master/CashFlow/Projections.Tests</PackageProjectUrl>
     <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
     <PackageTags>
-      flujo de efectivo, cash flow management, proyecciones, administración, pruebas unitarias, pruebas integracion, Banca de desarrollo, BANOBRAS, México
+      flujo de efectivo, cash flow management, proyecciones, administración, pruebas unitarias, pruebas integracion, Banca de desarrollo, México
     </PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Financial.Management</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

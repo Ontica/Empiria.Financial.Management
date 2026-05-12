@@ -105,7 +105,7 @@ namespace Empiria.CashFlow.Projections.WebApi {
     public SingleObjectModel PrintProjection([FromUri] string projectionUID) {
 
       FileDto file = new FileDto(FileType.Pdf,
-        $"https://bnodpycgcyf-b.banobras.gob.mx/pyc/output.files/budgeting.transactions/" +
+        $"https://localhost/output.files/budgeting.transactions/" +
         $"cedula.presupuestal.2025-GC-AUT-00710.2025.05.23-04.20.08.pdf");
 
       return new SingleObjectModel(base.Request, file);
