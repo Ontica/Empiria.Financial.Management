@@ -25,7 +25,7 @@ App_Data/
 ZZ*.*
 
 ## Ignore Billing resources for testing
-Billing/Core.Tests/Resources/
+##Billing/Core.Tests/Resources/
 
 # Build results
 [Dd]ebug/
