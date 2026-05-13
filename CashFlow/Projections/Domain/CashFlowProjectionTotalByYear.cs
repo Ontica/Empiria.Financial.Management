@@ -62,7 +62,7 @@ namespace Empiria.CashFlow.Projections {
 
     public decimal GetTotalForMonth(int month) {
       return Entries.FindAll(x => x.Month == month)
-                    .Sum(x => x.Amount);
+                    .Sum(x => x.InflowAmount - x.OutflowAmount);
     }
 
     #endregion Methods

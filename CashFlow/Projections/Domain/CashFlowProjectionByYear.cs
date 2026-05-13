@@ -23,8 +23,8 @@ namespace Empiria.CashFlow.Projections {
 
     public CashFlowProjectionByYear(CashFlowProjection projection) {
       Assertion.Require(projection, nameof(projection));
-      Assertion.Require(!projection.IsEmptyInstance, "Transaction can't be the empty instance.");
-      Assertion.Require(!projection.IsNew, "Transaction can't be a new instance.");
+      Assertion.Require(!projection.IsEmptyInstance, "Projection can't be the empty instance.");
+      Assertion.Require(!projection.IsNew, "Projection can't be a new instance.");
 
       Projection = projection;
     }
@@ -63,14 +63,14 @@ namespace Empiria.CashFlow.Projections {
       int[] parts = EmpiriaString.SplitToIntArray(entryByYearUID, '|');
 
       return new CashFlowProjectionEntryByYearFields {
-         UID = entryByYearUID,
-         ProjectionUID = CashFlowProjection.Parse(parts[0]).UID,
-         ProjectionColumnUID = CashFlowProjectionColumn.Parse(parts[1]).UID,
-         CashFlowAccountUID = FinancialAccount.Parse(parts[2]).UID,
-         ProductUID = Product.Parse(parts[3]).UID,
-         ProductUnitUID = ProductUnit.Parse(parts[4]).UID,
-         CurrencyUID = Currency.Parse(parts[5]).UID,
-         Year = parts[6],
+        UID = entryByYearUID,
+        ProjectionUID = CashFlowProjection.Parse(parts[0]).UID,
+        ProjectionColumnUID = CashFlowProjectionColumn.Parse(parts[1]).UID,
+        CashFlowAccountUID = FinancialAccount.Parse(parts[2]).UID,
+        ProductUID = Product.Parse(parts[3]).UID,
+        ProductUnitUID = ProductUnit.Parse(parts[4]).UID,
+        CurrencyUID = Currency.Parse(parts[5]).UID,
+        Year = parts[6],
       };
     }
 
