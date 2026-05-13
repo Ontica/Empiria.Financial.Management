@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Json;
 
 using Empiria.Financial.Adapters;
@@ -39,7 +37,6 @@ namespace Empiria.Financial {
       InterestRateCeiling = account.InterestRateCeiling;
       InterestRateFactor = account.InterestRateFactor;
       InterestRateFloor = account.InterestRateFloor;
-      RepaymentDate = account.RepaymentDate;
       RepaymentTerm = account.RepaymentTerm;
     }
 
@@ -47,12 +44,40 @@ namespace Empiria.Financial {
 
     #region Properties
 
-    public decimal Fees {
+    public bool CapitalizeInterest {
       get {
-        return _financialExtData.Get("fees", 0m);
+        return _financialExtData.Get("capitalizeInterest", false);
       }
       private set {
-        _financialExtData.SetIfValue("fees", value);
+        _financialExtData.SetIfValue("capitalizeInterest", value);
+      }
+    }
+
+    public bool CapitalizeFees {
+      get {
+        return _financialExtData.Get("capitalizeFees", false);
+      }
+      private set {
+        _financialExtData.SetIfValue("capitalizeFees", value);
+      }
+    }
+
+
+    public decimal OpeningFee {
+      get {
+        return _financialExtData.Get("openingFee", 0m);
+      }
+      private set {
+        _financialExtData.SetIfValue("openingFee", value);
+      }
+    }
+
+    public decimal DisbursementFee {
+      get {
+        return _financialExtData.Get("disbursementFee", 0m);
+      }
+      private set {
+        _financialExtData.SetIfValue("disbursementFee", value);
       }
     }
 
@@ -96,25 +121,6 @@ namespace Empiria.Financial {
       }
     }
 
-
-    public DateTime RepaymentDate {
-      get {
-        return _financialExtData.Get("repaymentDate", ExecutionServer.DateMaxValue);
-      }
-      private set {
-        _financialExtData.SetIfValue("repaymentDate", value);
-      }
-    }
-
-
-    public decimal ExchangeRate {
-      get {
-        return _financialExtData.Get("exchangeRate", 0m);
-      }
-      private set {
-        _financialExtData.SetIfValue("exchangeRate", value);
-      }
-    }
 
     public decimal InterestRate {
       get {
