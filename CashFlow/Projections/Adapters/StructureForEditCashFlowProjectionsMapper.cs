@@ -31,7 +31,8 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       _allProjects = _allAccounts.SelectDistinct(x => x.Project);
 
-      list = _allAccounts.SelectDistinct(x => x.OrganizationalUnit);
+      list = _allAccounts.SelectDistinct(x => x.OrganizationalUnit)
+                         .Sort((x, y) => x.Code.CompareTo(y.Code));
 
       return list.Select(x => Map(x))
                  .ToFixedList();
@@ -43,7 +44,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       return new StructureForEditCashFlowProjections {
         UID = orgUnit.UID,
-        Name = orgUnit.Name,
+        Name = $"{orgUnit.Code} - {orgUnit.Name}",
 
         Plans = CashFlowPlan.GetList()
                             .MapToNamedEntityList(),
@@ -121,7 +122,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
       private FixedList<ProjectionProjectForEdition> MapProjects(FinancialProjectCategory projectCategory) {
 
         FixedList<FinancialProject> projects = _projects.FindAll(x => x.Category.Equals(projectCategory))
-                                                        .Sort((x, y) => ((INamedEntity)x).Name.CompareTo(((INamedEntity) y).Name))
+                                                        .Sort((x, y) => ((INamedEntity) x).Name.CompareTo(((INamedEntity) y).Name))
                                                         .ToFixedList();
 
         return projects.Select(x => MapFinancialProject(x))
