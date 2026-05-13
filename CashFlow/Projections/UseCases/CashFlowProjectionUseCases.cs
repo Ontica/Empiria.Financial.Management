@@ -17,6 +17,7 @@ using Empiria.StateEnums;
 using Empiria.Financial;
 using Empiria.Financial.Adapters;
 using Empiria.Financial.Projects;
+using Empiria.Financial.UseCases;
 
 using Empiria.CashFlow.Projections.Adapters;
 
@@ -39,6 +40,32 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
     #region Use cases
 
+    public CashFlowProjectionHolderDto AuthorizeProjection(string projectionUID) {
+      Assertion.Require(projectionUID, nameof(projectionUID));
+
+      var projection = CashFlowProjection.Parse(projectionUID);
+
+      projection.Authorize();
+
+      projection.Save();
+
+      return CashFlowProjectionMapper.Map(projection);
+    }
+
+
+    public CashFlowProjectionHolderDto CloseProjection(string projectionUID) {
+      Assertion.Require(projectionUID, nameof(projectionUID));
+
+      var projection = CashFlowProjection.Parse(projectionUID);
+
+      projection.Close();
+
+      projection.Save();
+
+      return CashFlowProjectionMapper.Map(projection);
+    }
+
+
     public CashFlowProjectionHolderDto CreateProjection(CashFlowProjectionFields fields) {
       Assertion.Require(fields, nameof(fields));
 
@@ -52,6 +79,13 @@ namespace Empiria.CashFlow.Projections.UseCases {
       CashFlowProjection projection = plan.AddProjection(category, baseAccount);
 
       projection.Update(fields);
+
+      using (var usecases = ExternalAccountsUseCases.UseCaseInteractor()) {
+        _ = usecases.RefreshAccountFromCreditSystem(baseAccount.UID);
+      }
+
+      projection.SetAccountAttributes(baseAccount.Attributes as CreditAttributes);
+      projection.SetFinancialData(baseAccount.FinancialData);
 
       projection.Save();
 
@@ -109,6 +143,20 @@ namespace Empiria.CashFlow.Projections.UseCases {
     }
 
 
+    public CashFlowProjectionHolderDto RejectProjection(string projectionUID, string message) {
+      Assertion.Require(projectionUID, nameof(projectionUID));
+      Assertion.Require(message, nameof(message));
+
+      var projection = CashFlowProjection.Parse(projectionUID);
+
+      projection.Reject();
+
+      projection.Save();
+
+      return CashFlowProjectionMapper.Map(projection);
+    }
+
+
     public FixedList<CashFlowProjectionDescriptorDto> SearchProjections(CashFlowProjectionsQuery query) {
       Assertion.Require(query, nameof(query));
 
@@ -124,6 +172,19 @@ namespace Empiria.CashFlow.Projections.UseCases {
       var persons = BaseObject.GetList<Person>();
 
       return persons.MapToNamedEntityList();
+    }
+
+
+    public CashFlowProjectionHolderDto SendToAuthorization(string projectionUID) {
+      Assertion.Require(projectionUID, nameof(projectionUID));
+
+      var projection = CashFlowProjection.Parse(projectionUID);
+
+      projection.SendToAuthorization();
+
+      projection.Save();
+
+      return CashFlowProjectionMapper.Map(projection);
     }
 
 

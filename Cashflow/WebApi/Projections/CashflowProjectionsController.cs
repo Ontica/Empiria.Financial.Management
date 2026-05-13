@@ -29,10 +29,62 @@ namespace Empiria.CashFlow.Projections.WebApi {
     #region Query web apis
 
     [HttpPost]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/authorize")]
+    public SingleObjectModel AuthorizeProjection([FromUri] string projectionUID) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+        CashFlowProjectionHolderDto projection = usecases.AuthorizeProjection(projectionUID);
+
+        return new SingleObjectModel(base.Request, projection);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/close")]
+    public SingleObjectModel CloseProjection([FromUri] string projectionUID) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+
+        CashFlowProjectionHolderDto projection = usecases.CloseProjection(projectionUID);
+
+        return new SingleObjectModel(base.Request, projection);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/reject")]
+    public SingleObjectModel RejectProjection([FromUri] string projectionUID,
+                                              [FromBody] MessageFields fields) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+
+        CashFlowProjectionHolderDto projection = usecases.RejectProjection(projectionUID, fields.Message);
+
+        return new SingleObjectModel(base.Request, projection);
+      }
+    }
+
+
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/send-to-authorization")]
+    public SingleObjectModel SendToAuthorization([FromUri] string projectionUID) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+
+        CashFlowProjectionHolderDto projection = usecases.SendToAuthorization(projectionUID);
+
+        return new SingleObjectModel(base.Request, projection);
+      }
+    }
+
+
+    [HttpPost]
     [Route("v1/cash-flow/projections")]
     public SingleObjectModel CreateProjection([FromBody] CashFlowProjectionFields fields) {
 
       using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+
         CashFlowProjectionHolderDto projection = usecases.CreateProjection(fields);
 
         return new SingleObjectModel(base.Request, projection);
