@@ -70,9 +70,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var party = Party.ParseWithContact(ExecutionServer.CurrentContact);
 
-      var orgUnits =
-        Accountability.GetCommissionersFor<OrganizationalUnit>(party, "budgeting",
-                                                               BudgetTransactionRules.ACQUISITION_MANAGER);
+      var orgUnits = Accountability.GetCommissionersFor<OrganizationalUnit>(party, "budgeting");
 
       return orgUnits.Select(x => new NamedEntityDto(x.UID, x.FullName))
                      .ToFixedList();

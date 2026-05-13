@@ -53,7 +53,7 @@ namespace Empiria.Budgeting.Transactions {
 
       var currentUser = Party.ParseWithContact(ExecutionServer.CurrentContact);
 
-      return Accountability.GetCommissionersFor<OrganizationalUnit>(currentUser, "budgeting", ACQUISITION_MANAGER);
+      return Accountability.GetCommissionersFor<OrganizationalUnit>(currentUser, "budgeting");
     }
 
     #endregion Constructors and parsers
