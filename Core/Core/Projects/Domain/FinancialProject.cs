@@ -314,7 +314,9 @@ namespace Empiria.Financial.Projects {
     internal void Delete() {
       Assertion.Require(Rules.CanDelete,
                         $"Can not delete project. Its status is {Status.GetName()}.");
-      this.Status = EntityStatus.Deleted;
+
+      ProjectNo = "Eliminado";
+      Status = EntityStatus.Deleted;
     }
 
 

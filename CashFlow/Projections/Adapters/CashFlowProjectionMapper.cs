@@ -69,6 +69,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
         PlanName = projection.Plan.Name,
         ProjectionTypeCategoryName = projection.Category.Name,
         ProjectionNo = projection.ProjectionNo,
+        ProjectionName = projection.BaseAccount.Name,
         PartyName = projection.BaseParty.Name,
         ProjectName = ((INamedEntity) projection.BaseProject).Name,
         ProjectTypeCategoryName = projection.BaseProject.Category.Name,

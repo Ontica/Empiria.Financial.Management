@@ -206,9 +206,15 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
+    [Newtonsoft.Json.JsonProperty(PropertyName = "AdditionalDescription")]
+    public string ProjectionName {
+      get; internal set;
+    }
+
     public string ProjectName {
       get; internal set;
     }
+
 
     [Newtonsoft.Json.JsonProperty(PropertyName = "ProjectTypeName")]
     public string ProjectTypeCategoryName {

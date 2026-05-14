@@ -36,19 +36,18 @@ namespace Empiria.Financial.Projects.Data {
     static internal string GetNextProjectNo() {
       string sql = "SELECT MAX(PRJ_NO) " +
                    "FROM FMS_PROJECTS " +
-                   $"WHERE LENGTH(PRJ_NO) = 5 AND " +
-                   $"PRJ_STATUS <> 'X'";
+                   $"WHERE LENGTH(PRJ_NO) >= 5 and PRJ_STATUS <> 'X'";
 
       string lastUniqueID = DataReader.GetScalar(DataOperation.Parse(sql), string.Empty);
 
       if (lastUniqueID.Length != 0) {
 
-        int consecutive = int.Parse(lastUniqueID) + 1;
+        int consecutive = int.Parse(lastUniqueID.Split('-')[1]) + 1;
 
-        return $"{consecutive:00000}";
+        return $"PRY-{consecutive:0000}";
 
       } else {
-        return "00001";
+        return "PRY-0001";
       }
     }
 
