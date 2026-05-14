@@ -48,15 +48,15 @@ namespace Empiria.CashFlow.Projections.Adapters {
         columns.Add(new DataTableColumn("projectionColumn", "Movimiento", "text-nowrap"));
       }
 
-      columns.Add(new DataTableColumn("inflowAmount", "Ingresos", "decimal"));
-      columns.Add(new DataTableColumn("outflowAmount", "Egresos", "decimal"));
+      columns.Add(new DataTableColumn("inflowAmount", "Ingresos", "decimal", 0));
+      columns.Add(new DataTableColumn("outflowAmount", "Egresos", "decimal", 0));
 
       FixedList<int> months = _entries.SelectDistinctFlat(x => x.Entries.Select(y => y.Month))
                                       .Sort((x, y) => x.CompareTo(y));
 
       foreach (int month in months) {
         columns.Add(new DataTableColumn($"month_{month}",
-                                        EmpiriaString.MonthName(month).Substring(0, 3), "decimal"));
+                                        EmpiriaString.MonthName(month).Substring(0, 3), "decimal", 0));
       }
 
       return columns.ToFixedList();
