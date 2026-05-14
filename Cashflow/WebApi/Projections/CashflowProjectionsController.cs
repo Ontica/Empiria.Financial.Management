@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
 using System.Web.Http;
 
 using Empiria.Json;
@@ -19,6 +20,7 @@ using Empiria.Financial.Projects;
 
 using Empiria.CashFlow.Projections.Adapters;
 using Empiria.CashFlow.Projections.UseCases;
+
 
 namespace Empiria.CashFlow.Projections.WebApi {
 
@@ -35,6 +37,26 @@ namespace Empiria.CashFlow.Projections.WebApi {
         CashFlowProjectionHolderDto projection = usecases.AuthorizeProjection(projectionUID);
 
         return new SingleObjectModel(base.Request, projection);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v1/cash-flow/projections/bulk-operation/authorize")]
+    public SingleObjectModel AuthorizeProjections([FromBody] BulkOperationCommand command) {
+
+      using (var usecases = CashFlowProjectionUseCases.UseCaseInteractor()) {
+
+        FixedList<CashFlowProjection> projections = command.Items.Select(x => CashFlowProjection.Parse(x))
+                                                                 .ToFixedList();
+
+        int authorized = usecases.AuthorizeProjections(projections);
+
+        var result = new {
+          Message = $"Se autorizaron {authorized} proyecciones del programa financiero."
+        };
+
+        return new SingleObjectModel(base.Request, result);
       }
     }
 

@@ -53,6 +53,28 @@ namespace Empiria.CashFlow.Projections.UseCases {
     }
 
 
+    public int AuthorizeProjections(FixedList<CashFlowProjection> projections) {
+      Assertion.Require(projections, nameof(projections));
+      Assertion.Require(projections.Count > 0, nameof(projections));
+
+      int counter = 0;
+
+      foreach (var projection in projections) {
+
+        if (!projection.Rules.CanAuthorize) {
+          continue;
+        }
+
+        projection.Authorize();
+        projection.Save();
+
+        counter++;
+      }
+
+      return counter;
+    }
+
+
     public CashFlowProjectionHolderDto CloseProjection(string projectionUID) {
       Assertion.Require(projectionUID, nameof(projectionUID));
 
