@@ -4,12 +4,13 @@
 *  Assembly : Empiria.CashFlow.Projections.dll           Pattern   : Use case interactor class               *
 *  Type     : CashFlowProjectionUseCases                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Use cases used to retrieve cash flow projections.                                              *
+*  Summary  : Use cases used to retrieve and edit cash flow projections.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
 
+using Empiria.History;
 using Empiria.Parties;
 using Empiria.Services;
 using Empiria.StateEnums;
@@ -23,7 +24,7 @@ using Empiria.CashFlow.Projections.Adapters;
 
 namespace Empiria.CashFlow.Projections.UseCases {
 
-  /// <summary>Use cases used to retrieve cash flow projections.</summary>
+  /// <summary>Use cases used to retrieve and edit cash flow projections.</summary>
   public class CashFlowProjectionUseCases : UseCase {
 
     #region Constructors and parsers
@@ -49,6 +50,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       projection.Save();
 
+      HistoryServices.CreateHistoryEntry(projection, new HistoryFields("Autorizada"));
+
       return CashFlowProjectionMapper.Map(projection);
     }
 
@@ -68,6 +71,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
         projection.Authorize();
         projection.Save();
 
+        HistoryServices.CreateHistoryEntry(projection, new HistoryFields("Autorizada"));
+
         counter++;
       }
 
@@ -83,6 +88,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
       projection.Close();
 
       projection.Save();
+
+      HistoryServices.CreateHistoryEntry(projection, new HistoryFields("Cerrada"));
 
       return CashFlowProjectionMapper.Map(projection);
     }
@@ -111,6 +118,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       projection.Save();
 
+      HistoryServices.CreateHistoryEntry(projection, new HistoryFields("Creada"));
+
       return CashFlowProjectionMapper.Map(projection);
     }
 
@@ -125,6 +134,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
       plan.RemoveProjection(projection);
 
       projection.Save();
+
+      HistoryServices.CreateHistoryEntry(projection, new HistoryFields("Eliminada"));
 
       return CashFlowProjectionMapper.Map(projection);
     }
@@ -175,6 +186,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       projection.Save();
 
+      HistoryServices.CreateHistoryEntry(projection, new HistoryFields("Rechazada", message));
+
       return CashFlowProjectionMapper.Map(projection);
     }
 
@@ -205,6 +218,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
       projection.SendToAuthorization();
 
       projection.Save();
+
+      HistoryServices.CreateHistoryEntry(projection, new HistoryFields("Enviada para su autorización"));
 
       return CashFlowProjectionMapper.Map(projection);
     }
