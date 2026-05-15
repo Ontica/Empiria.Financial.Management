@@ -402,6 +402,8 @@ namespace Empiria.Financial {
 
       operation.Parent = this;
 
+      operation.SetStatus(EntityStatus.Pending);
+
       _operations.Value.Add(operation);
 
       return operation;
@@ -423,8 +425,9 @@ namespace Empiria.Financial {
 
 
     internal FixedList<StandardAccount> GetAvailableOperations() {
-      return StandardAccount.GetChildren()
-                            .FindAll(x => !GetOperations().Contains(y => y.StandardAccount.Equals(x)));
+      return StandardAccount.GetAllChildren()
+                            .FindAll(x => x.IsLastLevel &&
+                                          !GetOperations().Contains(y => y.StandardAccount.Equals(x)));
     }
 
 
@@ -481,15 +484,18 @@ namespace Empiria.Financial {
 
       Assertion.Require(operation.Status == EntityStatus.Pending,
                         $"No se puede eliminar la operación {operation.Name} debido a que ya está activa");
+
       operation.Delete();
 
       _deletedOperations.Add(operation);
+
+      _operations.Value.Remove(operation);
 
       return operation;
     }
 
 
-    protected void SetStatus(EntityStatus newStatus) {
+    internal protected void SetStatus(EntityStatus newStatus) {
       Status = newStatus;
 
       MarkAsDirty();

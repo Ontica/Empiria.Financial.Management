@@ -22,7 +22,8 @@ namespace Empiria.Financial.Adapters {
         BaseAccount = FinancialAccountMapper.MapToDescriptor(baseAccount),
 
         AvailableOperations = baseAccount.GetAvailableOperations()
-                                         .MapToNamedEntityList(),
+                                         .Select(x => new NamedEntityDto(x.UID, $"{x.Name}"))
+                                         .ToFixedList(),
 
         CurrentOperations = MapToOperationAccounts(baseAccount.GetOperations())
       };
@@ -37,7 +38,7 @@ namespace Empiria.Financial.Adapters {
       return new OperationAccountDto {
         UID = operationAccount.UID,
         AccountNo = operationAccount.AccountNo,
-        OperationTypeName = operationAccount.StandardAccount.Name,
+        OperationTypeName = $"({operationAccount.StandardAccount.StdAcctNo}) {operationAccount.StandardAccount.FullName}",
         CurrencyName = operationAccount.Currency.Name
       };
     }

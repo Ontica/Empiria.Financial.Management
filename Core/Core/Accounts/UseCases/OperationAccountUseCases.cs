@@ -77,7 +77,7 @@ namespace Empiria.Financial.UseCases {
 
       FinancialAccount operation = account.RemoveOperation(operationAccountUID);
 
-      operation.Save();
+      account.Save();
 
       return OperationAccountMapper.MapOperationsAccounts(account);
     }
