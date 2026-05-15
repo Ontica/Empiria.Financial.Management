@@ -286,7 +286,7 @@ namespace Empiria.Financial.Projects {
     public FixedList<FinancialAccount> BaseAccounts {
       get {
         return _accounts.Value.ToFixedList()
-                        .FindAll(x => x.FinancialAccountType.PlaysRole(FinancialProject.PROJECT_BASE_ACCOUNTS_ROLE));
+                        .FindAll(x => x.FinancialAccountType.PlaysRole(PROJECT_BASE_ACCOUNTS_ROLE));
       }
     }
 
@@ -391,12 +391,11 @@ namespace Empiria.Financial.Projects {
 
       fields.EnsureValid();
 
-      Assertion.Require(stdAccount.Category.PlaysRole(STANDARD_ACCOUNTS_ROLE),
-                        $"stdAccount {stdAccount.Name} can not be added to projects.");
-
       var account = new FinancialAccount(accountType, stdAccount, orgUnit, this);
 
       account.Update(fields);
+
+      _accounts.Value.Add(account);
 
       return account;
     }
@@ -414,10 +413,9 @@ namespace Empiria.Financial.Projects {
 
 
     internal FixedList<StandardAccount> GetStandardAccounts() {
-      return this.Subprogram.StandardAccount.GetAllChildren()
-                                            .FindAll(x =>
-                                              x.Category.PlaysRole(STANDARD_ACCOUNTS_ROLE)
-                                            );
+      return ChartOfAccounts.TryParseNamedKey("ProgramaFinanciero")
+                            .GetStandardAccounts()
+                            .FindAll(x => x.Level >= 2 && !x.IsLastLevel);
     }
 
 

@@ -74,6 +74,8 @@ namespace Empiria.Financial {
 
     static public ChartOfAccounts Parse(string uid) => ParseKey<ChartOfAccounts>(uid);
 
+    static public ChartOfAccounts TryParseNamedKey(string namedKey) => TryParseNamedKey<ChartOfAccounts>(namedKey);
+
     static public ChartOfAccounts Empty => ParseEmpty<ChartOfAccounts>();
 
     static public FixedList<ChartOfAccounts> GetList() {
