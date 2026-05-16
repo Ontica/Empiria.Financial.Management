@@ -44,6 +44,13 @@ namespace Empiria.Financial {
 
     #region Properties
 
+    public string Prefix {
+      get {
+        return base.ExtensionData.Get("prefix", string.Empty);
+      }
+    }
+
+
     public FixedList<string> Roles {
       get {
         return base.ExtensionData.GetFixedList<string>("roles", false);

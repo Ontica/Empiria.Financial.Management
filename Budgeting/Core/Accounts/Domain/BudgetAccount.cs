@@ -27,7 +27,10 @@ namespace Empiria.Budgeting {
     public BudgetAccount(FinancialAccountType accountType,
                          StandardAccount standardAccount,
                          OrganizationalUnit orgUnit) : base(accountType, standardAccount, orgUnit) {
+
       BudgetProgram = BudgetProgram.ParseWithCode(orgUnit.ExtendedData.Get<string>("budgetProgram"));
+
+      SetStatus(EntityStatus.Active);
     }
 
     static public new BudgetAccount Parse(int id) => ParseId<BudgetAccount>(id);
@@ -100,7 +103,6 @@ namespace Empiria.Budgeting {
         return EmpiriaString.BuildKeywords(base.Keywords, BudgetProgram.Name);
       }
     }
-
 
     #endregion Properties
 

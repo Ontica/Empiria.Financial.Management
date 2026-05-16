@@ -420,10 +420,9 @@ namespace Empiria.Financial.Projects {
 
 
     internal void RemoveAccount(FinancialAccount account) {
-      Assertion.Require(Rules.CanUpdate, "Current user can not update this project.");
+      Assertion.Require(account.Status == EntityStatus.Pending, "Current user can not update this account.");
       Assertion.Require(account, nameof(account));
-      Assertion.Require(_accounts.Value.Contains(account),
-                        "Entry to remove does not belong to this project.");
+      Assertion.Require(_accounts.Value.Contains(account), "Account does not belong to this project.");
 
       account.Delete();
 

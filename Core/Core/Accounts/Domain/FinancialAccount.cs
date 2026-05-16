@@ -53,7 +53,6 @@ namespace Empiria.Financial {
       Assertion.Require(!orgUnit.IsEmptyInstance, nameof(orgUnit));
 
       StandardAccount = stdAccount;
-      AccountNo = StandardAccount.StdAcctNo;
       Currency = Currency.Default;
 
       Description = stdAccount.Description;
@@ -73,7 +72,6 @@ namespace Empiria.Financial {
       Assertion.Require(!project.IsEmptyInstance, nameof(project));
 
       Project = project;
-      AccountNo = (Project.BaseAccounts.Count + 1).ToString("000");
     }
 
     static public FinancialAccount Parse(int id) => ParseId<FinancialAccount>(id);
@@ -336,10 +334,10 @@ namespace Empiria.Financial {
     }
 
 
-    [DataField("ACCT_STATUS", Default = EntityStatus.Active)]
+    [DataField("ACCT_STATUS", Default = EntityStatus.Pending)]
     public EntityStatus Status {
       get; private set;
-    } = EntityStatus.Active;
+    } = EntityStatus.Pending;
 
 
     public bool IsInflowAccount {
@@ -453,6 +451,10 @@ namespace Empiria.Financial {
         _cache.Value.Add(this);
       }
 
+      if (AccountNo.Length == 0) {
+        AccountNo = FinancialAccountDataService.GetNextAccountNo(this);
+      }
+
       FinancialAccountDataService.WriteAccount(this, this.ExtData.ToString());
 
       if (this.Status == EntityStatus.Deleted) {
@@ -534,7 +536,11 @@ namespace Empiria.Financial {
       Description = accountData.CustomerName;
       StandardAccount = StandardAccount.TryParseAccountNo(accountData.StandardAccount) ?? StandardAccount;
       Currency = accountData.Currency;
-      OrganizationalUnit = accountData.OrganizationalUnit;
+
+      if (!accountData.OrganizationalUnit.IsEmptyInstance) {
+        OrganizationalUnit = accountData.OrganizationalUnit;
+      }
+
       SubledgerAccountNo = accountData.SubledgerAccountNo;
 
       Status = EntityStatus.Active;

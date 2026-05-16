@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Data;
 
 namespace Empiria.Financial.Data {
@@ -20,7 +21,7 @@ namespace Empiria.Financial.Data {
         return;
       }
       var sql = "UPDATE FMS_ACCOUNTS " +
-                $"SET ACCT_UID = '{System.Guid.NewGuid().ToString()}', " +
+                $"SET ACCT_UID = '{Guid.NewGuid().ToString()}', " +
                 $"ACCT_NUMBER = '{EmpiriaString.Clean(account.AccountNo)}', " +
                 $"ACCT_DESCRIPTION = '{EmpiriaString.Clean(account.Description).Replace("'", "''")}', " +
                 $"ACCT_KEYWORDS = '{account.Keywords}', " +
@@ -30,6 +31,30 @@ namespace Empiria.Financial.Data {
       var op = DataOperation.Parse(sql);
 
       DataWriter.Execute(op);
+    }
+
+
+    static internal string GetNextAccountNo(FinancialAccount financialAccount) {
+
+      string prefix = financialAccount.FinancialAccountType.Prefix;
+
+      if (prefix.Length == 0) {
+        return financialAccount.StandardAccount.StdAcctNo;
+      }
+
+      var sql = "SELECT MAX(ACCT_NUMBER) " +
+                "FROM FMS_ACCOUNTS " +
+               $"WHERE ACCT_NUMBER LIKE '{prefix}-%' AND ACCT_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      string lastAccountNo = DataReader.GetScalar(op, string.Empty);
+
+      if (lastAccountNo.Length != 0) {
+        return $"{prefix}-{int.Parse(lastAccountNo.Split('-')[1]) + 1:0000}";
+      } else {
+        return $"{prefix}-0001";
+      }
     }
 
 
