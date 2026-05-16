@@ -109,12 +109,7 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       projection.Update(fields);
 
-      using (var usecases = ExternalAccountsUseCases.UseCaseInteractor()) {
-        _ = usecases.RefreshAccountFromCreditSystem(baseAccount.UID);
-      }
-
-      projection.SetAccountAttributes(baseAccount.Attributes as CreditAttributes);
-      projection.SetFinancialData(baseAccount.FinancialData);
+      LoadInitialProjectionData(projection, baseAccount);
 
       projection.Save();
 
@@ -261,6 +256,22 @@ namespace Empiria.CashFlow.Projections.UseCases {
     }
 
     #endregion Use cases
+
+    #region Helpers
+
+    private void LoadInitialProjectionData(CashFlowProjection projection, FinancialAccount baseAccount) {
+
+      if (baseAccount.FinancialAccountType.ControlledByExternalSystem) {
+        using (var usecases = ExternalAccountsUseCases.UseCaseInteractor()) {
+          _ = usecases.RefreshAccountFromCreditSystem(baseAccount.UID);
+        }
+      }
+
+      projection.SetAccountAttributes(baseAccount.Attributes as CreditAttributes);
+      projection.SetFinancialData(baseAccount.FinancialData);
+    }
+
+    #endregion Helpers
 
   }  // class CashFlowProjectionUseCases
 

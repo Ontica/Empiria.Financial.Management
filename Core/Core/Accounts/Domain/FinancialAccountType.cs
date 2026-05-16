@@ -44,6 +44,13 @@ namespace Empiria.Financial {
 
     #region Properties
 
+    public bool ControlledByExternalSystem {
+      get {
+        return base.ExtensionData.Get("controlledByExternalSystem", false);
+      }
+    }
+
+
     public string Prefix {
       get {
         return base.ExtensionData.Get("prefix", string.Empty);
@@ -56,6 +63,7 @@ namespace Empiria.Financial {
         return base.ExtensionData.GetFixedList<string>("roles", false);
       }
     }
+
 
     #endregion Properties
 
