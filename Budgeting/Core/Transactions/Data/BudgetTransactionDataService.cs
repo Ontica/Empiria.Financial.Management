@@ -69,26 +69,22 @@ namespace Empiria.Budgeting.Transactions.Data {
                                                       (x.InProcess || x.IsClosed))
                                         .SelectDistinctFlat(x => x.Entries.SelectDistinct(y => y.ControlNo))
                                         .FindAll(x => x.Length > 0 && x.Contains("/"))
+                                        .Select(x => int.Parse(x.Split('/')[1]))
+                                        .ToFixedList()
                                         .Sort((x, y) => x.CompareTo(y))
                                         .Reverse();
 
-      int counter = 0;
+      int nextPayment = 1;
 
       if (paymentNos.Count > 0) {
-        var paymentNo = paymentNos[0].Split('/')[1];
-        counter = int.Parse(paymentNo);
-        counter++;
-      } else {
-        counter = 1;
+        nextPayment = paymentNos[0] + 1;
       }
 
       foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
 
         var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
 
-        string paymentNoString = counter.ToString("00");
-
-        entry.ControlNo = $"{relatedEntry.ControlNo}/{paymentNoString}";
+        entry.ControlNo = $"{relatedEntry.ControlNo}/{nextPayment:D2}";
 
         entry.Save();
       }
@@ -176,9 +172,8 @@ namespace Empiria.Budgeting.Transactions.Data {
 
       string controlNosFilter = string.Empty;
 
-
-
       if (transaction.OperationType == BudgetOperationType.Request) {
+
         entryIds = transaction.Entries.SelectDistinct(x => x.Id);
 
         entryIds = FixedList<int>.MergeDistinct(entryIds,
@@ -189,7 +184,10 @@ namespace Empiria.Budgeting.Transactions.Data {
                                                 entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
                                                                                         .FindAll(x => x > 0));
 
-        var controlNos = entryIds.Select(x => BudgetEntry.Parse(x)).ToFixedList().SelectDistinct(x => x.ControlNo).FindAll(x => x.Length > 0);
+        var controlNos = entryIds.Select(x => BudgetEntry.Parse(x))
+                                 .ToFixedList()
+                                 .SelectDistinct(x => x.ControlNo)
+                                 .FindAll(x => x.Length > 0);
 
         foreach (var controlNo in controlNos) {
           if (controlNosFilter.Length > 0) {
@@ -214,7 +212,10 @@ namespace Empiria.Budgeting.Transactions.Data {
                                                 entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
                                                                                         .FindAll(x => x > 0));
 
-        var controlNos = entryIds.Select(x => BudgetEntry.Parse(x)).ToFixedList().SelectDistinct(x => x.ControlNo).FindAll(x => x.Length > 0);
+        var controlNos = entryIds.Select(x => BudgetEntry.Parse(x))
+                                 .ToFixedList()
+                                 .SelectDistinct(x => x.ControlNo)
+                                 .FindAll(x => x.Length > 0);
 
         foreach (var controlNo in controlNos) {
           if (controlNosFilter.Length > 0) {
