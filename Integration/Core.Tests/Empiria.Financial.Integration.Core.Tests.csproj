@@ -72,12 +72,10 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Tests" Version="1.0.0" />
     <PackageReference Include="Empiria.Financial.Integration" Version="2.0.0" />
-    <PackageReference Include="Banobras.PYC.ExternalInterfaces" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\extensions\Tests\Empiria.Tests.csproj" />
     <ProjectReference Include="..\Core\Empiria.Financial.Integration.Core.csproj" />
-    <ProjectReference Include="..\..\..\banobras.pyc\ExternalInterfaces\Banobras.PYC.ExternalInterfaces.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">

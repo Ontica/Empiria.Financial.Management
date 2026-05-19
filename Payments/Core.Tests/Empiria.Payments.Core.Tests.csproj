@@ -78,7 +78,6 @@
     <ProjectReference Include="..\..\..\extensions\Tests\Empiria.Tests.csproj" />
     <ProjectReference Include="..\Core\Empiria.Payments.Core.csproj" />
     <ProjectReference Include="..\..\..\operations.management\Orders\Core\Empiria.Orders.Core.csproj" />
-    <ProjectReference Include="..\..\..\banobras.pyc\ExternalInterfaces\Banobras.PYC.ExternalInterfaces.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="empiria.config.json">
