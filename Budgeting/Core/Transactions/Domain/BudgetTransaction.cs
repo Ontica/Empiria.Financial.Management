@@ -172,6 +172,16 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public BudgetOrderExtensionData OrderData {
+      get {
+        return ExtensionData.Get("orderData", BudgetOrderExtensionData.Empty);
+      }
+      private set {
+        ExtensionData.SetIf("orderData", value, !value.IsEmptyInstance);
+      }
+    }
+
+
     [DataField("BDG_TXN_IDENTIFICATORS")]
     private string _identificators = string.Empty;
 
