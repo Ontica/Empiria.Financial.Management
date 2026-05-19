@@ -36,11 +36,20 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
-    public BaseActions Actions {
+    public FinancialProjectActions Actions {
       get; internal set;
     }
 
   }  // class FinancialProjectHolderDto
+
+
+
+  public class FinancialProjectActions : BaseActions {
+
+    public bool CanChangeProject {
+      get; internal set;
+    }
+  }
 
 
 

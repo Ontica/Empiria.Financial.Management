@@ -67,16 +67,12 @@ namespace Empiria.Financial.Projects.Adapters {
 
     #region Helpers
 
-    static private BaseActions MapActions(FinancialProjectRules rules) {
-      //return new BaseActions {
-      //  CanDelete = rules.CanDelete,
-      //  CanEditDocuments = rules.CanEditDocuments,
-      //  CanUpdate = rules.CanUpdate
-      //};
-      return new BaseActions {
-        CanDelete = true,
-        CanEditDocuments = true,
-        CanUpdate = true
+    static private FinancialProjectActions MapActions(FinancialProjectRules rules) {
+      return new FinancialProjectActions {
+        CanDelete = rules.CanDelete,
+        CanEditDocuments = rules.CanEditDocuments,
+        CanUpdate = rules.CanUpdate,
+        CanChangeProject = rules.CanUpdate
       };
     }
 
