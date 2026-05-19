@@ -88,12 +88,11 @@ namespace Empiria.Financial.Projects {
         if (_project.IsNew) {
           return true;
         }
-        if (_project.Status != EntityStatus.Pending) {
+        if (_project.Status == EntityStatus.Deleted || _project.Status == EntityStatus.Suspended) {
           return false;
         }
-        if (_project.FinancialProjectType.IsProtected &&
-            (ExecutionServer.CurrentPrincipal.IsInRole(PROJECT_AUTHORIZER) ||
-             ExecutionServer.CurrentPrincipal.IsInRole(PROJECT_MANAGER))) {
+        if (ExecutionServer.CurrentPrincipal.IsInRole(PROJECT_AUTHORIZER) ||
+            ExecutionServer.CurrentPrincipal.IsInRole(PROJECT_MANAGER)) {
           return true;
         }
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
