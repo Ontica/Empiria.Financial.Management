@@ -445,9 +445,9 @@ namespace Empiria.Billing {
     } = ExecutionServer.DateMaxValue;
 
 
-    public string TipoCambio {
+    public decimal TipoCambio {
       get; internal set;
-    } = string.Empty;
+    } = 1;
 
 
     public string TipoComprobante {

@@ -225,6 +225,16 @@ namespace Empiria.Billing {
     }
 
 
+    public decimal TipoCambio {
+      get {
+        return _schemaData.Get<decimal>("tipoCambio", 1);
+      }
+      private set {
+        _schemaData.SetIfValue("tipoCambio", value);
+      }
+    }
+
+
     public decimal TrasladoLocal {
       get {
         return _schemaData.Get<decimal>("trasladoLocal", 0);
@@ -331,6 +341,7 @@ namespace Empiria.Billing {
       SubTotal = schemaData.Subtotal;
       Descuento = schemaData.Descuento;
       Total = schemaData.Total;
+      TipoCambio = schemaData.TipoCambio;
       TrasladoLocal = schemaData.TrasladoLocal;
       TrasladoIVA = schemaData.TrasladoIVA;
       TrasladoIEPS = schemaData.TrasladoIEPS;
@@ -338,7 +349,6 @@ namespace Empiria.Billing {
       RetencionISR = schemaData.RetencionISR;
       RetencionIVA = schemaData.RetencionIVA;
       RetencionIEPS = schemaData.RetencionIEPS;
-
       TipoComprobante = schemaData.TipoComprobante;
     }
   }
