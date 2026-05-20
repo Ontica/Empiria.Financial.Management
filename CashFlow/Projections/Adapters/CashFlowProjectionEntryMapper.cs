@@ -99,9 +99,13 @@ namespace Empiria.CashFlow.Projections.Adapters {
         Year = entry.Year,
         Month = entry.Month,
         MonthName = entry.MonthName,
+        Currency = entry.Currency.ISOCode,
+        ExchangeRate = entry.ExchangeRate,
         ProjectionColumn = entry.ProjectionColumn.Name,
         InflowAmount = entry.InflowAmount,
         OutflowAmount = entry.OutflowAmount,
+        InflowAmountMXN = entry.InflowAmount * entry.ExchangeRate,
+        OutflowAmountMXN = entry.OutflowAmount * entry.ExchangeRate,
         ItemType = DataTableEntryType.Entry.ToString()
       };
     }

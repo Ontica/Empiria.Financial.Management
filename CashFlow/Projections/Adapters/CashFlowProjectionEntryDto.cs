@@ -117,11 +117,27 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
+    public string Currency {
+      get; internal set;
+    }
+
+    public decimal ExchangeRate {
+      get; internal set;
+    }
+
     public decimal InflowAmount {
       get; internal set;
     }
 
     public decimal OutflowAmount {
+      get; internal set;
+    }
+
+    public decimal InflowAmountMXN {
+      get; internal set;
+    }
+
+    public decimal OutflowAmountMXN {
       get; internal set;
     }
 
