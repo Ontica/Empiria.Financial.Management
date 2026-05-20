@@ -199,7 +199,7 @@ namespace Empiria.Billing.SATMexicoImporter {
     }
 
 
-    public string TipoCambio {
+    public decimal TipoCambio {
       get; internal set;
     }
 

@@ -102,7 +102,7 @@ namespace Empiria.Billing.SATMexicoImporter {
         Descuento = GetAttribute<decimal>(generalDataNode, "Descuento"),
         Total = GetAttribute<decimal>(generalDataNode, "Total"),
 
-        TipoCambio = GetAttribute(generalDataNode, "TipoCambio"),
+        TipoCambio = GetAttribute<decimal>(generalDataNode, "TipoCambio"),
         TipoDeComprobante = GetAttribute(generalDataNode, "TipoDeComprobante"),
         Exportacion = GetAttribute(generalDataNode, "Exportacion"),
         MetodoPago = GetAttribute(generalDataNode, "MetodoPago"),
