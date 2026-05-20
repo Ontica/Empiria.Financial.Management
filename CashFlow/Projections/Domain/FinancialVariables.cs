@@ -10,6 +10,9 @@
 
 using Empiria.Financial;
 
+using Empiria.DynamicData.ExternalData;
+using Empiria.DynamicData.ExternalData.UseCases;
+
 namespace Empiria.CashFlow.Projections {
 
   /// <summary>Provides financial variables for cash flow projections.</summary>
@@ -21,7 +24,19 @@ namespace Empiria.CashFlow.Projections {
         return decimal.One;
       }
 
-      return 18.64m;
+      var variable = ExternalVariable.TryParseWithCode(currency.ISOCode);
+
+      ExternalValue value = ExternalValuesUseCases.UseCaseInteractor()
+                                                  .GetExternalValue(variable, year);
+
+      if (value == null) {
+        return decimal.One;
+      }
+
+      string monthStr = EmpiriaString.MonthName(month, true)
+                                     .ToLower();
+
+      return value.GetTotalField(monthStr);
     }
 
   }  // class FinancialVariables
