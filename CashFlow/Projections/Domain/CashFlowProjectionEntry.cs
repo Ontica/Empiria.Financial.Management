@@ -186,7 +186,7 @@ namespace Empiria.CashFlow.Projections {
     [DataField("CFW_PJC_ENTRY_EXCHANGE_RATE")]
     public decimal ExchangeRate {
       get; private set;
-    }
+    } = decimal.One;
 
 
     [DataField("CFW_PJC_ENTRY_DESCRIPTION")]
@@ -294,6 +294,7 @@ namespace Empiria.CashFlow.Projections {
       Month = Patcher.Patch(fields.Month, Month);
 
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
+
       OriginalAmount = Patcher.Patch(fields.Amount, Amount);
 
       if (CashFlowAccount.IsInflowAccount) {
@@ -301,7 +302,10 @@ namespace Empiria.CashFlow.Projections {
       } else {
         OutflowAmount = OriginalAmount;
       }
-      ExchangeRate = Patcher.Patch(fields.ExchangeRate, ExchangeRate);
+
+      if (Currency.Distinct(Projection.Plan.BaseCurrency)) {
+        ExchangeRate = FinancialVariables.GetExchangeRate(Year, Month, Currency);
+      }
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);

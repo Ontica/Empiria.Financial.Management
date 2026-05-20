@@ -69,11 +69,6 @@ namespace Empiria.CashFlow.Projections {
       get; set;
     } = null;
 
-    public decimal? ExchangeRate {
-      get; set;
-    } = null;
-
-
     public string Description {
       get; set;
     } = string.Empty;
@@ -130,10 +125,6 @@ namespace Empiria.CashFlow.Projections {
 
       if (fields.CurrencyUID.Length != 0) {
         _ = Currency.Parse(fields.CurrencyUID);
-      }
-
-      if (fields.ExchangeRate == 0) {
-        fields.ExchangeRate = 1;
       }
 
       if (fields.Month.HasValue) {

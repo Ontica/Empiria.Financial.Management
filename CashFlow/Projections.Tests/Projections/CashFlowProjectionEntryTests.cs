@@ -136,7 +136,6 @@ namespace Empiria.Tests.CashFlow.Projections {
       CashFlowProjectionEntry sut = TestsObjects.TryGetObject(projection.Entries);
 
       var fields = new CashFlowProjectionEntryFields {
-        ExchangeRate = 1.431278m,
         Justification = "Updated justification",
         Description = "Updated description"
       };
@@ -145,7 +144,6 @@ namespace Empiria.Tests.CashFlow.Projections {
 
       projection.UpdateEntry(sut, fields);
 
-      Assert.Equal(fields.ExchangeRate, sut.ExchangeRate);
       Assert.Equal(fields.Description, sut.Description);
       Assert.Equal(fields.Justification, sut.Justification);
       Assert.Equal(count, sut.Projection.Entries.Count);
