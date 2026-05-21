@@ -68,6 +68,10 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
+    public bool ShowVariables {
+      get; internal set;
+    }
+
   }  // class CashFlowProjectionActions
 
 

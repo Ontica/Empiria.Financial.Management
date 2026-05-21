@@ -30,7 +30,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
         GroupedEntries = new CashFlowProjectionEntriesByYearTableDto(byYearProjection.GetEntries()),
         Documents = DocumentServices.GetAllEntityDocuments(projection),
         History = HistoryServices.GetEntityHistory(projection),
-        Actions = MapActions(projection.Rules)
+        Actions = MapActions(projection)
       };
     }
 
@@ -50,15 +50,16 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     #region Helpers
 
-    static private CashFlowProjectionActions MapActions(CashFlowProjectionRules rules) {
+    static private CashFlowProjectionActions MapActions(CashFlowProjection projection) {
       return new CashFlowProjectionActions {
-        CanAuthorize = rules.CanAuthorize,
-        CanClose = rules.CanClose,
-        CanDelete = rules.CanDelete,
-        CanEditDocuments = rules.CanEditDocuments,
-        CanReject = rules.CanReject,
-        CanSendToAuthorization = rules.CanSendToAuthorization,
-        CanUpdate = rules.CanUpdate
+        CanAuthorize = projection.Rules.CanAuthorize,
+        CanClose = projection.Rules.CanClose,
+        CanDelete = projection.Rules.CanDelete,
+        CanEditDocuments = projection.Rules.CanEditDocuments,
+        CanReject = projection.Rules.CanReject,
+        CanSendToAuthorization = projection.Rules.CanSendToAuthorization,
+        CanUpdate = projection.Rules.CanUpdate,
+        ShowVariables = projection.BaseAccount.FinancialAccountType.UID.Contains("Credit")
       };
     }
 
