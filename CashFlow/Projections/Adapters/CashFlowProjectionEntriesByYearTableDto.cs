@@ -48,15 +48,18 @@ namespace Empiria.CashFlow.Projections.Adapters {
         columns.Add(new DataTableColumn("projectionColumn", "Movimiento", "text-nowrap"));
       }
 
-      columns.Add(new DataTableColumn("inflowAmount", "Ingresos", "decimal", 0));
-      columns.Add(new DataTableColumn("outflowAmount", "Egresos", "decimal", 0));
+      columns.Add(new DataTableColumn("currency", "Mon", "text"));
+      columns.Add(new DataTableColumn("inflowAmount", "Ingresos", "text") { Align = "right" });
+      columns.Add(new DataTableColumn("outflowAmount", "Egresos", "text") { Align = "right" });
 
       FixedList<int> months = _entries.SelectDistinctFlat(x => x.Entries.Select(y => y.Month))
                                       .Sort((x, y) => x.CompareTo(y));
 
       foreach (int month in months) {
         columns.Add(new DataTableColumn($"month_{month}",
-                                        EmpiriaString.MonthName(month).Substring(0, 3), "decimal", 0));
+                                        EmpiriaString.MonthName(month).Substring(0, 3), "text") {
+          Align = "right"
+        });
       }
 
       return columns.ToFixedList();
@@ -85,9 +88,9 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     private FixedList<CashFlowProjectionEntryByYearDynamicDto> BuildTotals() {
 
-      var entries = BuildEntries();
+      FixedList<CashFlowProjectionEntryByYearDynamicDto> entries = BuildEntries();
 
-      if (entries.Count() == 1) {
+      if (entries.Count() == 0) {
         return new FixedList<CashFlowProjectionEntryByYearDynamicDto>();
       }
 
@@ -108,7 +111,6 @@ namespace Empiria.CashFlow.Projections.Adapters {
   }  // class CashFlowProjectionEntriesByYearTableDto
 
 
-
   /// <summary>Dynamic fields DTO that holds a yearly cash flow projection entry with months in columns.</summary>
   public class CashFlowProjectionEntryByYearDynamicDto : DynamicFields {
 
@@ -121,18 +123,24 @@ namespace Empiria.CashFlow.Projections.Adapters {
       Year = pivot.Year;
 
       for (int i = 1; i <= 12; i++) {
-        decimal inflows = fields.FindAll(x => x.IsInflowAccount).Sum(x => x.GetTotalField($"Month_{i}"));
-        decimal outflows = fields.FindAll(x => !x.IsInflowAccount).Sum(x => x.GetTotalField($"Month_{i}"));
+        decimal inflows = fields.FindAll(x => x.IsInflowAccount).Sum(x => decimal.Parse(x.GetField($"Month_{i}", "0")));
+        decimal outflows = fields.FindAll(x => !x.IsInflowAccount).Sum(x => decimal.Parse(x.GetField($"Month_{i}", "0")));
         if (inflows != 0 || outflows != 0) {
-          base.SetTotalField($"Month_{i}", inflows - outflows);
+          base.SetField($"Month_{i}", (inflows - outflows).ToString("N0"));
         }
       }
 
-      decimal inflowTotal = fields.FindAll(x => x.IsInflowAccount).Sum(x => x.GetTotalField("InflowAmount"));
-      base.SetTotalField("InflowAmount", inflowTotal);
+      Currency = pivot.Currency;
 
-      decimal outflowTotal = fields.FindAll(x => !x.IsInflowAccount).Sum(x => x.GetTotalField("OutflowAmount"));
-      base.SetTotalField("OutflowAmount", outflowTotal);
+      decimal inflowTotal = fields.FindAll(x => x.IsInflowAccount)
+                                  .Sum(x => decimal.Parse(x.GetField("InflowAmount", "0")));
+
+      base.SetField("InflowAmount", inflowTotal.ToString("N0"));
+
+      decimal outflowTotal = fields.FindAll(x => !x.IsInflowAccount)
+                                   .Sum(x => decimal.Parse(x.GetField("OutflowAmount", "0")));
+
+      base.SetField("OutflowAmount", outflowTotal.ToString("N0"));
     }
 
 
@@ -156,15 +164,15 @@ namespace Empiria.CashFlow.Projections.Adapters {
       for (int i = 1; i <= 12; i++) {
         decimal amount = entry.GetAmountForMonth(i);
         if (amount != 0) {
-          base.SetTotalField($"Month_{i}", amount);
+          base.SetField($"Month_{i}", amount.ToString("N0"));
         }
         total += amount;
       }
 
       if (IsInflowAccount) {
-        base.SetTotalField("InflowAmount", total);
+        base.SetField("InflowAmount", total.ToString("N0"));
       } else {
-        base.SetTotalField("OutflowAmount", total);
+        base.SetField("OutflowAmount", total.ToString("N0"));
       }
     }
 
