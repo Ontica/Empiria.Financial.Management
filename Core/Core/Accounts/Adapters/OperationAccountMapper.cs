@@ -22,7 +22,7 @@ namespace Empiria.Financial.Adapters {
         BaseAccount = FinancialAccountMapper.MapToDescriptor(baseAccount),
 
         AvailableOperations = baseAccount.GetAvailableOperations()
-                                         .Select(x => new NamedEntityDto(x.UID, $"{x.Name}"))
+                                         .Select(x => new NamedEntityDto(x.UID, $"({x.StdAcctNo}) {x.FullName}"))
                                          .ToFixedList(),
 
         CurrentOperations = MapToOperationAccounts(baseAccount.GetOperations())

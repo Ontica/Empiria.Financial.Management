@@ -93,6 +93,7 @@ namespace Empiria.Payments.Processor.Adapters {
 
     public int PaymentWithdrawalAccountId {
       get {
+
         var budget = (Budget) _instruction.PaymentOrder.PayableEntity.Budget;
 
         return budget.BudgetType.PaymentsWithdrawalAccountId;
@@ -103,13 +104,6 @@ namespace Empiria.Payments.Processor.Adapters {
     public string PaymentReferenceNo {
       get {
         return _instruction.PaymentOrder.ReferenceNumber;
-      }
-    }
-
-
-    public string PaymentDescription {
-      get {
-        return "Pago Banobras, S.N.C.";
       }
     }
 
