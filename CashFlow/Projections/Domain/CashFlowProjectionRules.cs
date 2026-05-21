@@ -19,7 +19,7 @@ namespace Empiria.CashFlow.Projections {
 
     static internal readonly string CASH_FLOW_AUTHORIZER = "cash-flow-authorizer";
     static internal readonly string CASH_FLOW_MANAGER = "cash-flow-manager";
-    static internal readonly string CASH_FLOW_PROJECTOR = "cash-flow-projector";
+    static internal readonly string CASH_FLOW_PLANNER = "cash-flow-planner";
     static internal readonly string CASH_FLOW_ROLE = "cash-flow";
 
     private readonly CashFlowProjection _projection;
@@ -71,7 +71,7 @@ namespace Empiria.CashFlow.Projections {
           return false;
         }
 
-        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PROJECTOR) &&
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PLANNER) &&
             _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
           return true;
         }
@@ -93,7 +93,7 @@ namespace Empiria.CashFlow.Projections {
           return false;
         }
 
-        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PROJECTOR) &&
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PLANNER) &&
           _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
           return true;
         }
@@ -137,7 +137,7 @@ namespace Empiria.CashFlow.Projections {
            ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER))) {
           return true;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PROJECTOR) &&
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PLANNER) &&
             _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
           return true;
         }
@@ -165,7 +165,7 @@ namespace Empiria.CashFlow.Projections {
              ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER))) {
           return true;
         }
-        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PROJECTOR) &&
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PLANNER) &&
           _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
           return true;
         }

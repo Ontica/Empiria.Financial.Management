@@ -187,7 +187,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
         return string.Empty;
       }
 
-      if (ExecutionServer.CurrentPrincipal.IsInRole(CashFlowProjectionRules.CASH_FLOW_PROJECTOR)) {
+      if (ExecutionServer.CurrentPrincipal.IsInRole(CashFlowProjectionRules.CASH_FLOW_PLANNER)) {
         return $"CFW_PJC_BASE_PARTY_ID = {ExecutionServer.CurrentContact.Organization.Id}";
       }
 
