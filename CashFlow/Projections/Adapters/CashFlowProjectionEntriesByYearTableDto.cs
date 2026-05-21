@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.DynamicData;
+using Empiria.Financial;
 
 namespace Empiria.CashFlow.Projections.Adapters {
 
@@ -82,6 +83,8 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       list.AddRange(totals);
 
+      list.AddRange(BuildVariables());
+
       return list.ToFixedList();
     }
 
@@ -107,6 +110,29 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       return totals.ToFixedList();
     }
+
+
+    private FixedList<CashFlowProjectionEntryByYearDynamicDto> BuildVariables() {
+      var currencies = _entries.SelectDistinct(x => x.Currency).FindAll(x => x.Distinct(Currency.Default));
+
+      if (currencies.Count() == 0) {
+        return new FixedList<CashFlowProjectionEntryByYearDynamicDto>();
+      }
+
+      var variables = new List<CashFlowProjectionEntryByYearDynamicDto>(currencies.Count());
+
+      foreach (var currency in currencies) {
+        decimal[] exchangeRates = FinancialVariables.GetExchangeRates(_entries[0].Year, currency);
+
+        var currencyVariable = new CashFlowProjectionEntryByYearDynamicDto($"Tipo de cambio {currency.ISOCode}",
+                                                                           exchangeRates);
+
+        variables.Add(currencyVariable);
+      }
+
+      return variables.ToFixedList();
+    }
+
 
   }  // class CashFlowProjectionEntriesByYearTableDto
 
@@ -146,7 +172,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     internal CashFlowProjectionEntryByYearDynamicDto(CashFlowProjectionEntryByYear entry) {
       UID = entry.UID;
-      ItemType = DataTableEntryType.Entry.ToString();
+      ItemType = DataTableEntryType.Group1.ToString();
       ItemDescription = ((INamedEntity) entry.CashFlowAccount).Name;
       ProjectionUID = entry.Projection.UID;
       CashFlowPlanName = entry.Projection.Plan.Name;
@@ -176,6 +202,28 @@ namespace Empiria.CashFlow.Projections.Adapters {
       }
     }
 
+    public CashFlowProjectionEntryByYearDynamicDto(string description, decimal[] decimals) {
+      UID = string.Empty;
+      ItemType = DataTableEntryType.Entry.ToString();
+      ItemDescription = description;
+      ProjectionUID = string.Empty;
+      CashFlowPlanName = string.Empty;
+      ProjectionColumn = string.Empty;
+      CashFlowAccount = string.Empty;
+      IsInflowAccount = false;
+      Product = string.Empty;
+      Description = string.Empty;
+      ProductUnit = string.Empty;
+      Justification = string.Empty;
+      Year = 2027;
+      Currency = Financial.Currency.Default.ISOCode;
+
+      for (int i = 0; i < decimals.Length && i < 12; i++) {
+        if (decimals[i] != 0) {
+          base.SetField($"Month_{i + 1}", decimals[i].ToString("N6"));
+        }
+      }
+    }
 
     public string UID {
       get;
