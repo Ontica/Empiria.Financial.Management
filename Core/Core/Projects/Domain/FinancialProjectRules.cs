@@ -83,6 +83,19 @@ namespace Empiria.Financial.Projects {
     }
 
 
+    public bool CanEditOperations {
+      get {
+        if (_project.IsNew) {
+          return false;
+        }
+        if (_project.Status == EntityStatus.Deleted || _project.Status == EntityStatus.Suspended) {
+          return false;
+        }
+        return ExecutionServer.CurrentPrincipal.IsInRole(PROJECT_AUTHORIZER);
+      }
+    }
+
+
     public bool CanUpdate {
       get {
         if (_project.IsNew) {

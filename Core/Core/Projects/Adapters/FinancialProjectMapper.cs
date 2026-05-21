@@ -72,7 +72,8 @@ namespace Empiria.Financial.Projects.Adapters {
         CanDelete = rules.CanDelete,
         CanEditDocuments = rules.CanEditDocuments,
         CanUpdate = rules.CanUpdate,
-        CanChangeProject = rules.CanUpdate
+        CanChangeProject = rules.CanUpdate,
+        CanEditOperations = rules.CanEditOperations,
       };
     }
 

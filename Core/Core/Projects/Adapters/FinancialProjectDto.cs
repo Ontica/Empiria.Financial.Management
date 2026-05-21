@@ -49,7 +49,12 @@ namespace Empiria.Financial.Projects.Adapters {
     public bool CanChangeProject {
       get; internal set;
     }
-  }
+
+    public bool CanEditOperations {
+      get; internal set;
+    }
+
+  }  // class FinancialProjectActions
 
 
 
