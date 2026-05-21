@@ -39,6 +39,34 @@ namespace Empiria.CashFlow.Projections {
       return value.GetTotalField(monthStr);
     }
 
+
+    static internal decimal[] GetExchangeRates(int year, Currency currency) {
+
+      if (Currency.Default.Equals(currency)) {
+        return new decimal[12] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m };
+      }
+
+      var variable = ExternalVariable.TryParseWithCode(currency.ISOCode);
+
+      ExternalValue value = ExternalValuesUseCases.UseCaseInteractor()
+                                                  .GetExternalValue(variable, year);
+
+      return new decimal[12] {
+        value.GetTotalField("ene"),
+        value.GetTotalField("feb"),
+        value.GetTotalField("mar"),
+        value.GetTotalField("abr"),
+        value.GetTotalField("may"),
+        value.GetTotalField("jun"),
+        value.GetTotalField("jul"),
+        value.GetTotalField("ago"),
+        value.GetTotalField("sep"),
+        value.GetTotalField("oct"),
+        value.GetTotalField("nov"),
+        value.GetTotalField("dic")
+      };
+    }
+
   }  // class FinancialVariables
 
 }  // namespace Empiria.CashFlow.Projections
