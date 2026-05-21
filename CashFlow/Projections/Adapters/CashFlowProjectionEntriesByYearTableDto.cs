@@ -23,6 +23,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     internal CashFlowProjectionEntriesByYearTableDto(FixedList<CashFlowProjectionEntryByYear> entries) {
       _entries = entries;
+
     }
 
     public FixedList<DataTableColumn> Columns {
@@ -83,11 +84,18 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       list.AddRange(totals);
 
-      list.AddRange(BuildVariables());
+      list.AddRange(BuildExchangeRates());
+
+      list.AddRange(BuildCalculationVariables());
+
+      var mxnTotal = TryBuildMXNTotal();
+
+      if (mxnTotal != null) {
+        list.Add(mxnTotal);
+      }
 
       return list.ToFixedList();
     }
-
 
     private FixedList<CashFlowProjectionEntryByYearDynamicDto> BuildTotals() {
 
@@ -112,8 +120,14 @@ namespace Empiria.CashFlow.Projections.Adapters {
     }
 
 
-    private FixedList<CashFlowProjectionEntryByYearDynamicDto> BuildVariables() {
-      var currencies = _entries.SelectDistinct(x => x.Currency).FindAll(x => x.Distinct(Currency.Default));
+    private FixedList<CashFlowProjectionEntryByYearDynamicDto> BuildCalculationVariables() {
+      return new FixedList<CashFlowProjectionEntryByYearDynamicDto>();
+    }
+
+
+    private FixedList<CashFlowProjectionEntryByYearDynamicDto> BuildExchangeRates() {
+      var currencies = _entries.SelectDistinct(x => x.Currency)
+                               .FindAll(x => x.Distinct(Currency.Default));
 
       if (currencies.Count() == 0) {
         return new FixedList<CashFlowProjectionEntryByYearDynamicDto>();
@@ -125,7 +139,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
         decimal[] exchangeRates = FinancialVariables.GetExchangeRates(_entries[0].Year, currency);
 
         var currencyVariable = new CashFlowProjectionEntryByYearDynamicDto($"Tipo de cambio {currency.ISOCode}",
-                                                                           exchangeRates);
+                                                                           DataTableEntryType.Group1, exchangeRates, "N6");
 
         variables.Add(currencyVariable);
       }
@@ -133,6 +147,31 @@ namespace Empiria.CashFlow.Projections.Adapters {
       return variables.ToFixedList();
     }
 
+
+    private CashFlowProjectionEntryByYearDynamicDto TryBuildMXNTotal() {
+      var currencies = _entries.SelectDistinct(x => x.Currency)
+                               .FindAll(x => x.Distinct(Currency.Default));
+
+      if (currencies.Count() == 0) {
+        return null;
+      }
+
+      decimal[] values = new decimal[12];
+
+      foreach (var currency in currencies) {
+        decimal[] exchangeRates = FinancialVariables.GetExchangeRates(_entries[0].Year, currency);
+
+
+        for (int i = 1; i <= 12; i++) {
+          decimal monthTotal = _entries.Sum(x => x.GetAmountForMonth(i) * exchangeRates[i - 1]);
+
+          values[i - 1] = monthTotal;
+        }
+      }
+
+      return new CashFlowProjectionEntryByYearDynamicDto("Total en pesos mexicanos",
+                                                         DataTableEntryType.Summary, values);
+    }
 
   }  // class CashFlowProjectionEntriesByYearTableDto
 
@@ -172,7 +211,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     internal CashFlowProjectionEntryByYearDynamicDto(CashFlowProjectionEntryByYear entry) {
       UID = entry.UID;
-      ItemType = DataTableEntryType.Group1.ToString();
+      ItemType = DataTableEntryType.Entry.ToString();
       ItemDescription = ((INamedEntity) entry.CashFlowAccount).Name;
       ProjectionUID = entry.Projection.UID;
       CashFlowPlanName = entry.Projection.Plan.Name;
@@ -202,9 +241,10 @@ namespace Empiria.CashFlow.Projections.Adapters {
       }
     }
 
-    public CashFlowProjectionEntryByYearDynamicDto(string description, decimal[] decimals) {
+    public CashFlowProjectionEntryByYearDynamicDto(string description, DataTableEntryType entryType,
+                                                   decimal[] decimals, string format = "N0") {
       UID = string.Empty;
-      ItemType = DataTableEntryType.Entry.ToString();
+      ItemType = entryType.ToString();
       ItemDescription = description;
       ProjectionUID = string.Empty;
       CashFlowPlanName = string.Empty;
@@ -220,7 +260,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       for (int i = 0; i < decimals.Length && i < 12; i++) {
         if (decimals[i] != 0) {
-          base.SetField($"Month_{i + 1}", decimals[i].ToString("N6"));
+          base.SetField($"Month_{i + 1}", decimals[i].ToString(format));
         }
       }
     }
