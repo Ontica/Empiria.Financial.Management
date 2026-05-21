@@ -76,6 +76,20 @@ namespace Empiria.Financial.Accounts.WebApi {
       }
     }
 
+    [HttpPost]
+    [Route("v2/financial-accounts/{accountUID:guid}/change-project")]
+    public SingleObjectModel ChangeAccountProject([FromUri] string accountUID, [FromBody] ChangeProjectFields fields) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+
+        fields.AccountUID = accountUID;
+
+        FinancialAccountDto account = usecases.ChangeProject(accountUID, fields.NewProjectUID);
+
+        return new SingleObjectModel(base.Request, account);
+      }
+    }
+
 
     [HttpPost]
     [Route("v2/financial-accounts")]
@@ -142,5 +156,25 @@ namespace Empiria.Financial.Accounts.WebApi {
     #endregion Command web apis
 
   }  // class FinancialAccountController
+
+
+
+  public class ChangeProjectFields {
+
+    public string AccountUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string OldProjectUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string NewProjectUID {
+      get; set;
+    } = string.Empty;
+
+  }  // class ChangeProjectFields
 
 }  // namespace Empiria.Financial.Accounts.WebApi

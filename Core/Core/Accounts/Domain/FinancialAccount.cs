@@ -408,6 +408,15 @@ namespace Empiria.Financial {
     }
 
 
+    internal void ChangeProject(FinancialProject newProject) {
+      Assertion.Require(newProject, nameof(newProject));
+
+      this.Project = newProject;
+
+      MarkAsDirty();
+    }
+
+
     internal void Delete() {
       this.Status = EntityStatus.Deleted;
 

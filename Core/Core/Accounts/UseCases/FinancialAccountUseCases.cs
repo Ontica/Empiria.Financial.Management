@@ -48,6 +48,24 @@ namespace Empiria.Financial.UseCases {
     }
 
 
+
+    internal FinancialAccountDto ChangeProject(string accountUID, string newProjectUID) {
+      Assertion.Require(accountUID, nameof(accountUID));
+      Assertion.Require(newProjectUID, nameof(newProjectUID));
+
+      var account = FinancialAccount.Parse(accountUID);
+
+      var newProject = FinancialProject.Parse(newProjectUID);
+
+      account.Project.MoveAccountTo(account, newProject);
+
+      account.Save();
+
+      return FinancialAccountMapper.Map(account);
+    }
+
+
+
     public FinancialAccountDto CreateAccount(FinancialAccountFields fields) {
       Assertion.Require(fields, nameof(fields));
 

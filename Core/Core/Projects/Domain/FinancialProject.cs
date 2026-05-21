@@ -419,6 +419,19 @@ namespace Empiria.Financial.Projects {
     }
 
 
+    internal void MoveAccountTo(FinancialAccount account, FinancialProject newProject) {
+      Assertion.Require(account, nameof(account));
+      Assertion.Require(newProject, nameof(newProject));
+      Assertion.Require(this.Distinct(newProject), "New project must be distinct to current project.");
+
+      account.ChangeProject(newProject);
+
+      newProject._accounts.Value.Add(account);
+
+      _accounts.Value.Remove(account);
+    }
+
+
     internal void RemoveAccount(FinancialAccount account) {
       Assertion.Require(account.Status == EntityStatus.Pending, "Current user can not update this account.");
       Assertion.Require(account, nameof(account));
