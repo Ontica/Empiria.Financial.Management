@@ -31,8 +31,10 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
     #region Single entry use cases
 
-    public FixedList<CashFlowProjectionEntryDto> CalculateProjectionEntries(string projectionUID) {
+    public FixedList<CashFlowProjectionEntryDto> CalculateProjectionEntries(string projectionUID,
+                                                                            string method) {
       Assertion.Require(projectionUID, nameof(projectionUID));
+      Assertion.Require(method, nameof(method));
 
       var projection = CashFlowProjection.Parse(projectionUID);
 

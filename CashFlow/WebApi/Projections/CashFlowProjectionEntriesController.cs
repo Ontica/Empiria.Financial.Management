@@ -23,11 +23,11 @@ namespace Empiria.CashFlow.Projections.WebApi {
     #region Single entry web apis
 
     [HttpPost]
-    [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/calculate")]
-    public CollectionModel CalculateProjectionEntries([FromUri] string projectionUID) {
+    [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/calculate/{method}")]
+    public CollectionModel CalculateProjectionEntries([FromUri] string projectionUID, [FromUri] string method) {
 
       using (var usecases = CashFlowProjectionEntriesUseCases.UseCaseInteractor()) {
-        FixedList<CashFlowProjectionEntryDto> entries = usecases.CalculateProjectionEntries(projectionUID);
+        FixedList<CashFlowProjectionEntryDto> entries = usecases.CalculateProjectionEntries(projectionUID, method);
 
         return new CollectionModel(base.Request, entries);
       }
