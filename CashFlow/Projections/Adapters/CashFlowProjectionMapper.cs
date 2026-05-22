@@ -22,12 +22,13 @@ namespace Empiria.CashFlow.Projections.Adapters {
     #region Public mappers
 
     static internal CashFlowProjectionHolderDto Map(CashFlowProjection projection) {
+
       var byYearProjection = new CashFlowProjectionByYear(projection);
 
       return new CashFlowProjectionHolderDto {
         Projection = MapProjection(projection),
         Entries = CashFlowProjectionEntryMapper.MapToDescriptor(projection.Entries),
-        GroupedEntries = new CashFlowProjectionEntriesByYearTableDto(byYearProjection.GetEntries()),
+        GroupedEntries = new CashFlowProjectionEntriesByYearTableDto(byYearProjection),
         Documents = DocumentServices.GetAllEntityDocuments(projection),
         History = HistoryServices.GetEntityHistory(projection),
         Actions = MapActions(projection)
