@@ -113,8 +113,8 @@ namespace Empiria.Financial {
 
     protected override void OnLoad() {
       _operations = new Lazy<List<FinancialAccount>>(() =>
-                        _cache.Value.FindAll(x => x._parentId == this.Id &&
-                                                  x.Project.Equals(this.Project) &&
+                        _cache.Value.FindAll(x => x._parentId == Id &&
+                                                  x.Project.Equals(Project) &&
                                           x.IsOperationAccount
                       ));
     }
@@ -296,13 +296,13 @@ namespace Empiria.Financial {
 
     public FinancialAccount Parent {
       get {
-        if (this.IsEmptyInstance) {
+        if (IsEmptyInstance) {
           return this;
         }
         return Parse(_parentId);
       }
       private set {
-        if (this.IsEmptyInstance) {
+        if (IsEmptyInstance) {
           return;
         }
         _parentId = value.Id;
@@ -393,10 +393,10 @@ namespace Empiria.Financial {
                        $"Esta cuenta ya contiene la operación {stdAccount.Name} para la moneda {currency.Name}.");
 
       var operation = new FinancialAccount(FinancialAccountType.OperationAccount,
-                                           stdAccount, this.OrganizationalUnit, this.Project);
+                                           stdAccount, OrganizationalUnit, Project);
 
-      operation.AccountNo = fields.AccountNo;
-      operation.Currency = currency;
+      AccountNo = fields.AccountNo;
+      Currency = currency;
 
       operation.Parent = this;
 
@@ -411,14 +411,14 @@ namespace Empiria.Financial {
     internal void ChangeProject(FinancialProject newProject) {
       Assertion.Require(newProject, nameof(newProject));
 
-      this.Project = newProject;
+      Project = newProject;
 
       MarkAsDirty();
     }
 
 
     internal void Delete() {
-      this.Status = EntityStatus.Deleted;
+      Status = EntityStatus.Deleted;
 
       MarkAsDirty();
     }
@@ -433,8 +433,7 @@ namespace Empiria.Financial {
 
     internal FixedList<StandardAccount> GetAvailableOperations() {
       return StandardAccount.GetAllChildren()
-                            .FindAll(x => x.IsLastLevel &&
-                                          !GetOperations().Contains(y => y.StandardAccount.Equals(x)));
+                            .FindAll(x => x.IsLastLevel);
     }
 
 
@@ -451,11 +450,11 @@ namespace Empiria.Financial {
 
     protected override void OnSave() {
       if (base.IsNew) {
-        this.StartDate = ExecutionServer.DateMinValue;
-        this.EndDate = ExecutionServer.DateMaxValue;
+        StartDate = ExecutionServer.DateMinValue;
+        EndDate = ExecutionServer.DateMaxValue;
 
-        this.PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-        this.PostingTime = DateTime.Now;
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+        PostingTime = DateTime.Now;
 
         _cache.Value.Add(this);
       }
@@ -464,9 +463,9 @@ namespace Empiria.Financial {
         AccountNo = FinancialAccountDataService.GetNextAccountNo(this);
       }
 
-      FinancialAccountDataService.WriteAccount(this, this.ExtData.ToString());
+      FinancialAccountDataService.WriteAccount(this, ExtData.ToString());
 
-      if (this.Status == EntityStatus.Deleted) {
+      if (Status == EntityStatus.Deleted) {
         _cache.Value.Remove(this);
       }
 
@@ -480,7 +479,7 @@ namespace Empiria.Financial {
       }
       _deletedOperations.Clear();
 
-      if (!this.Project.IsEmptyInstance) {
+      if (!Project.IsEmptyInstance) {
         Project.Refresh();
       }
     }
