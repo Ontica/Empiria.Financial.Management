@@ -27,15 +27,10 @@ namespace Empiria.CashFlow.Projections.Adapters {
       Year = pivot.Year;
 
       for (int i = 1; i <= 12; i++) {
-        decimal inflows = fields.FindAll(x => x.IsInflowAccount)
-                                .Sum(x => decimal.Parse(x.GetField($"Month_{i}", "0")));
 
-        decimal outflows = fields.FindAll(x => !x.IsInflowAccount)
-                                 .Sum(x => decimal.Parse(x.GetField($"Month_{i}", "0")));
+        decimal monthTotal = fields.Sum(x => decimal.Parse(x.GetField($"Month_{i}", "0")));
 
-        if (inflows != 0 || outflows != 0) {
-          base.SetField($"Month_{i}", (inflows - outflows).ToString("N0"));
-        }
+        base.SetField($"Month_{i}", monthTotal.ToString("N0"));
       }
 
       Currency = pivot.Currency;

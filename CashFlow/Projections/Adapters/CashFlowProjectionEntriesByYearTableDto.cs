@@ -153,8 +153,13 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       decimal[] mxnTotals = _byYearProjection.GetMXNTotals(_entries[0].Year);
 
-      return new CashFlowProjectionEntryByYearDynamicDto("Total en pesos mexicanos",
-                                                         DataTableEntryType.Summary, mxnTotals);
+      var dynDto = new CashFlowProjectionEntryByYearDynamicDto("Total en pesos mexicanos",
+                                                               DataTableEntryType.Summary, mxnTotals);
+
+      dynDto.SetField("InflowAmount", _byYearProjection.InflowsTotal.ToString("N0"));
+      dynDto.SetField("OutflowAmount", _byYearProjection.OutflowsTotal.ToString("N0"));
+
+      return dynDto;
     }
 
   }  // class CashFlowProjectionEntriesByYearTableDto
