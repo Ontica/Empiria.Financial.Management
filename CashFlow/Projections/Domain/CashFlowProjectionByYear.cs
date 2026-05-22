@@ -88,6 +88,17 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    internal FixedList<Currency> GetCurrencies() {
+      return GetEntries().SelectDistinct(x => x.Currency);
+    }
+
+
+    internal FixedList<int> GetMonths() {
+      return GetEntries().SelectDistinctFlat(x => x.Entries.Select(y => y.Month))
+                         .Sort((x, y) => x.CompareTo(y));
+    }
+
+
     internal FixedList<CashFlowProjectionEntry> GetProjectionEntries(string entryByYearUID) {
       Assertion.Require(entryByYearUID, nameof(entryByYearUID));
 
@@ -147,6 +158,27 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    internal FixedList<(Currency, decimal[])> GetExchangeRates(int year) {
+
+      var foreignCurrencies = GetCurrencies().FindAll(x => x.Distinct(Currency.Default));
+
+      if (foreignCurrencies.Count() == 0) {
+        return new FixedList<(Currency, decimal[])>();
+      }
+
+      var list = new List<(Currency, decimal[])>(foreignCurrencies.Count());
+
+      foreach (var currency in foreignCurrencies) {
+
+        decimal[] exchangeRates = FinancialVariables.GetExchangeRates(year, currency);
+
+        list.Add((currency, exchangeRates));
+      }
+
+      return list.ToFixedList();
+    }
+
+
     public FixedList<CashFlowProjectionTotalByYear> GetTotals() {
       var groups = Projection.Entries.GroupBy(x => $"{x.Year}|{Projection.Id}|{x.ProjectionColumn.Id}");
 
@@ -176,6 +208,16 @@ namespace Empiria.CashFlow.Projections {
       updatedEntries.AddRange(GetDeletedEntries(fields));
 
       return updatedEntries.ToFixedList();
+    }
+
+
+    internal bool HasCalculationVariables() {
+      return false;
+    }
+
+
+    internal bool HasForeignCurrencies() {
+      return GetCurrencies().Count(x => x.Distinct(Currency.Default)) > 0;
     }
 
     #endregion Methods
@@ -253,6 +295,27 @@ namespace Empiria.CashFlow.Projections {
       }
 
       return list.ToFixedList();
+    }
+
+
+    internal decimal[] GetMXNTotals(int year) {
+
+      FixedList<(Currency, decimal[])> exchangeRates = GetExchangeRates(year);
+
+      decimal[] mxnTotals = new decimal[12];
+
+      var entries = GetEntries();
+
+      foreach (var exchangeRate in exchangeRates) {
+
+        for (int i = 1; i <= 12; i++) {
+          decimal monthTotal = entries.Sum(x => x.GetAmountForMonth(i) * exchangeRate.Item2[i - 1]);
+
+          mxnTotals[i - 1] = monthTotal;
+        }
+      }
+
+      return mxnTotals;
     }
 
 
