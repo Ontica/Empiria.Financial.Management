@@ -37,6 +37,18 @@ namespace Empiria.CashFlow.Projections {
       get;
     }
 
+    public decimal InflowsTotal {
+      get {
+        return GetEntries().Sum(x => x.InflowAmount);
+      }
+    }
+
+    public decimal OutflowsTotal {
+      get {
+        return GetEntries().Sum(x => x.OutflowAmount);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
@@ -88,12 +100,12 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    internal FixedList<Currency> GetCurrencies() {
+    public FixedList<Currency> GetCurrencies() {
       return GetEntries().SelectDistinct(x => x.Currency);
     }
 
 
-    internal FixedList<int> GetMonths() {
+    public FixedList<int> GetMonths() {
       return GetEntries().SelectDistinctFlat(x => x.Entries.Select(y => y.Month))
                          .Sort((x, y) => x.CompareTo(y));
     }
@@ -158,7 +170,7 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    internal FixedList<(Currency, decimal[])> GetExchangeRates(int year) {
+    public FixedList<(Currency, decimal[])> GetExchangeRates(int year) {
 
       var foreignCurrencies = GetCurrencies().FindAll(x => x.Distinct(Currency.Default));
 
@@ -211,12 +223,12 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    internal bool HasCalculationVariables() {
+    public bool HasCalculationVariables() {
       return false;
     }
 
 
-    internal bool HasForeignCurrencies() {
+    public bool HasForeignCurrencies() {
       return GetCurrencies().Count(x => x.Distinct(Currency.Default)) > 0;
     }
 
@@ -298,7 +310,7 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    internal decimal[] GetMXNTotals(int year) {
+    public decimal[] GetMXNTotals(int year) {
 
       FixedList<(Currency, decimal[])> exchangeRates = GetExchangeRates(year);
 
@@ -317,7 +329,6 @@ namespace Empiria.CashFlow.Projections {
 
       return mxnTotals;
     }
-
 
     private FixedList<CashFlowProjectionEntry> GetNewEntries(CashFlowProjectionEntryByYearFields fields) {
       var list = new List<CashFlowProjectionEntry>(12);
