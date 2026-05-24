@@ -11,7 +11,6 @@
 using Xunit;
 
 using Empiria.CashFlow.CashLedger;
-
 using Empiria.CashFlow.CashLedger.Adapters;
 
 namespace Empiria.Tests.CashFlow.CashLedger {

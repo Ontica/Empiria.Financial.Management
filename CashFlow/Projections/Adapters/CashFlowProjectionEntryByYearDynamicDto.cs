@@ -26,13 +26,6 @@ namespace Empiria.CashFlow.Projections.Adapters {
       ProjectionColumn = pivot.ProjectionColumn;
       Year = pivot.Year;
 
-      for (int i = 1; i <= 12; i++) {
-
-        decimal monthTotal = fields.Sum(x => decimal.Parse(x.GetField($"Month_{i}", "0")));
-
-        base.SetField($"Month_{i}", monthTotal.ToString("N0"));
-      }
-
       Currency = pivot.Currency;
 
       decimal inflowTotal = fields.FindAll(x => x.IsInflowAccount)
