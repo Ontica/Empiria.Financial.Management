@@ -178,6 +178,18 @@ namespace Empiria.CashFlow.Projections.Adapters {
       get; internal set;
     }
 
+    public string Currency {
+      get; internal set;
+    }
+
+    public decimal InflowsTotal {
+      get; internal set;
+    }
+
+    public decimal OutflowsTotal {
+      get; internal set;
+    }
+
     public decimal Total {
       get; internal set;
     }

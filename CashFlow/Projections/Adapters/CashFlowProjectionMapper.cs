@@ -114,6 +114,9 @@ namespace Empiria.CashFlow.Projections.Adapters {
         RequestedBy = projection.RequestedBy.MapToNamedEntity(),
         AdjustmentOf = projection.AdjustmentOf.IsEmptyInstance ?
                                   NamedEntityDto.Empty : projection.AdjustmentOf.MapToNamedEntity(),
+        Currency = projection.BaseAccount.Currency.ISOCode,
+        InflowsTotal = projection.InflowsTotal,
+        OutflowsTotal = projection.OutflowsTotal,
         Total = projection.GetTotal(),
         Status = projection.Status.MapToNamedEntity(),
       };

@@ -288,6 +288,34 @@ namespace Empiria.CashFlow.Projections {
       }
     }
 
+
+    public decimal InflowsTotal {
+      get {
+        return Entries.Sum(x => x.InflowAmount);
+      }
+    }
+
+
+    public decimal InflowsTotalBaseCurrency {
+      get {
+        return Entries.Sum(x => x.InflowAmount * x.ExchangeRate);
+      }
+    }
+
+
+    public decimal OutflowsTotal {
+      get {
+        return Entries.Sum(x => x.OutflowAmount);
+      }
+    }
+
+
+    public decimal OutflowsTotalBaseCurrency {
+      get {
+        return Entries.Sum(x => x.OutflowAmount * x.ExchangeRate);
+      }
+    }
+
     internal CashFlowProjectionRules Rules {
       get {
         return new CashFlowProjectionRules(this);
@@ -450,6 +478,7 @@ namespace Empiria.CashFlow.Projections {
         return _entries.Value.ToFixedList();
       }
     }
+
 
     [DataField("CFW_PJC_TOTAL")]
     private decimal _total = 0;
