@@ -64,7 +64,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     public FixedList<CashFlowProjectionEntryByYearDynamicDto> Entries {
       get {
-        FixedList<CashFlowProjectionEntryByYearDynamicDto> entries = BuildEntries();
+        FixedList<CashFlowProjectionEntryByYearDynamicDto> entries = BuildConcepts();
 
         var list = new List<CashFlowProjectionEntryByYearDynamicDto>(entries);
 
@@ -92,7 +92,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
     }
 
 
-    private FixedList<CashFlowProjectionEntryByYearDynamicDto> BuildEntries() {
+    private FixedList<CashFlowProjectionEntryByYearDynamicDto> BuildConcepts() {
       return _entries.Select(x => new CashFlowProjectionEntryByYearDynamicDto(x))
                      .ToFixedList()
                      .Sort((x, y) => x.CashFlowAccount.CompareTo(y.CashFlowAccount));
@@ -101,7 +101,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     private FixedList<CashFlowProjectionEntryByYearDynamicDto> BuildTotals() {
 
-      FixedList<CashFlowProjectionEntryByYearDynamicDto> entries = BuildEntries();
+      FixedList<CashFlowProjectionEntryByYearDynamicDto> entries = BuildConcepts();
 
       if (entries.Count() == 0) {
         return new FixedList<CashFlowProjectionEntryByYearDynamicDto>();
@@ -151,13 +151,11 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
     private CashFlowProjectionEntryByYearDynamicDto BuildMXNTotal() {
 
-      decimal[] mxnTotals = _byYearProjection.GetMXNTotals(_entries[0].Year);
-
       var dynDto = new CashFlowProjectionEntryByYearDynamicDto("Total en pesos mexicanos",
-                                                               DataTableEntryType.Summary, mxnTotals);
+                                                               DataTableEntryType.Summary, new decimal[0]);
 
-      dynDto.SetField("InflowAmount", _byYearProjection.InflowsTotal.ToString("N0"));
-      dynDto.SetField("OutflowAmount", _byYearProjection.OutflowsTotal.ToString("N0"));
+      dynDto.SetField("InflowAmount", _byYearProjection.InflowsTotalBaseCurrency.ToString("N0"));
+      dynDto.SetField("OutflowAmount", _byYearProjection.OutflowsTotalBaseCurrency.ToString("N0"));
 
       return dynDto;
     }

@@ -121,7 +121,9 @@ namespace Empiria.CashFlow.Projections.Adapters {
         ItemType = DataTableEntryType.Total.ToString(),
         ProjectionColumn = pivot.ProjectionColumn.Name,
         InflowAmount = items.Sum(x => x.InflowAmount),
-        OutflowAmount = items.Sum(x => x.OutflowAmount)
+        OutflowAmount = items.Sum(x => x.OutflowAmount),
+        InflowAmountMXN = items.Sum(x => x.InflowAmount * x.ExchangeRate),
+        OutflowAmountMXN = items.Sum(x => x.OutflowAmount * x.ExchangeRate)
       };
     }
 

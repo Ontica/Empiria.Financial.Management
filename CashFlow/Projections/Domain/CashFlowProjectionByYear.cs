@@ -37,15 +37,31 @@ namespace Empiria.CashFlow.Projections {
       get;
     }
 
+
     public decimal InflowsTotal {
       get {
-        return GetEntries().Sum(x => x.InflowAmount);
+        return Projection.Entries.Sum(x => x.InflowAmount);
       }
     }
 
+
+    public decimal InflowsTotalBaseCurrency {
+      get {
+        return Projection.Entries.Sum(x => x.InflowAmount * x.ExchangeRate);
+      }
+    }
+
+
     public decimal OutflowsTotal {
       get {
-        return GetEntries().Sum(x => x.OutflowAmount);
+        return Projection.Entries.Sum(x => x.OutflowAmount);
+      }
+    }
+
+
+    public decimal OutflowsTotalBaseCurrency {
+      get {
+        return Projection.Entries.Sum(x => x.OutflowAmount * x.ExchangeRate);
       }
     }
 
