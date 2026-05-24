@@ -105,19 +105,13 @@ namespace Empiria.CashFlow.Projections {
       }
     }
 
-    public decimal Total {
-      get {
-        return InflowAmount - OutflowAmount;
-      }
-    }
-
     #endregion Properties
 
     #region Methods
 
     public decimal GetAmountForMonth(int month) {
       return Entries.FindAll(x => x.Month == month)
-                    .Sum(x => x.InflowAmount - x.OutflowAmount);
+                    .Sum(x => x.Amount);
     }
 
     #endregion Methods
