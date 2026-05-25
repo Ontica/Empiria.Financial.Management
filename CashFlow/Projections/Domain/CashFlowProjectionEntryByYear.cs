@@ -99,9 +99,23 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    public decimal InflowAmountBaseCurrency {
+      get {
+        return Entries.Sum(x => x.InflowAmount * x.ExchangeRate);
+      }
+    }
+
+
     public decimal OutflowAmount {
       get {
         return Entries.Sum(x => x.OutflowAmount);
+      }
+    }
+
+
+    public decimal OutflowAmountBaseCurrency {
+      get {
+        return Entries.Sum(x => x.OutflowAmount * x.ExchangeRate);
       }
     }
 
@@ -112,6 +126,12 @@ namespace Empiria.CashFlow.Projections {
     public decimal GetAmountForMonth(int month) {
       return Entries.FindAll(x => x.Month == month)
                     .Sum(x => x.Amount);
+    }
+
+
+    public decimal GetAmountForMonthBaseCurrency(int month) {
+      return Entries.FindAll(x => x.Month == month)
+                    .Sum(x => x.Amount * x.ExchangeRate);
     }
 
     #endregion Methods
