@@ -30,13 +30,17 @@ namespace Empiria.Financial {
     public CreditFinancialData(ICreditAccountData account) {
       Assertion.Require(account, nameof(account));
 
+      CapitalizeFees = account.CapitalizeFees;
+      CapitalizeInterest = account.CapitalizeInterest;
       CurrentBalance = account.CurrentBalance;
+      DisbursementFee = account.DisbursementFee;
       GracePeriod = account.InterestGracePeriod;
       InterestRate = account.InterestRate;
       InvestmentTerm = account.InvestmentTerm;
       InterestRateCeiling = account.InterestRateCeiling;
       InterestRateFactor = account.InterestRateFactor;
       InterestRateFloor = account.InterestRateFloor;
+      OpeningFee = account.OpeningFee;
       RepaymentTerm = account.RepaymentTerm;
     }
 

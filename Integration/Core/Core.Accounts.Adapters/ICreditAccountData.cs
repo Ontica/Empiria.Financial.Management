@@ -155,6 +155,22 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
+    decimal OpeningFee {
+      get;
+    }
+
+    decimal DisbursementFee {
+      get;
+    }
+
+    bool CapitalizeFees {
+      get;
+    }
+
+    bool CapitalizeInterest {
+      get;
+    }
+
 
   }  // interface ICreditAccountData
 

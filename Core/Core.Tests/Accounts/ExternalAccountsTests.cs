@@ -23,7 +23,7 @@ namespace Empiria.Tests.Financial.Accounts {
 
       var usecases = ExternalAccountsUseCases.UseCaseInteractor();
 
-      string accountUID = "a6d887d5-3d99-4066-8e12-ebac47cbeadc";
+      string accountUID = "64fbbf4e-8a45-4e57-931c-a2807008b54b";
 
       var sut = usecases.RefreshAccountFromCreditSystem(accountUID);
 
