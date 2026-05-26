@@ -61,11 +61,9 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-
     OrganizationalUnit OrganizationalUnit {
       get;
     }
-
 
     string CreditType {
       get;
@@ -168,6 +166,10 @@ namespace Empiria.Financial.Adapters {
     }
 
     bool CapitalizeInterest {
+      get;
+    }
+
+    CreditRiskStage CreditRiskStage {
       get;
     }
 

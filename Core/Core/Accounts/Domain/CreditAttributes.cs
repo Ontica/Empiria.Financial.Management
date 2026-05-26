@@ -34,6 +34,7 @@ namespace Empiria.Financial {
       SubledgerAccountNo = account.SubledgerAccountNo;
       CreditLineNo = account.CreditLineNo;
       CreditProjectType = account.CreditProjectType;
+      CreditRiskStage = account.CreditRiskStage;
     }
 
     public CreditAttributes(JsonObject attributes) {
@@ -142,6 +143,7 @@ namespace Empiria.Financial {
       var json = JsonObject.Parse(_attributes.ToString());
 
       json.Set("CreditProjectType", CreditProjectType.MapToNamedEntity());
+      json.Set("CreditRiskStage", CreditRiskStage.MapToNamedEntity());
 
       return json.ToString();
     }
