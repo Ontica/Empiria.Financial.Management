@@ -98,6 +98,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public ChartOfAccountsDefinitionDto ChartOfAccounts {
+      get; internal set;
+    }
+
     public int Level {
       get; internal set;
     }

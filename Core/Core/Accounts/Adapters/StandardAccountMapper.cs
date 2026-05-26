@@ -81,6 +81,7 @@ namespace Empiria.Financial.Adapters {
         RoleType = account.RoleType.MapToNamedEntity(),
         DebtorCreditorType = account.DebtorCreditorType.MapToNamedEntity(),
         Classification = account.MainClassification.MapToNamedEntity("Sin clasificación asignada"),
+        ChartOfAccounts = ChartOfAccountsMapper.MapToDefinition(account.ChartOfAccounts),
         Level = account.Level,
         IsLastLevel = account.IsLastLevel,
         IsProjectRelated = account.StandardAccountType.IsProjectRelated,
