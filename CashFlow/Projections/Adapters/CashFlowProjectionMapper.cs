@@ -81,6 +81,9 @@ namespace Empiria.CashFlow.Projections.Adapters {
         AuthorizedByName = projection.AuthorizedBy.Name,
         RecordingTime = projection.RecordingTime,
         RecordedByName = projection.RecordedBy.Name,
+        Currency = projection.BaseAccount.Currency.ISOCode,
+        InflowsTotal = projection.InflowsTotal,
+        OutflowsTotal = projection.OutflowsTotal,
         Total = projection.GetTotal(),
         StatusName = projection.Status.GetName(),
       };
