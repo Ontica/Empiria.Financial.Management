@@ -17,6 +17,7 @@ namespace Empiria.Financial.Adapters {
     BudgetControlNoEntries,
 
     CashFlowConcepts,
+    AccountTotals,    // remove this
 
     CashFlowEntriesBySubledger,
 
@@ -54,6 +55,11 @@ namespace Empiria.Financial.Adapters {
     } = string.Empty;
 
 
+    public string PartyUID {
+      get; set;
+    } = string.Empty;
+
+
     public string[] Keywords {
       get; set;
     } = new string[0];
@@ -63,11 +69,6 @@ namespace Empiria.Financial.Adapters {
       get; set;
     } = new string[0];
 
-
-    [Newtonsoft.Json.JsonProperty(PropertyName = "Parties")]
-    public string OrgUnitUID {
-      get; set;
-    } = string.Empty;
 
   }  // class RecordsSearchQuery
 
