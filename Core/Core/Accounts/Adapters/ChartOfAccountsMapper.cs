@@ -41,7 +41,7 @@ namespace Empiria.Financial.Adapters {
     }
 
 
-    static private ChartOfAccountsDefinitionDto MapToDefinition(ChartOfAccounts chartOfAccounts) {
+    static internal ChartOfAccountsDefinitionDto MapToDefinition(ChartOfAccounts chartOfAccounts) {
       AutoGrouping autoGroupingConfig = chartOfAccounts.AutoGrouping;
 
       return new ChartOfAccountsDefinitionDto {
@@ -55,6 +55,7 @@ namespace Empiria.Financial.Adapters {
         },
         ShowAccounts = chartOfAccounts.ShowAccounts,
         ShowOrgUnits = chartOfAccounts.ShowOrgUnits,
+        OrgUnitsListRole = chartOfAccounts.OrgUnitsListRole
       };
     }
 

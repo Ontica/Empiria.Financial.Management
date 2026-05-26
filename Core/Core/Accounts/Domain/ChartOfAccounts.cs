@@ -116,11 +116,20 @@ namespace Empiria.Financial {
     }
 
 
+    public string OrgUnitsListRole {
+      get {
+        return ExtData.Get<string>("orgUnitsListRole", string.Empty);
+      }
+    }
+
+
     public FixedList<FinancialAccountType> FinancialAccountTypes {
       get {
         return ExtData.GetFixedList<FinancialAccountType>("financialAccountTypes");
       }
     }
+
+
 
     #endregion Properties
 

@@ -68,6 +68,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public string OrgUnitsListRole {
+      get; internal set;
+    }
+
   }  // class ChartOfAccountsDefinitionDto
 
 
