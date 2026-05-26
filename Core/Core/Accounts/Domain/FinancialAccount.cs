@@ -115,7 +115,7 @@ namespace Empiria.Financial {
       _operations = new Lazy<List<FinancialAccount>>(() =>
                         _cache.Value.FindAll(x => x._parentId == Id &&
                                                   x.Project.Equals(Project) &&
-                                          x.IsOperationAccount
+                                                  x.IsOperationAccount
                       ));
     }
 
@@ -395,8 +395,8 @@ namespace Empiria.Financial {
       var operation = new FinancialAccount(FinancialAccountType.OperationAccount,
                                            stdAccount, OrganizationalUnit, Project);
 
-      AccountNo = fields.AccountNo;
-      Currency = currency;
+      operation.AccountNo = fields.AccountNo;
+      operation.Currency = currency;
 
       operation.Parent = this;
 
