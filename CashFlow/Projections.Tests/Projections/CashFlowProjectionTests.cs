@@ -40,8 +40,6 @@ namespace Empiria.Tests.CashFlow.Projections {
       Assert.Equal(baseAccount, sut.BaseAccount);
       Assert.Equal(baseAccount.Project, sut.BaseProject);
       Assert.Equal(baseAccount.OrganizationalUnit, sut.BaseParty);
-      Assert.False(sut.HasProjectionNo);
-      Assert.Equal(CashFlowProjection.TO_ASSIGN_PROJECTION_NO, sut.ProjectionNo);
       Assert.Equal(OperationSource.Default, sut.OperationSource);
       Assert.Equal(CashFlowProjection.Empty, sut.AdjustmentOf);
       Assert.Equal(TransactionStatus.Pending, sut.Status);
@@ -58,7 +56,7 @@ namespace Empiria.Tests.CashFlow.Projections {
       TestsCommonMethods.Authenticate();
 
       CashFlowProjection sut = TestsObjects.TryGetObject<CashFlowProjection>(
-                                              x => x.Rules.CanDelete && x.HasProjectionNo
+                                              x => x.Rules.CanDelete
                                             );
 
       string projectionNo = sut.ProjectionNo;
@@ -76,13 +74,12 @@ namespace Empiria.Tests.CashFlow.Projections {
       TestsCommonMethods.Authenticate();
 
       CashFlowProjection sut = TestsObjects.TryGetObject<CashFlowProjection>(
-                                              x => x.Rules.CanDelete && !x.HasProjectionNo
+                                              x => x.Rules.CanDelete
                                             );
 
       sut.DeleteOrCancel();
 
       Assert.Equal(TransactionStatus.Deleted, sut.Status);
-      Assert.Equal(CashFlowProjection.DELETED_PROJECTION_NO, sut.ProjectionNo);
     }
 
 

@@ -20,7 +20,7 @@ namespace Empiria.CashFlow.Projections.Data {
     static internal string GetNextProjectionNo(CashFlowProjection projection) {
       Assertion.Require(projection, nameof(projection));
 
-      if (projection.HasProjectionNo) {
+      if (projection.ProjectionNo.Length != 0) {
         return projection.ProjectionNo;
       }
 
@@ -35,6 +35,8 @@ namespace Empiria.CashFlow.Projections.Data {
       if (lastUniqueID.Length != 0) {
 
         int consecutive = int.Parse(lastUniqueID.Substring(lastUniqueID.LastIndexOf('-') + 1));
+
+        consecutive++;
 
         return $"{prefix}-{consecutive:00000}";
 

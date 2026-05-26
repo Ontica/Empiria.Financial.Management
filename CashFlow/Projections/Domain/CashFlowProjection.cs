@@ -33,9 +33,6 @@ namespace Empiria.CashFlow.Projections {
 
     static internal readonly string BASE_ACCOUNT_ROLE = "cash-flow-projection-base-account";
 
-    static internal readonly string DELETED_PROJECTION_NO = "Eliminada";
-    static internal readonly string TO_ASSIGN_PROJECTION_NO = "Por asignar";
-
     #endregion Fields
 
     #region Constructors and parsers
@@ -64,7 +61,6 @@ namespace Empiria.CashFlow.Projections {
       BaseParty = baseAccount.OrganizationalUnit;
 
       OperationSource = OperationSource.Default;
-      ProjectionNo = TO_ASSIGN_PROJECTION_NO;
     }
 
     static public CashFlowProjection Parse(int id) => ParseId<CashFlowProjection>(id);
@@ -281,14 +277,6 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    public bool HasProjectionNo {
-      get {
-        return this.ProjectionNo.Length != 0 &&
-               this.ProjectionNo != TO_ASSIGN_PROJECTION_NO;
-      }
-    }
-
-
     public decimal InflowsTotal {
       get {
         return Entries.Sum(x => x.InflowAmount);
@@ -329,10 +317,6 @@ namespace Empiria.CashFlow.Projections {
     internal void Authorize() {
       Assertion.Require(Rules.CanAuthorize, "Current user can not authorize this cash flow projection.");
 
-      if (!HasProjectionNo) {
-        ProjectionNo = CashFlowProjectionDataService.GetNextProjectionNo(this);
-      }
-
       AuthorizedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       AuthorizationTime = DateTime.Now;
       Status = TransactionStatus.Authorized;
@@ -356,10 +340,9 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(this.Status == TransactionStatus.Pending,
                        $"Can not delete or cancel this cash flow projection. Its status is {Status.GetName()}.");
 
-      if (HasProjectionNo) {
+      if (Status != TransactionStatus.Pending) {
         Status = TransactionStatus.Canceled;
       } else {
-        ProjectionNo = DELETED_PROJECTION_NO;
         Status = TransactionStatus.Deleted;
       }
     }
@@ -372,10 +355,14 @@ namespace Empiria.CashFlow.Projections {
 
 
     protected override void OnSave() {
+
       if (IsNew) {
+
+        ProjectionNo = CashFlowProjectionDataService.GetNextProjectionNo(this);
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
+
       if (Status == TransactionStatus.Pending) {
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         RecordingTime = DateTime.Now;
@@ -404,10 +391,6 @@ namespace Empiria.CashFlow.Projections {
     internal void SendToAuthorization() {
       Assertion.Require(Rules.CanSendToAuthorization,
                         "Current user can not send this cash flow projection to authorization.");
-
-      if (!HasProjectionNo) {
-        ProjectionNo = CashFlowProjectionDataService.GetNextProjectionNo(this);
-      }
 
       RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       RequestedTime = DateTime.Now;
