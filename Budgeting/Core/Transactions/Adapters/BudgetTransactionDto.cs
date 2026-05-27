@@ -94,6 +94,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
+    public bool ShowRelatedData {
+      get; internal set;
+    }
+
   }  // class BudgetTransactionActions
 
 
