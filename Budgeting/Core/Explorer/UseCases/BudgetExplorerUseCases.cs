@@ -171,6 +171,11 @@ namespace Empiria.Budgeting.Explorer.UseCases {
     }
 
 
+    public FixedList<BudgetMonthEntryDto> GetCommitedBudget(BudgetAccount account, int year) {
+      return GetAvailableBudget(account, year);
+    }
+
+
     public decimal GetAvailableBudget(Budget budget, BudgetAccount budgetAccount, int month) {
       Assertion.Require(budget, nameof(budget));
       Assertion.Require(budgetAccount, nameof(budgetAccount));
@@ -232,7 +237,6 @@ namespace Empiria.Budgeting.Explorer.UseCases {
         new FixedList<BudgetEntryDto>()
       );
     }
-
 
     #endregion Use cases
 
