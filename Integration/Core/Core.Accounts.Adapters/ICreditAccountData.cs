@@ -25,7 +25,7 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    string BaseInterestRate {
+    InterestRateType BaseInterestRate {
       get;
     }
 

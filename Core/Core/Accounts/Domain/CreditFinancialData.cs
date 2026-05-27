@@ -42,6 +42,7 @@ namespace Empiria.Financial {
       InterestRateFloor = account.InterestRateFloor;
       OpeningFee = account.OpeningFee;
       RepaymentTerm = account.RepaymentTerm;
+      InterestRateType = account.BaseInterestRate;
     }
 
     #endregion Properties
