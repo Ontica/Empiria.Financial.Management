@@ -38,6 +38,22 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       var projection = CashFlowProjection.Parse(projectionUID);
 
+      var calculator = new CashFlowProjectionCalculator(projection);
+
+      FixedList<CashFlowProjectionEntry> currentEntries = calculator.GetCurrentEntries(method);
+
+      foreach (var entry in currentEntries) {
+        projection.RemoveEntry(entry);
+      }
+
+      FixedList<CashFlowProjectionEntryFields> entries = calculator.CalculateEntries(method);
+
+      foreach (var entry in entries) {
+        projection.AddEntry(entry);
+      }
+
+      projection.Save();
+
       return CashFlowProjectionEntryMapper.Map(projection.Entries);
     }
 
