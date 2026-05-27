@@ -28,7 +28,6 @@ namespace Empiria.Financial {
     public CreditAttributes(ICreditAccountData account) {
 
       Borrower = account.CustomerName;
-      //CreditStage = CreditStage.ParseNamedKey<CreditStage>(account.CreditStage);
       CreditType = account.CreditType;
       ExternalCreditNo = account.CreditNo;
       SubledgerAccountNo = account.SubledgerAccountNo;
@@ -69,40 +68,40 @@ namespace Empiria.Financial {
 
     public CreditProcessStage CreditProcessStage {
       get {
-        return _attributes.Get("creditProcessStageId", CreditProcessStage.Empty);
+        return _attributes.Get("creditProcessStageUID", CreditProcessStage.Empty);
       }
       internal set {
-        _attributes.SetIf("creditProcessStageId", value.Id, !value.IsEmptyInstance);
+        _attributes.SetIf("creditProcessStageUID", value.UID, !value.IsEmptyInstance);
       }
     }
 
 
     public CreditRiskStage CreditRiskStage {
       get {
-        return _attributes.Get("creditRiskStageId", CreditRiskStage.Empty);
+        return _attributes.Get("creditRiskStageUID", CreditRiskStage.Empty);
       }
       internal set {
-        _attributes.SetIf("creditRiskStageId", value.Id, !value.IsEmptyInstance);
+        _attributes.SetIf("creditRiskStageUID", value.UID, !value.IsEmptyInstance);
       }
     }
 
 
     public CreditType CreditType {
       get {
-        return _attributes.Get("creditTypeId", CreditType.Empty);
+        return _attributes.Get("creditTypeUID", CreditType.Empty);
       }
       internal set {
-        _attributes.SetIf("creditTypeId", value.Id, !value.IsEmptyInstance);
+        _attributes.SetIf("creditTypeUID", value.UID, !value.IsEmptyInstance);
       }
     }
 
 
     public CreditProjectType CreditProjectType {
       get {
-        return _attributes.Get("creditProjectTypeId", CreditProjectType.Empty);
+        return _attributes.Get("creditProjectTypeUID", CreditProjectType.Empty);
       }
       set {
-        _attributes.SetIf("creditProjectTypeId", value.UID, !value.IsEmptyInstance);
+        _attributes.SetIf("creditProjectTypeUID", value.UID, !value.IsEmptyInstance);
       }
     }
 

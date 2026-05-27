@@ -35,12 +35,12 @@ namespace Empiria.Financial {
       CurrentBalance = account.CurrentBalance;
       DisbursementFee = account.DisbursementFee;
       GracePeriod = account.InterestGracePeriod;
+      InterestRateType = account.BaseInterestRate;
       InterestRate = account.InterestRate;
       InvestmentTerm = account.InvestmentTerm;
       InterestRateFactor = account.InterestRateFactor;
       OpeningFee = account.OpeningFee;
       RepaymentTerm = account.RepaymentTerm;
-      InterestRateType = account.BaseInterestRate;
     }
 
     #endregion Properties
@@ -137,10 +137,10 @@ namespace Empiria.Financial {
 
     public InterestRateType InterestRateType {
       get {
-        return _financialExtData.Get("interestRateTypeId", InterestRateType.Empty);
+        return _financialExtData.Get("interestRateTypeUID", InterestRateType.Empty);
       }
       private set {
-        _financialExtData.SetIf("interestRateTypeId", value.Id, !value.IsEmptyInstance);
+        _financialExtData.SetIf("interestRateTypeUID", value.UID, !value.IsEmptyInstance);
       }
     }
 
