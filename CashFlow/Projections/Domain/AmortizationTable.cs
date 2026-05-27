@@ -13,6 +13,18 @@ using System.Collections.Generic;
 
 namespace Empiria.CashFlow.Projections {
 
+
+  public enum AmortizationMethod {
+
+    CuotaFija,
+
+    CuotaVariable,
+
+    None,
+
+  }
+
+
   /// <summary>Generates an amortization table for a given loan or credit.</summary>
   public class AmortizationTable {
 

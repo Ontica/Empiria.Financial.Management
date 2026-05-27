@@ -24,10 +24,13 @@ namespace Empiria.CashFlow.Projections.WebApi {
 
     [HttpPost]
     [Route("v1/cash-flow/projections/{projectionUID:guid}/entries/calculate/{method}")]
-    public CollectionModel CalculateProjectionEntries([FromUri] string projectionUID, [FromUri] string method) {
+    public CollectionModel CalculateProjectionEntries([FromUri] string projectionUID,
+                                                      [FromUri] AmortizationMethod method = AmortizationMethod.None) {
 
       using (var usecases = CashFlowProjectionEntriesUseCases.UseCaseInteractor()) {
-        FixedList<CashFlowProjectionEntryDto> entries = usecases.CalculateProjectionEntries(projectionUID, method);
+
+        FixedList<CashFlowProjectionEntryDto> entries =
+                                  usecases.CalculateProjectionEntries(projectionUID, method);
 
         return new CollectionModel(base.Request, entries);
       }

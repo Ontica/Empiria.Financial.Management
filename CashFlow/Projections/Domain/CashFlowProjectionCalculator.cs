@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Empiria.Financial;
+using Empiria.Time;
 
 namespace Empiria.CashFlow.Projections {
 
@@ -27,15 +28,13 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    internal FixedList<CashFlowProjectionEntryFields> CalculateEntries(string method) {
+    internal FixedList<CashFlowProjectionEntryFields> CalculateEntries(AmortizationMethod method) {
       Assertion.Require(method, nameof(method));
 
-      var principalAccount = _projection.BaseAccount.GetOperations()
-                                                  .Find(x => x.StandardAccount.StdAcctNo.EndsWith("01"));
-      var interestAccount = _projection.BaseAccount.GetOperations()
-                                                   .Find(x => x.StandardAccount.StdAcctNo.EndsWith("03"));
+      var principalAcct = TryGetPrincipalAccount();
+      var interestAcct = TryGetInterestAccount();
 
-      if (principalAccount == null || interestAccount == null) {
+      if (principalAcct == null || interestAcct == null) {
         return FixedList<CashFlowProjectionEntryFields>.Empty;
       }
 
@@ -49,50 +48,60 @@ namespace Empiria.CashFlow.Projections {
 
       var financialData = (CreditFinancialData) _projection.FinancialData;
 
-      var calculadora = new AmortizationTable(disbursements.Sum(x => x.Amount),
-                                              financialData.InterestRate,
-                                              financialData.RepaymentTerm);
+      var amortizationTable = new AmortizationTable(disbursements.Sum(x => x.Amount),
+                                                    financialData.InterestRate,
+                                                    financialData.RepaymentTerm);
+
+      var projectionColumn = disbursements[0].ProjectionColumn;
+
+      foreach (var amortizationEntry in amortizationTable.GetMonthlyTable()
+                                                         .FindAll(x => x.Month <= 12)) {
+
+        var month = amortizationEntry.Month + disbursements[0].Month;
+
+        if (month > 12) {
+          break;
+        }
+        var yearMonth = new YearMonth(disbursements[0].Year, month);
 
 
-      foreach (var amortizacion in calculadora.GetMonthlyTable().FindAll(x => x.Month <= 12)) {
+        if (amortizationEntry.Principal != 0) {
+          var entry = BuildEntry(projectionColumn, yearMonth,
+                                 principalAcct, amortizationEntry.Principal);
 
-        var mes = amortizacion.Month + disbursements[0].Month;
-
-        if (mes > 12) {
-          continue;
+          list.Add(entry);
         }
 
-        var entry = BuildEntryFrom(disbursements[0], mes, principalAccount, amortizacion.Principal);
+        if (amortizationEntry.Interest != 0) {
+          var entry = BuildEntry(projectionColumn, yearMonth,
+                                 interestAcct, amortizationEntry.Interest);
 
-        list.Add(entry);
-
-        entry = BuildEntryFrom(disbursements[0], mes, interestAccount, amortizacion.Interest);
-
-        list.Add(entry);
+          list.Add(entry);
+        }
       }
 
       return list.ToFixedList();
     }
 
-    internal FixedList<CashFlowProjectionEntry> GetEntriesToBeRemoved(string method) {
-      Assertion.Require(method, nameof(method));
 
+    internal FixedList<CashFlowProjectionEntry> GetEntriesToBeRemoved() {
       return _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("01") ||
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("03"));
     }
 
     #region Helpers
 
-    private CashFlowProjectionEntryFields BuildEntryFrom(CashFlowProjectionEntry baseEntry,
-                                                         int mes, FinancialAccount newAccount,
-                                                         decimal amount) {
+    private CashFlowProjectionEntryFields BuildEntry(CashFlowProjectionColumn projectionColumn,
+                                                     YearMonth yearMonth,
+                                                     FinancialAccount newAccount,
+                                                     decimal amount) {
       return new CashFlowProjectionEntryFields {
-        ProjectionUID = baseEntry.Projection.UID,
-        ProjectionColumnUID = baseEntry.ProjectionColumn.UID,
+        ProjectionUID = _projection.UID,
+        ProjectionColumnUID = projectionColumn.UID,
         CashFlowAccountUID = newAccount.UID,
-        Month = mes,
-        Year = baseEntry.Year,
-        CurrencyUID = baseEntry.Currency.UID,
+        Year = yearMonth.Year,
+        Month = yearMonth.Month,
+        CurrencyUID = newAccount.Currency.UID,
         Amount = amount
       };
     }
@@ -101,6 +110,18 @@ namespace Empiria.CashFlow.Projections {
     private FixedList<CashFlowProjectionEntry> GetDisbursementEntries() {
       return _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("07"))
                                 .Sort((x, y) => x.Month.CompareTo(y.Month));
+    }
+
+
+    private FinancialAccount TryGetInterestAccount() {
+      return _projection.BaseAccount.GetOperations()
+                                    .Find(x => x.StandardAccount.StdAcctNo.EndsWith("03"));
+    }
+
+
+    private FinancialAccount TryGetPrincipalAccount() {
+      return _projection.BaseAccount.GetOperations()
+                                    .Find(x => x.StandardAccount.StdAcctNo.EndsWith("01"));
     }
 
     #endregion Helpers

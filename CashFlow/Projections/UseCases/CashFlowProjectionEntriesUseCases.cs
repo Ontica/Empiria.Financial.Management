@@ -32,7 +32,7 @@ namespace Empiria.CashFlow.Projections.UseCases {
     #region Single entry use cases
 
     public FixedList<CashFlowProjectionEntryDto> CalculateProjectionEntries(string projectionUID,
-                                                                            string method) {
+                                                                            AmortizationMethod method) {
       Assertion.Require(projectionUID, nameof(projectionUID));
       Assertion.Require(method, nameof(method));
 
@@ -40,7 +40,7 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       var calculator = new CashFlowProjectionCalculator(projection);
 
-      FixedList<CashFlowProjectionEntry> currentEntries = calculator.GetEntriesToBeRemoved(method);
+      FixedList<CashFlowProjectionEntry> currentEntries = calculator.GetEntriesToBeRemoved();
 
       foreach (var entry in currentEntries) {
         projection.RemoveEntry(entry);
