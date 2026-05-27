@@ -29,10 +29,10 @@ namespace Empiria.Financial {
 
       Borrower = account.CustomerName;
       //CreditStage = CreditStage.ParseNamedKey<CreditStage>(account.CreditStage);
-      //CreditType = CreditType.ParseNamedKey<CreditType>(account.CreditType);
+      CreditType = account.CreditType;
       ExternalCreditNo = account.ExternalCreditNo;
       SubledgerAccountNo = account.SubledgerAccountNo;
-      CreditLineNo = account.CreditLineNo;
+      CreditLine = account.CreditLineNo;
       CreditProjectType = account.CreditProjectType;
       CreditRiskStage = account.CreditRiskStage;
     }
@@ -118,7 +118,7 @@ namespace Empiria.Financial {
     }
 
 
-    public string CreditLineNo {
+    public string CreditLine {
       get {
         return _attributes.Get("creditLine", string.Empty);
       }
@@ -131,21 +131,13 @@ namespace Empiria.Financial {
 
     #region Helpers
 
-    internal JsonObject ToJson() {
-      var json = JsonObject.Parse(_attributes.ToString());
-
-      json.Set("CreditProjectType", CreditProjectType.MapToNamedEntity());
-
-      return json;
+    public JsonObject ToJson() {
+      return JsonObject.Parse(_attributes.ToString());
     }
 
     public override string ToJsonString() {
-      var json = JsonObject.Parse(_attributes.ToString());
 
-      json.Set("CreditProjectType", CreditProjectType.MapToNamedEntity());
-      json.Set("CreditRiskStage", CreditRiskStage.MapToNamedEntity());
-
-      return json.ToString();
+      return ToJson().ToString();
     }
 
     #endregion Helpers

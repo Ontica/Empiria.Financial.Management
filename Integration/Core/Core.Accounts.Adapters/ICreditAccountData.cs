@@ -65,7 +65,7 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    string CreditType {
+    CreditType CreditType {
       get;
     }
 
