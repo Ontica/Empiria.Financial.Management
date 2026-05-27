@@ -47,7 +47,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
-    public FixedList<BudgetTypeForEditionDto> GetBudgetTypesForTransactionEdition() {
+    public FixedList<BudgetTypeForEditionDto> GetBudgetTypesForTransactionEdition(TransactionStage stage) {
       FixedList<Budget> budgets = Budget.GetList()
                                         .FindAll(x => x.EditionAllowed)
                                         .FindAll(x => x.AvailableTransactionTypes.Contains(y => y.ManualEdition));
@@ -63,7 +63,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
 
     public FixedList<NamedEntityDto> GetOrgUnitsForTransactionEdition(string budgetUID,
-                                                                      string transactionTypeUID) {
+                                                                      string transactionTypeUID,
+                                                                      TransactionStage stage) {
 
       Assertion.Require(budgetUID, nameof(budgetUID));
       Assertion.Require(transactionTypeUID, nameof(transactionTypeUID));

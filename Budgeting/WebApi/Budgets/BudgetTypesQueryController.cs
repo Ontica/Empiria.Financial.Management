@@ -10,6 +10,7 @@
 
 using System.Web.Http;
 
+using Empiria.StateEnums;
 using Empiria.WebApi;
 
 using Empiria.Budgeting.Adapters;
@@ -40,10 +41,10 @@ namespace Empiria.Budgeting.WebApi {
 
     [HttpGet]
     [Route("v2/budgeting/budget-types/for-transaction-edition")]
-    public CollectionModel GetBudgetTypesForTransactionEdition() {
+    public CollectionModel GetBudgetTypesForTransactionEdition([FromUri] TransactionStage stage = TransactionStage.All) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
-        FixedList<BudgetTypeForEditionDto> list = usecases.GetBudgetTypesForTransactionEdition();
+        FixedList<BudgetTypeForEditionDto> list = usecases.GetBudgetTypesForTransactionEdition(stage);
 
         return new CollectionModel(base.Request, list);
       }
@@ -53,10 +54,11 @@ namespace Empiria.Budgeting.WebApi {
     [HttpGet]
     [Route("v2/budgeting/organizational-units/for-transaction-edition")]
     public CollectionModel GetOrgUnitsForTransactionEdition([FromUri] string budgetUID,
-                                                            [FromUri] string transactionTypeUID) {
+                                                            [FromUri] string transactionTypeUID,
+                                                            [FromUri] TransactionStage stage = TransactionStage.All) {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
-        FixedList<NamedEntityDto> list = usecases.GetOrgUnitsForTransactionEdition(budgetUID, transactionTypeUID);
+        FixedList<NamedEntityDto> list = usecases.GetOrgUnitsForTransactionEdition(budgetUID, transactionTypeUID, stage);
 
         return new CollectionModel(base.Request, list);
       }
