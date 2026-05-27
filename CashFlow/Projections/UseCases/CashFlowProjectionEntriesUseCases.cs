@@ -40,7 +40,7 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       var calculator = new CashFlowProjectionCalculator(projection);
 
-      FixedList<CashFlowProjectionEntry> currentEntries = calculator.GetCurrentEntries(method);
+      FixedList<CashFlowProjectionEntry> currentEntries = calculator.GetEntriesToBeRemoved(method);
 
       foreach (var entry in currentEntries) {
         projection.RemoveEntry(entry);
