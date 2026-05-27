@@ -37,9 +37,7 @@ namespace Empiria.Financial {
       GracePeriod = account.InterestGracePeriod;
       InterestRate = account.InterestRate;
       InvestmentTerm = account.InvestmentTerm;
-      InterestRateCeiling = account.InterestRateCeiling;
       InterestRateFactor = account.InterestRateFactor;
-      InterestRateFloor = account.InterestRateFloor;
       OpeningFee = account.OpeningFee;
       RepaymentTerm = account.RepaymentTerm;
       InterestRateType = account.BaseInterestRate;
@@ -156,25 +154,6 @@ namespace Empiria.Financial {
       }
     }
 
-
-    public decimal InterestRateFloor {
-      get {
-        return _financialExtData.Get("interestRateFloor", 0m);
-      }
-      private set {
-        _financialExtData.SetIfValue("interestRateFloor", value);
-      }
-    }
-
-
-    public decimal InterestRateCeiling {
-      get {
-        return _financialExtData.Get("interestRateCeiling", 0m);
-      }
-      private set {
-        _financialExtData.SetIfValue("interestRateCeiling", value);
-      }
-    }
 
     internal JsonObject ToJson() {
       return _financialExtData;

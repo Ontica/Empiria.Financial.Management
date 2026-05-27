@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.Parties;
 
 namespace Empiria.Financial.Adapters {
@@ -29,27 +27,11 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    string BaseMorInterestRate {
-      get;
-    }
-
-    string PreviousCredits {
-      get;
-    }
-
     CreditProjectType CreditProjectType {
       get;
     }
 
     Currency Currency {
-      get;
-    }
-
-    string FederalTaxPayersReg {
-      get;
-    }
-
-    int FederalTaxPayersRegNo {
       get;
     }
 
@@ -69,39 +51,11 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    string CreditStageId {
-      get;
-    }
-
     string StandardAccount {
       get;
     }
 
-    string ExternalCreditNo {
-      get;
-    }
-
-    DateTime MaxAvailabilityDate {
-      get;
-    }
-
-    DateTime MaxRefinancingDate {
-      get;
-    }
-
     string CreditLineNo {
-      get;
-    }
-
-    decimal NetFinancedAmount {
-      get;
-    }
-
-    string ConstructionBuilding {
-      get;
-    }
-
-    decimal ConstructionBuildingCost {
       get;
     }
 
@@ -117,19 +71,7 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
-    int DisbursementPeriod {
-      get;
-    }
-
-    DateTime DisbursementDate {
-      get;
-    }
-
     int RepaymentTerm {
-      get;
-    }
-
-    DateTime RepaymentDate {
       get;
     }
 
@@ -142,14 +84,6 @@ namespace Empiria.Financial.Adapters {
     }
 
     decimal InterestRateFactor {
-      get;
-    }
-
-    decimal InterestRateFloor {
-      get;
-    }
-
-    decimal InterestRateCeiling {
       get;
     }
 
