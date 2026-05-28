@@ -29,6 +29,7 @@ namespace Empiria.Financial {
 
       Borrower = account.CustomerName;
       CreditType = account.CreditType;
+      CreditProcessStage = account.CreditProcessStage;
       ExternalCreditNo = account.CreditNo;
       SubledgerAccountNo = account.SubledgerAccountNo;
       CreditLine = account.CreditLineNo;

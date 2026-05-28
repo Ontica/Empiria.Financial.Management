@@ -107,6 +107,9 @@ namespace Empiria.Financial.Adapters {
       get;
     }
 
+    CreditProcessStage CreditProcessStage {
+      get;
+    }
 
   }  // interface ICreditAccountData
 
