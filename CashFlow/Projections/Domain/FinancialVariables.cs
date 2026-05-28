@@ -39,7 +39,6 @@ namespace Empiria.CashFlow.Projections {
       return value.GetTotalField(monthStr);
     }
 
-
     static internal decimal[] GetExchangeRates(int year, Currency currency) {
 
       if (Currency.Default.Equals(currency)) {
@@ -65,6 +64,22 @@ namespace Empiria.CashFlow.Projections {
         value.GetTotalField("nov"),
         value.GetTotalField("dic")
       };
+    }
+
+
+    static internal decimal GetFinancialValue(int year, int month, ExternalVariable variable) {
+
+      ExternalValue value = ExternalValuesUseCases.UseCaseInteractor()
+                                                  .GetExternalValue(variable, year);
+
+      if (value == null) {
+        return decimal.Zero;
+      }
+
+      string monthStr = EmpiriaString.MonthName(month, true)
+                                     .ToLower();
+
+      return value.GetTotalField(monthStr);
     }
 
   }  // class FinancialVariables
