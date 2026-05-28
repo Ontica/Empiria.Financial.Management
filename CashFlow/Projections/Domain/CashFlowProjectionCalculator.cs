@@ -10,7 +10,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
+using Empiria.DynamicData.ExternalData;
 using Empiria.Financial;
 using Empiria.Time;
 
@@ -38,7 +38,7 @@ namespace Empiria.CashFlow.Projections {
         return FixedList<CashFlowProjectionEntryFields>.Empty;
       }
 
-      var disbursements = GetDisbursementEntries();
+      FixedList<CashFlowProjectionEntry> disbursements = GetDisbursementEntries();
 
       if (disbursements.Count == 0) {
         return FixedList<CashFlowProjectionEntryFields>.Empty;
@@ -48,22 +48,28 @@ namespace Empiria.CashFlow.Projections {
 
       var financialData = (CreditFinancialData) _projection.FinancialData;
 
+      CashFlowProjectionEntry firstDisbursement = disbursements[0];
+
+      var yearMonth = new YearMonth(firstDisbursement.Year, firstDisbursement.Month);
+
+      decimal interestRate = GetInterestRate(yearMonth, financialData);
+
       var amortizationTable = new AmortizationTable(disbursements.Sum(x => x.Amount),
-                                                    financialData.InterestRate,
+                                                    interestRate,
                                                     financialData.RepaymentTerm);
 
-      var projectionColumn = disbursements[0].ProjectionColumn;
+      var projectionColumn = firstDisbursement.ProjectionColumn;
 
       foreach (var amortizationEntry in amortizationTable.GetMonthlyTable()
                                                          .FindAll(x => x.Month <= 12)) {
 
-        var month = amortizationEntry.Month + disbursements[0].Month;
+        var month = amortizationEntry.Month + firstDisbursement.Month;
 
         if (month > 12) {
           break;
         }
-        var yearMonth = new YearMonth(disbursements[0].Year, month);
 
+        yearMonth = new YearMonth(firstDisbursement.Year, month);
 
         if (amortizationEntry.Principal != 0) {
           var entry = BuildEntry(projectionColumn, yearMonth,
@@ -107,9 +113,29 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    private decimal GetInterestRate(YearMonth yearMonth, CreditFinancialData financialData) {
+
+      decimal interestRate = financialData.InterestRate;
+
+      var intrestRateTypeVariable = ExternalVariable.TryParseWithCode(financialData.InterestRateType.Code);
+
+      if (intrestRateTypeVariable == null) {
+        return interestRate;
+      }
+
+      var variableInterestRate = FinancialVariables.GetFinancialValue(yearMonth.Year, yearMonth.Month,
+                                                                      intrestRateTypeVariable);
+
+      return variableInterestRate + interestRate;
+
+    }
+
+
     private FixedList<CashFlowProjectionEntry> GetDisbursementEntries() {
       return _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("07"))
-                                .Sort((x, y) => x.Month.CompareTo(y.Month));
+                                .OrderBy(x => x.Year)
+                                .ThenBy(x => x.Month)
+                                .ToFixedList();
     }
 
 
