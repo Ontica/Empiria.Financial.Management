@@ -8,9 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
+
 using Empiria.Budgeting.Data;
 
 using Empiria.Budgeting.Transactions.Adapters;
+using Empiria.Budgeting.Transactions;
 
 namespace Empiria.Budgeting {
 
@@ -29,11 +32,12 @@ namespace Empiria.Budgeting {
 
     public FixedList<BudgetAccount> Search() {
 
-      string accountsFilter = GetAccountsFilter();
       string budgetTypeFilter = GetBudgetTypeFilter();
       string orgUnitFilter = GetOrgUnitFilter();
-      string keywordsFilter = GetKeywordsFilter();
+      string accountsFilter = GetAccountsFilter("ACCT_NUMBER");
       string statusFilter = GetStatusFilter();
+      string keywordsFilter = GetKeywordsFilter("ACCT_KEYWORDS");
+
 
       var filter = new Filter(budgetTypeFilter);
 
@@ -45,15 +49,30 @@ namespace Empiria.Budgeting {
       return BudgetAccountData.SearchBudgetAccounts(filter.ToString(), "ACCT_NUMBER");
     }
 
+
+    internal FixedList<StandardAccount> SearchAvailable() {
+
+      string budgetTypeFilter = GetBudgetTypeFilter();
+      string accountsFilter = GetAccountsFilter("STD_ACCT_NUMBER");
+      string keywordsFilter = GetKeywordsFilter("STD_ACCT_KEYWORDS");
+
+      var filter = new Filter(budgetTypeFilter);
+
+      filter.AppendAnd(accountsFilter);
+      filter.AppendAnd(keywordsFilter);
+
+      return BudgetAccountData.SearchAvailableBudgetAccounts(filter.ToString(), "STD_ACCT_NUMBER");
+    }
+
     #endregion Methods
 
     #region Helpers
 
-    private string GetAccountsFilter() {
+    private string GetAccountsFilter(string accountCodeField) {
       string accountsFilter = _query.GetTransactionType().BudgetAccountsFilter;
 
       accountsFilter = EmpiriaString.Clean(accountsFilter ?? string.Empty);
-      accountsFilter = accountsFilter.Replace("{{ACCOUNT.CODE.FIELD}}", "ACCT_NUMBER");
+      accountsFilter = accountsFilter.Replace("{{ACCOUNT.CODE.FIELD}}", accountCodeField);
 
       return accountsFilter;
     }
@@ -64,14 +83,14 @@ namespace Empiria.Budgeting {
     }
 
 
-    private string GetKeywordsFilter() {
+    private string GetKeywordsFilter(string keywordsFieldName) {
       string keywords = EmpiriaString.Clean(_query.Keywords ?? string.Empty);
 
       if (keywords.Length == 0) {
         return string.Empty;
       }
 
-      return SearchExpression.ParseAndLikeKeywords("ACCT_KEYWORDS", keywords);
+      return SearchExpression.ParseAndLikeKeywords(keywordsFieldName, keywords);
     }
 
 
@@ -81,6 +100,10 @@ namespace Empiria.Budgeting {
 
 
     private string GetStatusFilter() {
+      if (_query.GetTransactionType().OperationType == BudgetOperationType.Plan) {
+        return $"ACCT_STATUS IN ('A', 'P')";
+      }
+
       return $"ACCT_STATUS = 'A'";
     }
 

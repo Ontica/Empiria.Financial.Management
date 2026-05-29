@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
 using Empiria.HumanResources;
 using Empiria.Parties;
 using Empiria.Services;
@@ -106,7 +107,13 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       FixedList<BudgetAccount> accounts = searcher.Search();
 
-      return BudgetAccountMapper.Map(accounts);
+      if (query.GetTransactionType().OperationType != BudgetOperationType.Plan) {
+        return BudgetAccountMapper.Map(accounts);
+      }
+
+      FixedList<StandardAccount> availableAccounts = searcher.SearchAvailable();
+
+      return BudgetAccountMapper.Map(accounts, availableAccounts, query.GetBaseParty());
     }
 
 

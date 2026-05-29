@@ -9,11 +9,35 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Data;
+using Empiria.Financial;
 
 namespace Empiria.Budgeting.Data {
 
   /// <summary>Provides data access services for budget accounts.</summary>
   static internal class BudgetAccountData {
+
+    static internal FixedList<StandardAccount> SearchAvailableBudgetAccounts(string filter, string sort) {
+
+      var sql = "SELECT FMS_STD_ACCOUNTS.* " +
+                "FROM FMS_STD_ACCOUNTS " +
+                "WHERE {{FILTER}} STD_ACCT_ROLE_TYPE = 'P' AND STD_ACCT_STATUS = 'A' AND " +
+                "STD_ACCT_ID NOT IN (SELECT ACCT_STD_ACCT_ID FROM FMS_ACCOUNTS)";
+
+      if (!string.IsNullOrWhiteSpace(filter)) {
+        sql = sql.Replace("{{FILTER}}", $"{filter} AND");
+      } else {
+        sql = sql.Replace("{{FILTER}}", string.Empty);
+      }
+
+      if (!string.IsNullOrWhiteSpace(sort)) {
+        sql += $" ORDER BY {sort}";
+      }
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<StandardAccount>(op);
+    }
+
 
     static internal FixedList<BudgetAccount> SearchBudgetAccounts(string filter, string sort) {
 

@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Financial;
+using Empiria.Parties;
 using Empiria.StateEnums;
 
 namespace Empiria.Budgeting.Adapters {
@@ -16,12 +18,29 @@ namespace Empiria.Budgeting.Adapters {
   static internal class BudgetAccountMapper {
 
     static internal FixedList<BudgetAccountDto> Map(FixedList<BudgetAccount> accounts) {
+
       return accounts.Select(x => Map(x))
                      .ToFixedList();
     }
 
 
-    static public BudgetAccountDto Map(BudgetAccount account) {
+    static internal FixedList<BudgetAccountDto> Map(FixedList<BudgetAccount> currentAccounts,
+                                                    FixedList<StandardAccount> availableAccounts,
+                                                    OrganizationalUnit orgUnit) {
+
+      FixedList<BudgetAccountDto> current = currentAccounts.Select(x => Map(x))
+                                                          .ToFixedList();
+
+      FixedList<BudgetAccountDto> available = availableAccounts.Select(x => Map(x, orgUnit))
+                                                               .ToFixedList();
+
+      return FixedList<BudgetAccountDto>.Merge(current, available)
+                                        .Sort((x, y) => x.Code.CompareTo(y.Code));
+    }
+
+    #region Helpers
+
+    static private BudgetAccountDto Map(BudgetAccount account) {
       return new BudgetAccountDto {
         UID = account.UID,
         BaseSegmentUID = account.StandardAccount.UID,
@@ -33,6 +52,22 @@ namespace Empiria.Budgeting.Adapters {
         IsAssigned = true
       };
     }
+
+
+    static private BudgetAccountDto Map(StandardAccount account, OrganizationalUnit orgUnit) {
+      return new BudgetAccountDto {
+        UID = string.Empty,
+        BaseSegmentUID = account.UID,
+        Code = account.StdAcctNo,
+        Name = $"{account.Name} (No utilizada)",
+        Type = account.StandardAccountType.MapToNamedEntity(),
+        OrganizationalUnit = orgUnit.MapToNamedEntity(),
+        Status = account.Status.MapToDto(),
+        IsAssigned = false
+      };
+    }
+
+    #endregion Helpers
 
   }  // class BudgetAccountMapper
 
