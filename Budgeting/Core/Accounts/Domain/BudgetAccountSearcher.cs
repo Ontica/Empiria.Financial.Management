@@ -8,44 +8,39 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Parties;
-
 using Empiria.Budgeting.Data;
+
+using Empiria.Budgeting.Transactions.Adapters;
 
 namespace Empiria.Budgeting {
 
   /// <summary>Searches budget accounts.</summary>
   public class BudgetAccountSearcher {
 
-    private readonly BudgetType _budgetType;
-    private readonly string _keywords;
+    private readonly BudgetAccountsQuery _query;
 
-    public BudgetAccountSearcher(BudgetType budgetType, string keywords = "") {
-      Assertion.Require(budgetType, nameof(budgetType));
+    public BudgetAccountSearcher(BudgetAccountsQuery query) {
+      Assertion.Require(query, nameof(query));
 
-      _budgetType = budgetType;
-      _keywords = EmpiriaString.Clean(keywords ?? string.Empty);
+      _query = query;
     }
 
     #region Methods
 
-    public FixedList<BudgetAccount> Search(OrganizationalUnit orgUnit, string filterString) {
-      Assertion.Require(orgUnit, nameof(orgUnit));
+    public FixedList<BudgetAccount> Search() {
 
-      filterString = EmpiriaString.Clean(filterString ?? string.Empty);
-      filterString = filterString.Replace("{{ACCOUNT.CODE.FIELD}}", "ACCT_NUMBER");
-
+      string accountsFilter = GetAccountsFilter();
       string budgetTypeFilter = GetBudgetTypeFilter();
-      string orgUnitFilter = GetOrgUnitFilter(orgUnit);
+      string orgUnitFilter = GetOrgUnitFilter();
       string keywordsFilter = GetKeywordsFilter();
       string statusFilter = GetStatusFilter();
 
       var filter = new Filter(budgetTypeFilter);
 
       filter.AppendAnd(orgUnitFilter);
-      filter.AppendAnd(keywordsFilter);
-      filter.AppendAnd(filterString);
+      filter.AppendAnd(accountsFilter);
       filter.AppendAnd(statusFilter);
+      filter.AppendAnd(keywordsFilter);
 
       return BudgetAccountData.SearchBudgetAccounts(filter.ToString(), "ACCT_NUMBER");
     }
@@ -54,21 +49,34 @@ namespace Empiria.Budgeting {
 
     #region Helpers
 
+    private string GetAccountsFilter() {
+      string accountsFilter = _query.GetTransactionType().BudgetAccountsFilter;
+
+      accountsFilter = EmpiriaString.Clean(accountsFilter ?? string.Empty);
+      accountsFilter = accountsFilter.Replace("{{ACCOUNT.CODE.FIELD}}", "ACCT_NUMBER");
+
+      return accountsFilter;
+    }
+
+
     private string GetBudgetTypeFilter() {
-      return $"STD_ACCT_TYPE_ID = {_budgetType.StandardAccountType.Id}";
+      return $"STD_ACCT_TYPE_ID = {_query.GetBaseBudget().BudgetType.StandardAccountType.Id}";
     }
 
 
     private string GetKeywordsFilter() {
-      if (_keywords.Length == 0) {
+      string keywords = EmpiriaString.Clean(_query.Keywords ?? string.Empty);
+
+      if (keywords.Length == 0) {
         return string.Empty;
       }
-      return SearchExpression.ParseAndLikeKeywords("ACCT_KEYWORDS", _keywords);
+
+      return SearchExpression.ParseAndLikeKeywords("ACCT_KEYWORDS", keywords);
     }
 
 
-    private string GetOrgUnitFilter(Party party) {
-      return $"ACCT_ORG_UNIT_ID = {party.Id}";
+    private string GetOrgUnitFilter() {
+      return $"ACCT_ORG_UNIT_ID = {_query.GetBaseParty().Id}";
     }
 
 
