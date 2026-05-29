@@ -126,29 +126,64 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     static private string BuildTransactionStageFilter(TransactionStage stage, FixedList<string> userRoles) {
       int userId = ExecutionServer.CurrentUserId;
 
+      string currentUserFilter = $"(BDG_TXN_POSTED_BY_ID = {userId} OR " +
+                                 $"BDG_TXN_RECORDED_BY_ID = {userId} OR " +
+                                 $"BDG_TXN_REQUESTED_BY_ID = {userId} OR " +
+                                 $"BDG_TXN_AUTHORIZED_BY_ID = {userId} OR " +
+                                 $"BDG_TXN_APPLIED_BY_ID = {userId})";
 
-      if (stage == TransactionStage.MyInbox) {
+      switch (stage) {
 
-        if (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
-            userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER)) {
-          return string.Empty;
-        }
+        case TransactionStage.Planning:
 
-        return $"(BDG_TXN_POSTED_BY_ID = {userId} OR " +
-              $"BDG_TXN_RECORDED_BY_ID = {userId} OR " +
-              $"BDG_TXN_REQUESTED_BY_ID = {userId} OR " +
-              $"BDG_TXN_AUTHORIZED_BY_ID = {userId} OR " +
-              $"BDG_TXN_APPLIED_BY_ID = {userId})";
+          var planningTxnTypesIds =
+                  BudgetTransactionType.GetList()
+                                       .FindAll(x => x.OperationType == BudgetOperationType.Plan)
+                                       .Select(x => x.Id)
+                                       .ToFixedList();
 
-      } else if (stage == TransactionStage.ControlDesk) {
+          var budgetIds = Budget.GetList()
+                              .FindAll(x => planningTxnTypesIds.Intersect(x.AvailableTransactionTypes.Select(y => y.Id)
+                                                                                                     .ToFixedList()).Count != 0)
+                              .Select(x => x.Id)
+                              .ToFixedList();
 
-        if (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
-            userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER)) {
-          return "BDG_TXN_STATUS NOT IN ('J', 'C', 'D', 'X')";
-        }
+          if (planningTxnTypesIds.Count == 0) {
+            return SearchExpression.NoRecordsFilter;
+          }
+
+          if (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
+              userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER)) {
+            return $"(BDG_TXN_TYPE_ID IN ({string.Join(",", planningTxnTypesIds)}) AND " +
+                    $"BDG_TXN_BASE_BUDGET_ID in ({string.Join(",", budgetIds)}))";
+
+          } else {
+            return $"(BDG_TXN_TYPE_ID IN ({string.Join(",", planningTxnTypesIds)}) AND " +
+                   $"BDG_TXN_BASE_BUDGET_ID in ({string.Join(",", budgetIds)}) AND " +
+                   $"{currentUserFilter})";
+          }
+
+        case TransactionStage.MyInbox:
+
+          if (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
+              userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER)) {
+            return string.Empty;
+          }
+
+          return currentUserFilter;
+
+        case TransactionStage.ControlDesk:
+
+          if (userRoles.Contains(BudgetTransactionRules.BUDGET_MANAGER) ||
+              userRoles.Contains(BudgetTransactionRules.BUDGET_AUTHORIZER)) {
+            return "BDG_TXN_STATUS NOT IN ('J', 'C', 'D', 'X')";
+          }
+
+          return SearchExpression.NoRecordsFilter;
+
+        default:
+          return SearchExpression.NoRecordsFilter;
       }
-
-      return SearchExpression.NoRecordsFilter;
     }
 
 
