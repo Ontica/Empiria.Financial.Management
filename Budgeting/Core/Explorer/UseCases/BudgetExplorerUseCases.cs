@@ -122,6 +122,19 @@ namespace Empiria.Budgeting.Explorer.UseCases {
     }
 
 
+    public BudgetExplorerResultDto ExploreBudget(BudgetExplorerQuery query) {
+      Assertion.Require(query, nameof(query));
+
+      BudgetExplorerCommand command = BudgetExplorerQueryMapper.Map(query);
+
+      var explorer = new BudgetExplorer(command);
+
+      BudgetExplorerResult result = explorer.Execute();
+
+      return BudgetExplorerResultMapper.Map(query, result);
+    }
+
+
     public FixedList<BudgetDataInColumns> GetAvailableBudget(AvailableBudgetQuery query) {
       Assertion.Require(query, nameof(query));
 
@@ -132,47 +145,9 @@ namespace Empiria.Budgeting.Explorer.UseCases {
 
 
     public FixedList<BudgetMonthEntryDto> GetAvailableBudget(BudgetAccount account, int year) {
-      Assertion.Require(account, nameof(account));
+      FixedList<BudgetDataInColumns> budgetData = GetAccountYearBudget(account, year);
 
-      var budget = Budget.GetList(account.BudgetType)
-                         .Find(x => x.Year == year);
-
-      Assertion.Require(budget,
-        $"No se encontró un presupuesto del tipo {account.BudgetType.DisplayName} para el año {year}.");
-
-      var query = new AvailableBudgetQuery {
-        Budget = budget,
-        Accounts = new FixedList<BudgetAccount>(new[] { account }),
-        Year = year,
-      };
-
-      var builder = new AvailableBudgetBuilder(query);
-
-      FixedList<BudgetDataInColumns> result = builder.Build();
-
-      var list = result.Select(x => new BudgetMonthEntryDto {
-        Month = x.Month,
-        Amount = x.Available
-      }).ToFixedList();
-
-      var zerosMonths = EmpiriaMath.GetRange(1, 12)
-                                   .ToFixedList()
-                                   .FindAll(x => !list.Contains(y => y.Month == x))
-                                   .Select(x => new BudgetMonthEntryDto {
-                                     Month = x,
-                                     Amount = 0
-                                   }).ToFixedList();
-
-      list = FixedList<BudgetMonthEntryDto>.MergeDistinct(list, zerosMonths);
-
-      list.Sort((x, y) => x.Month.CompareTo(y.Month));
-
-      return list;
-    }
-
-
-    public FixedList<BudgetMonthEntryDto> GetCommitedBudget(BudgetAccount account, int year) {
-      return GetAvailableBudget(account, year);
+      return BudgetMonthEntryDto.Map(budgetData, (x) => x.Available, true);
     }
 
 
@@ -190,7 +165,6 @@ namespace Empiria.Budgeting.Explorer.UseCases {
 
       var builder = new AvailableBudgetBuilder(query);
 
-
       FixedList<BudgetDataInColumns> result = builder.Build();
 
       if (result.Count == 0) {
@@ -201,16 +175,11 @@ namespace Empiria.Budgeting.Explorer.UseCases {
     }
 
 
-    public BudgetExplorerResultDto ExploreBudget(BudgetExplorerQuery query) {
-      Assertion.Require(query, nameof(query));
 
-      BudgetExplorerCommand command = BudgetExplorerQueryMapper.Map(query);
+    public FixedList<BudgetMonthEntryDto> GetCommitedBudget(BudgetAccount account, int year) {
+      FixedList<BudgetDataInColumns> budgetData = GetAccountYearBudget(account, year);
 
-      var explorer = new BudgetExplorer(command);
-
-      BudgetExplorerResult result = explorer.Execute();
-
-      return BudgetExplorerResultMapper.Map(query, result);
+      return BudgetMonthEntryDto.Map(budgetData, (x) => x.Requested + x.Commited, true);
     }
 
 
@@ -239,6 +208,30 @@ namespace Empiria.Budgeting.Explorer.UseCases {
     }
 
     #endregion Use cases
+
+    #region Helpers
+
+    private FixedList<BudgetDataInColumns> GetAccountYearBudget(BudgetAccount account, int year) {
+      Assertion.Require(account, nameof(account));
+
+      var budget = Budget.GetList(account.BudgetType)
+                         .Find(x => x.Year == year);
+
+      Assertion.Require(budget,
+        $"No se encontró un presupuesto del tipo {account.BudgetType.DisplayName} para el año {year}.");
+
+      var query = new AvailableBudgetQuery {
+        Budget = budget,
+        Accounts = new FixedList<BudgetAccount>(new[] { account }),
+        Year = year,
+      };
+
+      var builder = new AvailableBudgetBuilder(query);
+
+      return builder.Build();
+    }
+
+    #endregion Helpers
 
   }  // class BudgetExplorerUseCases
 
