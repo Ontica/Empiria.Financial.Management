@@ -8,6 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
+using Empiria.Budgeting.Explorer;
+
 namespace Empiria.Budgeting.Transactions.Adapters {
 
   /// <summary>Output DTO used to return budget entries for a whole year.</summary>
@@ -92,6 +96,35 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
     public decimal Amount {
       get; internal set;
+    }
+
+
+    static internal FixedList<BudgetMonthEntryDto> Map(FixedList<BudgetDataInColumns> budgetData,
+                                                   Func<BudgetDataInColumns, decimal> amountValueFunc,
+                                                   bool includeZeroMonths) {
+
+      var list = budgetData.Select(x => new BudgetMonthEntryDto {
+        Month = x.Month,
+        Amount = amountValueFunc(x)
+      }).ToFixedList();
+
+      if (!includeZeroMonths) {
+        return list;
+      }
+
+      var zerosMonths = EmpiriaMath.GetRange(1, 12)
+                                   .ToFixedList()
+                                   .FindAll(x => !list.Contains(y => y.Month == x))
+                                   .Select(x => new BudgetMonthEntryDto {
+                                     Month = x,
+                                     Amount = 0
+                                   }).ToFixedList();
+
+      list = FixedList<BudgetMonthEntryDto>.MergeDistinct(list, zerosMonths);
+
+      list.Sort((x, y) => x.Month.CompareTo(y.Month));
+
+      return list;
     }
 
   }  // class BudgetMonthEntryFields
