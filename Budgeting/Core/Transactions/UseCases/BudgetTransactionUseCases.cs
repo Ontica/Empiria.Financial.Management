@@ -8,11 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
 using Empiria.HumanResources;
 using Empiria.Parties;
 using Empiria.Services;
 using Empiria.StateEnums;
+
+using Empiria.Financial;
 
 using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;

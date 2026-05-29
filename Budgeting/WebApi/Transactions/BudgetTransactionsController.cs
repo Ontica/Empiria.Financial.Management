@@ -145,6 +145,18 @@ namespace Empiria.Budgeting.Transactions.WebApi {
       }
     }
 
+    [HttpPost]
+    [Route("v2/budgeting/transactions/{transactionUID:guid}/request-account/{stdAccountUID:guid}")]
+    public SingleObjectModel RequestBudgetAccount([FromUri] string transactionUID, [FromUri] string stdAccountUID) {
+
+      using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
+
+        BudgetAccountDto account = usecases.RequestBudgetAccount(transactionUID, stdAccountUID);
+
+        return new SingleObjectModel(base.Request, account);
+      }
+    }
+
 
     [HttpPost]
     [Route("v2/budgeting/transactions/{transactionUID:guid}/return-to-edition")]

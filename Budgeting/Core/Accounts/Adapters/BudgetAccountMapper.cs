@@ -38,9 +38,8 @@ namespace Empiria.Budgeting.Adapters {
                                         .Sort((x, y) => x.Code.CompareTo(y.Code));
     }
 
-    #region Helpers
 
-    static private BudgetAccountDto Map(BudgetAccount account) {
+    static internal BudgetAccountDto Map(BudgetAccount account) {
       return new BudgetAccountDto {
         UID = account.UID,
         BaseSegmentUID = account.StandardAccount.UID,
@@ -53,6 +52,8 @@ namespace Empiria.Budgeting.Adapters {
       };
     }
 
+
+    #region Helpers
 
     static private BudgetAccountDto Map(StandardAccount account, OrganizationalUnit orgUnit) {
       return new BudgetAccountDto {

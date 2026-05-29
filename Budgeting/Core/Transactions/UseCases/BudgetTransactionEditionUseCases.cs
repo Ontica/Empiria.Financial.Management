@@ -15,6 +15,7 @@ using Empiria.Parties;
 using Empiria.Services;
 using Empiria.StateEnums;
 
+using Empiria.Budgeting.Adapters;
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.Data;
 
@@ -203,6 +204,34 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       }
 
       return BudgetTransactionMapper.MapToDescriptor(transactions);
+    }
+
+
+    public BudgetAccountDto RequestBudgetAccount(string transactionUID, string stdAccountUID) {
+      Assertion.Require(transactionUID, nameof(transactionUID));
+      Assertion.Require(stdAccountUID, nameof(stdAccountUID));
+
+      var transaction = BudgetTransaction.Parse(transactionUID);
+
+      Assertion.Require(transaction.OperationType == BudgetOperationType.Plan,
+                        "Budget account request is only allowed for planning transactions.");
+
+      var financialAcctType = FinancialAccountType.Parse(3243);
+
+      var stdAccount = StandardAccount.Parse(stdAccountUID);
+
+      var budgetAccount = new BudgetAccount(financialAcctType, stdAccount,
+                                            transaction.BaseParty as OrganizationalUnit);
+
+      budgetAccount.SetStatus(EntityStatus.Pending);
+
+      budgetAccount.Save();
+
+      HistoryServices.CreateHistoryEntry(transaction,
+        new HistoryFields("Solicitud de partida presupuestal",
+                         $"Se solicitó la utilización de la partida presupuestal {budgetAccount.AccountNo}."));
+
+      return BudgetAccountMapper.Map(budgetAccount);
     }
 
 
