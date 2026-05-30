@@ -94,7 +94,9 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public bool ShowRelatedData {
+
+    [Newtonsoft.Json.JsonProperty("ShowRelatedData")]
+    public bool RequiresRelatedEntity {
       get; internal set;
     }
 

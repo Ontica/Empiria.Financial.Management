@@ -260,12 +260,6 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
-    public bool ShowRelatedData {
-      get {
-        return true;
-      }
-    }
-
     #endregion Properties
 
   }  // class BudgetTransactionRules

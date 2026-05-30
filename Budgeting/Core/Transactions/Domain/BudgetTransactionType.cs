@@ -162,12 +162,19 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    public FixedList<ObjectTypeInfo> RelatedDocumentTypes {
+    public FixedList<ObjectTypeInfo> RelatedEntityTypes {
       get {
-        var ids = ExtensionData.GetFixedList<int>("relatedDocumentTypes", false);
+        var ids = ExtensionData.GetFixedList<int>("relatedEntityTypes", false);
 
         return ids.Select(x => ObjectTypeInfo.Parse(x))
                   .ToFixedList();
+      }
+    }
+
+
+    public bool RequiresRelatedEntity {
+      get {
+        return RelatedEntityTypes.Count > 0;
       }
     }
 

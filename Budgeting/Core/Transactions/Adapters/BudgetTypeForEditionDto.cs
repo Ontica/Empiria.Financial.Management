@@ -73,9 +73,12 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public FixedList<NamedEntityDto> RelatedDocumentTypes {
+
+    [Newtonsoft.Json.JsonProperty("RelatedDocumentTypes")]
+    public FixedList<NamedEntityDto> RelatedEntityTypes {
       get; internal set;
     }
+
 
     public TransactionTypeEntriesRulesDto EntriesRules {
       get; internal set;

@@ -55,7 +55,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         RelatedTransactions = MapToDescriptor(relatedTxns),
         Documents = documents,
         History = HistoryServices.GetEntityHistory(transaction),
-        Actions = MapActions(transaction.Rules)
+        Actions = MapActions(transaction)
       };
     }
 
@@ -118,7 +118,10 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       }
     }
 
-    static private BudgetTransactionActions MapActions(BudgetTransactionRules rules) {
+    static private BudgetTransactionActions MapActions(BudgetTransaction transaction) {
+
+      var rules = new BudgetTransactionRules(transaction);
+
       return new BudgetTransactionActions {
         CanAuthorize = rules.CanAuthorize,
         CanCancel = rules.CanCancel,
@@ -130,7 +133,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         CanReturnToEdition = rules.CanReturnToEdition,
         CanSendToAuthorization = rules.CanSendToAuthorization,
         CanUpdate = rules.CanUpdate,
-        ShowRelatedData = rules.ShowRelatedData
+        RequiresRelatedEntity = transaction.TransactionType.RequiresRelatedEntity,
       };
     }
 
@@ -207,7 +210,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         AskForAllowsOverdrafts = txnType.AllowsOverdrafts,
         ManualEdition = txnType.ManualEdition,
         OperationSources = txnType.OperationSources.MapToNamedEntityList(),
-        RelatedDocumentTypes = txnType.RelatedDocumentTypes.MapToNamedEntityList(),
+        RelatedEntityTypes = txnType.RelatedEntityTypes.MapToNamedEntityList(),
         EntriesRules = MapTransactionTypeEntriesRules(txnType)
       };
     }
