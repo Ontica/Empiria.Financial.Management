@@ -50,11 +50,23 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
 
     public FixedList<BudgetTypeForEditionDto> GetBudgetTypesForTransactionEdition(TransactionStage stage) {
-      FixedList<Budget> budgets = Budget.GetList()
-                                        .FindAll(x => x.EditionAllowed)
-                                        .FindAll(x => x.AvailableTransactionTypes.Contains(y => y.ManualEdition));
 
-      return BudgetTransactionMapper.MapBudgetTypesForEdition(budgets.SelectDistinct(x => x.BudgetType));
+      FixedList<Budget> budgets = Budget.GetList()
+                                        .FindAll(x => x.AvailableTransactionTypes.Count > 0);
+
+      var principal = ExecutionServer.CurrentPrincipal;
+
+      FixedList<BudgetTransactionType> txnTypes = budgets.SelectDistinctFlat(x => x.AvailableTransactionTypes)
+                                                         .FindAll(x => x.ManualEdition)
+                                                         .FindAll(x => !x.IsProtected ||
+                                                                       principal.IsInRole("budget-manager") ||
+                                                                       principal.IsInRole("budget-authorizer"));
+
+      if (stage == TransactionStage.Planning) {
+        txnTypes = txnTypes.FindAll(x => x.OperationType == BudgetOperationType.Plan);
+      }
+
+      return BudgetTransactionMapper.MapBudgetTransactionTypesForEdition(txnTypes);
     }
 
 

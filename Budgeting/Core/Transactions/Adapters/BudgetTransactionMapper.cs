@@ -17,6 +17,7 @@ using Empiria.Billing;
 using Empiria.Billing.Adapters;
 
 using Empiria.Budgeting.Adapters;
+using System.Linq;
 
 namespace Empiria.Budgeting.Transactions.Adapters {
 
@@ -60,9 +61,55 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
-    static internal FixedList<BudgetTypeForEditionDto> MapBudgetTypesForEdition(FixedList<BudgetType> budgetTypes) {
-      return budgetTypes.Select(x => MapBudgetTypeForEdition(x))
-                        .ToFixedList();
+    static internal FixedList<BudgetTypeForEditionDto> MapBudgetTransactionTypesForEdition(FixedList<BudgetTransactionType> txnTypes) {
+
+      var groupedTxnTypes = txnTypes.GroupBy(x => x.BudgetType)
+                                    .Select(g => new {
+                                      BudgetType = g.Key,
+                                      Budgets = g.ToFixedList().SelectDistinctFlat(x => x.AvailableBudgets),
+                                      TxnTypes = txnTypes.Intersect(g.ToFixedList())
+                                    }).ToFixedList();
+
+      return groupedTxnTypes.Select(x => MapBudgetTypeForEdition(x.BudgetType, x.Budgets, x.TxnTypes))
+                            .ToFixedList();
+    }
+
+
+    static public BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
+
+      return new BudgetTransactionDto {
+        UID = transaction.UID,
+        TransactionType = MapTransactionTypeForEdition(transaction.TransactionType),
+        TransactionNo = transaction.TransactionNo,
+        BudgetType = transaction.BaseBudget.BudgetType.MapToNamedEntity(),
+        Budget = transaction.BaseBudget.MapToNamedEntity(),
+        Description = transaction.Description,
+        Justification = transaction.Justification,
+        OperationSource = transaction.OperationSource.MapToNamedEntity(),
+        BaseParty = transaction.BaseParty.MapToNamedEntity(),
+        BaseEntityType = transaction.HasEntity ?
+            transaction.GetEntity().Data.BudgetableType.MapToNamedEntity() : NamedEntityDto.Empty,
+        BaseEntity = transaction.HasEntity ?
+            transaction.GetEntity().MapToNamedEntity() : NamedEntityDto.Empty,
+        BaseEntityNo = GetBaseEntityNo(transaction),
+        AllowsOverdrafts = transaction.AllowsOverdrafts,
+        Total = transaction.GetTotal(),
+        RecordingDate = transaction.RequestedDate,
+        RecordedBy = transaction.RecordedBy.MapToNamedEntity(),
+        RequestedDate = transaction.RequestedDate,
+        RequestedBy = transaction.RequestedBy.MapToNamedEntity(),
+        AuthorizationDate = transaction.AuthorizationDate,
+        AuthorizedBy = transaction.AuthorizedBy.MapToNamedEntity(),
+        ApplicationDate = transaction.ApplicationDate,
+        AppliedBy = transaction.AppliedBy.MapToNamedEntity(),
+        Status = transaction.Status.MapToNamedEntity()
+      };
+    }
+
+
+    static public FixedList<BudgetTransactionDescriptorDto> MapToDescriptor(FixedList<BudgetTransaction> transactions) {
+      return transactions.Select(x => MapToDescriptor(x))
+                         .ToFixedList();
     }
 
 
@@ -90,12 +137,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         StatusName = transaction.Status.GetName(),
         RejectedReason = transaction.RejectedReason
       };
-    }
-
-
-    static public FixedList<BudgetTransactionDescriptorDto> MapToDescriptor(FixedList<BudgetTransaction> transactions) {
-      return transactions.Select(x => MapToDescriptor(x))
-                         .ToFixedList();
     }
 
     #endregion Public mappers
@@ -138,35 +179,31 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
-    static private BudgetTypeForEditionDto MapBudgetTypeForEdition(BudgetType budgetType) {
-
-      var budgets = Budget.GetList(budgetType);
-      // .FindAll(x => x.AvailableTransactionTypes.Contains(y => y.ManualEdition));
+    static private BudgetTypeForEditionDto MapBudgetTypeForEdition(BudgetType budgetType,
+                                                                   FixedList<Budget> budgets,
+                                                                   FixedList<BudgetTransactionType> txnTypes) {
 
       return new BudgetTypeForEditionDto {
         UID = budgetType.UID,
         Name = budgetType.DisplayName,
         Multiyear = budgetType.Multiyear,
-        Budgets = MapBudgetsForEdition(budgets)
+        Budgets = MapBudgetsForEdition(budgets, txnTypes)
       };
     }
 
 
-    static private FixedList<BudgetForEditionDto> MapBudgetsForEdition(FixedList<Budget> budgets) {
-      return budgets.Select(x => MapBudgetForEdition(x))
-                    .ToFixedList();
-    }
+    static private FixedList<BudgetForEditionDto> MapBudgetsForEdition(FixedList<Budget> budgets, FixedList<BudgetTransactionType> txnTypes) {
 
-
-    static private BudgetForEditionDto MapBudgetForEdition(Budget budget) {
-      return new BudgetForEditionDto {
-        UID = budget.UID,
-        Name = budget.Name,
-        Year = budget.Year,
-        Type = budget.BudgetType.MapToNamedEntity(),
-        TransactionTypes = MapTransactionTypes(budget),
-        SegmentTypes = BudgetSegmentTypesMapper.Map(budget.BudgetType.StdAccountCategories),
-      };
+      return budgets.Select(x => new BudgetForEditionDto {
+        UID = x.UID,
+        Name = x.Name,
+        Year = x.Year,
+        Type = x.BudgetType.MapToNamedEntity(),
+        TransactionTypes = txnTypes.FindAll(y => y.AvailableBudgets.Contains(x))
+                                   .Select(y => MapTransactionTypeForEdition(y))
+                                   .ToFixedList(),
+        SegmentTypes = BudgetSegmentTypesMapper.Map(x.BudgetType.StdAccountCategories),
+      }).ToFixedList();
     }
 
 
@@ -189,20 +226,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
     }
 
 
-    static private FixedList<TransactionTypeForEditionDto> MapTransactionTypes(Budget budget) {
-      var principal = ExecutionServer.CurrentPrincipal;
-
-      return budget.AvailableTransactionTypes.Select(x => BudgetTransactionType.Parse(x.UID))
-                                             .ToFixedList()
-                                             //.FindAll(x => x.ManualEdition)
-                                             .FindAll(x => !x.IsProtected ||
-                                                           principal.IsInRole("budget-manager") ||
-                                                           principal.IsInRole("budget-authorizer"))
-                                             .Select(x => MapTransactionTypeForEdition(BudgetTransactionType.Parse(x.UID)))
-                                             .ToFixedList();
-    }
-
-
     static private TransactionTypeForEditionDto MapTransactionTypeForEdition(BudgetTransactionType txnType) {
       return new TransactionTypeForEditionDto {
         UID = txnType.UID,
@@ -222,38 +245,6 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         SelectProduct = txnType.SelectProduct,
         SelectParty = txnType.SelectParty,
         Years = txnType.AvailableYears
-      };
-    }
-
-
-    static public BudgetTransactionDto MapTransaction(BudgetTransaction transaction) {
-
-      return new BudgetTransactionDto {
-        UID = transaction.UID,
-        TransactionType = MapTransactionTypeForEdition(transaction.TransactionType),
-        TransactionNo = transaction.TransactionNo,
-        BudgetType = transaction.BaseBudget.BudgetType.MapToNamedEntity(),
-        Budget = transaction.BaseBudget.MapToNamedEntity(),
-        Description = transaction.Description,
-        Justification = transaction.Justification,
-        OperationSource = transaction.OperationSource.MapToNamedEntity(),
-        BaseParty = transaction.BaseParty.MapToNamedEntity(),
-        BaseEntityType = transaction.HasEntity ?
-            transaction.GetEntity().Data.BudgetableType.MapToNamedEntity() : NamedEntityDto.Empty,
-        BaseEntity = transaction.HasEntity ?
-            transaction.GetEntity().MapToNamedEntity() : NamedEntityDto.Empty,
-        BaseEntityNo = GetBaseEntityNo(transaction),
-        AllowsOverdrafts = transaction.AllowsOverdrafts,
-        Total = transaction.GetTotal(),
-        RecordingDate = transaction.RequestedDate,
-        RecordedBy = transaction.RecordedBy.MapToNamedEntity(),
-        RequestedDate = transaction.RequestedDate,
-        RequestedBy = transaction.RequestedBy.MapToNamedEntity(),
-        AuthorizationDate = transaction.AuthorizationDate,
-        AuthorizedBy = transaction.AuthorizedBy.MapToNamedEntity(),
-        ApplicationDate = transaction.ApplicationDate,
-        AppliedBy = transaction.AppliedBy.MapToNamedEntity(),
-        Status = transaction.Status.MapToNamedEntity()
       };
     }
 
