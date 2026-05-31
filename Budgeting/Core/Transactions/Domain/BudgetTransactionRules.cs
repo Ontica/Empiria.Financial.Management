@@ -153,6 +153,11 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool CanReject {
       get {
+
+        if (!_transaction.TransactionType.RequiresRelatedEntity) {
+          return false;
+        }
+
         if (_transaction.Status == TransactionStatus.OnAuthorization &&
             _securityRoles.Contains(BUDGET_AUTHORIZER)) {
           return true;
