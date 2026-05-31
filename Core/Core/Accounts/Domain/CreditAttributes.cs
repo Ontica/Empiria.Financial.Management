@@ -25,6 +25,16 @@ namespace Empiria.Financial {
       // no-op
     }
 
+
+    public CreditAttributes(JsonObject attributes) {
+      Assertion.Require(attributes, nameof(attributes));
+
+      _attributes = attributes;
+
+      PatchJsonUIDsFields();
+    }
+
+
     public CreditAttributes(ICreditAccountData account) {
 
       Borrower = account.CustomerName;
@@ -37,12 +47,6 @@ namespace Empiria.Financial {
       CreditRiskStage = account.CreditRiskStage;
     }
 
-    public CreditAttributes(JsonObject attributes) {
-      Assertion.Require(attributes, nameof(attributes));
-
-      _attributes = attributes;
-    }
-
     #endregion Properties
 
     #region Properties
@@ -51,7 +55,7 @@ namespace Empiria.Financial {
       get {
         return _attributes.Get("borrower", string.Empty);
       }
-      internal set {
+      private set {
         _attributes.SetIfValue("borrower", value);
       }
     }
@@ -61,7 +65,7 @@ namespace Empiria.Financial {
       get {
         return _attributes.Get("subledgerAccountNo", string.Empty);
       }
-      internal set {
+      private set {
         _attributes.SetIfValue("subledgerAccountNo", value);
       }
     }
@@ -69,40 +73,40 @@ namespace Empiria.Financial {
 
     public CreditProcessStage CreditProcessStage {
       get {
-        return _attributes.Get("creditProcessStageUID", CreditProcessStage.Empty);
+        return _attributes.Get("creditProcessStageId", CreditProcessStage.Empty);
       }
-      internal set {
-        _attributes.SetIf("creditProcessStageUID", value.UID, !value.IsEmptyInstance);
+      private set {
+        _attributes.SetIf("creditProcessStageId", value.Id, !value.IsEmptyInstance);
       }
     }
 
 
     public CreditRiskStage CreditRiskStage {
       get {
-        return _attributes.Get("creditRiskStageUID", CreditRiskStage.Empty);
+        return _attributes.Get("creditRiskStageId", CreditRiskStage.Empty);
       }
-      internal set {
-        _attributes.SetIf("creditRiskStageUID", value.UID, !value.IsEmptyInstance);
+      private set {
+        _attributes.SetIf("creditRiskStageId", value.Id, !value.IsEmptyInstance);
       }
     }
 
 
     public CreditType CreditType {
       get {
-        return _attributes.Get("creditTypeUID", CreditType.Empty);
+        return _attributes.Get("creditTypeId", CreditType.Empty);
       }
-      internal set {
-        _attributes.SetIf("creditTypeUID", value.UID, !value.IsEmptyInstance);
+      private set {
+        _attributes.SetIf("creditTypeId", value.Id, !value.IsEmptyInstance);
       }
     }
 
 
     public CreditProjectType CreditProjectType {
       get {
-        return _attributes.Get("creditProjectTypeUID", CreditProjectType.Empty);
+        return _attributes.Get("creditProjectTypeId", CreditProjectType.Empty);
       }
-      set {
-        _attributes.SetIf("creditProjectTypeUID", value.UID, !value.IsEmptyInstance);
+      private set {
+        _attributes.SetIf("creditProjectTypeId", value.Id, !value.IsEmptyInstance);
       }
     }
 
@@ -112,7 +116,7 @@ namespace Empiria.Financial {
       get {
         return _attributes.Get("externalCreditNo", string.Empty);
       }
-      internal set {
+      private set {
         _attributes.SetIfValue("externalCreditNo", value);
       }
     }
@@ -122,22 +126,44 @@ namespace Empiria.Financial {
       get {
         return _attributes.Get("creditLine", string.Empty);
       }
-      internal set {
+      private set {
         _attributes.SetIfValue("creditLine", value);
       }
     }
 
     #endregion Properties
 
-    #region Helpers
+    #region Methods
 
     public JsonObject ToJson() {
-      return JsonObject.Parse(_attributes.ToString());
+      return _attributes;
     }
 
     public override string ToJsonString() {
+      return _attributes.ToString();
+    }
 
-      return ToJson().ToString();
+    #endregion Methods
+
+    #region Helpers
+
+    private void PatchJsonUIDsFields() {
+      if (_attributes.HasValue("creditProcessStageUID")) {
+        this.CreditProcessStage = _attributes.Get<CreditProcessStage>("creditProcessStageUID");
+        _attributes.Remove("creditProcessStageUID");
+      }
+      if (_attributes.HasValue("creditRiskStageUID")) {
+        this.CreditRiskStage = _attributes.Get<CreditRiskStage>("creditRiskStageUID");
+        _attributes.Remove("creditRiskStageUID");
+      }
+      if (_attributes.HasValue("creditTypeUID")) {
+        this.CreditType = _attributes.Get<CreditType>("creditTypeUID");
+        _attributes.Remove("creditTypeUID");
+      }
+      if (_attributes.HasValue("creditProjectTypeUID")) {
+        this.CreditProjectType = _attributes.Get<CreditProjectType>("creditProjectTypeUID");
+        _attributes.Remove("creditProjectTypeUID");
+      }
     }
 
     #endregion Helpers

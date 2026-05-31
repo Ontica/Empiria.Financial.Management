@@ -25,7 +25,11 @@ namespace Empiria.Financial {
       Assertion.Require(financialData, nameof(financialData));
 
       _financialExtData = financialData;
+
+
+      PatchJsonUIDsFields();
     }
+
 
     public CreditFinancialData(ICreditAccountData account) {
       Assertion.Require(account, nameof(account));
@@ -35,10 +39,10 @@ namespace Empiria.Financial {
       CurrentBalance = account.CurrentBalance;
       DisbursementFee = account.DisbursementFee;
       GracePeriod = account.InterestGracePeriod;
-      InterestRateType = account.BaseInterestRate;
       InterestRate = account.InterestRate;
-      InvestmentTerm = account.InvestmentTerm;
       InterestRateFactor = account.InterestRateFactor;
+      InterestRateType = account.BaseInterestRate;
+      InvestmentTerm = account.InvestmentTerm;
       OpeningFee = account.OpeningFee;
       RepaymentTerm = account.RepaymentTerm;
     }
@@ -46,15 +50,6 @@ namespace Empiria.Financial {
     #endregion Properties
 
     #region Properties
-
-    public bool CapitalizeInterest {
-      get {
-        return _financialExtData.Get("capitalizeInterest", false);
-      }
-      private set {
-        _financialExtData.SetIfValue("capitalizeInterest", value);
-      }
-    }
 
     public bool CapitalizeFees {
       get {
@@ -66,21 +61,12 @@ namespace Empiria.Financial {
     }
 
 
-    public decimal OpeningFee {
+    public bool CapitalizeInterest {
       get {
-        return _financialExtData.Get("openingFee", 0m);
+        return _financialExtData.Get("capitalizeInterest", false);
       }
       private set {
-        _financialExtData.SetIfValue("openingFee", value);
-      }
-    }
-
-    public decimal DisbursementFee {
-      get {
-        return _financialExtData.Get("disbursementFee", 0m);
-      }
-      private set {
-        _financialExtData.SetIfValue("disbursementFee", value);
+        _financialExtData.SetIfValue("capitalizeInterest", value);
       }
     }
 
@@ -95,12 +81,12 @@ namespace Empiria.Financial {
     }
 
 
-    public int InvestmentTerm {
+    public decimal DisbursementFee {
       get {
-        return _financialExtData.Get("investmentTerm", 0);
+        return _financialExtData.Get("disbursementFee", 0m);
       }
       private set {
-        _financialExtData.SetIfValue("investmentTerm", value);
+        _financialExtData.SetIfValue("disbursementFee", value);
       }
     }
 
@@ -115,32 +101,12 @@ namespace Empiria.Financial {
     }
 
 
-    public int RepaymentTerm {
-      get {
-        return _financialExtData.Get("repaymentTerm", 0);
-      }
-      private set {
-        _financialExtData.SetIfValue("repaymentTerm", value);
-      }
-    }
-
-
     public decimal InterestRate {
       get {
         return _financialExtData.Get("interestRate", 0m);
       }
       private set {
         _financialExtData.SetIfValue("interestRate", value);
-      }
-    }
-
-
-    public InterestRateType InterestRateType {
-      get {
-        return _financialExtData.Get("interestRateTypeUID", InterestRateType.Empty);
-      }
-      private set {
-        _financialExtData.SetIf("interestRateTypeUID", value.UID, !value.IsEmptyInstance);
       }
     }
 
@@ -155,16 +121,67 @@ namespace Empiria.Financial {
     }
 
 
-    internal JsonObject ToJson() {
-      return _financialExtData;
+    public InterestRateType InterestRateType {
+      get {
+        return _financialExtData.Get("interestRateTypeId", InterestRateType.Empty);
+      }
+      private set {
+        _financialExtData.SetIf("interestRateTypeId", value.Id, !value.IsEmptyInstance);
+      }
+    }
+
+
+    public int InvestmentTerm {
+      get {
+        return _financialExtData.Get("investmentTerm", 0);
+      }
+      private set {
+        _financialExtData.SetIfValue("investmentTerm", value);
+      }
+    }
+
+
+    public decimal OpeningFee {
+      get {
+        return _financialExtData.Get("openingFee", 0m);
+      }
+      private set {
+        _financialExtData.SetIfValue("openingFee", value);
+      }
+    }
+
+
+    public int RepaymentTerm {
+      get {
+        return _financialExtData.Get("repaymentTerm", 0);
+      }
+      private set {
+        _financialExtData.SetIfValue("repaymentTerm", value);
+      }
     }
 
     #endregion Properties
 
-    #region Helpers
+    #region Methods
+
+    internal JsonObject ToJson() {
+      return _financialExtData;
+    }
+
 
     public override string ToJsonString() {
       return _financialExtData.ToString();
+    }
+
+    #endregion Methods
+
+    #region Helpers
+
+    private void PatchJsonUIDsFields() {
+      if (_financialExtData.HasValue("interestRateTypeUID")) {
+        this.InterestRateType = _financialExtData.Get<InterestRateType>("interestRateTypeUID");
+        _financialExtData.Remove("interestRateTypeUID");
+      }
     }
 
     #endregion Helpers

@@ -11,6 +11,7 @@
 using Xunit;
 
 using Empiria.Financial;
+using Empiria.Json;
 
 namespace Empiria.Tests.Financial.Accounts {
 
@@ -20,13 +21,15 @@ namespace Empiria.Tests.Financial.Accounts {
     #region Facts
     [Fact]
     public void Should_Update_CreditData() {
-      var attributes = new CreditAttributes {
-        CreditType = TestsObjects.TryGetObject<CreditType>(),
-        CreditRiskStage = TestsObjects.TryGetObject<CreditRiskStage>(),
-        CreditProcessStage = TestsObjects.TryGetObject<CreditProcessStage>(),
-        Borrower = "La Vía Óntica SC",
-        ExternalCreditNo = EmpiriaString.BuildRandomString(32)
+      var json = new JsonObject() {
+        { "creditTypeUID", TestsObjects.TryGetObject<CreditType>().UID },
+        { "creditRiskStageUID", TestsObjects.TryGetObject<CreditRiskStage>().UID },
+        { "creditProcessStageUID", TestsObjects.TryGetObject<CreditProcessStage>().UID},
+        { "borrower", "La Vía Óntica SC" },
+        { "externalCreditNo", EmpiriaString.BuildRandomString(32) }
       };
+
+      var attributes = new CreditAttributes(json);
 
       var fields = new FinancialAccountFields {
         Attributes = attributes,
@@ -36,11 +39,13 @@ namespace Empiria.Tests.Financial.Accounts {
 
       sut.Update(fields);
 
-      Assert.Equal(((CreditAttributes) fields.Attributes).CreditType, ((CreditAttributes) sut.Attributes).CreditType);
-      Assert.Equal(((CreditAttributes) fields.Attributes).CreditRiskStage, ((CreditAttributes) sut.Attributes).CreditRiskStage);
-      Assert.Equal(((CreditAttributes) fields.Attributes).CreditProcessStage, ((CreditAttributes) sut.Attributes).CreditProcessStage);
-      Assert.Equal(((CreditAttributes) fields.Attributes).Borrower, ((CreditAttributes) sut.Attributes).Borrower);
-      Assert.Equal(((CreditAttributes) fields.Attributes).ExternalCreditNo, ((CreditAttributes) sut.Attributes).ExternalCreditNo);
+      var sutAttributes = (CreditAttributes) sut.Attributes;
+
+      Assert.Equal(attributes.CreditType, sutAttributes.CreditType);
+      Assert.Equal(attributes.CreditRiskStage, sutAttributes.CreditRiskStage);
+      Assert.Equal(attributes.CreditProcessStage, sutAttributes.CreditProcessStage);
+      Assert.Equal(attributes.Borrower, sutAttributes.Borrower);
+      Assert.Equal(attributes.ExternalCreditNo, sutAttributes.ExternalCreditNo);
     }
 
 
