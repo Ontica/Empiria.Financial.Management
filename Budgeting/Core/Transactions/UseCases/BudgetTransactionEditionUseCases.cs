@@ -16,6 +16,10 @@ using Empiria.Services;
 using Empiria.StateEnums;
 
 using Empiria.Budgeting.Adapters;
+
+using Empiria.Budgeting.Explorer;
+using Empiria.Budgeting.Explorer.Adapters;
+
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions.Data;
 
@@ -309,6 +313,8 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       var transaction = BudgetTransaction.Parse(budgetTransactionUID);
 
+      EnsureCanSendToAuthorization(transaction);
+
       transaction.SendToAuthorization();
 
       transaction.Save();
@@ -405,6 +411,52 @@ namespace Empiria.Budgeting.Transactions.UseCases {
       if (rule == MultiplicityRule.ZeroOrOnePerYear && count >= 1) {
         Assertion.RequireFail($"Ya existe una transacción del tipo {transactionType.DisplayName} " +
                               $"del presupuesto {budget.Name}, para el área {baseParty.Name}.");
+      }
+
+    }
+
+
+    private void EnsureCanSendToAuthorization(BudgetTransaction transaction) {
+      if (transaction.OperationType != BudgetOperationType.Plan) {
+        return;
+      }
+
+      var byYearEntries = new BudgetTransactionByYear(transaction).GetEntries();
+
+
+      var query = new AvailableBudgetQuery {
+        Budget = transaction.BaseBudget,
+        OrganizationalUnit = (OrganizationalUnit) transaction.BaseParty,
+        Year = transaction.BaseBudget.Year,
+      };
+
+      var builder = new AvailableBudgetBuilder(query);
+
+      var result = builder.Build();
+
+      var missed = result.FindAll(x => (x.Requested + x.Commited) > 0 && !byYearEntries.Contains(y => y.BudgetAccount.Equals(x.BudgetAccount)));
+
+      if (missed.Count > 0) {
+        Assertion.RequireFail($"Las siguientes partidas presupuestales requieren solicitud " +
+                              $"presupuestal para el año {query.Year}: " +
+            $"{string.Join(", ", missed.Select(x => ((INamedEntity) x.BudgetAccount).Name))}");
+      }
+
+
+      foreach (var entry in byYearEntries) {
+
+        var resultEntry = result.Find(x => x.BudgetAccount.Equals(entry.BudgetAccount));
+
+        if (resultEntry == null) {
+          continue;
+        }
+
+        decimal needed = resultEntry.Requested + resultEntry.Commited;
+
+        if (needed > entry.Total) {
+          Assertion.RequireFail($"La partida presupuestal {((INamedEntity) entry.BudgetAccount).Name} requiere {needed:C2} " +
+                                $"pero solo se están solicitando {entry.Total:C2}. Faltan {needed - entry.Total:C2}.");
+        }
       }
 
     }
