@@ -89,6 +89,14 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public FixedList<Budget> AvailableBudgets {
+      get {
+        return Budget.GetList()
+                     .FindAll(x => x.AvailableTransactionTypes.Any(y => y.Equals(this)));
+      }
+    }
+
+
     public FixedList<int> AvailableYears {
       get {
         return ExtensionData.GetFixedList<int>("availableYears", false);
