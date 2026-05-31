@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Parties;
+
 namespace Empiria.Budgeting.Explorer.Adapters {
 
   /// <summary>Input query for request available budget information.</summary>
@@ -18,6 +20,16 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     } = Budget.Empty;
 
 
+    public OrganizationalUnit OrganizationalUnit {
+      get; set;
+    } = OrganizationalUnit.Empty;
+
+
+    public FixedList<BudgetAccount> Accounts {
+      get; set;
+    } = FixedList<BudgetAccount>.Empty;
+
+
     public int Year {
       get; set;
     }
@@ -25,10 +37,6 @@ namespace Empiria.Budgeting.Explorer.Adapters {
     public int Month {
       get; set;
     }
-
-    public FixedList<BudgetAccount> Accounts {
-      get; set;
-    } = FixedList<BudgetAccount>.Empty;
 
   }  // class AvailableBudgetQuery
 

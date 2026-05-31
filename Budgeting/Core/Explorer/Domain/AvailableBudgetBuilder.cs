@@ -36,12 +36,14 @@ namespace Empiria.Budgeting.Explorer {
       string budgetFilter = BuildBudgetFilter();
       string yearFilter = BuildYearFilter();
       string monthFilter = BuildMonthFilter();
+      string orgUnitFilter = BuildOrgUnitFilter();
       string accountsFilter = BuildAccountsFilter();
 
       var filter = new Filter(budgetFilter);
 
       filter.AppendAnd(yearFilter);
       filter.AppendAnd(monthFilter);
+      filter.AppendAnd(orgUnitFilter);
       filter.AppendAnd(accountsFilter);
 
       return filter.ToString();
@@ -65,21 +67,30 @@ namespace Empiria.Budgeting.Explorer {
     }
 
 
-    private string BuildYearFilter() {
-      if (_query.Year == 0) {
-        return string.Empty;
-      }
-
-      return $"BUDGET_YEAR = {_query.Year}";
-    }
-
-
     private string BuildMonthFilter() {
       if (_query.Month == 0) {
         return string.Empty;
       }
 
       return $"BUDGET_MONTH = {_query.Month}";
+    }
+
+
+    private string BuildOrgUnitFilter() {
+      if (_query.OrganizationalUnit.IsEmptyInstance) {
+        return string.Empty;
+      }
+
+      return $"ORG_UNIT_ID = {_query.OrganizationalUnit.Id}";
+    }
+
+
+    private string BuildYearFilter() {
+      if (_query.Year == 0) {
+        return string.Empty;
+      }
+
+      return $"BUDGET_YEAR = {_query.Year}";
     }
 
     #endregion Helpers
