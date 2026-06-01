@@ -92,12 +92,23 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    private decimal CalculateMonthlyFixedPrincipalPayment() {
+      return Amount / DurationMonths;
+    }
+
+
+    private decimal CalculateMonthlyInterestRate() {
+      return AnnualInterestRate / 100 / 12;
+    }
+
+
     private FixedList<AmortizationTableEntry> GetCuotaFijaMonthlyTable() {
 
       var table = new List<AmortizationTableEntry>(DurationMonths);
 
-      decimal monthlyRate = AnnualInterestRate / 100 / 12;
+      decimal monthlyRate = CalculateMonthlyInterestRate();
       decimal monthlyPayment = CalculateFixedMonthlyPayment();
+
       decimal balance = Amount;
 
       for (int month = 1; month <= DurationMonths; month++) {
@@ -125,7 +136,35 @@ namespace Empiria.CashFlow.Projections {
 
 
     private FixedList<AmortizationTableEntry> GetCuotaVariableMonthlyTable() {
-      throw new System.NotImplementedException();
+
+      var table = new List<AmortizationTableEntry>(DurationMonths);
+
+      decimal monthlyRate = CalculateMonthlyInterestRate();
+      decimal principalPayment = CalculateMonthlyFixedPrincipalPayment();
+
+      decimal balance = Amount;
+
+      for (int month = 1; month <= DurationMonths; month++) {
+
+        decimal interest = Math.Round(balance * monthlyRate, 2);
+        decimal principal = principalPayment;
+
+        if (month == DurationMonths) {
+          principal = balance;
+        }
+
+        balance = Math.Round(balance - principal, 2);
+
+        table.Add(new AmortizationTableEntry {
+          Month = month,
+          MonthlyPayment = principal + interest,
+          Principal = principal,
+          Interest = interest,
+          RemainingBalance = balance
+        });
+      }
+
+      return table.ToFixedList();
     }
 
     #endregion Helpers
