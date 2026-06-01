@@ -60,7 +60,27 @@ namespace Empiria.CashFlow.Projections {
 
     #region Methods
 
-    public decimal CalculateMonthlyPayment() {
+    public FixedList<AmortizationTableEntry> GetMonthlyTable(AmortizationMethod method) {
+      Assertion.Require(method != AmortizationMethod.None, nameof(method));
+
+      switch (method) {
+
+        case AmortizationMethod.CuotaFija:
+          return GetCuotaFijaMonthlyTable();
+
+        case AmortizationMethod.CuotaVariable:
+          return GetCuotaVariableMonthlyTable();
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized amortization method {method}.");
+      }
+    }
+
+    #endregion Methods
+
+    #region Helpers
+
+    private decimal CalculateFixedMonthlyPayment() {
       decimal monthlyRate = AnnualInterestRate / 100 / 12;
 
       // Formula: P * (r * (1+r)^n) / ((1+r)^n - 1)
@@ -72,12 +92,12 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    public FixedList<AmortizationTableEntry> GetMonthlyTable() {
+    private FixedList<AmortizationTableEntry> GetCuotaFijaMonthlyTable() {
 
       var table = new List<AmortizationTableEntry>(DurationMonths);
 
       decimal monthlyRate = AnnualInterestRate / 100 / 12;
-      decimal monthlyPayment = CalculateMonthlyPayment();
+      decimal monthlyPayment = CalculateFixedMonthlyPayment();
       decimal balance = Amount;
 
       for (int month = 1; month <= DurationMonths; month++) {
@@ -103,7 +123,12 @@ namespace Empiria.CashFlow.Projections {
       return table.ToFixedList();
     }
 
-    #endregion Methods
+
+    private FixedList<AmortizationTableEntry> GetCuotaVariableMonthlyTable() {
+      throw new System.NotImplementedException();
+    }
+
+    #endregion Helpers
 
   }  // class AmortizationTable
 

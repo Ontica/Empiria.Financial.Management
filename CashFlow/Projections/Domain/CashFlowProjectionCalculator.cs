@@ -60,7 +60,7 @@ namespace Empiria.CashFlow.Projections {
 
       var projectionColumn = firstDisbursement.ProjectionColumn;
 
-      foreach (var amortizationEntry in amortizationTable.GetMonthlyTable()
+      foreach (var amortizationEntry in amortizationTable.GetMonthlyTable(method)
                                                          .FindAll(x => x.Month <= 12)) {
 
         var month = amortizationEntry.Month + firstDisbursement.Month;
