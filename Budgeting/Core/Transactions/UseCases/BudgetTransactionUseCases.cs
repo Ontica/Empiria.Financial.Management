@@ -124,7 +124,7 @@ namespace Empiria.Budgeting.Transactions.UseCases {
         return BudgetAccountMapper.Map(accounts);
       }
 
-      FixedList<StandardAccount> availableAccounts = searcher.SearchAvailable();
+      FixedList<StandardAccount> availableAccounts = searcher.SearchAvailable(query.GetBaseParty());
 
       return BudgetAccountMapper.Map(accounts, availableAccounts, query.GetBaseParty());
     }

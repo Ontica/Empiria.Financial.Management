@@ -10,18 +10,22 @@
 
 using Empiria.Data;
 using Empiria.Financial;
+using Empiria.Parties;
 
 namespace Empiria.Budgeting.Data {
 
   /// <summary>Provides data access services for budget accounts.</summary>
   static internal class BudgetAccountData {
 
-    static internal FixedList<StandardAccount> SearchAvailableBudgetAccounts(string filter, string sort) {
+    static internal FixedList<StandardAccount> SearchAvailableBudgetAccounts(OrganizationalUnit orgUnit,
+                                                                             string filter, string sort) {
 
       var sql = "SELECT FMS_STD_ACCOUNTS.* " +
                 "FROM FMS_STD_ACCOUNTS " +
                 "WHERE {{FILTER}} STD_ACCT_ROLE_TYPE = 'P' AND STD_ACCT_STATUS = 'A' AND " +
-                "STD_ACCT_ID NOT IN (SELECT ACCT_STD_ACCT_ID FROM FMS_ACCOUNTS)";
+                $"STD_ACCT_ID NOT IN (SELECT ACCT_STD_ACCT_ID " +
+                                    $"FROM FMS_ACCOUNTS " +
+                                    $"WHERE ACCT_ORG_UNIT_ID = {orgUnit.Id})";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql = sql.Replace("{{FILTER}}", $"{filter} AND");

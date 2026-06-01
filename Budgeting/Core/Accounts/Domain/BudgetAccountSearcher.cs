@@ -14,6 +14,7 @@ using Empiria.Budgeting.Data;
 
 using Empiria.Budgeting.Transactions.Adapters;
 using Empiria.Budgeting.Transactions;
+using Empiria.Parties;
 
 namespace Empiria.Budgeting {
 
@@ -50,7 +51,7 @@ namespace Empiria.Budgeting {
     }
 
 
-    internal FixedList<StandardAccount> SearchAvailable() {
+    internal FixedList<StandardAccount> SearchAvailable(OrganizationalUnit orgUnit) {
 
       string budgetTypeFilter = GetBudgetTypeFilter();
       string accountsFilter = GetAccountsFilter("STD_ACCT_NUMBER");
@@ -61,7 +62,7 @@ namespace Empiria.Budgeting {
       filter.AppendAnd(accountsFilter);
       filter.AppendAnd(keywordsFilter);
 
-      return BudgetAccountData.SearchAvailableBudgetAccounts(filter.ToString(), "STD_ACCT_NUMBER");
+      return BudgetAccountData.SearchAvailableBudgetAccounts(orgUnit, filter.ToString(), "STD_ACCT_NUMBER");
     }
 
     #endregion Methods
