@@ -145,6 +145,10 @@ namespace Empiria.CashFlow.Projections {
 
       for (int month = 1; month <= RepaymentMonths; month++) {
 
+        if (balance <= 0) {
+          break;
+        }
+
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = Math.Round(monthlyPayment - interest, 2);
 
@@ -181,6 +185,10 @@ namespace Empiria.CashFlow.Projections {
       decimal principalPayment = CalculateMonthlyFixedPrincipalPayment(balance);
 
       for (int month = 1; month <= RepaymentMonths; month++) {
+
+        if (balance <= 0) {
+          break;
+        }
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = principalPayment;
