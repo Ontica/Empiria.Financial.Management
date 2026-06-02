@@ -54,10 +54,14 @@ namespace Empiria.CashFlow.Projections {
 
       decimal interestRate = GetInterestRate(yearMonth, financialData);
 
-      var amortizationTable = new AmortizationTable(disbursements.Sum(x => x.Amount),
-                                                    interestRate,
-                                                    financialData.RepaymentTerm,
-                                                    financialData.GracePeriod);
+      var amortizationParams = new AmortizationParameters {
+        Amount = disbursements.Sum(x => x.Amount),
+        AnnualInterestRate = interestRate,
+        RepaymentMonths = financialData.RepaymentTerm,
+        GraceMonths = financialData.GracePeriod
+      };
+
+      var amortizationTable = new AmortizationTable(amortizationParams);
 
       var projectionColumn = firstDisbursement.ProjectionColumn;
 
