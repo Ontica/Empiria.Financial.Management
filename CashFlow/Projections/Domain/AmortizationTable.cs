@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Empiria.CashFlow.Projections {
 
@@ -28,9 +29,17 @@ namespace Empiria.CashFlow.Projections {
 
   public class AmortizationParameters {
 
-    public decimal Amount {
+    public FixedList<(int Month, decimal Amount)> Disbursements {
       get; set;
     }
+
+
+    public decimal TotalAmount {
+      get {
+        return Disbursements.Sum(x => x.Amount);
+      }
+    }
+
 
     public decimal AnnualInterestRate {
       get; set;
@@ -57,7 +66,8 @@ namespace Empiria.CashFlow.Projections {
     }
 
     internal void EnsureValid() {
-      Assertion.Require(Amount > 0, "El importe debe ser mayor a cero.");
+      Assertion.Require(Disbursements, "Se requiere el campo con las variables mensuales de otorgamiento de crédito.");
+      Assertion.Require(TotalAmount > 0, "El importe total del otorgamiento de crédito debe ser mayor a cero.");
       Assertion.Require(AnnualInterestRate > 0, "La tasa de interés debe ser mayor a cero.");
       Assertion.Require(RepaymentMonths > 0, "El plazo de amortización en meses debe ser mayor a cero.");
       Assertion.Require(GraceMonths >= 0, "Los meses de gracia deben ser mayores o iguales a cero.");
@@ -123,7 +133,7 @@ namespace Empiria.CashFlow.Projections {
 
       decimal interest = 0;
 
-      decimal balance = _params.Amount;
+      decimal balance = _params.TotalAmount;
 
       for (int month = 1; month <= _params.GraceMonths; month++) {
 
@@ -137,13 +147,15 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    private decimal CalculateMonthFees(decimal balance, int month) {
-      if (month != 1) {
-        return 0;
+    private decimal CalculateMonthFees(int month) {
+
+      decimal amount = GetMonthDisbursement(month);
+
+      if (month == 1) {
+        return Math.Round(amount * _params.OpeningFee / 100, 2);
       }
 
-      return Math.Round(balance * _params.DisbursementFee / 100, 2) +
-             Math.Round(balance * _params.OpeningFee / 100, 2);
+      return Math.Round(amount * _params.DisbursementFee / 100, 2);
     }
 
 
@@ -165,7 +177,7 @@ namespace Empiria.CashFlow.Projections {
 
       decimal graceMonthsInterest = CalculateGraceMonthsInterest();
 
-      decimal balance = _params.Amount + graceMonthsInterest;
+      decimal balance = _params.TotalAmount + graceMonthsInterest;
 
       decimal monthlyPayment = CalculateFixedMonthlyPayment(balance);
 
@@ -177,7 +189,7 @@ namespace Empiria.CashFlow.Projections {
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = Math.Round(monthlyPayment - interest, 2);
-        decimal fees = CalculateMonthFees(balance, month);
+        decimal fees = CalculateMonthFees(month);
 
         if (month == _params.RepaymentMonths) {
           principal = balance;
@@ -207,7 +219,7 @@ namespace Empiria.CashFlow.Projections {
 
       decimal graceMonthsInterest = CalculateGraceMonthsInterest();
 
-      decimal balance = _params.Amount + graceMonthsInterest;
+      decimal balance = _params.TotalAmount + graceMonthsInterest;
 
       decimal principalPayment = CalculateMonthlyFixedPrincipalPayment(balance);
 
@@ -219,7 +231,7 @@ namespace Empiria.CashFlow.Projections {
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = principalPayment;
-        decimal fees = CalculateMonthFees(balance, month);
+        decimal fees = CalculateMonthFees(month);
 
         if (month == _params.RepaymentMonths) {
           principal = balance;
@@ -237,6 +249,16 @@ namespace Empiria.CashFlow.Projections {
       }
 
       return table.ToFixedList();
+    }
+
+
+    private decimal GetMonthDisbursement(int month) {
+
+      if (_params.Disbursements.Exists(x => x.Month == month)) {
+        return _params.Disbursements.First(x => x.Month == month).Amount;
+      }
+
+      return 0;
     }
 
     #endregion Helpers

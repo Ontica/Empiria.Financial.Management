@@ -56,7 +56,8 @@ namespace Empiria.CashFlow.Projections {
       decimal interestRate = GetInterestRate(yearMonth, financialData);
 
       var amortizationParams = new AmortizationParameters {
-        Amount = disbursements.Sum(x => x.Amount),
+
+        Disbursements = disbursements.Select(x => (x.Month - disbursements[0].Month + 1, x.Amount)).ToFixedList(),
         AnnualInterestRate = interestRate,
         RepaymentMonths = financialData.RepaymentTerm,
         GraceMonths = financialData.GracePeriod,
@@ -107,7 +108,8 @@ namespace Empiria.CashFlow.Projections {
 
     internal FixedList<CashFlowProjectionEntry> GetEntriesToBeRemoved() {
       return _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("01") ||
-                                              x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("03"));
+                                              x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("03") ||
+                                              x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("06"));
     }
 
     #region Helpers
