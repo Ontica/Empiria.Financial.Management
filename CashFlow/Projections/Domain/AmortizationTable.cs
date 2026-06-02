@@ -44,13 +44,30 @@ namespace Empiria.CashFlow.Projections {
       get; set;
     }
 
+    public decimal DisbursementFee {
+      get; internal set;
+    }
+
+    public decimal OpeningFee {
+      get; set;
+    }
+
+    public bool CapitalizeFees {
+      get; set;
+    }
+
     internal void EnsureValid() {
       Assertion.Require(Amount > 0, "El importe debe ser mayor a cero.");
       Assertion.Require(AnnualInterestRate > 0, "La tasa de interés debe ser mayor a cero.");
       Assertion.Require(RepaymentMonths > 0, "El plazo de amortización en meses debe ser mayor a cero.");
+      Assertion.Require(GraceMonths >= 0, "Los meses de gracia deben ser mayores o iguales a cero.");
+      Assertion.Require(DisbursementFee >= 0, "La comisión por desembolso debe ser un porcentaje mayor o igual a cero.");
+      Assertion.Require(OpeningFee >= 0, "La comisión por apertura debe ser un porcentaje mayor o igual a cero.");
     }
 
-  }
+  }  // class AmortizationParameters
+
+
 
   /// <summary>Generates an amortization table for a given loan or credit.</summary>
   public class AmortizationTable {
@@ -120,6 +137,16 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
+    private decimal CalculateMonthFees(decimal balance, int month) {
+      if (month != 1) {
+        return 0;
+      }
+
+      return Math.Round(balance * _params.DisbursementFee / 100, 2) +
+             Math.Round(balance * _params.OpeningFee / 100, 2);
+    }
+
+
     private decimal CalculateMonthlyFixedPrincipalPayment(decimal amount) {
       return Math.Round(amount / _params.RepaymentMonths, 2);
     }
@@ -150,6 +177,7 @@ namespace Empiria.CashFlow.Projections {
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = Math.Round(monthlyPayment - interest, 2);
+        decimal fees = CalculateMonthFees(balance, month);
 
         if (month == _params.RepaymentMonths) {
           principal = balance;
@@ -159,9 +187,9 @@ namespace Empiria.CashFlow.Projections {
 
         table.Add(new AmortizationTableEntry {
           Month = month,
-          MonthlyPayment = principal + interest,
           Principal = principal,
           Interest = interest,
+          Fees = fees,
           RemainingBalance = balance
         });
 
@@ -191,6 +219,7 @@ namespace Empiria.CashFlow.Projections {
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = principalPayment;
+        decimal fees = CalculateMonthFees(balance, month);
 
         if (month == _params.RepaymentMonths) {
           principal = balance;
@@ -200,9 +229,9 @@ namespace Empiria.CashFlow.Projections {
 
         table.Add(new AmortizationTableEntry {
           Month = month,
-          MonthlyPayment = principal + interest,
           Principal = principal,
           Interest = interest,
+          Fees = fees,
           RemainingBalance = balance
         });
       }
@@ -223,8 +252,11 @@ namespace Empiria.CashFlow.Projections {
       get; internal set;
     }
 
-    public decimal MonthlyPayment {
-      get; internal set;
+
+    public decimal MonthPayment {
+      get {
+        return Principal + Interest + Fees;
+      }
     }
 
     public decimal Principal {
@@ -232,6 +264,10 @@ namespace Empiria.CashFlow.Projections {
     }
 
     public decimal Interest {
+      get; internal set;
+    }
+
+    public decimal Fees {
       get; internal set;
     }
 

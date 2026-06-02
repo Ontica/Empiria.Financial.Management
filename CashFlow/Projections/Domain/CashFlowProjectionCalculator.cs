@@ -31,8 +31,9 @@ namespace Empiria.CashFlow.Projections {
     internal FixedList<CashFlowProjectionEntryFields> CalculateEntries(AmortizationMethod method) {
       Assertion.Require(method, nameof(method));
 
-      var principalAcct = TryGetPrincipalAccount();
-      var interestAcct = TryGetInterestAccount();
+      FinancialAccount principalAcct = TryGetPrincipalAccount();
+      FinancialAccount interestAcct = TryGetInterestAccount();
+      FinancialAccount feesAcct = TryGetFeesAccount();
 
       if (principalAcct == null || interestAcct == null) {
         return FixedList<CashFlowProjectionEntryFields>.Empty;
@@ -58,7 +59,10 @@ namespace Empiria.CashFlow.Projections {
         Amount = disbursements.Sum(x => x.Amount),
         AnnualInterestRate = interestRate,
         RepaymentMonths = financialData.RepaymentTerm,
-        GraceMonths = financialData.GracePeriod
+        GraceMonths = financialData.GracePeriod,
+        DisbursementFee = financialData.DisbursementFee,
+        OpeningFee = financialData.OpeningFee,
+        CapitalizeFees = financialData.CapitalizeFees
       };
 
       var amortizationTable = new AmortizationTable(amortizationParams);
@@ -89,11 +93,17 @@ namespace Empiria.CashFlow.Projections {
 
           list.Add(entry);
         }
+
+        if (feesAcct != null && amortizationEntry.Fees != 0) {
+          var entry = BuildEntry(projectionColumn, yearMonth,
+                                 feesAcct, amortizationEntry.Fees);
+
+          list.Add(entry);
+        }
       }
 
       return list.ToFixedList();
     }
-
 
     internal FixedList<CashFlowProjectionEntry> GetEntriesToBeRemoved() {
       return _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("01") ||
@@ -132,7 +142,6 @@ namespace Empiria.CashFlow.Projections {
                                                                       intrestRateTypeVariable);
 
       return variableInterestRate + interestRate;
-
     }
 
 
@@ -141,6 +150,12 @@ namespace Empiria.CashFlow.Projections {
                                 .OrderBy(x => x.Year)
                                 .ThenBy(x => x.Month)
                                 .ToFixedList();
+    }
+
+
+    private FinancialAccount TryGetFeesAccount() {
+      return _projection.BaseAccount.GetOperations()
+                                    .Find(x => x.StandardAccount.StdAcctNo.EndsWith("06"));
     }
 
 
