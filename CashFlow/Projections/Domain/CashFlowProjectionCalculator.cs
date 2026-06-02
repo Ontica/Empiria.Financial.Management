@@ -56,14 +56,15 @@ namespace Empiria.CashFlow.Projections {
 
       var amortizationTable = new AmortizationTable(disbursements.Sum(x => x.Amount),
                                                     interestRate,
-                                                    financialData.RepaymentTerm);
+                                                    financialData.RepaymentTerm,
+                                                    financialData.GracePeriod);
 
       var projectionColumn = firstDisbursement.ProjectionColumn;
 
       foreach (var amortizationEntry in amortizationTable.GetMonthlyTable(method)
                                                          .FindAll(x => x.Month <= 12)) {
 
-        var month = amortizationEntry.Month + firstDisbursement.Month;
+        var month = financialData.GracePeriod + amortizationEntry.Month + firstDisbursement.Month;
 
         if (month > 12) {
           break;

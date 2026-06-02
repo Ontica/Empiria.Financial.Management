@@ -28,17 +28,15 @@ namespace Empiria.CashFlow.Projections {
   /// <summary>Generates an amortization table for a given loan or credit.</summary>
   public class AmortizationTable {
 
-    public AmortizationTable(decimal amount, decimal annualInterestRate, int durationMonths) {
-      if (amount <= 0)
-        throw new ArgumentException("El importe debe ser mayor a cero.");
-      if (annualInterestRate <= 0)
-        throw new ArgumentException("La tasa de interés debe ser mayor a cero.");
-      if (durationMonths <= 0)
-        throw new ArgumentException("La duración debe ser mayor a cero.");
+    public AmortizationTable(decimal amount, decimal annualInterestRate, int repaymentMonths, int graceMonths = 0) {
+      Assertion.Require(amount > 0, "El importe debe ser mayor a cero.");
+      Assertion.Require(annualInterestRate > 0, "La tasa de interés debe ser mayor a cero.");
+      Assertion.Require(repaymentMonths > 0, "El plazo de amortización en meses debe ser mayor a cero.");
 
       Amount = amount;
       AnnualInterestRate = annualInterestRate;
-      DurationMonths = durationMonths;
+      RepaymentMonths = repaymentMonths;
+      GraceMonths = graceMonths;
     }
 
 
@@ -52,8 +50,18 @@ namespace Empiria.CashFlow.Projections {
       get; private set;
     }
 
-    public int DurationMonths {
+    public int GraceMonths {
       get; private set;
+    }
+
+    public int RepaymentMonths {
+      get; private set;
+    }
+
+    public int TotalMonths {
+      get {
+        return RepaymentMonths + GraceMonths;
+      }
     }
 
     #endregion Properties
@@ -80,20 +88,41 @@ namespace Empiria.CashFlow.Projections {
 
     #region Helpers
 
-    private decimal CalculateFixedMonthlyPayment() {
-      decimal monthlyRate = AnnualInterestRate / 100 / 12;
+    private decimal CalculateFixedMonthlyPayment(decimal amount) {
+
+      decimal monthlyRate = CalculateMonthlyInterestRate();
 
       // Formula: P * (r * (1+r)^n) / ((1+r)^n - 1)
-      double factor = Math.Pow((double) (1 + monthlyRate), DurationMonths);
+      double factor = Math.Pow((double) (1 + monthlyRate), RepaymentMonths);
 
-      decimal monthlyPayment = Amount * ((monthlyRate * (decimal) factor) / ((decimal) factor - 1));
+      decimal monthlyPayment = amount * ((monthlyRate * (decimal) factor) / ((decimal) factor - 1));
 
       return Math.Round(monthlyPayment, 2);
     }
 
 
-    private decimal CalculateMonthlyFixedPrincipalPayment() {
-      return Amount / DurationMonths;
+    private decimal CalculateGraceMonthsInterest() {
+
+      decimal monthlyRate = CalculateMonthlyInterestRate();
+
+      decimal interest = 0;
+
+      decimal balance = Amount;
+
+      for (int month = 1; month <= GraceMonths; month++) {
+
+        decimal monthInterest = Math.Round(balance * monthlyRate, 2);
+
+        interest += monthInterest;
+        balance += monthInterest;
+      }
+
+      return interest;
+    }
+
+
+    private decimal CalculateMonthlyFixedPrincipalPayment(decimal amount) {
+      return Math.Round(amount / RepaymentMonths, 2);
     }
 
 
@@ -104,19 +133,22 @@ namespace Empiria.CashFlow.Projections {
 
     private FixedList<AmortizationTableEntry> GetCuotaFijaMonthlyTable() {
 
-      var table = new List<AmortizationTableEntry>(DurationMonths);
+      var table = new List<AmortizationTableEntry>(RepaymentMonths);
 
       decimal monthlyRate = CalculateMonthlyInterestRate();
-      decimal monthlyPayment = CalculateFixedMonthlyPayment();
 
-      decimal balance = Amount;
+      decimal graceMonthsInterest = CalculateGraceMonthsInterest();
 
-      for (int month = 1; month <= DurationMonths; month++) {
+      decimal balance = Amount + graceMonthsInterest;
+
+      decimal monthlyPayment = CalculateFixedMonthlyPayment(balance);
+
+      for (int month = 1; month <= RepaymentMonths; month++) {
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = Math.Round(monthlyPayment - interest, 2);
 
-        if (month == DurationMonths) {
+        if (month == RepaymentMonths) {
           principal = balance;
         }
 
@@ -129,6 +161,7 @@ namespace Empiria.CashFlow.Projections {
           Interest = interest,
           RemainingBalance = balance
         });
+
       }
 
       return table.ToFixedList();
@@ -137,19 +170,22 @@ namespace Empiria.CashFlow.Projections {
 
     private FixedList<AmortizationTableEntry> GetCuotaVariableMonthlyTable() {
 
-      var table = new List<AmortizationTableEntry>(DurationMonths);
+      var table = new List<AmortizationTableEntry>(RepaymentMonths);
 
       decimal monthlyRate = CalculateMonthlyInterestRate();
-      decimal principalPayment = CalculateMonthlyFixedPrincipalPayment();
 
-      decimal balance = Amount;
+      decimal graceMonthsInterest = CalculateGraceMonthsInterest();
 
-      for (int month = 1; month <= DurationMonths; month++) {
+      decimal balance = Amount + graceMonthsInterest;
+
+      decimal principalPayment = CalculateMonthlyFixedPrincipalPayment(balance);
+
+      for (int month = 1; month <= RepaymentMonths; month++) {
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = principalPayment;
 
-        if (month == DurationMonths) {
+        if (month == RepaymentMonths) {
           principal = balance;
         }
 
