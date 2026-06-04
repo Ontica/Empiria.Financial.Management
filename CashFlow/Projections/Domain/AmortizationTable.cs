@@ -133,7 +133,7 @@ namespace Empiria.CashFlow.Projections {
 
       decimal interest = 0;
 
-      decimal balance = _params.TotalAmount;
+      decimal balance = _params.Disbursements[0].Amount;
 
       for (int month = 1; month <= _params.GraceMonths; month++) {
 
@@ -159,8 +159,8 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    private decimal CalculateMonthlyFixedPrincipalPayment(decimal amount) {
-      return Math.Round(amount / _params.RepaymentMonths, 2);
+    private decimal CalculateMonthlyFixedPrincipalPayment(decimal amount, int month) {
+      return Math.Round(amount / (_params.RepaymentMonths - month + 1), 2);
     }
 
 
@@ -177,11 +177,13 @@ namespace Empiria.CashFlow.Projections {
 
       decimal graceMonthsInterest = CalculateGraceMonthsInterest();
 
-      decimal balance = _params.TotalAmount + graceMonthsInterest;
-
-      decimal monthlyPayment = CalculateFixedMonthlyPayment(balance);
+      decimal balance = graceMonthsInterest;
 
       for (int month = 1; month <= _params.RepaymentMonths; month++) {
+
+        balance += GetMonthDisbursement(month);
+
+        decimal monthlyPayment = CalculateFixedMonthlyPayment(balance);
 
         if (balance <= 0) {
           break;
@@ -219,11 +221,17 @@ namespace Empiria.CashFlow.Projections {
 
       decimal graceMonthsInterest = CalculateGraceMonthsInterest();
 
-      decimal balance = _params.TotalAmount + graceMonthsInterest;
+      decimal balance = graceMonthsInterest;
 
-      decimal principalPayment = CalculateMonthlyFixedPrincipalPayment(balance);
+      decimal principalPayment = 0;
 
       for (int month = 1; month <= _params.RepaymentMonths; month++) {
+
+        if (GetMonthDisbursement(month) != 0) {
+          balance += GetMonthDisbursement(month);
+
+          principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month);
+        }
 
         if (balance <= 0) {
           break;
