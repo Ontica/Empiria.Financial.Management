@@ -100,16 +100,23 @@ namespace Empiria.CashFlow.Projections {
                                  feesAcct, amortizationEntry.Fees);
 
           list.Add(entry);
+
+          var taxesEntry = BuildEntry(projectionColumn, yearMonth,
+                                      GetFeesTaxesAccount(), amortizationEntry.Fees * 0.16m);
+
+          list.Add(taxesEntry);
         }
       }
 
       return list.ToFixedList();
     }
 
+
     internal FixedList<CashFlowProjectionEntry> GetEntriesToBeRemoved() {
       return _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("01") ||
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("03") ||
-                                              x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("06"));
+                                              x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("06") ||
+                                              x.CashFlowAccount.Id == GetFeesTaxesAccount().Id);
     }
 
     #region Helpers
@@ -154,6 +161,10 @@ namespace Empiria.CashFlow.Projections {
                                 .ToFixedList();
     }
 
+
+    private FinancialAccount GetFeesTaxesAccount() {
+      return FinancialAccount.Parse(222834);
+    }
 
     private FinancialAccount TryGetFeesAccount() {
       return _projection.BaseAccount.GetOperations()
