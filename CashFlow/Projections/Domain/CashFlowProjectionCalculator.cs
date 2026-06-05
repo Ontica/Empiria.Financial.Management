@@ -36,6 +36,7 @@ namespace Empiria.CashFlow.Projections {
       FinancialAccount principalAcct = TryGetPrincipalAccount();
       FinancialAccount interestAcct = TryGetInterestAccount();
       FinancialAccount feesAcct = TryGetFeesAccount();
+      FinancialAccount capitalizedInterestAcct = TryGetCapitalizedInterestAccount();
 
       if (principalAcct == null || interestAcct == null) {
         return FixedList<CashFlowProjectionEntryFields>.Empty;
@@ -67,7 +68,8 @@ namespace Empiria.CashFlow.Projections {
         GraceMonths = financialData.GracePeriod,
         DisbursementFee = financialData.DisbursementFee,
         OpeningFee = financialData.OpeningFee,
-        CapitalizeFees = financialData.CapitalizeFees
+        CapitalizeFees = financialData.CapitalizeFees,
+        CapitalizeInterest = financialData.CapitalizeInterest
       };
 
       var amortizationTable = new AmortizationTable(amortizationParams);
@@ -99,6 +101,13 @@ namespace Empiria.CashFlow.Projections {
           list.Add(entry);
         }
 
+        if (amortizationEntry.CapitalizedInterest != 0) {
+          var entry = BuildEntry(projectionColumn, yearMonth,
+                                 capitalizedInterestAcct, amortizationEntry.CapitalizedInterest);
+
+          list.Add(entry);
+        }
+
         if (feesAcct != null && amortizationEntry.Fees != 0) {
           var entry = BuildEntry(projectionColumn, yearMonth,
                                  feesAcct, amortizationEntry.Fees);
@@ -119,6 +128,7 @@ namespace Empiria.CashFlow.Projections {
     internal FixedList<CashFlowProjectionEntry> GetEntriesToBeRemoved() {
       return _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("01") ||
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("03") ||
+                                              x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("05") ||
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("06") ||
                                               x.CashFlowAccount.Id == GetFeesTaxesAccount().Id);
     }
@@ -169,6 +179,13 @@ namespace Empiria.CashFlow.Projections {
     private FinancialAccount GetFeesTaxesAccount() {
       return FinancialAccount.Parse(222834);
     }
+
+
+    private FinancialAccount TryGetCapitalizedInterestAccount() {
+      return _projection.BaseAccount.GetOperations()
+                                    .Find(x => x.StandardAccount.StdAcctNo.EndsWith("05"));
+    }
+
 
     private FinancialAccount TryGetFeesAccount() {
       return _projection.BaseAccount.GetOperations()

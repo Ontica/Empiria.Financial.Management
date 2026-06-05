@@ -79,6 +79,10 @@ namespace Empiria.CashFlow.Projections {
       get; set;
     }
 
+    public bool CapitalizeInterest {
+      get; set;
+    }
+
     internal void EnsureValid() {
       Assertion.Require(Disbursements, "Se requiere el campo con las variables mensuales de otorgamiento de crédito.");
       Assertion.Require(TotalAmount > 0, "El importe total del otorgamiento de crédito debe ser mayor a cero.");
@@ -241,7 +245,8 @@ namespace Empiria.CashFlow.Projections {
 
       decimal balance = 0;
       decimal feesBalance = 0;
-
+      decimal interestPayment = 0;
+      decimal capitalizedInterest = 0;
       decimal principalPayment = 0;
 
       for (int month = 2; month <= _params.TotalMonths; month++) {
@@ -251,6 +256,16 @@ namespace Empiria.CashFlow.Projections {
           balance += GetMonthDisbursement(month - 1);
 
           feesBalance += CalculateMonthFees(month - 1);
+
+          interestPayment = Math.Round(balance * monthlyRate, 2);
+
+          if (_params.CapitalizeInterest) {
+            balance += interestPayment;
+            capitalizedInterest = interestPayment;
+            interestPayment = 0;
+          } else {
+            capitalizedInterest = 0;
+          }
 
           if (_params.CapitalizeFees) {
             balance += feesBalance;
@@ -268,8 +283,6 @@ namespace Empiria.CashFlow.Projections {
           continue;
         }
 
-        decimal interest = Math.Round(balance * monthlyRate, 2);
-
         if (month == _params.TotalMonths) {
           principalPayment = balance;
         }
@@ -279,7 +292,8 @@ namespace Empiria.CashFlow.Projections {
         table.Add(new AmortizationTableEntry {
           Month = month,
           Principal = principalPayment,
-          Interest = interest,
+          Interest = interestPayment,
+          CapitalizedInterest = capitalizedInterest,
           Fees = feesBalance,
           RemainingBalance = balance
         });
@@ -329,21 +343,16 @@ namespace Empiria.CashFlow.Projections {
       get; internal set;
     }
 
+    public decimal CapitalizedInterest {
+      get; internal set;
+    }
+
     public decimal Fees {
       get; internal set;
     }
 
     public decimal RemainingBalance {
       get; internal set;
-    }
-
-
-    internal void Sum(AmortizationTableEntry entry) {
-
-      Principal += entry.Principal;
-      Interest += entry.Interest;
-      Fees += entry.Fees;
-      RemainingBalance += entry.RemainingBalance;
     }
 
   }  // class AmortizationTableEntry
