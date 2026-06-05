@@ -48,7 +48,7 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(projection.Plan.IncludesYear(year), nameof(year));
       Assertion.Require(1 <= month && month <= 12, nameof(month));
       Assertion.Require(projection.Plan.IncludesMonth(year, month), nameof(month));
-      Assertion.Require(amount > 0, nameof(amount));
+      Assertion.Require(amount > 0, $"Amount must be greater than zero: {amount}");
 
       Projection = projection;
       CashFlowAccount = account;

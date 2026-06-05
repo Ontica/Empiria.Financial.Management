@@ -57,7 +57,8 @@ namespace Empiria.CashFlow.Projections {
 
       var amortizationParams = new AmortizationParameters {
 
-        Disbursements = disbursements.Select(x => (x.Month - disbursements[0].Month + 1, x.Amount)).ToFixedList(),
+        Disbursements = disbursements.Select(x => (x.Month - disbursements[0].Month + 1, x.Amount))
+                                     .ToFixedList(),
         AnnualInterestRate = interestRate,
         RepaymentMonths = financialData.RepaymentTerm,
         GraceMonths = financialData.GracePeriod,

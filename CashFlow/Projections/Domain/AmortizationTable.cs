@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Empiria.CashFlow.Projections {
 
-
+  /// <summary>Enumerates amortization methods.</summary>
   public enum AmortizationMethod {
 
     CuotaFija,
@@ -26,7 +26,7 @@ namespace Empiria.CashFlow.Projections {
   }
 
 
-
+  /// <summary>Holds parameters used to build amortization tables.</summary>
   public class AmortizationParameters {
 
     public FixedList<(int Month, decimal Amount)> Disbursements {
@@ -79,7 +79,7 @@ namespace Empiria.CashFlow.Projections {
 
 
 
-  /// <summary>Generates an amortization table for a given loan or credit.</summary>
+  /// <summary>Service used to generate an amortization table for a given loan or credit.</summary>
   public class AmortizationTable {
 
     private AmortizationParameters _params;
@@ -133,9 +133,11 @@ namespace Empiria.CashFlow.Projections {
 
       decimal interest = 0;
 
-      decimal balance = _params.Disbursements[0].Amount;
+      decimal balance = 0;
 
       for (int month = 1; month <= _params.GraceMonths; month++) {
+
+        balance += GetMonthDisbursement(month);
 
         decimal monthInterest = Math.Round(balance * monthlyRate, 2);
 
@@ -228,6 +230,7 @@ namespace Empiria.CashFlow.Projections {
       for (int month = 1; month <= _params.RepaymentMonths; month++) {
 
         if (GetMonthDisbursement(month) != 0) {
+
           balance += GetMonthDisbursement(month);
 
           principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month);

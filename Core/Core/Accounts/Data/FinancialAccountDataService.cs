@@ -2,13 +2,14 @@
 *                                                                                                            *
 *  Module   : Account                                    Component : Data Layer                              *
 *  Assembly : Empiria.Financial.Management.Core.dll      Pattern   : Data Service                            *
-*  Type     : AccountDataService                         License   : Please read LICENSE.txt file            *
+*  Type     : FinancialAccountDataService                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides data access services for financial accounts.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+
 using Empiria.Data;
 
 namespace Empiria.Financial.Data {
@@ -90,6 +91,7 @@ namespace Empiria.Financial.Data {
       return DataReader.GetFixedList<FinancialAccount>(op);
     }
 
+
     static internal void WriteAccount(FinancialAccount o, string extensionData) {
       var op = DataOperation.Parse("write_FMS_Account",
          o.Id, o.UID, o.FinancialAccountType.Id, o.StandardAccount.Id, o.Organization.Id,
@@ -101,6 +103,6 @@ namespace Empiria.Financial.Data {
       DataWriter.Execute(op);
     }
 
-  }  // class AccountDataService
+  }  // class FinancialAccountDataService
 
 }  // namespace Empiria.Financial.Data

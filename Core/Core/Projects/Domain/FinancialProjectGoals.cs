@@ -86,13 +86,18 @@ namespace Empiria.Financial.Projects {
 
     #endregion Properties
 
-    #region Helpers
+    #region Methods
+
+    public JsonObject ToJson() {
+      return _projectGoals;
+    }
+
 
     public string ToJsonString() {
       return _projectGoals.ToString();
     }
 
-    #endregion Helpers
+    #endregion Methods
 
   }  // class FinancialProjectGoals
 
