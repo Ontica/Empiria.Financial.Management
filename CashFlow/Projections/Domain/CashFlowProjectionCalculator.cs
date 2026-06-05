@@ -10,9 +10,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Empiria.DynamicData.ExternalData;
+
 using Empiria.Financial;
 using Empiria.Time;
+
+using Empiria.DynamicData.ExternalData;
 
 namespace Empiria.CashFlow.Projections {
 
@@ -57,8 +59,9 @@ namespace Empiria.CashFlow.Projections {
 
       var amortizationParams = new AmortizationParameters {
 
-        Disbursements = disbursements.Select(x => (x.Month - disbursements[0].Month + 1, x.Amount))
+        Disbursements = disbursements.Select(x => (x.Month, x.Amount))
                                      .ToFixedList(),
+        InitialPeriod = yearMonth,
         AnnualInterestRate = interestRate,
         RepaymentMonths = financialData.RepaymentTerm,
         GraceMonths = financialData.GracePeriod,
@@ -74,7 +77,7 @@ namespace Empiria.CashFlow.Projections {
       foreach (var amortizationEntry in amortizationTable.GetMonthlyTable(method)
                                                          .FindAll(x => x.Month <= 12)) {
 
-        var month = financialData.GracePeriod + amortizationEntry.Month + firstDisbursement.Month;
+        var month = amortizationEntry.Month;
 
         if (month > 12) {
           break;
