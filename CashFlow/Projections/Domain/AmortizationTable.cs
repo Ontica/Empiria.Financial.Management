@@ -252,6 +252,11 @@ namespace Empiria.CashFlow.Projections {
 
           feesBalance += CalculateMonthFees(month - 1);
 
+          if (_params.CapitalizeFees) {
+            balance += feesBalance;
+            feesBalance = 0;
+          }
+
           principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month - 1);
         }
 
@@ -264,17 +269,16 @@ namespace Empiria.CashFlow.Projections {
         }
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
-        decimal principal = principalPayment;
 
         if (month == _params.TotalMonths) {
-          principal = balance;
+          principalPayment = balance;
         }
 
-        balance = Math.Round(balance - principal, 2);
+        balance = Math.Round(balance - principalPayment, 2);
 
         table.Add(new AmortizationTableEntry {
           Month = month,
-          Principal = principal,
+          Principal = principalPayment,
           Interest = interest,
           Fees = feesBalance,
           RemainingBalance = balance
