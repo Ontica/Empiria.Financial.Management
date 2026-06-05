@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Empiria.Time;
+
 namespace Empiria.CashFlow.Projections {
 
   /// <summary>Enumerates amortization methods.</summary>
@@ -41,11 +43,23 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    public decimal AnnualInterestRate {
+    public YearMonth InitialPeriod {
       get; set;
     }
 
     public int RepaymentMonths {
+      get; set;
+    }
+
+
+    public int TotalMonths {
+      get {
+        return InitialPeriod.Month + GraceMonths + RepaymentMonths;
+      }
+    }
+
+
+    public decimal AnnualInterestRate {
       get; set;
     }
 
@@ -173,7 +187,7 @@ namespace Empiria.CashFlow.Projections {
 
     private FixedList<AmortizationTableEntry> GetCuotaFijaMonthlyTable() {
 
-      var table = new List<AmortizationTableEntry>(_params.RepaymentMonths);
+      var table = new List<AmortizationTableEntry>(_params.TotalMonths);
 
       decimal monthlyRate = CalculateMonthlyInterestRate();
 
@@ -181,21 +195,21 @@ namespace Empiria.CashFlow.Projections {
 
       decimal balance = graceMonthsInterest;
 
-      for (int month = 1; month <= _params.RepaymentMonths; month++) {
+      for (int month = 1; month <= _params.TotalMonths; month++) {
 
         balance += GetMonthDisbursement(month);
 
         decimal monthlyPayment = CalculateFixedMonthlyPayment(balance);
 
         if (balance <= 0) {
-          break;
+          continue;
         }
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = Math.Round(monthlyPayment - interest, 2);
         decimal fees = CalculateMonthFees(month);
 
-        if (month == _params.RepaymentMonths) {
+        if (month == _params.TotalMonths) {
           principal = balance;
         }
 
@@ -227,7 +241,7 @@ namespace Empiria.CashFlow.Projections {
 
       decimal principalPayment = 0;
 
-      for (int month = 1; month <= _params.RepaymentMonths; month++) {
+      for (int month = 1; month <= _params.TotalMonths; month++) {
 
         if (GetMonthDisbursement(month) != 0) {
 
@@ -236,21 +250,25 @@ namespace Empiria.CashFlow.Projections {
           principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month);
         }
 
+        if (month < _params.InitialPeriod.Month) {
+          continue;
+        }
+
         if (balance <= 0) {
-          break;
+          continue;
         }
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = principalPayment;
         decimal fees = CalculateMonthFees(month);
 
-        if (month == _params.RepaymentMonths) {
+        if (month == _params.TotalMonths) {
           principal = balance;
         }
 
         balance = Math.Round(balance - principal, 2);
 
-        table.Add(new AmortizationTableEntry {
+        InsertOrSumTableEntry(table, new AmortizationTableEntry {
           Month = month,
           Principal = principal,
           Interest = interest,
@@ -262,6 +280,30 @@ namespace Empiria.CashFlow.Projections {
       return table.ToFixedList();
     }
 
+    private void InsertOrSumTableEntry(List<AmortizationTableEntry> table,
+                                       AmortizationTableEntry entry) {
+
+      int month = 0;
+
+      if (entry.Month == _params.InitialPeriod.Month) {
+        month = entry.Month + _params.GraceMonths + 1;
+      } else {
+        month = entry.Month + 1;
+      }
+
+      entry.Month = month;
+
+      var monthEntry = table.Find(x => x.Month == month);
+
+      if (monthEntry == null) {
+
+        table.Add(entry);
+
+      } else {
+
+        monthEntry.Sum(entry);
+      }
+    }
 
     private decimal GetMonthDisbursement(int month) {
 
@@ -306,6 +348,15 @@ namespace Empiria.CashFlow.Projections {
 
     public decimal RemainingBalance {
       get; internal set;
+    }
+
+
+    internal void Sum(AmortizationTableEntry entry) {
+
+      Principal += entry.Principal;
+      Interest += entry.Interest;
+      Fees += entry.Fees;
+      RemainingBalance += entry.RemainingBalance;
     }
 
   }  // class AmortizationTableEntry
