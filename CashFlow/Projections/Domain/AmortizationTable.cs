@@ -167,7 +167,11 @@ namespace Empiria.CashFlow.Projections {
 
       decimal amount = GetMonthDisbursement(month);
 
-      if (month == 1) {
+      int firstDisbursementMonth = _params.Disbursements
+                                          .First(x => x.Amount != 0m)
+                                          .Month;
+
+      if (month == firstDisbursementMonth) {
         return Math.Round(amount * _params.OpeningFee / 100, 2);
       }
 
@@ -235,32 +239,32 @@ namespace Empiria.CashFlow.Projections {
 
       decimal monthlyRate = CalculateMonthlyInterestRate();
 
-      decimal graceMonthsInterest = CalculateGraceMonthsInterest();
-
-      decimal balance = graceMonthsInterest;
+      decimal balance = 0;
+      decimal feesBalance = 0;
 
       decimal principalPayment = 0;
 
-      for (int month = 1; month <= _params.TotalMonths; month++) {
+      for (int month = 2; month <= _params.TotalMonths; month++) {
 
-        if (GetMonthDisbursement(month) != 0) {
+        if (GetMonthDisbursement(month - 1) != 0) {
 
-          balance += GetMonthDisbursement(month);
+          balance += GetMonthDisbursement(month - 1);
 
-          principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month);
+          feesBalance += CalculateMonthFees(month - 1);
+
+          principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month - 1);
         }
 
-        if (month < _params.InitialPeriod.Month) {
+        if (month < _params.InitialPeriod.Month + _params.GraceMonths) {
           continue;
         }
 
-        if (balance <= 0) {
+        if (balance <= 0 && feesBalance <= 0) {
           continue;
         }
 
         decimal interest = Math.Round(balance * monthlyRate, 2);
         decimal principal = principalPayment;
-        decimal fees = CalculateMonthFees(month);
 
         if (month == _params.TotalMonths) {
           principal = balance;
@@ -268,42 +272,20 @@ namespace Empiria.CashFlow.Projections {
 
         balance = Math.Round(balance - principal, 2);
 
-        InsertOrSumTableEntry(table, new AmortizationTableEntry {
+        table.Add(new AmortizationTableEntry {
           Month = month,
           Principal = principal,
           Interest = interest,
-          Fees = fees,
+          Fees = feesBalance,
           RemainingBalance = balance
         });
+
+        feesBalance = 0;
       }
 
       return table.ToFixedList();
     }
 
-    private void InsertOrSumTableEntry(List<AmortizationTableEntry> table,
-                                       AmortizationTableEntry entry) {
-
-      int month = 0;
-
-      if (entry.Month == _params.InitialPeriod.Month) {
-        month = entry.Month + _params.GraceMonths + 1;
-      } else {
-        month = entry.Month + 1;
-      }
-
-      entry.Month = month;
-
-      var monthEntry = table.Find(x => x.Month == month);
-
-      if (monthEntry == null) {
-
-        table.Add(entry);
-
-      } else {
-
-        monthEntry.Sum(entry);
-      }
-    }
 
     private decimal GetMonthDisbursement(int month) {
 
@@ -313,6 +295,7 @@ namespace Empiria.CashFlow.Projections {
 
       return 0;
     }
+
 
     #endregion Helpers
 
