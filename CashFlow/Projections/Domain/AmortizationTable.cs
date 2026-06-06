@@ -100,6 +100,8 @@ namespace Empiria.CashFlow.Projections {
   /// <summary>Service used to generate an amortization table for a given loan or credit.</summary>
   public class AmortizationTable {
 
+    private const decimal FEES_TAX = 0.16m;
+
     private AmortizationParameters _params;
 
     public AmortizationTable(AmortizationParameters parameters) {
@@ -264,16 +266,12 @@ namespace Empiria.CashFlow.Projections {
             balance += interestPayment;
             capitalizedInterest = interestPayment;
             interestPayment = 0;
-          } else {
-            capitalizedInterest = 0;
           }
 
           if (_params.CapitalizeFees) {
-            balance += feesBalance;
-            capitalizedFees = feesBalance;
+            balance += feesBalance + (feesBalance * FEES_TAX);
+            capitalizedFees = feesBalance + (feesBalance * FEES_TAX);
             feesBalance = 0;
-          } else {
-            capitalizedFees = 0;
           }
 
           principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month - 1);
@@ -298,12 +296,15 @@ namespace Empiria.CashFlow.Projections {
           Principal = principalPayment,
           Interest = interestPayment,
           Fees = feesBalance,
+          FeesTaxes = feesBalance * FEES_TAX,
           CapitalizedInterest = capitalizedInterest,
           CapitalizedFees = capitalizedFees,
           RemainingBalance = balance
         });
 
         feesBalance = 0;
+        capitalizedInterest = 0;
+        capitalizedFees = 0;
       }
 
       return table.ToFixedList();
@@ -348,15 +349,19 @@ namespace Empiria.CashFlow.Projections {
       get; internal set;
     }
 
+    public decimal Fees {
+      get; internal set;
+    }
+
+    public decimal FeesTaxes {
+      get; internal set;
+    }
+
     public decimal CapitalizedInterest {
       get; internal set;
     }
 
     public decimal CapitalizedFees {
-      get; internal set;
-    }
-
-    public decimal Fees {
       get; internal set;
     }
 

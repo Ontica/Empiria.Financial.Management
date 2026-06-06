@@ -21,6 +21,8 @@ namespace Empiria.CashFlow.Projections {
   /// <summary>Generates cash flow projection entries with their values using financial data.</summary>
   internal class CashFlowProjectionCalculator {
 
+    static private readonly FinancialAccount FEES_TAXES_ACCOUNT = FinancialAccount.Parse(222834);
+
     private CashFlowProjection _projection;
 
     internal CashFlowProjectionCalculator(CashFlowProjection projection) {
@@ -114,9 +116,12 @@ namespace Empiria.CashFlow.Projections {
                                  feesAcct, amortizationEntry.Fees);
 
           list.Add(entry);
+        }
 
+
+        if (amortizationEntry.FeesTaxes != 0) {
           var taxesEntry = BuildEntry(projectionColumn, yearMonth,
-                                      GetFeesTaxesAccount(), amortizationEntry.Fees * 0.16m);
+                                      FEES_TAXES_ACCOUNT, amortizationEntry.FeesTaxes);
 
           list.Add(taxesEntry);
         }
@@ -140,7 +145,7 @@ namespace Empiria.CashFlow.Projections {
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("05") ||
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("06") ||
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("15") ||
-                                              x.CashFlowAccount.Id == GetFeesTaxesAccount().Id);
+                                              x.CashFlowAccount.Equals(FEES_TAXES_ACCOUNT));
     }
 
     #region Helpers
@@ -183,11 +188,6 @@ namespace Empiria.CashFlow.Projections {
                                 .OrderBy(x => x.Year)
                                 .ThenBy(x => x.Month)
                                 .ToFixedList();
-    }
-
-
-    private FinancialAccount GetFeesTaxesAccount() {
-      return FinancialAccount.Parse(222834);
     }
 
 
