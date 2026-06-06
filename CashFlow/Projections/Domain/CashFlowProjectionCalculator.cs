@@ -37,6 +37,7 @@ namespace Empiria.CashFlow.Projections {
       FinancialAccount interestAcct = TryGetInterestAccount();
       FinancialAccount feesAcct = TryGetFeesAccount();
       FinancialAccount capitalizedInterestAcct = TryGetCapitalizedInterestAccount();
+      FinancialAccount capitalizedFeesAcct = TryGetCapitalizedFeesAccount();
 
       if (principalAcct == null || interestAcct == null) {
         return FixedList<CashFlowProjectionEntryFields>.Empty;
@@ -108,7 +109,7 @@ namespace Empiria.CashFlow.Projections {
           list.Add(entry);
         }
 
-        if (feesAcct != null && amortizationEntry.Fees != 0) {
+        if (amortizationEntry.Fees != 0) {
           var entry = BuildEntry(projectionColumn, yearMonth,
                                  feesAcct, amortizationEntry.Fees);
 
@@ -118,6 +119,14 @@ namespace Empiria.CashFlow.Projections {
                                       GetFeesTaxesAccount(), amortizationEntry.Fees * 0.16m);
 
           list.Add(taxesEntry);
+        }
+
+
+        if (amortizationEntry.CapitalizedFees != 0) {
+          var entry = BuildEntry(projectionColumn, yearMonth,
+                                 capitalizedFeesAcct, amortizationEntry.CapitalizedFees);
+
+          list.Add(entry);
         }
       }
 
@@ -130,6 +139,7 @@ namespace Empiria.CashFlow.Projections {
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("03") ||
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("05") ||
                                               x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("06") ||
+                                              x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("15") ||
                                               x.CashFlowAccount.Id == GetFeesTaxesAccount().Id);
     }
 
@@ -178,6 +188,12 @@ namespace Empiria.CashFlow.Projections {
 
     private FinancialAccount GetFeesTaxesAccount() {
       return FinancialAccount.Parse(222834);
+    }
+
+
+    private FinancialAccount TryGetCapitalizedFeesAccount() {
+      return _projection.BaseAccount.GetOperations()
+                                    .Find(x => x.StandardAccount.StdAcctNo.EndsWith("15"));
     }
 
 

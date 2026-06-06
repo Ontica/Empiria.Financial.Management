@@ -244,10 +244,11 @@ namespace Empiria.CashFlow.Projections {
       decimal monthlyRate = CalculateMonthlyInterestRate();
 
       decimal balance = 0;
-      decimal feesBalance = 0;
       decimal interestPayment = 0;
       decimal capitalizedInterest = 0;
       decimal principalPayment = 0;
+      decimal feesBalance = 0;
+      decimal capitalizedFees = 0;
 
       for (int month = 2; month <= _params.TotalMonths; month++) {
 
@@ -269,7 +270,10 @@ namespace Empiria.CashFlow.Projections {
 
           if (_params.CapitalizeFees) {
             balance += feesBalance;
+            capitalizedFees = feesBalance;
             feesBalance = 0;
+          } else {
+            capitalizedFees = 0;
           }
 
           principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month - 1);
@@ -293,8 +297,9 @@ namespace Empiria.CashFlow.Projections {
           Month = month,
           Principal = principalPayment,
           Interest = interestPayment,
-          CapitalizedInterest = capitalizedInterest,
           Fees = feesBalance,
+          CapitalizedInterest = capitalizedInterest,
+          CapitalizedFees = capitalizedFees,
           RemainingBalance = balance
         });
 
@@ -344,6 +349,10 @@ namespace Empiria.CashFlow.Projections {
     }
 
     public decimal CapitalizedInterest {
+      get; internal set;
+    }
+
+    public decimal CapitalizedFees {
       get; internal set;
     }
 
