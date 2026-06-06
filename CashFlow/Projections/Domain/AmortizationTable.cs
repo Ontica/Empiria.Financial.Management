@@ -100,7 +100,7 @@ namespace Empiria.CashFlow.Projections {
   /// <summary>Service used to generate an amortization table for a given loan or credit.</summary>
   public class AmortizationTable {
 
-    private const decimal FEES_TAX = 0.16m;
+    static internal readonly decimal FEES_TAX = 0.16m;
 
     private AmortizationParameters _params;
 
@@ -134,38 +134,16 @@ namespace Empiria.CashFlow.Projections {
 
     #region Helpers
 
-    private decimal CalculateFixedMonthlyPayment(decimal amount) {
+    private decimal CalculateFixedMonthlyPayment(decimal amount, int month) {
 
       decimal monthlyRate = CalculateMonthlyInterestRate();
 
       // Formula: P * (r * (1+r)^n) / ((1+r)^n - 1)
-      double factor = Math.Pow((double) (1 + monthlyRate), _params.RepaymentMonths);
+      double factor = Math.Pow((double) (1 + monthlyRate), _params.RepaymentMonths + _params.GraceMonths - month + 1);
 
       decimal monthlyPayment = amount * ((monthlyRate * (decimal) factor) / ((decimal) factor - 1));
 
       return Math.Round(monthlyPayment, 2);
-    }
-
-
-    private decimal CalculateGraceMonthsInterest() {
-
-      decimal monthlyRate = CalculateMonthlyInterestRate();
-
-      decimal interest = 0;
-
-      decimal balance = 0;
-
-      for (int month = 1; month <= _params.GraceMonths; month++) {
-
-        balance += GetMonthDisbursement(month);
-
-        decimal monthInterest = Math.Round(balance * monthlyRate, 2);
-
-        interest += monthInterest;
-        balance += monthInterest;
-      }
-
-      return interest;
     }
 
 
@@ -201,38 +179,79 @@ namespace Empiria.CashFlow.Projections {
 
       decimal monthlyRate = CalculateMonthlyInterestRate();
 
-      decimal graceMonthsInterest = CalculateGraceMonthsInterest();
+      decimal balance = 0;
+      decimal interestPayment = 0;
+      decimal capitalizedInterest = 0;
+      decimal principalPayment = 0;
+      decimal feesBalance = 0;
+      decimal capitalizedFees = 0;
 
-      decimal balance = graceMonthsInterest;
+      decimal monthlyPayment = 0;
 
-      for (int month = 1; month <= _params.TotalMonths; month++) {
+      for (int month = 2; month <= _params.TotalMonths; month++) {
 
-        balance += GetMonthDisbursement(month);
+        if (GetMonthDisbursement(month - 1) != 0) {
 
-        decimal monthlyPayment = CalculateFixedMonthlyPayment(balance);
+          balance += GetMonthDisbursement(month - 1);
 
-        if (balance <= 0) {
+          feesBalance += CalculateMonthFees(month - 1);
+
+          monthlyPayment = CalculateFixedMonthlyPayment(balance, month);
+
+          interestPayment = Math.Round(balance * monthlyRate, 2);
+
+          principalPayment = Math.Round(monthlyPayment - interestPayment, 2);
+
+          if (_params.CapitalizeInterest) {
+            balance += interestPayment;
+            capitalizedInterest = interestPayment;
+            interestPayment = 0;
+          }
+
+          if (_params.CapitalizeFees) {
+            balance += feesBalance + (feesBalance * FEES_TAX);
+            capitalizedFees = feesBalance + (feesBalance * FEES_TAX);
+            feesBalance = 0;
+          }
+
+        } else {
+
+          interestPayment = Math.Round(balance * monthlyRate, 2);
+          principalPayment = Math.Round(monthlyPayment - interestPayment, 2);
+
+          if (_params.CapitalizeInterest) {
+            interestPayment = 0;
+          }
+        }
+
+
+        if (month < _params.InitialPeriod.Month + _params.GraceMonths) {
           continue;
         }
 
-        decimal interest = Math.Round(balance * monthlyRate, 2);
-        decimal principal = Math.Round(monthlyPayment - interest, 2);
-        decimal fees = CalculateMonthFees(month);
-
-        if (month == _params.TotalMonths) {
-          principal = balance;
+        if (balance <= 0 && feesBalance <= 0) {
+          continue;
         }
 
-        balance = Math.Round(balance - principal, 2);
+        if (month == _params.TotalMonths) {
+          principalPayment = balance;
+        }
+
+        balance = Math.Round(balance - principalPayment, 2);
 
         table.Add(new AmortizationTableEntry {
           Month = month,
-          Principal = principal,
-          Interest = interest,
-          Fees = fees,
+          Principal = principalPayment,
+          Interest = interestPayment,
+          Fees = feesBalance,
+          CapitalizedInterest = capitalizedInterest,
+          CapitalizedFees = capitalizedFees,
           RemainingBalance = balance
         });
 
+        feesBalance = 0;
+        capitalizedInterest = 0;
+        capitalizedFees = 0;
       }
 
       return table.ToFixedList();
@@ -296,7 +315,6 @@ namespace Empiria.CashFlow.Projections {
           Principal = principalPayment,
           Interest = interestPayment,
           Fees = feesBalance,
-          FeesTaxes = feesBalance * FEES_TAX,
           CapitalizedInterest = capitalizedInterest,
           CapitalizedFees = capitalizedFees,
           RemainingBalance = balance
@@ -353,8 +371,11 @@ namespace Empiria.CashFlow.Projections {
       get; internal set;
     }
 
+
     public decimal FeesTaxes {
-      get; internal set;
+      get {
+        return Fees * AmortizationTable.FEES_TAX;
+      }
     }
 
     public decimal CapitalizedInterest {
