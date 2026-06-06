@@ -138,8 +138,10 @@ namespace Empiria.CashFlow.Projections {
 
       decimal monthlyRate = CalculateMonthlyInterestRate();
 
+      int adjustedMonth = _params.TotalMonths - month + 1;
+
       // Formula: P * (r * (1+r)^n) / ((1+r)^n - 1)
-      double factor = Math.Pow((double) (1 + monthlyRate), _params.RepaymentMonths + _params.GraceMonths - month + 1);
+      double factor = Math.Pow((double) (1 + monthlyRate), adjustedMonth);
 
       decimal monthlyPayment = amount * ((monthlyRate * (decimal) factor) / ((decimal) factor - 1));
 
@@ -163,8 +165,11 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    private decimal CalculateMonthlyFixedPrincipalPayment(decimal amount, int month) {
-      return Math.Round(amount / (_params.RepaymentMonths - month + 1), 2);
+    private decimal CalculateMonthlyFixedPrincipalPayment(decimal balance, int month) {
+
+      int adjustedMonth = _params.TotalMonths - month + 1;
+
+      return Math.Round(balance / adjustedMonth, 2);
     }
 
 
@@ -293,8 +298,10 @@ namespace Empiria.CashFlow.Projections {
             feesBalance = 0;
           }
 
-          principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month - 1);
+          principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month);
         }
+
+
 
         if (month < _params.InitialPeriod.Month + _params.GraceMonths) {
           continue;
