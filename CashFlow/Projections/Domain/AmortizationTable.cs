@@ -134,7 +134,7 @@ namespace Empiria.CashFlow.Projections {
 
     #region Helpers
 
-    private decimal CalculateFixedMonthlyPayment(decimal amount, int month) {
+    private decimal CalculateFixedMonthlyPayment(decimal balance, int month) {
 
       decimal monthlyRate = CalculateMonthlyInterestRate();
 
@@ -143,7 +143,7 @@ namespace Empiria.CashFlow.Projections {
       // Formula: P * (r * (1+r)^n) / ((1+r)^n - 1)
       double factor = Math.Pow((double) (1 + monthlyRate), adjustedMonth);
 
-      decimal monthlyPayment = amount * ((monthlyRate * (decimal) factor) / ((decimal) factor - 1));
+      decimal monthlyPayment = balance * ((monthlyRate * (decimal) factor) / ((decimal) factor - 1));
 
       return Math.Round(monthlyPayment, 2);
     }

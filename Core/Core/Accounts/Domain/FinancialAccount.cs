@@ -30,6 +30,8 @@ namespace Empiria.Financial {
 
     #region Fields
 
+    static public readonly FinancialAccount FEES_TAXES_ACCOUNT = FinancialAccount.Parse(222834);
+
     private Lazy<List<FinancialAccount>> _operations = new Lazy<List<FinancialAccount>>();
     private List<FinancialAccount> _deletedOperations = new List<FinancialAccount>();
 
@@ -192,6 +194,9 @@ namespace Empiria.Financial {
       get {
 
         if (IsOperationAccount) {
+          if (this.Equals(FEES_TAXES_ACCOUNT)) {
+            return $"IVA por comisiones cobradas";
+          }
           return OperationType.Name;
         }
 
@@ -214,11 +219,15 @@ namespace Empiria.Financial {
 
     string INamedEntity.Name {
       get {
-        if (IsOperationAccount) {
-          return $"({Code}) {OperationType.Name}";
+        if (!IsOperationAccount) {
+          return $"({Code}) {Name}";
         }
 
-        return $"({Code}) {Name}";
+        if (this.Equals(FEES_TAXES_ACCOUNT)) {
+          return $"({Code}) IVA por comisiones cobradas";
+        }
+
+        return $"({Code}) {OperationType.Name}";
       }
     }
 
