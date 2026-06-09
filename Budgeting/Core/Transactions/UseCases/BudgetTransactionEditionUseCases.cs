@@ -114,6 +114,10 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     public BudgetTransaction CompleteBalanceEntries(BudgetTransaction transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
+      if (transaction.OperationType != BudgetOperationType.Exercise) {
+        return transaction;
+      }
+
       var balancer = new BudgetTransactionBalancer(transaction);
 
       FixedList<BudgetEntry> entries = balancer.BuildBalanceEntries();
