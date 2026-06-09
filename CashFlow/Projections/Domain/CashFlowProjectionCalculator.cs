@@ -39,10 +39,6 @@ namespace Empiria.CashFlow.Projections {
       FinancialAccount capitalizedInterestAcct = TryGetCapitalizedInterestAccount();
       FinancialAccount capitalizedFeesAcct = TryGetCapitalizedFeesAccount();
 
-      if (principalAcct == null || interestAcct == null) {
-        return FixedList<CashFlowProjectionEntryFields>.Empty;
-      }
-
       FixedList<CashFlowProjectionEntry> disbursements = GetDisbursementEntries();
 
       if (disbursements.Count == 0) {
@@ -52,6 +48,27 @@ namespace Empiria.CashFlow.Projections {
       var list = new List<CashFlowProjectionEntryFields>();
 
       var financialData = (CreditFinancialData) _projection.FinancialData;
+
+      if (principalAcct == null) {
+        Assertion.RequireFail("La cuenta no tiene definido el concepto (01) Recuperación de capital.");
+      }
+
+      if (interestAcct == null) {
+        Assertion.RequireFail("La cuenta no tiene definido el concepto (03) Intereses cobrados.");
+      }
+
+      if (capitalizedInterestAcct == null && (financialData.CapitalizeInterest)) {
+        Assertion.RequireFail("La cuenta no tiene definido el concepto (05) Refinanciamiento de intereses.");
+      }
+
+      if (feesAcct == null && (financialData.OpeningFee > 0 || financialData.DisbursementFee > 0)) {
+        Assertion.RequireFail("La cuenta no tiene definido el concepto (06) Comisiones cobradas.");
+      }
+
+      if (capitalizedFeesAcct == null && financialData.CapitalizeFees &&
+         (financialData.OpeningFee > 0 || financialData.DisbursementFee > 0)) {
+        Assertion.RequireFail("La cuenta no tiene definido el concepto (15) Capitalización de comisiones.");
+      }
 
       CashFlowProjectionEntry firstDisbursement = disbursements[0];
 
