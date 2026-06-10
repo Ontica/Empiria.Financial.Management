@@ -216,7 +216,6 @@ namespace Empiria.CashFlow.Projections {
         if (_params.CapitalizeInterest) {
           balance += interestPayment;
           capitalizedInterest = interestPayment;
-          interestPayment = 0;
         }
 
         if (_params.CapitalizeFees) {
@@ -284,7 +283,6 @@ namespace Empiria.CashFlow.Projections {
           if (_params.CapitalizeInterest) {
             balance += interestPayment;
             capitalizedInterest = interestPayment;
-            interestPayment = 0;
           }
 
           if (_params.CapitalizeFees) {
