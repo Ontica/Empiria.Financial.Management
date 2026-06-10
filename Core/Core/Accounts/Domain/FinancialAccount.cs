@@ -30,8 +30,6 @@ namespace Empiria.Financial {
 
     #region Fields
 
-    static public readonly FinancialAccount FEES_TAXES_ACCOUNT = FinancialAccount.Parse(222834);
-
     private Lazy<List<FinancialAccount>> _operations = new Lazy<List<FinancialAccount>>();
     private List<FinancialAccount> _deletedOperations = new List<FinancialAccount>();
 
@@ -82,6 +80,7 @@ namespace Empiria.Financial {
 
     static public FinancialAccount Empty => ParseEmpty<FinancialAccount>();
 
+    static public FinancialAccount FEES_TAXES_ACCOUNT => Parse(222834);
 
     static public FixedList<FinancialAccount> GetList() {
       return _cache.Value.ToFixedList();
