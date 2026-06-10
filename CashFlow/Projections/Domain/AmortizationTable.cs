@@ -207,28 +207,23 @@ namespace Empiria.CashFlow.Projections {
 
           principalPayment = Math.Round(monthlyPayment - interestPayment, 2);
 
-          if (_params.CapitalizeInterest) {
-            balance += interestPayment;
-            capitalizedInterest = interestPayment;
-            interestPayment = 0;
-          }
-
-          if (_params.CapitalizeFees) {
-            balance += feesBalance + (feesBalance * FEES_TAX);
-            capitalizedFees = feesBalance + (feesBalance * FEES_TAX);
-            feesBalance = 0;
-          }
-
         } else {
 
           interestPayment = Math.Round(balance * monthlyRate, 2);
           principalPayment = Math.Round(monthlyPayment - interestPayment, 2);
-
-          if (_params.CapitalizeInterest) {
-            interestPayment = 0;
-          }
         }
 
+        if (_params.CapitalizeInterest) {
+          balance += interestPayment;
+          capitalizedInterest = interestPayment;
+          interestPayment = 0;
+        }
+
+        if (_params.CapitalizeFees) {
+          balance += feesBalance + (feesBalance * FEES_TAX);
+          capitalizedFees = feesBalance + (feesBalance * FEES_TAX);
+          feesBalance = 0;
+        }
 
         if (month < _params.InitialPeriod.Month + _params.GraceMonths) {
           continue;
