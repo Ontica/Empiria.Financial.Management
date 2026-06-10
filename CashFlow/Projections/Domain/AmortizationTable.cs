@@ -195,11 +195,13 @@ namespace Empiria.CashFlow.Projections {
 
       for (int month = 2; month <= _params.TotalMonths; month++) {
 
+        var monthFees = CalculateMonthFees(month - 1);
+
+        feesBalance += monthFees;
+
         if (GetMonthDisbursement(month - 1) != 0) {
 
           balance += GetMonthDisbursement(month - 1);
-
-          feesBalance += CalculateMonthFees(month - 1);
 
           monthlyPayment = CalculateFixedMonthlyPayment(balance, month);
 
@@ -219,12 +221,11 @@ namespace Empiria.CashFlow.Projections {
         }
 
         if (_params.CapitalizeFees) {
-          balance += feesBalance + (feesBalance * FEES_TAX);
-          capitalizedFees = feesBalance + (feesBalance * FEES_TAX);
-          feesBalance = 0;
+          balance += monthFees + (monthFees * FEES_TAX);
+          capitalizedFees = monthFees + (monthFees * FEES_TAX);
         }
 
-        if (month < _params.InitialPeriod.Month + _params.GraceMonths) {
+        if (month <= _params.InitialPeriod.Month + _params.GraceMonths) {
           continue;
         }
 
@@ -272,11 +273,13 @@ namespace Empiria.CashFlow.Projections {
 
       for (int month = 2; month <= _params.TotalMonths; month++) {
 
+        var monthFees = CalculateMonthFees(month - 1);
+
+        feesBalance += monthFees;
+
         if (GetMonthDisbursement(month - 1) != 0) {
 
           balance += GetMonthDisbursement(month - 1);
-
-          feesBalance += CalculateMonthFees(month - 1);
 
           interestPayment = Math.Round(balance * monthlyRate, 2);
 
@@ -286,17 +289,30 @@ namespace Empiria.CashFlow.Projections {
           }
 
           if (_params.CapitalizeFees) {
-            balance += feesBalance + (feesBalance * FEES_TAX);
-            capitalizedFees = feesBalance + (feesBalance * FEES_TAX);
-            feesBalance = 0;
+            balance += monthFees + (monthFees * FEES_TAX);
+            capitalizedFees = monthFees + (monthFees * FEES_TAX);
           }
 
           principalPayment = CalculateMonthlyFixedPrincipalPayment(balance, month);
+        } else {
+
+          interestPayment = Math.Round(balance * monthlyRate, 2);
+
+          if (_params.CapitalizeInterest) {
+            balance += interestPayment;
+            capitalizedInterest = interestPayment;
+          }
+
+          if (_params.CapitalizeFees) {
+            balance += monthFees + (monthFees * FEES_TAX);
+            capitalizedFees = monthFees + (monthFees * FEES_TAX);
+          }
+
         }
 
 
 
-        if (month < _params.InitialPeriod.Month + _params.GraceMonths) {
+        if (month <= _params.InitialPeriod.Month + _params.GraceMonths) {
           continue;
         }
 
