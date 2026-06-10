@@ -199,10 +199,15 @@ namespace Empiria.CashFlow.Projections {
 
 
     private FixedList<CashFlowProjectionEntry> GetDisbursementEntries() {
-      return _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("07"))
-                                .OrderBy(x => x.Year)
-                                .ThenBy(x => x.Month)
-                                .ToFixedList();
+      var entries = _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("07"));
+
+      if (entries.Count == 0) {
+        entries = _projection.Entries.FindAll(x => x.CashFlowAccount.StandardAccount.StdAcctNo.EndsWith("08"));
+      }
+
+      return entries.OrderBy(x => x.Year)
+                    .ThenBy(x => x.Month)
+                    .ToFixedList();
     }
 
 
