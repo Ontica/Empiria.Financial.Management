@@ -549,7 +549,6 @@ namespace Empiria.Financial {
       Assertion.Require(accountData, nameof(accountData));
 
       AccountNo = accountData.CreditNo;
-      Description = accountData.CustomerName;
       StandardAccount = StandardAccount.TryParseAccountNo(accountData.StandardAccount) ?? StandardAccount;
       Currency = accountData.Currency;
 
