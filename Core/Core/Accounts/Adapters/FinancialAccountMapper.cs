@@ -64,7 +64,6 @@ namespace Empiria.Financial.Adapters {
         UID = string.Empty,
         AccountNo = account.CreditNo,
         SubledgerAccountNo = account.SubledgerAccountNo,
-        Description = account.CustomerName,
         Currency = account.Currency.MapToNamedEntity(),
         OrganizationalUnit = account.OrganizationalUnit.MapToNamedEntity(),
         Attributes = new CreditAttributes(account),
