@@ -203,9 +203,30 @@ namespace Empiria.CashFlow.Projections {
 
           balance += GetMonthDisbursement(month - 1);
 
+          if (_params.CapitalizeFees) {
+            capitalizedFees = monthFees + (monthFees * FEES_TAX);
+            balance += capitalizedFees;
+          }
+
           monthlyPayment = CalculateFixedMonthlyPayment(balance, month);
 
           interestPayment = Math.Round(balance * monthlyRate, 2);
+
+          if (_params.CapitalizeInterest) {
+            capitalizedInterest = interestPayment;
+          }
+
+          principalPayment = Math.Round(monthlyPayment - interestPayment, 2);
+
+        } else if (_params.CapitalizeInterest) {
+
+          balance += table.Find(x => x.Month == month - 1)?.CapitalizedInterest ?? 0;
+
+          monthlyPayment = CalculateFixedMonthlyPayment(balance, month);
+
+          interestPayment = Math.Round(balance * monthlyRate, 2);
+
+          capitalizedInterest = interestPayment;
 
           principalPayment = Math.Round(monthlyPayment - interestPayment, 2);
 
@@ -213,16 +234,6 @@ namespace Empiria.CashFlow.Projections {
 
           interestPayment = Math.Round(balance * monthlyRate, 2);
           principalPayment = Math.Round(monthlyPayment - interestPayment, 2);
-        }
-
-        if (_params.CapitalizeInterest) {
-          balance += interestPayment;
-          capitalizedInterest = interestPayment;
-        }
-
-        if (_params.CapitalizeFees) {
-          balance += monthFees + (monthFees * FEES_TAX);
-          capitalizedFees = monthFees + (monthFees * FEES_TAX);
         }
 
         if (month <= _params.InitialPeriod.Month + _params.GraceMonths) {
