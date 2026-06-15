@@ -151,6 +151,22 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public bool CanReleaseBudget {
+      get {
+        if (_transaction.Status != TransactionStatus.Closed) {
+          return false;
+        }
+        if (!_securityRoles.Contains(BUDGET_MANAGER)) {
+          return false;
+        }
+        if (_transaction.OperationType == BudgetOperationType.Request) {
+          return true;
+        }
+
+        return false;
+      }
+    }
+
     public bool CanReject {
       get {
 

@@ -243,6 +243,15 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     }
 
 
+    internal BudgetTransactionHolderDto ReleaseBudget(BudgetTransaction transaction) {
+      Assertion.Require(transaction, nameof(transaction));
+
+      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Se liberaron los saldos disponibles de la suficiencia"));
+
+      return BudgetTransactionMapper.Map(transaction);
+    }
+
+
     public BudgetTransactionHolderDto ReopenTransaction(BudgetTransaction transaction, string reason) {
       Assertion.Require(transaction, nameof(transaction));
 

@@ -169,6 +169,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         CanClose = rules.CanClose,
         CanDelete = rules.CanDelete,
         CanEditDocuments = rules.CanEditDocuments,
+        CanReleaseBudget = rules.CanReleaseBudget,
         CanReject = rules.CanReject,
         CanReopen = rules.CanReopen,
         CanReturnToEdition = rules.CanReturnToEdition,
