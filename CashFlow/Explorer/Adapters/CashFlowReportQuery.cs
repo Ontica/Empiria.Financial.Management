@@ -14,6 +14,8 @@ namespace Empiria.CashFlow.Explorer.Adapters {
 
   public enum CashFlowReportType {
 
+    CashFlowPlanByYearAndOrgUnit,
+
     ConceptAnalytic,
 
     ConceptDetail,
@@ -42,9 +44,9 @@ namespace Empiria.CashFlow.Explorer.Adapters {
     } = DateTime.MaxValue;
 
 
-    public string Keywords {
+    public string[] Keywords {
       get; set;
-    } = string.Empty;
+    } = new string[0];
 
 
     public string AccountingLedgerUID {
@@ -72,32 +74,7 @@ namespace Empiria.CashFlow.Explorer.Adapters {
     } = string.Empty;
 
 
-    public string ProgramUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string SubprogramUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string FinancingSourceUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string ProjectTypeUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string ProjectUID {
-      get; set;
-    } = string.Empty;
-
-
-    public string FinancialAccountUID {
+    public string PlanUID {
       get; set;
     } = string.Empty;
 
