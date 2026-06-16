@@ -8,9 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
-
 using Empiria.History;
+using Empiria.HumanResources;
 using Empiria.Parties;
 using Empiria.Services;
 using Empiria.StateEnums;
@@ -164,10 +163,12 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
 
     public FixedList<StructureForEditCashFlowProjections> GetStructureForEditCashFlowProjections() {
-      FixedList<OrganizationalUnit> list = Party.GetList<OrganizationalUnit>(DateTime.Today)
-                                                .FindAll(x => x.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE));
 
-      return StructureForEditCashFlowProjectionsMapper.Map(list);
+      var party = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      FixedList<OrganizationalUnit> orgUnits = Accountability.GetCommissionersFor<OrganizationalUnit>(party, "cash-flow");
+
+      return StructureForEditCashFlowProjectionsMapper.Map(orgUnits);
     }
 
 

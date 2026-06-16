@@ -71,16 +71,16 @@ namespace Empiria.CashFlow.Projections {
           return false;
         }
 
-        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_PLANNER) &&
-            _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
+        if (EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
+                                    new int[] { _projection.PostedBy.Id, _projection.RecordedBy.Id })) {
           return true;
         }
-        if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
-                                    new int[] { _projection.PostedBy.Id, _projection.RecordedBy.Id })) {
-          return false;
+
+        if (ExecutionServer.CurrentPrincipal.IsInRole(CASH_FLOW_MANAGER)) {
+          return true;
         }
 
-        return true;
+        return false;
       }
     }
 

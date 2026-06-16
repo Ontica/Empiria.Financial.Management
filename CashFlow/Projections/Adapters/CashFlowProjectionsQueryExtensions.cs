@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using Empiria.Financial;
+using Empiria.HumanResources;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
@@ -187,15 +188,26 @@ namespace Empiria.CashFlow.Projections.Adapters {
         return string.Empty;
       }
 
-      if (ExecutionServer.CurrentPrincipal.IsInRole(CashFlowProjectionRules.CASH_FLOW_PLANNER)) {
-        return $"CFW_PJC_BASE_PARTY_ID = {ExecutionServer.CurrentContact.Organization.Id}";
+      if (!ExecutionServer.CurrentPrincipal.IsInRole(CashFlowProjectionRules.CASH_FLOW_PLANNER)) {
+        return SearchExpression.NoRecordsFilter;
+      }
+
+      var party = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      FixedList<OrganizationalUnit> orgUnits = Accountability.GetCommissionersFor<OrganizationalUnit>(party, "cash-flow");
+
+      string filter = SearchExpression.ParseInSet("CFW_PJC_BASE_PARTY_ID", orgUnits.Select(x => x.Id));
+
+      if (filter.Length != 0) {
+        filter = " OR " + filter;
       }
 
       return $"(CFW_PJC_POSTED_BY_ID = {userId} OR " +
               $"CFW_PJC_RECORDED_BY_ID = {userId} OR " +
               $"CFW_PJC_REQUESTED_BY_ID = {userId} OR " +
               $"CFW_PJC_AUTHORIZED_BY_ID = {userId} OR " +
-              $"CFW_PJC_APPLIED_BY_ID = {userId})";
+              $"CFW_PJC_APPLIED_BY_ID = {userId}" +
+              $"{filter})";
     }
 
 

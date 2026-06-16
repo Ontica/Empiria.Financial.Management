@@ -25,14 +25,12 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       _allAccounts = FinancialAccount.GetList()
                                      .FindAll(x =>
-                                        x.FinancialAccountType.PlaysRole(CashFlowProjection.BASE_ACCOUNT_ROLE)
+                                        x.FinancialAccountType.PlaysRole(CashFlowProjection.BASE_ACCOUNT_ROLE) &&
+                                        list.Contains(x.OrganizationalUnit)
                                      );
 
 
       _allProjects = _allAccounts.SelectDistinct(x => x.Project);
-
-      list = _allAccounts.SelectDistinct(x => x.OrganizationalUnit)
-                         .Sort((x, y) => x.Code.CompareTo(y.Code));
 
       return list.Select(x => Map(x))
                  .ToFixedList();
