@@ -8,6 +8,10 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 using Empiria.Parties;
 
 using Empiria.Financial;
@@ -30,7 +34,16 @@ namespace Empiria.CashFlow.Projections.Adapters {
                                      );
 
 
-      _allProjects = _allAccounts.SelectDistinct(x => x.Project);
+      if (list.Any(x => x.PlaysRole("oficina-promocion"))) {
+        _allProjects = FixedList<FinancialProject>.MergeDistinct(_allAccounts.SelectDistinct(x => x.Project),
+                                                               FinancialProject.GetList<FinancialProject>()
+                                                                               .FindAll(x => x.AllowNewProspectedAccounts));
+      } else {
+        _allProjects = _allAccounts.SelectDistinct(x => x.Project);
+      }
+
+      _allProjects = _allProjects.OrderBy(x => x.ProjectNo)
+                                 .ToFixedList();
 
       return list.Select(x => Map(x))
                  .ToFixedList();
@@ -90,19 +103,8 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
         FixedList<FinancialProjectCategory> projectCategories = null;
 
-        if (projectionCategory.AccountStatus == StateEnums.EntityStatus.Active) {
 
-          projectCategories = _accounts.FindAll(x => x.Status == StateEnums.EntityStatus.Active)
-                                       .SelectDistinct(x => x.Project.Category);
-
-        } else if (projectionCategory.AccountStatus == StateEnums.EntityStatus.Pending) {
-
-          projectCategories = _accounts.FindAll(x => x.Status == StateEnums.EntityStatus.Pending)
-                                       .SelectDistinct(x => x.Project.Category);
-        } else {
-
-          projectCategories = _projects.SelectDistinct(x => x.Category);
-        }
+        projectCategories = _projects.SelectDistinct(x => x.Category);
 
         return projectCategories.Select(x => MapProjectType(x))
                                 .ToFixedList();
@@ -132,12 +134,24 @@ namespace Empiria.CashFlow.Projections.Adapters {
         return new ProjectionProjectForEdition {
           UID = project.UID,
           Name = ((INamedEntity) project).Name,
-          Accounts = _accounts.FindAll(x => x.Project.Equals(project))
-                              .Sort((x, y) => ((INamedEntity) x).Name.CompareTo(((INamedEntity) y).Name))
-                              .MapToNamedEntityList()
+          Accounts = MapProjectAccounts(project)
         };
       }
 
+
+      private FixedList<NamedEntityDto> MapProjectAccounts(FinancialProject project) {
+        var accounts = new List<NamedEntityDto>(24);
+
+        if (project.AllowNewProspectedAccounts) {
+          accounts.Add(new NamedEntityDto(Guid.Empty.ToString(), "Crear crédito prospectado"));
+        }
+
+        accounts.AddRange(_accounts.FindAll(x => x.Project.Equals(project))
+                                   .Sort((x, y) => ((INamedEntity) x).Name.CompareTo(((INamedEntity) y).Name))
+                                   .MapToNamedEntityList());
+
+        return accounts.ToFixedList();
+      }
     }  // class Structurer
 
   }  // class StructureForEditCashFlowProjectionsMapper
