@@ -67,13 +67,11 @@ namespace Empiria.CashFlow.Projections {
       }
     }
 
-
-    public EntityStatus AccountStatus {
+    public bool AllowProspectedAccounts {
       get {
-        return ExtData.Get("accountsStatus", EntityStatus.All);
+        return ExtData.Get<bool>("allowProspectedAccounts", false);
       }
     }
-
 
     #endregion Properties
 

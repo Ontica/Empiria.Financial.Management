@@ -291,6 +291,13 @@ namespace Empiria.Financial.Projects {
     }
 
 
+    public bool AllowNewProspectedAccounts {
+      get {
+        return ExtData.Get("allowNewProspectedAccounts", false);
+      }
+    }
+
+
     public bool HasProjectNo {
       get {
         return this.ProjectNo.Length != 0 &&
