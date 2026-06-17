@@ -32,7 +32,9 @@ namespace Empiria.Financial.Accounts.WebApi {
 
         FinancialAccountDto accountDto = usecases.CreateAccountFromCreditSystem(accountNo,
                                                                                 fields.ProjectUID,
-                                                                                fields.StandardAccountUID);
+                                                                                fields.StandardAccountUID,
+                                                                                fields.OrganizationalUnitUID,
+                                                                                fields.Description);
 
         return new SingleObjectModel(this.Request, accountDto);
       }
@@ -82,6 +84,14 @@ namespace Empiria.Financial.Accounts.WebApi {
     }
 
     public string StandardAccountUID {
+      get; set;
+    }
+
+    public string OrganizationalUnitUID {
+      get; set;
+    }
+
+    public string Description {
       get; set;
     }
 

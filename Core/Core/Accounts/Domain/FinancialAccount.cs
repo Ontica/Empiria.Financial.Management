@@ -185,7 +185,7 @@ namespace Empiria.Financial {
 
     [DataField("ACCT_DESCRIPTION")]
     public string Description {
-      get; private set;
+      get; set;
     }
 
 
@@ -551,10 +551,6 @@ namespace Empiria.Financial {
       AccountNo = accountData.CreditNo;
       StandardAccount = StandardAccount.TryParseAccountNo(accountData.StandardAccount) ?? StandardAccount;
       Currency = accountData.Currency;
-
-      if (!accountData.OrganizationalUnit.IsEmptyInstance) {
-        OrganizationalUnit = accountData.OrganizationalUnit;
-      }
 
       SubledgerAccountNo = accountData.SubledgerAccountNo;
 

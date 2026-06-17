@@ -12,6 +12,7 @@ using Empiria.Services;
 
 using Empiria.Financial.Adapters;
 using Empiria.Financial.Projects;
+using Empiria.Parties;
 
 namespace Empiria.Financial.UseCases {
 
@@ -35,16 +36,20 @@ namespace Empiria.Financial.UseCases {
 
     public FinancialAccountDto CreateAccountFromCreditSystem(string accountNo,
                                                              string projectUID,
-                                                             string standardAccountUID) {
+                                                             string standardAccountUID,
+                                                             string organizationalUnitUID,
+                                                             string description) {
       Assertion.Require(accountNo, nameof(accountNo));
       Assertion.Require(projectUID, nameof(projectUID));
       Assertion.Require(standardAccountUID, nameof(standardAccountUID));
+      Assertion.Require(organizationalUnitUID, nameof(organizationalUnitUID));
+      Assertion.Require(description, nameof(description));
 
       ICreditAccountData externalAccount = GetAccountFromCreditSystem(accountNo, true);
 
       var accountType = FinancialAccountType.CreditAccount;
       var project = FinancialProject.Parse(projectUID);
-      var orgUnit = externalAccount.OrganizationalUnit;
+      var orgUnit = OrganizationalUnit.Parse(organizationalUnitUID);
 
       var stdAccount = StandardAccount.Parse(standardAccountUID);
 
@@ -57,6 +62,8 @@ namespace Empiria.Financial.UseCases {
       var account = new FinancialAccount(accountType, stdAccount, orgUnit, project);
 
       account.Update(externalAccount);
+
+      account.Description = description;
 
       account.Save();
 
