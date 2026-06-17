@@ -35,6 +35,12 @@ namespace Empiria.Financial {
       get; set;
     } = string.Empty;
 
+
+    public string OperationName {
+      get; set;
+    } = string.Empty;
+
+
     #endregion Properties
 
     #region Methods

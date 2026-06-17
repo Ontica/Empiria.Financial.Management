@@ -166,7 +166,6 @@ namespace Empiria.Financial {
       get; private set;
     }
 
-
     [DataField("ACCT_NUMBER")]
     public string AccountNo {
       get; private set;
@@ -192,10 +191,12 @@ namespace Empiria.Financial {
     public string Name {
       get {
 
-        if (IsOperationAccount) {
-          if (this.Equals(FEES_TAXES_ACCOUNT)) {
-            return $"IVA por comisiones cobradas";
-          }
+        if (IsOperationAccount && OperationName.Length != 0) {
+
+          return OperationName;
+
+        } else if (IsOperationAccount) {
+
           return OperationType.Name;
         }
 
@@ -208,9 +209,6 @@ namespace Empiria.Financial {
           name = Description;
         }
 
-        if (Status == EntityStatus.Pending) {
-          name += FinancialAccountType.FemaleGenre ? " [Proyectada]" : " [Proyectado]";
-        }
         return name;
       }
     }
@@ -222,11 +220,21 @@ namespace Empiria.Financial {
           return $"({Code}) {Name}";
         }
 
-        if (this.Equals(FEES_TAXES_ACCOUNT)) {
-          return $"({Code}) IVA por comisiones cobradas";
+        if (OperationName.Length != 0) {
+          return $"({Code}) {OperationName}";
+        } else {
+          return $"({Code}) {OperationType.Name}";
         }
+      }
+    }
 
-        return $"({Code}) {OperationType.Name}";
+
+    public string OperationName {
+      get {
+        return ExtData.Get("operationName", string.Empty);
+      }
+      private set {
+        ExtData.SetIfValue("operationName", value);
       }
     }
 
@@ -405,7 +413,7 @@ namespace Empiria.Financial {
 
       operation.AccountNo = fields.AccountNo;
       operation.Currency = currency;
-
+      operation.OperationName = EmpiriaString.Clean(fields.OperationName);
       operation.Parent = this;
 
       operation.SetStatus(EntityStatus.Pending);

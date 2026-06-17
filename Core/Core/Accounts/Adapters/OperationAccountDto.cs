@@ -45,6 +45,10 @@ namespace Empiria.Financial.Adapters {
       get; internal set;
     }
 
+    public string OperationName {
+      get; internal set;
+    }
+
     public string CurrencyName {
       get; internal set;
     }

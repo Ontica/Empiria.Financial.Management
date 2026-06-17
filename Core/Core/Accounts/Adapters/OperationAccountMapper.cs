@@ -39,7 +39,8 @@ namespace Empiria.Financial.Adapters {
         UID = operationAccount.UID,
         AccountNo = operationAccount.AccountNo,
         OperationTypeName = $"({operationAccount.StandardAccount.StdAcctNo}) {operationAccount.StandardAccount.FullName}",
-        CurrencyName = operationAccount.Currency.Name
+        OperationName = operationAccount.Name,
+        CurrencyName = operationAccount.Currency.ISOCode
       };
     }
 
