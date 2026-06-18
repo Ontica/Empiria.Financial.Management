@@ -102,6 +102,12 @@ namespace Empiria.CashFlow.Projections.UseCases {
       var plan = CashFlowPlan.Parse(fields.PlanUID);
       var category = CashFlowProjectionCategory.Parse(fields.ProjectionCategoryTypeUID);
 
+      if (fields.MustCreateProspectedAccount()) {
+        Assertion.Require(fields.Description, "Se requiere proporcionar la descripción de la nueva cuenta prospectada.");
+        FinancialAccount prospectedAccount = CreateProspectedAccount(fields);
+        fields.AccountUID = prospectedAccount.UID;
+      }
+
       var baseAccount = FinancialAccount.Parse(fields.AccountUID);
 
       CashFlowProjection projection = plan.AddProjection(category, baseAccount);
@@ -259,6 +265,18 @@ namespace Empiria.CashFlow.Projections.UseCases {
     #endregion Use cases
 
     #region Helpers
+
+    private FinancialAccount CreateProspectedAccount(CashFlowProjectionFields fields) {
+      FinancialAccountUseCases usecases = FinancialAccountUseCases.UseCaseInteractor();
+
+      var project = FinancialProject.Parse(fields.ProjectUID);
+      var orgUnit = OrganizationalUnit.Parse(fields.PartyUID);
+
+      FinancialAccount prospectedAccount = usecases.CreateProspectedAccount(project, orgUnit, fields.Description);
+
+      return prospectedAccount;
+    }
+
 
     private void LoadInitialProjectionData(CashFlowProjection projection, FinancialAccount baseAccount) {
 

@@ -97,7 +97,7 @@ namespace Empiria.CashFlow.Projections {
         _ = FinancialProject.Parse(fields.ProjectUID);
       }
 
-      if (fields.AccountUID.Length != 0) {
+      if (fields.AccountUID.Length != 0 && fields.AccountUID != Guid.Empty.ToString()) {
         _ = FinancialAccount.Parse(fields.AccountUID);
       }
 
@@ -105,6 +105,11 @@ namespace Empiria.CashFlow.Projections {
         _ = OperationSource.Parse(fields.SourceUID);
       }
 
+    }
+
+
+    static internal bool MustCreateProspectedAccount(this CashFlowProjectionFields fields) {
+      return fields.AccountUID == Guid.Empty.ToString();
     }
 
   }  // class CashFlowProjectionFieldsExtensions
