@@ -84,6 +84,31 @@ namespace Empiria.Financial.UseCases {
     }
 
 
+    public FinancialAccount CreateProspectedAccount(FinancialProject project, OrganizationalUnit orgUnit,
+                                                    string description) {
+      Assertion.Require(project, nameof(project));
+      Assertion.Require(orgUnit, nameof(orgUnit));
+      Assertion.Require(description, nameof(description));
+
+      var pivotAccount = project.Accounts.Find(x => !x.IsOperationAccount);
+
+      var accountFields = new FinancialAccountFields {
+        FinancialAccountTypeUID = "ObjectTypeInfo.FinancialAccount.ProspectedCredit",
+        ProjectUID = project.UID,
+        OrganizationalUnitUID = orgUnit.UID,
+        Description = description,
+        StandardAccountUID = pivotAccount.StandardAccount.UID,
+        CurrencyUID = pivotAccount.Currency.UID
+      };
+
+      FinancialAccount prospectedAccount = project.AddAccount(accountFields);
+
+      prospectedAccount.Save();
+
+      return prospectedAccount;
+    }
+
+
     public void DeleteAccount(string accountUID) {
       Assertion.Require(accountUID, nameof(accountUID));
 
