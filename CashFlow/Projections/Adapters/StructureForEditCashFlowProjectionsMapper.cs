@@ -74,8 +74,15 @@ namespace Empiria.CashFlow.Projections.Adapters {
       internal Structurer(OrganizationalUnit orgUnit) {
         _orgUnit = orgUnit;
         _accounts = _allAccounts.FindAll(x => x.OrganizationalUnit.Equals(_orgUnit));
-        _projects = _allProjects.FindAll(x => _accounts.Contains(y => y.OrganizationalUnit.Equals(_orgUnit) &&
-                                                                      y.Project.Equals(x)));
+
+        if (_orgUnit.PlaysRole("oficina-promocion")) {
+          _projects = _allProjects.FindAll(x => _accounts.Contains(y => (y.OrganizationalUnit.Equals(_orgUnit) &&
+                                                                         y.Project.Equals(x))) ||
+                                                                         x.AllowNewProspectedAccounts);
+        } else {
+          _projects = _allProjects.FindAll(x => _accounts.Contains(y => y.OrganizationalUnit.Equals(_orgUnit) &&
+                                                                        y.Project.Equals(x)));
+        }
       }
 
 
@@ -121,8 +128,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       private FixedList<ProjectionProjectForEdition> MapProjects(FinancialProjectCategory projectCategory) {
 
-        FixedList<FinancialProject> projects = _projects.FindAll(x => x.Category.Equals(projectCategory))
-                                                        .Sort((x, y) => ((INamedEntity) x).Name.CompareTo(((INamedEntity) y).Name))
+        FixedList<FinancialProject> projects = _projects.OrderBy(x => ((INamedEntity) x).Name)
                                                         .ToFixedList();
 
         return projects.Select(x => MapFinancialProject(x))
