@@ -105,6 +105,23 @@ namespace Empiria.Financial.UseCases {
 
       prospectedAccount.Save();
 
+      var pivotOperations = pivotAccount.GetOperations();
+
+      foreach (var operation in pivotOperations) {
+
+        var operationAcctFields = new OperationAccountFields {
+
+          BaseAccountUID = prospectedAccount.UID,
+          StandardAccountUID = operation.StandardAccount.UID,
+          CurrencyUID = operation.Currency.UID,
+          AccountNo = operation.AccountNo
+        };
+
+        FinancialAccount operationAccount = prospectedAccount.AddOperation(operationAcctFields);
+
+        operationAccount.Save();
+      }
+
       return prospectedAccount;
     }
 
