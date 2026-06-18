@@ -12,6 +12,8 @@ using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
+using Empiria.Financial;
+
 namespace Empiria.CashFlow.Projections {
 
   /// <summary>Represents a cash flow projection category that serves to
@@ -40,6 +42,29 @@ namespace Empiria.CashFlow.Projections {
 
     #region Properties
 
+    public bool AllowProspectedAccounts {
+      get {
+        return ExtData.Get<bool>("allowProspectedAccounts", false);
+      }
+    }
+
+
+    public FixedList<FinancialAccountType> FinancialAccountTypes {
+      get {
+        return ExtData.GetList<FinancialAccountType>("financialAccountTypes", false)
+                      .ToFixedList();
+      }
+    }
+
+
+    public FixedList<OperationSource> OperationSources {
+      get {
+        return ExtData.GetList<OperationSource>("sources", false)
+                      .ToFixedList();
+      }
+    }
+
+
     public CashFlowProjectionType ProjectionType {
       get {
         if (IsEmptyInstance) {
@@ -56,20 +81,6 @@ namespace Empiria.CashFlow.Projections {
     public EntityStatus Status {
       get {
         return base.GetStatus<EntityStatus>();
-      }
-    }
-
-
-    public FixedList<OperationSource> OperationSources {
-      get {
-        return ExtData.GetList<OperationSource>("sources", false)
-                      .ToFixedList();
-      }
-    }
-
-    public bool AllowProspectedAccounts {
-      get {
-        return ExtData.Get<bool>("allowProspectedAccounts", false);
       }
     }
 
