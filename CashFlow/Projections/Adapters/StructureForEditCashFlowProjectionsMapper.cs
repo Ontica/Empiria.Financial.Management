@@ -113,48 +113,66 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
         projectCategories = _projects.SelectDistinct(x => x.Category);
 
-        return projectCategories.Select(x => MapProjectType(x))
+        return projectCategories.Select(x => MapProjectType(projectionCategory, x))
                                 .ToFixedList();
       }
 
 
-      private ProjectTypeForEditionDto MapProjectType(FinancialProjectCategory baseProjectCategory) {
+      private ProjectTypeForEditionDto MapProjectType(CashFlowProjectionCategory projectionCategory,
+                                                      FinancialProjectCategory baseProjectCategory) {
         return new ProjectTypeForEditionDto {
           UID = baseProjectCategory.UID,
           Name = baseProjectCategory.Name,
-          Projects = MapProjects(baseProjectCategory)
+          Projects = MapProjects(projectionCategory)
         };
       }
 
-      private FixedList<ProjectionProjectForEdition> MapProjects(FinancialProjectCategory projectCategory) {
+      private FixedList<ProjectionProjectForEdition> MapProjects(CashFlowProjectionCategory projectionCategory) {
 
-        FixedList<FinancialProject> projects = _projects.OrderBy(x => ((INamedEntity) x).Name)
-                                                        .ToFixedList();
+        FixedList<FinancialProject> projects;
 
-        return projects.Select(x => MapFinancialProject(x))
+        if (projectionCategory.AllowProspectedAccounts && _orgUnit.PlaysRole("oficina-promocion")) {
+          projects = _accounts.FindAll(x => projectionCategory.FinancialAccountTypes.Contains(x.FinancialAccountType))
+                              .SelectDistinct(x => x.Project);
+
+          projects = FixedList<FinancialProject>.MergeDistinct(projects,
+                                                               _allProjects.FindAll(x => x.AllowNewProspectedAccounts));
+        } else {
+          projects = _accounts.FindAll(x => projectionCategory.FinancialAccountTypes.Contains(x.FinancialAccountType))
+                              .SelectDistinct(x => x.Project);
+        }
+
+        projects = projects.OrderBy(x => ((INamedEntity) x).Name)
+                                          .ToFixedList();
+
+        return projects.Select(x => MapFinancialProject(projectionCategory, x))
                        .ToFixedList();
       }
 
 
-      private ProjectionProjectForEdition MapFinancialProject(FinancialProject project) {
+      private ProjectionProjectForEdition MapFinancialProject(CashFlowProjectionCategory projectionCategory,
+                                                              FinancialProject project) {
         return new ProjectionProjectForEdition {
           UID = project.UID,
           Name = ((INamedEntity) project).Name,
-          Accounts = MapProjectAccounts(project)
+          Accounts = MapProjectAccounts(projectionCategory, project)
         };
       }
 
 
-      private FixedList<NamedEntityDto> MapProjectAccounts(FinancialProject project) {
-        var accounts = new List<NamedEntityDto>(24);
+      private FixedList<NamedEntityDto> MapProjectAccounts(CashFlowProjectionCategory projectionCategory,
+                                                           FinancialProject project) {
+        var accounts = new List<NamedEntityDto>(16);
 
-        if (project.AllowNewProspectedAccounts) {
+        if (projectionCategory.AllowProspectedAccounts && _orgUnit.PlaysRole("oficina-promocion")) {
           accounts.Add(new NamedEntityDto(Guid.Empty.ToString(), "Crear crédito prospectado"));
         }
 
-        accounts.AddRange(_accounts.FindAll(x => x.Project.Equals(project))
-                                   .Sort((x, y) => ((INamedEntity) x).Name.CompareTo(((INamedEntity) y).Name))
-                                   .MapToNamedEntityList());
+        var projectAccounts = _accounts.FindAll(x => x.Project.Equals(project) &&
+                                                     projectionCategory.FinancialAccountTypes.Contains(x.FinancialAccountType))
+                                       .Sort((x, y) => ((INamedEntity) x).Name.CompareTo(((INamedEntity) y).Name));
+
+        accounts.AddRange(projectAccounts.MapToNamedEntityList());
 
         return accounts.ToFixedList();
       }
