@@ -87,7 +87,20 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
 
       internal FixedList<ProjectionTypeForEditionDto> GetProjectionCategories() {
+
         var projectionCategories = CashFlowProjectionCategory.GetList();
+
+        var accountTypes = _accounts.SelectDistinct(x => x.FinancialAccountType);
+
+        if (_orgUnit.PlaysRole("oficina-promocion")) {
+
+          projectionCategories = projectionCategories.FindAll(x => x.FinancialAccountTypes.Any(y => accountTypes.Contains(y)) ||
+                                                                   x.AllowProspectedAccounts);
+
+        } else {
+
+          projectionCategories = projectionCategories.FindAll(x => x.FinancialAccountTypes.Any(y => accountTypes.Contains(y)));
+        }
 
         return projectionCategories.Select(x => MapCategory(x))
                                    .ToFixedList();
@@ -95,6 +108,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
 
       private ProjectionTypeForEditionDto MapCategory(CashFlowProjectionCategory projectionCategory) {
+
         var sources = projectionCategory.OperationSources;
 
         return new ProjectionTypeForEditionDto {
@@ -108,10 +122,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
 
       private FixedList<ProjectTypeForEditionDto> MapBaseProjectTypes(CashFlowProjectionCategory projectionCategory) {
 
-        FixedList<FinancialProjectCategory> projectCategories = null;
-
-
-        projectCategories = _projects.SelectDistinct(x => x.Category);
+        FixedList<FinancialProjectCategory> projectCategories = new[] { FinancialProjectCategory.Empty }.ToFixedList();
 
         return projectCategories.Select(x => MapProjectType(projectionCategory, x))
                                 .ToFixedList();
@@ -126,6 +137,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
           Projects = MapProjects(projectionCategory)
         };
       }
+
 
       private FixedList<ProjectionProjectForEdition> MapProjects(CashFlowProjectionCategory projectionCategory) {
 
