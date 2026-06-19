@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
+
 using Empiria.Parties;
 using Empiria.Services;
 
@@ -90,7 +92,9 @@ namespace Empiria.Financial.UseCases {
       Assertion.Require(orgUnit, nameof(orgUnit));
       Assertion.Require(description, nameof(description));
 
-      var pivotAccount = project.Accounts.Find(x => !x.IsOperationAccount);
+      var pivotAccount = project.Accounts.FindAll(x => !x.IsOperationAccount)
+                                         .OrderBy(x => x.GetOperations().Count)
+                                         .Last();
 
       var accountFields = new FinancialAccountFields {
         FinancialAccountTypeUID = "ObjectTypeInfo.FinancialAccount.ProspectedCredit",
