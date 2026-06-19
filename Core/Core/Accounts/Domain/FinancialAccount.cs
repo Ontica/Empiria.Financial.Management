@@ -299,10 +299,9 @@ namespace Empiria.Financial {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Code, Name, _identifiers, _tags,
-                                           SubledgerAccountNo,
-                                           Project.Keywords, OrganizationalUnit.Keywords,
-                                           StandardAccount.Keywords);
+        return EmpiriaString.BuildKeywords(Code, Name, OperationName, _identifiers, _tags,
+                                           SubledgerAccountNo, Project.Keywords,
+                                           StandardAccount.Keywords, OrganizationalUnit.Keywords);
       }
     }
 
@@ -550,6 +549,8 @@ namespace Empiria.Financial {
       _attributes = JsonObject.Parse(fields.Attributes);
       _financialData = JsonObject.Parse(fields.FinancialData);
       _tags = EmpiriaString.Tagging(fields.Tags);
+
+      MarkAsDirty();
     }
 
 
