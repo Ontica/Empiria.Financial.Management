@@ -38,6 +38,8 @@ namespace Empiria.Financial.Projects.UseCases {
 
       FinancialAccount account = project.AddAccount(fields);
 
+      account.Save();
+
       project.Save();
 
       return FinancialAccountMapper.MapToDescriptor(account);
@@ -85,6 +87,8 @@ namespace Empiria.Financial.Projects.UseCases {
 
       project.RemoveAccount(account);
 
+      account.Save();
+
       project.Save();
 
       return FinancialAccountMapper.MapToDescriptor(account);
@@ -101,6 +105,8 @@ namespace Empiria.Financial.Projects.UseCases {
       FinancialAccount account = project.GetAccount(fields.UID);
 
       project.UpdateAccount(account, fields);
+
+      account.Save();
 
       project.Save();
 
