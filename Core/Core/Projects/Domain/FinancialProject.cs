@@ -251,7 +251,7 @@ namespace Empiria.Financial.Projects {
     }
 
 
-    [DataField("PRJ_STATUS", Default = EntityStatus.Pending)]
+    [DataField("PRJ_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get; private set;
     }
@@ -331,8 +331,6 @@ namespace Empiria.Financial.Projects {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
         ProjectNo = FinancialProjectDataService.GetNextProjectNo();
-      }
-      if (Status == EntityStatus.Pending) {
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         RecordingTime = DateTime.Now;
       }
@@ -432,7 +430,6 @@ namespace Empiria.Financial.Projects {
 
 
     internal void RemoveAccount(FinancialAccount account) {
-      Assertion.Require(account.Status == EntityStatus.Pending, "Current user can not update this account.");
       Assertion.Require(account, nameof(account));
       Assertion.Require(_accounts.Value.Contains(account), "Account does not belong to this project.");
 
