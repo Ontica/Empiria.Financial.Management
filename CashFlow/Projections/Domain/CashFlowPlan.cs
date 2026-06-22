@@ -168,6 +168,7 @@ namespace Empiria.CashFlow.Projections {
       _projections.Value.Remove(projection);
     }
 
+
     internal CashFlowProjection TryGetProjection(FinancialAccount baseAccount) {
 
       return _projections.Value.Find(x => x.BaseAccount.Equals(baseAccount));

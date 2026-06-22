@@ -56,7 +56,6 @@ namespace Empiria.CashFlow.Explorer.UseCases {
       );
     }
 
-
     #endregion Use cases
 
     #region Helpers

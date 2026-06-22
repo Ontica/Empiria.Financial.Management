@@ -40,7 +40,7 @@ namespace Empiria.CashFlow.Projections.Adapters {
     }
 
 
-    internal CashFlowProjectionEntryByYearDynamicDto(CashFlowProjectionEntryByYear entry) {
+    public CashFlowProjectionEntryByYearDynamicDto(CashFlowProjectionEntryByYear entry) {
       UID = entry.UID;
       ItemType = DataTableEntryType.Entry.ToString();
       ItemDescription = ((INamedEntity) entry.CashFlowAccount).Name;
