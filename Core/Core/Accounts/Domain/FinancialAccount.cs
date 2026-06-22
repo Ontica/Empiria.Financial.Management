@@ -507,9 +507,6 @@ namespace Empiria.Financial {
 
       Assertion.Require(operation, "La operación que se intentó remover no existe.");
 
-      Assertion.Require(operation.Status == EntityStatus.Pending,
-                        $"No se puede eliminar la operación {operation.Name} debido a que ya está activa");
-
       operation.Delete();
 
       _deletedOperations.Add(operation);
