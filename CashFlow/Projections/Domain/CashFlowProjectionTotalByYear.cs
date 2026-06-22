@@ -50,6 +50,20 @@ namespace Empiria.CashFlow.Projections {
       get; private set;
     }
 
+    public decimal InflowsTotal {
+      get {
+        return Entries.Sum(x => x.InflowAmount);
+      }
+    }
+
+
+    public decimal OutflowsTotal {
+      get {
+        return Entries.Sum(x => x.OutflowAmount);
+      }
+    }
+
+
     public decimal Total {
       get {
         return Entries.Sum(x => x.Amount);
