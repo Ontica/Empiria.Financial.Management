@@ -97,7 +97,7 @@ namespace Empiria.Financial.UseCases {
                                          .Last();
 
       var accountFields = new FinancialAccountFields {
-        FinancialAccountTypeUID = "ObjectTypeInfo.FinancialAccount.ProspectedCredit",
+        FinancialAccountTypeUID = FinancialAccountType.ProspectedCredit.UID,
         ProjectUID = project.UID,
         OrganizationalUnitUID = orgUnit.UID,
         Description = description,
@@ -202,7 +202,6 @@ namespace Empiria.Financial.UseCases {
 
       return FinancialAccountMapper.Map(account);
     }
-
 
     #endregion Use cases
 
