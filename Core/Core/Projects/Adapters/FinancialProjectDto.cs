@@ -54,6 +54,10 @@ namespace Empiria.Financial.Projects.Adapters {
       get; internal set;
     }
 
+    public bool CanConvertToCreditAccount {
+      get; internal set;
+    }
+
   }  // class FinancialProjectActions
 
 

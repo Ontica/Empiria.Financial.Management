@@ -432,6 +432,25 @@ namespace Empiria.Financial {
     }
 
 
+    internal void ConvertTo(FinancialAccountType newAccountType, string newAccountNo) {
+      Assertion.Require(newAccountType, nameof(newAccountType));
+      Assertion.Require(newAccountNo, nameof(newAccountNo));
+      Assertion.Require(!newAccountType.Equals(this.FinancialAccountType),
+                        "No se puede convertir al mimo tipo de cuenta.");
+
+      Assertion.Require(!this.FinancialAccountType.ControlledByExternalSystem,
+                        "No se puede convertir una cuenta que ya está controlada por un sistema externo.");
+
+      Assertion.Require(newAccountType.ControlledByExternalSystem,
+                        "No se puede convertir una cuenta a un tipo " +
+                        "que no está controlado por un sistema externo.");
+
+      base.ReclassifyAs(newAccountType);
+
+      this.AccountNo = newAccountNo;
+    }
+
+
     internal void Delete() {
       Status = EntityStatus.Deleted;
 

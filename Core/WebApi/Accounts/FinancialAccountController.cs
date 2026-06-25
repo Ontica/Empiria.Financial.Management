@@ -76,15 +76,31 @@ namespace Empiria.Financial.Accounts.WebApi {
       }
     }
 
+
     [HttpPost]
     [Route("v2/financial-accounts/{accountUID:guid}/change-project")]
-    public SingleObjectModel ChangeAccountProject([FromUri] string accountUID, [FromBody] ChangeProjectFields fields) {
+    public SingleObjectModel ChangeAccountProject([FromUri] string accountUID,
+                                                  [FromBody] ChangeProjectFields fields) {
 
       using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
 
         fields.AccountUID = accountUID;
 
         FinancialAccountDto account = usecases.ChangeProject(accountUID, fields.NewProjectUID);
+
+        return new SingleObjectModel(base.Request, account);
+      }
+    }
+
+
+    [HttpPost]
+    [Route("v2/financial-accounts/{accountUID:guid}/convert-to-credit-account/{creditNo}")]
+    public SingleObjectModel ConvertToCreditAccount([FromUri] string accountUID,
+                                                    [FromUri] string creditNo) {
+
+      using (var usecases = FinancialAccountUseCases.UseCaseInteractor()) {
+
+        FinancialAccountDto account = usecases.ConvertToCreditAccount(accountUID, creditNo);
 
         return new SingleObjectModel(base.Request, account);
       }

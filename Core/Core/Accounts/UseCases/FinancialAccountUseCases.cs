@@ -86,6 +86,36 @@ namespace Empiria.Financial.UseCases {
     }
 
 
+    public FinancialAccountDto ConvertToCreditAccount(string accountUID, string creditNo) {
+      Assertion.Require(accountUID, nameof(accountUID));
+      Assertion.Require(creditNo, nameof(creditNo));
+
+      var currentAccount = FinancialAccount.TryParseWithAccountNo(FinancialAccountType.CreditAccount, creditNo);
+
+      Assertion.Require(currentAccount == null, $"Ya está registrada una cuenta de crédito con el número {creditNo}.");
+
+      var account = FinancialAccount.Parse(accountUID);
+
+      Assertion.Require(account.FinancialAccountType.Equals(FinancialAccountType.ProspectedCredit),
+                        $"La cuenta que se desea convertir no es un crédito prospectado.");
+
+      using (var usecases = ExternalAccountsUseCases.UseCaseInteractor()) {
+
+        var externalAccount = usecases.TryGetAccountFromCreditSystem(creditNo);
+
+        Assertion.Require(externalAccount, $"No se encontró la cuenta de crédito {creditNo} en el sistema externo.");
+
+        account.ConvertTo(FinancialAccountType.CreditAccount, creditNo);
+
+        account.Save();
+
+        usecases.RefreshAccountFromCreditSystem(account.UID);
+      }
+
+      return FinancialAccountMapper.Map(account);
+    }
+
+
     public FinancialAccount CreateProspectedAccount(FinancialProject project, OrganizationalUnit orgUnit,
                                                     string description) {
       Assertion.Require(project, nameof(project));

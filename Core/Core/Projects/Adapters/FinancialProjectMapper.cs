@@ -74,6 +74,7 @@ namespace Empiria.Financial.Projects.Adapters {
         CanUpdate = rules.CanUpdate,
         CanChangeProject = rules.CanUpdate,
         CanEditOperations = rules.CanEditOperations,
+        CanConvertToCreditAccount = true,
       };
     }
 
