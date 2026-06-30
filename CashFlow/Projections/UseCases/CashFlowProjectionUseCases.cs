@@ -15,8 +15,9 @@ using Empiria.Services;
 using Empiria.StateEnums;
 
 using Empiria.Financial;
-using Empiria.Financial.Adapters;
 using Empiria.Financial.Projects;
+
+using Empiria.Financial.Adapters;
 using Empiria.Financial.UseCases;
 
 using Empiria.CashFlow.Projections.Adapters;
@@ -124,6 +125,37 @@ namespace Empiria.CashFlow.Projections.UseCases {
     }
 
 
+    public CashFlowProjection CreateProjection(CashFlowProjectionFields fields,
+                                               FixedList<CashFlowProjectionEntryFields> entriesFields) {
+      Assertion.Require(fields, nameof(fields));
+      Assertion.Require(entriesFields, nameof(entriesFields));
+      Assertion.Require(entriesFields.Count > 0, nameof(entriesFields));
+
+      fields.EnsureValid();
+
+      var plan = CashFlowPlan.Parse(fields.PlanUID);
+      var category = CashFlowProjectionCategory.Parse(fields.ProjectionCategoryTypeUID);
+
+      var baseAccount = FinancialAccount.Parse(fields.AccountUID);
+
+      var projection = new CashFlowProjection(plan, category, baseAccount);
+
+      projection.Update(fields);
+
+      foreach (var entry in entriesFields) {
+        projection.AddEntry(entry);
+      }
+
+      projection.SendToAuthorization(projection.RequestedBy);
+
+      plan.AddProjection(projection);
+
+      projection.Save();
+
+      return projection;
+    }
+
+
     public CashFlowProjectionHolderDto DeleteOrCancelProjection(string projectionUID) {
       Assertion.Require(projectionUID, nameof(projectionUID));
 
@@ -139,7 +171,6 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       return CashFlowProjectionMapper.Map(projection);
     }
-
 
     public FixedList<NamedEntityDto> GetOperationSources() {
       return OperationSource.GetList()
@@ -217,7 +248,9 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       var projection = CashFlowProjection.Parse(projectionUID);
 
-      projection.SendToAuthorization();
+      var requestedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      projection.SendToAuthorization(requestedBy);
 
       projection.Save();
 

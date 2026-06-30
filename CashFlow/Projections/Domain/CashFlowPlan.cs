@@ -111,6 +111,16 @@ namespace Empiria.CashFlow.Projections {
 
     #region Methods
 
+    internal void AddProjection(CashFlowProjection projection) {
+      Assertion.Require(projection, nameof(projection));
+      Assertion.Require(!projection.IsEmptyInstance, nameof(projection));
+
+      AssertCanAddProjection(projection.BaseAccount);
+
+      _projections.Value.Add(projection);
+    }
+
+
     internal CashFlowProjection AddProjection(CashFlowProjectionCategory category,
                                               FinancialAccount baseAccount) {
       Assertion.Require(category, nameof(category));
@@ -187,7 +197,7 @@ namespace Empiria.CashFlow.Projections {
       var orgUnit = baseAccount.OrganizationalUnit;
 
       Assertion.Require(orgUnit.PlaysRole(CashFlowProjectionRules.CASH_FLOW_ROLE),
-                        $"{orgUnit.Name} is not configurated to handle cash flow projections.");
+                        $"({orgUnit.Code}) {orgUnit.Name} is not configurated to handle cash flow projections.");
 
       if (TryGetProjection(baseAccount) != null) {
         Assertion.RequireFail("Ya está registrada una proyección de flujo de efectivo para " +
