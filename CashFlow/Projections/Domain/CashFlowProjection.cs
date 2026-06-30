@@ -388,11 +388,11 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    internal void SendToAuthorization() {
+    internal void SendToAuthorization(Party requestedBy) {
       Assertion.Require(Rules.CanSendToAuthorization,
                         "Current user can not send this cash flow projection to authorization.");
 
-      RequestedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      RequestedBy = requestedBy;
       RequestedTime = DateTime.Now;
       Status = TransactionStatus.OnAuthorization;
     }
