@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Parties;
 using Empiria.StateEnums;
 
 namespace Empiria.CashFlow.Projections {
@@ -141,6 +142,11 @@ namespace Empiria.CashFlow.Projections {
             _projection.BaseParty.Id == ExecutionServer.CurrentContact.Organization.Id) {
           return true;
         }
+
+        if (_projection.RecordedBy is OrganizationalUnit) {
+          return true;
+        }
+
         if (!EmpiriaMath.IsMemberOf(ExecutionServer.CurrentContact.Id,
                                     new int[] { _projection.PostedBy.Id,
                                                 _projection.RecordedBy.Id })) {
