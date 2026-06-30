@@ -169,7 +169,7 @@ namespace Empiria.CashFlow.Projections {
     }
 
 
-    internal CashFlowProjection TryGetProjection(FinancialAccount baseAccount) {
+    public CashFlowProjection TryGetProjection(FinancialAccount baseAccount) {
 
       return _projections.Value.Find(x => x.BaseAccount.Equals(baseAccount));
     }

@@ -13,14 +13,14 @@ using Empiria.StateEnums;
 namespace Empiria.CashFlow.Projections {
 
   /// <summary>Provides services to control cash flow projection's rules.</summary>
-  internal class CashFlowProjectionRules {
+  public class CashFlowProjectionRules {
 
     #region Fields
 
-    static internal readonly string CASH_FLOW_AUTHORIZER = "cash-flow-authorizer";
-    static internal readonly string CASH_FLOW_MANAGER = "cash-flow-manager";
-    static internal readonly string CASH_FLOW_PLANNER = "cash-flow-planner";
-    static internal readonly string CASH_FLOW_ROLE = "cash-flow";
+    static public readonly string CASH_FLOW_AUTHORIZER = "cash-flow-authorizer";
+    static public readonly string CASH_FLOW_MANAGER = "cash-flow-manager";
+    static public readonly string CASH_FLOW_PLANNER = "cash-flow-planner";
+    static public readonly string CASH_FLOW_ROLE = "cash-flow";
 
     private readonly CashFlowProjection _projection;
 
