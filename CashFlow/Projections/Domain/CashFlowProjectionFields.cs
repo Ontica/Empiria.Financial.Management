@@ -61,6 +61,11 @@ namespace Empiria.CashFlow.Projections {
     } = string.Empty;
 
 
+    public string RecordedByUID {
+      get; set;
+    } = string.Empty;
+
+
     public string[] Tags {
       get; set;
     } = new string[0];

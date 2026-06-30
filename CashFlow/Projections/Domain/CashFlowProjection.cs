@@ -363,7 +363,7 @@ namespace Empiria.CashFlow.Projections {
         PostingTime = DateTime.Now;
       }
 
-      if (Status == TransactionStatus.Pending) {
+      if (Status == TransactionStatus.Pending && RecordedBy.IsEmptyInstance) {
         RecordedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         RecordingTime = DateTime.Now;
       }
@@ -392,7 +392,7 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(Rules.CanSendToAuthorization,
                         "Current user can not send this cash flow projection to authorization.");
 
-      RequestedBy = PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      RequestedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       RequestedTime = DateTime.Now;
       Status = TransactionStatus.OnAuthorization;
     }
@@ -438,6 +438,12 @@ namespace Empiria.CashFlow.Projections {
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
+
+      if (fields.RecordedByUID.Length != 0) {
+        RecordedBy = Patcher.Patch(fields.RecordedByUID, RecordedBy);
+        RecordingTime = DateTime.Now;
+      }
+
       Tags = string.Join(" ", fields.Tags);
 
       ApplicationDate = Patcher.Patch(fields.ApplicationDate, ApplicationDate);
