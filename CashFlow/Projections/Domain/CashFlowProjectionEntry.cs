@@ -48,6 +48,9 @@ namespace Empiria.CashFlow.Projections {
       Assertion.Require(projection.Plan.IncludesYear(year), nameof(year));
       Assertion.Require(1 <= month && month <= 12, nameof(month));
       Assertion.Require(projection.Plan.IncludesMonth(year, month), nameof(month));
+
+      amount = Math.Round(amount, 0);
+
       Assertion.Require(amount > 0, $"Amount must be greater than zero: {amount}");
 
       Projection = projection;
@@ -285,17 +288,13 @@ namespace Empiria.CashFlow.Projections {
         Assertion.RequireFail($"Invalid month for this projection's plan ({fields.Month.Value}).");
       }
 
-      CashFlowAccount = Patcher.Patch(fields.CashFlowAccountUID, CashFlowAccount);
-      ProjectionColumn = Patcher.Patch(fields.ProjectionColumnUID, ProjectionColumn);
-      Product = Patcher.Patch(fields.ProductUID, Product);
-      ProductUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit);
-      ProductQty = fields.ProductQty;
-      Year = Patcher.Patch(fields.Year, Year);
-      Month = Patcher.Patch(fields.Month, Month);
+      var amount = Patcher.Patch(fields.Amount, Amount);
 
-      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
+      amount = Math.Round(amount, 0);
 
-      OriginalAmount = Patcher.Patch(fields.Amount, Amount);
+      Assertion.Require(amount > 0, "Amount must be greater than zero.");
+
+      OriginalAmount = amount;
 
       if (CashFlowAccount.IsInflowAccount) {
         InflowAmount = OriginalAmount;
@@ -305,7 +304,20 @@ namespace Empiria.CashFlow.Projections {
 
       if (Currency.Distinct(Projection.Plan.BaseCurrency)) {
         ExchangeRate = FinancialVariables.GetExchangeRate(Year, Month, Currency);
+      } else {
+        ExchangeRate = decimal.One;
       }
+
+
+      CashFlowAccount = Patcher.Patch(fields.CashFlowAccountUID, CashFlowAccount);
+      ProjectionColumn = Patcher.Patch(fields.ProjectionColumnUID, ProjectionColumn);
+      Product = Patcher.Patch(fields.ProductUID, Product);
+      ProductUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit);
+      ProductQty = fields.ProductQty;
+      Year = Patcher.Patch(fields.Year, Year);
+      Month = Patcher.Patch(fields.Month, Month);
+
+      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
