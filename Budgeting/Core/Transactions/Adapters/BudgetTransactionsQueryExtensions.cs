@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.HumanResources;
 using Empiria.Parties;
 using Empiria.StateEnums;
 
@@ -124,13 +125,23 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static private string BuildTransactionStageFilter(TransactionStage stage, FixedList<string> userRoles) {
-      int userId = ExecutionServer.CurrentUserId;
 
-      string currentUserFilter = $"(BDG_TXN_POSTED_BY_ID = {userId} OR " +
-                                 $"BDG_TXN_RECORDED_BY_ID = {userId} OR " +
-                                 $"BDG_TXN_REQUESTED_BY_ID = {userId} OR " +
-                                 $"BDG_TXN_AUTHORIZED_BY_ID = {userId} OR " +
-                                 $"BDG_TXN_APPLIED_BY_ID = {userId})";
+      var party = Party.ParseWithContact(ExecutionServer.CurrentContact);
+
+      FixedList<OrganizationalUnit> orgUnits = Accountability.GetCommissionersFor<OrganizationalUnit>(party, "budgeting");
+
+      string filter = SearchExpression.ParseInSet("BDG_TXN_BASE_PARTY_ID", orgUnits.Select(x => x.Id));
+
+      if (filter.Length != 0) {
+        filter = " OR " + filter;
+      }
+
+      string currentUserFilter = $"(BDG_TXN_POSTED_BY_ID = {party.Id} OR " +
+                           $"BDG_TXN_RECORDED_BY_ID = {party.Id} OR " +
+                           $"BDG_TXN_REQUESTED_BY_ID = {party.Id} OR " +
+                           $"BDG_TXN_AUTHORIZED_BY_ID = {party.Id} OR " +
+                           $"BDG_TXN_APPLIED_BY_ID = {party.Id}" +
+                           $"{filter})";
 
       switch (stage) {
 
