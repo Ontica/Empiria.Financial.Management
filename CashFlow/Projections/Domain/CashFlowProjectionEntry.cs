@@ -302,6 +302,8 @@ namespace Empiria.CashFlow.Projections {
         OutflowAmount = OriginalAmount;
       }
 
+      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
+
       if (Currency.Distinct(Projection.Plan.BaseCurrency)) {
         ExchangeRate = FinancialVariables.GetExchangeRate(Year, Month, Currency);
       } else {
@@ -316,8 +318,6 @@ namespace Empiria.CashFlow.Projections {
       ProductQty = fields.ProductQty;
       Year = Patcher.Patch(fields.Year, Year);
       Month = Patcher.Patch(fields.Month, Month);
-
-      Currency = Patcher.Patch(fields.CurrencyUID, Currency);
 
       Description = EmpiriaString.Clean(fields.Description);
       Justification = EmpiriaString.Clean(fields.Justification);
