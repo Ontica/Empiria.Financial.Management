@@ -112,7 +112,6 @@ namespace Empiria.Financial.Adapters {
   } // class FinancialAccountDto
 
 
-
   public class FinancialAccountDescriptor {
 
     public string UID {
