@@ -129,7 +129,7 @@ namespace Empiria.CashFlow.Projections.UseCases {
                                                FixedList<CashFlowProjectionEntryFields> entriesFields) {
       Assertion.Require(fields, nameof(fields));
       Assertion.Require(entriesFields, nameof(entriesFields));
-      Assertion.Require(entriesFields.Count > 0, nameof(entriesFields));
+      Assertion.Require(entriesFields.Count > 0, $"{nameof(entriesFields)} must contain at least one entry.");
 
       fields.EnsureValid();
 
