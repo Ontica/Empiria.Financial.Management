@@ -150,6 +150,8 @@ namespace Empiria.CashFlow.Projections.UseCases {
 
       plan.AddProjection(projection);
 
+      LoadInitialProjectionData(projection, baseAccount);
+
       projection.Save();
 
       return projection;
