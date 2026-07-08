@@ -47,11 +47,14 @@ namespace Empiria.Budgeting.Data {
 
       var sql = "SELECT FMS_ACCOUNTS.* " +
                 "FROM FMS_ACCOUNTS INNER JOIN FMS_STD_ACCOUNTS " +
-                "ON FMS_ACCOUNTS.ACCT_STD_ACCT_ID = FMS_STD_ACCOUNTS.STD_ACCT_ID";
+                "ON FMS_ACCOUNTS.ACCT_STD_ACCT_ID = FMS_STD_ACCOUNTS.STD_ACCT_ID " +
+                "INNER JOIN PARTIES " +
+                "ON FMS_ACCOUNTS.ACCT_ORG_UNIT_ID = PARTIES.PARTY_ID";
 
       if (!string.IsNullOrWhiteSpace(filter)) {
         sql += $" WHERE {filter}";
       }
+
       if (!string.IsNullOrWhiteSpace(sort)) {
         sql += $" ORDER BY {sort}";
       }

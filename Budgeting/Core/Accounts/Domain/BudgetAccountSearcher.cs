@@ -35,10 +35,9 @@ namespace Empiria.Budgeting {
 
       string budgetTypeFilter = GetBudgetTypeFilter();
       string orgUnitFilter = GetOrgUnitFilter();
-      string accountsFilter = GetAccountsFilter("ACCT_NUMBER");
+      string accountsFilter = GetAccountsFilter();
       string statusFilter = GetStatusFilter();
       string keywordsFilter = GetKeywordsFilter("ACCT_KEYWORDS");
-
 
       var filter = new Filter(budgetTypeFilter);
 
@@ -51,10 +50,10 @@ namespace Empiria.Budgeting {
     }
 
 
-    internal FixedList<StandardAccount> SearchAvailable(OrganizationalUnit orgUnit) {
+    public FixedList<StandardAccount> SearchAvailable(OrganizationalUnit orgUnit) {
 
       string budgetTypeFilter = GetBudgetTypeFilter();
-      string accountsFilter = GetAccountsFilter("STD_ACCT_NUMBER");
+      string accountsFilter = GetStandardAccountsFilter();
       string keywordsFilter = GetKeywordsFilter("STD_ACCT_KEYWORDS");
 
       var filter = new Filter(budgetTypeFilter);
@@ -69,13 +68,8 @@ namespace Empiria.Budgeting {
 
     #region Helpers
 
-    private string GetAccountsFilter(string accountCodeField) {
-      string accountsFilter = _query.GetTransactionType().BudgetAccountsFilter;
-
-      accountsFilter = EmpiriaString.Clean(accountsFilter ?? string.Empty);
-      accountsFilter = accountsFilter.Replace("{{ACCOUNT.CODE.FIELD}}", accountCodeField);
-
-      return accountsFilter;
+    private string GetAccountsFilter() {
+      return _query.GetTransactionType().BudgetAccountsFilter;
     }
 
 
@@ -97,6 +91,11 @@ namespace Empiria.Budgeting {
 
     private string GetOrgUnitFilter() {
       return $"ACCT_ORG_UNIT_ID = {_query.GetBaseParty().Id}";
+    }
+
+
+    private string GetStandardAccountsFilter() {
+      return _query.GetTransactionType().BudgetStandardAccountsFilter;
     }
 
 
