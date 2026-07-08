@@ -118,6 +118,13 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
+    public string BudgetStandardAccountsFilter {
+      get {
+        return ExtensionData.Get("standardAccountsFilter", string.Empty);
+      }
+    }
+
+
     public BudgetType BudgetType {
       get {
         int budgetTypeId = ExtensionData.Get<int>("budgetTypeId");
