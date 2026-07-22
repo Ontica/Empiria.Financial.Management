@@ -10,7 +10,7 @@
 
 using Empiria.Data;
 
-using Empiria.Financial.CostObject.Domain;
+using Empiria.Financial.CostObject;
 
 namespace Empiria.Financial.CostObject.Data {
 
@@ -18,7 +18,7 @@ namespace Empiria.Financial.CostObject.Data {
   static internal class FinancialCostObjectData {
 
     static internal FixedList<FinancialCostObject> GetActiveCostObjects() {
-      var sql = "SELECT * FROM COBJ_COST_OBJECT " +
+      var sql = "SELECT * FROM FMS_COST_OBJECTS " +
                 "WHERE COBJ_STATUS <> 'X' " +
                 "AND COBJ_START_DATE <= SYSDATE AND COBJ_END_DATE >= SYSDATE " +
                 "ORDER BY COBJ_EXTERNAL_NO";
@@ -30,7 +30,7 @@ namespace Empiria.Financial.CostObject.Data {
 
     static internal FinancialCostObject TryGetByExternalCode(string externalCode) {
 
-      var sql = "SELECT * FROM COBJ_COST_OBJECT " +
+      var sql = "SELECT * FROM FMS_COST_OBJECTS " +
           "WHERE COBJ_STATUS = 'A' " +
           $"AND COBJ_EXTERNAL_NO = '{externalCode}'" +
           "ORDER BY COBJ_EXTERNAL_NO";
@@ -42,7 +42,7 @@ namespace Empiria.Financial.CostObject.Data {
     }
 
     static internal void Write(FinancialCostObject o) {
-      var op = DataOperation.Parse("write_COBJ_CostObject",
+      var op = DataOperation.Parse("write_FMS_CostObject",
           o.Id, o.UID, o.CostObjectType, o.ExternalCode, o.Description,
           o.ExtData, o.Keywords, o.StartDate, o.EndDate,
           o.HistoricId, o.PostedById, o.PostingTime,

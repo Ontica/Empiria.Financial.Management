@@ -11,10 +11,10 @@
 using System;
 
 
-namespace Empiria.Financial.CostObject.Domain {
+namespace Empiria.Financial.CostObject {
 
   /// <summary>Holds information for a financial cost objects entry.</summary>
-  public class FinancialCostObjectEntry : BaseObject {
+  public class FinancialCostObjectEntry {
 
     public string ExternalCode {
       get; set;

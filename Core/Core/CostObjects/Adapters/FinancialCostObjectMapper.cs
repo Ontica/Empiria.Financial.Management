@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial.CostObject.Domain;
+using Empiria.Financial.CostObject;
 
 namespace Empiria.Financial.CostObject.Adapters {
 
@@ -22,7 +22,7 @@ namespace Empiria.Financial.CostObject.Adapters {
     static internal FinancialCostObjectDto Map(FinancialCostObject o) {
       return new FinancialCostObjectDto {
         UID = o.UID,
-        CostObjectType = 3245,
+        CostObjectType = 3278,
         ExternalCode = o.ExternalCode,
         Description = o.Description,
         StartDate = o.StartDate,

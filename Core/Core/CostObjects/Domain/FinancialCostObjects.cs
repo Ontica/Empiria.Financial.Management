@@ -15,7 +15,7 @@ using Empiria.StateEnums;
 using Empiria.Financial.CostObject.Data;
 using Empiria.Json;
 
-namespace Empiria.Financial.CostObject.Domain {
+namespace Empiria.Financial.CostObject {
 
   /// <summary>Represents a financial cost objects.</summary>
   public class FinancialCostObject : BaseObject {

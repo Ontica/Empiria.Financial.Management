@@ -12,7 +12,7 @@ using Empiria.Services;
 
 using Empiria.Financial.CostObject.Adapters;
 using Empiria.Financial.CostObject.Data;
-using Empiria.Financial.CostObject.Domain;
+using Empiria.Financial.CostObject;
 
 namespace Empiria.Financial.CostObject.UseCases {
 
@@ -39,6 +39,12 @@ namespace Empiria.Financial.CostObject.UseCases {
       return FinancialCostObjectMapper.Map(list);
     }
 
+    public FinancialCostObjectDto GetByUID(string uid) {
+      var costObject = FinancialCostObject.Parse(uid);
+
+      return FinancialCostObjectMapper.Map(costObject);
+    }
+
     public FinancialCostObjectDto CreateCostObject(FinancialCostObjectEntry entry) {
       Assertion.Require(entry, nameof(entry));
 
@@ -50,7 +56,6 @@ namespace Empiria.Financial.CostObject.UseCases {
       costObject.Save();
 
       return FinancialCostObjectMapper.Map(costObject);
-
     }
 
     public FinancialCostObjectDto UpdateCostObject(string uid, FinancialCostObjectEntry entry) {
