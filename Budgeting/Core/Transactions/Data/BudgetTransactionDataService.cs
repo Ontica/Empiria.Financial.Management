@@ -51,7 +51,7 @@ namespace Empiria.Budgeting.Transactions.Data {
 
     static internal void CopyRelatedEntryControlCodes(BudgetTransaction transaction) {
 
-      foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
+      foreach (var entry in transaction.Entries.FindAll(x => x.HasRelatedEntry)) {
 
         var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
 
@@ -64,30 +64,38 @@ namespace Empiria.Budgeting.Transactions.Data {
 
     static internal void GenerateApprovedPaymentControlCodes(BudgetTransaction transaction) {
 
-      var paymentNos = BudgetTransaction.GetRelatedTo(transaction)
-                                        .FindAll(x => x.OperationType == BudgetOperationType.ApprovePayment &&
-                                                      (x.InProcess || x.IsClosed))
-                                        .SelectDistinctFlat(x => x.Entries.SelectDistinct(y => y.ControlNo))
-                                        .FindAll(x => x.Length > 0 && x.Contains("/"))
-                                        .Select(x => int.Parse(x.Split('/')[1]))
-                                        .ToFixedList()
-                                        .Sort((x, y) => x.CompareTo(y))
-                                        .Reverse();
+      FixedList<BudgetEntry> toPayEntries =
+                BudgetTransaction.GetRelatedTo(transaction)
+                                 .FindAll(x => x.OperationType == BudgetOperationType.ApprovePayment &&
+                                               (x.InProcess || x.IsClosed))
+                                 .SelectDistinctFlat(x => x.Entries)
+                                 .FindAll(x => transaction.Entries.Contains(y => y.BudgetAccount.Equals(x.BudgetAccount)) &&
+                                                                                 x.ControlNo.Contains("/") &&
+                                                                                 !x.IsAdjustment &&
+                                                                                 x.BalanceColumn.Equals(BalanceColumn.ToPay))
+                                 .Sort((x, y) => x.ControlNo.CompareTo(y.ControlNo));
 
-      int nextPayment = 1;
+      foreach (var entry in transaction.Entries.FindAll(x => x.HasRelatedEntry)) {
 
-      if (paymentNos.Count > 0) {
-        nextPayment = paymentNos[0] + 1;
-      }
+        var lastToPayEntry = toPayEntries.FindLast(x => x.BudgetAccount.Equals(entry.BudgetAccount));
 
-      foreach (var entry in transaction.Entries.FindAll(x => x.RelatedEntryId > 0)) {
+        if (lastToPayEntry != null) {
 
-        var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
+          int nextPayment = int.Parse(lastToPayEntry.ControlNo.Split('/')[1]) + 1;
 
-        entry.ControlNo = $"{relatedEntry.ControlNo}/{nextPayment:D2}";
+          entry.ControlNo = $"{lastToPayEntry.ControlNo.Split('/')[0]}/{nextPayment:D2}";
+
+        } else {
+
+          var relatedEntry = BudgetEntry.Parse(entry.RelatedEntryId);
+
+          entry.ControlNo = $"{relatedEntry.ControlNo}/{1:D2}";
+        }
 
         entry.Save();
-      }
+
+      }  // foreach
+
     }
 
 
@@ -178,11 +186,11 @@ namespace Empiria.Budgeting.Transactions.Data {
 
         entryIds = FixedList<int>.MergeDistinct(entryIds,
                                                 entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
-                                                                                        .FindAll(x => x > 0));
+                                                        .FindAll(x => x != -1));
 
         entryIds = FixedList<int>.MergeDistinct(entryIds,
                                                 entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
-                                                                                        .FindAll(x => x > 0));
+                                                         .FindAll(x => x != -1));
 
         var controlNos = entryIds.Select(x => BudgetEntry.Parse(x))
                                  .ToFixedList()

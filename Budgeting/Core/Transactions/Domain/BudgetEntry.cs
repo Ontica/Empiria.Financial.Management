@@ -360,6 +360,13 @@ namespace Empiria.Budgeting.Transactions {
     } = -1;
 
 
+    public bool HasRelatedEntry {
+      get {
+        return RelatedEntryId != -1;
+      }
+    }
+
+
     [DataField("BDG_ENTRY_POSITION")]
     public int Position {
       get; private set;
