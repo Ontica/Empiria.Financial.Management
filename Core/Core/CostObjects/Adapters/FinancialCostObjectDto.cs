@@ -19,8 +19,8 @@ namespace Empiria.Financial.CostObject.Adapters {
       get; internal set;
     }
 
-    public int CostObjectType {
-      get; internal set;
+    public int CostObjectTypeId {
+     get; internal set;
     }
 
     public string ExternalCode {

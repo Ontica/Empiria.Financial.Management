@@ -14,8 +14,6 @@ using Empiria.WebApi;
 
 using Empiria.Financial.CostObject.Adapters;
 using Empiria.Financial.CostObject.UseCases;
-using Empiria.Financial.CostObject;
-using System;
 
 namespace Empiria.Financial.CostObject.WebApi {
 
@@ -25,7 +23,7 @@ namespace Empiria.Financial.CostObject.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v3/financial-costobject/{costObjectUID:guid}")]
+    [Route("v3/financial-costobject/costobjects/{costObjectUID:guid}")]
     public SingleObjectModel GetFinancialConcept([FromUri] string costObjectUID) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
@@ -37,7 +35,7 @@ namespace Empiria.Financial.CostObject.WebApi {
     }
 
     [HttpGet]
-    [Route("v3/financial-costobject/cost-objects")]
+    [Route("v3/financial-costobject/costobjects")]
     public CollectionModel GetActiveCostObjects() {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
@@ -49,18 +47,19 @@ namespace Empiria.Financial.CostObject.WebApi {
     }
 
     [HttpPost]
-    [Route("v3/financial-costobject/create-objects")]
+    [Route("v3/financial-costobject/costobjects")]
     public SingleObjectModel CreateCostObject([FromBody] FinancialCostObjectEntry entry) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
 
         FinancialCostObjectDto costObject = usecases.CreateCostObject(entry);
+
         return new SingleObjectModel(base.Request, costObject);
       }
     }
 
     [HttpPut, HttpPatch]
-    [Route("v3/financial-costobject/update-objects/{uid}")]
+    [Route("v3/financial-costobject/costobjects/{uid}")]
     public SingleObjectModel UpdateCostObject([FromUri] string uid,
                                               [FromBody] FinancialCostObjectEntry entry) {
 
@@ -73,7 +72,7 @@ namespace Empiria.Financial.CostObject.WebApi {
     }
 
     [HttpDelete]
-    [Route("v3/financial-costobject/delete-objects/{uid}")]
+    [Route("v3/financial-costobject/costobjects/{uid}")]
     public NoDataModel DeleteCostObject([FromUri] string uid) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {

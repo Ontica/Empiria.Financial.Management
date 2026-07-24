@@ -8,10 +8,11 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial.CostObject;
+using System;
+using Empiria.Financial;
+using Empiria.Financial.CostObject.Adapters;
+using Empiria.Financial.CostObject.UseCases;
 using Xunit;
-
-//using Empiria.Financial.CostObjects;
 
 namespace Empiria.Tests.Financial.CostObjects {
 
@@ -21,18 +22,45 @@ namespace Empiria.Tests.Financial.CostObjects {
     #region Facts
 
     [Fact]
-    public void Should_Parse_All_Financial_CostObject() {
-      var list = BaseObject.GetFullList<FinancialCostObject>();
-    }
-
-    [Fact]
-    public void Should_Read_All_Financial_CostObjects() {
+    public void Should_all_Financial_CostObject() {
       var sut = BaseObject.GetFullList<FinancialCostObject>();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
     }
 
+    [Fact]
+    public void Should_Create_Financial_CostObjects() {
+
+      TestsCommonMethods.Authenticate();
+
+      var contact = ExecutionServer.CurrentContact;
+
+      var entry = new FinancialCostObjectEntry {
+        CostObjectTypeId = 5739,
+        ExternalCode = "COM-022",
+        Description = "Objeto de gasto de PRUEBA con COM-022",
+        StartDate = DateTime.Today,
+      };
+
+      using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
+
+        FinancialCostObjectDto sut = usecases.CreateCostObject(entry);
+
+        Assert.NotNull(sut);
+      }
+
+    }
+
+    [Fact]
+    public void Should_Update_Financial_CostObjects() {
+     
+    }
+
+    [Fact]
+    public void Should_Delete_Financial_CostObjects() {
+
+    }
 
     [Fact]
     public void Should_Read_Empty_FinancialCostObjects() {

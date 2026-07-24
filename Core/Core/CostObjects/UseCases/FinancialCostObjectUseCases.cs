@@ -12,7 +12,6 @@ using Empiria.Services;
 
 using Empiria.Financial.CostObject.Adapters;
 using Empiria.Financial.CostObject.Data;
-using Empiria.Financial.CostObject;
 
 namespace Empiria.Financial.CostObject.UseCases {
 
@@ -47,10 +46,6 @@ namespace Empiria.Financial.CostObject.UseCases {
 
     public FinancialCostObjectDto CreateCostObject(FinancialCostObjectEntry entry) {
       Assertion.Require(entry, nameof(entry));
-
-      var list = FinancialCostObjectData.TryGetByExternalCode(entry.ExternalCode);
-      Assertion.Require(list.IsEmptyInstance,
-          $"A cost object with code {entry.ExternalCode} already exists.");
 
       var costObject = FinancialCostObject.Create(entry);
       costObject.Save();

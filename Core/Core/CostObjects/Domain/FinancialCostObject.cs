@@ -14,8 +14,9 @@ using Empiria.StateEnums;
 
 using Empiria.Financial.CostObject.Data;
 using Empiria.Json;
+using Empiria.Parties;
 
-namespace Empiria.Financial.CostObject {
+namespace Empiria.Financial {
 
   /// <summary>Represents a financial cost objects.</summary>
   public class FinancialCostObject : BaseObject {
@@ -35,12 +36,12 @@ namespace Empiria.Financial.CostObject {
     #endregion Constructors and parsers
 
     #region Properties
-    
+
     [DataField("COBJ_TYPE_ID")]
-    public FinancialCostObject CostObjectType {
+    public FinancialCostObjectType CostType {
       get; private set;
     }
-    
+
     [DataField("COBJ_EXTERNAL_NO")]
     public string ExternalCode {
       get; private set;
@@ -58,7 +59,7 @@ namespace Empiria.Financial.CostObject {
 
     public string Keywords {
       get {
-        return $"{ExternalCode} " + EmpiriaString.BuildKeywords(Description);
+        return  EmpiriaString.BuildKeywords(ExternalCode, Description);
       }
     }
 
@@ -73,12 +74,12 @@ namespace Empiria.Financial.CostObject {
     }
 
     [DataField("COBJ_HISTORIC_ID")]
-    public int HistoricId {
+    internal int HistoricId {
       get; private set;
     }
 
     [DataField("COBJ_POSTED_BY_ID")]
-    public int PostedById {
+    public Party PostedBy {
       get; private set;
     }
 
@@ -100,11 +101,11 @@ namespace Empiria.Financial.CostObject {
       Assertion.Require(entry, nameof(entry));
 
       var costObject = new FinancialCostObject {
-         
+        CostType = FinancialCostObjectType.Parse(entry.CostObjectTypeId),
         ExternalCode = entry.ExternalCode,
         Description = entry.Description,
         StartDate = entry.StartDate,
-        EndDate = entry.EndDate ?? ExecutionServer.DateMaxValue
+        EndDate = ExecutionServer.DateMaxValue
       };
 
       return costObject;
@@ -117,16 +118,13 @@ namespace Empiria.Financial.CostObject {
     }
 
     internal void Delete() {
-      Assertion.Require(Status != EntityStatus.Deleted,
-          "This cost object was already deleted.");
-
       Status = EntityStatus.Deleted;
       EndDate = DateTime.Today;
     }
 
     protected override void OnSave() {
       if (IsNew) {
-        PostedById = ExecutionServer.CurrentUserId;
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
       }
 

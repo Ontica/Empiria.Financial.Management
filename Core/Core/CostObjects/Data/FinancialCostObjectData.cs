@@ -43,9 +43,9 @@ namespace Empiria.Financial.CostObject.Data {
 
     static internal void Write(FinancialCostObject o) {
       var op = DataOperation.Parse("write_FMS_CostObject",
-          o.Id, o.UID, o.CostObjectType, o.ExternalCode, o.Description,
+          o.Id, o.UID, o.CostType.Id, o.ExternalCode, o.Description,
           o.ExtData, o.Keywords, o.StartDate, o.EndDate,
-          o.HistoricId, o.PostedById, o.PostingTime,
+          o.Id, o.PostedBy.Id, o.PostingTime,
           (char) o.Status);
 
       DataWriter.Execute(op);
