@@ -52,7 +52,7 @@ namespace Empiria.Financial {
     }
 
 
-    INamedEntity Project {
+    INamedEntity CostObject {
       get;
     }
 
