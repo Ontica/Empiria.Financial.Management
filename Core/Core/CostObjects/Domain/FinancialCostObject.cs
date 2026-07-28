@@ -19,7 +19,7 @@ using Empiria.Parties;
 namespace Empiria.Financial {
 
   /// <summary>Represents a financial cost objects.</summary>
-  public class FinancialCostObject : BaseObject {
+  public class FinancialCostObject : BaseObject, INamedEntity {
 
     #region Constructors and parsers
 
@@ -59,7 +59,7 @@ namespace Empiria.Financial {
 
     public string Keywords {
       get {
-        return  EmpiriaString.BuildKeywords(ExternalCode, Description);
+        return EmpiriaString.BuildKeywords(ExternalCode, Description);
       }
     }
 
@@ -91,6 +91,15 @@ namespace Empiria.Financial {
     [DataField("COBJ_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get; private set;
+    }
+
+    public string Name {
+      get {
+        if (ExternalCode.Length != 0) {
+          return $"{ExternalCode} {Description}";
+        }
+        return Description;
+      }
     }
 
     #endregion Properties
