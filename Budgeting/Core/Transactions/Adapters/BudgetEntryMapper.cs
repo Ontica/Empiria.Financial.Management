@@ -46,7 +46,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Product = entry.Product.MapToNamedEntity(),
         ProductUnit = entry.ProductUnit.MapToNamedEntity(),
         ProductQty = entry.ProductQty,
-        Project = entry.Project.MapToNamedEntity(),
+        CostObject = entry.CostObject.MapToNamedEntity(),
         Party = entry.BudgetAccount.OrganizationalUnit.MapToNamedEntity(),
         Description = entry.Description,
         Justification = entry.Justification,

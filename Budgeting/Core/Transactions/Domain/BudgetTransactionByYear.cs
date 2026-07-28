@@ -47,7 +47,7 @@ namespace Empiria.Budgeting.Transactions {
 
       return $"{entry.Transaction.Id}|{entry.BalanceColumn.Id}|{entry.BudgetAccount.Id}|" +
              $"{entry.BudgetProgram.Id}|{entry.Product.Id}|{entry.ProductUnit.Id}|" +
-             $"{entry.Project.Id}|{entry.Currency.Id}|{entry.Year}";
+             $"{entry.CostObject.Id}|{entry.Currency.Id}|{entry.Year}";
     }
 
 
@@ -56,7 +56,7 @@ namespace Empiria.Budgeting.Transactions {
 
       return $"{entry.Transaction.Id}|{entry.BalanceColumn.Id}|{entry.BudgetAccount.Id}|" +
              $"{entry.BudgetProgram.Id}|{entry.Product.Id}|{entry.ProductUnit.Id}|" +
-             $"{entry.Project.Id}|{entry.Currency.Id}|{entry.Year}";
+             $"{entry.CostObject.Id}|{entry.Currency.Id}|{entry.Year}";
     }
 
 
@@ -73,7 +73,7 @@ namespace Empiria.Budgeting.Transactions {
         BudgetProgramUID = BudgetProgram.Parse(parts[3]).UID,
         ProductUID = Product.Parse(parts[4]).UID,
         ProductUnitUID = ProductUnit.Parse(parts[5]).UID,
-        ProjectUID = Project.Parse(parts[6]).UID,
+        CostObjectUID = Project.Parse(parts[6]).UID,
         CurrencyUID = Currency.Parse(parts[7]).UID,
         Year = parts[8],
       };
@@ -104,7 +104,7 @@ namespace Empiria.Budgeting.Transactions {
                                                                         x.BudgetProgram.Id == parts[3] &&
                                                                         x.Product.Id == parts[4] &&
                                                                         x.ProductUnit.Id == parts[5] &&
-                                                                        x.Project.Id == parts[6] &&
+                                                                        x.CostObject.Id == parts[6] &&
                                                                         x.Currency.Id == parts[7] &&
                                                                         x.Year == parts[8]);
 
@@ -119,7 +119,7 @@ namespace Empiria.Budgeting.Transactions {
       var account = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount.Empty);
       var product = Patcher.Patch(fields.ProductUID, Product.Empty);
       var productUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
-      var project = Patcher.Patch(fields.ProjectUID, Project.Empty);
+      var costObject = Patcher.Patch(fields.CostObjectUID, FinancialCostObject.Empty);
       var currency = Patcher.Patch(fields.CurrencyUID, Transaction.BaseBudget.BudgetType.Currency);
       var year = fields.Year;
 
@@ -127,7 +127,7 @@ namespace Empiria.Budgeting.Transactions {
                                                                         x.BudgetAccount.Equals(account) &&
                                                                         x.Product.Equals(product) &&
                                                                         x.ProductUnit.Equals(productUnit) &&
-                                                                        x.Project.Equals(project) &&
+                                                                        x.CostObject.Equals(costObject) &&
                                                                         x.Currency.Equals(currency) &&
                                                                         x.Year == year);
 
@@ -197,8 +197,8 @@ namespace Empiria.Budgeting.Transactions {
         msg += $" Producto: {entry.Product.Name}.";
       }
 
-      if (!entry.Project.IsEmptyInstance) {
-        msg += $" Proyecto: {entry.Project.Name}.";
+      if (!entry.CostObject.IsEmptyInstance) {
+        msg += $" Centro de costos: {entry.CostObject.Name}.";
       }
 
       return msg;
@@ -300,7 +300,7 @@ namespace Empiria.Budgeting.Transactions {
         Year = fields.Year,
         Month = amount.Month,
         CurrencyUID = fields.CurrencyUID,
-        ProjectUID = fields.ProjectUID,
+        CostObjectUID = fields.CostObjectUID,
         ProductUID = fields.ProductUID,
         ProductUnitUID = fields.ProductUnitUID,
         Description = fields.Description,

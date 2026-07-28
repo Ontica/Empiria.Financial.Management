@@ -17,7 +17,6 @@ using Empiria.Json;
 using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.Products;
-using Empiria.Projects;
 using Empiria.StateEnums;
 
 using Empiria.Budgeting.Transactions.Data;
@@ -739,14 +738,14 @@ namespace Empiria.Budgeting.Transactions {
       var account = Patcher.Patch(fields.BudgetAccountUID, BudgetAccount.Empty);
       var product = Patcher.Patch(fields.ProductUID, Product.Empty);
       var productUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
-      var project = Patcher.Patch(fields.ProjectUID, Project.Empty);
+      var costObject = Patcher.Patch(fields.CostObjectUID, FinancialCostObject.Empty);
       var currency = Patcher.Patch(fields.CurrencyUID, BaseBudget.BudgetType.Currency);
 
       return _entries.Value.Find(x => x.BalanceColumn.Equals(column) &&
                                       x.BudgetAccount.Equals(account) &&
                                       x.Product.Equals(product) &&
                                       x.ProductUnit.Equals(productUnit) &&
-                                      x.Project.Equals(project) &&
+                                      x.CostObject.Equals(costObject) &&
                                       x.Currency.Equals(currency) &&
                                       x.Year == fields.Year &&
                                       x.Month == fields.Month);

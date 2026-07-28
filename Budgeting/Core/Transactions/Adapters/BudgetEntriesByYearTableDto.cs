@@ -153,7 +153,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       Description = entry.Description;
       ProductUnit = entry.ProductUnit.Name;
       Justification = entry.Justification;
-      Project = entry.Project.Name;
+      Project = entry.CostObject.Name;
       Year = entry.Year;
       Currency = entry.Currency.ISOCode;
 

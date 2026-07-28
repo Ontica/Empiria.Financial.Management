@@ -26,7 +26,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Description = entry.Description,
         ProductUnit = entry.ProductUnit.MapToNamedEntity(),
         Justification = entry.Justification,
-        Project = entry.Project.MapToNamedEntity(),
+        CostObject = entry.CostObject.MapToNamedEntity(),
         Year = entry.Year,
         Currency = entry.Currency.MapToNamedEntity(),
         Amounts = MapAmounts(entry.Entries),

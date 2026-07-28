@@ -42,7 +42,7 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; set;
     }
 
-    public NamedEntityDto Project {
+    public NamedEntityDto CostObject {
       get; internal set;
     }
 

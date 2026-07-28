@@ -80,7 +80,7 @@ namespace Empiria.Budgeting.Transactions {
       get; set;
     }
 
-    public string ProjectUID {
+    public string CostObjectUID {
       get; set;
     } = string.Empty;
 
@@ -154,7 +154,7 @@ namespace Empiria.Budgeting.Transactions {
       fields.OriginCountryUID = Patcher.CleanUID(fields.OriginCountryUID);
       fields.ProductUnitUID = Patcher.CleanUID(fields.ProductUnitUID);
       fields.PartyUID = Patcher.CleanUID(fields.PartyUID);
-      fields.ProjectUID = Patcher.CleanUID(fields.ProjectUID);
+      fields.CostObjectUID = Patcher.CleanUID(fields.CostObjectUID);
       fields.CurrencyUID = Patcher.CleanUID(fields.CurrencyUID);
 
       fields.Description = EmpiriaString.Clean(fields.Description);
@@ -191,8 +191,8 @@ namespace Empiria.Budgeting.Transactions {
         _ = Country.Parse(fields.OriginCountryUID);
       }
 
-      if (fields.ProjectUID.Length != 0) {
-        _ = Project.Parse(fields.ProjectUID);
+      if (fields.CostObjectUID.Length != 0) {
+        _ = Project.Parse(fields.CostObjectUID);
       }
 
       if (fields.PartyUID.Length != 0) {

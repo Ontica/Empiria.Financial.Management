@@ -10,7 +10,6 @@
 
 using Empiria.Financial;
 using Empiria.Products;
-using Empiria.Projects;
 
 namespace Empiria.Budgeting.Transactions {
 
@@ -62,7 +61,8 @@ namespace Empiria.Budgeting.Transactions {
     } = string.Empty;
 
 
-    public string ProjectUID {
+    [Newtonsoft.Json.JsonProperty("ProjectUID")]
+    public string CostObjectUID {
       get; set;
     } = string.Empty;
 
@@ -127,8 +127,8 @@ namespace Empiria.Budgeting.Transactions {
       }
 
 
-      if (fields.ProjectUID.Length != 0) {
-        _ = Project.Parse(fields.ProjectUID);
+      if (fields.CostObjectUID.Length != 0) {
+        _ = FinancialCostObject.Parse(fields.CostObjectUID);
       }
 
 

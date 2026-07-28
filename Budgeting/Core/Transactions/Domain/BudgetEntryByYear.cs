@@ -12,7 +12,6 @@ using System.Linq;
 
 using Empiria.Financial;
 using Empiria.Products;
-using Empiria.Projects;
 
 namespace Empiria.Budgeting.Transactions {
 
@@ -32,7 +31,7 @@ namespace Empiria.Budgeting.Transactions {
       BudgetProgram = BudgetProgram.Parse(fields.BudgetProgramUID);
       Product = Product.Parse(fields.ProductUID);
       ProductUnit = ProductUnit.Parse(fields.ProductUnitUID);
-      Project = Project.Parse(fields.ProjectUID);
+      CostObject = FinancialCostObject.Parse(fields.CostObjectUID);
       Currency = Currency.Parse(fields.CurrencyUID);
       Year = fields.Year;
 
@@ -86,7 +85,7 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    public Project Project {
+    public FinancialCostObject CostObject {
       get;
     }
 

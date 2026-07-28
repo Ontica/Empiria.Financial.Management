@@ -59,9 +59,12 @@ namespace Empiria.Budgeting.Transactions.Adapters {
       get; internal set;
     }
 
-    public NamedEntityDto Project {
+
+    [Newtonsoft.Json.JsonProperty("Project")]
+    public NamedEntityDto CostObject {
       get; internal set;
     }
+
 
     public int Year {
       get; internal set;

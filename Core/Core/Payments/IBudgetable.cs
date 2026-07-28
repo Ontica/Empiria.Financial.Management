@@ -16,7 +16,6 @@ using Empiria.Locations;
 using Empiria.Ontology;
 using Empiria.Parties;
 using Empiria.Products;
-using Empiria.Projects;
 
 namespace Empiria.Financial {
 
@@ -181,9 +180,9 @@ namespace Empiria.Financial {
       get; set;
     }
 
-    public Project Project {
+    public FinancialCostObject CostObject {
       get; set;
-    } = Project.Empty;
+    } = FinancialCostObject.Empty;
 
 
     public Party Party {
@@ -244,7 +243,7 @@ namespace Empiria.Financial {
       Assertion.Require(Description != null, nameof(Description));
       Assertion.Require(Justification != null, nameof(Justification));
       Assertion.Require(ProductQty > 0, $"{nameof(ProductQty)} must be greater than zero.");
-      Assertion.Require(Project, nameof(Project));
+      Assertion.Require(CostObject, nameof(CostObject));
       Assertion.Require(Party, nameof(Party));
       Assertion.Require(!ExecutionServer.IsMinOrMaxDate(BudgetingDate), $"Invalid {nameof(BudgetingDate)}.");
       Assertion.Require(BudgetingDate.Year >= DateTime.Today.Year, $"Invalid {nameof(BudgetingDate)}.");

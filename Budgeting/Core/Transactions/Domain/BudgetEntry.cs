@@ -15,7 +15,6 @@ using Empiria.Json;
 using Empiria.Locations;
 using Empiria.Parties;
 using Empiria.Products;
-using Empiria.Projects;
 using Empiria.StateEnums;
 
 using Empiria.Budgeting.Transactions.Data;
@@ -68,7 +67,7 @@ namespace Empiria.Budgeting.Transactions {
       ProductUnit = entry.ProductUnit;
       ProductQty = entry.ProductQty;
       OriginCountry = entry.OriginCountry;
-      Project = entry.Project;
+      CostObject = entry.CostObject;
       Party = entry.Party;
       EntityTypeId = entry.BudgetableItem.GetEmpiriaType().Id;
       EntityId = entry.BudgetableItem.Id;
@@ -205,7 +204,7 @@ namespace Empiria.Budgeting.Transactions {
 
 
     [DataField("BDG_ENTRY_PROJECT_ID")]
-    public Project Project {
+    public FinancialCostObject CostObject {
       get; private set;
     }
 
@@ -419,7 +418,7 @@ namespace Empiria.Budgeting.Transactions {
         ProductUnit = this.ProductUnit,
         ProductQty = this.ProductQty,
         OriginCountry = this.OriginCountry,
-        Project = this.Project,
+        CostObject = this.CostObject,
         Party = this.Party,
         EntityTypeId = this.EntityTypeId,
         EntityId = this.EntityId,
@@ -574,7 +573,7 @@ namespace Empiria.Budgeting.Transactions {
       ProductUnit = Patcher.Patch(fields.ProductUnitUID, ProductUnit.Empty);
       ProductQty = fields.ProductQty;
       OriginCountry = Patcher.Patch(fields.OriginCountryUID, Country.Default);
-      Project = Patcher.Patch(fields.ProjectUID, Project.Empty);
+      CostObject = Patcher.Patch(fields.CostObjectUID, FinancialCostObject.Empty);
       Party = Patcher.Patch(fields.PartyUID, Party.Empty);
       EntityTypeId = fields.EntityTypeId;
       EntityId = fields.EntityId;
