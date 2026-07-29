@@ -121,7 +121,7 @@ namespace Empiria.Financial {
         CostType = FinancialCostObjectType.Parse(entry.CostObjectTypeId),
         ExternalCode = entry.ExternalCode,
         Description = entry.Description,
-        OrgUnit = OrganizationalUnit.Parse(entry.requestedByUID),
+        OrgUnit = OrganizationalUnit.Parse(entry.RequestedByUID),
         StartDate = entry.StartDate,
         EndDate = ExecutionServer.DateMaxValue
       };
@@ -130,7 +130,7 @@ namespace Empiria.Financial {
     }
 
     internal void Update(FinancialCostObjectEntry entry) {
-      OrgUnit = OrganizationalUnit.Parse(entry.requestedByUID);
+      OrgUnit = OrganizationalUnit.Parse(entry.RequestedByUID);
       Description = entry.Description;
       EndDate = entry.EndDate ?? EndDate;
     }

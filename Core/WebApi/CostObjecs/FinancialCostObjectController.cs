@@ -23,6 +23,7 @@ namespace Empiria.Financial.CostObject.WebApi {
     #region Query web apis
 
     [HttpGet]
+    [Route("v3/costs-management/cost-centers")]
     [Route("v3/costs-management/cost-objects")]
     public CollectionModel GetCostObjects() {
 
@@ -35,6 +36,7 @@ namespace Empiria.Financial.CostObject.WebApi {
     }
 
     [HttpGet]
+    [Route("v3/costs-management/cost-centers/{costObjectUID:guid}")]
     [Route("v3/costs-management/cost-objects/{costObjectUID:guid}")]
     public SingleObjectModel GetByUIDCostObject([FromUri] string costObjectUID) {
 
@@ -48,6 +50,7 @@ namespace Empiria.Financial.CostObject.WebApi {
 
     [HttpPost]
     [Route("v3/costs-management/cost-centers/search")]
+    [Route("v3/costs-management/cost-objects/search")]
     public CollectionModel SearchCostObjectsByOrgUnit([FromBody] FinancialCostObjectEntry query) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
@@ -71,6 +74,7 @@ namespace Empiria.Financial.CostObject.WebApi {
 
     [HttpPost]
     [Route("v3/costs-management/cost-centers")]
+    [Route("v3/costs-management/cost-objects")]
     public SingleObjectModel CreateCostObject([FromBody] FinancialCostObjectEntry entry) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
@@ -81,26 +85,29 @@ namespace Empiria.Financial.CostObject.WebApi {
       }
     }
 
+
     [HttpPut, HttpPatch]
-    [Route("v3/costs-management/cost-centers/{uid}")]
-    public SingleObjectModel UpdateCostObject([FromUri] string uid,
+    [Route("v3/costs-management/cost-centers/{costObjectUID:guid}")]
+    [Route("v3/costs-management/cost-objects/{costObjectUID:guid}")]
+    public SingleObjectModel UpdateCostObject([FromUri] string costObjectUID,
                                               [FromBody] FinancialCostObjectEntry entry) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
 
-        var costObject = usecases.UpdateCostObject(uid, entry);
-        
+        var costObject = usecases.UpdateCostObject(costObjectUID, entry);
+
         return new SingleObjectModel(base.Request, costObject);
       }
     }
 
     [HttpDelete]
-    [Route("v3/costs-management/cost-centers/{uid}")]
-    public NoDataModel DeleteCostObject([FromUri] string uid) {
+    [Route("v3/costs-management/cost-centers/{costObjectUID:guid}")]
+    [Route("v3/costs-management/cost-objects/{costObjectUID:guid}")]
+    public NoDataModel DeleteCostObject([FromUri] string costObjectUID) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
 
-        usecases.DeleteCostObject(uid);
+        usecases.DeleteCostObject(costObjectUID);
 
         return new NoDataModel(base.Request);
       }

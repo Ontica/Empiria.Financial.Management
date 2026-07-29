@@ -32,7 +32,7 @@ namespace Empiria.Financial.CostObject.UseCases {
 
     #region Use cases
 
-    public  FixedList<FinancialCostObjectDto> GetCostObjects() {
+    public FixedList<FinancialCostObjectDto> GetCostObjects() {
 
       FixedList<FinancialCostObject> costObject = FinancialCostObject.GetList("COBJ_STATUS <> 'X'", "COBJ_DESCRIPTION");
 
@@ -41,8 +41,10 @@ namespace Empiria.Financial.CostObject.UseCases {
 
     public FixedList<FinancialCostObjectDto> SearchCostObjectsByOrgUnit(FinancialCostObjectEntry entry) {
 
-      var party = Party.Parse(entry.requestedByUID);
-      FixedList <FinancialCostObject> costObject = FinancialCostObject.GetList($"COBJ_ORG_UNIT_ID = {party.Id} AND COBJ_STATUS <> 'X'", "COBJ_DESCRIPTION");
+      var party = Party.Parse(entry.RequestedByUID);
+
+      FixedList<FinancialCostObject> costObject = FinancialCostObject.GetList($"COBJ_ORG_UNIT_ID = {party.Id} AND " +
+                                                                               $"COBJ_STATUS <> 'X'", "COBJ_DESCRIPTION");
 
       return FinancialCostObjectMapper.Map(costObject);
     }

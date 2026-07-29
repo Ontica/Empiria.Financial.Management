@@ -10,7 +10,6 @@
 
 using System;
 
-
 namespace Empiria.Financial {
 
   /// <summary>Holds information for a financial cost objects entry.</summary>
@@ -23,12 +22,12 @@ namespace Empiria.Financial {
     public string ExternalCode {
       get; set;
     }
-    
+
     public string Description {
       get; set;
     }
 
-    public string requestedByUID {
+    public string RequestedByUID {
       get; set;
     }
 
@@ -36,10 +35,11 @@ namespace Empiria.Financial {
       get; set;
     } = DateTime.Today;
 
+
     public DateTime? EndDate {
       get; set;
     }
 
   } // Holds information for a financial cost object entry.
 
-} // Empiria.Financial.CostObjects.Domain 
+} // Empiria.Financial

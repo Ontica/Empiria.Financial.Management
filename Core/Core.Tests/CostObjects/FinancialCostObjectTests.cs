@@ -58,7 +58,7 @@ namespace Empiria.Tests.Financial.CostObjects {
         CostObjectTypeId = 5739,
         ExternalCode = "COM-101",
         Description = "Objeto de gasto de PRUEBA con COM-101",
-        requestedByUID = "22bf7ea2-4527-43ee-a5a6-6f3dd8d06646",
+        RequestedByUID = "22bf7ea2-4527-43ee-a5a6-6f3dd8d06646",
         StartDate = DateTime.Today,
       };
 
@@ -76,10 +76,10 @@ namespace Empiria.Tests.Financial.CostObjects {
 
       var entry = new FinancialCostObjectEntry {
         Description = "Objeto de gasto de PRUEBA con COM-100",
-        requestedByUID = "fef1a792-94bc-44e6-8c6a-f5caa7c9a089",
+        RequestedByUID = "fef1a792-94bc-44e6-8c6a-f5caa7c9a089",
         StartDate = DateTime.Today,
       };
-      
+
       var UID = "e85a2713-2ae9-4705-bb8c-7c004bdeb1e1";
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
@@ -93,12 +93,12 @@ namespace Empiria.Tests.Financial.CostObjects {
 
     [Fact]
     public void Should_Delete_Financial_CostObjects() {
-      
+
       var UID = "e85a2713-2ae9-4705-bb8c-7c004bdeb1e1";
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
 
-       usecases.DeleteCostObject(UID);
+        usecases.DeleteCostObject(UID);
 
       }
     }
