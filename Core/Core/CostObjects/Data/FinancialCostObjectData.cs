@@ -10,41 +10,25 @@
 
 using Empiria.Data;
 
-using Empiria.Financial.CostObject;
-
 namespace Empiria.Financial.CostObject.Data {
 
   /// <summary>Provides data access services for financial cost object data.</summary>
   static internal class FinancialCostObjectData {
 
-    static internal FixedList<FinancialCostObject> GetActiveCostObjects() {
-      var sql = "SELECT * FROM FMS_COST_OBJECTS " +
-                "WHERE COBJ_STATUS <> 'X' " +
-                "AND COBJ_START_DATE <= SYSDATE AND COBJ_END_DATE >= SYSDATE " +
-                "ORDER BY COBJ_EXTERNAL_NO";
-
-      var op = DataOperation.Parse(sql);
-
-      return DataReader.GetFixedList<FinancialCostObject>(op);
+    static internal FixedList<FinancialCostObject> GetCostObjects() {
+      
+     return BaseObject.GetFullList<FinancialCostObject>();
     }
 
-    static internal FinancialCostObject TryGetByExternalCode(string externalCode) {
+    static internal FixedList<FinancialCostObject> GetByAreaCostObjects(int AreaId) {
 
-      var sql = "SELECT * FROM FMS_COST_OBJECTS " +
-          "WHERE COBJ_STATUS = 'A' " +
-          $"AND COBJ_EXTERNAL_NO = '{externalCode}'" +
-          "ORDER BY COBJ_EXTERNAL_NO";
-
-
-      var op = DataOperation.Parse(sql, externalCode);
-
-      return DataReader.GetPlainObject<FinancialCostObject>(op, null);
+      return BaseObject.GetFullList<FinancialCostObject>($"acct_org_unit_id = {AreaId}","Description");
     }
 
     static internal void Write(FinancialCostObject o) {
       var op = DataOperation.Parse("write_FMS_CostObject",
           o.Id, o.UID, o.CostType.Id, o.ExternalCode, o.Description,
-          o.ExtData, o.Keywords, o.StartDate, o.EndDate,
+          o.OrgUnit.Id, o.ExtData, o.Keywords, o.StartDate, o.EndDate,
           o.Id, o.PostedBy.Id, o.PostingTime,
           (char) o.Status);
 

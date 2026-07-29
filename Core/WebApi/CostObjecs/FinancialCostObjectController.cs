@@ -23,8 +23,20 @@ namespace Empiria.Financial.CostObject.WebApi {
     #region Query web apis
 
     [HttpGet]
-    [Route("v3/financial-costobject/costobjects/{costObjectUID:guid}")]
-    public SingleObjectModel GetFinancialConcept([FromUri] string costObjectUID) {
+    [Route("v3/costs-management/cost-objects")]
+    public CollectionModel GetCostObjects() {
+
+      using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
+
+        FixedList<FinancialCostObjectDto> costObjects = usecases.GetCostObjects();
+
+        return new CollectionModel(base.Request, costObjects);
+      }
+    }
+
+    [HttpGet]
+    [Route("v3/costs-management/cost-objects/{costObjectUID:guid}")]
+    public SingleObjectModel GetByUIDCostObject([FromUri] string costObjectUID) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
 
@@ -34,20 +46,31 @@ namespace Empiria.Financial.CostObject.WebApi {
       }
     }
 
-    [HttpGet]
-    [Route("v3/financial-costobject/costobjects")]
-    public CollectionModel GetActiveCostObjects() {
+    [HttpPost]
+    [Route("v3/costs-management/cost-centers/search")]
+    public CollectionModel SearchCostObjectsByOrgUnit([FromBody] FinancialCostObjectEntry query) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
-        
-        FixedList<FinancialCostObjectDto> costObjects = usecases.GetCostObjects();
-        
-        return new CollectionModel(base.Request, costObjects);
+
+        FixedList<FinancialCostObjectDto> costObject = usecases.SearchCostObjectsByOrgUnit(query);
+
+        return new CollectionModel(base.Request, costObject);
       }
     }
 
+
+    [HttpGet]
+    [Route("v3/costs-management/cost-centers-types")]
+    public CollectionModel GetCostObjectsTypes() {
+
+      var typesCostObject = FinancialCostObjectType.GetList();
+
+      return new CollectionModel(base.Request, typesCostObject);
+    }
+
+
     [HttpPost]
-    [Route("v3/financial-costobject/costobjects")]
+    [Route("v3/costs-management/cost-centers")]
     public SingleObjectModel CreateCostObject([FromBody] FinancialCostObjectEntry entry) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
@@ -59,7 +82,7 @@ namespace Empiria.Financial.CostObject.WebApi {
     }
 
     [HttpPut, HttpPatch]
-    [Route("v3/financial-costobject/costobjects/{uid}")]
+    [Route("v3/costs-management/cost-centers/{uid}")]
     public SingleObjectModel UpdateCostObject([FromUri] string uid,
                                               [FromBody] FinancialCostObjectEntry entry) {
 
@@ -72,7 +95,7 @@ namespace Empiria.Financial.CostObject.WebApi {
     }
 
     [HttpDelete]
-    [Route("v3/financial-costobject/costobjects/{uid}")]
+    [Route("v3/costs-management/cost-centers/{uid}")]
     public NoDataModel DeleteCostObject([FromUri] string uid) {
 
       using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {

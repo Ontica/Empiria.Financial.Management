@@ -11,7 +11,7 @@
 using Empiria.Services;
 
 using Empiria.Financial.CostObject.Adapters;
-using Empiria.Financial.CostObject.Data;
+using Empiria.Parties;
 
 namespace Empiria.Financial.CostObject.UseCases {
 
@@ -32,11 +32,21 @@ namespace Empiria.Financial.CostObject.UseCases {
 
     #region Use cases
 
-    public FixedList<FinancialCostObjectDto> GetCostObjects() {
-      var list = FinancialCostObjectData.GetActiveCostObjects();
+    public  FixedList<FinancialCostObjectDto> GetCostObjects() {
 
-      return FinancialCostObjectMapper.Map(list);
+      FixedList<FinancialCostObject> costObject = FinancialCostObject.GetList("COBJ_STATUS <> 'X'", "COBJ_DESCRIPTION");
+
+      return FinancialCostObjectMapper.Map(costObject);
     }
+
+    public FixedList<FinancialCostObjectDto> SearchCostObjectsByOrgUnit(FinancialCostObjectEntry entry) {
+
+      var party = Party.Parse(entry.requestedByUID);
+      FixedList <FinancialCostObject> costObject = FinancialCostObject.GetList($"COBJ_ORG_UNIT_ID = {party.Id} AND COBJ_STATUS <> 'X'", "COBJ_DESCRIPTION");
+
+      return FinancialCostObjectMapper.Map(costObject);
+    }
+
 
     public FinancialCostObjectDto GetByUID(string uid) {
       var costObject = FinancialCostObject.Parse(uid);

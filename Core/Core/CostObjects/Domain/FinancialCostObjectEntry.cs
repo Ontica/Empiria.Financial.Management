@@ -16,15 +16,19 @@ namespace Empiria.Financial {
   /// <summary>Holds information for a financial cost objects entry.</summary>
   public class FinancialCostObjectEntry {
 
-
     public int CostObjectTypeId {
       get; set;
     }
+
     public string ExternalCode {
       get; set;
     }
     
     public string Description {
+      get; set;
+    }
+
+    public string requestedByUID {
       get; set;
     }
 

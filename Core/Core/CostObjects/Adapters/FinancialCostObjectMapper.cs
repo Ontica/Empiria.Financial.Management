@@ -21,13 +21,9 @@ namespace Empiria.Financial.CostObject.Adapters {
 
     static internal FinancialCostObjectDto Map(FinancialCostObject o) {
       return new FinancialCostObjectDto {
-        CostObjectTypeId = o.CostType.Id,
         UID = o.UID,
-        ExternalCode = o.ExternalCode,
-        Description = o.Description,
-        StartDate = o.StartDate,
-        EndDate = o.EndDate,
-        Status = o.Status.ToString()
+        TypeName = o.CostType.Name,
+        Name = o.Description,      
       };
     }
 

@@ -23,7 +23,25 @@ namespace Empiria.Tests.Financial.CostObjects {
 
     [Fact]
     public void Should_all_Financial_CostObject() {
-      var sut = BaseObject.GetFullList<FinancialCostObject>();
+      var sut = FinancialCostObject.GetList<FinancialCostObject>();
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+    [Fact]
+    public void Should_all_Financial_GetByAreaCostObject() {
+
+      var sut = FinancialCostObject.GetList<FinancialCostObject>("COBJ_ORG_UNIT_ID = 495", "COBJ_DESCRIPTION");
+
+      Assert.NotNull(sut);
+      Assert.NotEmpty(sut);
+    }
+
+    [Fact]
+    public void Should_all_Financial_GetTypes() {
+
+      var sut = FinancialCostObjectType.GetList<FinancialCostObjectType>();
 
       Assert.NotNull(sut);
       Assert.NotEmpty(sut);
@@ -38,8 +56,9 @@ namespace Empiria.Tests.Financial.CostObjects {
 
       var entry = new FinancialCostObjectEntry {
         CostObjectTypeId = 5739,
-        ExternalCode = "COM-022",
-        Description = "Objeto de gasto de PRUEBA con COM-022",
+        ExternalCode = "COM-101",
+        Description = "Objeto de gasto de PRUEBA con COM-101",
+        requestedByUID = "22bf7ea2-4527-43ee-a5a6-6f3dd8d06646",
         StartDate = DateTime.Today,
       };
 
@@ -54,17 +73,41 @@ namespace Empiria.Tests.Financial.CostObjects {
 
     [Fact]
     public void Should_Update_Financial_CostObjects() {
-     
+
+      var entry = new FinancialCostObjectEntry {
+        Description = "Objeto de gasto de PRUEBA con COM-100",
+        requestedByUID = "fef1a792-94bc-44e6-8c6a-f5caa7c9a089",
+        StartDate = DateTime.Today,
+      };
+      
+      var UID = "e85a2713-2ae9-4705-bb8c-7c004bdeb1e1";
+
+      using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
+
+        FinancialCostObjectDto sut = usecases.UpdateCostObject(UID, entry);
+
+        Assert.NotNull(sut);
+      }
+
     }
 
     [Fact]
     public void Should_Delete_Financial_CostObjects() {
+      
+      var UID = "e85a2713-2ae9-4705-bb8c-7c004bdeb1e1";
 
+      using (var usecases = FinancialCostObjectUseCases.UseCaseInteractor()) {
+
+       usecases.DeleteCostObject(UID);
+
+      }
     }
 
     [Fact]
     public void Should_Read_Empty_FinancialCostObjects() {
-      var sut = FinancialCostObject.Empty;
+
+      var UID = "e85a2713-2ae9-4705-bb8c-7c004bdeb1e1";
+      var sut = FinancialCostObject.Parse(UID);
 
       Assert.NotNull(sut);
     }

@@ -33,6 +33,10 @@ namespace Empiria.Financial {
 
     static public FinancialCostObject Empty => ParseEmpty<FinancialCostObject>();
 
+    static public FixedList<FinancialCostObject> GetList() => GetFullList<FinancialCostObject>();
+
+    static public FixedList<FinancialCostObject> GetList(string filter, string sort) => GetFullList<FinancialCostObject>(filter, sort);
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -52,7 +56,11 @@ namespace Empiria.Financial {
       get; private set;
     }
 
-    [DataField("COBJ_EXT_DATA")]
+    [DataField("COBJ_ORG_UNIT_ID")]
+    public OrganizationalUnit OrgUnit {
+      get; private set;
+    }
+
     internal JsonObject ExtData {
       get; private set;
     }
@@ -113,6 +121,7 @@ namespace Empiria.Financial {
         CostType = FinancialCostObjectType.Parse(entry.CostObjectTypeId),
         ExternalCode = entry.ExternalCode,
         Description = entry.Description,
+        OrgUnit = OrganizationalUnit.Parse(entry.requestedByUID),
         StartDate = entry.StartDate,
         EndDate = ExecutionServer.DateMaxValue
       };
@@ -121,7 +130,7 @@ namespace Empiria.Financial {
     }
 
     internal void Update(FinancialCostObjectEntry entry) {
-
+      OrgUnit = OrganizationalUnit.Parse(entry.requestedByUID);
       Description = entry.Description;
       EndDate = entry.EndDate ?? EndDate;
     }

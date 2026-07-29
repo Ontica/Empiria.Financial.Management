@@ -9,7 +9,9 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using Empiria.Financial.CostObject.UseCases;
 using Empiria.Ontology;
+using Empiria.Services;
 
 namespace Empiria.Financial {
 

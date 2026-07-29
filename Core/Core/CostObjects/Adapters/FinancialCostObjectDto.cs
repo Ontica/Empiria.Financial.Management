@@ -19,27 +19,11 @@ namespace Empiria.Financial.CostObject.Adapters {
       get; internal set;
     }
 
-    public int CostObjectTypeId {
+    public string TypeName {
      get; internal set;
     }
 
-    public string ExternalCode {
-      get; internal set;
-    }
-
-    public string Description {
-      get; internal set;
-    }
-
-    public DateTime StartDate {
-      get; internal set;
-    }
-
-    public DateTime EndDate {
-      get; internal set;
-    }
-
-    public string Status {
+    public string Name {
       get; internal set;
     }
 
