@@ -91,13 +91,23 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
     [HttpGet]
     [Route("v2/budgeting/transactions/operation-sources")]
-    public SingleObjectModel GetOperationSources() {
+    public CollectionModel GetOperationSources() {
 
       using (var usecases = BudgetTransactionUseCases.UseCaseInteractor()) {
         FixedList<NamedEntityDto> operationSources = usecases.GetOperationSources();
 
-        return new SingleObjectModel(base.Request, operationSources);
+        return new CollectionModel(base.Request, operationSources);
       }
+    }
+
+
+    [HttpGet]
+    [Route("v2/budgeting/transactions/special-operation-types")]
+    public CollectionModel GetSpecialOperationTypes() {
+
+      var specialOperationTypes = BudgetSpecialOperationType.GetList();
+
+      return new CollectionModel(base.Request, specialOperationTypes.MapToNamedEntityList());
     }
 
 
