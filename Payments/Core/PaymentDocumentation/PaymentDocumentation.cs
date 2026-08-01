@@ -12,17 +12,24 @@ using System;
 using System.IO;
 using System.IO.Compression;
 
-using Empiria.Billing;
 using Empiria.Documents;
+using Empiria.Storage;
+
+using Empiria.Billing;
+
 using Empiria.Payments.Data;
 
 namespace Empiria.Payments {
 
   /// <summary>Engine that processes payment instructions.</summary>
   public class PaymentDocumentation {
+
     #region Properties and Fields
 
-    static private string BASE_DIRECTORY = ConfigurationData.GetString("Storage", "Reports.GenerationStoragePath");
+    static private string BASE_DIRECTORY = ConfigurationData.GetString("Empiria.Storage",
+                                                                       "Reports.GenerationStoragePath");
+    static private string HTTP_BASE_URL = ConfigurationData.GetString("Empiria.Storage",
+                                                                      "Reports.BaseUrl");
 
     static int voucherCount = 0;
 
@@ -30,11 +37,14 @@ namespace Empiria.Payments {
 
     #region Methods
 
-    static public string Proccess(DateTime fromDate, DateTime toDate) {
+    static public FileDto GenerateZipFile(DateTime fromDate, DateTime toDate) {
+
       var paymentOrders = GetPaymentOrders(fromDate, toDate);
 
       string zipFileName = BuildPaymentsPackage(paymentOrders);
-      return zipFileName;
+
+
+      return new FileDto(FileType.Zip, $"{HTTP_BASE_URL}/{zipFileName}");
     }
 
     #endregion Methods
@@ -43,6 +53,7 @@ namespace Empiria.Payments {
 
     static private string BuildPaymentsPackage(FixedList<PaymentOrder> paymentOrders) {
       string folderName = "DoctosPagos_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
+
       string path = Path.Combine(BASE_DIRECTORY, folderName);
 
       CreateDirectory(path);
@@ -52,6 +63,7 @@ namespace Empiria.Payments {
       }
 
       string zipPath = path + ".zip";
+
       ZipFolder(path, zipPath);
 
       return Path.GetFileName(zipPath);

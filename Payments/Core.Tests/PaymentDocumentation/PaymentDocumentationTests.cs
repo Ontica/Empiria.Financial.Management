@@ -32,7 +32,7 @@ namespace Empiria.Tests.Payments {
       DateTime fromDate = Convert.ToDateTime("15-01-2026");
       DateTime toDate = Convert.ToDateTime("11-02-2026");
 
-      var sut = PaymentDocumentation.Proccess(fromDate, toDate);
+      var sut = PaymentDocumentation.GenerateZipFile(fromDate, toDate);
 
       Assert.NotNull(sut);
     }
