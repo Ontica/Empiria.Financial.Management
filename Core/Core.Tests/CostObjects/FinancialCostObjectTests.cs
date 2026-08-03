@@ -100,8 +100,10 @@ namespace Empiria.Tests.Financial.CostObjects {
 
         usecases.DeleteCostObject(UID);
 
+        Assert.True(true);
       }
     }
+
 
     [Fact]
     public void Should_Read_Empty_FinancialCostObjects() {

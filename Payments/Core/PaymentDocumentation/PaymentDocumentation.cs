@@ -1,10 +1,10 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Payment documentation services             Component : Service Layer                           *
-*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Service                                 *
+*  Assembly : Empiria.Payments.Core.dll                  Pattern   : Static Service                          *
 *  Type     : PaymentDocumentation                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Collector of Payment documentation  by specific date.                                          *
+*  Summary  : Generates a ZipFile with payments documentation by a given date period.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -21,8 +21,8 @@ using Empiria.Payments.Data;
 
 namespace Empiria.Payments {
 
-  /// <summary>Engine that processes payment instructions.</summary>
-  public class PaymentDocumentation {
+  /// <summary>Engine that generates a ZipFile with payments documentation by a given date period.</summary>
+  static public class PaymentDocumentation {
 
     #region Properties and Fields
 
@@ -107,7 +107,7 @@ namespace Empiria.Payments {
         var documents = Documents.DocumentServices.GetEntityDocuments(bill);
 
         foreach (var document in documents) {
-          fileName = dctosDirectory + "\\" + SetFileName(paymentOrder, bill, document);
+          fileName = Path.Combine(dctosDirectory, SetFileName(paymentOrder, bill, document));
           destFile = Path.Combine(directory, fileName);
 
           CopyFile(document.FullLocalName, destFile);

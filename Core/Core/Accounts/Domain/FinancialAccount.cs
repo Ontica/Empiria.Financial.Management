@@ -33,7 +33,8 @@ namespace Empiria.Financial {
     private Lazy<List<FinancialAccount>> _operations = new Lazy<List<FinancialAccount>>();
     private List<FinancialAccount> _deletedOperations = new List<FinancialAccount>();
 
-    static readonly private Lazy<List<FinancialAccount>> _cache = new Lazy<List<FinancialAccount>>(() => GetAllAccounts());
+    static readonly private Lazy<List<FinancialAccount>> _cache =
+                                          new Lazy<List<FinancialAccount>>(() => GetAllAccounts());
 
     #endregion Fields
 
