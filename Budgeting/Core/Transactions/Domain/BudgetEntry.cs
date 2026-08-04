@@ -361,7 +361,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public bool HasRelatedEntry {
       get {
-        return RelatedEntryId != -1;
+        return RelatedEntryId != -1 && RelatedEntryId != 0;
       }
     }
 

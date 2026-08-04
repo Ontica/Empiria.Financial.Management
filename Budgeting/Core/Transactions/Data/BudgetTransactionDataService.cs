@@ -185,12 +185,14 @@ namespace Empiria.Budgeting.Transactions.Data {
         entryIds = transaction.Entries.SelectDistinct(x => x.Id);
 
         entryIds = FixedList<int>.MergeDistinct(entryIds,
-                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
-                                                        .FindAll(x => x != -1));
+                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x))
+                                                        .FindAll(x => x.HasRelatedEntry)
+                                                        .SelectDistinct(x => x.RelatedEntryId));
 
         entryIds = FixedList<int>.MergeDistinct(entryIds,
-                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
-                                                         .FindAll(x => x != -1));
+                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x))
+                                                         .FindAll(x => x.HasRelatedEntry)
+                                                         .SelectDistinct(x => x.RelatedEntryId));
 
         var controlNos = entryIds.Select(x => BudgetEntry.Parse(x))
                                  .ToFixedList()
@@ -209,16 +211,18 @@ namespace Empiria.Budgeting.Transactions.Data {
         }
 
       } else {
-        entryIds = transaction.Entries.SelectDistinct(x => x.RelatedEntryId)
-                                      .FindAll(x => x > 0);
+        entryIds = transaction.Entries.FindAll(x => x.HasRelatedEntry)
+                                      .SelectDistinct(x => x.RelatedEntryId);
 
         entryIds = FixedList<int>.MergeDistinct(entryIds,
-                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
-                                                                                        .FindAll(x => x > 0));
+                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x))
+                                                        .FindAll(x => x.HasRelatedEntry)
+                                                        .SelectDistinct(x => x.RelatedEntryId));
 
         entryIds = FixedList<int>.MergeDistinct(entryIds,
-                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x).RelatedEntryId)
-                                                                                        .FindAll(x => x > 0));
+                                                entryIds.SelectDistinct(x => BudgetEntry.Parse(x))
+                                                        .FindAll(x => x.HasRelatedEntry)
+                                                        .SelectDistinct(x => x.RelatedEntryId));
 
         var controlNos = entryIds.Select(x => BudgetEntry.Parse(x))
                                  .ToFixedList()
