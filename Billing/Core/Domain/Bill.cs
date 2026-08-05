@@ -233,7 +233,7 @@ namespace Empiria.Billing {
         if (SchemaData.MetodoPago.Length != 0) {
           return SchemaData.MetodoPago;
         } else {
-          return "ND";
+          return string.Empty;
         }
       }
     }
