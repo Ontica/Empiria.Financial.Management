@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Linq;
 
 using Empiria.Financial;
 using Empiria.Parties;
@@ -52,7 +53,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    public BudgetTransaction Build(BudgetOperationType operationType, FixedList<BudgetEntry> previousEntries) {
+    public BudgetTransaction Build(BudgetOperationType operationType,
+                                   FixedList<BudgetEntry> previousEntries) {
       Assertion.Require(operationType, nameof(operationType));
 
       if (operationType == BudgetOperationType.Request) {
@@ -62,10 +64,33 @@ namespace Empiria.Budgeting.Transactions {
       return BuildTransaction(operationType, previousEntries);
     }
 
+
+    public BudgetTransaction BuildForAdjustment(BudgetTransaction toAdjustTxn) {
+      Assertion.Require(toAdjustTxn, nameof(toAdjustTxn));
+
+      EmpiriaLog.Debug(toAdjustTxn.TransactionNo + ": to adjust " + string.Join(", ", toAdjustTxn.Entries.Select(x => x.Id.ToString())));
+      EmpiriaLog.Debug(_budgetable.Data.BudgetableNo + ": adjusted " + string.Join(", ", _budgetable.Items.Select(x => x.BudgetableItem.Id.ToString())));
+
+      BudgetTransactionFields fields = BuildTransactionFields();
+
+      BudgetTransaction transaction = BuildTransaction(BudgetOperationType.Adjustment, fields);
+
+      BuildAdjustmentEntries(transaction, toAdjustTxn);
+
+      Assertion.Require(transaction.Entries.Count > 0,
+          "No es posible generar la transacción presupuestal debido " +
+          "a que la orden de compra o requisición no cuenta " +
+          "con conceptos pendientes de autorizar.");
+
+      return transaction;
+
+      throw new NotImplementedException();
+    }
+
     #region Transaction builders
 
     private BudgetTransaction BuildBudgetRequestTransaction() {
-      BudgetTransactionFields fields = BuildTransactionFields(BudgetOperationType.Request);
+      BudgetTransactionFields fields = BuildTransactionFields();
 
       BudgetTransaction transaction = BuildTransaction(BudgetOperationType.Request, fields);
 
@@ -79,11 +104,12 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    private BudgetTransaction BuildTransaction(BudgetOperationType operationType, FixedList<BudgetEntry> previousEntries) {
+    private BudgetTransaction BuildTransaction(BudgetOperationType operationType,
+                                               FixedList<BudgetEntry> previousEntries) {
 
       Assertion.Require(operationType, nameof(operationType));
 
-      BudgetTransactionFields fields = BuildTransactionFields(operationType);
+      BudgetTransactionFields fields = BuildTransactionFields();
 
       BudgetTransaction transaction = BuildTransaction(operationType, fields);
 
@@ -98,7 +124,8 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    private BudgetTransaction BuildTransaction(BudgetOperationType operationType, BudgetTransactionFields fields) {
+    private BudgetTransaction BuildTransaction(BudgetOperationType operationType,
+                                               BudgetTransactionFields fields) {
 
       var transactionType = BudgetTransactionType.GetFor(BaseBudget.BudgetType, operationType);
 
@@ -110,7 +137,7 @@ namespace Empiria.Budgeting.Transactions {
     }
 
 
-    private BudgetTransactionFields BuildTransactionFields(BudgetOperationType operationType) {
+    private BudgetTransactionFields BuildTransactionFields() {
 
       return new BudgetTransactionFields {
         BasePartyUID = _budgetable.Data.RequestedBy.UID,
@@ -127,6 +154,36 @@ namespace Empiria.Budgeting.Transactions {
     #endregion Transaction builders
 
     #region Entries builders
+
+    private void BuildAdjustmentEntries(BudgetTransaction transaction, BudgetTransaction toAdjustTxn) {
+
+      var previousEntries = toAdjustTxn.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment &&
+                                                             x.BalanceColumn == BalanceColumn.Exercised);
+
+      foreach (var entry in previousEntries) {
+
+        var total = _budgetable.Items.FindAll(x => x.BudgetAccount.Equals(entry.BudgetAccount))
+                                     .Sum(x => x.CurrencyAmount);
+
+        if (entry.Deposit - total > 0) {
+
+          var budgetableItem = _budgetable.Items.Find(x => x.BudgetAccount.Equals(entry.BudgetAccount));
+
+          BudgetEntry newEntry = entry.CloneFor(transaction, _applicationDate, BalanceColumn.Exercised, false, false);
+
+          newEntry.SetAmount(entry.Deposit - total, _exchangeRate);
+
+          transaction.AddEntry(newEntry);
+
+          newEntry = entry.CloneFor(transaction, _applicationDate, BalanceColumn.Available, true, false);
+
+          newEntry.SetAmount(entry.Deposit - total, _exchangeRate);
+
+          transaction.AddEntry(newEntry);
+        }
+      }
+    }
+
 
     private void BuildBudgetRequestEntries(BudgetTransaction transaction) {
 
@@ -176,7 +233,8 @@ namespace Empiria.Budgeting.Transactions {
         }
 
         Assertion.Require(previousEntry, $"No se encontró una entrada previa correspondiente: " +
-                                         $"{transaction.TransactionNo} / {budgetableItem.BudgetableItem.Id}");
+                                         $"{transaction.TransactionNo} ORD {_budgetable.Id} / {budgetableItem.BudgetableItem.Id}, in " +
+                                         $"{string.Join(",", previousEntries.Select(x => x.EntityId))}");
 
         BudgetEntry newEntry = BuildEntry(transaction, previousEntry, budgetableItem, _applicationDate, depositColumn, true);
 

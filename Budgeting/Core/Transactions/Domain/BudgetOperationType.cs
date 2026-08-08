@@ -31,6 +31,8 @@ namespace Empiria.Budgeting.Transactions {
 
     Exercise,
 
+    Adjustment,
+
     None
 
   }  // enum BudgetOperationType

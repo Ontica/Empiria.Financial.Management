@@ -336,8 +336,8 @@ namespace Empiria.Budgeting.Transactions {
     public FixedList<BudgetEntry> Entries {
       get {
         return _entries.Value
-                       .OrderBy(x => x.BudgetAccount.Code)
-                       .ThenBy(x => x.BudgetAccount.OrganizationalUnit.Code)
+                       .OrderBy(x => x.BudgetAccount.OrganizationalUnit.Code)
+                       .ThenBy(x => x.BudgetAccount.Code)
                        .ToFixedList();
       }
     }
@@ -514,7 +514,8 @@ namespace Empiria.Budgeting.Transactions {
 
 
     public void Close() {
-      if (OperationType != BudgetOperationType.Exercise) {
+      if (OperationType != BudgetOperationType.Adjustment &&
+          OperationType != BudgetOperationType.Exercise) {
 
         Assertion.Require(Rules.CanClose, "Current user can not close this transaction.");
 
