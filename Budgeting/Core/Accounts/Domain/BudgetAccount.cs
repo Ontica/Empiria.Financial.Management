@@ -8,14 +8,20 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Financial;
 using Empiria.Parties;
 using Empiria.StateEnums;
+
+using Empiria.Financial;
+using Empiria.Financial.Rules;
 
 namespace Empiria.Budgeting {
 
   /// <summary>Financial account that represents a budget account.</summary>
   public class BudgetAccount : FinancialAccount {
+
+    static private readonly FixedList<FinancialRule> _budgetingRules =
+                                      FinancialRuleCategory.ParseNamedKey("BUDGETING_ACCOUNTS")
+                                                           .GetFinancialRules();
 
     #region Constructors and parsers
 
@@ -101,6 +107,12 @@ namespace Empiria.Budgeting {
     public override string Keywords {
       get {
         return EmpiriaString.BuildKeywords(base.Keywords, BudgetProgram.Name);
+      }
+    }
+
+    public string LedgerAccountNo {
+      get {
+        return _budgetingRules.Find(x => x.DebitConcept == AccountNo)?.CreditAccount ?? string.Empty;
       }
     }
 
