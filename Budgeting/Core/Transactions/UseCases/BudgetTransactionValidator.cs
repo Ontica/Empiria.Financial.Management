@@ -38,21 +38,24 @@ namespace Empiria.Budgeting.Transactions {
 
       var deposits = _transaction.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment &&
                                                   x.BudgetAccount.StandardAccount.RoleType != Financial.AccountRoleType.Control)
-                                         .GroupBy(x => new { x.BudgetAccount, x.Month });
+                                         .GroupBy(x => new { x.BudgetAccount });
 
 
       foreach (var deposit in deposits) {
 
         BudgetAccount account = deposit.Key.BudgetAccount;
+
         decimal requiredAmount = deposit.Sum(x => x.Deposit);
 
-        decimal depositsTotal = GetDepositsTotal(_transaction.OperationType.DefaultWithdrawalColumn(), account);
+        decimal depositsTotal = GetDepositsTotal(_transaction.OperationType.DepositColumn(), account);
 
         decimal withdrawalsTotal = GetWithdrawalsTotal(_transaction.OperationType.DefaultWithdrawalColumn(), account);
 
-        if (requiredAmount > withdrawalsTotal) {
+        decimal availableBudget = depositsTotal - withdrawalsTotal;
+
+        if (requiredAmount > availableBudget) {
           Assertion.RequireFail($"No hay presupuesto comprometido disponible para la partida {account.AccountNo}: " +
-                                $"Disponible {(depositsTotal - withdrawalsTotal):C2}, Solicitado {requiredAmount:C2}");
+                                $"Disponible {(availableBudget):C2}, Solicitado {requiredAmount:C2}");
         }
       }
     }
