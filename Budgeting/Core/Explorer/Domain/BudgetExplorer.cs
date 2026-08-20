@@ -98,12 +98,16 @@ namespace Empiria.Budgeting.Explorer {
 
 
     private FixedList<BudgetDataInColumns> FilterBudgetData(FixedList<BudgetDataInColumns> budgetData) {
-      if (_command.OrganizationalUnits.Count == 0) {
-        return budgetData;
 
-      } else {
-        return budgetData.FindAll(x => _command.OrganizationalUnits.Contains(x.BudgetAccount.OrganizationalUnit));
+      if (_command.OrganizationalUnits.Count != 0) {
+        budgetData = budgetData.FindAll(x => _command.OrganizationalUnits.Contains(x.BudgetAccount.OrganizationalUnit));
       }
+
+      if (_command.BudgetAccounts.Length != 0) {
+        budgetData = budgetData.FindAll(x => _command.BudgetAccounts.Any(y => x.BudgetAccount.Code.StartsWith(y)));
+      }
+
+      return budgetData;
     }
 
 
