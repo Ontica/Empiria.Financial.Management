@@ -7,11 +7,11 @@
 *  Summary  : Unit tests for BillUseCases.                                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using Xunit;
-
+using Empiria.Billing;
 using Empiria.Billing.Adapters;
 using Empiria.Billing.UseCases;
-using Empiria.Billing;
+using Empiria.Documents;
+using Xunit;
 
 namespace Empiria.Tests.Billing {
 
@@ -45,7 +45,9 @@ namespace Empiria.Tests.Billing {
       using (var usecases = BillUseCases.UseCaseInteractor()) {
 
         string[] billsUID = new string[] {
-          "499d1348-d2d1-4f9e-997a-f4260fb029c4"
+          "f7efd60c-a6e2-4e94-a95e-d940cee8018c",
+          "dbc189cf-bed0-4474-bba7-ce6fd43136cb",
+          "3de8b8c1-c3d5-4963-89b1-6e5168964c39"
         };
 
         BillsStructureDto sut = usecases.GetBills(billsUID);
@@ -120,6 +122,20 @@ namespace Empiria.Tests.Billing {
 
         Assert.True(true);
       }
+    }
+
+
+    [Fact]
+    public void Get_Bill_Types_Test() {
+
+      var sut = DocumentProduct.GetList<DocumentProduct>()
+                     .FindAll(x => x.InternalCode.StartsWith("BILL-") &&
+                              x.ApplicationContentType.Equals("complemento-pago-sat"))
+                     .ToFixedList()
+                     .Select(x => BillTypeDto.MapToBillTypeDto(x))
+                     .ToFixedList();
+
+      Assert.NotNull(sut);
     }
 
     #region Helpers

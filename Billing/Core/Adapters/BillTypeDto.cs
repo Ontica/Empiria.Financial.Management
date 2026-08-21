@@ -4,57 +4,56 @@
 *  Assembly : Empiria.Billing.Core.dll                   Pattern   : Output DTO                              *
 *  Type     : BillsStructureDto                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Output DTO with a list of bills with the sums of subtotal and total, and a taxes list.          *
+*  Summary  : Data transfer object used to return bill type information.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Documents;
+
 namespace Empiria.Billing.Adapters {
 
-  ///<summary>Output DTO with a list of bills with the sums of subtotal and total, and a taxes list.</summary>
-  public class BillsStructureDto {
-
-    public FixedList<BillDto> Bills {
-      get; internal set;
-    }
-
-    public decimal Subtotal {
-      get; internal set;
-    }
-
-    public decimal Discounts {
-      get; internal set;
-    }
-
-    public FixedList<BillsStructureTaxEntryDto> Taxes {
-      get; internal set;
-    }
-
-    public decimal Total {
-      get; internal set;
-    }
-
-  }  // class BillsStructureDto
-
-
-  /// <summary>Output DTO with a tax type grouped sum for all the bills in a BillsStructureDto.</summary>
-  public class BillsStructureTaxEntryDto {
+  /// <summary>Data transfer object used to return bill type information.</summary>
+  public class BillTypeDto {
 
     public string UID {
       get; internal set;
     }
 
-    public NamedEntityDto TaxType {
+    public string Name {
       get; internal set;
     }
 
-    public decimal BaseAmount {
+    public string FileType {
       get; internal set;
     }
 
-    public decimal Total {
+    public string ApplicationContentType {
       get; internal set;
     }
 
-  }  // class BillsStructureTaxEntryDto
+    public bool IsCFDI {
+      get; internal set;
+    }
+
+    public string Description {
+      get; internal set;
+    }
+
+    #region Helpers
+
+    static public BillTypeDto MapToBillTypeDto(DocumentProduct document) {
+      return new BillTypeDto {
+        UID = document.UID,
+        Name = document.Name,
+        FileType = document.FileType.ToString(),
+        ApplicationContentType = document.ApplicationContentType,
+        IsCFDI = document.Attributes.Get("isCFDI", false),
+        Description = document.Description
+      };
+    }
+
+    #endregion Helpers
+
+  } // class BillTypeDto
 
 } // namespace Empiria.Billing.Adapters
