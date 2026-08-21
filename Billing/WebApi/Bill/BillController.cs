@@ -9,11 +9,10 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System.Web.Http;
-
-using Empiria.WebApi;
-
 using Empiria.Billing.Adapters;
 using Empiria.Billing.UseCases;
+using Empiria.Documents;
+using Empiria.WebApi;
 
 namespace Empiria.Billing.WebApi {
 
@@ -32,6 +31,21 @@ namespace Empiria.Billing.WebApi {
 
         return new SingleObjectModel(base.Request, bill);
       }
+    }
+
+
+    [HttpGet]
+    [Route("v2/billing-management/bills/bill-types-for-edition")]
+    public CollectionModel GetBillTypes() {
+
+      var billTypes = DocumentProduct.GetList<DocumentProduct>()
+                     .FindAll(x => x.InternalCode.StartsWith("BILL-") &&
+                              x.ApplicationContentType.Equals("complemento-pago-sat"))
+                     .ToFixedList()
+                     .Select(x => BillTypeDto.MapToBillTypeDto(x))
+                     .ToFixedList();
+
+      return new CollectionModel(base.Request, billTypes);
     }
 
     #endregion Web apis
