@@ -246,7 +246,16 @@ namespace Empiria.Budgeting.Transactions.UseCases {
     internal BudgetTransactionHolderDto ReleaseBudget(BudgetTransaction transaction) {
       Assertion.Require(transaction, nameof(transaction));
 
-      HistoryServices.CreateHistoryEntry(transaction, new HistoryFields("Se liberaron los saldos disponibles de la suficiencia"));
+      var validator = new BudgetTransactionValidator(transaction);
+
+      decimal availableAmount = validator.AvailableAmount();
+
+      if (availableAmount > 0) {
+        HistoryServices.CreateHistoryEntry(transaction, new HistoryFields($"Se liberaron {availableAmount:C2} de la suficiencia."));
+        Assertion.RequireFail($"Se liberaron {availableAmount:C2} de la suficiencia.");
+      } else {
+        Assertion.RequireFail($"La suficiencia {transaction.TransactionNo} no tiene presupuesto disponible para liberar.");
+      }
 
       return BudgetTransactionMapper.Map(transaction);
     }

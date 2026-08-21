@@ -30,9 +30,34 @@ namespace Empiria.Budgeting.Transactions {
 
       _transaction = transaction;
 
-      _relatedTransactions = BudgetTransaction.GetRelatedTo(transaction);
+      _relatedTransactions = BudgetTransaction.GetRelatedTo(transaction)
+                                              .FindAll(x => x.InProcess || x.IsClosed);
     }
 
+
+    public decimal AvailableAmount() {
+
+      var deposits = _transaction.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment &&
+                                                       x.BudgetAccount.StandardAccount.RoleType != Financial.AccountRoleType.Control)
+                                         .GroupBy(x => new { x.BudgetAccount });
+
+      decimal availableAmount = 0;
+
+      foreach (var deposit in deposits) {
+
+        BudgetAccount account = deposit.Key.BudgetAccount;
+
+        decimal depositsTotal = GetDepositsTotal(_transaction.OperationType.DepositColumn(), account);
+
+        decimal withdrawalsTotal = GetWithdrawalsTotal(_transaction.OperationType.DepositColumn(), account);
+
+        decimal availableBudget = depositsTotal - withdrawalsTotal;
+
+        availableAmount += availableBudget;
+      }
+
+      return availableAmount;
+    }
 
     public void EnsureHasAvailableBudget() {
 
