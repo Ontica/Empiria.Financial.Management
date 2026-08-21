@@ -49,7 +49,7 @@ namespace Empiria.Budgeting.Transactions {
 
         decimal depositsTotal = GetDepositsTotal(_transaction.OperationType.DepositColumn(), account);
 
-        decimal withdrawalsTotal = GetWithdrawalsTotal(_transaction.OperationType.DepositColumn(), account);
+        decimal withdrawalsTotal = GetWithdrawalsTotal(_transaction.OperationType.DefaultWithdrawalColumn(), account);
 
         decimal availableBudget = depositsTotal - withdrawalsTotal;
 
@@ -58,6 +58,7 @@ namespace Empiria.Budgeting.Transactions {
 
       return availableAmount;
     }
+
 
     public void EnsureHasAvailableBudget() {
 
@@ -72,11 +73,7 @@ namespace Empiria.Budgeting.Transactions {
 
         decimal requiredAmount = deposit.Sum(x => x.Deposit);
 
-        decimal depositsTotal = GetDepositsTotal(_transaction.OperationType.DepositColumn(), account);
-
-        decimal withdrawalsTotal = GetWithdrawalsTotal(_transaction.OperationType.DefaultWithdrawalColumn(), account);
-
-        decimal availableBudget = depositsTotal - withdrawalsTotal;
+        decimal availableBudget = GetTotal(_transaction.OperationType.DefaultWithdrawalColumn(), account);
 
         if (requiredAmount > availableBudget) {
           Assertion.RequireFail($"No hay presupuesto comprometido disponible para la partida {account.AccountNo}: " +
@@ -85,8 +82,16 @@ namespace Empiria.Budgeting.Transactions {
       }
     }
 
-
     #region Helpers
+
+    private decimal GetTotal(BalanceColumn balanceColumn, BudgetAccount account) {
+      return _relatedTransactions.SelectFlat(x => x.Entries)
+                                 .FindAll(x => x.BudgetAccount.Equals(account) &&
+                                               x.BalanceColumn.Equals(balanceColumn) &&
+                                               !x.IsAdjustment)
+                                 .Sum(x => x.Deposit - x.Withdrawal);
+    }
+
 
     private decimal GetDepositsTotal(BalanceColumn balanceColumn, BudgetAccount account) {
       return _relatedTransactions.SelectFlat(x => x.Entries)
