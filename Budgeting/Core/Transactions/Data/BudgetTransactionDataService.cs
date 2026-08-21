@@ -73,7 +73,7 @@ namespace Empiria.Budgeting.Transactions.Data {
                                                                                  x.ControlNo.Contains("/") &&
                                                                                  !x.IsAdjustment &&
                                                                                  x.BalanceColumn.Equals(BalanceColumn.ToPay))
-                                 .Sort((x, y) => x.ControlNo.CompareTo(y.ControlNo));
+                                 .Sort((x, y) => PaymentControlNoAsInteger(x.ControlNo).CompareTo(PaymentControlNoAsInteger(y.ControlNo)));
 
       foreach (var entry in transaction.Entries.FindAll(x => x.HasRelatedEntry)) {
 
@@ -95,7 +95,6 @@ namespace Empiria.Budgeting.Transactions.Data {
         entry.Save();
 
       }  // foreach
-
     }
 
 
@@ -398,6 +397,17 @@ namespace Empiria.Budgeting.Transactions.Data {
 
       DataWriter.Execute(op);
     }
+
+
+    #region Helpers
+
+    static private int PaymentControlNoAsInteger(string controlNo) {
+      Assertion.Require(controlNo, nameof(controlNo));
+
+      return int.Parse(controlNo.Split('/')[1]);
+    }
+
+    #endregion Helpers
 
   }  // class BudgetTransactionDataService
 
