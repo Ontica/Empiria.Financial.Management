@@ -34,6 +34,24 @@ namespace Empiria.Financial.Rules.Adapters {
       return new DynamicDto<FinancialRuleDescriptor>(category.GetDataColumns(), dtos);
     }
 
+    static public FixedList<FinancialRuleDescriptor> MapExcel(FinancialRuleCategory category,
+                                                          FixedList<FinancialRule> rules) {
+
+      var dtos = rules.Select(rule => new FinancialRuleDescriptor {
+        UID = rule.UID,
+        DebitAccount = rule.DebitAccount,
+        CreditAccount = rule.CreditAccount,
+        DebitConcept = rule.DebitConcept,
+        CreditConcept = rule.CreditConcept,
+        Description = rule.Description,
+        StartDate = rule.StartDate,
+        EndDate = rule.EndDate,
+        StatusName = rule.Status.GetName()
+      }).ToFixedList();
+
+      return new FixedList<FinancialRuleDescriptor>(dtos);
+    }
+
 
     static internal FinancialRuleDto Map(FinancialRule rule) {
       return new FinancialRuleDto {

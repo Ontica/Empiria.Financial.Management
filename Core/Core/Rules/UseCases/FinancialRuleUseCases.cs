@@ -12,6 +12,8 @@ using Empiria.DynamicData;
 using Empiria.Services;
 
 using Empiria.Financial.Rules.Adapters;
+using Empiria.Office;
+using Empiria.Storage;
 
 namespace Empiria.Financial.Rules.UseCases {
 
@@ -71,6 +73,25 @@ namespace Empiria.Financial.Rules.UseCases {
       var rule = FinancialRule.Parse(ruleUID);
 
       return FinancialRuleMapper.Map(rule);
+    }
+
+
+    public FileDto CategoryRuleToexcel(FinancialRuleQuery query) {
+      var templateUID = $"{GetType().Name}.CategoryRules";
+
+      var templateConfig = FileTemplateConfig.Parse(templateUID);
+
+      var builder = new FinancialRuleToExcelBuilder(templateConfig);
+
+      var category = FinancialRuleCategory.Parse(query.CategoryUID);
+
+      FixedList<FinancialRule> rules = query.Execute();
+
+      DynamicDto<FinancialRuleDescriptor> rulesDescriptor = FinancialRuleMapper.Map(category, rules);
+
+      ExcelFile excelFile = builder.CreateExcelFile(rulesDescriptor.Entries);
+
+      return excelFile.ToFileDto();
     }
 
 

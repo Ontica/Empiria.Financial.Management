@@ -15,6 +15,7 @@ using Empiria.WebApi;
 
 using Empiria.Financial.Rules.Adapters;
 using Empiria.Financial.Rules.UseCases;
+using Empiria.Storage;
 
 namespace Empiria.Financial.Rules.WebApi {
 
@@ -45,6 +46,20 @@ namespace Empiria.Financial.Rules.WebApi {
         FinancialRuleDto rule = usecases.GetRule(ruleUID);
 
         return new SingleObjectModel(base.Request, rule);
+      }
+    }
+
+    [HttpPost]
+    [Route("v3/financial-rules/categories/{categoryUID:guid}/export")]
+    public SingleObjectModel CategoryRuleToExcel([FromUri] string categoryUID, 
+                                                 [FromBody] FinancialRuleQuery query) {
+
+      query.CategoryUID = categoryUID;
+      using (var usecases = FinancialRuleUseCases.UseCaseInteractor()) {
+
+        FileDto rules = usecases.CategoryRuleToexcel(query);
+
+        return new SingleObjectModel(base.Request, rules);
       }
     }
 

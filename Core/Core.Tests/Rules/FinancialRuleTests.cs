@@ -11,6 +11,11 @@
 using Xunit;
 
 using Empiria.Financial.Rules;
+using DocumentFormat.OpenXml.Vml.Office;
+using Empiria.Services;
+using Empiria.Storage;
+using Empiria.Financial.Rules.UseCases;
+using Empiria.Financial.Rules.Adapters;
 
 namespace Empiria.Tests.Financial.Rules {
 
@@ -53,8 +58,24 @@ namespace Empiria.Tests.Financial.Rules {
       Assert.Equal(FinancialRule.Parse("Empty"), sut);
     }
 
+
+    [Fact]
+    public void Should_CreateToExcel() {
+
+      FinancialRuleQuery query = new FinancialRuleQuery {
+        CategoryUID = "60e03161-f76d-4363-a34d-028daad84172"
+      };
+
+      using (var usecases = FinancialRuleUseCases.UseCaseInteractor()) {
+        FileDto sut = usecases.CategoryRuleToexcel(query);
+
+        Assert.NotNull(sut);
+      }
+     
+    }
+
     #endregion Facts
 
-  }  // class FinancialRuleTests
+}  // class FinancialRuleTests
 
 }  // namespace Empiria.Tests.Financial.Rules
