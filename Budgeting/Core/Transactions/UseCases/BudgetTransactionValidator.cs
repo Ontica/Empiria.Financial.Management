@@ -25,8 +25,8 @@ namespace Empiria.Budgeting.Transactions {
       Assertion.Require(transaction.Entries.Count > 0,
                         "Transaction has no entries.");
 
-      Assertion.Require(transaction.Entries.SelectDistinct(x => x.Year).Count == 1,
-                        "Transaction can not be multiyear.");
+      //Assertion.Require(transaction.Entries.SelectDistinct(x => x.Year).Count == 1,
+      //                  "Transaction can not be multiyear.");
 
       _transaction = transaction;
 
@@ -37,26 +37,22 @@ namespace Empiria.Budgeting.Transactions {
 
     public decimal AvailableAmount() {
 
-      var deposits = _transaction.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment &&
-                                                       x.BudgetAccount.StandardAccount.RoleType != Financial.AccountRoleType.Control)
-                                         .GroupBy(x => new { x.BudgetAccount });
+      var entries = _relatedTransactions.SelectFlat(x => x.Entries)
+                                        .FindAll(x => (x.BalanceColumn.Equals(BalanceColumn.Requested) ||
+                                                       x.BalanceColumn.Equals(BalanceColumn.Commited)) &&
+                                                      !x.IsAdjustment && x.NoRejected);
 
-      decimal availableAmount = 0;
+      return entries.Sum(x => x.Deposit - x.Withdrawal);
+    }
 
-      foreach (var deposit in deposits) {
 
-        BudgetAccount account = deposit.Key.BudgetAccount;
+    public decimal AvailableAmount(BalanceColumn balanceColumn) {
 
-        decimal depositsTotal = GetDepositsTotal(_transaction.OperationType.DepositColumn(), account);
+      var entries = _relatedTransactions.SelectFlat(x => x.Entries)
+                                        .FindAll(x => x.BalanceColumn.Equals(balanceColumn) &&
+                                                      !x.IsAdjustment && x.NoRejected);
 
-        decimal withdrawalsTotal = GetWithdrawalsTotal(_transaction.OperationType.DefaultWithdrawalColumn(), account);
-
-        decimal availableBudget = depositsTotal - withdrawalsTotal;
-
-        availableAmount += availableBudget;
-      }
-
-      return availableAmount;
+      return entries.Sum(x => x.Deposit - x.Withdrawal);
     }
 
 
@@ -77,7 +73,7 @@ namespace Empiria.Budgeting.Transactions {
 
         if (requiredAmount > availableBudget) {
           Assertion.RequireFail($"No hay presupuesto comprometido disponible para la partida {account.AccountNo}: " +
-                                $"Disponible {(availableBudget):C2}, Solicitado {requiredAmount:C2}");
+                                $"Solicitado {requiredAmount:C2}, Disponible {(availableBudget):C2}");
         }
       }
     }
