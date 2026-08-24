@@ -163,13 +163,22 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
       var rules = new BudgetTransactionRules(transaction);
 
+      decimal availableAmount = 0;
+
+      if (rules.CanReleaseBudget) {
+
+        var validator = new BudgetTransactionValidator(transaction);
+
+        availableAmount = validator.AvailableAmount(transaction.OperationType.DepositColumn());
+      }
+
       return new BudgetTransactionActions {
         CanAuthorize = rules.CanAuthorize,
         CanCancel = rules.CanCancel,
         CanClose = rules.CanClose,
         CanDelete = rules.CanDelete,
         CanEditDocuments = rules.CanEditDocuments,
-        CanReleaseBudget = rules.CanReleaseBudget,
+        CanReleaseBudget = rules.CanReleaseBudget && availableAmount > 0,
         CanReject = rules.CanReject,
         CanReopen = rules.CanReopen,
         CanReturnToEdition = rules.CanReturnToEdition,

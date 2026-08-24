@@ -125,13 +125,13 @@ namespace Empiria.Budgeting.Transactions.WebApi {
 
     [HttpPost]
     [Route("v2/budgeting/transactions/{transactionUID:guid}/release-budget")]
-    public SingleObjectModel ReleaseBudget([FromUri] string transactionUID) {
+    public SingleObjectModel ReleaseBudget([FromUri] string transactionUID, [FromBody] MessageFields fields) {
 
       using (var usecases = BudgetTransactionEditionUseCases.UseCaseInteractor()) {
 
         var transaction = BudgetTransaction.Parse(transactionUID);
 
-        BudgetTransactionHolderDto txnHolder = usecases.ReleaseBudget(transaction);
+        BudgetTransactionHolderDto txnHolder = usecases.ReleaseBudget(transaction, fields.Message);
 
         return new SingleObjectModel(base.Request, txnHolder);
       }

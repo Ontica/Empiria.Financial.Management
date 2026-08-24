@@ -159,7 +159,8 @@ namespace Empiria.Budgeting.Transactions {
         if (!_securityRoles.Contains(BUDGET_MANAGER)) {
           return false;
         }
-        if (_transaction.OperationType == BudgetOperationType.Request) {
+        if (_transaction.OperationType == BudgetOperationType.Request ||
+            _transaction.OperationType == BudgetOperationType.Commit) {
           return true;
         }
 
