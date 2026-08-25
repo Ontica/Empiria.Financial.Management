@@ -8,9 +8,30 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Empiria.Budgeting.Transactions {
+
+
+  public class AvailableBudgetEntry {
+
+    internal AvailableBudgetEntry(BudgetEntry budgetEntry, decimal availableAmount) {
+      BudgetEntry = budgetEntry;
+      AvailableAmount = availableAmount;
+    }
+
+
+    public BudgetEntry BudgetEntry {
+      get;
+    }
+
+    public decimal AvailableAmount {
+      get;
+    }
+
+  }   // class AvailableBudgetEntry
+
 
   /// <summary>Provides services used to validate a budget transaction.</summary>
   public class BudgetTransactionValidator {
@@ -53,6 +74,42 @@ namespace Empiria.Budgeting.Transactions {
                                                       !x.IsAdjustment && x.NoRejected);
 
       return entries.Sum(x => x.Deposit - x.Withdrawal);
+    }
+
+
+    public FixedList<AvailableBudgetEntry> AvailableBudgetEntries() {
+
+      var groupedEntries = _relatedTransactions.SelectFlat(x => x.Entries)
+                                               .FindAll(x => x.BalanceColumn.Equals(_transaction.OperationType.DepositColumn()) &&
+                                                            !x.IsAdjustment && x.NoRejected)
+                                               .GroupBy(x => new { x.BudgetAccount, ControlNo = x.ControlNo.Split('/')[0] });
+
+      var availableBudgetEntries = new List<AvailableBudgetEntry>();
+
+      foreach (var entry in groupedEntries) {
+
+        decimal availableAmount = entry.Sum(x => x.Deposit - x.Withdrawal);
+
+        if (availableAmount <= 0) {
+          continue;
+        }
+
+        var txnEntry = _transaction.Entries.Find(x => x.BalanceColumn.Equals(_transaction.OperationType.DepositColumn()) &&
+                                                      x.Deposit > 0 &&
+                                                      x.BudgetAccount.Equals(entry.Key.BudgetAccount) &&
+                                                      x.ControlNo.Equals(entry.Key.ControlNo) &&
+                                                      !x.IsAdjustment && x.NoRejected);
+
+        if (txnEntry == null) {
+          continue;
+        }
+
+        var availableEntry = new AvailableBudgetEntry(txnEntry, availableAmount);
+
+        availableBudgetEntries.Add(availableEntry);
+      }
+
+      return availableBudgetEntries.ToFixedList();
     }
 
 
