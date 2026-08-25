@@ -77,7 +77,7 @@ namespace Empiria.Budgeting.Transactions.Data {
 
       foreach (var entry in transaction.Entries.FindAll(x => x.HasRelatedEntry)) {
 
-        var lastToPayEntry = toPayEntries.FindLast(x => x.BudgetAccount.Equals(entry.BudgetAccount));
+        var lastToPayEntry = toPayEntries.FindLast(x => x.BudgetAccount.AccountNo == entry.BudgetAccount.AccountNo);
 
         if (lastToPayEntry != null) {
 
