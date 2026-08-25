@@ -75,7 +75,7 @@ namespace Empiria.Budgeting.Transactions {
 
       BudgetTransaction transaction = BuildTransaction(BudgetOperationType.Adjustment, fields);
 
-      BuildAdjustmentEntries(transaction, toAdjustTxn);
+      BuildAdjustmentEntries(transaction, toAdjustTxn, BalanceColumn.Exercised);
 
       Assertion.Require(transaction.Entries.Count > 0,
           "No es posible generar la transacción presupuestal debido " +
@@ -83,8 +83,55 @@ namespace Empiria.Budgeting.Transactions {
           "con conceptos pendientes de autorizar.");
 
       return transaction;
+    }
 
-      throw new NotImplementedException();
+
+    internal BudgetTransaction ReleaseBudget(BudgetTransaction transaction, string justification) {
+      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(transaction.IsClosed, $"transaction {transaction.TransactionNo} must be closed before releasing budget.");
+
+      var validator = new BudgetTransactionValidator(transaction);
+
+      FixedList<AvailableBudgetEntry> availableBudgetEntries = validator.AvailableBudgetEntries();
+
+      if (availableBudgetEntries.Count == 0) {
+        Assertion.Require(transaction.Entries.Count > 0,
+            "No es posible generar la transacción presupuestal de liberación de recursos debido " +
+            "a que no cuenta con entradas con saldo por liberar.");
+      }
+
+
+      BudgetTransactionFields fields = BuildTransactionFields();
+
+      fields.Description = $"Liberación del presupuesto disponible a partir de la " +
+                           $"transacción {transaction.TransactionNo}: {transaction.Description}";
+
+      fields.Justification = justification;
+
+      BudgetTransaction releaseBudgetTxn = BuildTransaction(BudgetOperationType.Adjustment, fields);
+
+      foreach (var entry in availableBudgetEntries) {
+
+        BudgetEntry newEntry = entry.BudgetEntry.CloneFor(releaseBudgetTxn, entry.BudgetEntry.Date, entry.BudgetEntry.BalanceColumn, false, false);
+
+        newEntry.SetAmount(entry.AvailableAmount, _exchangeRate);
+
+        releaseBudgetTxn.AddEntry(newEntry);
+
+        //newEntry = entry.BudgetEntry.CloneFor(releaseBudgetTxn, entry.BudgetEntry.Date, BalanceColumn.Reduced, false, true);
+
+        //newEntry.SetAmount(entry.AvailableAmount, _exchangeRate);
+
+        //releaseBudgetTxn.AddEntry(newEntry);
+
+        newEntry = entry.BudgetEntry.CloneFor(releaseBudgetTxn, _applicationDate, BalanceColumn.Available, true, false);
+
+        newEntry.SetAmount(entry.AvailableAmount, _exchangeRate);
+
+        releaseBudgetTxn.AddEntry(newEntry);
+      }
+
+      return releaseBudgetTxn;
     }
 
     #region Transaction builders
@@ -155,32 +202,34 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Entries builders
 
-    private void BuildAdjustmentEntries(BudgetTransaction transaction, BudgetTransaction toAdjustTxn) {
+    private void BuildAdjustmentEntries(BudgetTransaction transaction, BudgetTransaction toAdjustTxn,
+                                        BalanceColumn balanceColumn) {
 
       var previousEntries = toAdjustTxn.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment &&
-                                                             x.BalanceColumn == BalanceColumn.Exercised);
+                                                             x.BalanceColumn == balanceColumn);
 
       foreach (var entry in previousEntries) {
 
         var total = _budgetable.Items.FindAll(x => x.BudgetAccount.Equals(entry.BudgetAccount))
                                      .Sum(x => x.CurrencyAmount);
 
-        if (entry.Deposit - total > 0) {
-
-          var budgetableItem = _budgetable.Items.Find(x => x.BudgetAccount.Equals(entry.BudgetAccount));
-
-          BudgetEntry newEntry = entry.CloneFor(transaction, _applicationDate, BalanceColumn.Exercised, false, false);
-
-          newEntry.SetAmount(entry.Deposit - total, _exchangeRate);
-
-          transaction.AddEntry(newEntry);
-
-          newEntry = entry.CloneFor(transaction, _applicationDate, BalanceColumn.Available, true, false);
-
-          newEntry.SetAmount(entry.Deposit - total, _exchangeRate);
-
-          transaction.AddEntry(newEntry);
+        if (entry.Deposit - total <= 0) {
+          continue;
         }
+
+        var budgetableItem = _budgetable.Items.Find(x => x.BudgetAccount.Equals(entry.BudgetAccount));
+
+        BudgetEntry newEntry = entry.CloneFor(transaction, _applicationDate, balanceColumn, false, false);
+
+        newEntry.SetAmount(entry.Deposit - total, _exchangeRate);
+
+        transaction.AddEntry(newEntry);
+
+        newEntry = entry.CloneFor(transaction, _applicationDate, BalanceColumn.Available, true, false);
+
+        newEntry.SetAmount(entry.Deposit - total, _exchangeRate);
+
+        transaction.AddEntry(newEntry);
       }
     }
 

@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
+
 using Empiria.Documents;
 using Empiria.Financial;
 using Empiria.History;
@@ -252,17 +254,27 @@ namespace Empiria.Budgeting.Transactions.UseCases {
 
       availableAmount = validator.AvailableAmount(transaction.OperationType.DepositColumn());
 
-      if (availableAmount > 0) {
-        HistoryServices.CreateHistoryEntry(transaction,
-                new HistoryFields($"Se liberaron {availableAmount:C2} de la transaccción presupuestal.", reason));
-
-        Assertion.RequireFail($"Se liberaron {availableAmount:C2} de la transaccción {transaction.TransactionNo}.");
-
-      } else {
-        Assertion.RequireFail($"La transaccción {transaction.TransactionNo} no tiene presupuesto disponible para liberar.");
+      if (availableAmount <= 0) {
+        Assertion.RequireFail($"La transacción {transaction.TransactionNo} no tiene presupuesto disponible para liberar.");
       }
 
-      return BudgetTransactionMapper.Map(transaction);
+      var builder = new BudgetTransactionBuilder(transaction.GetEntity(), OperationSource.Default,
+                                                 DateTime.Today, transaction.ExchangeRate);
+
+      BudgetTransaction releaseBudgetTxn = builder.ReleaseBudget(transaction, reason);
+
+      releaseBudgetTxn.SendToAuthorization();
+
+      releaseBudgetTxn.Authorize();
+
+      releaseBudgetTxn.Close();
+
+      releaseBudgetTxn.Save();
+
+      HistoryServices.CreateHistoryEntry(transaction,
+              new HistoryFields($"Se liberaron {availableAmount:C2} de la transacción presupuestal.", reason));
+
+      return BudgetTransactionMapper.Map(releaseBudgetTxn);
     }
 
 
