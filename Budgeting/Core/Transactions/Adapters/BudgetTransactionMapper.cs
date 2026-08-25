@@ -184,7 +184,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         CanReturnToEdition = rules.CanReturnToEdition,
         CanSendToAuthorization = rules.CanSendToAuthorization,
         CanUpdate = rules.CanUpdate,
-        RequiresRelatedEntity = transaction.TransactionType.RequiresRelatedEntity,
+        RequiresRelatedEntity = transaction.HasEntity ||
+                                transaction.TransactionType.RequiresRelatedEntity,
       };
     }
 
