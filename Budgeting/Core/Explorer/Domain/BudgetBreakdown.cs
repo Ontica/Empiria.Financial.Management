@@ -70,7 +70,7 @@ namespace Empiria.Budgeting.Explorer {
 
 
     private FixedList<BudgetDataInColumns> GetBudgetData() {
-      return BudgetExplorerDataService.GetBudgetDataInMultipleColumnsByMonth(_command.Budget);
+      return BudgetExplorerDataService.GetBudgetDataInMultipleColumnsByMonth(_command);
     }
 
 

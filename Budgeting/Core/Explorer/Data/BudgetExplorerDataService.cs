@@ -30,11 +30,13 @@ namespace Empiria.Budgeting.Explorer.Data {
     }
 
 
-    static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumns(Budget budget) {
-      Assertion.Require(budget, nameof(budget));
+    static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumns(BudgetExplorerCommand command) {
+      Assertion.Require(command, nameof(command));
+
+      string filter = BuildFilter(command);
 
       var sql = "SELECT * FROM vw_Budget_Multicolumn " +
-                $"WHERE BUDGET_ID = {budget.Id}";
+                $"WHERE {filter}";
 
       var op = DataOperation.Parse(sql);
 
@@ -42,17 +44,18 @@ namespace Empiria.Budgeting.Explorer.Data {
     }
 
 
-    static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumnsByMonth(Budget budget) {
-      Assertion.Require(budget, nameof(budget));
+    static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumnsByMonth(BudgetExplorerCommand command) {
+      Assertion.Require(command, nameof(command));
+
+      string filter = BuildFilter(command);
 
       var sql = "SELECT * FROM vw_Budget_Multicolumn_By_Month " +
-                $"WHERE BUDGET_ID = {budget.Id}";
+                $"WHERE {filter}";
 
       var op = DataOperation.Parse(sql);
 
       return DataReader.GetPlainObjectFixedList<BudgetDataInColumns>(op);
     }
-
 
     static internal FixedList<BudgetDataInColumns> GetBudgetDataInMultipleColumnsByMonth(string filter) {
       Assertion.Require(filter, nameof(filter));
@@ -143,6 +146,31 @@ namespace Empiria.Budgeting.Explorer.Data {
 
       return DataReader.GetPlainObjectFixedList<BudgetDataInColumns>(op);
     }
+
+    #region Helpers
+
+    static private string BuildFilter(BudgetExplorerCommand command) {
+      var filter = new Filter();
+
+      filter.AppendAnd($"BUDGET_ID = {command.Budget.Id}");
+
+      if (command.OrganizationalUnits.Count != 0) {
+        filter.AppendAnd(
+          SearchExpression.ParseInSet($"ORG_UNIT_ID", command.OrganizationalUnits.Select(x => x.Id))
+        );
+      }
+
+      if (command.BudgetAccounts.Length != 0) {
+        filter.AppendAnd(
+          SearchExpression.ParseLike("ACCT_NUMBER",
+                                     command.BudgetAccounts.ToFixedList().Select(x => $"{x}%"))
+        );
+      }
+
+      return filter.ToString();
+    }
+
+    #endregion Helpers
 
   }  // class BudgetTransactionDataService
 
