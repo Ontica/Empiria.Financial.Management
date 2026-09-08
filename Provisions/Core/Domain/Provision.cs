@@ -147,7 +147,7 @@ namespace Empiria.Provisions {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
       }
 
-      ProvisionsData.WriteProvision(this);
+      ProvisionData.WriteProvision(this);
     }
 
     #endregion Methods

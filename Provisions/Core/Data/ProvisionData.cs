@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Provisions Management                      Component : Data Layer                              *
 *  Assembly : Empiria.Provisions.Core.dll                Pattern   : Data Services                           *
-*  Type     : ProvisionsData                             License   : Please read LICENSE.txt file            *
+*  Type     : ProvisionData                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Provides provisions persistance services.                                                      *
 *                                                                                                            *
@@ -13,7 +13,7 @@ using Empiria.Data;
 namespace Empiria.Provisions {
 
   /// <summary>Provides provisions persistance services.</summary>
-  static internal class ProvisionsData {
+  static internal class ProvisionData {
 
     static internal void WriteProvision(Provision o) {
       var op = DataOperation.Parse("write_fms_provision",
@@ -25,6 +25,6 @@ namespace Empiria.Provisions {
       DataWriter.Execute(op);
     }
 
-  }  // enum class ProvisionsData
+  }  // class ProvisionData
 
 }  // namespace Empiria.Provisions
