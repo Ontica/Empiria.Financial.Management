@@ -8,15 +8,19 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-/// <summary>Enumerates the status of a provision.</summary>
-public enum ProvisionStatus {
+namespace Empiria.Provisions {
 
-  Programmed = 'G',
+  /// <summary>Enumerates the status of a provision.</summary>
+  public enum ProvisionStatus {
 
-  Provisioned = 'V',
+    Programmed = 'G',
 
-  Canceled = 'L',
+    Provisioned = 'V',
 
-  All = '@'
+    Canceled = 'L',
 
-}  // enum ProvisionStatus
+    All = '@'
+
+  }  // enum ProvisionStatus
+
+}  // namespace Empiria.Provisions
