@@ -37,9 +37,6 @@ namespace Empiria.Provisions {
 
       PaymentOrder = PaymentOrder.Empty;
 
-      PostingTime = DateTime.Now;
-      PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
-
       Status = ProvisionStatus.Programmed;
     }
 
@@ -143,6 +140,15 @@ namespace Empiria.Provisions {
       PaymentOrder = PaymentOrder.Empty;
     }
 
+
+    protected override void OnSave() {
+      if (IsNew) {
+        PostingTime = DateTime.Now;
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
+      }
+
+      ProvisionsData.WriteProvision(this);
+    }
 
     #endregion Methods
 
