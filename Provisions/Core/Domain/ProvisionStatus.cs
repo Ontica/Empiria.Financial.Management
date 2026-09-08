@@ -13,7 +13,7 @@ public enum ProvisionStatus {
 
   Programmed = 'G',
 
-  Provisioned = 'P',
+  Provisioned = 'V',
 
   Canceled = 'L',
 
