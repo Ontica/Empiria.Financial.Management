@@ -47,8 +47,16 @@ namespace Empiria.Provisions {
 
     static public Provision Empty => ParseEmpty<Provision>();
 
-    #endregion Constructors and parsers
 
+    static public Provision TryGetFor(IPayableEntity payableEntity) {
+      Assertion.Require(payableEntity, nameof(payableEntity));
+
+      return TryParse<Provision>($"PRV_PAYABLE_ENTITY_ID = {payableEntity.Id} AND " +
+                                 $"PRV_PAYABLE_ENTITY_TYPE_ID = {payableEntity.GetEmpiriaType().Id} AND " +
+                                 $"PRV_STATUS <> '{(char) ProvisionStatus.Canceled}'");
+    }
+
+    #endregion Constructors and parsers
 
     #region Properties
 
