@@ -44,7 +44,7 @@ namespace Empiria.Billing {
 
 
     internal BillTaxItemTotal(BillTaxMethod taxMethod, TaxType taxType,
-                              FixedList<BillTaxEntry> billTaxEntries, decimal tipoCambio) {
+                              FixedList<BillTaxEntry> billTaxEntries) {
       UID = taxType.UID;
       TaxType = taxType;
       TaxName = taxType.Name;
@@ -57,12 +57,12 @@ namespace Empiria.Billing {
       BaseAmount = Math.Round(billTaxEntries.Sum(x => x.BaseAmount), 2, MidpointRounding.AwayFromZero);
 
       var taxes = Math.Round(billTaxEntries.FindAll(x => !x.Bill.BillType.IsCreditNote)
-                              .Sum(x => (x.TaxMethod == BillTaxMethod.Retencion ? -1 * x.Total : x.Total) * tipoCambio),
+                              .Sum(x => (x.TaxMethod == BillTaxMethod.Retencion ? -1 * x.Total : x.Total)),
                              2, MidpointRounding.AwayFromZero);
 
       var creditNoteTaxes = Math.Round(billTaxEntries.ToFixedList()
                                         .FindAll(x => x.Bill.BillType.IsCreditNote)
-                                        .Sum(x => (x.TaxMethod == BillTaxMethod.Retencion ? x.Total : -1 * x.Total) * tipoCambio)
+                                        .Sum(x => (x.TaxMethod == BillTaxMethod.Retencion ? x.Total : -1 * x.Total))
                                        , 2, MidpointRounding.AwayFromZero);
 
       Total = taxes + creditNoteTaxes;
@@ -124,16 +124,16 @@ namespace Empiria.Billing {
     public decimal Subtotal {
       get {
         return _bills.Sum(x => (x.BillType.IsCreditNote ?
-                               -1 * x.Subtotal : x.Subtotal) * x.SchemaData.TipoCambio) +
+                               -1 * x.Subtotal : x.Subtotal)) +
                _bills.SelectFlat(x => x.Concepts.Where(a => a.SchemaData.IsBonusConcept))
-                     .ToFixedList().Sum(x => x.Subtotal * x.Bill.SchemaData.TipoCambio);
+                     .ToFixedList().Sum(x => x.Subtotal);
       }
     }
 
 
     public decimal Discounts {
       get {
-        return _bills.Sum(x => (x.BillType.IsCreditNote ? -1 * x.Discount : x.Discount) * x.SchemaData.TipoCambio);
+        return _bills.Sum(x => (x.BillType.IsCreditNote ? -1 * x.Discount : x.Discount));
       }
     }
 
@@ -145,15 +145,15 @@ namespace Empiria.Billing {
 
     public decimal Total {
       get {
-        return _bills.Sum(x => (x.BillType.IsCreditNote ? -1 * x.Total : x.Total) * x.SchemaData.TipoCambio) +
-               _bills.Sum(x => x.TotalBonusConcepts * x.SchemaData.TipoCambio) +
-               _bills.Sum(x => x.TotalBonusTaxes * x.SchemaData.TipoCambio);
+        return _bills.Sum(x => (x.BillType.IsCreditNote ? -1 * x.Total : x.Total)) +
+               _bills.Sum(x => x.TotalBonusConcepts) +
+               _bills.Sum(x => x.TotalBonusTaxes);
       }
     }
 
 
     public decimal GetTotal() {
-      return _bills.Sum(x => (x.BillType.IsCreditNote ? -1 * x.Total : x.Total) * x.SchemaData.TipoCambio);
+      return _bills.Sum(x => (x.BillType.IsCreditNote ? -1 * x.Total : x.Total));
     }
 
 
@@ -190,7 +190,7 @@ namespace Empiria.Billing {
       foreach (var taxTypeGroup in taxTypesByBill) {
 
         var taxTotal = new BillTaxItemTotal(taxTypeGroup.Key.TaxMethod, taxTypeGroup.Key.TaxType,
-                                            taxTypeGroup.ToFixedList(), bill.SchemaData.TipoCambio);
+                                            taxTypeGroup.ToFixedList());
 
         taxItemsByBills.Add(taxTotal);
       }
@@ -265,9 +265,9 @@ namespace Empiria.Billing {
       var billsTrasladosLocales = _bills.FindAll(x => x.SchemaData.TrasladoLocal > 0);
 
       var localTraslados = billsTrasladosLocales.FindAll(x => !x.BillType.IsCreditNote)
-                              .Sum(x => x.SchemaData.TrasladoLocal * x.SchemaData.TipoCambio) +
+                              .Sum(x => x.SchemaData.TrasladoLocal) +
                            billsTrasladosLocales.FindAll(x => x.BillType.IsCreditNote)
-                              .Sum(x => (x.SchemaData.TrasladoLocal * x.SchemaData.TipoCambio) * -1);
+                              .Sum(x => (x.SchemaData.TrasladoLocal) * -1);
       if (localTraslados != 0) {
         taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Traslado, TaxType.Parse(119),
                                   billsTrasladosLocales.ToFixedList(), localTraslados));
@@ -280,9 +280,9 @@ namespace Empiria.Billing {
       var billsRetencionesLocales = _bills.FindAll(x => x.SchemaData.RetencionLocal > 0);
 
       var localRetenciones = billsRetencionesLocales.FindAll(x => !x.BillType.IsCreditNote)
-                              .Sum(x => (x.SchemaData.RetencionLocal * x.SchemaData.TipoCambio) * -1) +
+                              .Sum(x => (x.SchemaData.RetencionLocal) * -1) +
                               billsRetencionesLocales.FindAll(x => x.BillType.IsCreditNote)
-                              .Sum(x => x.SchemaData.RetencionLocal * x.SchemaData.TipoCambio);
+                              .Sum(x => x.SchemaData.RetencionLocal);
       if (localRetenciones != 0) {
 
         taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Retencion, TaxType.Parse(119),
@@ -295,9 +295,9 @@ namespace Empiria.Billing {
       var billsRetencionesIEPS = _bills.FindAll(x => x.SchemaData.RetencionIEPS > 0);
 
       var iepsRetenciones = billsRetencionesIEPS.FindAll(x => !x.BillType.IsCreditNote)
-                              .Sum(x => (x.SchemaData.RetencionIEPS * x.SchemaData.TipoCambio) * -1) +
+                              .Sum(x => (x.SchemaData.RetencionIEPS) * -1) +
                               billsRetencionesIEPS.FindAll(x => x.BillType.IsCreditNote)
-                              .Sum(x => x.SchemaData.RetencionIEPS * x.SchemaData.TipoCambio);
+                              .Sum(x => x.SchemaData.RetencionIEPS);
       if (iepsRetenciones != 0) {
 
         taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Retencion, TaxType.Parse(103),
@@ -310,9 +310,9 @@ namespace Empiria.Billing {
       var billsRetencionesISR = _bills.FindAll(x => x.SchemaData.RetencionISR > 0);
 
       var isrRetenciones = billsRetencionesISR.FindAll(x => !x.BillType.IsCreditNote)
-                              .Sum(x => (x.SchemaData.RetencionISR * x.SchemaData.TipoCambio) * -1) +
+                              .Sum(x => (x.SchemaData.RetencionISR) * -1) +
                               billsRetencionesISR.FindAll(x => x.BillType.IsCreditNote)
-                              .Sum(x => x.SchemaData.RetencionISR * x.SchemaData.TipoCambio);
+                              .Sum(x => x.SchemaData.RetencionISR);
       if (isrRetenciones != 0) {
         taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Retencion, TaxType.Parse(102),
                                   billsRetencionesISR.ToFixedList(), isrRetenciones));
@@ -325,9 +325,9 @@ namespace Empiria.Billing {
       var billsRetencionesIVA = _bills.FindAll(x => x.SchemaData.RetencionIVA > 0);
 
       var ivaRetenciones = billsRetencionesIVA.FindAll(x => !x.BillType.IsCreditNote)
-                              .Sum(x => (x.SchemaData.RetencionIVA * x.SchemaData.TipoCambio) * -1) +
+                              .Sum(x => (x.SchemaData.RetencionIVA) * -1) +
                               billsRetencionesIVA.FindAll(x => x.BillType.IsCreditNote)
-                              .Sum(x => x.SchemaData.RetencionIVA * x.SchemaData.TipoCambio);
+                              .Sum(x => x.SchemaData.RetencionIVA);
       if (ivaRetenciones != 0) {
         taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Retencion, TaxType.Parse(101),
                                   billsRetencionesIVA.ToFixedList(), ivaRetenciones));
@@ -340,9 +340,9 @@ namespace Empiria.Billing {
       var billsTrasladosIEPS = _bills.FindAll(x => x.SchemaData.TrasladoIEPS > 0);
 
       var iepsTraslados = billsTrasladosIEPS.FindAll(x => !x.BillType.IsCreditNote)
-                              .Sum(x => x.SchemaData.TrasladoIEPS * x.SchemaData.TipoCambio) +
+                              .Sum(x => x.SchemaData.TrasladoIEPS) +
                            billsTrasladosIEPS.FindAll(x => x.BillType.IsCreditNote)
-                              .Sum(x => (x.SchemaData.TrasladoIEPS * x.SchemaData.TipoCambio) * -1);
+                              .Sum(x => (x.SchemaData.TrasladoIEPS) * -1);
       if (iepsTraslados != 0) {
         taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Traslado, TaxType.Parse(103),
                                   billsTrasladosIEPS.ToFixedList(), iepsTraslados));
@@ -355,9 +355,9 @@ namespace Empiria.Billing {
       var billsTrasladosIVA = _bills.FindAll(x => x.SchemaData.TrasladoIVA > 0);
 
       var ivaTraslados = billsTrasladosIVA.FindAll(x => !x.BillType.IsCreditNote)
-                              .Sum(x => x.SchemaData.TrasladoIVA * x.SchemaData.TipoCambio) +
+                              .Sum(x => x.SchemaData.TrasladoIVA) +
                            billsTrasladosIVA.FindAll(x => x.BillType.IsCreditNote)
-                              .Sum(x => (x.SchemaData.TrasladoIVA * x.SchemaData.TipoCambio) * -1);
+                              .Sum(x => (x.SchemaData.TrasladoIVA) * -1);
       if (ivaTraslados != 0) {
         taxTypesGroupsByBills.Add(new BillTaxItemTotal(BillTaxMethod.Traslado, TaxType.Parse(101),
                                   billsTrasladosIVA.ToFixedList(), ivaTraslados));
