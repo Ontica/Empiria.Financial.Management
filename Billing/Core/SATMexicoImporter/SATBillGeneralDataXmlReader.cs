@@ -32,29 +32,26 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode concept in conceptsNode.ChildNodes) {
 
-        if (!concept.Name.Equals("cfdi:Concepto") && !concept.Name.Equals("edr:Concepto")) {
-          Assertion.EnsureFailed("The concepts node must contain only concepts.");
+        if (concept.Name.Equals("cfdi:Concepto") || concept.Name.Equals("edr:Concepto")) {
+
+          var conceptoDto = new SATBillConceptDto() {
+            ClaveProdServ = GetAttribute(concept, "ClaveProdServ"),
+            ClaveUnidad = GetAttribute(concept, "ClaveUnidad"),
+            Cantidad = GetAttribute<decimal>(concept, "Cantidad"),
+            Unidad = GetAttribute(concept, "Unidad"),
+            NoIdentificacion = GetAttribute(concept, "NoIdentificacion"),
+            Descripcion = GetAttribute(concept, "Descripcion"),
+            ValorUnitario = GetAttribute<decimal>(concept, "ValorUnitario"),
+            Importe = GetAttribute<decimal>(concept, "Importe"),
+            Descuento = GetAttribute<decimal>(concept, "Descuento"),
+            ObjetoImp = GetAttribute(concept, "ObjetoImp"),
+            Impuestos = GenerateTaxesByConcept(concept.ChildNodes)
+          };
+
+          conceptosDto.Add(conceptoDto);
         }
-
-        var conceptoDto = new SATBillConceptDto() {
-          ClaveProdServ = GetAttribute(concept, "ClaveProdServ"),
-          ClaveUnidad = GetAttribute(concept, "ClaveUnidad"),
-          Cantidad = GetAttribute<decimal>(concept, "Cantidad"),
-          Unidad = GetAttribute(concept, "Unidad"),
-          NoIdentificacion = GetAttribute(concept, "NoIdentificacion"),
-          Descripcion = GetAttribute(concept, "Descripcion"),
-          ValorUnitario = GetAttribute<decimal>(concept, "ValorUnitario"),
-          Importe = GetAttribute<decimal>(concept, "Importe"),
-          Descuento = GetAttribute<decimal>(concept, "Descuento"),
-          ObjetoImp = GetAttribute(concept, "ObjetoImp"),
-          Impuestos = GenerateTaxesByConcept(concept.ChildNodes)
-        };
-
-        conceptosDto.Add(conceptoDto);
-
       }
       return conceptosDto.ToFixedList();
-
     }
 
 
