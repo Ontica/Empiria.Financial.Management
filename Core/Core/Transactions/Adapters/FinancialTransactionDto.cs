@@ -18,12 +18,15 @@ namespace Empiria.Financial.Transactions.Adapters {
   /// <summary>Output DTO holder for financial transactions.</summary>
   public class FinancialTransactionDto {
 
-    public FinancialTransactionDto(string transactionType, IIdentifiable transaction,
+    public FinancialTransactionDto(string transactionCode,
+                                   IIdentifiable transaction, IIdentifiable traceableObject,
                                    OperationSource source, DateTime transactionTime,
                                    DateTime recordingTime, JsonObject payload) {
 
-      Assertion.Require(transactionType, nameof(transactionType));
+      Assertion.Require(transactionCode, nameof(transactionCode));
       Assertion.Require(transaction, nameof(transaction));
+
+      Assertion.Require(traceableObject, nameof(traceableObject));
 
       Assertion.Require(source, nameof(source));
 
@@ -35,8 +38,9 @@ namespace Empiria.Financial.Transactions.Adapters {
       Assertion.Require(payload, nameof(payload));
       Assertion.Require(payload.HasItems, nameof(payload));
 
-      TransactionType = transactionType;
+      TransactionCode = transactionCode;
       TransactionId = transaction.Id;
+      TraceableObjectId = traceableObject.Id;
       SourceId = source.Id;
       TransactionTime = transactionTime;
       RecordingTime = recordingTime;
@@ -44,11 +48,15 @@ namespace Empiria.Financial.Transactions.Adapters {
     }
 
 
-    public string TransactionType {
+    public string TransactionCode {
       get;
     }
 
     public int TransactionId {
+      get;
+    }
+
+    public int TraceableObjectId {
       get;
     }
 
