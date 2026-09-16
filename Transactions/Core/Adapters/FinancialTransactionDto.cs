@@ -1,7 +1,7 @@
 ﻿/* Empiria Financial *****************************************************************************************
 *                                                                                                            *
 *  Module   : Financial Transactions                          Component : Adapters Layer                     *
-*  Assembly : Empiria.Financial.Core.dll                      Pattern   : Ouput DTO                          *
+*  Assembly : Empiria.Financial.Transactions.Core.dll         Pattern   : Ouput DTO                          *
 *  Type     : FinancialTransactionDto                         License   : Please read LICENSE.txt file       *
 *                                                                                                            *
 *  Summary  : Output DTO with data related to a financial transaction.                                       *
