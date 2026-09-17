@@ -63,9 +63,11 @@
   <ItemGroup Condition=" '$(Configuration)' != 'Multisolutions' ">
     <PackageReference Include="Empiria.Central" Version="8.0.0" />
     <PackageReference Include="Empiria.Services" Version="1.0.0" />
+    <PackageReference Include="Empiria.FinancialAccounting.WebApiClient" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\..\central\Central\Empiria.Central.csproj" />
     <ProjectReference Include="..\..\..\extensions\Services\Empiria.Services.csproj" />
+    <ProjectReference Include="..\..\..\financial.accounting\WebApiClient\Empiria.FinancialAccounting.WebApiClient.csproj" />
   </ItemGroup>
 </Project>
