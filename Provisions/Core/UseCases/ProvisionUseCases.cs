@@ -47,6 +47,13 @@ namespace Empiria.Provisions {
       return provision;
     }
 
+
+    public FixedList<Provision> GetProgrammedProvisions() {
+
+      return Provision.GetList<Provision>($"PRV_STATUS = '{(char) ProvisionStatus.Programmed}'")
+                       .ToFixedList();
+    }
+
     #endregion Use cases
 
   }  // class ProvisionUseCases
