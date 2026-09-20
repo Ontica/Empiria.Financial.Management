@@ -37,14 +37,12 @@ namespace Empiria.Financial.Transactions.UseCases {
 
     #region Use cases
 
-    public async Task<int> ProcessTransaction(FinancialTransaction transaction) {
-      Assertion.Require(transaction, nameof(transaction));
+    public async Task<int> ProcessTransaction(FinancialTransactionFields fields) {
+      Assertion.Require(fields, nameof(fields));
 
-      var transactionDto = FinancialTransactionMapper.Map(transaction);
+      fields.EnsureValid();
 
-      int notificationId = await _accountingServices.NotifyTransaction(transactionDto);
-
-      return notificationId;
+      return await _accountingServices.NotifyTransaction(fields);
     }
 
     #endregion Use cases
