@@ -18,31 +18,33 @@ namespace Empiria.Financial.Transactions {
   /// <summary>Holds information related to a financial transaction.</summary>
   public class FinancialTransaction {
 
-    public FinancialTransaction(string transactionKey,
+    public FinancialTransaction(string transactionKey, string description,
                                 IIdentifiable transaction, IIdentifiable traceableEntity,
-                                OperationSource source, DateTime transactionTime,
+                                OperationSource source, DateTime applicationDate,
                                 DateTime recordingTime, JsonObject payload) {
 
       Assertion.Require(transactionKey, nameof(transactionKey));
-      Assertion.Require(transaction, nameof(transaction));
+      Assertion.Require(description, nameof(description));
 
+      Assertion.Require(transaction, nameof(transaction));
       Assertion.Require(traceableEntity, nameof(traceableEntity));
 
       Assertion.Require(source, nameof(source));
 
-      Assertion.Require(transactionTime <= DateTime.Now, nameof(transactionTime));
+      Assertion.Require(applicationDate <= DateTime.Now, nameof(applicationDate));
       Assertion.Require(recordingTime <= DateTime.Now, nameof(recordingTime));
-      Assertion.Require(transactionTime <= recordingTime,
-                        "Recording date must be greater than or equal to transaction date.");
+      Assertion.Require(applicationDate <= recordingTime,
+                        "Recording time must be greater than or equal to application date.");
 
       Assertion.Require(payload, nameof(payload));
       Assertion.Require(payload.HasItems, nameof(payload));
 
       TransactionKey = transactionKey;
+      Description = description;
       TransactionReferenceId = transaction.Id;
       TraceableEntityReferenceId = traceableEntity.Id;
       SourceCode = source.Code;
-      TransactionTime = transactionTime;
+      ApplicationDate = applicationDate;
       RecordingTime = recordingTime;
       Payload = payload;
     }
@@ -50,6 +52,10 @@ namespace Empiria.Financial.Transactions {
     #region Properties
 
     public string TransactionKey {
+      get;
+    }
+
+    public string Description {
       get;
     }
 
@@ -65,7 +71,7 @@ namespace Empiria.Financial.Transactions {
       get;
     }
 
-    public DateTime TransactionTime {
+    public DateTime ApplicationDate {
       get;
     }
 

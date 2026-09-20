@@ -18,10 +18,11 @@ namespace Empiria.Financial.Transactions.Adapters {
 
       return new FinancialTransactionDto {
         TransactionKey = transaction.TransactionKey,
+        Description = transaction.Description,
         TransactionReferenceId = transaction.TransactionReferenceId,
         TraceableEntityReferenceId = transaction.TraceableEntityReferenceId,
         SourceCode = transaction.SourceCode,
-        TransactionTime = transaction.TransactionTime,
+        ApplicationDate = transaction.ApplicationDate,
         RecordingTime = transaction.RecordingTime,
         Payload = transaction.Payload
       };
