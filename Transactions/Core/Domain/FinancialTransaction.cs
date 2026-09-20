@@ -18,15 +18,15 @@ namespace Empiria.Financial.Transactions {
   /// <summary>Holds information related to a financial transaction.</summary>
   public class FinancialTransaction {
 
-    public FinancialTransaction(string transactionCode,
-                                IIdentifiable transaction, IIdentifiable traceableObject,
+    public FinancialTransaction(string transactionKey,
+                                IIdentifiable transaction, IIdentifiable traceableEntity,
                                 OperationSource source, DateTime transactionTime,
                                 DateTime recordingTime, JsonObject payload) {
 
-      Assertion.Require(transactionCode, nameof(transactionCode));
+      Assertion.Require(transactionKey, nameof(transactionKey));
       Assertion.Require(transaction, nameof(transaction));
 
-      Assertion.Require(traceableObject, nameof(traceableObject));
+      Assertion.Require(traceableEntity, nameof(traceableEntity));
 
       Assertion.Require(source, nameof(source));
 
@@ -38,29 +38,30 @@ namespace Empiria.Financial.Transactions {
       Assertion.Require(payload, nameof(payload));
       Assertion.Require(payload.HasItems, nameof(payload));
 
-      TransactionCode = transactionCode;
-      TransactionId = transaction.Id;
-      TraceableObjectId = traceableObject.Id;
-      SourceId = source.Id;
+      TransactionKey = transactionKey;
+      TransactionReferenceId = transaction.Id;
+      TraceableEntityReferenceId = traceableEntity.Id;
+      SourceCode = source.Code;
       TransactionTime = transactionTime;
       RecordingTime = recordingTime;
       Payload = payload;
     }
 
+    #region Properties
 
-    public string TransactionCode {
+    public string TransactionKey {
       get;
     }
 
-    public int TransactionId {
+    public int TransactionReferenceId {
       get;
     }
 
-    public int TraceableObjectId {
+    public int TraceableEntityReferenceId {
       get;
     }
 
-    public int SourceId {
+    public string SourceCode {
       get;
     }
 
@@ -75,6 +76,8 @@ namespace Empiria.Financial.Transactions {
     public JsonObject Payload {
       get;
     }
+
+    #endregion Properties
 
   }  // class FinancialTransaction
 

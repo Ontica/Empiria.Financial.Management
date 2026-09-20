@@ -17,10 +17,10 @@ namespace Empiria.Financial.Transactions.Adapters {
       Assertion.Require(transaction, nameof(transaction));
 
       return new FinancialTransactionDto {
-        TransactionCode = transaction.TransactionCode,
-        TransactionId = transaction.TransactionId,
-        TraceableObjectId = transaction.TraceableObjectId,
-        SourceId = transaction.SourceId,
+        TransactionKey = transaction.TransactionKey,
+        TransactionReferenceId = transaction.TransactionReferenceId,
+        TraceableEntityReferenceId = transaction.TraceableEntityReferenceId,
+        SourceCode = transaction.SourceCode,
         TransactionTime = transaction.TransactionTime,
         RecordingTime = transaction.RecordingTime,
         Payload = transaction.Payload
