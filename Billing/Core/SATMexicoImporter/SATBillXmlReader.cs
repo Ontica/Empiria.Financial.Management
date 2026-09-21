@@ -122,7 +122,27 @@ namespace Empiria.Billing.SATMexicoImporter {
               };
             }
           }
+        } else {
+
+          foreach (XmlNode item in complementChild.ChildNodes) {
+
+            if (item.Name.EndsWith("Conceptos")) {
+
+              GenerateAddendaConceptsSpecialCase(item.ChildNodes);
+            }
+          }
         }
+      }
+    }
+
+
+    private void GenerateAddendaConceptsSpecialCase(XmlNodeList conceptParents) {
+
+      foreach (XmlNode conceptParent in conceptParents) {
+
+        _satBillDto.Addenda = new SATBillAddenda {
+          Conceptos = generalDataReader.GenerateConceptsList(conceptParent, true)
+        };
       }
     }
 
@@ -163,26 +183,25 @@ namespace Empiria.Billing.SATMexicoImporter {
 
       foreach (XmlNode concept in conceptsNode.ChildNodes) {
 
-        if (!concept.Name.EndsWith(":Concepto")) {
-          Assertion.EnsureFailed("The concepts node must contain only concepts.");
+        if (concept.Name.EndsWith("Concepto")) {
+
+          var conceptoDto = new SATBillConceptDto() {
+            IsConceptSumToTotal = isConceptSumToTotal,
+            ClaveProdServ = generalDataReader.GetAttribute(concept, "claveProdServ"),
+            ClaveUnidad = generalDataReader.GetAttribute(concept, "claveUnidad"),
+            Cantidad = generalDataReader.GetAttribute<decimal>(concept, "cantidad"),
+            Unidad = generalDataReader.GetAttribute(concept, "unidad"),
+            NoIdentificacion = generalDataReader.GetAttribute(concept, "noIdentificacion"),
+            Descripcion = generalDataReader.GetAttribute(concept, "descripcion"),
+            ValorUnitario = generalDataReader.GetAttribute<decimal>(concept, "valorUnitario"),
+            Importe = generalDataReader.GetAttribute<decimal>(concept, "importe"),
+            Descuento = generalDataReader.GetAttribute<decimal>(concept, "descuento"),
+            ObjetoImp = generalDataReader.GetAttribute(concept, "objetoImp"),
+            Impuestos = generalDataReader.GenerateTaxesByConcept(concept.ChildNodes)
+          };
+
+          conceptosDto.Add(conceptoDto);
         }
-
-        var conceptoDto = new SATBillConceptDto() {
-          IsConceptSumToTotal = isConceptSumToTotal,
-          Cantidad = generalDataReader.GetAttribute<decimal>(concept, "cantidad"),
-          Unidad = generalDataReader.GetAttribute(concept, "unidad"),
-          ValorUnitario = generalDataReader.GetAttribute<decimal>(concept, "valorUnitario"),
-          Importe = generalDataReader.GetAttribute<decimal>(concept, "importe"),
-          Descripcion = generalDataReader.GetAttribute(concept, "descripcion"),
-          ClaveProdServ = generalDataReader.GetAttribute(concept, "claveProdServ"),
-          ClaveUnidad = generalDataReader.GetAttribute(concept, "claveUnidad"),
-          NoIdentificacion = generalDataReader.GetAttribute(concept, "noIdentificacion"),
-          Descuento = generalDataReader.GetAttribute<decimal>(concept, "descuento"),
-          ObjetoImp = generalDataReader.GetAttribute(concept, "objetoImp"),
-          Impuestos = generalDataReader.GenerateTaxesByConcept(concept.ChildNodes)
-        };
-
-        conceptosDto.Add(conceptoDto);
       }
       return conceptosDto.ToFixedList();
     }

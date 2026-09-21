@@ -26,13 +26,15 @@ namespace Empiria.Billing.SATMexicoImporter {
 
     #region Public methods
 
-    internal FixedList<SATBillConceptDto> GenerateConceptsList(XmlNode conceptsNode) {
+    internal FixedList<SATBillConceptDto> GenerateConceptsList(XmlNode conceptsNode,
+                                                               bool isConceptSumToTotal = false) {
 
       var conceptosDto = new List<SATBillConceptDto>();
 
       foreach (XmlNode concept in conceptsNode.ChildNodes) {
 
-        if (concept.Name.Equals("cfdi:Concepto") || concept.Name.Equals("edr:Concepto")) {
+        if (concept.Name.Equals("cfdi:Concepto") || concept.Name.Equals("edr:Concepto") ||
+            concept.Name.EndsWith("Concepto")) {
 
           var conceptoDto = new SATBillConceptDto() {
             ClaveProdServ = GetAttribute(concept, "ClaveProdServ"),
@@ -45,7 +47,8 @@ namespace Empiria.Billing.SATMexicoImporter {
             Importe = GetAttribute<decimal>(concept, "Importe"),
             Descuento = GetAttribute<decimal>(concept, "Descuento"),
             ObjetoImp = GetAttribute(concept, "ObjetoImp"),
-            Impuestos = GenerateTaxesByConcept(concept.ChildNodes)
+            Impuestos = GenerateTaxesByConcept(concept.ChildNodes),
+            IsConceptSumToTotal = isConceptSumToTotal
           };
 
           conceptosDto.Add(conceptoDto);
