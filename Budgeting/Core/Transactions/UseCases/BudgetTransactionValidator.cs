@@ -11,6 +11,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Empiria.Financial;
+
 namespace Empiria.Budgeting.Transactions {
 
 
@@ -117,19 +119,19 @@ namespace Empiria.Budgeting.Transactions {
 
       var deposits = _transaction.Entries.FindAll(x => x.Deposit > 0 && x.NotAdjustment &&
                                                   x.BudgetAccount.StandardAccount.RoleType != Financial.AccountRoleType.Control)
-                                         .GroupBy(x => new { x.BudgetAccount });
+                                         .GroupBy(x => new { x.BudgetAccount.StandardAccount });
 
 
       foreach (var deposit in deposits) {
 
-        BudgetAccount account = deposit.Key.BudgetAccount;
+        StandardAccount account = deposit.Key.StandardAccount;
 
         decimal requiredAmount = deposit.Sum(x => x.Deposit);
 
         decimal availableBudget = GetTotal(_transaction.OperationType.DefaultWithdrawalColumn(), account);
 
         if (requiredAmount > availableBudget) {
-          Assertion.RequireFail($"No hay presupuesto comprometido disponible para la partida {account.AccountNo}: " +
+          Assertion.RequireFail($"No hay presupuesto comprometido disponible para la partida {account.StdAcctNo}: " +
                                 $"Solicitado {requiredAmount:C2}, Disponible {(availableBudget):C2}");
         }
       }
@@ -137,31 +139,14 @@ namespace Empiria.Budgeting.Transactions {
 
     #region Helpers
 
-    private decimal GetTotal(BalanceColumn balanceColumn, BudgetAccount account) {
+    private decimal GetTotal(BalanceColumn balanceColumn, StandardAccount account) {
       return _relatedTransactions.SelectFlat(x => x.Entries)
-                                 .FindAll(x => x.BudgetAccount.Equals(account) &&
+                                 .FindAll(x => x.BudgetAccount.StandardAccount.Equals(account) &&
                                                x.BalanceColumn.Equals(balanceColumn) &&
                                                !x.IsAdjustment)
                                  .Sum(x => x.Deposit - x.Withdrawal);
     }
 
-
-    private decimal GetDepositsTotal(BalanceColumn balanceColumn, BudgetAccount account) {
-      return _relatedTransactions.SelectFlat(x => x.Entries)
-                                 .FindAll(x => x.BudgetAccount.Equals(account) &&
-                                               x.BalanceColumn.Equals(balanceColumn) &&
-                                               x.Deposit > 0 && !x.IsAdjustment)
-                                 .Sum(x => x.Deposit);
-    }
-
-
-    private decimal GetWithdrawalsTotal(BalanceColumn balanceColumn, BudgetAccount account) {
-      return _relatedTransactions.SelectFlat(x => x.Entries)
-                                 .FindAll(x => x.BudgetAccount.Equals(account) &&
-                                               x.BalanceColumn.Equals(balanceColumn) &&
-                                               x.Withdrawal > 0 && !x.IsAdjustment)
-                                 .Sum(x => x.Withdrawal);
-    }
 
     #endregion Helpers
 
