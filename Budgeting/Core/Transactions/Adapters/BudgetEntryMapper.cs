@@ -95,6 +95,15 @@ namespace Empiria.Budgeting.Transactions.Adapters {
 
 
     static private BudgetEntryDescriptorDto MapToDescriptor(BudgetEntry entry) {
+
+      decimal deposit = entry.Deposit;
+      decimal withdrawal = entry.Withdrawal;
+
+      if (entry.BalanceColumn.Equals(BalanceColumn.Reduced)) {
+        withdrawal = deposit;
+        deposit = 0;
+      }
+
       return new BudgetEntryDescriptorDto {
         UID = entry.UID,
         BudgetAccountCode = entry.BudgetAccount.Code,
@@ -110,14 +119,23 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Day = entry.Day,
         ItemType = DataTableEntryType.Entry.ToString(),
         BalanceColumn = entry.BalanceColumn.Name,
-        Deposit = entry.Deposit,
-        Withdrawal = entry.Withdrawal,
+        Deposit = deposit,
+        Withdrawal = withdrawal,
       };
     }
 
 
     static private BudgetEntryDescriptorDto MapToDescriptorTotals(BudgetEntry pivot,
                                                                   FixedList<BudgetEntry> items) {
+
+      decimal deposit = items.Sum(x => x.Deposit);
+      decimal withdrawal = items.Sum(x => x.Withdrawal);
+
+      if (pivot.BalanceColumn.Equals(BalanceColumn.Reduced)) {
+        withdrawal = deposit;
+        deposit = 0;
+      }
+
       return new BudgetEntryDescriptorDto {
         UID = $"{pivot.Year}|{pivot.BalanceColumn.Name}",
         BudgetAccountCode = string.Empty,
@@ -126,8 +144,8 @@ namespace Empiria.Budgeting.Transactions.Adapters {
         Year = pivot.Year,
         ItemType = DataTableEntryType.Total.ToString(),
         BalanceColumn = pivot.BalanceColumn.Name,
-        Deposit = items.Sum(x => x.Deposit),
-        Withdrawal = items.Sum(x => x.Withdrawal)
+        Deposit = deposit,
+        Withdrawal = withdrawal
       };
     }
 
