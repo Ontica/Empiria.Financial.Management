@@ -33,20 +33,17 @@ namespace Empiria.Budgeting {
     public BudgetAccount(FinancialAccountType accountType,
                          StandardAccount standardAccount,
                          OrganizationalUnit orgUnit) : base(accountType, standardAccount, orgUnit) {
+      Assertion.Require(accountType, nameof(accountType));
+      Assertion.Require(standardAccount, nameof(standardAccount));
+      Assertion.Require(orgUnit, nameof(orgUnit));
 
-      BudgetProgram = BudgetProgram.ParseWithCode(orgUnit.ExtendedData.Get<string>("budgetProgram"));
-
+      SetBudgetProgram(accountType, orgUnit);
       SetStatus(EntityStatus.Active);
     }
 
     static public new BudgetAccount Parse(int id) => ParseId<BudgetAccount>(id);
 
     static public new BudgetAccount Parse(string uid) => ParseKey<BudgetAccount>(uid);
-
-
-    static public BudgetAccount TryParse(string accountNo) =>
-          TryParse<BudgetAccount>($"ACCT_NUMBER = '{accountNo}'");
-
 
     static public BudgetAccount TryParse(OrganizationalUnit orgUnit, string accountNo) =>
           TryParse<BudgetAccount>($"ACCT_NUMBER = '{accountNo}' AND ACCT_ORG_UNIT_ID = {orgUnit.Id}");
@@ -120,21 +117,21 @@ namespace Empiria.Budgeting {
 
     #region Methods
 
-    internal new void SetStatus(EntityStatus newStatus) {
+    private void SetBudgetProgram(FinancialAccountType accountType,
+                                  OrganizationalUnit orgUnit) {
 
-      if (Status == EntityStatus.Pending && newStatus == EntityStatus.OnReview) {
-        var programCode = OrganizationalUnit.ExtendedData.Get("budgetProgram", string.Empty);
-
-        if (programCode.Length != 0) {
-          BudgetProgram = BudgetProgram.ParseWithCode(programCode);
-        } else {
-          BudgetProgram = BudgetProgram.Undefined;
-        }
-
-      } else if (Status == EntityStatus.OnReview && newStatus == EntityStatus.Pending) {
-        BudgetProgram = BudgetProgram.Undefined;
+      if (!accountType.UID.Contains("GastoCorriente")) {
+        return;
       }
 
+      var program = orgUnit.ExtendedData.Get("budgetProgram", string.Empty);
+
+      if (program.Length != 0) {
+        BudgetProgram = BudgetProgram.ParseWithCode(program);
+      }
+    }
+
+    internal new void SetStatus(EntityStatus newStatus) {
       base.SetStatus(newStatus);
     }
 
