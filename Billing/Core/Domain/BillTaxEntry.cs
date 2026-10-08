@@ -32,7 +32,7 @@ namespace Empiria.Billing {
       Assertion.Require(bill, nameof(bill));
       Assertion.Require(!bill.IsEmptyInstance, nameof(bill));
       Assertion.Require(billTaxRelatedObjectId, nameof(billTaxRelatedObjectId));
-      
+
       Bill = bill;
       BillTaxRelatedObjectTypeId = Bill.BillType.Id;
       BillTaxRelatedObjectId = billTaxRelatedObjectId;
@@ -123,8 +123,8 @@ namespace Empiria.Billing {
 
 
     [DataField("BILL_TAX_EXT_DATA")]
-    private JsonObject ExtData {
-      get; set;
+    public JsonObject ExtData {
+      get; private set;
     }
 
 
