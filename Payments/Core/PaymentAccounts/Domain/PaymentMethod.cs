@@ -43,6 +43,12 @@ namespace Empiria.Payments {
     }
 
 
+    public new string Code {
+      get {
+        return base.Code;
+      }
+    }
+
     public bool IsElectronic {
       get {
         return BrokerCode.Length != 0;
