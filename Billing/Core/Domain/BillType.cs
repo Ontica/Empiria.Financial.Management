@@ -44,7 +44,7 @@ namespace Empiria.Billing {
 
     public bool IsCreditNote {
       get {
-        return this.Name.Contains("CreditNote");
+        return this.Name.Contains("CreditNote") || this.Name.Contains("Return");
       }
     }
 
