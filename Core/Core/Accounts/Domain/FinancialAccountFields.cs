@@ -50,6 +50,11 @@ namespace Empiria.Financial {
     } = string.Empty;
 
 
+    public string SubledgerAccountNo {
+      get; set;
+    } = string.Empty;
+
+
     public string OrganizationalUnitUID {
       get; set;
     } = string.Empty;

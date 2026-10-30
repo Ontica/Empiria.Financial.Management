@@ -560,6 +560,7 @@ namespace Empiria.Financial {
 
       Description = Patcher.PatchClean(fields.Description, Description);
       StandardAccount = Patcher.Patch(fields.StandardAccountUID, StandardAccount);
+      SubledgerAccountNo = Patcher.PatchClean(fields.SubledgerAccountNo, SubledgerAccountNo);
       Currency = Patcher.Patch(fields.CurrencyUID, Currency);
       OrganizationalUnit = Patcher.Patch(fields.OrganizationalUnitUID, OrganizationalUnit);
 
