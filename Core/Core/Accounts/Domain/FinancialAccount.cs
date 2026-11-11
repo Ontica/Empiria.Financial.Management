@@ -109,7 +109,7 @@ namespace Empiria.Financial {
     static public FinancialAccount TryParseWithSubledgerAccount(string subledgerAccountNo) {
       Assertion.Require(subledgerAccountNo, nameof(subledgerAccountNo));
 
-      return GetList().Find(x => x.SubledgerAccountNo == subledgerAccountNo);
+      return GetList().Find(x => x.SubledgerAccountNo == subledgerAccountNo && !x.IsOperationAccount);
     }
 
 
