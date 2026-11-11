@@ -38,6 +38,8 @@ namespace Empiria.CashFlow.CashLedger {
 
     internal FixedList<CashEntryFields> Execute() {
 
+      ProcessEqualEntriesAsNoCashFlowEntries();
+
       ProcessNoCashFlowEntriesOneToOne();
 
       ProcessNoCashFlowEntriesOneToOneTwoWay();
@@ -51,8 +53,6 @@ namespace Empiria.CashFlow.CashLedger {
       ProcessNoCashFlowEntriesSwapedFromCashFlowRules();
 
       ProcessNoCashFlowAccounts();
-
-      ProcessEqualEntriesAsNoCashFlowEntries();
 
       ProcessCashFlowEntriesOneToOne();
 
