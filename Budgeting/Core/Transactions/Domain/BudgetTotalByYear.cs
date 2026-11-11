@@ -49,7 +49,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public decimal Total {
       get {
-        return Entries.Sum(x => x.Amount);
+        return Entries.Sum(x => x.Deposit - x.Withdrawal);
       }
     }
 
@@ -59,7 +59,7 @@ namespace Empiria.Budgeting.Transactions {
 
     public decimal GetTotalForMonth(int month) {
       return Entries.FindAll(x => x.Month == month)
-                    .Sum(x => x.Amount);
+                    .Sum(x => x.Deposit - x.Withdrawal);
     }
 
     #endregion Methods
