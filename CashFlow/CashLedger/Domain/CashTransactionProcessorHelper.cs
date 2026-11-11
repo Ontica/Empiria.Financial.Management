@@ -65,7 +65,7 @@ namespace Empiria.CashFlow.CashLedger {
       } else if (cashAccounts.Count > 1) {
 
         AddProcessedEntry(rule, entry, CashAccountStatus.CashFlowUnassigned,
-          $"{appliedRule} (la cuenta tiene más de un concepto relacionado con el tipo de operación.)");
+          $"{appliedRule} (la cuenta tiene más de un concepto relacionado con el tipo de operación: {string.Join(", ", cashAccounts.Select(x => x.Id))})");
 
       } else {
         throw Assertion.EnsureNoReachThisCode();
@@ -365,6 +365,7 @@ namespace Empiria.CashFlow.CashLedger {
 
       return FinancialAccount.GetList(x => x.AccountNo == directConceptNo &&
                                            x.Currency.Id == entry.CurrencyId &&
+                                           !x.Tags.Contains("PROJECTION_ONLY") &&
                                            x.IsOperationAccount);
     }
 
