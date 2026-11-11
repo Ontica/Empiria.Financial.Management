@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
+
 using Empiria.Documents;
 
 namespace Empiria.Billing {
@@ -27,6 +29,7 @@ namespace Empiria.Billing {
 
     static public FixedList<BillCategory> GetList() {
       return BaseObject.GetList<BillCategory>()
+                       .OrderBy(x => x.Name)
                        .ToFixedList();
     }
 

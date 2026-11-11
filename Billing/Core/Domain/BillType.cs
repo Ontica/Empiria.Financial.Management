@@ -35,6 +35,7 @@ namespace Empiria.Billing {
     static public FixedList<BillType> GetList() {
       return Empty.GetAllSubclasses()
                   .Select(x => (BillType) x)
+                  .OrderBy(x => x.Name)
                   .ToFixedList();
     }
 

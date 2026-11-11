@@ -24,7 +24,7 @@ namespace Empiria.Billing.WebApi {
 
       var billTypes = BillCategory.GetList();
 
-      return new CollectionModel(base.Request, billTypes.MapToNamedEntityList());
+      return new CollectionModel(base.Request, billTypes.MapToNamedEntityList(true));
     }
 
     [HttpGet]
@@ -33,7 +33,7 @@ namespace Empiria.Billing.WebApi {
 
       var billTypes = BillType.GetList();
 
-      return new CollectionModel(base.Request, billTypes.MapToNamedEntityList());
+      return new CollectionModel(base.Request, billTypes.MapToNamedEntityList(true));
     }
 
     #endregion Web apis
