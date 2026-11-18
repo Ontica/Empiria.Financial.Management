@@ -17,7 +17,7 @@ namespace Empiria.Financial {
 
     Requested = 'R',
 
-    Assigned = 'A',
+    Closed = 'C',
 
     Canceled = 'L',
 
@@ -39,10 +39,10 @@ namespace Empiria.Financial {
           return string.Empty;
 
         case ProvisionStatus.Requested:
-          return "PROVISION_PENDING";
+          return "PROVISION_REQUESTED";
 
-        case ProvisionStatus.Assigned:
-          return "PROVISION_ASSIGNED";
+        case ProvisionStatus.Closed:
+          return "PROVISION_CLOSED";
 
         default:
           throw Assertion.EnsureNoReachThisCode(

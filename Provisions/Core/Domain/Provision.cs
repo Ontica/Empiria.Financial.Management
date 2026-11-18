@@ -37,7 +37,7 @@ namespace Empiria.Provisions {
 
       PaymentOrder = PaymentOrder.Empty;
 
-      Status = ProvisionStatus.Programmed;
+      Status = ProvisionStatus.Requested;
     }
 
 
@@ -90,8 +90,7 @@ namespace Empiria.Provisions {
 
     public string Keywords {
       get {
-        return PayableEntity.EntityNo + EmpiriaString.BuildKeywords(PayableEntity.Keywords,
-                                                                    PaymentOrder.Keywords);
+        return PayableEntity.EntityNo + EmpiriaString.BuildKeywords(PayableEntity.Keywords);
       }
     }
 
@@ -108,17 +107,17 @@ namespace Empiria.Provisions {
     }
 
 
-    [DataField("PRV_STATUS", Default = ProvisionStatus.Programmed)]
+    [DataField("PRV_STATUS", Default = ProvisionStatus.Requested)]
     public ProvisionStatus Status {
       get; private set;
-    } = ProvisionStatus.Programmed;
+    } = ProvisionStatus.Requested;
 
     #endregion Properties
 
     #region Methods
 
     internal void Cancel() {
-      Assertion.Require(Status == ProvisionStatus.Programmed,
+      Assertion.Require(Status == ProvisionStatus.Requested,
                         "Only a programmed provision can be canceled.");
 
       Status = ProvisionStatus.Canceled;
@@ -126,10 +125,10 @@ namespace Empiria.Provisions {
 
 
     internal void SetAsProvisioned() {
-      Assertion.Require(Status == ProvisionStatus.Programmed,
-                        "Only a programmed provision can be provisioned.");
+      Assertion.Require(Status == ProvisionStatus.Requested,
+                        "Only a requested provision can be provisioned.");
 
-      Status = ProvisionStatus.Provisioned;
+      Status = ProvisionStatus.Requested;
     }
 
 

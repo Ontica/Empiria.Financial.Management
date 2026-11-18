@@ -50,8 +50,9 @@ namespace Empiria.Provisions {
 
     public FixedList<Provision> GetProgrammedProvisions() {
 
-      return Provision.GetList<Provision>($"PRV_STATUS = '{(char) ProvisionStatus.Programmed}'")
-                       .ToFixedList();
+      return Provision.GetList<Provision>($"PRV_STATUS = '{(char) ProvisionStatus.Requested}'")
+                      .ToFixedList()
+                      .FindAll(x => x.PayableEntity.Items.Count > 0);
     }
 
     #endregion Use cases
