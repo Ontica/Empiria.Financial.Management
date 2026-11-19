@@ -83,10 +83,10 @@ namespace Empiria.Financial {
 
     public ProvisionStatus Status {
       get {
-        return _json.Get("status", ProvisionStatus.None);
+        return _json.Get("status", ProvisionStatus.Candidate);
       }
       private set {
-        _json.SetIf("status", value, value != ProvisionStatus.None);
+        _json.SetIf("status", value, value != ProvisionStatus.Candidate);
       }
     }
 

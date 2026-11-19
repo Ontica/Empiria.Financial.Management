@@ -13,7 +13,7 @@ namespace Empiria.Financial {
   /// <summary>Enumerates the status of a payment provision.</summary>
   public enum ProvisionStatus {
 
-    None = 'N',
+    Candidate = 'N',
 
     Requested = 'R',
 
@@ -28,13 +28,40 @@ namespace Empiria.Financial {
 
 
   /// <summary>Provides extension methods for ProvisionStatus enumeration.</summary>
-  static class ProvisionStatusExtensions {
+  static public class ProvisionStatusExtensions {
+
+    static public string GetName(this ProvisionStatus status) {
+
+      switch (status) {
+
+        case ProvisionStatus.Candidate:
+          return "Candidata";
+
+        case ProvisionStatus.Requested:
+          return "Solicitada";
+
+        case ProvisionStatus.Closed:
+          return "Provisionada";
+
+        case ProvisionStatus.Canceled:
+          return "Cancelada";
+
+        case ProvisionStatus.All:
+          return "Todas";
+
+        default:
+          throw Assertion.EnsureNoReachThisCode(
+            $"Cannot get name for provision with status {status}."
+          );
+      }
+    }
+
 
     static public string GetTag(this ProvisionStatus status) {
 
       switch (status) {
 
-        case ProvisionStatus.None:
+        case ProvisionStatus.Candidate:
         case ProvisionStatus.Canceled:
           return string.Empty;
 
